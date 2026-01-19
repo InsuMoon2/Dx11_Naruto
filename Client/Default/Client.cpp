@@ -3,7 +3,7 @@
 
 #include "pch.h"
 #include "framework.h"
-#include "Dx11_Naruto.h"
+#include "Client.h"
 
 #define MAX_LOADSTRING 100
 
