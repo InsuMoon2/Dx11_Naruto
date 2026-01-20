@@ -1,7 +1,5 @@
-﻿#ifndef PCH_H
-#define PCH_H
+﻿#pragma once
 
 #include "framework.h"
 #include "Client_Defines.h"
 
-#endif //PCH_H
