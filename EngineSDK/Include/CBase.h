@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 
 #include "Engine_Define.h"
 
-BEGIN(Engine)
+NS_BEGIN(Engine)
 
 class ENGINE_DLL CBase abstract
 {
@@ -22,4 +22,4 @@ protected:
 
 };
 
-END
+NS_END

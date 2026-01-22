@@ -25,6 +25,9 @@
     <ClInclude Include="..\Public\CLevel_Loading.h">
       <Filter>01. Levels\00. Loading</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CLoader.h">
+      <Filter>01. Levels\00. Loading\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -38,6 +41,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CLevel_Loading.cpp">
       <Filter>01. Levels\00. Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CLoader.cpp">
+      <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +67,9 @@
     </Filter>
     <Filter Include="01. Levels\02. GamePlay">
       <UniqueIdentifier>{c58091b5-21bf-4f78-ae91-95a21cea922d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\00. Loading\Loader">
+      <UniqueIdentifier>{d57f9a79-cbfe-4f7c-88b6-26fcaae93bdf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

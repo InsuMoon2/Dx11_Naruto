@@ -2,7 +2,7 @@
 
 #include "CBase.h"
 
-BEGIN(Engine)
+NS_BEGIN(Engine)
 
 class CGameInstance;
 
@@ -27,4 +27,4 @@ public:
 
 };
 
-END
+NS_END

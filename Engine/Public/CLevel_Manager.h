@@ -2,7 +2,7 @@
 
 #include "CBase.h"
 
-BEGIN(Engine)
+NS_BEGIN(Engine)
 
 class CLevel;
 
@@ -28,4 +28,4 @@ public:
 
 };
 
-END
+NS_END

@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\CLevel_Loading.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\CLoader.h" />
     <ClInclude Include="..\Public\CMainApp.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\CLevel_Loading.cpp" />
+    <ClCompile Include="..\Private\CLoader.cpp" />
     <ClCompile Include="..\Private\CMainApp.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">

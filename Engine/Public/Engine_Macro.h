@@ -3,12 +3,14 @@
 
 namespace Engine
 {
+#define ETOI(ENUM) static_cast<unsigned int>(ENUM)
+
 	#ifndef			MSG_BOX
 	#define			MSG_BOX(_message)			MessageBox(nullptr, TEXT(_message), L"System Message", MB_OK)
 	#endif
 
-	#define			BEGIN(NAMESPACE)		namespace NAMESPACE {
-	#define			END						}
+	#define			NS_BEGIN(NAMESPACE)		namespace NAMESPACE {
+	#define			NS_END						}
 	
 	#define			USING(NAMESPACE)	    using namespace NAMESPACE;
 	
@@ -19,6 +21,7 @@ namespace Engine
 	#endif
 
     #define GAME CGameInstance::GetInstance()
+    #define GET_SINGLE(classname) classname::GetInstance()
 
 	// ==================================================
 	// NULL/FAILED 체크 매크로

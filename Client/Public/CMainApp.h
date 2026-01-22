@@ -2,13 +2,13 @@
 
 #include "CBase.h"
 
-BEGIN(Engine)
+NS_BEGIN(Engine)
 
 class CGameInstance;
 
-END
+NS_END
 
-BEGIN(Client)
+NS_BEGIN(Client)
 
 class CMainApp : public CBase
 {
@@ -23,6 +23,9 @@ public:
     HRESULT Render();
 
 private:
+    HRESULT Ready_StartLevel(LEVEL startLevelID);
+
+private:
     ComPtr<Device>              _device;
     ComPtr<DeviceContext>       _context;
 
@@ -32,4 +35,4 @@ public:
 
 };
 
-END
+NS_END

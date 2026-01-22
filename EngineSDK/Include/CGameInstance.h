@@ -2,7 +2,7 @@
 
 #include "CBase.h"
 
-BEGIN(Engine)
+NS_BEGIN(Engine)
 class CGraphic_Device;
 class CTimer_Manager;
 class CLevel_Manager;
@@ -44,4 +44,4 @@ public:
 
 };
 
-END
+NS_END

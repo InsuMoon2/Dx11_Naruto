@@ -23,7 +23,8 @@ HRESULT CMainApp::Initialize()
     if (FAILED(GAME->Initialize_Engine(engineDesc, _device, _context)))
         return E_FAIL;
 
-    GAME->Change_Level(static_cast<uint32>(LEVEL::LOADING), CLevel_Loading::Create(_device, _context));
+    if (FAILED(Ready_StartLevel(LEVEL::LOGO)))
+        return E_FAIL;
 
 
     return S_OK;
@@ -50,6 +51,17 @@ HRESULT CMainApp::Render()
         return E_FAIL;
 
     if (FAILED(GAME->Present()))
+        return E_FAIL;
+
+    return S_OK;
+}
+
+HRESULT CMainApp::Ready_StartLevel(LEVEL startLevelID)
+{
+    if (LEVEL::LOADING == startLevelID)
+        return E_FAIL;
+
+    if (FAILED(GAME->Change_Level(ETOI(LEVEL::LOADING), CLevel_Loading::Create(_device, _context, startLevelID))))
         return E_FAIL;
 
     return S_OK;

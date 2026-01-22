@@ -2,7 +2,7 @@
 
 #include "CBase.h"
 
-BEGIN(Engine)
+NS_BEGIN(Engine)
 
 class ENGINE_DLL CTimer : public CBase
 {
@@ -30,4 +30,4 @@ public:
 
 };
 
-END
+NS_END

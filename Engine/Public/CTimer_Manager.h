@@ -2,7 +2,7 @@
 
 #include "CBase.h"
 
-BEGIN(Engine)
+NS_BEGIN(Engine)
 
 class CTimer;
 
@@ -27,4 +27,4 @@ public:
 	virtual void						Free();
 };
 
-END
+NS_END
