@@ -20,14 +20,15 @@ public:
     virtual HRESULT Initialize(LEVEL nextLevelID);
     virtual void    Update(float timeDelta) override;
     virtual void    LateUpdate(float timeDelta) override;
-    virtual HRESULT Render() override;
+     virtual HRESULT Render() override;
 
 private:
     shared_ptr<CLoader> _loader;
+    LEVEL               _nextLevelID = { LEVEL::END };
 
 private:
-    HRESULT Ready_Layer_Background(const wstring& layerTag);
-    HRESULT Ready_Layer_UI(const wstring& uiTag);
+    HRESULT  Ready_Layer_Background(const wstring& layerTag);
+    HRESULT  Ready_Layer_UI(const wstring& uiTag);
 
 public:
     static shared_ptr<CLevel_Loading> Create(

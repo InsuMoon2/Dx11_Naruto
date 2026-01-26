@@ -2,6 +2,8 @@
 #include "CLevel_Loading.h"
 #include "CLoader.h"
 #include "CGameInstance.h"
+#include "CLevel_Gameplay.h"
+#include "CLevel_Logo.h"
 
 CLevel_Loading::CLevel_Loading(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : CLevel { device, context }
@@ -14,6 +16,8 @@ CLevel_Loading::~CLevel_Loading()
 
 HRESULT CLevel_Loading::Initialize(LEVEL nextLevelID)
 {
+    _nextLevelID = nextLevelID;
+
     if (FAILED(Ready_Layer_Background(TEXT("Layer_Background"))))
         return E_FAIL;
 
@@ -31,9 +35,34 @@ HRESULT CLevel_Loading::Initialize(LEVEL nextLevelID)
 
 void CLevel_Loading::Update(float timeDelta)
 {
-    if (_loader && _loader->IsFinished())
+    if (_loader->IsFinished() && GetKeyState(VK_RETURN))
     {
+        shared_ptr<CLevel> nextLevel = { nullptr };
 
+        switch (_nextLevelID)
+        {
+        case LEVEL::LOGO:
+            nextLevel = CLevel_Logo::Create(_device, _context);
+            break;
+
+        case LEVEL::GAMEPLAY:
+            nextLevel = CLevel_Gameplay::Create(_device, _context);
+            break;
+        }
+
+        if (nextLevel == nullptr)
+        {
+            MSG_BOX("Failed to Created : NextLevel");
+            return;
+        }
+
+        if (FAILED(GAME->Change_Level(ETOI(_nextLevelID), nextLevel)))
+        {
+            MSG_BOX("Failed to Change : NextLevel");
+            return;
+        }
+
+        return;
     }
 }
 
@@ -44,6 +73,9 @@ void CLevel_Loading::LateUpdate(float timeDelta)
 
 HRESULT CLevel_Loading::Render()
 {
+    #ifdef _DEBUG
+    _loader->Print_LoadingText();
+    #endif
 
     return S_OK;
 }

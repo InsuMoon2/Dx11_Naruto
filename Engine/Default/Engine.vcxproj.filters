@@ -46,6 +46,7 @@
     <ClInclude Include="..\Public\CLevel_Manager.h">
       <Filter>01. Utility\01. Levels\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CPrototype_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -78,6 +79,9 @@
     <Filter Include="01. Utility\01. Levels\Manager">
       <UniqueIdentifier>{2460fd42-d888-4401-9e2f-960dbf041888}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\02. Prototype">
+      <UniqueIdentifier>{6204a2da-6a69-4c68-8cc7-361c0f264d58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\CBase.cpp">
@@ -104,5 +108,6 @@
     <ClCompile Include="..\Private\CLevel_Manager.cpp">
       <Filter>01. Utility\01. Levels\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CPrototype_Manager.cpp" />
   </ItemGroup>
 </Project>

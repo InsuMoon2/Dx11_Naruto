@@ -44,6 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -51,6 +52,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -120,6 +122,8 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Public/;../Default/</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -145,6 +149,8 @@ xcopy /y "$(SolutionDir)Engine\Public\*.*" "$(SolutionDir)EngineSDK\Include\"</C
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Public/</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -160,6 +166,7 @@ xcopy /y "$(SolutionDir)Engine\Public\*.*" "$(SolutionDir)EngineSDK\Include\"</C
     <ClInclude Include="..\Public\CGraphic_Device.h" />
     <ClInclude Include="..\Public\CLevel.h" />
     <ClInclude Include="..\Public\CLevel_Manager.h" />
+    <ClInclude Include="..\Public\CPrototype_Manager.h" />
     <ClInclude Include="..\Public\Engine_Define.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
     <ClInclude Include="..\Public\Engine_Function.h" />
@@ -177,6 +184,7 @@ xcopy /y "$(SolutionDir)Engine\Public\*.*" "$(SolutionDir)EngineSDK\Include\"</C
     <ClCompile Include="..\Private\CGraphic_Device.cpp" />
     <ClCompile Include="..\Private\CLevel.cpp" />
     <ClCompile Include="..\Private\CLevel_Manager.cpp" />
+    <ClCompile Include="..\Private\CPrototype_Manager.cpp" />
     <ClCompile Include="..\Private\CTimer.cpp" />
     <ClCompile Include="..\Private\CTimer_Manager.cpp" />
     <ClCompile Include="pch.cpp">

@@ -22,16 +22,18 @@ namespace Engine
     using wstring   = std::wstring;
     using string    = std::string;
 
-    // SimpleMath 벡터/행렬
-    using vec2      = DirectX::SimpleMath::Vector2;
-    using vec3      = DirectX::SimpleMath::Vector3;
-    using vec4      = DirectX::SimpleMath::Vector4;
-    using matrix    = DirectX::SimpleMath::Matrix;
+    using tchar     = wchar_t;
 
-    using quat      = DirectX::SimpleMath::Quaternion;
-    using color     = DirectX::SimpleMath::Color;
-    using ray       = DirectX::SimpleMath::Ray;
-    using plane     = DirectX::SimpleMath::Plane;
+    // SimpleMath 벡터/행렬
+    using Vec2      = DirectX::SimpleMath::Vector2;
+    using Vec3      = DirectX::SimpleMath::Vector3;
+    using Vec4      = DirectX::SimpleMath::Vector4;
+    using Matrix    = DirectX::SimpleMath::Matrix;
+
+    using Quat      = DirectX::SimpleMath::Quaternion;
+    using Color     = DirectX::SimpleMath::Color;
+    using Ray       = DirectX::SimpleMath::Ray;
+    using Plane     = DirectX::SimpleMath::Plane;
 
     // DirectX COM 객체 타입
     template<typename T>

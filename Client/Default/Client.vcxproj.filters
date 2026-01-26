@@ -28,6 +28,12 @@
     <ClInclude Include="..\Public\CLoader.h">
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CLevel_Logo.h">
+      <Filter>01. Levels\01. Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CLevel_Gameplay.h">
+      <Filter>01. Levels\02. GamePlay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -44,6 +50,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CLoader.cpp">
       <Filter>01. Levels\00. Loading\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CLevel_Logo.cpp">
+      <Filter>01. Levels\01. Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CLevel_Gameplay.cpp">
+      <Filter>01. Levels\02. GamePlay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

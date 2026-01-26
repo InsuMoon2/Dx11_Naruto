@@ -24,7 +24,7 @@ public:
 	void	Clear_Resources(uint32 levelIndex);
 
 public: /* Graphic Device */
-	HRESULT Clear_Buffers(const color& clearColor);
+	HRESULT Clear_Buffers(const Color& clearColor);
 	HRESULT Present();
 
 public: /* Timer Manager */

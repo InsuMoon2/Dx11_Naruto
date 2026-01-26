@@ -69,7 +69,7 @@ HRESULT CGraphic_Device::Initialize(HWND hWnd, WINMODE eWinMode, uint32 winSizeX
     return S_OK;
 }
 
-HRESULT CGraphic_Device::Clear_BackBufferView(const color& clearColor)
+HRESULT CGraphic_Device::Clear_BackBufferView(const Color& clearColor)
 {
     if (_context == nullptr)
         return E_FAIL;

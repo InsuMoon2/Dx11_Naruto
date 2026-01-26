@@ -15,7 +15,7 @@ public:
         uint32 winSizeX, uint32 winSizeY,
         ComPtr<Device>& deviceOut, ComPtr<DeviceContext>& contextOut);
 
-    HRESULT Clear_BackBufferView(const color& clearColor);
+    HRESULT Clear_BackBufferView(const Color& clearColor);
     HRESULT Clear_DepthStencil_View();
 
     /* 후면 버퍼를 전면버퍼로 교체한다.(백버퍼를 화면에 직접 보여준다.) */

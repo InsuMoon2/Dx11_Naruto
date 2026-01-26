@@ -20,7 +20,8 @@ private:
 	shared_ptr<CTimer>		Find_Timer(const wstring& timerTag);
 
 private:
-	unordered_map<wstring, shared_ptr<CTimer>>		_timers;
+    using TimerTypes = unordered_map<wstring, shared_ptr<CTimer>>;
+    TimerTypes _timers;
 
 public:
 	static unique_ptr<CTimer_Manager>	Create();

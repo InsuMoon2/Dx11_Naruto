@@ -15,8 +15,12 @@ public:
     HRESULT Initialize(LEVEL nextLevelID);
     HRESULT Loading();
 
-    bool    IsFinished() const { return _isFinished; }
+    bool    IsFinished()     const { return _isFinished; }
     LEVEL   GetNextLevelID() const { return _nextLevelID; }
+
+    #ifdef _DEBUG
+    HRESULT Print_LoadingText();
+    #endif
 
 private:
     HRESULT Loading_For_LogoLevel();
@@ -30,7 +34,8 @@ private:
     CRITICAL_SECTION        _criticalSection = {};
     LEVEL                   _nextLevelID = { LEVEL::END };
     bool                    _isFinished = { false };
-
+    tchar                   _loadingText[MAX_PATH] = {};
+        
 public:
     static shared_ptr<CLoader> Create(
         ComPtr<Device> device, ComPtr<DeviceContext> context, LEVEL nextLevelID);

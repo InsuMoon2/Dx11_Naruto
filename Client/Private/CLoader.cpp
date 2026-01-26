@@ -63,20 +63,83 @@ HRESULT CLoader::Loading()
     // 크리티컬 섹션 탈출
     LeaveCriticalSection(&_criticalSection);
 
-    _isFinished = true;
 
     return hr;
+}
+
+HRESULT CLoader::Print_LoadingText()
+{
+    SetWindowText(g_hWnd, _loadingText);
+
+    return S_OK;
 }
 
 HRESULT CLoader::Loading_For_LogoLevel()
 {
     // TODO : 로고 로딩
+    lstrcpy(_loadingText, TEXT("텍스쳐 로딩 중"));
+    for (int i = 0; i < 999999; i++)
+        int Data = 10;
+
+    lstrcpy(_loadingText, TEXT("셰이더 로딩 중"));
+    for (int i = 0; i < 99999; i++)
+        int Data = 10;
+
+    lstrcpy(_loadingText, TEXT("사운드 로딩 중"));
+    for (int i = 0; i < 99999; i++)
+        int Data = 10;
+
+    lstrcpy(_loadingText, TEXT("모델 로딩 중"));
+    for (int i = 0; i < 99999; i++)
+        int Data = 10;
+
+    lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
+    for (int i = 0; i < 99999; i++)
+        int Data = 10;
+
+    lstrcpy(_loadingText, TEXT("로딩 완료"));
+    for (int i = 0; i < 99999; i++)
+        int Data = 10;
+
+
+    lstrcpy(_loadingText, TEXT("로딩이 완료되었습니다."));
+
+    _isFinished = true;
+
     return S_OK;
 }
 
 HRESULT CLoader::Loading_For_GamePlay()
 {
     // TODO : 게임플레이 로딩
+    lstrcpy(_loadingText, TEXT("텍스쳐 로딩 중"));
+    for (int i = 0; i < 9999999; i++)
+        int Data = 10;
+
+    lstrcpy(_loadingText, TEXT("셰이더 로딩 중"));
+    for (int i = 0; i < 9999999; i++)
+        int Data = 10;
+
+    lstrcpy(_loadingText, TEXT("사운드 로딩 중"));
+    for (int i = 0; i < 9999999; i++)
+        int Data = 10;
+
+    lstrcpy(_loadingText, TEXT("모델 로딩 중"));
+    for (int i = 0; i < 9999999; i++)
+        int Data = 10;
+
+    lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
+    for (int i = 0; i < 9999999; i++)
+        int Data = 10;
+
+    lstrcpy(_loadingText, TEXT("로딩 완료"));
+    for (int i = 0; i < 9999999; i++)
+        int Data = 10;
+
+    lstrcpy(_loadingText, TEXT("로딩이 완료되었습니다."));
+
+    _isFinished = true;
+
     return S_OK;
 }
 
@@ -103,5 +166,4 @@ void CLoader::Free()
     DeleteCriticalSection(&_criticalSection);
 
     CBase::Free();
-
 }

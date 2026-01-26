@@ -57,7 +57,7 @@ void CGameInstance::Clear_Resources(uint32 levelIndex)
 {
 }
 
-HRESULT CGameInstance::Clear_Buffers(const color& clearColor)
+HRESULT CGameInstance::Clear_Buffers(const Color& clearColor)
 {
     if (FAILED(_graphicDevice->Clear_BackBufferView(clearColor)))
         return E_FAIL;

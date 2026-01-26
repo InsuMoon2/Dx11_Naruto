@@ -42,7 +42,7 @@ void CMainApp::LateUpdate(float timeDelta)
 
 HRESULT CMainApp::Render()
 {
-    color clearColor = { 0.f, 0.f, 1.f, 1.f };
+    Color clearColor = { 0.f, 0.f, 1.f, 1.f };
 
     if(FAILED(GAME->Clear_Buffers(clearColor)))
         return E_FAIL;
