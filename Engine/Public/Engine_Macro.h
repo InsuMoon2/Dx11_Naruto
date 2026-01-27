@@ -20,7 +20,7 @@ namespace Engine
 	#define ENGINE_DLL		_declspec(dllimport)
 	#endif
 
-    #define GAME CGameInstance::GetInstance()
+    #define GAME GameInstance::GetInstance()
     #define GET_SINGLE(classname) classname::GetInstance()
 
 	// ==================================================

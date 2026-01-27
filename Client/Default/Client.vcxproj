@@ -155,12 +155,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Public\CLevel_Gameplay.h" />
-    <ClInclude Include="..\Public\CLevel_Loading.h" />
-    <ClInclude Include="..\Public\CLevel_Logo.h" />
+    <ClInclude Include="..\Public\Background.h" />
+    <ClInclude Include="..\Public\Level_Gameplay.h" />
+    <ClInclude Include="..\Public\Level_Loading.h" />
+    <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
-    <ClInclude Include="..\Public\CLoader.h" />
-    <ClInclude Include="..\Public\CMainApp.h" />
+    <ClInclude Include="..\Public\Loader.h" />
+    <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -168,11 +169,12 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Private\CLevel_Gameplay.cpp" />
-    <ClCompile Include="..\Private\CLevel_Loading.cpp" />
-    <ClCompile Include="..\Private\CLevel_Logo.cpp" />
-    <ClCompile Include="..\Private\CLoader.cpp" />
-    <ClCompile Include="..\Private\CMainApp.cpp" />
+    <ClCompile Include="..\Private\Background.cpp" />
+    <ClCompile Include="..\Private\Level_Gameplay.cpp" />
+    <ClCompile Include="..\Private\Level_Loading.cpp" />
+    <ClCompile Include="..\Private\Level_Logo.cpp" />
+    <ClCompile Include="..\Private\Loader.cpp" />
+    <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

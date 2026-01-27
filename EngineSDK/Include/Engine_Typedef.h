@@ -24,6 +24,12 @@ namespace Engine
 
     using tchar     = wchar_t;
 
+    template<typename Key, typename Value>
+    using umap = std::unordered_map<Key, Value>;
+
+    template<typename T>
+    using uset = std::unordered_set<T>;
+
     // SimpleMath 벡터/행렬
     using Vec2      = DirectX::SimpleMath::Vector2;
     using Vec3      = DirectX::SimpleMath::Vector3;

@@ -22,31 +22,40 @@
     <ClInclude Include="..\Public\Engine_Struct.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CBase.h">
+    <ClInclude Include="..\Public\Base.h">
       <Filter>01. Utility\99. SuperClass</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CTimer.h">
+    <ClInclude Include="..\Public\Timer.h">
       <Filter>00. System\01. Timer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CTimer_Manager.h">
+    <ClInclude Include="..\Public\Timer_Manager.h">
       <Filter>00. System\01. Timer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CGraphic_Device.h">
+    <ClInclude Include="..\Public\Graphic_Device.h">
       <Filter>00. System\00. Device</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CGameInstance.h">
+    <ClInclude Include="..\Public\GameInstance.h">
       <Filter>01. Utility\00. GameInstance</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>98. Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CLevel.h">
+    <ClInclude Include="..\Public\Level.h">
       <Filter>01. Utility\01. Levels</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CLevel_Manager.h">
+    <ClInclude Include="..\Public\Level_Manager.h">
       <Filter>01. Utility\01. Levels\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CPrototype_Manager.h" />
+    <ClInclude Include="..\Public\Prototype_Manager.h">
+      <Filter>01. Utility\02. Prototype</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Component.h">
+      <Filter>01. Utility\04. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject.h">
+      <Filter>01. Utility\03. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Object_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -82,32 +91,47 @@
     <Filter Include="01. Utility\02. Prototype">
       <UniqueIdentifier>{6204a2da-6a69-4c68-8cc7-361c0f264d58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. GameObject">
+      <UniqueIdentifier>{9ea6e2b2-1992-4bef-9c4a-f666d4ca161c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component">
+      <UniqueIdentifier>{e3652022-a538-439c-aa39-ac764fbc9754}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Private\CBase.cpp">
+    <ClCompile Include="..\Private\Base.cpp">
       <Filter>01. Utility\99. SuperClass</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CTimer.cpp">
+    <ClCompile Include="..\Private\Timer.cpp">
       <Filter>00. System\01. Timer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CTimer_Manager.cpp">
+    <ClCompile Include="..\Private\Timer_Manager.cpp">
       <Filter>00. System\01. Timer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CGraphic_Device.cpp">
+    <ClCompile Include="..\Private\Graphic_Device.cpp">
       <Filter>00. System\00. Device</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CGameInstance.cpp">
+    <ClCompile Include="..\Private\GameInstance.cpp">
       <Filter>01. Utility\00. GameInstance</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CLevel.cpp">
+    <ClCompile Include="..\Private\Level.cpp">
       <Filter>01. Utility\01. Levels</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CLevel_Manager.cpp">
+    <ClCompile Include="..\Private\Level_Manager.cpp">
       <Filter>01. Utility\01. Levels\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CPrototype_Manager.cpp" />
+    <ClCompile Include="..\Private\Prototype_Manager.cpp">
+      <Filter>01. Utility\02. Prototype</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Component.cpp">
+      <Filter>01. Utility\04. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject.cpp">
+      <Filter>01. Utility\03. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Object_Manager.cpp" />
   </ItemGroup>
 </Project>

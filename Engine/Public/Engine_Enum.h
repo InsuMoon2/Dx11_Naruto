@@ -3,8 +3,9 @@
 
 namespace Engine
 {
-	enum class WINMODE { FULL, WIN };
+	enum class WinMode { Full, Win };
 
+    enum class ObjectType { GameObject, Component };
 	
 
 }

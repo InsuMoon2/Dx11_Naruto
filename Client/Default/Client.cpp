@@ -2,8 +2,8 @@
 #include "framework.h"
 #include "Client.h"
 
-#include "CMainApp.h"
-#include "CGameInstance.h"
+#include "MainApp.h"
+#include "GameInstance.h"
 
 #define MAX_LOADSTRING 100
 
@@ -28,7 +28,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: 여기에 코드를 입력합니다.
-    unique_ptr<CMainApp> mainApp = { nullptr };
+    unique_ptr<MainApp> mainApp = { nullptr };
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -45,7 +45,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
-    mainApp = CMainApp::Create();
+    mainApp = MainApp::Create();
     NULL_CHECK_RETURN(mainApp, FALSE);
 
     GAME->Add_Timer(L"Timer_Default");
@@ -73,7 +73,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (timeAcc >= 1.f / 60.f)
         {
             mainApp->Update(GAME->Compute_TimeDelta(L"Timer_60FPS"));
-            mainApp->LateUpdate(GAME->Compute_TimeDelta(L"Timer_60FPS"));
+            mainApp->Late_Update(GAME->Compute_TimeDelta(L"Timer_60FPS"));
             mainApp->Render();
 
             timeAcc = 0.f;

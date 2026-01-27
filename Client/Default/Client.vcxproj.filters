@@ -10,7 +10,7 @@
     <ClInclude Include="targetver.h">
       <Filter>98. Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CMainApp.h">
+    <ClInclude Include="..\Public\MainApp.h">
       <Filter>00. MainApp</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
@@ -22,41 +22,43 @@
     <ClInclude Include="..\Public\Client_Defines.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CLevel_Loading.h">
+    <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01. Levels\00. Loading</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CLoader.h">
+    <ClInclude Include="..\Public\Loader.h">
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CLevel_Logo.h">
+    <ClInclude Include="..\Public\Level_Logo.h">
       <Filter>01. Levels\01. Logo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CLevel_Gameplay.h">
+    <ClInclude Include="..\Public\Level_Gameplay.h">
       <Filter>01. Levels\02. GamePlay</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Background.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CMainApp.cpp">
+    <ClCompile Include="..\Private\MainApp.cpp">
       <Filter>00. MainApp</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CLevel_Loading.cpp">
+    <ClCompile Include="..\Private\Level_Loading.cpp">
       <Filter>01. Levels\00. Loading</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CLoader.cpp">
+    <ClCompile Include="..\Private\Loader.cpp">
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CLevel_Logo.cpp">
+    <ClCompile Include="..\Private\Level_Logo.cpp">
       <Filter>01. Levels\01. Logo</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CLevel_Gameplay.cpp">
+    <ClCompile Include="..\Private\Level_Gameplay.cpp">
       <Filter>01. Levels\02. GamePlay</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Background.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -82,6 +84,9 @@
     </Filter>
     <Filter Include="01. Levels\00. Loading\Loader">
       <UniqueIdentifier>{d57f9a79-cbfe-4f7c-88b6-26fcaae93bdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject">
+      <UniqueIdentifier>{51d814c6-ec28-40cd-8ba1-9221474af90f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -8,7 +8,9 @@ namespace Engine
 	typedef struct tagEngineDesc
     {
         HWND        hWnd;
-        WINMODE     winMode;
+        WinMode     winMode;
+
+        uint32      numLevels;
         uint32      viewportWidth;
         uint32      viewportHeight;
 

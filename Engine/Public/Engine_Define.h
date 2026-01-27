@@ -32,7 +32,7 @@ using namespace std;
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
 
-// WIN
+// Win
 #include <Windows.h>
 #include <assert.h>
 //#include <optional>
