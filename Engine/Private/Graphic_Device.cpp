@@ -74,10 +74,22 @@ HRESULT Graphic_Device::Clear_BackBufferView(const Color& clearColor)
     if (_context == nullptr)
         return E_FAIL;
 
+    ID3D11RenderTargetView* pRTVs[] = { _renderTarget.Get() };
+    _context->OMSetRenderTargets(1, pRTVs, _depthStencil.Get());
+
+    D3D11_VIEWPORT vp;
+    vp.TopLeftX = 0;
+    vp.TopLeftY = 0;
+    vp.Width = static_cast<float>(1600); // 멤버변수 저장 필요
+    vp.Height = static_cast<float>(900);
+    vp.MinDepth = 0.f;
+    vp.MaxDepth = 1.f;
+    _context->RSSetViewports(1, &vp);
+
     /* DX9기준 : Clear함수는 백버퍼, 깊이스텐실버퍼를 한꺼번에 지운다. */
     /* 백버퍼를 초기화한다. */
-    float colorArray[4] = { clearColor.x, clearColor.y, clearColor.z, clearColor.w };
-    _context->ClearRenderTargetView(_renderTarget.Get(), colorArray);
+    //float colorArray[4] = { clearColor.x, clearColor.y, clearColor.z, clearColor.w };
+    //_context->ClearRenderTargetView(_renderTarget.Get(), colorArray);
 
     return S_OK;
 }

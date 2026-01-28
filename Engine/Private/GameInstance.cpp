@@ -49,7 +49,7 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     return S_OK;
 }
 
-void GameInstance::Priority_Update(float timeDelta)
+void GameInstance::Priority_Update_Engine(float timeDelta)
 {
     _objectManager->Priority_Update(timeDelta);
 
@@ -62,7 +62,7 @@ void GameInstance::Update_Engine(float timeDelta)
 
 }
 
-void GameInstance::LateUpdate_Engine(float timeDelta)
+void GameInstance::Late_Update_Engine(float timeDelta)
 {
     _levelManager->Late_Update(timeDelta);
     _objectManager->Late_Update(timeDelta);

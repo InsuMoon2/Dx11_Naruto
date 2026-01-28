@@ -4,6 +4,8 @@
 
 NS_BEGIN(Engine)
 
+class GameObject;
+
 class ENGINE_DLL Component abstract : public Base
 {
 public:
@@ -15,9 +17,14 @@ public:
     HRESULT Initialize();
     HRESULT Initialize_Prototype();
 
-private:
-    ComPtr<Device>          _device = { nullptr };
+    shared_ptr<GameObject> Get_Owner() { return _owner.lock(); }
+
+protected:
+    ComPtr<Device>          _device  = { nullptr };
     ComPtr<DeviceContext>   _context = { nullptr };
+
+protected:
+    weak_ptr<GameObject>    _owner;
 
 public:
     virtual shared_ptr<Component> Clone(void* arg) abstract;

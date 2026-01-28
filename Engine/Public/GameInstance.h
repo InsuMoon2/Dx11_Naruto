@@ -29,9 +29,9 @@ public:
 public:
 	HRESULT Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>& deviceOut, ComPtr<DeviceContext>& contextOut);
 
-    void    Priority_Update(float timeDelta);
+    void    Priority_Update_Engine(float timeDelta);
 	void	Update_Engine(float timeDelta);
-	void	LateUpdate_Engine(float timeDelta);
+	void	Late_Update_Engine(float timeDelta);
 
 	HRESULT Draw();
 	void	Clear_Resources(uint32 levelIndex);

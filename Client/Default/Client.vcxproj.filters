@@ -13,9 +13,6 @@
     <ClInclude Include="..\Public\MainApp.h">
       <Filter>00. MainApp</Filter>
     </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>98. Default</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>98. Default</Filter>
     </ClInclude>
@@ -34,7 +31,9 @@
     <ClInclude Include="..\Public\Level_Gameplay.h">
       <Filter>01. Levels\02. GamePlay</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Background.h" />
+    <ClInclude Include="..\Public\Background.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -58,7 +57,9 @@
     <ClCompile Include="..\Private\Level_Gameplay.cpp">
       <Filter>01. Levels\02. GamePlay</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Background.cpp" />
+    <ClCompile Include="..\Private\Background.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

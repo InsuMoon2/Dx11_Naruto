@@ -1,5 +1,4 @@
 ﻿#include "pch.h"
-#include "framework.h"
 #include "Client.h"
 
 #include "MainApp.h"
@@ -127,13 +126,15 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   RECT rc = { 0, 0, static_cast<LONG>(g_winSizeX), static_cast<LONG>(g_winSizeY) };
 
-   if (!hWnd)
-   {
-      return FALSE;
-   }
+   AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+
+   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+       CW_USEDEFAULT, 0,
+       rc.right - rc.left,  // 계산된 가로 폭
+       rc.bottom - rc.top,  // 계산된 세로 높이
+       nullptr, nullptr, hInstance, nullptr);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -153,8 +154,13 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+        return true;
+
     switch (message)
     {
     case WM_COMMAND:
