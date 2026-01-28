@@ -3,16 +3,20 @@
 #include "Base.h"
 
 NS_BEGIN(Engine)
+/* Device */
 class Graphic_Device;
 
+/* Manager */
 class Timer_Manager;
 class Level_Manager;
 class Prototype_Manager;
+class Object_Manager;
 
-class Level;
-
+/* Base */
 class GameObject;
 class Component;
+
+class Level;
 
 class ENGINE_DLL GameInstance : public Base
 {
@@ -24,8 +28,11 @@ public:
 
 public:
 	HRESULT Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>& deviceOut, ComPtr<DeviceContext>& contextOut);
+
+    void    Priority_Update(float timeDelta);
 	void	Update_Engine(float timeDelta);
 	void	LateUpdate_Engine(float timeDelta);
+
 	HRESULT Draw();
 	void	Clear_Resources(uint32 levelIndex);
 
@@ -47,11 +54,18 @@ public: /* Prototype Manager */
     HRESULT Add_Component_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<Component> component);
     shared_ptr<Component> Clone_Component(uint32 levelIndex, const wstring& prototypeTag, void* arg = nullptr);
 
+public: /* Object Manager */
+    HRESULT Add_GameObject(
+        uint32 protoIndex, const wstring& protoTag,
+        uint32 layerIndex, const wstring& layerTag,
+        void* arg = nullptr);
+
 private:
 	unique_ptr<Graphic_Device>      _graphicDevice;
 	unique_ptr<Timer_Manager>	    _timerManager;
     unique_ptr<Level_Manager>       _levelManager;
     unique_ptr<Prototype_Manager>   _protoManager;
+    unique_ptr<Object_Manager>      _objectManager;
 
 public:
 	void Free() override;

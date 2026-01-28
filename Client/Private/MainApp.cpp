@@ -31,6 +31,11 @@ HRESULT MainApp::Initialize()
     return S_OK;
 }
 
+void MainApp::Priority_Update(float timeDelta)
+{
+    GAME->Priority_Update(timeDelta);
+}
+
 void MainApp::Update(float timeDelta)
 {
     GAME->Update_Engine(timeDelta);

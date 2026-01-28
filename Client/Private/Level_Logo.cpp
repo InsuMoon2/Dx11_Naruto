@@ -15,7 +15,8 @@ Level_Logo::~Level_Logo()
 
 HRESULT Level_Logo::Initialize()
 {
-
+    if (FAILED(Ready_Layer_Background(TEXT("Layer_Background"))))
+        return E_FAIL;
 
     return S_OK;
 }
@@ -42,6 +43,15 @@ HRESULT Level_Logo::Render()
     SetWindowText(g_hWnd, TEXT("현재 레벨 : Logo"));
     #endif
     
+
+    return S_OK;
+}
+
+HRESULT Level_Logo::Ready_Layer_Background(const wstring& layerTag)
+{
+    if (FAILED(GAME->Add_GameObject(ETOI(LevelType::Logo), TEXT("Prototype_Background"),
+        ETOI(LevelType::Logo), layerTag)))
+        return E_FAIL;
 
     return S_OK;
 }

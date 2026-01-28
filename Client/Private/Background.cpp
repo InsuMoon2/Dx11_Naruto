@@ -23,6 +23,7 @@ HRESULT Background::Initialize_Prototype()
 
 HRESULT Background::Initialize(void* arg)
 {
+    
 
     return S_OK;
 }

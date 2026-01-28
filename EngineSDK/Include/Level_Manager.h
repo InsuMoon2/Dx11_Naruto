@@ -14,6 +14,7 @@ public:
 
 public:
     HRESULT Change_Level(uint32 levelIndex, shared_ptr<Level> level);
+
     void    Update(float timeDelta);
     void    Late_Update(float timeDelta);
     HRESULT Render();

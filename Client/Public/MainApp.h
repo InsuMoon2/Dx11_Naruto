@@ -18,6 +18,7 @@ public:
 
 public:
     HRESULT Initialize();
+    void    Priority_Update(float timeDelta);
     void    Update(float timeDelta);
     void    Late_Update(float timeDelta);
     HRESULT Render();

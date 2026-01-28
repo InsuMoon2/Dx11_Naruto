@@ -52,12 +52,12 @@ namespace Engine
 	        private:													 \
 	        static std::shared_ptr<CLASSNAME> m_pInstance;				 \
 	        public:														 \
-	        static std::shared_ptr<CLASSNAME> GetInstance();			 \
+	        static std::shared_ptr<CLASSNAME>& GetInstance();			 \
 	        static void DestroyInstance();
 
 	#define IMPLEMENT_SINGLETON(CLASSNAME)								 \
 	        std::shared_ptr<CLASSNAME> CLASSNAME::m_pInstance = nullptr; \
-	        std::shared_ptr<CLASSNAME> CLASSNAME::GetInstance() {		 \
+	        std::shared_ptr<CLASSNAME>& CLASSNAME::GetInstance() {		 \
 	            if(m_pInstance == nullptr) {							 \
 	                m_pInstance = std::make_shared<CLASSNAME>();		 \
 	            }														 \

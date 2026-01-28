@@ -14,6 +14,7 @@ public:
 
 public:
     virtual HRESULT Initialize();
+    virtual void    Priority_Update(float timeDelta);
     virtual void    Update(float timeDelta);
     virtual void    Late_Update(float timeDelta);
     virtual HRESULT Render();

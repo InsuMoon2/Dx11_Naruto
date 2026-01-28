@@ -22,6 +22,11 @@ HRESULT Level::Initialize()
     return S_OK;
 }
 
+void Level::Priority_Update(float timeDelta)
+{
+
+}
+
 void Level::Update(float timeDelta)
 {
 

@@ -72,6 +72,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         if (timeAcc >= 1.f / 60.f)
         {
+            mainApp->Priority_Update(GAME->Compute_TimeDelta(L"Timer_60FPS"));
             mainApp->Update(GAME->Compute_TimeDelta(L"Timer_60FPS"));
             mainApp->Late_Update(GAME->Compute_TimeDelta(L"Timer_60FPS"));
             mainApp->Render();

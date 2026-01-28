@@ -6,6 +6,7 @@
 #include "Prototype_Manager.h"
 #include "Timer_Manager.h"
 #include "Prototype_Manager.h"
+#include "Object_Manager.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -40,19 +41,31 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _protoManager = Prototype_Manager::Create(desc.numLevels);
     NULL_CHECK_RETURN(_protoManager, E_FAIL);
+
+    _objectManager = Object_Manager::Create(desc.numLevels);
+    NULL_CHECK_RETURN(_objectManager, E_FAIL);
     
 
     return S_OK;
 }
 
+void GameInstance::Priority_Update(float timeDelta)
+{
+    _objectManager->Priority_Update(timeDelta);
+
+}
+
 void GameInstance::Update_Engine(float timeDelta)
 {
     _levelManager->Update(timeDelta);
+    _objectManager->Update(timeDelta);
+
 }
 
 void GameInstance::LateUpdate_Engine(float timeDelta)
 {
     _levelManager->Late_Update(timeDelta);
+    _objectManager->Late_Update(timeDelta);
 }
 
 HRESULT GameInstance::Draw()
@@ -124,6 +137,12 @@ HRESULT GameInstance::Add_Component_Prototype(uint32 levelIndex, const wstring& 
 shared_ptr<Component> GameInstance::Clone_Component(uint32 levelIndex, const wstring& prototypeTag, void* arg)
 {
     return _protoManager->Clone_Component(levelIndex, prototypeTag, arg);
+}
+
+HRESULT GameInstance::Add_GameObject(uint32 protoIndex, const wstring& protoTag, uint32 layerIndex,
+    const wstring& layerTag, void* arg)
+{
+    return _objectManager->Add_GameObject(protoIndex, protoTag, layerIndex, layerTag, arg);
 }
 
 void GameInstance::Free()

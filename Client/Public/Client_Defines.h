@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Windows.h>
+#include "GameInstance.h"
 
 extern HWND g_hWnd;
 extern HINSTANCE g_hInst;

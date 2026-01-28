@@ -23,6 +23,7 @@ public:
     virtual HRESULT Render() override;
 
 private:
+    HRESULT         Ready_Layer_Background(const wstring& layerTag);
 
 
 public:
