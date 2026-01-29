@@ -5,49 +5,65 @@ namespace Engine
 {
 #define ETOI(ENUM) static_cast<unsigned int>(ENUM)
 
-	#ifndef			MSG_BOX
-	#define			MSG_BOX(_message)			MessageBox(nullptr, TEXT(_message), L"System Message", MB_OK)
-	#endif
+#ifndef			MSG_BOX
+#define			MSG_BOX(_message)			MessageBox(nullptr, TEXT(_message), L"System Message", MB_OK)
+#endif
 
-	#define			NS_BEGIN(NAMESPACE)		namespace NAMESPACE {
-	#define			NS_END						}
-	
-	#define			USING(NAMESPACE)	    using namespace NAMESPACE;
-	
-	#ifdef	ENGINE_EXPORTS
-	#define ENGINE_DLL		_declspec(dllexport)
-	#else
-	#define ENGINE_DLL		_declspec(dllimport)
-	#endif
+#define			NS_BEGIN(NAMESPACE)		namespace NAMESPACE {
+#define			NS_END						}
 
-    #define GAME GameInstance::GetInstance()
-    #define GET_SINGLE(classname) classname::GetInstance()
+#define			USING(NAMESPACE)	    using namespace NAMESPACE;
 
-	// ==================================================
-	// NULL/FAILED 체크 매크로
-	// ==================================================
-	#define NULL_CHECK(_ptr) \
+#ifdef	ENGINE_EXPORTS
+#define ENGINE_DLL		_declspec(dllexport)
+#else
+#define ENGINE_DLL		_declspec(dllimport)
+#endif
+
+#define GET_SINGLE(classname) classname::GetInstance()
+
+#define GAME    GET_SINGLE(GameInstance)
+#define INPUT	GET_SINGLE(Input_Manager)
+
+// ==================================================
+// NULL/FAILED 체크 매크로
+// ==================================================
+#define NULL_CHECK(_ptr) \
 	        { if(_ptr == nullptr) { return; } }
 
-	#define NULL_CHECK_RETURN(_ptr, _return) \
+#define NULL_CHECK_RETURN(_ptr, _return) \
 	        { if(_ptr == nullptr) { return _return; } }
 
-	#define FAILED_CHECK(_hr) \
+#define FAILED_CHECK(_hr) \
 	        if(FAILED(_hr)) { MSG_BOX("Failed"); return E_FAIL; }
 
-	#define FAILED_CHECK_RETURN(_hr, _return) \
+#define FAILED_CHECK_RETURN(_hr, _return) \
 	        if(FAILED(_hr)) { MSG_BOX("Failed"); return _return; }
-	
-	
-	// ==================================================
-	// 싱글톤 매크로
-	// ==================================================
-	#define NO_COPY(CLASSNAME)											 \
+
+
+/* ------------------------------------------ */
+/*            weak_ptr Lock 매크로             */
+/* ------------------------------------------ */
+
+// weak_ptr가 가리키는 객체를 안전하게 참조(Reference Count 처리)하기 위해 
+// lock()을 통해 shared_ptr로 승격 후 사용
+#define LOCK_WP(weak_ptr, var_name, ...)                                            \
+        auto var_name = (weak_ptr).lock();                                          \
+        if (!var_name)                                                              \
+        {                                                                           \
+            LOG_ERROR(#weak_ptr " Lock Failed");                                    \
+            return __VA_ARGS__;                                                     \
+        }
+
+// ==================================================
+// 싱글톤 매크로
+// ==================================================
+#define NO_COPY(CLASSNAME)											     \
 	        private:													 \
 	        CLASSNAME(const CLASSNAME&) = delete;						 \
 	        CLASSNAME& operator=(const CLASSNAME&) = delete;			 
-																		 
-	#define DECLARE_SINGLETON(CLASSNAME)								 \
+
+#define DECLARE_SINGLETON(CLASSNAME)								     \
 	        NO_COPY(CLASSNAME)											 \
 	        private:													 \
 	        static std::shared_ptr<CLASSNAME> m_pInstance;				 \
@@ -55,7 +71,7 @@ namespace Engine
 	        static std::shared_ptr<CLASSNAME>& GetInstance();			 \
 	        static void DestroyInstance();
 
-	#define IMPLEMENT_SINGLETON(CLASSNAME)								 \
+#define IMPLEMENT_SINGLETON(CLASSNAME)								     \
 	        std::shared_ptr<CLASSNAME> CLASSNAME::m_pInstance = nullptr; \
 	        std::shared_ptr<CLASSNAME>& CLASSNAME::GetInstance() {		 \
 	            if(m_pInstance == nullptr) {							 \

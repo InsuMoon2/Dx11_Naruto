@@ -1,10 +1,10 @@
 ﻿#pragma once
 
 #include "Editor_Define.h"
+#include "Engine_Struct.h"
 
 NS_BEGIN(Editor)
-
-class ImGui_Manager;
+    class ImGui_Manager;
 class Editor_Manager;
 
 class EditorInstance
@@ -16,7 +16,7 @@ public:
     ~EditorInstance();
 
 public:
-    HRESULT Initialize_Editor(HWND hWnd, ComPtr<Device> device, ComPtr<DeviceContext> context);
+    HRESULT Initialize_Editor(const EDITOR_DESC& desc, ComPtr<Device> device, ComPtr<DeviceContext> context);
     void    Update_Editor(float timeDelta);
     void    Render_Editor();
     void    Release();
@@ -27,13 +27,17 @@ public:
     void    Stop();
     bool    IsPlaying() const { return _isPlaying && !_isPaused; }
 
+    HWND    Get_WindowHandle() const { return _desc.hWnd; }
+
 private: /* Manager */
     unique_ptr<ImGui_Manager>   _imguiManager;
     unique_ptr<Editor_Manager>  _editorManager;
 
 private:
-    bool _isPlaying = false;
+    bool _isPlaying = true;
     bool _isPaused = false;
+
+    EDITOR_DESC _desc = {};
 
 };
 

@@ -157,6 +157,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Background.h" />
+    <ClInclude Include="..\Public\IconsFontAwesome6.h" />
     <ClInclude Include="..\Public\Level_Gameplay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />

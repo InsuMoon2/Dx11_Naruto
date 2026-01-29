@@ -2,7 +2,7 @@
 #include "Inspector.h"
 
 Inspector::Inspector()
-    : EditorWindow(TEXT("Log"))
+    : EditorWindow(TEXT("Inspector"))
 {
 }
 
@@ -15,9 +15,9 @@ void Inspector::Initialize()
     EditorWindow::Initialize();
 }
 
-void Inspector::Update()
+void Inspector::Update(float timeDelta)
 {
-    EditorWindow::Update();
+    EditorWindow::Update(timeDelta);
 }
 
 void Inspector::OnGui()

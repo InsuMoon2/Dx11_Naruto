@@ -35,7 +35,7 @@ HRESULT Level_Loading::Initialize(LevelType nextLevelID)
 
 void Level_Loading::Update(float timeDelta)
 {
-    if (_loader->IsFinished() && GetKeyState(VK_RETURN))
+    //if (_loader->IsFinished() && GetKeyState(VK_RETURN))
     {
         shared_ptr<Level> nextLevel = { nullptr };
 

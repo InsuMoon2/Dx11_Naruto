@@ -16,9 +16,9 @@ void Content_Browser::Initialize()
 
 }
 
-void Content_Browser::Update()
+void Content_Browser::Update(float timeDelta)
 {
-    EditorWindow::Update();
+    EditorWindow::Update(timeDelta);
 
 }
 

@@ -48,7 +48,7 @@ namespace Engine
     using Device            = ID3D11Device;
     using DeviceContext     = ID3D11DeviceContext;
     using SwapChain         = IDXGISwapChain;
-    using RenderTarget      = ID3D11RenderTargetView;
+    using RenderTargetView  = ID3D11RenderTargetView;
     using DepthStencil      = ID3D11DepthStencilView;
     using Texture2D         = ID3D11Texture2D;
     using Buffer            = ID3D11Buffer;

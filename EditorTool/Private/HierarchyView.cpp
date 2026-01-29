@@ -15,9 +15,9 @@ void HierarchyView::Initialize()
     EditorWindow::Initialize();
 }
 
-void HierarchyView::Update()
+void HierarchyView::Update(float timeDelta)
 {
-    EditorWindow::Update();
+    EditorWindow::Update(timeDelta);
 }
 
 void HierarchyView::OnGui()

@@ -7,6 +7,7 @@
 #include "Timer_Manager.h"
 #include "Prototype_Manager.h"
 #include "Object_Manager.h"
+#include "Input_Manager.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -33,6 +34,8 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     NULL_CHECK_RETURN(_graphicDevice, E_FAIL);
 
+    INPUT->Init(desc.hWnd);
+
     _timerManager = Timer_Manager::Create();
     NULL_CHECK_RETURN(_timerManager, E_FAIL);
 
@@ -57,8 +60,10 @@ void GameInstance::Priority_Update_Engine(float timeDelta)
 
 void GameInstance::Update_Engine(float timeDelta)
 {
+    INPUT->Update(timeDelta);
     _levelManager->Update(timeDelta);
     _objectManager->Update(timeDelta);
+
 
 }
 
@@ -77,6 +82,36 @@ HRESULT GameInstance::Draw()
 
 void GameInstance::Clear_Resources(uint32 levelIndex)
 {
+}
+
+ComPtr<Device> GameInstance::Get_Device()
+{
+    return _graphicDevice->Get_Device();
+}
+
+ComPtr<DeviceContext> GameInstance::Get_Context()
+{
+    return _graphicDevice->Get_Context();
+}
+
+uint32 GameInstance::Get_ViewportWidth()
+{
+    return _graphicDevice->GetWidth();
+}
+
+uint32 GameInstance::Get_ViewportHeight()
+{
+    return _graphicDevice->GetHeight();
+}
+
+void GameInstance::BindBackBuffer()
+{
+    _graphicDevice->BindBackBuffer();
+}
+
+HRESULT GameInstance::Resize_BackBuffer(uint32 width, uint32 height)
+{
+    return _graphicDevice->Resize(width, height);
 }
 
 HRESULT GameInstance::Clear_Buffers(const Color& clearColor)
@@ -149,6 +184,9 @@ void GameInstance::Free()
 {
     Base::Free();
 
-    _timerManager.reset();
-    _graphicDevice.reset();
+    _objectManager.reset(); 
+    _levelManager.reset();  
+    _protoManager.reset();  
+    _timerManager.reset();  
+    _graphicDevice.reset(); 
 }

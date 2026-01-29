@@ -15,6 +15,16 @@ namespace Engine
         uint32      viewportHeight;
 
     } ENGINE_DESC;
+
+    typedef struct tagEditorDesc
+    {
+        HWND        hWnd;
+        WinMode     winMode;
+
+        uint32      viewportWidth;
+        uint32      viewportHeight;
+
+    } EDITOR_DESC;
 }
 
 

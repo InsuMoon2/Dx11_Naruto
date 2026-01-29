@@ -3,6 +3,7 @@
 NS_BEGIN(Editor)
 
 class EditorWindow;
+class SceneView;
 
 class Editor_Manager
 {
@@ -16,6 +17,9 @@ public:
     void    Render();
 
     void    AddWindow(const wstring& key, shared_ptr<EditorWindow> window);
+
+public:
+    shared_ptr<EditorWindow> Get_Window(const wstring& key);
 
 private:
     void    BeginDockSpace();

@@ -9,9 +9,9 @@ public:
     virtual ~EditorWindow() = default;
 
 public:
-    virtual void    Initialize()    { }
-    virtual void    Update()        { }
-    virtual void    OnGui()         = 0;
+    virtual void    Initialize() { }
+    virtual void    Update(float timeDelta) { }
+    virtual void    OnGui() = 0;
 
 public:
     const wstring&  Get_Name() const { return _name; }

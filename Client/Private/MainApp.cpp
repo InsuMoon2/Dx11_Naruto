@@ -15,18 +15,30 @@ MainApp::~MainApp()
 
 HRESULT MainApp::Initialize()
 {
-    ENGINE_DESC engineDesc = {};
-    engineDesc.hWnd = g_hWnd;           
-    engineDesc.winMode = WinMode::Win;
-    engineDesc.viewportWidth = g_winSizeX;  
-    engineDesc.viewportHeight = g_winSizeY;
-    engineDesc.numLevels = ETOI(LevelType::END);
+    // Engine Setting
+    {
+        ENGINE_DESC engineDesc = {};
+        engineDesc.hWnd = g_hWnd;
+        engineDesc.winMode = WinMode::Win;
+        engineDesc.viewportWidth = g_winSizeX;
+        engineDesc.viewportHeight = g_winSizeY;
+        engineDesc.numLevels = ETOI(LevelType::END);
 
-    if (FAILED(GAME->Initialize_Engine(engineDesc, _device, _context)))
-        return E_FAIL;
+        if (FAILED(GAME->Initialize_Engine(engineDesc, _device, _context)))
+            return E_FAIL;
+    }
 
-    if (FAILED(EDITOR->Initialize_Editor(g_hWnd, _device, _context)))
-        return E_FAIL;
+    // Editor Setting
+    {
+        EDITOR_DESC editorDesc;
+        editorDesc.hWnd = g_hWnd;
+        editorDesc.winMode = WinMode::Win;
+        editorDesc.viewportWidth = g_winSizeX;
+        editorDesc.viewportHeight = g_winSizeY;
+
+        if (FAILED(EDITOR->Initialize_Editor(editorDesc, _device, _context)))
+            return E_FAIL;
+    }
 
     if (FAILED(Ready_StartLevel(LevelType::Logo)))
         return E_FAIL;
@@ -69,8 +81,8 @@ HRESULT MainApp::Render()
     if(FAILED(GAME->Clear_Buffers(clearColor)))
         return E_FAIL;
 
-    if (FAILED(GAME->Draw()))
-        return E_FAIL;
+    //if (FAILED(GAME->Draw()))
+    //    return E_FAIL; -> Editor로 이동
 
     EDITOR->Render_Editor();
 
@@ -108,5 +120,9 @@ unique_ptr<MainApp> MainApp::Create()
 void MainApp::Free()
 {
     Base::Free();
+
+    EditorInstance::DestroyInstance();
+    GameInstance::DestroyInstance();
+
 
 }

@@ -100,8 +100,7 @@ HRESULT Loader::Loading_For_LogoLevel()
         return E_FAIL;
     }
 
-
-    lstrcpy(_loadingText, TEXT("로딩 완료"));
+    lstrcpy(_loadingText, TEXT("Logo 로딩 완료"));
 
 
     _isFinished = true;
@@ -128,7 +127,7 @@ HRESULT Loader::Loading_For_GamePlay()
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
 
 
-    lstrcpy(_loadingText, TEXT("로딩 완료"));
+    lstrcpy(_loadingText, TEXT("GamePlay 로딩 완료"));
 
 
 

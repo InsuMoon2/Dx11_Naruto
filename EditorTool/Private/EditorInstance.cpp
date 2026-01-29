@@ -10,9 +10,11 @@ EditorInstance::~EditorInstance()
     Release();
 }
 
-HRESULT EditorInstance::Initialize_Editor(HWND hWnd, ComPtr<Device> device, ComPtr<DeviceContext> context)
+HRESULT EditorInstance::Initialize_Editor(const EDITOR_DESC& desc, ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
-    _imguiManager = ImGui_Manager::Create(hWnd, device, context);
+    _desc = desc;
+
+    _imguiManager = ImGui_Manager::Create(desc.hWnd, device, context);
     NULL_CHECK_RETURN(_imguiManager, E_FAIL);
 
     _editorManager = Editor_Manager::Create();
@@ -30,8 +32,8 @@ void EditorInstance::Update_Editor(float timeDelta)
 
 void EditorInstance::Render_Editor()
 {
-    _imguiManager->Render();
     _editorManager->Render();
+    _imguiManager->Render();
 }
 
 void EditorInstance::Release()

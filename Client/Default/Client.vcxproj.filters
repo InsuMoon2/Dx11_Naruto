@@ -34,6 +34,9 @@
     <ClInclude Include="..\Public\Background.h">
       <Filter>02. GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\IconsFontAwesome6.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">

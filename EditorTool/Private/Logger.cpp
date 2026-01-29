@@ -2,7 +2,7 @@
 #include "Logger.h"
 
 Logger::Logger()
-    : EditorWindow(TEXT("Log"))
+    : EditorWindow(TEXT("Console"))
 {
 }
 
@@ -15,9 +15,9 @@ void Logger::Initialize()
     EditorWindow::Initialize();
 }
 
-void Logger::Update()
+void Logger::Update(float timeDelta)
 {
-    EditorWindow::Update();
+    EditorWindow::Update(timeDelta);
 }
 
 void Logger::OnGui()

@@ -16,6 +16,9 @@ HRESULT Graphic_Device::Initialize(HWND hWnd, WinMode eWinMode, uint32 winSizeX,
 {
     uint32 flag = 0;
 
+    _width  = winSizeX;
+    _height = winSizeY;
+
 #ifdef _DEBUG
     //flag = D3D11_CREATE_DEVICE_DEBUG;
     flag = 0;
@@ -80,7 +83,7 @@ HRESULT Graphic_Device::Clear_BackBufferView(const Color& clearColor)
     D3D11_VIEWPORT vp;
     vp.TopLeftX = 0;
     vp.TopLeftY = 0;
-    vp.Width = static_cast<float>(1600); // 멤버변수 저장 필요
+    vp.Width = static_cast<float>(1600); // 이거 지금 클라에있는데.. 엔진으로 옮길지?
     vp.Height = static_cast<float>(900);
     vp.MinDepth = 0.f;
     vp.MaxDepth = 1.f;
@@ -113,6 +116,50 @@ HRESULT Graphic_Device::Present()
     /* 전면 버퍼와 후면 버퍼를 교체하여 후면 버퍼를 전면으로 보여주는 역할을 한다. */
     /* 후면 버퍼를 직접 화면에 보여줄게. */
     return _swapChain->Present(0, 0);
+}
+
+void Graphic_Device::BindBackBuffer()
+{
+    // RenderTarget을 백버퍼로 다시 설정
+    ID3D11RenderTargetView* pRTVs[] = { _renderTarget.Get() };
+    _context->OMSetRenderTargets(1, pRTVs, _depthStencil.Get());
+
+    // Viewport 복원
+    D3D11_VIEWPORT vp = {};
+    vp.TopLeftX = 0.f;
+    vp.TopLeftY = 0.f;
+    vp.Width = static_cast<float>(_width);
+    vp.Height = static_cast<float>(_height);
+    vp.MinDepth = 0.f;
+    vp.MaxDepth = 1.f;
+
+    _context->RSSetViewports(1, &vp);
+}
+
+HRESULT Graphic_Device::Resize(uint32 width, uint32 height)
+{
+
+    _width = width;
+    _height = height;
+
+    if (_swapChain == nullptr) return E_FAIL;
+    _context->OMSetRenderTargets(0, 0, 0);
+
+    // 1. 기존 View 해제
+    _renderTarget.Reset();
+    _depthStencil.Reset();
+
+    // 2. 버퍼 크기 변경
+    if (FAILED(_swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0)))
+        return E_FAIL;
+
+    // 3. View 재생성
+    if (FAILED(Ready_BackBuffer_RenderTargetView()))
+        return E_FAIL;
+    if (FAILED(Ready_DepthStencilView(width, height)))
+        return E_FAIL;
+
+    return S_OK;
 }
 
 HRESULT Graphic_Device::Ready_SwapChain(HWND hWnd, WinMode eWinMode, uint32 winSizeX, uint32 winSizeY)

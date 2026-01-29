@@ -10,7 +10,7 @@ public:
 
 public:
     void Initialize() override;
-    void Update() override;
+    void Update(float timeDelta) override;
     void OnGui() override;
 
 public:
