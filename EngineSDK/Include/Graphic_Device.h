@@ -11,7 +11,7 @@ public:
     virtual ~Graphic_Device();
 
 public:
-    HRESULT Initialize(HWND hWnd, WinMode eWinMode,
+    HRESULT Initialize(HWND hWnd, EWinMode eWinMode,
         uint32 winSizeX, uint32 winSizeY,
         ComPtr<Device>& deviceOut, ComPtr<DeviceContext>& contextOut);
 
@@ -32,7 +32,7 @@ public:
     HRESULT Resize(uint32 width, uint32 height);
 
 private:
-    HRESULT Ready_SwapChain(HWND hWnd, WinMode eWinMode, uint32 winSizeX, uint32 winSizeY);
+    HRESULT Ready_SwapChain(HWND hWnd, EWinMode eWinMode, uint32 winSizeX, uint32 winSizeY);
     HRESULT Ready_BackBuffer_RenderTargetView();
     HRESULT Ready_DepthStencilView(uint32 winSizeX, uint32 winSizeY);
 
@@ -47,7 +47,7 @@ private:
     uint32                      _height = {};
 
 public:
-    static unique_ptr<Graphic_Device> Create(HWND hWnd, WinMode eWinMode,
+    static unique_ptr<Graphic_Device> Create(HWND hWnd, EWinMode eWinMode,
         uint32 winSizeX, uint32 winSizeY,
         ComPtr<Device>& deviceOut, ComPtr<DeviceContext>& contextOut);
 

@@ -4,7 +4,7 @@
 #include "Engine_Struct.h"
 
 NS_BEGIN(Editor)
-    class ImGui_Manager;
+class ImGui_Manager;
 class Editor_Manager;
 
 class EditorInstance

@@ -11,7 +11,7 @@ Graphic_Device::~Graphic_Device()
 
 }
 
-HRESULT Graphic_Device::Initialize(HWND hWnd, WinMode eWinMode, uint32 winSizeX, uint32 winSizeY,
+HRESULT Graphic_Device::Initialize(HWND hWnd, EWinMode eWinMode, uint32 winSizeX, uint32 winSizeY,
                                     ComPtr<Device>& deviceOut, ComPtr<DeviceContext>& contextOut)
 {
     uint32 flag = 0;
@@ -162,7 +162,7 @@ HRESULT Graphic_Device::Resize(uint32 width, uint32 height)
     return S_OK;
 }
 
-HRESULT Graphic_Device::Ready_SwapChain(HWND hWnd, WinMode eWinMode, uint32 winSizeX, uint32 winSizeY)
+HRESULT Graphic_Device::Ready_SwapChain(HWND hWnd, EWinMode eWinMode, uint32 winSizeX, uint32 winSizeY)
 {
     ComPtr<IDXGIDevice> pDXGIDevice;
     _device.As(&pDXGIDevice);
@@ -199,7 +199,7 @@ HRESULT Graphic_Device::Ready_SwapChain(HWND hWnd, WinMode eWinMode, uint32 winS
     SwapChainDesc.SampleDesc.Count = 1;
 
     SwapChainDesc.OutputWindow = hWnd;
-    SwapChainDesc.Windowed = (eWinMode == WinMode::Win);
+    SwapChainDesc.Windowed = (eWinMode == EWinMode::Win);
     SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
     /* 백버퍼라는 텍스처(ID3D11Texture2D)를 생성했다. */
@@ -257,7 +257,7 @@ HRESULT Graphic_Device::Ready_DepthStencilView(uint32 winSizeX, uint32 winSizeY)
     return S_OK;
 }
 
-unique_ptr<Graphic_Device> Graphic_Device::Create(HWND hWnd, WinMode eWinMode, uint32 winSizeX, uint32 winSizeY,
+unique_ptr<Graphic_Device> Graphic_Device::Create(HWND hWnd, EWinMode eWinMode, uint32 winSizeX, uint32 winSizeY,
     ComPtr<Device>& deviceOut, ComPtr<DeviceContext>& contextOut)
 {
     auto instance = make_unique<Graphic_Device>();

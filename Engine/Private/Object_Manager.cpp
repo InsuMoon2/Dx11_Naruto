@@ -57,7 +57,7 @@ void Object_Manager::Late_Update(float timeDelta)
 }
 
 HRESULT Object_Manager::Add_GameObject(uint32 protoLevelIndex, const wstring& protoTag, uint32 layerLevelIndex,
-    const wstring& layerTag, void* arg)
+    const wstring& layerTag, any arg)
 {
     if (layerLevelIndex >= _numLevels)
         return E_FAIL;

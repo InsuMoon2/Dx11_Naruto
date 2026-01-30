@@ -21,7 +21,7 @@ public:
     HRESULT Add_GameObject(
             uint32 protoLevelIndex, const wstring& protoTag,
             uint32 layerLevelIndex, const wstring& layerTag,
-            void* arg);
+            any arg);
 
 private:
     shared_ptr<Layer> Find_Layer(uint32 levelIndex, const wstring& layerTag);

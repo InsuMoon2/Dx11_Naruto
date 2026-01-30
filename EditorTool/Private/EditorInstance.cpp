@@ -43,12 +43,17 @@ void EditorInstance::Release()
 
 void EditorInstance::Play()
 {
+    _isPlaying = true;
+    _isPaused = false;
 }
 
 void EditorInstance::Pause()
 {
+    _isPaused = !_isPaused;
 }
 
 void EditorInstance::Stop()
 {
+    _isPlaying = false;
+    _isPaused = false;
 }

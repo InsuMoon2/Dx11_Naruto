@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "Background.h"
+#include "GameInstance.h"
 
 Background::Background(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject { device, context }
@@ -17,13 +18,14 @@ Background::~Background()
 
 HRESULT Background::Initialize_Prototype()
 {
+    
 
     return S_OK;
 }
 
-HRESULT Background::Initialize(void* arg)
+HRESULT Background::Initialize(any arg)
 {
-    
+    GameObject::Initialize(arg);
 
     return S_OK;
 }
@@ -41,6 +43,8 @@ void Background::Update(float timeDelta)
 void Background::Late_Update(float timeDelta)
 {
     GameObject::Late_Update(timeDelta);
+
+    GAME->Add_RenderGroup(ERenderGroup::UI, GetSharedPtr());
 }
 
 shared_ptr<GameObject> Background::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -57,7 +61,7 @@ shared_ptr<GameObject> Background::Create(ComPtr<Device> device, ComPtr<DeviceCo
     return instance;
 }
 
-shared_ptr<GameObject> Background::Clone(void* arg)
+shared_ptr<GameObject> Background::Clone(any arg)
 {
     auto instance = make_shared<Background>(*this);
 

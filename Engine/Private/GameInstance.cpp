@@ -11,6 +11,7 @@
 
 #include "GameObject.h"
 #include "Component.h"
+#include "Renderer.h"
 
 IMPLEMENT_SINGLETON(GameInstance)
 
@@ -48,6 +49,8 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     _objectManager = Object_Manager::Create(desc.numLevels);
     NULL_CHECK_RETURN(_objectManager, E_FAIL);
     
+    _renderer = Renderer::Create(Get_Device(), Get_Context());
+    NULL_CHECK_RETURN(_renderer, E_FAIL);
 
     return S_OK;
 }
@@ -159,7 +162,7 @@ HRESULT GameInstance::Add_GameObject_Prototype(uint32 levelIndex, const wstring&
     return _protoManager->Add_GameObject_Prototype(levelIndex, prototypeTag, gameObject);
 }
 
-shared_ptr<GameObject> GameInstance::Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, void* arg)
+shared_ptr<GameObject> GameInstance::Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, any arg)
 {
     return _protoManager->Clone_GameObject(levelIndex, prototypeTag, arg);
 }
@@ -169,15 +172,20 @@ HRESULT GameInstance::Add_Component_Prototype(uint32 levelIndex, const wstring& 
     return _protoManager->Add_Component_Prototype(levelIndex, prototypeTag, component);
 }
 
-shared_ptr<Component> GameInstance::Clone_Component(uint32 levelIndex, const wstring& prototypeTag, void* arg)
+shared_ptr<Component> GameInstance::Clone_Component(uint32 levelIndex, const wstring& prototypeTag, any arg)
 {
     return _protoManager->Clone_Component(levelIndex, prototypeTag, arg);
 }
 
 HRESULT GameInstance::Add_GameObject(uint32 protoIndex, const wstring& protoTag, uint32 layerIndex,
-    const wstring& layerTag, void* arg)
+    const wstring& layerTag, any arg)
 {
     return _objectManager->Add_GameObject(protoIndex, protoTag, layerIndex, layerTag, arg);
+}
+
+void GameInstance::Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject)
+{
+    return _renderer->Add_RenderGroup(renderType, gameObject);
 }
 
 void GameInstance::Free()

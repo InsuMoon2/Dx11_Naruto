@@ -12,6 +12,8 @@ class Level_Manager;
 class Prototype_Manager;
 class Object_Manager;
 
+class Renderer;
+
 /* Base */
 class GameObject;
 class Component;
@@ -58,16 +60,20 @@ public: /* LevelType Manager */
 
 public: /* Prototype Manager */
     HRESULT                 Add_GameObject_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<GameObject> gameObject);
-    shared_ptr<GameObject>  Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, void* arg = nullptr);
+    shared_ptr<GameObject>  Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, any arg = {});
 
     HRESULT                 Add_Component_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<Component> component);
-    shared_ptr<Component>   Clone_Component(uint32 levelIndex, const wstring& prototypeTag, void* arg = nullptr);
+    shared_ptr<Component>   Clone_Component(uint32 levelIndex, const wstring& prototypeTag, any arg = {});
 
 public: /* Object Manager */
     HRESULT                 Add_GameObject(
                                 uint32 protoIndex, const wstring& protoTag,
                                 uint32 layerIndex, const wstring& layerTag,
-                                void* arg = nullptr);
+                                any arg = {});
+
+public: /* Renderer */
+    void                    Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject);
+
 
 private:
 	unique_ptr<Graphic_Device>      _graphicDevice;
@@ -75,6 +81,7 @@ private:
     unique_ptr<Level_Manager>       _levelManager;
     unique_ptr<Prototype_Manager>   _protoManager;
     unique_ptr<Object_Manager>      _objectManager;
+    unique_ptr<Renderer>            _renderer;
 
 public:
 	void Free() override;

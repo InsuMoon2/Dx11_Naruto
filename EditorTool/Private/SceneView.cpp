@@ -37,46 +37,73 @@ void SceneView::Update(float timeDelta)
 
 void SceneView::OnGui()
 {
-    ImGuiWindowFlags flags = ImGuiWindowFlags_None;
+    PrePare_Window();
 
-    if (_shouldRestoreWindow && _savedDockId != 0)
+    ImGuiWindowFlags flags = Get_WindowFlags();
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    ImGui::Begin("Scene", nullptr, flags);
     {
-        ImGui::SetNextWindowDockID(_savedDockId, ImGuiCond_Always);
-        _shouldRestoreWindow = false;
+        Update_WindowState();
+
+        Render_Viewport();
     }
+    ImGui::End();
+    ImGui::PopStyleVar();
+}
+
+ImGuiWindowFlags SceneView::Get_WindowFlags() const
+{
+    ImGuiWindowFlags flags = ImGuiWindowFlags_None;
 
     if (_isFullScreen)
     {
         flags |= ImGuiWindowFlags_NoDecoration;
         flags |= ImGuiWindowFlags_NoMove;
         flags |= ImGuiWindowFlags_NoResize;
+    }
 
+    return flags;
+}
+
+void SceneView::PrePare_Window()
+{
+    // DockID 복원
+    if (_shouldRestoreWindow && _savedDockId != 0)
+    {
+        ImGui::SetNextWindowDockID(_savedDockId, ImGuiCond_Always);
+        _shouldRestoreWindow = false;
+    }
+
+    // 전체화면 크기 설정
+    if (_isFullScreen)
+    {
         ImGui::SetNextWindowPos(ImVec2(0, 0));
         ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
     }
+}
 
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    ImGui::Begin("Scene", nullptr, flags);
+void SceneView::Render_Viewport()
+{
+    ImVec2 panelSize = ImGui::GetContentRegionAvail();
+    _viewportSize = Vec2(panelSize.x, panelSize.y);
+
+    if (_renderTarget && panelSize.x > 0 && panelSize.y > 0)
     {
-        if (!_isFullScreen)
-            _savedDockId = ImGui::GetWindowDockID();
+        _renderTarget->Resize(static_cast<uint32>(panelSize.x),
+            static_cast<uint32>(panelSize.y));
 
-        _isFocused = ImGui::IsWindowFocused();
-        _isHovered = ImGui::IsWindowHovered();
-
-        // 뷰포트 크기 계산
-        ImVec2 panelSize = ImGui::GetContentRegionAvail();
-        _viewportSize = Vec2(panelSize.x, panelSize.y);
-
-        if (_renderTarget && panelSize.x > 0 && panelSize.y > 0)
-        {
-            _renderTarget->Resize(static_cast<uint32>(panelSize.x), static_cast<uint32>(panelSize.y));
-
-            ImGui::Image(_renderTarget->GetSRV(), panelSize);
-        }
+        ImGui::Image(_renderTarget->GetSRV(), panelSize);
     }
-    ImGui::End();
-    ImGui::PopStyleVar();
+}
+
+void SceneView::Update_WindowState()
+{
+    if (!_isFullScreen)
+        _savedDockId = ImGui::GetWindowDockID();
+
+    _isFocused = ImGui::IsWindowFocused();
+    _isHovered = ImGui::IsWindowHovered();
 }
 
 void SceneView::ToggleFullScreen()
@@ -118,6 +145,7 @@ void SceneView::ToggleFullScreen()
         _shouldRestoreWindow = true; 
     }
 }
+
 
 shared_ptr<SceneView> SceneView::Create()
 {

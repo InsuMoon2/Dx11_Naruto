@@ -19,7 +19,7 @@ HRESULT MainApp::Initialize()
     {
         ENGINE_DESC engineDesc = {};
         engineDesc.hWnd = g_hWnd;
-        engineDesc.winMode = WinMode::Win;
+        engineDesc.winMode = EWinMode::Win;
         engineDesc.viewportWidth = g_winSizeX;
         engineDesc.viewportHeight = g_winSizeY;
         engineDesc.numLevels = ETOI(LevelType::END);
@@ -32,7 +32,7 @@ HRESULT MainApp::Initialize()
     {
         EDITOR_DESC editorDesc;
         editorDesc.hWnd = g_hWnd;
-        editorDesc.winMode = WinMode::Win;
+        editorDesc.winMode = EWinMode::Win;
         editorDesc.viewportWidth = g_winSizeX;
         editorDesc.viewportHeight = g_winSizeY;
 

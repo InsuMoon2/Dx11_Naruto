@@ -15,8 +15,17 @@ GameObject::~GameObject()
 {
 }
 
-HRESULT GameObject::Initialize(void* arg)
+HRESULT GameObject::Initialize(any arg)
 {
+    if (!arg.has_value())
+        return S_OK;
+
+    auto desc = any_cast<FGameObjectDesc>(arg);
+
+    _transformCom = Transform::Create(_device, _context);
+
+    if (FAILED(_transformCom->Initialize(desc)))
+        return E_FAIL;
 
     return S_OK;
 }
@@ -38,6 +47,11 @@ void GameObject::Update(float timeDelta)
 }
 
 void GameObject::Late_Update(float timeDelta)
+{
+
+}
+
+void GameObject::Render()
 {
 
 }

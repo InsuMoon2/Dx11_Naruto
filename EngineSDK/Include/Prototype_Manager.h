@@ -17,10 +17,10 @@ public:
     HRESULT                     Initialize(uint32 numLevels);
 
     HRESULT                     Add_GameObject_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<GameObject> prototype);
-    shared_ptr<GameObject>      Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, void* arg);
+    shared_ptr<GameObject>      Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, any arg);
 
     HRESULT                     Add_Component_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<Component> prototype);
-    shared_ptr<Component>       Clone_Component(uint32 levelIndex, const wstring& prototypeTag, void* arg);
+    shared_ptr<Component>       Clone_Component(uint32 levelIndex, const wstring& prototypeTag, any arg);
     
     HRESULT                     Clear_Prototype(uint32 levelIndex);
 

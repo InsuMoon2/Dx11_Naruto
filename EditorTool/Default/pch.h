@@ -5,4 +5,4 @@
 #include "Engine_Define.h"
 #include "Editor_Define.h"
 
-//#include "IconsFontAwesome6.h"
+#include "IconsFontAwesome6.h"

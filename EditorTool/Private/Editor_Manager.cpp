@@ -101,13 +101,43 @@ void Editor_Manager::BeginDockSpace()
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 4.f);
 
         float windowWidth = ImGui::GetWindowWidth();
-        ImGui::SetCursorPosX((windowWidth / 2.f) - 40.f); // 중앙 정렬
+        ImGui::SetCursorPosX((windowWidth / 2.f) - 150.f); // 중앙 정렬
 
-        if (ImGui::Button(">")) EDITOR->Play();
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 4));
+
+        if (!EDITOR->IsPlaying())
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+
+            if (ImGui::Button(ICON_FA_PLAY "##Play"))
+                EDITOR->Play();
+
+            ImGui::PopStyleColor();
+        }
+        else
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.7f, 0.2f, 0.2f, 1.0f));
+
+            if (ImGui::Button(ICON_FA_STOP "##Stop"))
+                EDITOR->Stop();
+
+            ImGui::PopStyleColor();
+        }
+
         ImGui::SameLine();
-        if (ImGui::Button("||")) EDITOR->Pause();
+
+        // Pause
+        if (ImGui::Button(ICON_FA_PAUSE "##Pause"))
+            EDITOR->Pause();
+
         ImGui::SameLine();
-        if (ImGui::Button("X")) EDITOR->Stop();
+
+        // Next Frame
+        if (ImGui::Button(ICON_FA_FORWARD_STEP "##NextFrame"))
+        {
+            // TODO: 한 프레임만 진행
+        }
+        ImGui::PopStyleVar();
      
         ImGui::SetCursorPosY(toolbarHeight);
     }

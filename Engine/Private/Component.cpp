@@ -15,7 +15,7 @@ Component::~Component()
 {
 }
 
-HRESULT Component::Initialize()
+HRESULT Component::Initialize(any arg)
 {
 
     return S_OK;

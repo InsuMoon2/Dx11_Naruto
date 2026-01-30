@@ -3,10 +3,11 @@
 
 namespace Engine
 {
-	enum class WinMode { Full, Win };
+	enum class EWinMode { Full, Win };
 
-    enum class ObjectType { GameObject, Component };
-	
+    enum class EObjectType { GameObject, Component };
+
+    enum class ERenderGroup { Priority, NonBlend, Blend, UI, END };
 
 }
 #endif // Engine_Enum_h__

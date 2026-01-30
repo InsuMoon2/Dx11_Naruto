@@ -8,7 +8,7 @@ namespace Engine
 	typedef struct tagEngineDesc
     {
         HWND        hWnd;
-        WinMode     winMode;
+        EWinMode     winMode;
 
         uint32      numLevels;
         uint32      viewportWidth;
@@ -19,7 +19,7 @@ namespace Engine
     typedef struct tagEditorDesc
     {
         HWND        hWnd;
-        WinMode     winMode;
+        EWinMode     winMode;
 
         uint32      viewportWidth;
         uint32      viewportHeight;

@@ -4,7 +4,7 @@
 
 NS_BEGIN(Engine)
 
-class ENGINE_DLL Base abstract
+class ENGINE_DLL Base abstract : public enable_shared_from_this<Base>
 {
 protected:
 	Base();

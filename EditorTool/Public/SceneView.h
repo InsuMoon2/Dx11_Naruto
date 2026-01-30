@@ -23,8 +23,12 @@ public:
     shared_ptr<RenderTarget> Get_RenderTarget() { return _renderTarget; }
 
 private:
-    void ToggleFullScreen();
-
+    ImGuiWindowFlags Get_WindowFlags() const;
+    void             PrePare_Window();
+    void             Render_Viewport();
+    void             Update_WindowState();
+                     
+    void             ToggleFullScreen();
 
 private:
     shared_ptr<RenderTarget>    _renderTarget;
