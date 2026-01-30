@@ -137,6 +137,10 @@ xcopy /y "$(SolutionDir)Engine\Bin\Engine.lib" "$(SolutionDir)EngineSDK\Lib\"
 xcopy /y "$(SolutionDir)Engine\Public\*.*" "$(SolutionDir)EngineSDK\Include\"
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)Server\Protobuf\Protocol
+call GenProto.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

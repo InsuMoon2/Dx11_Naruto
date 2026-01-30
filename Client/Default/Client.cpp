@@ -4,6 +4,10 @@
 #include "MainApp.h"
 #include "GameInstance.h"
 
+#include <locale.h>
+
+FILE* debug;
+
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -163,6 +167,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     switch (message)
     {
+
+#pragma region Debug Log
+    case WM_CREATE:
+        AllocConsole();
+        _tfreopen_s(&debug, _T("CONOUT$"), _T("w"), stdout);
+        _tfreopen_s(&debug, _T("CONIN$"), _T("r"), stdin);
+        _tfreopen_s(&debug, _T("CONERR"), _T("w"), stderr);
+        _tsetlocale(LC_ALL, _T(""));
+        break;
+    case WM_CLOSE:
+        FreeConsole();
+        DestroyWindow(hWnd);
+        break;
+#pragma endregion
+
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);

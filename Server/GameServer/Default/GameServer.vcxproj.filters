@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="GameServer.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameSession.cpp">
+      <Filter>01. Session</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameSessionManager.cpp">
+      <Filter>01. Session</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Server_PacketHandler.cpp" />
+    <ClCompile Include="..\..\Protobuf\Bin\Protocol.pb.cc">
+      <Filter>02. Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Protobuf\Bin\Struct.pb.cc">
+      <Filter>02. Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Protobuf\Bin\Enum.pb.cc">
+      <Filter>02. Protocol</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="00. Main">
+      <UniqueIdentifier>{45b47d5a-3ba4-4c60-b53c-7c7cc5ca2ad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Session">
+      <UniqueIdentifier>{868a2065-414c-4178-a436-a947ef2f2b90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defines">
+      <UniqueIdentifier>{b466118f-4585-4b38-a39f-e4078c10125f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Default">
+      <UniqueIdentifier>{c98257a3-e5c6-4d96-b71b-4c59ced7c6c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Protocol">
+      <UniqueIdentifier>{62908d3d-266d-4b2d-bb93-6048410be370}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Protocol\00. Proto">
+      <UniqueIdentifier>{b5784ea9-f683-492b-aa22-26e60aeb7152}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameSession.h">
+      <Filter>01. Session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameSessionManager.h">
+      <Filter>01. Session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Server_Macro.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Server_PacketHandler.h" />
+    <ClInclude Include="..\..\Protobuf\Bin\Protocol.pb.h">
+      <Filter>02. Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Protobuf\Bin\Struct.pb.h">
+      <Filter>02. Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Protobuf\Bin\Enum.pb.h">
+      <Filter>02. Protocol</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Protobuf\Protocol\Protocol.proto">
+      <Filter>02. Protocol\00. Proto</Filter>
+    </None>
+    <None Include="..\..\Protobuf\Protocol\Struct.proto">
+      <Filter>02. Protocol\00. Proto</Filter>
+    </None>
+    <None Include="..\..\Protobuf\Protocol\Enum.proto">
+      <Filter>02. Protocol\00. Proto</Filter>
+    </None>
+  </ItemGroup>
+</Project>

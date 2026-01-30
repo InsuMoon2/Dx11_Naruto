@@ -58,12 +58,24 @@
     <ClInclude Include="..\Public\Object_Manager.h">
       <Filter>01. Utility\03. GameObject\00. Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Layer.h" />
-    <ClInclude Include="..\Public\RenderTarget.h" />
     <ClInclude Include="..\Public\Input_Manager.h">
       <Filter>01. Utility\98. Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Delegate.h" />
+    <ClInclude Include="Delegate.h">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Layer.h">
+      <Filter>01. Utility\03. GameObject\01. Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Renderer.h">
+      <Filter>97. Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RenderTarget.h">
+      <Filter>97. Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Transform.h">
+      <Filter>01. Utility\04. Component\00. Transform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -114,6 +126,12 @@
     <Filter Include="01. Utility\98. Utils">
       <UniqueIdentifier>{6a2903c6-1ca9-44c3-a9ca-6be613ef3d6b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97. Rendering">
+      <UniqueIdentifier>{a4e2c1a3-14f0-4285-817e-4b0033f0ae53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\00. Transform">
+      <UniqueIdentifier>{d11125f6-66d1-4c03-8a49-fc7bd1e45d50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -152,11 +170,23 @@
     <ClCompile Include="..\Private\Object_Manager.cpp">
       <Filter>01. Utility\03. GameObject\00. Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Layer.cpp" />
-    <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\Input_Manager.cpp">
       <Filter>01. Utility\98. Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Delegate.cpp" />
+    <ClCompile Include="Delegate.cpp">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Layer.cpp">
+      <Filter>01. Utility\03. GameObject\01. Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Renderer.cpp">
+      <Filter>97. Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderTarget.cpp">
+      <Filter>97. Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Transform.cpp">
+      <Filter>01. Utility\04. Component\00. Transform</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

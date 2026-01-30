@@ -37,6 +37,8 @@
     <ClInclude Include="..\Public\IconsFontAwesome6.h">
       <Filter>98. Default</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\NetworkManager.h" />
+    <ClInclude Include="..\Public\ServerSession.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -63,6 +65,8 @@
     <ClCompile Include="..\Private\Background.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\NetworkManager.cpp" />
+    <ClCompile Include="..\Private\ServerSession.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
