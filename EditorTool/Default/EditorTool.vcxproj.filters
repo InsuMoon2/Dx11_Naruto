@@ -48,12 +48,13 @@
     <ClInclude Include="..\Public\Content_Browser.h">
       <Filter>03. Viewer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Logger.h">
+    <ClInclude Include="..\Public\Console_View.h">
       <Filter>03. Viewer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Inspector.h">
       <Filter>03. Viewer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Editor_Logger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditorTool.cpp">
@@ -83,11 +84,12 @@
     <ClCompile Include="..\Private\Content_Browser.cpp">
       <Filter>03. Viewer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Logger.cpp">
+    <ClCompile Include="..\Private\Console_View.cpp">
       <Filter>03. Viewer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Inspector.cpp">
       <Filter>03. Viewer</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Editor_Logger.cpp" />
   </ItemGroup>
 </Project>

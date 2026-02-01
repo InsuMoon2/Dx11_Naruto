@@ -5,6 +5,7 @@
 #include "GameInstance.h"
 
 #include <locale.h>
+#include <tchar.h>
 
 FILE* debug;
 
@@ -167,19 +168,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     switch (message)
     {
-
 #pragma region Debug Log
     case WM_CREATE:
+    {
         AllocConsole();
+
+        HANDLE hConsole = GetStdHandle(STD_INPUT_HANDLE);
+        DWORD mode;
+        GetConsoleMode(hConsole, &mode);
+        SetConsoleMode(hConsole, mode & ~ENABLE_QUICK_EDIT_MODE);
+
+        HWND consoleWindow = GetConsoleWindow();
+        MoveWindow(consoleWindow, 000, 250, 500, 300, TRUE);
+
         _tfreopen_s(&debug, _T("CONOUT$"), _T("w"), stdout);
         _tfreopen_s(&debug, _T("CONIN$"), _T("r"), stdin);
         _tfreopen_s(&debug, _T("CONERR"), _T("w"), stderr);
         _tsetlocale(LC_ALL, _T(""));
-        break;
+    }
+    break;
+
     case WM_CLOSE:
+    {
         FreeConsole();
         DestroyWindow(hWnd);
-        break;
+    }
+    break;
+        
 #pragma endregion
 
     case WM_COMMAND:

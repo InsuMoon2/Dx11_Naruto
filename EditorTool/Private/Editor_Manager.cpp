@@ -4,7 +4,7 @@
 #include "Editor_Manager.h"
 #include "SceneView.h"
 #include "HierarchyView.h"
-#include "Logger.h"
+#include "Console_View.h"
 #include "Content_Browser.h"
 #include "Inspector.h"
 #include "RenderTarget.h"
@@ -19,7 +19,7 @@ void Editor_Manager::Initialize()
     AddWindow(TEXT("Hierarchy"), HierarchyView::Create());
     AddWindow(TEXT("Inspector"), Inspector::Create());
 
-    AddWindow(TEXT("Console"), Logger::Create());
+    AddWindow(TEXT("Console"), Console_View::Create());
     AddWindow(TEXT("Content Browser"), Content_Browser::Create());
 
 }

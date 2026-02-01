@@ -108,10 +108,11 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>../Public/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin;$(SolutionDir)Server\Protobuf\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Protobuf\Protocol\Enum.proto" />
+    <None Include="..\..\Protobuf\Protocol\GenProto.bat" />
     <None Include="..\..\Protobuf\Protocol\Protocol.proto" />
     <None Include="..\..\Protobuf\Protocol\Struct.proto" />
   </ItemGroup>

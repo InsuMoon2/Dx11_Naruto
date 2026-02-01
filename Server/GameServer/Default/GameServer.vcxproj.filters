@@ -78,5 +78,8 @@
     <None Include="..\..\Protobuf\Protocol\Enum.proto">
       <Filter>02. Protocol\00. Proto</Filter>
     </None>
+    <None Include="..\..\Protobuf\Protocol\GenProto.bat">
+      <Filter>02. Protocol</Filter>
+    </None>
   </ItemGroup>
 </Project>

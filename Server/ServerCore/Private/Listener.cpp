@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "Listener.h"
 #include "SocketUtils.h"
 #include "IocpEvent.h"
@@ -86,7 +86,7 @@ void Listener::RegisterAccept(IocpEvent* acceptEvent)
 		const int32 errorCode = ::WSAGetLastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
-			// ¿œ¥‹ ¥ŸΩ√ Accept ∞…æÓ¡ÿ¥Ÿ
+			// ÏùºÎã® Îã§Ïãú Accept Í±∏Ïñ¥Ï§ÄÎã§
 			RegisterAccept(acceptEvent);
 		}
 	}

@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "GameSession.h"
 
+#include "Server_PacketHandler.h"
+
 GameSession::GameSession()
 {
 
@@ -15,6 +17,10 @@ GameSession::~GameSession()
 void GameSession::OnConnected()
 {
     cout << "Client 입장" << endl;
+
+    vector<BuffData> dummy;
+    auto sendBuffer = Server_PacketHandler::Make_S_TEST(0, 0, 0, dummy);
+    Send(sendBuffer);
 }
 
 void GameSession::OnDisconnected()

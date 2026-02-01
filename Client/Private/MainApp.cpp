@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "EditorInstance.h"
+#include "NetworkManager.h"
 
 MainApp::MainApp()
 {
@@ -43,6 +44,7 @@ HRESULT MainApp::Initialize()
     if (FAILED(Ready_StartLevel(LevelType::Logo)))
         return E_FAIL;
 
+	NetworkManager::GetInstance()->Initialize();
 
     return S_OK;
 }
@@ -64,6 +66,7 @@ void MainApp::Update(float timeDelta)
         GAME->Update_Engine(timeDelta);
     }
 
+	NetworkManager::GetInstance()->Update();
 }
 
 void MainApp::Late_Update(float timeDelta)
@@ -121,8 +124,13 @@ void MainApp::Free()
 {
     Base::Free();
 
+	// Network
+	{
+		NetworkManager::GetInstance()->Free();
+		NetworkManager::DestroyInstance();
+	}
+
     EditorInstance::DestroyInstance();
     GameInstance::DestroyInstance();
-
 
 }

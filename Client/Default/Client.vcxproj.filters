@@ -39,6 +39,10 @@
     </ClInclude>
     <ClInclude Include="..\Public\NetworkManager.h" />
     <ClInclude Include="..\Public\ServerSession.h" />
+    <ClInclude Include="..\Public\Client_PacketHandler.h" />
+    <ClInclude Include="..\Public\Protocol_Wrapper.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -67,6 +71,16 @@
     </ClCompile>
     <ClCompile Include="..\Private\NetworkManager.cpp" />
     <ClCompile Include="..\Private\ServerSession.cpp" />
+    <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
+    <ClCompile Include="..\..\Server\Protobuf\Bin\Enum.pb.cc">
+      <Filter>97. Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Server\Protobuf\Bin\Protocol.pb.cc">
+      <Filter>97. Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Server\Protobuf\Bin\Struct.pb.cc">
+      <Filter>97. Protocol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -95,6 +109,9 @@
     </Filter>
     <Filter Include="02. GameObject">
       <UniqueIdentifier>{51d814c6-ec28-40cd-8ba1-9221474af90f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Protocol">
+      <UniqueIdentifier>{3a0cc2be-c85a-436f-9e79-54cd74efe1e2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

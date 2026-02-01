@@ -25,6 +25,11 @@ namespace Engine
 #define GAME    GET_SINGLE(GameInstance)
 #define INPUT	GET_SINGLE(Input_Manager)
 
+    // LOG
+#define LOG_INFO(...)    spdlog::info(__VA_ARGS__)
+#define LOG_WARN(...)    spdlog::warn(__VA_ARGS__)
+#define LOG_ERROR(...)   spdlog::error(__VA_ARGS__)
+
 // ==================================================
 // NULL/FAILED 체크 매크로
 // ==================================================

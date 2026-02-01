@@ -18,6 +18,8 @@ HRESULT Level_Logo::Initialize()
     if (FAILED(Ready_Layer_Background(TEXT("Layer_Background"))))
         return E_FAIL;
 
+    
+
     return S_OK;
 }
 
@@ -34,6 +36,21 @@ void Level_Logo::Update(float timeDelta)
 void Level_Logo::Late_Update(float timeDelta)
 {
     Level::Late_Update(timeDelta);
+
+    if (INPUT->KeyDown(KEY_TYPE::KEY_1))
+    {
+        LOG_INFO("Info Test");
+    }
+
+    if (INPUT->KeyDown(KEY_TYPE::KEY_2))
+    {
+        LOG_WARN("Warning Test");
+    }
+
+    if (INPUT->KeyDown(KEY_TYPE::KEY_3))
+    {
+        LOG_ERROR("Error Test");
+    }
 
 }
 

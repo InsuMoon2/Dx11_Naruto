@@ -2,10 +2,11 @@
 
 #include "Base.h"
 
+class ClientService;
+
 NS_BEGIN(Client)
 
 class ServerSession;
-class ClientService;
 
 class NetworkManager : public Base
 {
