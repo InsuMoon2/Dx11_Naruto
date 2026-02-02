@@ -23,6 +23,8 @@ public:
     virtual HRESULT Render() override;
 
 private:
+    HRESULT         Ready_Layer_GameObject(const wstring& layerTag);
+    HRESULT         Ready_Layer_TempLayer(const wstring& layerTag);
 
 
 public:

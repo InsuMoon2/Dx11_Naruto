@@ -98,7 +98,7 @@ shared_ptr<Level_Loading> Level_Loading::Create(ComPtr<Device> device, ComPtr<De
 
     if (FAILED(instance->Initialize(nextLevelID)))
     {
-        MSG_BOX("Faield to Created : LevelType Loading");
+        MSG_BOX("Faield to Created : Loading");
 
         return nullptr;
     }

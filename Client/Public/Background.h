@@ -6,6 +6,8 @@ NS_BEGIN(Client)
 
 class Background : public GameObject
 {
+    GENERATE_BODY(Background)
+
 public:
     explicit Background(ComPtr<Device> device, ComPtr<DeviceContext> context);
     explicit Background(const Background& rhs);

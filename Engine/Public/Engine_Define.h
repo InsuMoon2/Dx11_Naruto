@@ -67,6 +67,8 @@ using json = nlohmann::json;
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 
+#include "Utils.h"
+
 // 메모리 누수 감지
 #ifndef DBG_NEW 
 

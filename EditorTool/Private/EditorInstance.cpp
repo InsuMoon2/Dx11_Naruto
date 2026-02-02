@@ -61,3 +61,18 @@ void EditorInstance::Stop()
     _isPlaying = false;
     _isPaused = false;
 }
+
+shared_ptr<EditorWindow> EditorInstance::Get_Window(const wstring& key)
+{
+    return _editorManager->Get_Window(key);
+}
+
+void EditorInstance::Start_SinglePlayer()
+{
+    return _playerSessionManager->Start_SinglePlayer();
+}
+
+void EditorInstance::Start_MultiPlayer(int32 playerCount)
+{
+    return _playerSessionManager->Start_MultiPlayer(playerCount);
+}

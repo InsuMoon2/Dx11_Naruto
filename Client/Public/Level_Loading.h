@@ -23,7 +23,7 @@ public:
      virtual HRESULT Render() override;
 
 private:
-    shared_ptr<Loader> _loader;
+    shared_ptr<Loader>      _loader;
     LevelType               _nextLevelID = { LevelType::END };
 
 private:

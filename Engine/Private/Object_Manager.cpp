@@ -80,6 +80,30 @@ HRESULT Object_Manager::Add_GameObject(uint32 protoLevelIndex, const wstring& pr
     return S_OK;
 }
 
+vector<shared_ptr<GameObject>> Object_Manager::Get_GameObjects(uint32 levelIndex)
+{
+    vector<shared_ptr<GameObject>> allObjects;
+
+    if (levelIndex >= _numLevels)
+        return allObjects;
+
+    for (auto& [tag, layer] : _layers[levelIndex])
+    {
+        if (!layer)
+            continue;
+
+        const auto& layerObjects = layer->Get_GameObjects();
+
+        for (auto& obj : layerObjects)
+        {
+            if (obj)
+                allObjects.emplace_back(obj);
+        }
+    }
+
+    return allObjects;
+}
+
 shared_ptr<Layer> Object_Manager::Find_Layer(uint32 levelIndex, const wstring& layerTag)
 {
     auto iter = _layers[levelIndex].find(layerTag);

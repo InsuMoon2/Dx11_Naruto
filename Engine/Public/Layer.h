@@ -18,6 +18,8 @@ public:
     void    Update(float timeDelta);
     void    Late_Update(float timeDelta);
 
+    const list<shared_ptr<GameObject>>& Get_GameObjects() const { return _gameObjects; }
+
 private:
     list<shared_ptr<GameObject>> _gameObjects;
 

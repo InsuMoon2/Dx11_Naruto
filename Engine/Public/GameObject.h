@@ -52,6 +52,7 @@ protected:
     shared_ptr<Transform> _transformCom;
 
 
+
 public:
     virtual shared_ptr<GameObject> Clone(any arg) abstract;
     virtual void Free() override;

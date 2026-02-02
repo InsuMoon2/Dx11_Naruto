@@ -29,6 +29,8 @@ void Renderer::Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> g
 
 void Renderer::Draw()
 {
+    _drawCallCount = 0;
+
     Render_Priority();
 
     Render_NonBlend();

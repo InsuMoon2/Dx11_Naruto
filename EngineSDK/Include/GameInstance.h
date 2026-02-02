@@ -57,6 +57,8 @@ public: /* Timer Manager */
 
 public: /* LevelType Manager */
     HRESULT                 Change_Level(uint32 levelIndex, shared_ptr<Level> level);
+    uint32                  Current_Level();
+
 
 public: /* Prototype Manager */
     HRESULT                 Add_GameObject_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<GameObject> gameObject);
@@ -70,6 +72,8 @@ public: /* Object Manager */
                                 uint32 protoIndex, const wstring& protoTag,
                                 uint32 layerIndex, const wstring& layerTag,
                                 any arg = {});
+
+    vector<shared_ptr<GameObject>> Get_GameObjects(uint32 levelIndex);
 
 public: /* Renderer */
     void                    Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject);

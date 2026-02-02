@@ -10,6 +10,7 @@ HRESULT ImGui_Manager::Initialize(HWND hWnd, ComPtr<Device> device, ComPtr<Devic
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
@@ -75,6 +76,7 @@ void ImGui_Manager::Free()
 {
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 }
 

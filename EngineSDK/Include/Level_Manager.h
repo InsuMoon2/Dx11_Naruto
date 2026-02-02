@@ -19,8 +19,11 @@ public:
     void    Late_Update(float timeDelta);
     HRESULT Render();
 
+public:
+    uint32  Get_CurrentLevel() const { return _currentLevelIndex; }
+
 private:
-    shared_ptr<Level>  _currentLevel;
+    shared_ptr<Level>   _currentLevel;
     uint32              _currentLevelIndex = { };
 
 public:

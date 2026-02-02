@@ -29,6 +29,11 @@ void Inspector::OnGui()
     ImGui::End();
 }
 
+void Inspector::Set_Target(shared_ptr<GameObject> target)
+{
+
+}
+
 shared_ptr<Inspector> Inspector::Create()
 {
     return make_shared<Inspector>();

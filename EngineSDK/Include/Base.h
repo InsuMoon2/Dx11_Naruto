@@ -11,14 +11,14 @@ protected:
 	virtual ~Base() = default;
 
 public:
-	void SetName(const wstring& name) { _strName = name; }
-	const wstring& GetName() const { return _strName; }
+	void Set_Name(const wstring& name) { _name = name; }
+	const wstring& Get_Name() const { return _name; }
 
 public:
 	virtual void Free() { }
 
 protected:
-	wstring _strName;
+	wstring _name;
 
 };
 

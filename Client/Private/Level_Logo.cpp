@@ -29,7 +29,7 @@ void Level_Logo::Update(float timeDelta)
 
     if (GetKeyState(VK_SPACE) & 0x8000)
     {
-        GAME->Change_Level(ETOI(LevelType::Loading), Level_Loading::Create(_device, _context, LevelType::GamePlay));
+        //GAME->Change_Level(ETOI(LevelType::Loading), Level_Loading::Create(_device, _context, LevelType::GamePlay));
     }
 }
 
@@ -37,27 +37,14 @@ void Level_Logo::Late_Update(float timeDelta)
 {
     Level::Late_Update(timeDelta);
 
-    if (INPUT->KeyDown(KEY_TYPE::KEY_1))
-    {
-        LOG_INFO("Info Test");
-    }
-
-    if (INPUT->KeyDown(KEY_TYPE::KEY_2))
-    {
-        LOG_WARN("Warning Test");
-    }
-
-    if (INPUT->KeyDown(KEY_TYPE::KEY_3))
-    {
-        LOG_ERROR("Error Test");
-    }
+   
 
 }
 
 HRESULT Level_Logo::Render()
 {
     #ifdef _DEBUG
-    //SetWindowText(g_hWnd, TEXT("현재 레벨 : Logo"));
+    SetWindowText(g_hWnd, TEXT("현재 레벨 : Logo"));
     #endif
     
 

@@ -15,6 +15,8 @@ Level_Gameplay::~Level_Gameplay()
 
 HRESULT Level_Gameplay::Initialize()
 {
+    CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")));
+    CHECK_FAILED(Ready_Layer_TempLayer(TEXT("Layer_TempLayer")));
 
     return S_OK;
 }
@@ -29,14 +31,46 @@ void Level_Gameplay::Late_Update(float timeDelta)
 {
     Level::Late_Update(timeDelta);
 
+    if (INPUT->KeyDown(KEY_TYPE::KEY_1))
+    {
+        LOG_INFO("Info Test");
+    }
+
+    if (INPUT->KeyDown(KEY_TYPE::KEY_2))
+    {
+        LOG_WARN("Warning Test");
+    }
+
+    if (INPUT->KeyDown(KEY_TYPE::KEY_3))
+    {
+        LOG_ERROR("Error Test");
+    }
 }
 
 HRESULT Level_Gameplay::Render()
 {
     #ifdef _DEBUG
-    //SetWindowText(g_hWnd, TEXT("현재 레벨 : GamePlay"));
+    SetWindowText(g_hWnd, TEXT("현재 레벨 : GamePlay"));
     #endif
     
+
+    return S_OK;
+}
+
+HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
+{
+    if (FAILED(GAME->Add_GameObject(ETOI(LevelType::GamePlay), TEXT("Prototype_TestPlayer"),
+        ETOI(LevelType::GamePlay), layerTag)))
+        return E_FAIL;
+
+    return S_OK;
+}
+
+HRESULT Level_Gameplay::Ready_Layer_TempLayer(const wstring& layerTag)
+{
+    if (FAILED(GAME->Add_GameObject(ETOI(LevelType::GamePlay), TEXT("Prototype_TestPlayer"),
+        ETOI(LevelType::GamePlay), layerTag)))
+        return E_FAIL;
 
     return S_OK;
 }

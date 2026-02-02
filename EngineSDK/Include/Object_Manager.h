@@ -5,6 +5,7 @@
 NS_BEGIN(Engine)
 
 class Layer;
+class GameObject;
 
 class Object_Manager : public Base
 {
@@ -22,6 +23,8 @@ public:
             uint32 protoLevelIndex, const wstring& protoTag,
             uint32 layerLevelIndex, const wstring& layerTag,
             any arg);
+
+    vector<shared_ptr<GameObject>> Get_GameObjects(uint32 levelIndex);
 
 private:
     shared_ptr<Layer> Find_Layer(uint32 levelIndex, const wstring& layerTag);

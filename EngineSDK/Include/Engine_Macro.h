@@ -87,6 +87,21 @@ namespace Engine
 	        void CLASSNAME::DestroyInstance() {							 \
 	            m_pInstance.reset();									 \
 	        }
+
+
+// =======================
+// 클래스 이름 세팅
+// =======================
+#define GENERATE_BODY(ClassName)                                         \
+public:                                                                  \
+    static const wchar_t* StaticClassName() { return L#ClassName; }      \
+private:                                                                 \
+                                                                         \
+    bool _name_setter_ = [this](){                                       \
+        if (this->Get_Name().empty())                                    \
+            this->Set_Name(StaticClassName());                           \
+        return true;                                                     \
+    }();
 }
 
 #endif // Engine_Macro_h__

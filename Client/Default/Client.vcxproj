@@ -170,6 +170,7 @@
     <ClInclude Include="..\Public\NetworkManager.h" />
     <ClInclude Include="..\Public\Protocol_Wrapper.h" />
     <ClInclude Include="..\Public\ServerSession.h" />
+    <ClInclude Include="..\Public\TestPlayer.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\NetworkManager.cpp" />
     <ClCompile Include="..\Private\ServerSession.cpp" />
+    <ClCompile Include="..\Private\TestPlayer.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

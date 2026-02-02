@@ -157,6 +157,11 @@ HRESULT GameInstance::Change_Level(uint32 levelIndex, shared_ptr<Level> level)
     return _levelManager->Change_Level(levelIndex, level);
 }
 
+uint32 GameInstance::Current_Level()
+{
+    return _levelManager->Get_CurrentLevel();
+}
+
 HRESULT GameInstance::Add_GameObject_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<GameObject> gameObject)
 {
     return _protoManager->Add_GameObject_Prototype(levelIndex, prototypeTag, gameObject);
@@ -181,6 +186,11 @@ HRESULT GameInstance::Add_GameObject(uint32 protoIndex, const wstring& protoTag,
     const wstring& layerTag, any arg)
 {
     return _objectManager->Add_GameObject(protoIndex, protoTag, layerIndex, layerTag, arg);
+}
+
+vector<shared_ptr<GameObject>> GameInstance::Get_GameObjects(uint32 levelIndex)
+{
+    return _objectManager->Get_GameObjects(levelIndex);
 }
 
 void GameInstance::Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject)

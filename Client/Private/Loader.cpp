@@ -2,6 +2,7 @@
 #include "Loader.h"
 #include "Background.h"
 #include "GameInstance.h"
+#include "TestPlayer.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -125,7 +126,12 @@ HRESULT Loader::Loading_For_GamePlay()
 
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
-
+    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, TEXT("Prototype_TestPlayer"),
+        TestPlayer::Create(_device, _context))))
+    {
+        MSG_BOX("Failed to Add Prototype : Prototype_TestPlayer");
+        return E_FAIL;
+    }
 
     lstrcpy(_loadingText, TEXT("GamePlay 로딩 완료"));
 

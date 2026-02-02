@@ -7,6 +7,7 @@ NS_BEGIN(Editor)
 class ImGui_Manager;
 class Editor_Manager;
 class PlayerSession_Manager;
+class EditorWindow;
 
 class EditorInstance
 {
@@ -30,12 +31,17 @@ public:
 
     HWND    Get_WindowHandle() const { return _desc.hWnd; }
 
-    PlayerSession_Manager* Get_PlayerSession() { return _playerSessionManager.get(); }
+public: /* Editor Manager */
+    shared_ptr<EditorWindow> Get_Window(const wstring& key);
+
+public: /* PlayerSession Manager */
+    void    Start_SinglePlayer();
+    void    Start_MultiPlayer(int32 playerCount);
 
 private: /* Manager */
-    unique_ptr<ImGui_Manager>   _imguiManager;
-    unique_ptr<Editor_Manager>  _editorManager;
-    unique_ptr<PlayerSession_Manager> _playerSessionManager;
+    unique_ptr<ImGui_Manager>           _imguiManager;
+    unique_ptr<Editor_Manager>          _editorManager;
+    unique_ptr<PlayerSession_Manager>   _playerSessionManager;
 
 private:
     bool _isPlaying = true;

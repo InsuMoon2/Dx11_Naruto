@@ -49,6 +49,9 @@
     <ClInclude Include="..\Public\ServerSession.h">
       <Filter>96. Network</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TestPlayer.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -92,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ServerSession.cpp">
       <Filter>96. Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestPlayer.cpp">
+      <Filter>02. GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

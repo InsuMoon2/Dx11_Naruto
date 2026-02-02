@@ -190,6 +190,7 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\Timer_Manager.h" />
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\Renderer.h" />
+    <ClInclude Include="..\Public\Utils.h" />
     <ClInclude Include="Delegate.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -212,6 +213,7 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\Renderer.cpp" />
+    <ClCompile Include="..\Private\Utils.cpp" />
     <ClCompile Include="Delegate.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

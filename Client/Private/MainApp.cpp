@@ -42,7 +42,7 @@ HRESULT MainApp::Initialize()
             return E_FAIL;
     }
 
-    if (FAILED(Ready_StartLevel(LevelType::Logo)))
+    if (FAILED(Ready_StartLevel(LevelType::GamePlay)))
         return E_FAIL;
 
 	NetworkManager::GetInstance()->Initialize();

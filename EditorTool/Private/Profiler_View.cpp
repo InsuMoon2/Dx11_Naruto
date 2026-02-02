@@ -14,14 +14,13 @@ Profiler_View::~Profiler_View()
 void Profiler_View::Initialize()
 {
     EditorWindow::Initialize();
+
+    Set_Active(false);
 }
 
 void Profiler_View::Update(float timeDelta)
 {
-    if (timeDelta > 0.f)
-        _currentFPS = 1.0f / timeDelta;
-    else
-        _currentFPS = 60.0f; 
+    _currentFPS = ImGui::GetIO().Framerate;
 
     _fpsHistory.push_back(_currentFPS);
 
@@ -68,18 +67,21 @@ void Profiler_View::OnGui()
 
     ImGui::Separator();
     // === FPS 그래프 ===
-    if (ImPlot::BeginPlot("FPS", ImVec2(300, 100)))
+    if (ImPlot::BeginPlot("FPS", ImVec2(400, 150)))
     {
         ImPlot::SetupAxes("Time", "FPS");
+        ImPlot::SetupAxisLimits(ImAxis_X1, 0, HISTORY_SIZE); 
         ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 120);
         ImPlot::PlotLine("FPS", _fpsHistory.data(), _fpsHistory.size());
         ImPlot::EndPlot();
     }
 
     // === DrawCall 그래프 ===
-    if (ImPlot::BeginPlot("Draw Calls", ImVec2(300, 100)))
+    if (ImPlot::BeginPlot("Draw Calls", ImVec2(400, 150)))
     {
         ImPlot::SetupAxes("Time", "Count");
+        ImPlot::SetupAxisLimits(ImAxis_X1, 0, HISTORY_SIZE); 
+        ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 100);          
         ImPlot::PlotLine("Draw Calls", _drawCallHistory.data(), _drawCallHistory.size());
         ImPlot::EndPlot();
     }
