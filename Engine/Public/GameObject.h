@@ -26,6 +26,16 @@ public:
     virtual void        Late_Update(float timeDelta);
     virtual void        Render();
 
+public:
+    void Add_Component(const wstring& tag, shared_ptr<Component> component);
+    shared_ptr<Component> Get_Compoennt(const wstring& tag);
+
+    template<typename T>
+    shared_ptr<T> Get_Component(const wstring& tag)
+    {
+        return static_pointer_cast<T>(Get_Component(tag));
+    }
+
 protected:
     shared_ptr<GameObject> GetSharedPtr()
     {
@@ -37,6 +47,8 @@ protected:
     ComPtr<DeviceContext> _context = { nullptr };
 
 protected:
+    map<wstring, shared_ptr<Component>> _components;
+
     shared_ptr<Transform> _transformCom;
 
 

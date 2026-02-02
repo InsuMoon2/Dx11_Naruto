@@ -33,16 +33,16 @@ namespace Engine
 // ==================================================
 // NULL/FAILED 체크 매크로
 // ==================================================
-#define NULL_CHECK(_ptr) \
+#define CHECK_NULL(_ptr) \
 	        { if(_ptr == nullptr) { return; } }
 
-#define NULL_CHECK_RETURN(_ptr, _return) \
+#define CHECK_NULL_RETURN(_ptr, _return) \
 	        { if(_ptr == nullptr) { return _return; } }
 
-#define FAILED_CHECK(_hr) \
+#define CHECK_FAILED(_hr) \
 	        if(FAILED(_hr)) { MSG_BOX("Failed"); return E_FAIL; }
 
-#define FAILED_CHECK_RETURN(_hr, _return) \
+#define CHECK_FAILED_RETURN(_hr, _return) \
 	        if(FAILED(_hr)) { MSG_BOX("Failed"); return _return; }
 
 

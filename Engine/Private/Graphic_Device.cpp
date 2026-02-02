@@ -91,8 +91,8 @@ HRESULT Graphic_Device::Clear_BackBufferView(const Color& clearColor)
 
     /* DX9기준 : Clear함수는 백버퍼, 깊이스텐실버퍼를 한꺼번에 지운다. */
     /* 백버퍼를 초기화한다. */
-    //float colorArray[4] = { clearColor.x, clearColor.y, clearColor.z, clearColor.w };
-    //_context->ClearRenderTargetView(_renderTarget.Get(), colorArray);
+    float colorArray[4] = { clearColor.x, clearColor.y, clearColor.z, clearColor.w };
+    _context->ClearRenderTargetView(_renderTarget.Get(), colorArray);
 
     return S_OK;
 }

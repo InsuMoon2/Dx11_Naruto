@@ -73,7 +73,7 @@ public: /* Object Manager */
 
 public: /* Renderer */
     void                    Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject);
-
+    int32                   Get_DrawCallCount();
 
 private:
 	unique_ptr<Graphic_Device>      _graphicDevice;

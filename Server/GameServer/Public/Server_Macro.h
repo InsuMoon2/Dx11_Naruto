@@ -6,10 +6,10 @@ namespace Server
 #define NS_END                 }
 
     // 유틸리티 매크로
-#define NULL_CHECK(_ptr) \
+#define CHECK_NULL(_ptr) \
         { if(_ptr == nullptr) { return; } }
 
-#define NULL_CHECK_RETURN(_ptr, _return) \
+#define CHECK_NULL_RETURN(_ptr, _return) \
         { if(_ptr == nullptr) { return _return; } }
 
     // weak_ptr Lock

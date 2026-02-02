@@ -26,14 +26,14 @@ HRESULT Level_Manager::Change_Level(uint32 levelIndex, shared_ptr<Level> level)
 
 void Level_Manager::Update(float timeDelta)
 {
-    NULL_CHECK(_currentLevel);
+    CHECK_NULL(_currentLevel);
 
     _currentLevel->Update(timeDelta);
 }
 
 void Level_Manager::Late_Update(float timeDelta)
 {
-    NULL_CHECK(_currentLevel);
+    CHECK_NULL(_currentLevel);
 
     _currentLevel->Late_Update(timeDelta);
 }

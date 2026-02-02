@@ -7,6 +7,8 @@
 #include "Console_View.h"
 #include "Content_Browser.h"
 #include "Inspector.h"
+#include "PlayerSession_Manager.h"
+#include "Profiler_View.h"
 #include "RenderTarget.h"
 
 Editor_Manager::~Editor_Manager()
@@ -21,6 +23,8 @@ void Editor_Manager::Initialize()
 
     AddWindow(TEXT("Console"), Console_View::Create());
     AddWindow(TEXT("Content Browser"), Content_Browser::Create());
+
+    AddWindow(TEXT("Profiler"), Profiler_View::Create());
 
 }
 
@@ -46,7 +50,7 @@ void Editor_Manager::Render()
         return;
 
     auto renderTarget = sceneView->Get_RenderTarget();
-    NULL_CHECK(renderTarget);
+    CHECK_NULL(renderTarget);
 
     renderTarget->BindAsTarget();
     renderTarget->Clear(Color(0.1f, 0.1f, 0.1f, 1.f));
@@ -137,6 +141,49 @@ void Editor_Manager::BeginDockSpace()
         {
             // TODO: 한 프레임만 진행
         }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button(ICON_FA_ELLIPSIS_VERTICAL "##PlayOptions"))
+        {
+            ImGui::OpenPopup("PlayOptionsPopup");
+        }
+
+        if (ImGui::BeginPopup("PlayOptionsPopup"))
+        {
+            ImGui::Text("Multiplayer Test");
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("Single Player"))
+            {
+                auto playMgr = EDITOR->Get_PlayerSession();
+                if (playMgr)
+                    playMgr->Start_SinglePlayer();
+
+                ImGui::CloseCurrentPopup();
+            }
+
+            if (ImGui::MenuItem("2 Players"))
+            {
+                auto playMgr = EDITOR->Get_PlayerSession();
+                if (playMgr)
+                    playMgr->Start_MultiPlayer(2);
+
+                ImGui::CloseCurrentPopup();
+            }
+
+            if (ImGui::MenuItem("4 Players"))
+            {
+                auto playMgr = EDITOR->Get_PlayerSession();
+                if (playMgr)
+                    playMgr->Start_MultiPlayer(4);
+
+                ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::EndPopup();
+        }
+
         ImGui::PopStyleVar();
      
         ImGui::SetCursorPosY(toolbarHeight);
@@ -161,6 +208,7 @@ void Editor_Manager::ShowMenuBar()
             ImGui::EndMenu();
         }
 
+        // 추가된 Viewer
         if (ImGui::BeginMenu("Window"))
         {
             for (auto& [key, window] : _windows)
@@ -176,6 +224,20 @@ void Editor_Manager::ShowMenuBar()
             ImGui::EndMenu();
         }
 
+        // Profiler
+        float menuBarWidth = ImGui::GetWindowWidth();
+        float buttonWidth = 120.f;
+
+        ImGui::SetCursorPosX(menuBarWidth - buttonWidth - 10.f);
+
+        if (ImGui::Button(ICON_FA_CHART_LINE "Profiler"))
+        {
+            auto profiler = dynamic_pointer_cast<Profiler_View>(Get_Window(TEXT("Profiler")));
+            if (profiler)
+
+                profiler->Set_Active(!profiler->IsActive());
+        }
+
         ImGui::EndMainMenuBar();
     }
 }
@@ -183,7 +245,7 @@ void Editor_Manager::ShowMenuBar()
 unique_ptr<Editor_Manager> Editor_Manager::Create()
 {
     auto instance = make_unique<Editor_Manager>();
-    NULL_CHECK_RETURN(instance, nullptr);
+    CHECK_NULL_RETURN(instance, nullptr);
 
     instance->Initialize();
 

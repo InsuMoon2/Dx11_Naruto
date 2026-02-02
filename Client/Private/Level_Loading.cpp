@@ -26,7 +26,7 @@ HRESULT Level_Loading::Initialize(LevelType nextLevelID)
 
     // 로더 생성
     _loader = Loader::Create(_device, _context, nextLevelID);
-    NULL_CHECK_RETURN(_loader, E_FAIL);
+    CHECK_NULL_RETURN(_loader, E_FAIL);
 
 
 

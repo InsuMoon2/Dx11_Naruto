@@ -3,6 +3,8 @@
 #include "EditorWindow.h"
 #include "Editor_Logger.h"
 
+NS_BEGIN(Editor)
+
 class Console_View : public EditorWindow
 {
 public:
@@ -22,3 +24,4 @@ private:
 
 };
 
+NS_END

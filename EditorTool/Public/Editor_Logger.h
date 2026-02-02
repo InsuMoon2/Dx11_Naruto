@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+NS_BEGIN(Editor)
+
 enum class LogLevel
 {
     Info, Warning, Error, END
@@ -45,3 +47,4 @@ private:
     static shared_ptr<ImGuiSink<mutex>> _sink;
 };
 
+NS_END

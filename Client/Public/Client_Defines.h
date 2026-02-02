@@ -10,8 +10,9 @@ extern HINSTANCE g_hInst;
 
 namespace Client
 {
-    const unsigned int		g_winSizeX = { 1600 };
-    const unsigned int		g_winSizeY = { 900 };
+    extern unsigned int		g_winSizeX;
+    extern unsigned int		g_winSizeY;
+    extern bool             g_enableEditor;
 
     enum class LevelType { Static, Loading, Logo, GamePlay, END };
 }

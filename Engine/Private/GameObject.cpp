@@ -56,8 +56,29 @@ void GameObject::Render()
 
 }
 
+void GameObject::Add_Component(const wstring& tag, shared_ptr<Component> component)
+{
+    assert(component != nullptr && "Component is Null");
+
+    if (_components.find(tag) != _components.end())
+        return;
+
+    _components.emplace(tag, component);
+}
+
+shared_ptr<Component> GameObject::Get_Compoennt(const wstring& tag)
+{
+    auto iter = _components.find(tag);
+
+    if (iter == _components.end())
+        return nullptr;
+
+    return iter->second;
+}
+
 void GameObject::Free()
 {
     Base::Free();
 
+    _components.clear();
 }

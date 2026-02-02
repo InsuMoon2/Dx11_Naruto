@@ -22,7 +22,7 @@ HRESULT Renderer::Initialize()
 
 void Renderer::Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject)
 {
-    NULL_CHECK(gameObject);
+    CHECK_NULL(gameObject);
 
     _renderObjects[ETOI(renderType)].emplace_back(gameObject);
 }
@@ -44,6 +44,8 @@ void Renderer::Render_Priority()
     {
         if (renderObject)
             renderObject->Render();
+
+        _drawCallCount++;
     }
 
     _renderObjects[ETOI(ERenderGroup::Priority)].clear();
@@ -55,6 +57,8 @@ void Renderer::Render_NonBlend()
     {
         if (renderObject)
             renderObject->Render();
+
+        _drawCallCount++;
     }
 
     _renderObjects[ETOI(ERenderGroup::NonBlend)].clear();
@@ -66,6 +70,8 @@ void Renderer::Render_Blend()
     {
         if (renderObject)
             renderObject->Render();
+
+        _drawCallCount++;
     }
 
     _renderObjects[ETOI(ERenderGroup::Blend)].clear();
@@ -77,6 +83,8 @@ void Renderer::Render_UI()
     {
         if (renderObject)
             renderObject->Render();
+
+        _drawCallCount++;
     }
 
     _renderObjects[ETOI(ERenderGroup::UI)].clear();

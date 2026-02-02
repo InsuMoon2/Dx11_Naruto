@@ -40,7 +40,7 @@ HRESULT Prototype_Manager::Add_GameObject_Prototype(uint32 levelIndex, const wst
 shared_ptr<GameObject> Prototype_Manager::Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, any arg)
 {
     auto gameObject = Find_GameObject_Prototype(levelIndex, prototypeTag);
-    NULL_CHECK_RETURN(gameObject, nullptr);
+    CHECK_NULL_RETURN(gameObject, nullptr);
 
     return gameObject->Clone(arg);
 }
@@ -63,7 +63,7 @@ HRESULT Prototype_Manager::Add_Component_Prototype(uint32 levelIndex, const wstr
 shared_ptr<Component> Prototype_Manager::Clone_Component(uint32 levelIndex, const wstring& prototypeTag, any arg)
 {
     auto component = Find_Component_Prototype(levelIndex, prototypeTag);
-    NULL_CHECK_RETURN(component, nullptr);
+    CHECK_NULL_RETURN(component, nullptr);
 
     return component->Clone(arg);
 }

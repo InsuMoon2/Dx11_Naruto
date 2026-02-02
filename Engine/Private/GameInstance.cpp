@@ -33,24 +33,24 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
         desc.hWnd, desc.winMode, desc.viewportWidth, desc.viewportHeight,
         deviceOut, contextOut);
 
-    NULL_CHECK_RETURN(_graphicDevice, E_FAIL);
+    CHECK_NULL_RETURN(_graphicDevice, E_FAIL);
 
     INPUT->Init(desc.hWnd);
 
     _timerManager = Timer_Manager::Create();
-    NULL_CHECK_RETURN(_timerManager, E_FAIL);
+    CHECK_NULL_RETURN(_timerManager, E_FAIL);
 
     _levelManager = Level_Manager::Create();
-    NULL_CHECK_RETURN(_levelManager, E_FAIL);
+    CHECK_NULL_RETURN(_levelManager, E_FAIL);
 
     _protoManager = Prototype_Manager::Create(desc.numLevels);
-    NULL_CHECK_RETURN(_protoManager, E_FAIL);
+    CHECK_NULL_RETURN(_protoManager, E_FAIL);
 
     _objectManager = Object_Manager::Create(desc.numLevels);
-    NULL_CHECK_RETURN(_objectManager, E_FAIL);
+    CHECK_NULL_RETURN(_objectManager, E_FAIL);
     
     _renderer = Renderer::Create(Get_Device(), Get_Context());
-    NULL_CHECK_RETURN(_renderer, E_FAIL);
+    CHECK_NULL_RETURN(_renderer, E_FAIL);
 
     return S_OK;
 }
@@ -186,6 +186,11 @@ HRESULT GameInstance::Add_GameObject(uint32 protoIndex, const wstring& protoTag,
 void GameInstance::Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject)
 {
     return _renderer->Add_RenderGroup(renderType, gameObject);
+}
+
+int32 GameInstance::Get_DrawCallCount()
+{
+    return _renderer->Get_DrawCallCount();
 }
 
 void GameInstance::Free()

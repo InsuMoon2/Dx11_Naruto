@@ -34,7 +34,7 @@ void Level_Gameplay::Late_Update(float timeDelta)
 HRESULT Level_Gameplay::Render()
 {
     #ifdef _DEBUG
-    SetWindowText(g_hWnd, TEXT("현재 레벨 : GamePlay"));
+    //SetWindowText(g_hWnd, TEXT("현재 레벨 : GamePlay"));
     #endif
     
 

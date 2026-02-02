@@ -76,6 +76,9 @@
     <ClInclude Include="..\Public\Transform.h">
       <Filter>01. Utility\04. Component\00. Transform</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Texture.h">
+      <Filter>01. Utility\04. Component\01. Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -131,6 +134,9 @@
     </Filter>
     <Filter Include="01. Utility\04. Component\00. Transform">
       <UniqueIdentifier>{d11125f6-66d1-4c03-8a49-fc7bd1e45d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\01. Texture">
+      <UniqueIdentifier>{ca604a5e-183a-43d7-9376-f11772d53533}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -188,5 +194,13 @@
     <ClCompile Include="..\Private\Transform.cpp">
       <Filter>01. Utility\04. Component\00. Transform</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Texture.cpp">
+      <Filter>01. Utility\04. Component\01. Texture</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\vkpkg.json">
+      <Filter>98. Default</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -52,7 +52,7 @@ namespace Engine
     using DepthStencil      = ID3D11DepthStencilView;
     using Texture2D         = ID3D11Texture2D;
     using Buffer            = ID3D11Buffer;
-    using ShaderResource    = ID3D11ShaderResourceView;
+    using ShaderResourceView    = ID3D11ShaderResourceView;
 
 }
 

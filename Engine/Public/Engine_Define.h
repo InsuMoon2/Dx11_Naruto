@@ -1,9 +1,13 @@
 ﻿#ifndef Engine_Define_h__
 #define Engine_Define_h__
 
+// DirectX
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <wrl.h>
+
+#include <directxtk/DDSTextureLoader.h>
+#include <directxtk/WICTextureLoader.h>
 
 using namespace DirectX;
 

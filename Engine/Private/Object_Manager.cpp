@@ -63,7 +63,7 @@ HRESULT Object_Manager::Add_GameObject(uint32 protoLevelIndex, const wstring& pr
         return E_FAIL;
 
     auto gameObject = GAME->Clone_GameObject(protoLevelIndex, protoTag, arg);
-    NULL_CHECK_RETURN(gameObject, E_FAIL);
+    CHECK_NULL_RETURN(gameObject, E_FAIL);
 
     shared_ptr<Layer> layer = Find_Layer(layerLevelIndex, layerTag);
 

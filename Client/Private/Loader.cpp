@@ -15,7 +15,7 @@ Loader::~Loader()
 unsigned int APIENTRY ThreadMain(void* arg)
 {
     Loader* loader = static_cast<Loader*>(arg);
-    NULL_CHECK_RETURN(loader, 1);
+    CHECK_NULL_RETURN(loader, 1);
 
     if (FAILED(loader->Loading()))
         return 1;

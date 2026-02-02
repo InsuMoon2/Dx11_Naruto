@@ -6,4 +6,6 @@
 #include "Editor_Define.h"
 #include "Engine_Define.h"
 
+namespace fs = std::filesystem;
+
 #include "IconsFontAwesome6.h"

@@ -30,6 +30,7 @@ HRESULT MainApp::Initialize()
     }
 
     // Editor Setting
+    if (g_enableEditor)
     {
         EDITOR_DESC editorDesc;
         editorDesc.hWnd = g_hWnd;
@@ -51,7 +52,11 @@ HRESULT MainApp::Initialize()
 
 void MainApp::Priority_Update(float timeDelta)
 {
-    if (EDITOR->IsPlaying())
+    if (!g_enableEditor)
+    {
+        GAME->Priority_Update_Engine(timeDelta);
+    }
+    else if (EDITOR->IsPlaying()) 
     {
         GAME->Priority_Update_Engine(timeDelta);
     }
@@ -59,19 +64,30 @@ void MainApp::Priority_Update(float timeDelta)
 
 void MainApp::Update(float timeDelta)
 {
-    EDITOR->Update_Editor(timeDelta);
+    if (g_enableEditor)
+    {
+        EDITOR->Update_Editor(timeDelta);
+    }
 
-    if (EDITOR->IsPlaying())
+    if (!g_enableEditor)
+    {
+        GAME->Update_Engine(timeDelta);
+    }
+    else if (EDITOR->IsPlaying())  
     {
         GAME->Update_Engine(timeDelta);
     }
 
-	NetworkManager::GetInstance()->Update();
+    NetworkManager::GetInstance()->Update();
 }
 
 void MainApp::Late_Update(float timeDelta)
 {
-    if (EDITOR->IsPlaying())
+    if (!g_enableEditor)
+    {
+        GAME->Late_Update_Engine(timeDelta);
+    }
+    else if (EDITOR->IsPlaying())
     {
         GAME->Late_Update_Engine(timeDelta);
     }
@@ -79,19 +95,26 @@ void MainApp::Late_Update(float timeDelta)
 
 HRESULT MainApp::Render()
 {
-    Color clearColor = { 0.3f, 0.3f, 0.3f, 1.f };
+    Color clearColor = g_enableEditor ?
+        Color{ 0.3f, 0.3f, 0.3f, 1.f } :  // 에디터: 회색
+        Color{ 0.1f, 0.3f, 1.0f, 1.f };   // 게임: 파란색
 
     if(FAILED(GAME->Clear_Buffers(clearColor)))
         return E_FAIL;
 
-    //if (FAILED(GAME->Draw()))
-    //    return E_FAIL; -> Editor로 이동
-
-    EDITOR->Render_Editor();
+    if (g_enableEditor) // 에디터 모드
+    {
+        EDITOR->Render_Editor();
+    }
+    else                // 게임 모드
+    {
+        if (FAILED(GAME->Draw()))
+            return E_FAIL;
+    }
 
     if (FAILED(GAME->Present()))
         return E_FAIL;
-
+    
     return S_OK;
 }
 

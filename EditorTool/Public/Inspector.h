@@ -2,6 +2,8 @@
 
 #include "EditorWindow.h"
 
+NS_BEGIN(Editor)
+
 class Inspector : public EditorWindow
 {
 public:
@@ -18,3 +20,4 @@ public:
 
 };
 
+NS_END

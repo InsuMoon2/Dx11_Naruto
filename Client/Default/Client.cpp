@@ -17,9 +17,62 @@ HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
+namespace Client
+{
+    unsigned int    g_winSizeX = 1600;
+    unsigned int    g_winSizeY = 900;
+    bool            g_enableEditor = true;
+}
+
+struct LaunchParams
+{
+    int32 playerIndex = 0;
+    int32 windowX = CW_USEDEFAULT;
+    int32 windowY = CW_USEDEFAULT;
+    int32 windowWidth  = g_winSizeX;   
+    int32 windowHeight = g_winSizeY;
+    bool  enableEditor = true;
+};
+
+LaunchParams ParseCommandLine(LPWSTR lpCmdLine)
+{
+    LaunchParams params;
+    wstring cmdLine(lpCmdLine);
+
+    // --player0
+    size_t playerPos = cmdLine.find(L"--player");
+    if (playerPos != wstring::npos)
+        params.playerIndex = _wtoi(cmdLine.c_str() + playerPos + 8);
+
+    // --x100
+    size_t xPos = cmdLine.find(L"--x");
+    if (xPos != wstring::npos && (xPos == 0 || cmdLine[xPos - 1] == L' '))
+        params.windowX = _wtoi(cmdLine.c_str() + xPos + 3);
+
+    // --y100
+    size_t yPos = cmdLine.find(L"--y");
+    if (yPos != wstring::npos && (yPos == 0 || cmdLine[yPos - 1] == L' '))
+        params.windowY = _wtoi(cmdLine.c_str() + yPos + 3);
+
+    // --width800
+    size_t widthPos = cmdLine.find(L"--width");
+    if (widthPos != wstring::npos)
+        params.windowWidth = _wtoi(cmdLine.c_str() + widthPos + 7);
+
+    // --height600
+    size_t heightPos = cmdLine.find(L"--height");
+    if (heightPos != wstring::npos)
+        params.windowHeight = _wtoi(cmdLine.c_str() + heightPos + 8);
+
+    if (cmdLine.find(L"--no-editor") != wstring::npos)
+        params.enableEditor = false;
+
+    return params;
+}
+
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
+BOOL                InitInstance(HINSTANCE, int, const LaunchParams&);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
@@ -29,7 +82,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
+    //UNREFERENCED_PARAMETER(lpCmdLine);
+
+    LPWSTR fullCmdLine = GetCommandLineW();
+
+    wstring cmdStr(fullCmdLine);
+    size_t firstSpace = cmdStr.find(L' ');
+    wstring args = (firstSpace != wstring::npos) ? cmdStr.substr(firstSpace + 1) : L"";
+
+    LaunchParams params = ParseCommandLine(const_cast<LPWSTR>(args.c_str()));
+
+    g_winSizeX = params.windowWidth;
+    g_winSizeY = params.windowHeight;
+    g_enableEditor = params.enableEditor;
 
     // TODO: 여기에 코드를 입력합니다.
     unique_ptr<MainApp> mainApp = { nullptr };
@@ -40,7 +105,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
     // 애플리케이션 초기화를 수행합니다:
-    if (!InitInstance (hInstance, nCmdShow))
+    if (!InitInstance (hInstance, nCmdShow, params))
     {
         return FALSE;
     }
@@ -50,7 +115,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
     mainApp = MainApp::Create();
-    NULL_CHECK_RETURN(mainApp, FALSE);
+    CHECK_NULL_RETURN(mainApp, FALSE);
 
     GAME->Add_Timer(L"Timer_Default");
     GAME->Add_Timer(L"Timer_60FPS");
@@ -127,18 +192,24 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        이 함수를 통해 인스턴스 핸들을 전역 변수에 저장하고
 //        주 프로그램 창을 만든 다음 표시합니다.
 //
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, const LaunchParams& params)
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   RECT rc = { 0, 0, static_cast<LONG>(g_winSizeX), static_cast<LONG>(g_winSizeY) };
+   wstring windowTitle = wstring(szTitle) + L" - Player " + to_wstring(params.playerIndex + 1);
+
+   RECT rc = { 0, 0, static_cast<LONG>(params.windowWidth), static_cast<LONG>(params.windowHeight) };
 
    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-       CW_USEDEFAULT, 0,
-       rc.right - rc.left,  // 계산된 가로 폭
-       rc.bottom - rc.top,  // 계산된 세로 높이
+   HWND hWnd = CreateWindowW(
+       szWindowClass,
+       windowTitle.c_str(),  
+       WS_OVERLAPPEDWINDOW,
+       params.windowX,       
+       params.windowY,       
+       rc.right - rc.left,   
+       rc.bottom - rc.top,   
        nullptr, nullptr, hInstance, nullptr);
 
    ShowWindow(hWnd, nCmdShow);

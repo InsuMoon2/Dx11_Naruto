@@ -37,11 +37,17 @@
     <ClInclude Include="..\Public\IconsFontAwesome6.h">
       <Filter>98. Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\NetworkManager.h" />
-    <ClInclude Include="..\Public\ServerSession.h" />
-    <ClInclude Include="..\Public\Client_PacketHandler.h" />
     <ClInclude Include="..\Public\Protocol_Wrapper.h">
       <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_PacketHandler.h">
+      <Filter>96. Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NetworkManager.h">
+      <Filter>96. Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ServerSession.h">
+      <Filter>96. Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -69,9 +75,6 @@
     <ClCompile Include="..\Private\Background.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\NetworkManager.cpp" />
-    <ClCompile Include="..\Private\ServerSession.cpp" />
-    <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
     <ClCompile Include="..\..\Server\Protobuf\Bin\Enum.pb.cc">
       <Filter>97. Protocol</Filter>
     </ClCompile>
@@ -80,6 +83,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Server\Protobuf\Bin\Struct.pb.cc">
       <Filter>97. Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Client_PacketHandler.cpp">
+      <Filter>96. Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NetworkManager.cpp">
+      <Filter>96. Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ServerSession.cpp">
+      <Filter>96. Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +124,9 @@
     </Filter>
     <Filter Include="97. Protocol">
       <UniqueIdentifier>{3a0cc2be-c85a-436f-9e79-54cd74efe1e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Network">
+      <UniqueIdentifier>{88f9c09b-d653-4b7f-a883-1d52d95d8814}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

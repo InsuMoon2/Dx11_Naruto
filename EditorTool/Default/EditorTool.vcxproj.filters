@@ -19,6 +19,9 @@
     <Filter Include="03. Viewer">
       <UniqueIdentifier>{f9b8d7c0-ca32-4b3c-9904-03e58eb3ba32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97. Utils">
+      <UniqueIdentifier>{5ca9452f-be03-47b3-bdb5-f0c666368c41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -54,7 +57,13 @@
     <ClInclude Include="..\Public\Inspector.h">
       <Filter>03. Viewer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Editor_Logger.h" />
+    <ClInclude Include="..\Public\PlayerSession_Manager.h">
+      <Filter>01. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Editor_Logger.h">
+      <Filter>97. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Profiler_View.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditorTool.cpp">
@@ -90,6 +99,12 @@
     <ClCompile Include="..\Private\Inspector.cpp">
       <Filter>03. Viewer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Editor_Logger.cpp" />
+    <ClCompile Include="..\Private\PlayerSession_Manager.cpp">
+      <Filter>01. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Editor_Logger.cpp">
+      <Filter>97. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Profiler_View.cpp" />
   </ItemGroup>
 </Project>

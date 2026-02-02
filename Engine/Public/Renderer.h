@@ -14,20 +14,26 @@ public:
 
 public:
     HRESULT Initialize();
-    void Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject);
-    void Draw();
+    void    Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject);
+    void    Draw();
 
 private:
-    void Render_Priority();
-    void Render_NonBlend();
-    void Render_Blend();
-    void Render_UI();
+    void    Render_Priority();
+    void    Render_NonBlend();
+    void    Render_Blend();
+    void    Render_UI();
+
+public:
+    int32   Get_DrawCallCount() const { return _drawCallCount; }
+    void    Reset_DrawCallCount() { _drawCallCount = 0; }
 
 private:
     ComPtr<Device>          _device;
     ComPtr<DeviceContext>   _context;
 
     list<shared_ptr<GameObject>> _renderObjects[ETOI(ERenderGroup::END)];
+
+    int32 _drawCallCount = 0;
 
 public:
     static unique_ptr<Renderer> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

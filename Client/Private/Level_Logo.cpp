@@ -57,7 +57,7 @@ void Level_Logo::Late_Update(float timeDelta)
 HRESULT Level_Logo::Render()
 {
     #ifdef _DEBUG
-    SetWindowText(g_hWnd, TEXT("현재 레벨 : Logo"));
+    //SetWindowText(g_hWnd, TEXT("현재 레벨 : Logo"));
     #endif
     
 
