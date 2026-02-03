@@ -38,6 +38,11 @@ public:
 	HRESULT                 Draw();
 	void	                Clear_Resources(uint32 levelIndex);
 
+public: /* Game State */
+    void                    Set_GameState(EGameState state) { _gameState = state; }
+    EGameState              Get_GameState() const { return _gameState; }
+    bool                    IsPlaying() const { return _gameState == EGameState::Play; }
+
 public: /* Graphic Device */
     ComPtr<Device>          Get_Device();
     ComPtr<DeviceContext>   Get_Context();
@@ -62,16 +67,16 @@ public: /* LevelType Manager */
 
 public: /* Prototype Manager */
     HRESULT                 Add_GameObject_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<GameObject> gameObject);
-    shared_ptr<GameObject>  Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, any arg = {});
+    shared_ptr<GameObject>  Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, void* arg = {});
 
-    HRESULT                 Add_Component_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<Component> component);
-    shared_ptr<Component>   Clone_Component(uint32 levelIndex, const wstring& prototypeTag, any arg = {});
+    HRESULT                 Add_Component_Prototype(uint32 levelIndex, uint32 protoID, shared_ptr<Component> component);
+    shared_ptr<Component>   Clone_Component(uint32 levelIndex, uint32 protoID, void* arg = {});
 
 public: /* Object Manager */
     HRESULT                 Add_GameObject(
                                 uint32 protoIndex, const wstring& protoTag,
                                 uint32 layerIndex, const wstring& layerTag,
-                                any arg = {});
+                                void* arg = {});
 
     vector<shared_ptr<GameObject>> Get_GameObjects(uint32 levelIndex);
 
@@ -86,6 +91,9 @@ private:
     unique_ptr<Prototype_Manager>   _protoManager;
     unique_ptr<Object_Manager>      _objectManager;
     unique_ptr<Renderer>            _renderer;
+
+private:
+    EGameState                      _gameState = EGameState::Edit;
 
 public:
 	void Free() override;

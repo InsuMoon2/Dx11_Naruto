@@ -143,3 +143,13 @@ Abi: 2db03ca14b583780f78475bcfe8033aa7356d073c08cb2482f6c85047a0888e0
 Description: Advanced 2D Plotting for Dear ImGui
 Status: install ok installed
 
+Package: magic-enum
+Version: 0.9.7
+Port-Version: 1
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 9d338c5792ebb622c8d7a7f0bfc4154f76bdd110235adfb06d89c172c21c8c65
+Description: Header-only C++17 library provides static reflection for enums, work with any enum type without any macro or boilerplate code.
+Status: install ok installed
+

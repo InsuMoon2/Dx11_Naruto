@@ -14,7 +14,7 @@ namespace Client
     extern unsigned int		g_winSizeY;
     extern bool             g_enableEditor;
 
-    enum class LevelType { Static, Loading, Logo, GamePlay, END };
+    enum class ELevelType { Static, Loading, Logo, GamePlay, END };
 }
 
 using namespace Client;

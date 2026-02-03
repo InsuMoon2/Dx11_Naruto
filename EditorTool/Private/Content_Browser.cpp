@@ -24,9 +24,11 @@ void Content_Browser::Update(float timeDelta)
 
 void Content_Browser::OnGui()
 {
+    string str = Utils::ToString(Get_Name());
+
     ImGuiWindowFlags flags = ImGuiWindowFlags_None;
 
-    ImGui::Begin("Content Browser", nullptr, flags);
+    ImGui::Begin(str.c_str(), nullptr, flags);
     {
 
     }

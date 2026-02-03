@@ -22,7 +22,7 @@ public:
     HRESULT Add_GameObject(
             uint32 protoLevelIndex, const wstring& protoTag,
             uint32 layerLevelIndex, const wstring& layerTag,
-            any arg);
+            void* arg);
 
     vector<shared_ptr<GameObject>> Get_GameObjects(uint32 levelIndex);
 

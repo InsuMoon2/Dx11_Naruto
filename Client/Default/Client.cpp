@@ -115,7 +115,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
     mainApp = MainApp::Create();
-    CHECK_NULL_RETURN(mainApp, FALSE);
+    CHECK_NULL(mainApp, FALSE);
 
     GAME->Add_Timer(L"Timer_Default");
     GAME->Add_Timer(L"Timer_60FPS");

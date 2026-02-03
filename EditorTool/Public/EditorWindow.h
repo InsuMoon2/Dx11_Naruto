@@ -20,7 +20,7 @@ public:
 
 protected:
     wstring  _name;
-    bool    _isActive = true;
+    bool     _isActive = true;
 
 };
 

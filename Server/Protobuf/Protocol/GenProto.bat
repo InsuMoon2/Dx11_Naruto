@@ -83,6 +83,5 @@ echo Protobuf generation complete!
 echo ===================================
 echo Generated files in: %OUTPUT_DIR%
 echo.
-dir ..\Bin\*.pb.*
-pause
+xcopy /y /d "%OUTPUT_DIR%\*.pb.h" "..\..\..\Engine\Public\"
 popd

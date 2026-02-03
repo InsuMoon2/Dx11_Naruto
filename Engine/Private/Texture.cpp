@@ -43,7 +43,7 @@ HRESULT Texture::Initialize_Prototype(const wstring& texturePath, uint32 numSRVs
         else
             hr = CreateWICTextureFromFile(_device.Get(), fullPath, nullptr, srv.GetAddressOf());
 
-        CHECK_FAILED_RETURN(hr, E_FAIL);
+        CHECK_FAILED(hr, E_FAIL);
 
         _SRVs.emplace_back(srv);
     }
@@ -51,7 +51,7 @@ HRESULT Texture::Initialize_Prototype(const wstring& texturePath, uint32 numSRVs
     return S_OK;
 }
 
-HRESULT Texture::Initialize(any arg)
+HRESULT Texture::Initialize(void* arg)
 {
     return Component::Initialize(arg);
 }
@@ -72,7 +72,7 @@ shared_ptr<Texture> Texture::Create(ComPtr<Device> device, ComPtr<DeviceContext>
     return instance;
 }
 
-shared_ptr<Component> Texture::Clone(any arg)
+shared_ptr<Component> Texture::Clone(void* arg)
 {
     auto instance = make_shared<Texture>(*this);
 

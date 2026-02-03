@@ -14,7 +14,7 @@ Level_Loading::~Level_Loading()
 {
 }
 
-HRESULT Level_Loading::Initialize(LevelType nextLevelID)
+HRESULT Level_Loading::Initialize(ELevelType nextLevelID)
 {
     _nextLevelID = nextLevelID;
 
@@ -26,7 +26,7 @@ HRESULT Level_Loading::Initialize(LevelType nextLevelID)
 
     // 로더 생성
     _loader = Loader::Create(_device, _context, nextLevelID);
-    CHECK_NULL_RETURN(_loader, E_FAIL);
+    CHECK_NULL(_loader, E_FAIL);
 
 
 
@@ -35,17 +35,17 @@ HRESULT Level_Loading::Initialize(LevelType nextLevelID)
 
 void Level_Loading::Update(float timeDelta)
 {
-    //if (_loader->IsFinished() && GetKeyState(VK_RETURN))
+    if (_loader->IsFinished())// && GetKeyState(VK_RETURN))
     {
         shared_ptr<Level> nextLevel = { nullptr };
 
         switch (_nextLevelID)
         {
-        case LevelType::Logo:
+        case ELevelType::Logo:
             nextLevel = Level_Logo::Create(_device, _context);
             break;
 
-        case LevelType::GamePlay:
+        case ELevelType::GamePlay:
             nextLevel = Level_Gameplay::Create(_device, _context);
             break;
         }
@@ -92,7 +92,7 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
     return S_OK;
 }
 
-shared_ptr<Level_Loading> Level_Loading::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, LevelType nextLevelID)
+shared_ptr<Level_Loading> Level_Loading::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID)
 {
     auto instance = make_shared<Level_Loading>(device, context);
 

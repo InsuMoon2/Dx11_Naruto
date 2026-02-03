@@ -3,6 +3,10 @@
 #include "Background.h"
 #include "GameInstance.h"
 #include "TestPlayer.h"
+#include "Texture.h"
+#include <magic_enum/magic_enum.hpp>
+#include <fstream>
+#include "Utils.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -16,7 +20,7 @@ Loader::~Loader()
 unsigned int APIENTRY ThreadMain(void* arg)
 {
     Loader* loader = static_cast<Loader*>(arg);
-    CHECK_NULL_RETURN(loader, 1);
+    CHECK_NULL(loader, 1);
 
     if (FAILED(loader->Loading()))
         return 1;
@@ -25,7 +29,7 @@ unsigned int APIENTRY ThreadMain(void* arg)
     return 0;
 }
 
-HRESULT Loader::Initialize(LevelType nextLevelID)
+HRESULT Loader::Initialize(ELevelType nextLevelID)
 {
     _nextLevelID = nextLevelID;
 
@@ -50,22 +54,25 @@ HRESULT Loader::Loading()
     // 크리티컬 섹션 진입
     EnterCriticalSection(&_criticalSection);
 
+    CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
     HRESULT hr = { };
 
     switch (_nextLevelID)
     {
-    case LevelType::Logo:
+    case ELevelType::Logo:
         hr = Loading_For_LogoLevel();
         break;
 
-    case LevelType::GamePlay:
+    case ELevelType::GamePlay:
         hr = Loading_For_GamePlay();
         break;
     }
 
+    CoUninitialize();
+
     // 크리티컬 섹션 탈출
     LeaveCriticalSection(&_criticalSection);
-
 
     return hr;
 }
@@ -79,19 +86,15 @@ HRESULT Loader::Print_LoadingText()
 
 HRESULT Loader::Loading_For_LogoLevel()
 {
-    uint32 levelIndex = ETOI(LevelType::Logo);
+    uint32 levelIndex = ETOI(ELevelType::Logo);
 
-    lstrcpy(_loadingText, TEXT("텍스쳐 로딩 중"));
+    lstrcpy(_loadingText, TEXT("리소스 로딩 중"));
 
-
-    lstrcpy(_loadingText, TEXT("셰이더 로딩 중"));
-
-
-    lstrcpy(_loadingText, TEXT("사운드 로딩 중"));
-
-
-    lstrcpy(_loadingText, TEXT("모델 로딩 중"));
-
+    if (FAILED(Load_Resources_From_Json(TEXT("../Bin/Resources/Data/json/ResourceTable.json"))))
+    {
+        MSG_BOX("Failed to Load Resources from JSON");
+        return E_FAIL;
+    }
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
     if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, TEXT("Prototype_Background"),
@@ -111,7 +114,7 @@ HRESULT Loader::Loading_For_LogoLevel()
 
 HRESULT Loader::Loading_For_GamePlay()
 {
-    uint32 levelIndex = ETOI(LevelType::GamePlay);
+    uint32 levelIndex = ETOI(ELevelType::GamePlay);
 
     lstrcpy(_loadingText, TEXT("텍스쳐 로딩 중"));
 
@@ -142,7 +145,93 @@ HRESULT Loader::Loading_For_GamePlay()
     return S_OK;
 }
 
-shared_ptr<Loader> Loader::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, LevelType nextLevelID)
+HRESULT Loader::Load_Resources_From_Json(const wstring& filePath)
+{
+    // Json 로드
+    ifstream file(filePath);
+    if (!file.is_open())
+    {
+        MSG_BOX("Failed to open Resource JSON file !");
+
+        return E_FAIL;
+    }
+
+    json root;
+    file >> root;
+
+    // Texture 로드
+    if (root.contains("Texture"))
+    {
+        for (const auto& item : root["Texture"])
+        {
+            string keyStr = item["key"];
+            wstring protoKey = Utils::ToWString(keyStr);
+            uint32 protoID = Get_ComponentID_From_String(protoKey);
+
+            if (protoID == 0)
+                continue;
+
+            // Path
+            string pathStr = item["path"];
+            wstring texturePath = Utils::ToWString(pathStr);
+
+            // Count, Level
+            int32 count = item.value("count", 1);
+            string levelStr = item.value("level", "Static");
+            uint32 levelIndex = Get_LevelIndex_From_String(Utils::ToWString(levelStr));
+
+            // 로딩 텍스트 업데이트
+            lstrcpy(_loadingText, (TEXT("Texture: ") + protoKey).c_str());
+
+            if (FAILED(GAME->Add_Component_Prototype(levelIndex, protoID,
+                    Texture::Create(_device, _context, texturePath.c_str(), count))))
+            {
+                wstring errorMsg = L"Failed to load: " + protoKey;
+                MSG_BOX_S(errorMsg.c_str());
+            }
+        }
+    }
+
+    // TODO : 모델 로드, 다른 리소스 로드 추후 추가
+
+
+    return S_OK;
+}
+
+uint32 Loader::Get_LevelIndex_From_String(const wstring& levelName)
+{
+    string levelNameStr = Utils::ToString(levelName);
+
+    auto levelEnum = magic_enum::enum_cast<ELevelType>(levelNameStr);
+
+    // 주의, Enum값과 csv에 세팅된 이름이 똑같아야함 [Loading, Logo, GamePlay]
+    if (levelEnum.has_value())
+    {
+        return ETOI(levelEnum.value());
+    }
+
+    return ETOI(ELevelType::Static);
+}
+
+uint32 Loader::Get_ComponentID_From_String(const wstring& key)
+{
+    const google::protobuf::EnumDescriptor* descriptor = Protocol::ComponentID_descriptor();
+
+    const google::protobuf::EnumValueDescriptor* valueDesc =
+        descriptor->FindValueByName(Utils::ToString(key));
+
+    if (valueDesc == nullptr)
+    {
+        wstring errorMsg = L"CRITICAL: Unknown Component Key -> " + key;
+        MSG_BOX_S(errorMsg.c_str());
+
+        return 0; 
+    }
+
+    return static_cast<uint32>(valueDesc->number());
+}
+
+shared_ptr<Loader> Loader::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID)
 {
     auto instance = make_shared<Loader>(device, context);
 

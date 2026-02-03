@@ -11,6 +11,8 @@
 #include <tchar.h>
 
 #include "Client_Defines.h"
+#include "Client_Enum.h"
+#include "Client_Macro.h"
 
 #include "Service.h"
 #include <assert.h>

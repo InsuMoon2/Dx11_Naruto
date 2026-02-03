@@ -9,5 +9,6 @@ namespace Engine
 
     enum class ERenderGroup { Priority, NonBlend, Blend, UI, END };
 
+    enum class EGameState { Edit, Play, Pause, END };
 }
 #endif // Engine_Enum_h__

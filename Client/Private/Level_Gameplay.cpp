@@ -15,8 +15,8 @@ Level_Gameplay::~Level_Gameplay()
 
 HRESULT Level_Gameplay::Initialize()
 {
-    CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")));
-    CHECK_FAILED(Ready_Layer_TempLayer(TEXT("Layer_TempLayer")));
+    CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")), E_FAIL);
+    CHECK_FAILED(Ready_Layer_TempLayer(TEXT("Layer_TempLayer")), E_FAIL);
 
     return S_OK;
 }
@@ -59,8 +59,8 @@ HRESULT Level_Gameplay::Render()
 
 HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
 {
-    if (FAILED(GAME->Add_GameObject(ETOI(LevelType::GamePlay), TEXT("Prototype_TestPlayer"),
-        ETOI(LevelType::GamePlay), layerTag)))
+    if (FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), TEXT("Prototype_TestPlayer"),
+        ETOI(ELevelType::GamePlay), layerTag)))
         return E_FAIL;
 
     return S_OK;
@@ -68,8 +68,8 @@ HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
 
 HRESULT Level_Gameplay::Ready_Layer_TempLayer(const wstring& layerTag)
 {
-    if (FAILED(GAME->Add_GameObject(ETOI(LevelType::GamePlay), TEXT("Prototype_TestPlayer"),
-        ETOI(LevelType::GamePlay), layerTag)))
+    if (FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), TEXT("Prototype_TestPlayer"),
+        ETOI(ELevelType::GamePlay), layerTag)))
         return E_FAIL;
 
     return S_OK;

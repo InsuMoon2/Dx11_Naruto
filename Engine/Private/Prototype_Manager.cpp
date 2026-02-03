@@ -37,33 +37,32 @@ HRESULT Prototype_Manager::Add_GameObject_Prototype(uint32 levelIndex, const wst
     return S_OK;
 }
 
-shared_ptr<GameObject> Prototype_Manager::Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, any arg)
+shared_ptr<GameObject> Prototype_Manager::Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, void* arg)
 {
     auto gameObject = Find_GameObject_Prototype(levelIndex, prototypeTag);
-    CHECK_NULL_RETURN(gameObject, nullptr);
+    CHECK_NULL(gameObject, nullptr);
 
     return gameObject->Clone(arg);
 }
 
-HRESULT Prototype_Manager::Add_Component_Prototype(uint32 levelIndex, const wstring& prototypeTag,
-    shared_ptr<Component> prototype)
+HRESULT Prototype_Manager::Add_Component_Prototype(uint32 levelIndex, uint32 protoID, shared_ptr<Component> prototype)
 {
-    if (Find_Component_Prototype(levelIndex, prototypeTag) != nullptr)
+    if (Find_Component_Prototype(levelIndex, protoID) != nullptr)
     {
         MSG_BOX("This component is already exists.");
 
         return E_FAIL;
     }
 
-    _componentPrototypes[levelIndex].emplace(prototypeTag, prototype);
+    _componentPrototypes[levelIndex].emplace(protoID, prototype);
 
     return S_OK;
 }
 
-shared_ptr<Component> Prototype_Manager::Clone_Component(uint32 levelIndex, const wstring& prototypeTag, any arg)
+shared_ptr<Component> Prototype_Manager::Clone_Component(uint32 levelIndex, uint32 protoID, void* arg)
 {
-    auto component = Find_Component_Prototype(levelIndex, prototypeTag);
-    CHECK_NULL_RETURN(component, nullptr);
+    auto component = Find_Component_Prototype(levelIndex, protoID);
+    CHECK_NULL(component, nullptr);
 
     return component->Clone(arg);
 }
@@ -93,12 +92,12 @@ shared_ptr<GameObject> Prototype_Manager::Find_GameObject_Prototype(uint32 level
     return iter->second;
 }
 
-shared_ptr<Component> Prototype_Manager::Find_Component_Prototype(uint32 levelIndex, const wstring& prototypeTag)
+shared_ptr<Component> Prototype_Manager::Find_Component_Prototype(uint32 levelIndex, uint32 protoID)
 {
     if (levelIndex >= _numLevels)
         return nullptr;
 
-    auto iter = _componentPrototypes[levelIndex].find(prototypeTag);
+    auto iter = _componentPrototypes[levelIndex].find(protoID);
 
     if (iter == _componentPrototypes[levelIndex].end())
         return nullptr;

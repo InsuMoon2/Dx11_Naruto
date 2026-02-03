@@ -1,12 +1,14 @@
 ﻿#pragma once
 
 #include "Transform.h"
-#include "Transform.h"
+#include "GameInstance.h"
 
 NS_BEGIN(Engine)
 
 class ENGINE_DLL GameObject abstract : public Base
 {
+    GENERATED_BODY(GameObject)
+
 public:
     struct FGameObjectDesc : public Transform::FTransformDesc
     {
@@ -20,41 +22,74 @@ public:
 
 public:
     virtual HRESULT     Initialize_Prototype();
-    virtual HRESULT     Initialize(any arg);
+    virtual HRESULT     Initialize(void* arg);
     virtual void        Priority_Update(float timeDelta);
     virtual void        Update(float timeDelta);
     virtual void        Late_Update(float timeDelta);
     virtual void        Render();
 
 public:
-    void Add_Component(const wstring& tag, shared_ptr<Component> component);
-    shared_ptr<Component> Get_Compoennt(const wstring& tag);
+    template<typename T>
+    shared_ptr<T> Get_Component()
+    {
+        uint32 id = T::GetComponentID();
+
+        auto iter = _components.find(id);
+
+        if (iter == _components.end())
+            return nullptr;
+
+        return static_pointer_cast<T>(iter->second);
+    }
 
     template<typename T>
-    shared_ptr<T> Get_Component(const wstring& tag)
+    HRESULT Add_Component(uint32 levelIndex, shared_ptr<T>& outCom, void* arg = {})
     {
-        return static_pointer_cast<T>(Get_Component(tag));
+        uint32 id = T::GetComponentID();
+
+        if (_components.contains(id))
+            return E_FAIL;
+
+        shared_ptr<Component> component = GAME->Clone_Component(levelIndex, id, arg);
+        CHECK_NULL(component, E_FAIL);
+
+        component->Set_Owner(this->GetSharedPtr());
+
+        _components.emplace(id, component);
+        outCom = static_pointer_cast<T>(component);
+
+        return S_OK;
+    };
+
+    template<typename T>
+    HRESULT Add_Component(uint32 levelIndex, uint32 protoID, shared_ptr<T>& outCom, void* arg = {})
+    {
+        if (_components.contains(protoID))
+            return E_FAIL;
+
+        shared_ptr<Component> component = GAME->Clone_Component(levelIndex, protoID, arg);
+        CHECK_NULL(component, E_FAIL);
+
+        _components.emplace(protoID, component);
+        outCom = static_pointer_cast<T>(component);
+
+        return S_OK;
     }
 
 protected:
-    shared_ptr<GameObject> GetSharedPtr()
-    {
-        return static_pointer_cast<GameObject>(shared_from_this());
-    }
+    shared_ptr<GameObject> GetSharedPtr() { return static_pointer_cast<GameObject>(shared_from_this()); }
 
 protected:
-    ComPtr<Device> _device = { nullptr };
-    ComPtr<DeviceContext> _context = { nullptr };
+    ComPtr<Device>          _device = { nullptr };
+    ComPtr<DeviceContext>   _context = { nullptr };
 
 protected:
-    map<wstring, shared_ptr<Component>> _components;
+    map<uint32, shared_ptr<Component>> _components;
 
-    shared_ptr<Transform> _transformCom;
-
-
+    shared_ptr<Transform>   _transformCom;
 
 public:
-    virtual shared_ptr<GameObject> Clone(any arg) abstract;
+    virtual shared_ptr<GameObject> Clone(void* arg) abstract;
     virtual void Free() override;
 };
 

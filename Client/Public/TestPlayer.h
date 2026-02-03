@@ -6,7 +6,7 @@ NS_BEGIN(Client)
 
 class TestPlayer : public GameObject
 {
-    GENERATE_BODY(TestPlayer)
+    GENERATED_BODY(TestPlayer)
 
 public:
     explicit TestPlayer(ComPtr<Device> device, ComPtr<DeviceContext> context);
@@ -15,14 +15,14 @@ public:
 
 public:
     virtual HRESULT Initialize_Prototype() override;
-    virtual HRESULT Initialize(any arg) override;
+    virtual HRESULT Initialize(void* arg) override;
     virtual void    Priority_Update(float timeDelta) override;
     virtual void    Update(float timeDelta) override;
     virtual void    Late_Update(float timeDelta) override;
 
 public:
     static shared_ptr<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
-    virtual shared_ptr<GameObject> Clone(any arg) override;
+    virtual shared_ptr<GameObject> Clone(void* arg) override;
 
 };
 

@@ -69,6 +69,11 @@ using json = nlohmann::json;
 
 #include "Utils.h"
 
+// Protobuf
+#include "Struct.pb.h"
+#include "Enum.pb.h"
+#include "Protocol.pb.h"
+
 // 메모리 누수 감지
 #ifndef DBG_NEW 
 

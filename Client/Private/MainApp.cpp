@@ -23,7 +23,7 @@ HRESULT MainApp::Initialize()
         engineDesc.winMode = EWinMode::Win;
         engineDesc.viewportWidth = g_winSizeX;
         engineDesc.viewportHeight = g_winSizeY;
-        engineDesc.numLevels = ETOI(LevelType::END);
+        engineDesc.numLevels = ETOI(ELevelType::END);
 
         if (FAILED(GAME->Initialize_Engine(engineDesc, _device, _context)))
             return E_FAIL;
@@ -42,7 +42,7 @@ HRESULT MainApp::Initialize()
             return E_FAIL;
     }
 
-    if (FAILED(Ready_StartLevel(LevelType::GamePlay)))
+    if (FAILED(Ready_StartLevel(ELevelType::Logo)))
         return E_FAIL;
 
 	NetworkManager::GetInstance()->Initialize();
@@ -118,12 +118,12 @@ HRESULT MainApp::Render()
     return S_OK;
 }
 
-HRESULT MainApp::Ready_StartLevel(LevelType startLevelID)
+HRESULT MainApp::Ready_StartLevel(ELevelType startLevelID)
 {
-    if (LevelType::Loading == startLevelID)
+    if (ELevelType::Loading == startLevelID)
         return E_FAIL;
 
-    if (FAILED(GAME->Change_Level(ETOI(LevelType::Loading), Level_Loading::Create(_device, _context, startLevelID))))
+    if (FAILED(GAME->Change_Level(ETOI(ELevelType::Loading), Level_Loading::Create(_device, _context, startLevelID))))
         return E_FAIL;
 
     return S_OK;

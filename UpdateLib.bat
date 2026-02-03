@@ -1,6 +1,6 @@
-// 명령어			옵션			원본 파일이 있는 위치		사본 파일을 저장할 위치
-
-xcopy			/y			.\Engine\Bin\Engine.dll		.\Client\Bin\
-xcopy			/y			.\Engine\Bin\Engine.lib		.\EngineSDK\Lib\
-
-xcopy			/y			.\Engine\Public\*.*			.\EngineSDK\Include\
+pushd %~dp0
+xcopy /y /d "Bin\Engine.dll" "Client\Bin\"
+xcopy /y /d "Bin\Engine.lib" "EngineSDK\Lib\"
+xcopy /y /d /s "Engine\Public\*.*" "EngineSDK\Include\"
+xcopy /y /d "Server\Protobuf\Bin\*.pb.h" "EngineSDK\Include\"
+popd

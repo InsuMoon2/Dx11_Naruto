@@ -17,7 +17,7 @@ HRESULT TestPlayer::Initialize_Prototype()
     return GameObject::Initialize_Prototype();
 }
 
-HRESULT TestPlayer::Initialize(any arg)
+HRESULT TestPlayer::Initialize(void* arg)
 {
     return GameObject::Initialize(arg);
 }
@@ -49,7 +49,7 @@ shared_ptr<GameObject> TestPlayer::Create(ComPtr<Device> device, ComPtr<DeviceCo
     return instance;
 }
 
-shared_ptr<GameObject> TestPlayer::Clone(any arg)
+shared_ptr<GameObject> TestPlayer::Clone(void* arg)
 {
     auto instance = make_shared<TestPlayer>(*this);
 

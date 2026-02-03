@@ -160,13 +160,14 @@
     <ClInclude Include="..\Public\Editor_Manager.h" />
     <ClInclude Include="..\Public\EditorWindow.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
-    <ClInclude Include="..\Public\HierarchyView.h" />
+    <ClInclude Include="..\Public\Game_View.h" />
+    <ClInclude Include="..\Public\Hierarchy.h" />
     <ClInclude Include="..\Public\ImGui_Manager.h" />
     <ClInclude Include="..\Public\Inspector.h" />
     <ClInclude Include="..\Public\Console_View.h" />
     <ClInclude Include="..\Public\PlayerSession_Manager.h" />
     <ClInclude Include="..\Public\Profiler_View.h" />
-    <ClInclude Include="..\Public\SceneView.h" />
+    <ClInclude Include="..\Public\Scene_View.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Level_Serializer.h" />
   </ItemGroup>
@@ -176,13 +177,14 @@
     <ClCompile Include="..\Private\Editor_Logger.cpp" />
     <ClCompile Include="..\Private\Editor_Manager.cpp" />
     <ClCompile Include="..\Private\EditorWindow.cpp" />
-    <ClCompile Include="..\Private\HierarchyView.cpp" />
+    <ClCompile Include="..\Private\Game_View.cpp" />
+    <ClCompile Include="..\Private\Hierarchy.cpp" />
     <ClCompile Include="..\Private\ImGui_Manager.cpp" />
     <ClCompile Include="..\Private\Inspector.cpp" />
     <ClCompile Include="..\Private\Console_View.cpp" />
     <ClCompile Include="..\Private\PlayerSession_Manager.cpp" />
     <ClCompile Include="..\Private\Profiler_View.cpp" />
-    <ClCompile Include="..\Private\SceneView.cpp" />
+    <ClCompile Include="..\Private\Scene_View.cpp" />
     <ClCompile Include="EditorTool.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

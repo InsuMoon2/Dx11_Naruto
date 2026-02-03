@@ -7,6 +7,8 @@
     "directxtk",
     "spdlog",
     "nlohmann-json",
+    "magic-enum",
+    "magic-enum",
     {
       "name": "imgui",
       "features": [ "docking-experimental", "dx11-binding", "win32-binding" ]

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Background.h"
 #include "GameInstance.h"
+#include "Texture.h"
 
 Background::Background(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject { device, context }
@@ -23,9 +24,16 @@ HRESULT Background::Initialize_Prototype()
     return S_OK;
 }
 
-HRESULT Background::Initialize(any arg)
+HRESULT Background::Initialize(void* arg)
 {
-    GameObject::Initialize(arg);
+    FBackgroundDesc desc{};
+
+    desc.speedPerSec = 1.f;
+    desc.rotationPerSec = 1.f;
+
+    CHECK_FAILED(GameObject::Initialize(&desc), E_FAIL);
+
+    CHECK_FAILED(Ready_Components(), E_FAIL);
 
     return S_OK;
 }
@@ -47,6 +55,13 @@ void Background::Late_Update(float timeDelta)
     GAME->Add_RenderGroup(ERenderGroup::UI, GetSharedPtr());
 }
 
+HRESULT Background::Ready_Components()
+{
+    CHECK_FAILED(Add_Component<Texture>(ETOI(ELevelType::Logo), Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, _textureCom), E_FAIL);
+    
+    return S_OK;
+}
+
 shared_ptr<GameObject> Background::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<Background>(device, context);
@@ -61,7 +76,7 @@ shared_ptr<GameObject> Background::Create(ComPtr<Device> device, ComPtr<DeviceCo
     return instance;
 }
 
-shared_ptr<GameObject> Background::Clone(any arg)
+shared_ptr<GameObject> Background::Clone(void* arg)
 {
     auto instance = make_shared<Background>(*this);
 

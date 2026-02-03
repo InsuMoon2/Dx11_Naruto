@@ -33,24 +33,24 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
         desc.hWnd, desc.winMode, desc.viewportWidth, desc.viewportHeight,
         deviceOut, contextOut);
 
-    CHECK_NULL_RETURN(_graphicDevice, E_FAIL);
+    CHECK_NULL(_graphicDevice, E_FAIL);
 
     INPUT->Init(desc.hWnd);
 
     _timerManager = Timer_Manager::Create();
-    CHECK_NULL_RETURN(_timerManager, E_FAIL);
+    CHECK_NULL(_timerManager, E_FAIL);
 
     _levelManager = Level_Manager::Create();
-    CHECK_NULL_RETURN(_levelManager, E_FAIL);
+    CHECK_NULL(_levelManager, E_FAIL);
 
     _protoManager = Prototype_Manager::Create(desc.numLevels);
-    CHECK_NULL_RETURN(_protoManager, E_FAIL);
+    CHECK_NULL(_protoManager, E_FAIL);
 
     _objectManager = Object_Manager::Create(desc.numLevels);
-    CHECK_NULL_RETURN(_objectManager, E_FAIL);
+    CHECK_NULL(_objectManager, E_FAIL);
     
     _renderer = Renderer::Create(Get_Device(), Get_Context());
-    CHECK_NULL_RETURN(_renderer, E_FAIL);
+    CHECK_NULL(_renderer, E_FAIL);
 
     return S_OK;
 }
@@ -167,23 +167,23 @@ HRESULT GameInstance::Add_GameObject_Prototype(uint32 levelIndex, const wstring&
     return _protoManager->Add_GameObject_Prototype(levelIndex, prototypeTag, gameObject);
 }
 
-shared_ptr<GameObject> GameInstance::Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, any arg)
+shared_ptr<GameObject> GameInstance::Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, void* arg)
 {
     return _protoManager->Clone_GameObject(levelIndex, prototypeTag, arg);
 }
 
-HRESULT GameInstance::Add_Component_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<Component> component)
+HRESULT GameInstance::Add_Component_Prototype(uint32 levelIndex, uint32 protoID, shared_ptr<Component> component)
 {
-    return _protoManager->Add_Component_Prototype(levelIndex, prototypeTag, component);
+    return _protoManager->Add_Component_Prototype(levelIndex, protoID, component);
 }
 
-shared_ptr<Component> GameInstance::Clone_Component(uint32 levelIndex, const wstring& prototypeTag, any arg)
+shared_ptr<Component> GameInstance::Clone_Component(uint32 levelIndex, uint32 protoID, void* arg)
 {
-    return _protoManager->Clone_Component(levelIndex, prototypeTag, arg);
+    return _protoManager->Clone_Component(levelIndex, protoID, arg);
 }
 
 HRESULT GameInstance::Add_GameObject(uint32 protoIndex, const wstring& protoTag, uint32 layerIndex,
-    const wstring& layerTag, any arg)
+    const wstring& layerTag, void* arg)
 {
     return _objectManager->Add_GameObject(protoIndex, protoTag, layerIndex, layerTag, arg);
 }
@@ -211,5 +211,6 @@ void GameInstance::Free()
     _levelManager.reset();  
     _protoManager.reset();  
     _timerManager.reset();  
-    _graphicDevice.reset(); 
+    _graphicDevice.reset();
+    _renderer.reset();
 }

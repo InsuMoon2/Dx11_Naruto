@@ -1,0 +1,8 @@
+{
+    "gameObjects": [
+        {
+            "name": "Background"
+        }
+    ],
+    "levelName": "EditorLevel"
+}

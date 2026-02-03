@@ -35,7 +35,7 @@ HRESULT ImGui_Manager::Initialize(HWND hWnd, ComPtr<Device> device, ComPtr<Devic
         icons_config.GlyphMinAdvanceX = 18.0f;
 
         io.Fonts->AddFontFromFileTTF(
-            "../../Resources/Fonts/fontawesome-free-7.1.0-desktop/otfs/Font Awesome 7 Free-Solid-900.otf",
+            "../../Client/Bin/Resources/Fonts/fontawesome-free-7.1.0-desktop/otfs/Font Awesome 7 Free-Solid-900.otf",
             18.0f,
             &icons_config,
             icons_ranges);

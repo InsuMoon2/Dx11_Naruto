@@ -13,7 +13,7 @@ Layer::~Layer()
 
 HRESULT Layer::Add_GameObject(shared_ptr<GameObject> gameObject)
 {
-    CHECK_NULL_RETURN(gameObject, E_FAIL);
+    CHECK_NULL(gameObject, E_FAIL);
 
     _gameObjects.emplace_back(gameObject);
 

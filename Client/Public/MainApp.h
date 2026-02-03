@@ -24,7 +24,7 @@ public:
     HRESULT Render();
 
 private:
-    HRESULT Ready_StartLevel(LevelType startLevelID);
+    HRESULT Ready_StartLevel(ELevelType startLevelID);
 
 private:
     ComPtr<Device>              _device;

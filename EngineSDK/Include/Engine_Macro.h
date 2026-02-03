@@ -1,5 +1,4 @@
-﻿#ifndef Engine_Macro_h__
-#define Engine_Macro_h__
+﻿#pragma once
 
 namespace Engine
 {
@@ -7,6 +6,7 @@ namespace Engine
 
 #ifndef			MSG_BOX
 #define			MSG_BOX(_message)			MessageBox(nullptr, TEXT(_message), L"System Message", MB_OK)
+#define			MSG_BOX_S(_message)			MessageBox(nullptr, _message, L"System Message", MB_OK)
 #endif
 
 #define			NS_BEGIN(NAMESPACE)		namespace NAMESPACE {
@@ -25,33 +25,32 @@ namespace Engine
 #define GAME    GET_SINGLE(GameInstance)
 #define INPUT	GET_SINGLE(Input_Manager)
 
-    // LOG
+// ==================================================
+//              LOG 매크로
+// ==================================================
 #define LOG_INFO(...)    spdlog::info(__VA_ARGS__)
 #define LOG_WARN(...)    spdlog::warn(__VA_ARGS__)
 #define LOG_ERROR(...)   spdlog::error(__VA_ARGS__)
 
 // ==================================================
-// NULL/FAILED 체크 매크로
+//              NULL/FAILED 체크 매크로
 // ==================================================
-#define CHECK_NULL(_ptr) \
-	        { if(_ptr == nullptr) { return; } }
+#define CHECK_NULL(_ptr, ...)                \
+    if ((_ptr) == nullptr) {                 \
+        LOG_ERROR("NULL");        \
+        return __VA_ARGS__;                  \
+    }
 
-#define CHECK_NULL_RETURN(_ptr, _return) \
-	        { if(_ptr == nullptr) { return _return; } }
+#define CHECK_FAILED(_hr, ...)               \
+    if (FAILED(_hr)) {                       \
+        LOG_ERROR("FAILED");       \
+        return __VA_ARGS__;                  \
+    }
 
-#define CHECK_FAILED(_hr) \
-	        if(FAILED(_hr)) { MSG_BOX("Failed"); return E_FAIL; }
+// ==================================================
+//              weak_ptr 매크로
+// ==================================================
 
-#define CHECK_FAILED_RETURN(_hr, _return) \
-	        if(FAILED(_hr)) { MSG_BOX("Failed"); return _return; }
-
-
-/* ------------------------------------------ */
-/*            weak_ptr Lock 매크로             */
-/* ------------------------------------------ */
-
-// weak_ptr가 가리키는 객체를 안전하게 참조(Reference Count 처리)하기 위해 
-// lock()을 통해 shared_ptr로 승격 후 사용
 #define LOCK_WP(weak_ptr, var_name, ...)                                            \
         auto var_name = (weak_ptr).lock();                                          \
         if (!var_name)                                                              \
@@ -61,7 +60,7 @@ namespace Engine
         }
 
 // ==================================================
-// 싱글톤 매크로
+//              싱글톤 매크로
 // ==================================================
 #define NO_COPY(CLASSNAME)											     \
 	        private:													 \
@@ -89,19 +88,30 @@ namespace Engine
 	        }
 
 
-// =======================
-// 클래스 이름 세팅
-// =======================
-#define GENERATE_BODY(ClassName)                                         \
+// ==================================================
+//              클래스 이름 세팅
+// ==================================================
+#define GENERATED_BODY(ClassName)                                         \
 public:                                                                  \
     static const wchar_t* StaticClassName() { return L#ClassName; }      \
 private:                                                                 \
                                                                          \
     bool _name_setter_ = [this](){                                       \
-        if (this->Get_Name().empty())                                    \
             this->Set_Name(StaticClassName());                           \
         return true;                                                     \
     }();
-}
 
-#endif // Engine_Macro_h__
+// ==================================================
+//              컴포넌트 ID 세팅
+// ==================================================
+
+#define GENERATED_COMPONENT(ClassName, ProtoID) \
+    GENERATED_BODY(ClassName)                    \
+                                                \
+public:                                         \
+    /* Protobuf ID 반환 */                     \
+    static uint32 GetComponentID() { return static_cast<uint32>(ProtoID); }
+
+
+
+}

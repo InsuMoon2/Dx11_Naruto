@@ -1,5 +1,4 @@
-﻿#ifndef Engine_Struct_h__
-#define Engine_Struct_h__
+﻿#pragma once
 
 #include "Engine_Typedef.h"
 
@@ -8,7 +7,7 @@ namespace Engine
 	typedef struct tagEngineDesc
     {
         HWND        hWnd;
-        EWinMode     winMode;
+        EWinMode    winMode;
 
         uint32      numLevels;
         uint32      viewportWidth;
@@ -19,13 +18,10 @@ namespace Engine
     typedef struct tagEditorDesc
     {
         HWND        hWnd;
-        EWinMode     winMode;
+        EWinMode    winMode;
 
         uint32      viewportWidth;
         uint32      viewportHeight;
 
     } EDITOR_DESC;
 }
-
-
-#endif // Engine_Struct_h__

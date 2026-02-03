@@ -50,23 +50,25 @@ void Profiler_View::OnGui()
     ImVec2 displaySize = ImGui::GetIO().DisplaySize;
     ImGui::SetNextWindowPos(ImVec2(displaySize.x - 320, 40), ImGuiCond_FirstUseEver);
 
-    if (!ImGui::Begin("Performance Profiler", &_isActive, flags))
+    string str = Utils::ToString(Get_Name());
+
+    if (!ImGui::Begin(str.c_str(), &_isActive, flags))
     {
         ImGui::End();
         return;
     }
 
-    // === FPS 표시 ===
+    // FPS
     ImGui::Text("FPS: %.1f", _currentFPS);
     ImGui::SameLine();
     ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.f), "(%.2f ms)", 1000.f / _currentFPS);
 
-    // === DrawCall 표시 ===
+    // DrawCall
     ImGui::Text("Draw Calls: %d", _currentDrawCalls);
 
 
     ImGui::Separator();
-    // === FPS 그래프 ===
+    // FPS 그래프
     if (ImPlot::BeginPlot("FPS", ImVec2(400, 150)))
     {
         ImPlot::SetupAxes("Time", "FPS");
@@ -76,7 +78,7 @@ void Profiler_View::OnGui()
         ImPlot::EndPlot();
     }
 
-    // === DrawCall 그래프 ===
+    // DrawCall 그래프
     if (ImPlot::BeginPlot("Draw Calls", ImVec2(400, 150)))
     {
         ImPlot::SetupAxes("Time", "Count");

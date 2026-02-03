@@ -68,10 +68,10 @@
       <Filter>01. Utility\03. GameObject\01. Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Renderer.h">
-      <Filter>97. Rendering</Filter>
+      <Filter>05. Rendering</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\RenderTarget.h">
-      <Filter>97. Rendering</Filter>
+      <Filter>05. Rendering</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Transform.h">
       <Filter>01. Utility\04. Component\00. Transform</Filter>
@@ -79,7 +79,12 @@
     <ClInclude Include="..\Public\Texture.h">
       <Filter>01. Utility\04. Component\01. Texture</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Utils.h" />
+    <ClInclude Include="..\Public\Utils.h">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Component_Factory.h" />
+    <ClInclude Include="..\Public\AnimNotify_Factory.h" />
+    <ClInclude Include="..\Public\Controller.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -130,14 +135,23 @@
     <Filter Include="01. Utility\98. Utils">
       <UniqueIdentifier>{6a2903c6-1ca9-44c3-a9ca-6be613ef3d6b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. Rendering">
-      <UniqueIdentifier>{a4e2c1a3-14f0-4285-817e-4b0033f0ae53}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\04. Component\00. Transform">
       <UniqueIdentifier>{d11125f6-66d1-4c03-8a49-fc7bd1e45d50}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Utility\04. Component\01. Texture">
       <UniqueIdentifier>{ca604a5e-183a-43d7-9376-f11772d53533}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Factory">
+      <UniqueIdentifier>{bbc4c72d-834b-4739-8694-bab80897058e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. GameObject\02. Controller">
+      <UniqueIdentifier>{c7bc88a9-2a8c-4e3e-90c1-0a41f8b30278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Rendering">
+      <UniqueIdentifier>{a4e2c1a3-14f0-4285-817e-4b0033f0ae53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Protocol">
+      <UniqueIdentifier>{657377b8-ee8f-4517-858f-7798fcb6ff4f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -187,10 +201,10 @@
       <Filter>01. Utility\03. GameObject\01. Layer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Renderer.cpp">
-      <Filter>97. Rendering</Filter>
+      <Filter>05. Rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\RenderTarget.cpp">
-      <Filter>97. Rendering</Filter>
+      <Filter>05. Rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Transform.cpp">
       <Filter>01. Utility\04. Component\00. Transform</Filter>
@@ -198,10 +212,18 @@
     <ClCompile Include="..\Private\Texture.cpp">
       <Filter>01. Utility\04. Component\01. Texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Utils.cpp" />
+    <ClCompile Include="..\Private\Utils.cpp">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Component_Factory.cpp" />
+    <ClCompile Include="..\Private\AnimNotify_Factory.cpp" />
+    <ClCompile Include="..\Private\Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">
+      <Filter>98. Default</Filter>
+    </None>
+    <None Include="..\..\UpdateLib.bat">
       <Filter>98. Default</Filter>
     </None>
   </ItemGroup>

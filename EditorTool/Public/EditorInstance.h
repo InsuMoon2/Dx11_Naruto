@@ -2,6 +2,7 @@
 
 #include "Editor_Define.h"
 #include "Engine_Struct.h"
+#include "GameInstance.h"
 
 NS_BEGIN(Editor)
 class ImGui_Manager;
@@ -27,7 +28,9 @@ public:
     void    Play();
     void    Pause();
     void    Stop();
-    bool    IsPlaying() const { return _isPlaying && !_isPaused; }
+
+    bool    IsPlaying() const { return GAME->Get_GameState() == EGameState::Play; }
+    bool    IsPaused()  const { return GAME->Get_GameState() == EGameState::Pause; }
 
     HWND    Get_WindowHandle() const { return _desc.hWnd; }
 
@@ -44,9 +47,6 @@ private: /* Manager */
     unique_ptr<PlayerSession_Manager>   _playerSessionManager;
 
 private:
-    bool _isPlaying = true;
-    bool _isPaused = false;
-
     EDITOR_DESC _desc = {};
 
 };

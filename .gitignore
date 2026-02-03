@@ -44,8 +44,8 @@ bld/
 
 # --- Exception: Keep Client/Bin/Resource in version control ---
 # Contains runtime assets (textures, meshes, etc.) required by the Client.
-!Client/Bin/Resource/
-!Client/Bin/Resource/**
+!Client/Bin/Resources/
+!Client/Bin/Resources/**
 !Client/Bin/fmodL.dll
 
 # Visual Studio 2015/2017 cache/options directory

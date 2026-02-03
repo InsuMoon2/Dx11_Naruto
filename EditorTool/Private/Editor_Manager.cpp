@@ -2,8 +2,8 @@
 #include "EditorInstance.h"
 #include "GameInstance.h"
 #include "Editor_Manager.h"
-#include "SceneView.h"
-#include "HierarchyView.h"
+#include "Scene_View.h"
+#include "Hierarchy.h"
 #include "Console_View.h"
 #include "Content_Browser.h"
 #include "Inspector.h"
@@ -11,6 +11,7 @@
 #include "PlayerSession_Manager.h"
 #include "Profiler_View.h"
 #include "RenderTarget.h"
+#include "Game_View.h"
 
 Editor_Manager::~Editor_Manager()
 {
@@ -18,8 +19,9 @@ Editor_Manager::~Editor_Manager()
 
 void Editor_Manager::Initialize()
 {
-    Add_Window(TEXT("Scene"), SceneView::Create());
-    Add_Window(TEXT("Hierarchy"), HierarchyView::Create());
+    Add_Window(TEXT("Scene"), Scene_View::Create());
+    Add_Window(TEXT("Game"), Game_View::Create());
+    Add_Window(TEXT("Hierarchy"), Hierarchy::Create());
     Add_Window(TEXT("Inspector"), Inspector::Create());
 
     Add_Window(TEXT("Console"), Console_View::Create());
@@ -34,6 +36,8 @@ void Editor_Manager::Update(float timeDelta)
     Begin_DockSpace();
     Show_MenuBar();
 
+    Handle_Shortcuts();
+
     for (auto& [key, window] : _windows)
     {
         if (window && window->IsActive())
@@ -46,19 +50,29 @@ void Editor_Manager::Update(float timeDelta)
 
 void Editor_Manager::Render()
 {
-    auto sceneView = dynamic_pointer_cast<SceneView>(Get_Window(TEXT("Scene")));
-    if (!sceneView || !sceneView->IsActive())
-        return;
+    shared_ptr<RenderTarget> targetRT = nullptr;
 
-    auto renderTarget = sceneView->Get_RenderTarget();
-    CHECK_NULL(renderTarget);
+    if (GAME->Get_GameState() == EGameState::Play)
+    {
+        auto gameView = dynamic_pointer_cast<Game_View>(Get_Window(TEXT("Game")));
+        if (gameView && gameView->IsActive())
+            targetRT = gameView->Get_RenderTarget();
+    }
+    else // Edit Mode
+    {
+        auto sceneView = dynamic_pointer_cast<Scene_View>(Get_Window(TEXT("Scene")));
+        if (sceneView && sceneView->IsActive())
+            targetRT = sceneView->Get_RenderTarget();
+    }
+    // 렌더링 수행
+    if (targetRT)
+    {
+        targetRT->BindAsTarget();
+        targetRT->Clear(Color(0.1f, 0.1f, 0.1f, 1.f));
+        GAME->Draw(); // 실제 게임 렌더링
+        targetRT->UnbindAll();
+    }
 
-    renderTarget->BindAsTarget();
-    renderTarget->Clear(Color(0.1f, 0.1f, 0.1f, 1.f));
-
-    GAME->Draw();
-
-    renderTarget->UnbindAll();
     GAME->BindBackBuffer();
 }
 
@@ -68,6 +82,35 @@ void Editor_Manager::Add_Window(const wstring& key, shared_ptr<EditorWindow> win
 
     if (window)
         window->Initialize();
+}
+
+void Editor_Manager::Handle_Shortcuts()
+{
+    bool ctrlPressed  = ImGui::GetIO().KeyCtrl;
+    bool shiftPressed = ImGui::GetIO().KeyShift;
+
+    if (ctrlPressed && ImGui::IsKeyPressed(ImGuiKey_S, false)) // false -> 반복 입력 방지
+    {
+        // Ctrl + Shift + S : 다른 이름으로 저장
+        if (shiftPressed)
+        {
+            _showSaveLevelDialog = true;
+            ::memset(_levelNameBuffer, 0, sizeof(_levelNameBuffer));
+        }
+        // Ctrl + S : 덮어쓰기
+        else
+        {
+            if (!_lastLevelPath.empty())
+            {
+                On_SaveLevel(_lastLevelPath);
+            }
+            else
+            {
+                _showSaveLevelDialog = true;
+                ::memset(_levelNameBuffer, 0, sizeof(_levelNameBuffer));
+            }
+        }
+    }
 }
 
 shared_ptr<EditorWindow> Editor_Manager::Get_Window(const wstring& key)
@@ -99,11 +142,10 @@ void Editor_Manager::Begin_DockSpace()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::Begin("##DockSpaceHost", nullptr, host_flags);
+
     ImGui::PopStyleVar(3);
     {
         float toolbarHeight = 34.f;
-
-        
 
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 4.f);
 
@@ -112,12 +154,16 @@ void Editor_Manager::Begin_DockSpace()
 
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 4));
 
-        if (!EDITOR->IsPlaying())
+        if (GAME->Get_GameState() == EGameState::Edit)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
 
             if (ImGui::Button(ICON_FA_PLAY "##Play"))
+            {
+                ImGui::SetWindowFocus("Game");
+
                 EDITOR->Play();
+            }
 
             ImGui::PopStyleColor();
         }
@@ -126,7 +172,12 @@ void Editor_Manager::Begin_DockSpace()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.7f, 0.2f, 0.2f, 1.0f));
 
             if (ImGui::Button(ICON_FA_STOP "##Stop"))
+            {
+                ImGui::SetWindowFocus("Scene");
+
                 EDITOR->Stop();
+            }
+                
 
             ImGui::PopStyleColor();
         }
@@ -266,6 +317,7 @@ void Editor_Manager::Show_SaveLevelDialog()
     if (!ImGui::IsPopupOpen("Save Level"))
         ImGui::OpenPopup("Save Level");
 
+    // 화면 중앙 
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::PushStyleColor(ImGuiCol_ModalWindowDimBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
@@ -274,6 +326,7 @@ void Editor_Manager::Show_SaveLevelDialog()
     if (ImGui::BeginPopupModal("Save Level", &_showSaveLevelDialog,
         ImGuiWindowFlags_NoResize))
     {
+
         ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), "Enter level name:");
         ImGui::Spacing();
 
@@ -326,12 +379,14 @@ void Editor_Manager::Show_SaveLevelDialog()
 
 void Editor_Manager::Show_LoadLevelDialog()
 {
+    // 팝업이 열려있지 않다면 
     if (!ImGui::IsPopupOpen("Load Level"))
         ImGui::OpenPopup("Load Level");
 
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::PushStyleColor(ImGuiCol_ModalWindowDimBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
     ImGui::SetNextWindowSize(ImVec2(400, 350));
 
     if (ImGui::BeginPopupModal("Load Level", &_showLoadLevelDialog,
@@ -344,6 +399,7 @@ void Editor_Manager::Show_LoadLevelDialog()
         ImGui::Separator();
         ImGui::Spacing();
 
+        // 리스트 박스 시작
         if (ImGui::BeginListBox("##LevelList", ImVec2(-1, 220)))
         {
             if (_levelFiles.empty())
@@ -356,11 +412,20 @@ void Editor_Manager::Show_LoadLevelDialog()
                 {
                     wstring& fileNameW = _levelFiles[i];
                     string fileName = string(fileNameW.begin(), fileNameW.end());
-
                     bool isSelected = (_selectedLevelIndex == i);
+
                     if (ImGui::Selectable(fileName.c_str(), isSelected))
                         _selectedLevelIndex = i;
 
+                    if (ImGui::BeginPopupContextItem())
+                    {
+                        if (ImGui::MenuItem("Delete Level"))
+                        {
+                            _deleteTargetFile = fileNameW; // 삭제할 파일 기억
+                            _showDeleteConfirm = true;     // 삭제 확인창 트리거
+                        }
+                        ImGui::EndPopup();
+                    }
                     // 더블 클릭 시 바로 로드
                     if (isSelected && ImGui::IsMouseDoubleClicked(0))
                     {
@@ -373,13 +438,16 @@ void Editor_Manager::Show_LoadLevelDialog()
             ImGui::EndListBox();
         }
 
+        if (_showDeleteConfirm)
+            ImGui::OpenPopup("Delete Confirmation");
+
+        Show_DeleteConfirmModal();
+
         ImGui::Spacing();
         ImGui::Separator();
         ImGui::Spacing();
 
-        // 버튼
         bool canLoad = (_selectedLevelIndex >= 0 && _selectedLevelIndex < _levelFiles.size());
-
         if (!canLoad)
             ImGui::BeginDisabled();
 
@@ -395,22 +463,69 @@ void Editor_Manager::Show_LoadLevelDialog()
 
         ImGui::SameLine();
 
+        // Cancel 버튼
         if (ImGui::Button("Cancel", ImVec2(120, 0)))
         {
             _showLoadLevelDialog = false;
             _selectedLevelIndex = -1;
         }
-
         ImGui::EndPopup();
     }
     ImGui::PopStyleColor();
 }
 
+void Editor_Manager::Show_DeleteConfirmModal()
+{
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    if (ImGui::BeginPopupModal("Delete Confirmation", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        string fileStr(_deleteTargetFile.begin(), _deleteTargetFile.end());
+        ImGui::Text("Are you sure you want to delete this file?");
+        ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "%s", fileStr.c_str());
+        ImGui::Separator();
+        if (ImGui::Button("Delete", ImVec2(120, 0)))
+        {
+            // 실제 파일 삭제 (std::filesystem)
+            try {
+                if (filesystem::exists(_deleteTargetFile))
+                {
+                    filesystem::remove(_deleteTargetFile);
+                    LOG_INFO("File Deleted: {}", fileStr);
+                }
+            }
+            catch (const exception& e) {
+                LOG_ERROR("Delete Failed: {}", e.what());
+            }
+
+            // 리스트 갱신
+            _levelFiles = Level_Serializer::Get_SaveFiles();
+            _deleteTargetFile = L"";
+            _showDeleteConfirm = false;
+
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Cancel", ImVec2(120, 0)))
+        {
+            _deleteTargetFile = L"";
+            _showDeleteConfirm = false;
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+}
+
 void Editor_Manager::On_SaveLevel(const wstring& fileName)
 {
-    uint32 currentLevel = GAME->Current_Level();
-    auto objects = GAME->Get_GameObjects(currentLevel);
-    Level_Serializer::Save_Level(fileName, objects);
+    Level_Serializer::Save_Level(fileName, GAME->Get_GameObjects(GAME->Current_Level()));
+    _lastLevelPath = fileName; // 경로 갱신
+    
+    string pathStr(fileName.begin(), fileName.end());
+
+    LOG_INFO("Level Saved: {}", pathStr);
 }
 
 void Editor_Manager::On_LoadLevel(const wstring& fileName)
@@ -420,6 +535,11 @@ void Editor_Manager::On_LoadLevel(const wstring& fileName)
     // TODO : 
     // 1. 현재 레벨 클리어
     // 2. 로드한 오브젝트 추가
+
+    _lastLevelPath = fileName;
+
+    string fileStr(fileName.begin(), fileName.end());
+    LOG_WARN("Level Loaded: {}", fileStr);
 }
 
 unique_ptr<Editor_Manager> Editor_Manager::Create()

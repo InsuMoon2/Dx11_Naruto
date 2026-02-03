@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Object_Manager.h"
 #include "GameInstance.h"
+#include "GameObject.h"
 #include "Layer.h"
 
 Object_Manager::Object_Manager()
@@ -57,13 +58,13 @@ void Object_Manager::Late_Update(float timeDelta)
 }
 
 HRESULT Object_Manager::Add_GameObject(uint32 protoLevelIndex, const wstring& protoTag, uint32 layerLevelIndex,
-    const wstring& layerTag, any arg)
+    const wstring& layerTag, void* arg)
 {
     if (layerLevelIndex >= _numLevels)
         return E_FAIL;
 
     auto gameObject = GAME->Clone_GameObject(protoLevelIndex, protoTag, arg);
-    CHECK_NULL_RETURN(gameObject, E_FAIL);
+    CHECK_NULL(gameObject, E_FAIL);
 
     shared_ptr<Layer> layer = Find_Layer(layerLevelIndex, layerTag);
 

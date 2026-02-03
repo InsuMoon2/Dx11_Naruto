@@ -23,15 +23,12 @@ HRESULT Transform::Initialize_Prototype()
     return S_OK;
 }
 
-HRESULT Transform::Initialize(any arg)
+HRESULT Transform::Initialize(void* arg)
 {
-    if (!arg.has_value())
-        return S_OK;
+    FTransformDesc* desc = static_cast<FTransformDesc*>(arg);
 
-    auto desc = any_cast<FTransformDesc>(arg);
-
-    _speedPerSec = desc.speedPerSec;
-    _rotationPerSec = desc.rotationPerSec;
+    _speedPerSec = desc->speedPerSec;
+    _rotationPerSec = desc->rotationPerSec;
 
     return S_OK;
 }
@@ -51,7 +48,7 @@ shared_ptr<Transform> Transform::Create(ComPtr<Device> device,
     return instance;
 }
 
-shared_ptr<Component> Transform::Clone(any arg)
+shared_ptr<Component> Transform::Clone(void* arg)
 {
     auto instance = make_shared<Transform>(*this);
 

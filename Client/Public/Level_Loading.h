@@ -17,14 +17,14 @@ public:
     virtual ~Level_Loading();
 
 public:
-    virtual HRESULT Initialize(LevelType nextLevelID);
+    virtual HRESULT Initialize(ELevelType nextLevelID);
     virtual void    Update(float timeDelta) override;
     virtual void    Late_Update(float timeDelta) override;
      virtual HRESULT Render() override;
 
 private:
     shared_ptr<Loader>      _loader;
-    LevelType               _nextLevelID = { LevelType::END };
+    ELevelType               _nextLevelID = { ELevelType::END };
 
 private:
     HRESULT  Ready_Layer_Background(const wstring& layerTag);
@@ -32,7 +32,7 @@ private:
 
 public:
     static shared_ptr<Level_Loading> Create(
-        ComPtr<Device> device, ComPtr<DeviceContext> context, LevelType nextLevelID);
+        ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID);
 
     virtual void Free() override;
 

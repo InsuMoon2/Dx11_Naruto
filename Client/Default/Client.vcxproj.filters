@@ -52,6 +52,12 @@
     <ClInclude Include="..\Public\TestPlayer.h">
       <Filter>02. GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Client_Macro.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Enum.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">

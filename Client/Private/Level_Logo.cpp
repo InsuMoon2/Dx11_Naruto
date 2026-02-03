@@ -53,8 +53,8 @@ HRESULT Level_Logo::Render()
 
 HRESULT Level_Logo::Ready_Layer_Background(const wstring& layerTag)
 {
-    if (FAILED(GAME->Add_GameObject(ETOI(LevelType::Logo), TEXT("Prototype_Background"),
-        ETOI(LevelType::Logo), layerTag)))
+    if (FAILED(GAME->Add_GameObject(ETOI(ELevelType::Logo), TEXT("Prototype_Background"),
+        ETOI(ELevelType::Logo), layerTag)))
         return E_FAIL;
 
     return S_OK;

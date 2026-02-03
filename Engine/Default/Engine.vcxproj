@@ -133,10 +133,7 @@
       <AdditionalDependencies>d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y "$(SolutionDir)Engine\Bin\Engine.dll" "$(SolutionDir)Client\Bin\"
-xcopy /y "$(SolutionDir)Engine\Bin\Engine.lib" "$(SolutionDir)EngineSDK\Lib\"
-xcopy /y "$(SolutionDir)Engine\Public\*.*" "$(SolutionDir)EngineSDK\Include\"
-</Command>
+      <Command>call "$(SolutionDir)UpdateLib.bat"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>cd $(SolutionDir)Server\Protobuf\Protocol
@@ -167,8 +164,11 @@ call GenProto.bat</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\AnimNotify_Factory.h" />
     <ClInclude Include="..\Public\Base.h" />
     <ClInclude Include="..\Public\Component.h" />
+    <ClInclude Include="..\Public\Component_Factory.h" />
+    <ClInclude Include="..\Public\Controller.h" />
     <ClInclude Include="..\Public\GameInstance.h" />
     <ClInclude Include="..\Public\GameObject.h" />
     <ClInclude Include="..\Public\Graphic_Device.h" />
@@ -196,8 +196,11 @@ call GenProto.bat</Command>
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\AnimNotify_Factory.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
+    <ClCompile Include="..\Private\Component_Factory.cpp" />
+    <ClCompile Include="..\Private\Controller.cpp" />
     <ClCompile Include="..\Private\GameInstance.cpp" />
     <ClCompile Include="..\Private\GameObject.cpp" />
     <ClCompile Include="..\Private\Graphic_Device.cpp" />
@@ -220,6 +223,7 @@ call GenProto.bat</Command>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\UpdateLib.bat" />
     <None Include="..\..\vkpkg.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

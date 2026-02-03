@@ -22,7 +22,9 @@ void Inspector::Update(float timeDelta)
 
 void Inspector::OnGui()
 {
-    ImGui::Begin("Inspector");
+    string str = Utils::ToString(Get_Name());
+
+    ImGui::Begin(str.c_str());
     {
 
     }

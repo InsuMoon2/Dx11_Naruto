@@ -15,17 +15,16 @@ GameObject::~GameObject()
 {
 }
 
-HRESULT GameObject::Initialize(any arg)
+HRESULT GameObject::Initialize(void* arg)
 {
-    if (!arg.has_value())
-        return S_OK;
-
-    auto desc = any_cast<FGameObjectDesc>(arg);
+    FGameObjectDesc* desc = static_cast<FGameObjectDesc*>(arg);
 
     _transformCom = Transform::Create(_device, _context);
+    CHECK_NULL(_transformCom, E_FAIL);
 
-    if (FAILED(_transformCom->Initialize(desc)))
-        return E_FAIL;
+    CHECK_FAILED(_transformCom->Initialize(desc), E_FAIL);
+
+    _components.emplace(Transform::GetComponentID(), _transformCom);
 
     return S_OK;
 }
@@ -54,26 +53,6 @@ void GameObject::Late_Update(float timeDelta)
 void GameObject::Render()
 {
 
-}
-
-void GameObject::Add_Component(const wstring& tag, shared_ptr<Component> component)
-{
-    assert(component != nullptr && "Component is Null");
-
-    if (_components.find(tag) != _components.end())
-        return;
-
-    _components.emplace(tag, component);
-}
-
-shared_ptr<Component> GameObject::Get_Compoennt(const wstring& tag)
-{
-    auto iter = _components.find(tag);
-
-    if (iter == _components.end())
-        return nullptr;
-
-    return iter->second;
 }
 
 void GameObject::Free()

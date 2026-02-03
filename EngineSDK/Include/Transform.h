@@ -6,6 +6,8 @@ NS_BEGIN(Engine)
 
 class ENGINE_DLL Transform : public Component
 {
+    GENERATED_COMPONENT(Transform, Protocol::COMPONENT_TYPE_TRANSFORM)
+
 public:
     struct FTransformDesc
     {
@@ -20,7 +22,7 @@ public:
 
 public:
     virtual HRESULT Initialize_Prototype() override;
-    virtual HRESULT Initialize(any arg) override;
+    virtual HRESULT Initialize(void* arg) override;
 
 private:
     Matrix  _worldMatrix = {};
@@ -29,7 +31,7 @@ private:
 
 public:
     static shared_ptr<Transform> Create(ComPtr<Device> device,ComPtr<DeviceContext> context);
-    virtual shared_ptr<Component> Clone(any arg) override;
+    virtual shared_ptr<Component> Clone(void* arg) override;
     virtual void Free() override;
 
 };

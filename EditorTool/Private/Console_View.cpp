@@ -23,7 +23,9 @@ void Console_View::Update(float timeDelta)
 
 void Console_View::OnGui()
 {
-    ImGui::Begin("Console", &_isActive);
+    string str = Utils::ToString(Get_Name());
+
+    ImGui::Begin(str.c_str(), &_isActive);
     {
         auto sink = Editor_Logger::GetSink();
 
@@ -48,7 +50,7 @@ void Console_View::OnGui()
                 else if (log.level == LogLevel::Error)
                     color = ImVec4(1, 0, 0, 1);
 
-                ImGui::TextColored(color, log.message.c_str());
+                ImGui::TextColored(color, "%s", log.message.c_str());
             }
 
             // 자동 스크롤
