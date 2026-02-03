@@ -103,7 +103,7 @@ void Editor_Manager::Begin_DockSpace()
     {
         float toolbarHeight = 34.f;
 
-        int test;
+        
 
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 4.f);
 
