@@ -14,12 +14,14 @@ TestPlayer::TestPlayer(const TestPlayer& rhs)
 
 HRESULT TestPlayer::Initialize_Prototype()
 {
-    return GameObject::Initialize_Prototype();
+
+    return S_OK;
 }
 
 HRESULT TestPlayer::Initialize(void* arg)
 {
-    return GameObject::Initialize(arg);
+
+    return S_OK;
 }
 
 void TestPlayer::Priority_Update(float timeDelta)

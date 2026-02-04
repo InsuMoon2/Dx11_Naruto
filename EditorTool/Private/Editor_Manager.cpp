@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
-#include "EditorInstance.h"
 #include "GameInstance.h"
+#include "EditorInstance.h"
 #include "Editor_Manager.h"
 #include "Scene_View.h"
 #include "Hierarchy.h"
@@ -164,7 +164,7 @@ void Editor_Manager::Begin_DockSpace()
 
                 EDITOR->Play();
             }
-
+            
             ImGui::PopStyleColor();
         }
         else
@@ -323,27 +323,45 @@ void Editor_Manager::Show_SaveLevelDialog()
     ImGui::PushStyleColor(ImGuiCol_ModalWindowDimBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
     ImGui::SetNextWindowSize(ImVec2(400, 150));
 
-    if (ImGui::BeginPopupModal("Save Level", &_showSaveLevelDialog,
-        ImGuiWindowFlags_NoResize))
+    if (ImGui::BeginPopupModal("Save Level", &_showSaveLevelDialog, ImGuiWindowFlags_NoResize))
     {
-
         ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), "Enter level name:");
         ImGui::Spacing();
 
+        ImGuiInputTextFlags flags = ImGuiInputTextFlags_EnterReturnsTrue;
+
+        bool isEnterPressed = false;
+
+        // 포커스 세팅
+        if (ImGui::IsWindowAppearing())
+            ImGui::SetKeyboardFocusHere();
+
         // 텍스트 입력
         ImGui::SetNextItemWidth(-1);
-        ImGui::InputText("##LevelName", _levelNameBuffer, IM_ARRAYSIZE(_levelNameBuffer));
+        if (ImGui::InputText("##LevelName", _levelNameBuffer, IM_ARRAYSIZE(_levelNameBuffer), flags))
+            isEnterPressed = true;
 
         ImGui::Spacing();
         ImGui::Separator();
         ImGui::Spacing();
 
+        // ESC 종료
+        if (ImGui::IsKeyPressed(ImGuiKey_Escape))
+        {
+            _showSaveLevelDialog = false;
+            ImGui::CloseCurrentPopup();
+        }
+
+        float buttonWidth = 120.f;
+        float spacing = ImGui::GetStyle().ItemSpacing.x;
+        float totalButtonsWidth = (buttonWidth * 2.f) + spacing;
+
+        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - totalButtonsWidth) * 0.5f);
+
         bool canSave = (strlen(_levelNameBuffer) > 0);
+        if (!canSave) ImGui::BeginDisabled();
 
-        if (!canSave)
-            ImGui::BeginDisabled();
-
-        if (ImGui::Button("Save", ImVec2(120, 0)))
+        if (ImGui::Button("Save", ImVec2(120, 0)) || (canSave && isEnterPressed))
         {
             time_t now = time(nullptr);
             tm localTime;
@@ -447,6 +465,19 @@ void Editor_Manager::Show_LoadLevelDialog()
         ImGui::Separator();
         ImGui::Spacing();
 
+        // ESC 종료
+        if (ImGui::IsKeyPressed(ImGuiKey_Escape))
+        {
+            _showLoadLevelDialog = false;
+            ImGui::CloseCurrentPopup();
+        }
+
+        float buttonWidth = 120.f;
+        float spacing = ImGui::GetStyle().ItemSpacing.x;
+        float totalButtonsWidth = (buttonWidth * 2.f) + spacing;
+
+        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - totalButtonsWidth) * 0.5f);
+
         bool canLoad = (_selectedLevelIndex >= 0 && _selectedLevelIndex < _levelFiles.size());
         if (!canLoad)
             ImGui::BeginDisabled();
@@ -486,15 +517,19 @@ void Editor_Manager::Show_DeleteConfirmModal()
         ImGui::Separator();
         if (ImGui::Button("Delete", ImVec2(120, 0)))
         {
-            // 실제 파일 삭제 (std::filesystem)
-            try {
-                if (filesystem::exists(_deleteTargetFile))
+            wstring fullPath = Level_Serializer::Get_FullPath(_deleteTargetFile);
+
+            // 실제 파일 삭제
+            try
+            {
+                if (filesystem::exists(fullPath))
                 {
-                    filesystem::remove(_deleteTargetFile);
-                    LOG_INFO("File Deleted: {}", fileStr);
+                    filesystem::remove(fullPath);
+                    LOG_WARN("File Deleted: {}", fileStr);
                 }
             }
-            catch (const exception& e) {
+            catch (const exception& e)
+            {
                 LOG_ERROR("Delete Failed: {}", e.what());
             }
 
@@ -523,9 +558,10 @@ void Editor_Manager::On_SaveLevel(const wstring& fileName)
     Level_Serializer::Save_Level(fileName, GAME->Get_GameObjects(GAME->Current_Level()));
     _lastLevelPath = fileName; // 경로 갱신
     
-    string pathStr(fileName.begin(), fileName.end());
+    fs::path path(fileName);
+    string pureName = path.stem().stem().string(); // 파일명 자르기
 
-    LOG_INFO("Level Saved: {}", pathStr);
+    LOG_WARN("Level Saved: {}", pureName);
 }
 
 void Editor_Manager::On_LoadLevel(const wstring& fileName)
@@ -538,8 +574,10 @@ void Editor_Manager::On_LoadLevel(const wstring& fileName)
 
     _lastLevelPath = fileName;
 
-    string fileStr(fileName.begin(), fileName.end());
-    LOG_WARN("Level Loaded: {}", fileStr);
+    fs::path path(fileName);
+    string pureName = path.stem().stem().string();
+
+    LOG_WARN("Level Loaded: {}", pureName);
 }
 
 unique_ptr<Editor_Manager> Editor_Manager::Create()

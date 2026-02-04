@@ -23,6 +23,8 @@ public:
     shared_ptr<GameObject> Get_SelectedObject() const { return _selectedObject; }
     const vector<shared_ptr<GameObject>>& Get_LevelObjects() const { return _levelObjects; }
 
+    void Delete_GameObject(uint32 levelIndex, shared_ptr<GameObject> object);
+
 private:
     void Draw_SearchBar();
     void Draw_ObjectList();

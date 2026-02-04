@@ -121,7 +121,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine\Public;$(SolutionDir)EngineSDK\Inc;$(SolutionDir)EditorTool\Public;$(SolutionDir)EditorTool\Default</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)EditorTool\Public;$(SolutionDir)EditorTool\Default;$(SolutionDir)EngineSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>

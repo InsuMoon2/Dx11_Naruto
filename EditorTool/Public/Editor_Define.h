@@ -14,3 +14,5 @@ namespace Editor
 using namespace Editor;
 
 #define EDITOR EditorInstance::GetInstance()
+
+#define U8(str) (const char*)u8##str

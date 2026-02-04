@@ -2,14 +2,15 @@
   <PropertyGroup>
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
   </PropertyGroup>
-
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- 루트 폴더의 vcpkg_installed 참조 -->
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories Condition="'$(Configuration)'=='Debug'">$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows\x64-windows\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories Condition="'$(Configuration)'=='Release'">$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows\x64-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <!-- 루트 폴더의 vcpkg_installed 참조 -->
+      <AdditionalLibraryDirectories Condition="'$(Configuration)'=='Debug'">$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)'=='Release'">$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

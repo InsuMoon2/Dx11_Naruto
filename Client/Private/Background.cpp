@@ -52,7 +52,7 @@ void Background::Late_Update(float timeDelta)
 {
     GameObject::Late_Update(timeDelta);
 
-    GAME->Add_RenderGroup(ERenderGroup::UI, GetSharedPtr());
+    GAME->Add_RenderGroup(ERenderGroup::UI, this->GetSharedPtr());
 }
 
 HRESULT Background::Ready_Components()

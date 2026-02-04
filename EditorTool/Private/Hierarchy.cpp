@@ -7,7 +7,7 @@
 #include "EditorInstance.h"
 
 Hierarchy::Hierarchy()
-    : EditorWindow(TEXT("Hieararchy"))
+    : EditorWindow(TEXT("Hierarchy"))
 {
 }
 
