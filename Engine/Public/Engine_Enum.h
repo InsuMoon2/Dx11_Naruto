@@ -1,5 +1,4 @@
-﻿#ifndef Engine_Enum_h__
-#define Engine_Enum_h__
+﻿#pragma once
 
 namespace Engine
 {
@@ -10,5 +9,7 @@ namespace Engine
     enum class ERenderGroup { Priority, NonBlend, Blend, UI, END };
 
     enum class EGameState { Edit, Play, Pause, END };
+
+    enum class EEventType { Create_Object, Delete_Object, END };
 }
-#endif // Engine_Enum_h__
+

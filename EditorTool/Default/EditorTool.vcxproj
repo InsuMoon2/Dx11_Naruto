@@ -124,6 +124,8 @@
       <AdditionalIncludeDirectories>$(SolutionDir)EditorTool\Public;$(SolutionDir)EditorTool\Default;$(SolutionDir)EngineSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <UseStandardPreprocessor>
+      </UseStandardPreprocessor>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -156,7 +158,9 @@
   <ItemGroup>
     <ClInclude Include="..\Public\Content_Browser.h" />
     <ClInclude Include="..\Public\EditorInstance.h" />
+    <ClInclude Include="..\Public\Editor_Enum.h" />
     <ClInclude Include="..\Public\Editor_Logger.h" />
+    <ClInclude Include="..\Public\Editor_Macro.h" />
     <ClInclude Include="..\Public\Editor_Manager.h" />
     <ClInclude Include="..\Public\EditorWindow.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
@@ -165,6 +169,7 @@
     <ClInclude Include="..\Public\ImGui_Manager.h" />
     <ClInclude Include="..\Public\Inspector.h" />
     <ClInclude Include="..\Public\Console_View.h" />
+    <ClInclude Include="..\Public\Notification_Manager.h" />
     <ClInclude Include="..\Public\PlayerSession_Manager.h" />
     <ClInclude Include="..\Public\Profiler_View.h" />
     <ClInclude Include="..\Public\Scene_View.h" />
@@ -182,6 +187,7 @@
     <ClCompile Include="..\Private\ImGui_Manager.cpp" />
     <ClCompile Include="..\Private\Inspector.cpp" />
     <ClCompile Include="..\Private\Console_View.cpp" />
+    <ClCompile Include="..\Private\Notification_Manager.cpp" />
     <ClCompile Include="..\Private\PlayerSession_Manager.cpp" />
     <ClCompile Include="..\Private\Profiler_View.cpp" />
     <ClCompile Include="..\Private\Scene_View.cpp" />

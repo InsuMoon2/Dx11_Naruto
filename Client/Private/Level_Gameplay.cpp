@@ -53,24 +53,19 @@ HRESULT Level_Gameplay::Render()
     SetWindowText(g_hWnd, TEXT("현재 레벨 : GamePlay"));
     #endif
     
-
     return S_OK;
 }
 
 HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
 {
-    if (FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), TEXT("Prototype_TestPlayer"),
-        ETOI(ELevelType::GamePlay), layerTag)))
-        return E_FAIL;
+    CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), OBJECT_TYPE_PLAYER, layerTag), E_FAIL);
 
     return S_OK;
 }
 
 HRESULT Level_Gameplay::Ready_Layer_TempLayer(const wstring& layerTag)
 {
-    if (FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), TEXT("Prototype_TestPlayer"),
-        ETOI(ELevelType::GamePlay), layerTag)))
-        return E_FAIL;
+    CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), OBJECT_TYPE_PLAYER, layerTag), E_FAIL);
 
     return S_OK;
 }

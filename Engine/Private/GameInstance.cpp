@@ -8,9 +8,11 @@
 #include "Prototype_Manager.h"
 #include "Object_Manager.h"
 #include "Input_Manager.h"
+#include "Event_Manager.h"
 
 #include "GameObject.h"
 #include "Component.h"
+#include "Prefab_Manager.h"
 #include "Renderer.h"
 
 IMPLEMENT_SINGLETON(GameInstance)
@@ -52,6 +54,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     _renderer = Renderer::Create(Get_Device(), Get_Context());
     CHECK_NULL(_renderer, E_FAIL);
 
+    _prefabManager = Prefab_Manager::Create(Get_Device(), Get_Context());
+    CHECK_NULL(_prefabManager, E_FAIL);
+
     return S_OK;
 }
 
@@ -67,13 +72,14 @@ void GameInstance::Update_Engine(float timeDelta)
     _levelManager->Update(timeDelta);
     _objectManager->Update(timeDelta);
 
-
 }
 
 void GameInstance::Late_Update_Engine(float timeDelta)
 {
     _levelManager->Late_Update(timeDelta);
     _objectManager->Late_Update(timeDelta);
+
+    EVENT->ProcessEvents();
 }
 
 HRESULT GameInstance::Draw()
@@ -162,30 +168,34 @@ uint32 GameInstance::Current_Level()
     return _levelManager->Get_CurrentLevel();
 }
 
-HRESULT GameInstance::Add_GameObject_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<GameObject> gameObject)
+HRESULT GameInstance::Add_GameObject_Prototype(uint32 levelIndex, uint32 objID, shared_ptr<GameObject> gameObject)
 {
-    return _protoManager->Add_GameObject_Prototype(levelIndex, prototypeTag, gameObject);
+    return _protoManager->Add_GameObject_Prototype(levelIndex, objID, gameObject);
 }
 
-shared_ptr<GameObject> GameInstance::Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, void* arg)
+shared_ptr<GameObject> GameInstance::Clone_GameObject(uint32 levelIndex, uint32 objID, void* arg)
 {
-    return _protoManager->Clone_GameObject(levelIndex, prototypeTag, arg);
+    return _protoManager->Clone_GameObject(levelIndex, objID, arg);
 }
 
-HRESULT GameInstance::Add_Component_Prototype(uint32 levelIndex, uint32 protoID, shared_ptr<Component> component)
+HRESULT GameInstance::Add_Component_Prototype(uint32 levelIndex, uint32 componentID, shared_ptr<Component> component)
 {
-    return _protoManager->Add_Component_Prototype(levelIndex, protoID, component);
+    return _protoManager->Add_Component_Prototype(levelIndex, componentID, component);
 }
 
-shared_ptr<Component> GameInstance::Clone_Component(uint32 levelIndex, uint32 protoID, void* arg)
+shared_ptr<Component> GameInstance::Clone_Component(uint32 levelIndex, uint32 componentID, void* arg)
 {
-    return _protoManager->Clone_Component(levelIndex, protoID, arg);
+    return _protoManager->Clone_Component(levelIndex, componentID, arg);
 }
 
-HRESULT GameInstance::Add_GameObject(uint32 protoIndex, const wstring& protoTag, uint32 layerIndex,
-    const wstring& layerTag, void* arg)
+HRESULT GameInstance::Add_GameObject(uint32 protoIndex, uint32 objID, uint32 layerIndex, const wstring& layerTag, void* arg)
 {
-    return _objectManager->Add_GameObject(protoIndex, protoTag, layerIndex, layerTag, arg);
+    return _objectManager->Add_GameObject(protoIndex, objID, layerIndex, layerTag, arg);
+}
+
+HRESULT GameInstance::Add_GameObject(uint32 levelIndex, uint32 objID, const wstring& layerTag, void* arg)
+{
+    return _objectManager->Add_GameObject(levelIndex, objID, levelIndex, layerTag, arg);
 }
 
 vector<shared_ptr<GameObject>> GameInstance::Get_GameObjects(uint32 levelIndex)

@@ -190,7 +190,7 @@ private:
 
 };
 
-// 언리얼 스타일로 매크로
+// 언리얼 스타일 매크로
 #define DECLARE_DELEGATE(DelegateName, ...) \
     using DelegateName = Engine::Delegate<__VA_ARGS__>
 

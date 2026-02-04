@@ -22,46 +22,45 @@ HRESULT Prototype_Manager::Initialize(uint32 numLevels)
     return S_OK;
 }
 
-HRESULT Prototype_Manager::Add_GameObject_Prototype(uint32 levelIndex, const wstring& prototypeTag,
-    shared_ptr<GameObject> prototype)
+HRESULT Prototype_Manager::Add_GameObject_Prototype(uint32 levelIndex, uint32 objID, shared_ptr<GameObject> prototype)
 {
-    if (Find_GameObject_Prototype(levelIndex, prototypeTag) != nullptr)
+    if (Find_GameObject_Prototype(levelIndex, objID) != nullptr)
     {
         MSG_BOX("This object is already exists.");
 
         return E_FAIL;
     }
 
-    _gameObjectPrototypes[levelIndex].emplace(prototypeTag, prototype);
+    _gameObjectPrototypes[levelIndex].emplace(objID, prototype);
 
     return S_OK;
 }
 
-shared_ptr<GameObject> Prototype_Manager::Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, void* arg)
+shared_ptr<GameObject> Prototype_Manager::Clone_GameObject(uint32 levelIndex, uint32 objID, void* arg)
 {
-    auto gameObject = Find_GameObject_Prototype(levelIndex, prototypeTag);
+    auto gameObject = Find_GameObject_Prototype(levelIndex, objID);
     CHECK_NULL(gameObject, nullptr);
 
     return gameObject->Clone(arg);
 }
 
-HRESULT Prototype_Manager::Add_Component_Prototype(uint32 levelIndex, uint32 protoID, shared_ptr<Component> prototype)
+HRESULT Prototype_Manager::Add_Component_Prototype(uint32 levelIndex, uint32 componentID, shared_ptr<Component> prototype)
 {
-    if (Find_Component_Prototype(levelIndex, protoID) != nullptr)
+    if (Find_Component_Prototype(levelIndex, componentID) != nullptr)
     {
         MSG_BOX("This component is already exists.");
 
         return E_FAIL;
     }
 
-    _componentPrototypes[levelIndex].emplace(protoID, prototype);
+    _componentPrototypes[levelIndex].emplace(componentID, prototype);
 
     return S_OK;
 }
 
-shared_ptr<Component> Prototype_Manager::Clone_Component(uint32 levelIndex, uint32 protoID, void* arg)
+shared_ptr<Component> Prototype_Manager::Clone_Component(uint32 levelIndex, uint32 componentID, void* arg)
 {
-    auto component = Find_Component_Prototype(levelIndex, protoID);
+    auto component = Find_Component_Prototype(levelIndex, componentID);
     CHECK_NULL(component, nullptr);
 
     return component->Clone(arg);
@@ -78,13 +77,12 @@ HRESULT Prototype_Manager::Clear_Prototype(uint32 levelIndex)
     return S_OK;
 }
 
-shared_ptr<GameObject> Prototype_Manager::Find_GameObject_Prototype(uint32 levelIndex,
-    const wstring& prototypeTag)
+shared_ptr<GameObject> Prototype_Manager::Find_GameObject_Prototype(uint32 levelIndex, uint32 objID)
 {
     if (levelIndex >= _numLevels)
         return nullptr;
 
-    auto iter = _gameObjectPrototypes[levelIndex].find(prototypeTag);
+    auto iter = _gameObjectPrototypes[levelIndex].find(objID);
 
     if (iter == _gameObjectPrototypes[levelIndex].end())
         return nullptr;
@@ -92,12 +90,12 @@ shared_ptr<GameObject> Prototype_Manager::Find_GameObject_Prototype(uint32 level
     return iter->second;
 }
 
-shared_ptr<Component> Prototype_Manager::Find_Component_Prototype(uint32 levelIndex, uint32 protoID)
+shared_ptr<Component> Prototype_Manager::Find_Component_Prototype(uint32 levelIndex, uint32 componentID)
 {
     if (levelIndex >= _numLevels)
         return nullptr;
 
-    auto iter = _componentPrototypes[levelIndex].find(protoID);
+    auto iter = _componentPrototypes[levelIndex].find(componentID);
 
     if (iter == _componentPrototypes[levelIndex].end())
         return nullptr;

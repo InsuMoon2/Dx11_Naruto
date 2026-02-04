@@ -2,6 +2,7 @@
 #include "EditorInstance.h"
 #include "ImGui_Manager.h"    
 #include "Editor_Manager.h"
+#include "Notification_Manager.h"
 #include "PlayerSession_Manager.h"
 
 IMPLEMENT_SINGLETON(EditorInstance)
@@ -24,6 +25,8 @@ HRESULT EditorInstance::Initialize_Editor(const EDITOR_DESC& desc, ComPtr<Device
     _playerSessionManager = PlayerSession_Manager::Create();
     CHECK_NULL(_playerSessionManager, E_FAIL);
 
+    _notificationManager = Notification_Manager::Create();
+    CHECK_NULL(_notificationManager, E_FAIL);
 
     return S_OK;
 }
@@ -32,17 +35,24 @@ void EditorInstance::Update_Editor(float timeDelta)
 {
     _imguiManager->Update(timeDelta);
     _editorManager->Update(timeDelta);
+    //_notificationManager->Update(timeDelta);
 }
 
 void EditorInstance::Render_Editor()
 {
     _editorManager->Render();
-    _imguiManager->Render();
+    //_notificationManager->Render();
+
+
+    {
+        _imguiManager->Render();
+    }
 }
 
 void EditorInstance::Release()
 {
     _playerSessionManager.reset();
+    //_notificationManager.reset();
 
     // ImGui
     _editorManager.reset();

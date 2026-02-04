@@ -13,6 +13,6 @@ namespace Editor
 
 using namespace Editor;
 
-#define EDITOR EditorInstance::GetInstance()
+#include "Editor_Macro.h"
+#include "Editor_Enum.h"
 
-#define U8(str) (const char*)u8##str

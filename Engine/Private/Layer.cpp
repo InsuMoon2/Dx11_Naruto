@@ -44,6 +44,14 @@ void Layer::Late_Update(float timeDelta)
     }
 }
 
+void Layer::Delete_GameObject(shared_ptr<GameObject> gameObject)
+{
+    auto iter = find(_gameObjects.begin(), _gameObjects.end(), gameObject);
+
+    if (iter != _gameObjects.end())
+        _gameObjects.erase(iter);
+}
+
 shared_ptr<Layer> Layer::Create()
 {
     return make_shared<Layer>();

@@ -8,7 +8,10 @@ NS_BEGIN(Editor)
 class ImGui_Manager;
 class Editor_Manager;
 class PlayerSession_Manager;
+class Notification_Manager;
+
 class EditorWindow;
+
 
 class EditorInstance
 {
@@ -41,10 +44,14 @@ public: /* PlayerSession Manager */
     void    Start_SinglePlayer();
     void    Start_MultiPlayer(int32 playerCount);
 
+public: /* Notification Manager */
+    Notification_Manager* Get_Notification() { return _notificationManager.get(); }
+
 private: /* Manager */
     unique_ptr<ImGui_Manager>           _imguiManager;
     unique_ptr<Editor_Manager>          _editorManager;
     unique_ptr<PlayerSession_Manager>   _playerSessionManager;
+    unique_ptr<Notification_Manager>    _notificationManager;
 
 private:
     EDITOR_DESC _desc = {};

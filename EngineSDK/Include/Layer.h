@@ -20,6 +20,9 @@ public:
 
     const list<shared_ptr<GameObject>>& Get_GameObjects() const { return _gameObjects; }
 
+public:
+    void Delete_GameObject(shared_ptr<GameObject> gameObject);
+
 private:
     list<shared_ptr<GameObject>> _gameObjects;
 

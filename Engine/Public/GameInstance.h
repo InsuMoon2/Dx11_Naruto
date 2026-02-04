@@ -11,6 +11,7 @@ class Timer_Manager;
 class Level_Manager;
 class Prototype_Manager;
 class Object_Manager;
+class Prefab_Manager;
 
 class Renderer;
 
@@ -66,16 +67,21 @@ public: /* LevelType Manager */
 
 
 public: /* Prototype Manager */
-    HRESULT                 Add_GameObject_Prototype(uint32 levelIndex, const wstring& prototypeTag, shared_ptr<GameObject> gameObject);
-    shared_ptr<GameObject>  Clone_GameObject(uint32 levelIndex, const wstring& prototypeTag, void* arg = {});
+    HRESULT                 Add_GameObject_Prototype(uint32 levelIndex, uint32 objID, shared_ptr<GameObject> gameObject);
+    shared_ptr<GameObject>  Clone_GameObject(uint32 levelIndex, uint32 objID, void* arg = {});
 
-    HRESULT                 Add_Component_Prototype(uint32 levelIndex, uint32 protoID, shared_ptr<Component> component);
-    shared_ptr<Component>   Clone_Component(uint32 levelIndex, uint32 protoID, void* arg = {});
+    HRESULT                 Add_Component_Prototype(uint32 levelIndex, uint32 componentID, shared_ptr<Component> component);
+    shared_ptr<Component>   Clone_Component(uint32 levelIndex, uint32 componentID, void* arg = {});
 
 public: /* Object Manager */
     HRESULT                 Add_GameObject(
-                                uint32 protoIndex, const wstring& protoTag,
+                                uint32 protoIndex, uint32 objID,
                                 uint32 layerIndex, const wstring& layerTag,
+                                void* arg = {});
+
+    HRESULT                 Add_GameObject(
+                                uint32 levelIndex, uint32 objID,
+                                const wstring& layerTag,
                                 void* arg = {});
 
     vector<shared_ptr<GameObject>> Get_GameObjects(uint32 levelIndex);
@@ -84,6 +90,9 @@ public: /* Renderer */
     void                    Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject);
     int32                   Get_DrawCallCount();
 
+public: /* Prefeb */
+
+
 private:
 	unique_ptr<Graphic_Device>      _graphicDevice;
 	unique_ptr<Timer_Manager>	    _timerManager;
@@ -91,6 +100,7 @@ private:
     unique_ptr<Prototype_Manager>   _protoManager;
     unique_ptr<Object_Manager>      _objectManager;
     unique_ptr<Renderer>            _renderer;
+    unique_ptr<Prefab_Manager>      _prefabManager;
 
 private:
     EGameState                      _gameState = EGameState::Edit;

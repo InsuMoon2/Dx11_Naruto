@@ -24,6 +24,7 @@ namespace Engine
 
 #define GAME    GET_SINGLE(GameInstance)
 #define INPUT	GET_SINGLE(Input_Manager)
+#define EVENT	GET_SINGLE(Event_Manager)
 
 // ==================================================
 //              LOG 매크로

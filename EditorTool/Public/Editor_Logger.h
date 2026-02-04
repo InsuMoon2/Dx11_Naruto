@@ -2,11 +2,6 @@
 
 NS_BEGIN(Editor)
 
-enum class LogLevel
-{
-    Info, Warning, Error, END
-};
-
 struct LogEntry
 {
     LogLevel level;

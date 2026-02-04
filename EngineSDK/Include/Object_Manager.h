@@ -3,6 +3,7 @@
 #include "Base.h"
 
 NS_BEGIN(Engine)
+struct FEvent;
 
 class Layer;
 class GameObject;
@@ -20,14 +21,21 @@ public:
     void    Late_Update(float timeDelta);
 
     HRESULT Add_GameObject(
-            uint32 protoLevelIndex, const wstring& protoTag,
+            uint32 protoLevelIndex, uint32 objID,
             uint32 layerLevelIndex, const wstring& layerTag,
             void* arg);
 
     vector<shared_ptr<GameObject>> Get_GameObjects(uint32 levelIndex);
 
 private:
+    void Bind_Events();
     shared_ptr<Layer> Find_Layer(uint32 levelIndex, const wstring& layerTag);
+
+    void OnCreateEvent(shared_ptr<FEvent> event);
+    void OnDeleteEvent(shared_ptr<FEvent> event);
+
+public:
+    void Delete_GameObject(uint32 levelIndex, shared_ptr<GameObject> gameObject);
 
 private:
     using LayerType = umap<wstring, shared_ptr<Layer>>;

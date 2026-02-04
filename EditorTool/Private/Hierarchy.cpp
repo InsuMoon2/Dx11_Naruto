@@ -5,6 +5,7 @@
 #include "Inspector.h"
 #include "Editor_Manager.h"
 #include "EditorInstance.h"
+#include "Event_Manager.h"
 
 Hierarchy::Hierarchy()
     : EditorWindow(TEXT("Hierarchy"))
@@ -36,6 +37,11 @@ void Hierarchy::OnGui()
     {
         Draw_SearchBar();
         Draw_ObjectList();
+
+        if (ImGui::IsWindowFocused())
+        {
+            Handle_Shotcuts();
+        }
     }
     ImGui::End();
 }
@@ -97,9 +103,9 @@ void Hierarchy::Draw_ObjectList()
             continue;
 
         // 선택 상태
-        bool isSelected = (_selectedObject == obj);
+        bool isSelected = Is_Selected(obj);
 
-        ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+        ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanAvailWidth;
         if (isSelected)
             flags |= ImGuiTreeNodeFlags_Selected;
 
@@ -109,14 +115,107 @@ void Hierarchy::Draw_ObjectList()
         // 클릭 시 선택
         if (ImGui::IsItemClicked())
         {
-            _selectedObject = obj;
+            bool isMultiSelect = ImGui::GetIO().KeyCtrl;
+            Select_Object(obj, isMultiSelect);
+        }
 
-            // Inspector에 전달
-            auto inspector = dynamic_pointer_cast<Inspector>(
-                EDITOR->Get_Window(TEXT("Inspector")));
+        if (ImGui::BeginPopupContextItem())
+        {
+            if (!Is_Selected(obj))
+            {
+                Select_Object(obj, false);
+            }
 
-            if (inspector)
-                inspector->Set_Target(obj);
+            if (ImGui::MenuItem("복사"))
+            {
+                for (auto& obj : _selectedObjects)
+                {
+                    EVENT->Publish(FEvent_Object::Create(EEventType::Create_Object, obj));
+                }
+            }
+
+            if (ImGui::MenuItem("삭제"))
+            {
+                for (auto& obj : _selectedObjects)
+                {
+                    EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));
+
+                    _selectedObjects.clear();
+                }
+            }
+            ImGui::EndPopup();
+        }
+    }
+}
+
+bool  Hierarchy::Is_Selected(shared_ptr<GameObject> obj)
+{
+    auto it = find(_selectedObjects.begin(), _selectedObjects.end(), obj);
+
+    return it != _selectedObjects.end();
+}
+
+void Hierarchy::Select_Object(shared_ptr<GameObject> obj, bool isMultiSelect)
+{
+    if (isMultiSelect)
+    {
+        auto iter = find(_selectedObjects.begin(), _selectedObjects.end(), obj);
+
+        if (iter != _selectedObjects.end())
+        {
+            _selectedObjects.erase(iter);
+        }
+        else
+        {
+            _selectedObjects.emplace_back(obj);
+        }
+    }
+    // 단일 선택
+    else
+    {
+        _selectedObjects.clear();
+        _selectedObjects.emplace_back(obj);
+    }
+
+    auto inspector = dynamic_pointer_cast<Inspector>(EDITOR->Get_Window(TEXT("Inspector")));
+
+    if (inspector)
+    {
+        if (!_selectedObjects.empty())
+            inspector->Set_Target(_selectedObjects.back());
+
+        else
+            inspector->Set_Target(nullptr);
+    }
+}
+
+void Hierarchy::Handle_Shotcuts()
+{
+    if (ImGui::IsKeyPressed(ImGuiKey_Delete))
+    {
+        for (auto& obj : _selectedObjects)
+        {
+            obj->Set_Destroy();
+
+            EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));
+        }
+
+        _selectedObjects.clear();
+    }
+
+    if (ImGui::GetIO().KeyCtrl)
+    {
+        if (ImGui::IsKeyPressed(ImGuiKey_C))
+        {
+            _copiedObjects = _selectedObjects;
+        }
+
+        if (ImGui::IsKeyPressed(ImGuiKey_V))
+        {
+            for (auto& copy : _copiedObjects)
+            {
+                EVENT->Publish(FEvent_Object::Create(EEventType::Create_Object, copy));
+            }
         }
     }
 }

@@ -12,6 +12,7 @@
 #include "Profiler_View.h"
 #include "RenderTarget.h"
 #include "Game_View.h"
+#include "Notification_Manager.h"
 
 Editor_Manager::~Editor_Manager()
 {
@@ -562,6 +563,8 @@ void Editor_Manager::On_SaveLevel(const wstring& fileName)
     string pureName = path.stem().stem().string(); // 파일명 자르기
 
     LOG_WARN("Level Saved: {}", pureName);
+    
+    //NOTIFY("Level Saved");
 }
 
 void Editor_Manager::On_LoadLevel(const wstring& fileName)

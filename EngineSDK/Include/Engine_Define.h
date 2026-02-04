@@ -84,6 +84,7 @@ using json = nlohmann::json;
 #endif
 
 using namespace Engine;
+using namespace Protocol;
 
 
 #endif // Engine_Define_h__

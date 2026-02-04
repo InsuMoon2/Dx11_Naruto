@@ -85,6 +85,10 @@
     <ClInclude Include="..\Public\Component_Factory.h" />
     <ClInclude Include="..\Public\AnimNotify_Factory.h" />
     <ClInclude Include="..\Public\Controller.h" />
+    <ClInclude Include="..\Public\Event_Manager.h">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Prefab_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -218,6 +222,10 @@
     <ClCompile Include="..\Private\Component_Factory.cpp" />
     <ClCompile Include="..\Private\AnimNotify_Factory.cpp" />
     <ClCompile Include="..\Private\Controller.cpp" />
+    <ClCompile Include="..\Private\Event_Manager.cpp">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Prefab_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

@@ -72,6 +72,15 @@
     <ClInclude Include="Level_Serializer.h">
       <Filter>97. Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Notification_Manager.h">
+      <Filter>01. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Editor_Enum.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Editor_Macro.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditorTool.cpp">
@@ -121,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="Level_Serializer.cpp">
       <Filter>97. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Notification_Manager.cpp">
+      <Filter>01. Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -86,45 +86,11 @@ inline bool ComponentID_Parse(absl::string_view name, ComponentID* value) {
   return ::google::protobuf::internal::ParseNamedEnum<ComponentID>(
       ComponentID_descriptor(), name, value);
 }
-enum PlayerType : int {
-  PLAYER_TYPE_NONE = 0,
-  PLAYER_TYPE_KNIGHT = 1,
-  PLAYER_TYPE_MAGE = 2,
-  PLAYER_TYPE_ARCHER = 3,
-  PlayerType_INT_MIN_SENTINEL_DO_NOT_USE_ =
-      std::numeric_limits<::int32_t>::min(),
-  PlayerType_INT_MAX_SENTINEL_DO_NOT_USE_ =
-      std::numeric_limits<::int32_t>::max(),
-};
-
-bool PlayerType_IsValid(int value);
-extern const uint32_t PlayerType_internal_data_[];
-constexpr PlayerType PlayerType_MIN = static_cast<PlayerType>(0);
-constexpr PlayerType PlayerType_MAX = static_cast<PlayerType>(3);
-constexpr int PlayerType_ARRAYSIZE = 3 + 1;
-const ::google::protobuf::EnumDescriptor*
-PlayerType_descriptor();
-template <typename T>
-const std::string& PlayerType_Name(T value) {
-  static_assert(std::is_same<T, PlayerType>::value ||
-                    std::is_integral<T>::value,
-                "Incorrect type passed to PlayerType_Name().");
-  return PlayerType_Name(static_cast<PlayerType>(value));
-}
-template <>
-inline const std::string& PlayerType_Name(PlayerType value) {
-  return ::google::protobuf::internal::NameOfDenseEnum<PlayerType_descriptor,
-                                                 0, 3>(
-      static_cast<int>(value));
-}
-inline bool PlayerType_Parse(absl::string_view name, PlayerType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<PlayerType>(
-      PlayerType_descriptor(), name, value);
-}
 enum OBJECT_TYPE : int {
   OBJECT_TYPE_NONE = 0,
   OBJECT_TYPE_PLAYER = 1,
   OBJECT_TYPE_MONSTER = 2,
+  OBJECT_TYPE_BACKGROUND = 10,
   OBJECT_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   OBJECT_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -134,8 +100,8 @@ enum OBJECT_TYPE : int {
 bool OBJECT_TYPE_IsValid(int value);
 extern const uint32_t OBJECT_TYPE_internal_data_[];
 constexpr OBJECT_TYPE OBJECT_TYPE_MIN = static_cast<OBJECT_TYPE>(0);
-constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(2);
-constexpr int OBJECT_TYPE_ARRAYSIZE = 2 + 1;
+constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(10);
+constexpr int OBJECT_TYPE_ARRAYSIZE = 10 + 1;
 const ::google::protobuf::EnumDescriptor*
 OBJECT_TYPE_descriptor();
 template <typename T>
@@ -148,7 +114,7 @@ const std::string& OBJECT_TYPE_Name(T value) {
 template <>
 inline const std::string& OBJECT_TYPE_Name(OBJECT_TYPE value) {
   return ::google::protobuf::internal::NameOfDenseEnum<OBJECT_TYPE_descriptor,
-                                                 0, 2>(
+                                                 0, 10>(
       static_cast<int>(value));
 }
 inline bool OBJECT_TYPE_Parse(absl::string_view name, OBJECT_TYPE* value) {
@@ -257,12 +223,6 @@ struct is_proto_enum<::Protocol::ComponentID> : std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor<::Protocol::ComponentID>() {
   return ::Protocol::ComponentID_descriptor();
-}
-template <>
-struct is_proto_enum<::Protocol::PlayerType> : std::true_type {};
-template <>
-inline const EnumDescriptor* GetEnumDescriptor<::Protocol::PlayerType>() {
-  return ::Protocol::PlayerType_descriptor();
 }
 template <>
 struct is_proto_enum<::Protocol::OBJECT_TYPE> : std::true_type {};

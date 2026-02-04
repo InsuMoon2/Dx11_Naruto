@@ -42,16 +42,22 @@ void GameObject::Priority_Update(float timeDelta)
 
 void GameObject::Update(float timeDelta)
 {
+    if (_isDestroyed) return;
+
 
 }
 
 void GameObject::Late_Update(float timeDelta)
 {
+    if (_isDestroyed) return;
+
 
 }
 
 void GameObject::Render()
 {
+    if (_isDestroyed) return;
+
 
 }
 

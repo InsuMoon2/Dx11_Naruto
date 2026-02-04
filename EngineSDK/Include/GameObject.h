@@ -29,6 +29,13 @@ public:
     virtual void        Render();
 
 public:
+    void Set_Destroy() { _isDestroyed = true; }
+    bool Is_Destroy() const { return _isDestroyed; }
+
+    Protocol::OBJECT_TYPE Get_ObjectType() const { return _objectType; }
+    void Set_ObjectType(Protocol::OBJECT_TYPE type) { _objectType = type; }
+
+public:
     template<typename T>
     shared_ptr<T> Get_Component()
     {
@@ -62,15 +69,17 @@ public:
     };
 
     template<typename T>
-    HRESULT Add_Component(uint32 levelIndex, uint32 protoID, shared_ptr<T>& outCom, void* arg = {})
+    HRESULT Add_Component(uint32 levelIndex, uint32 componentID, shared_ptr<T>& outCom, void* arg = {})
     {
-        if (_components.contains(protoID))
+        if (_components.contains(componentID))
             return E_FAIL;
 
-        shared_ptr<Component> component = GAME->Clone_Component(levelIndex, protoID, arg);
+        shared_ptr<Component> component = GAME->Clone_Component(levelIndex, componentID, arg);
         CHECK_NULL(component, E_FAIL);
 
-        _components.emplace(protoID, component);
+        component->Set_Owner(this->GetSharedPtr());
+
+        _components.emplace(componentID, component);
         outCom = static_pointer_cast<T>(component);
 
         return S_OK;
@@ -79,14 +88,19 @@ public:
 protected:
     shared_ptr<GameObject> GetSharedPtr() { return static_pointer_cast<GameObject>(shared_from_this()); }
 
-protected:
+protected: /* Device */
     ComPtr<Device>          _device = { nullptr };
     ComPtr<DeviceContext>   _context = { nullptr };
 
-protected:
+protected: /* Component */
     map<uint32, shared_ptr<Component>> _components;
 
     shared_ptr<Transform>   _transformCom;
+
+protected: /* Values */
+    Protocol::OBJECT_TYPE _objectType = Protocol::OBJECT_TYPE::OBJECT_TYPE_NONE;
+
+    bool _isDestroyed = false;
 
 public:
     virtual shared_ptr<GameObject> Clone(void* arg) abstract;

@@ -1,0 +1,11 @@
+{
+    "gameObjects": [
+        {
+            "name": "TestPlayer"
+        },
+        {
+            "name": "TestPlayer"
+        }
+    ],
+    "levelName": "EditorLevel"
+}

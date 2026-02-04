@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "Layer.h"
+#include "Event_Manager.h"
 
 Object_Manager::Object_Manager()
 {
@@ -17,6 +18,9 @@ HRESULT Object_Manager::Initialize(uint32 numLevels)
     _numLevels = numLevels;
 
     _layers.resize(numLevels);
+
+    // 이벤트
+    Bind_Events();
 
     return S_OK;
 }
@@ -57,13 +61,13 @@ void Object_Manager::Late_Update(float timeDelta)
     }
 }
 
-HRESULT Object_Manager::Add_GameObject(uint32 protoLevelIndex, const wstring& protoTag, uint32 layerLevelIndex,
+HRESULT Object_Manager::Add_GameObject(uint32 protoLevelIndex, uint32 objID, uint32 layerLevelIndex,
     const wstring& layerTag, void* arg)
 {
     if (layerLevelIndex >= _numLevels)
         return E_FAIL;
 
-    auto gameObject = GAME->Clone_GameObject(protoLevelIndex, protoTag, arg);
+    auto gameObject = GAME->Clone_GameObject(protoLevelIndex, objID, arg);
     CHECK_NULL(gameObject, E_FAIL);
 
     shared_ptr<Layer> layer = Find_Layer(layerLevelIndex, layerTag);
@@ -105,6 +109,21 @@ vector<shared_ptr<GameObject>> Object_Manager::Get_GameObjects(uint32 levelIndex
     return allObjects;
 }
 
+void Object_Manager::Bind_Events()
+{
+    // 삭제
+    EVENT->Subscribe(EEventType::Delete_Object, [this](shared_ptr<FEvent> event)
+        {
+            this->OnDeleteEvent(event);
+        });
+
+    // 생성
+    EVENT->Subscribe(EEventType::Create_Object, [this](shared_ptr<FEvent> event)
+        {
+            this->OnCreateEvent(event);
+        });
+}
+
 shared_ptr<Layer> Object_Manager::Find_Layer(uint32 levelIndex, const wstring& layerTag)
 {
     auto iter = _layers[levelIndex].find(layerTag);
@@ -113,6 +132,37 @@ shared_ptr<Layer> Object_Manager::Find_Layer(uint32 levelIndex, const wstring& l
         return nullptr;
 
     return iter->second;
+}
+
+void Object_Manager::OnDeleteEvent(shared_ptr<FEvent> event)
+{
+    auto deleteEvent = static_pointer_cast<FEvent_Object>(event);
+
+    if (deleteEvent && deleteEvent->targetObject)
+    {
+        this->Delete_GameObject(GAME->Current_Level(), deleteEvent->targetObject);
+    }
+}
+
+void Object_Manager::OnCreateEvent(shared_ptr<FEvent> event)
+{
+    auto createEvent = static_pointer_cast<FEvent_Object>(event);
+
+    if (createEvent && createEvent->targetObject)
+    {
+        // TODO : Add GameObject 사용
+    }
+}
+
+void Object_Manager::Delete_GameObject(uint32 levelIndex, shared_ptr<GameObject> gameObject)
+{
+    if (levelIndex >= _numLevels || gameObject == nullptr)
+        return;
+
+    for (auto& pair : _layers[levelIndex])
+    {
+        pair.second->Delete_GameObject(gameObject);
+    }
 }
 
 unique_ptr<Object_Manager> Object_Manager::Create(uint32 numLevels)
