@@ -29,6 +29,16 @@ namespace Engine
     template<typename T>
     using uset = std::unordered_set<T>;
 
+    // 스마트 포인터
+    template<typename T>
+    using Shared = std::shared_ptr<T>;
+
+    template<typename T>
+    using Weak = std::weak_ptr<T>;
+
+    template<typename T>
+    using Unique = std::unique_ptr<T>;
+
     // SimpleMath 벡터/행렬
     using Vec2      = DirectX::SimpleMath::Vector2;
     using Vec3      = DirectX::SimpleMath::Vector3;

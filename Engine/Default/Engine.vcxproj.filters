@@ -55,12 +55,6 @@
     <ClInclude Include="..\Public\GameObject.h">
       <Filter>01. Utility\03. GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Object_Manager.h">
-      <Filter>01. Utility\03. GameObject\00. Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Input_Manager.h">
-      <Filter>01. Utility\98. Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Delegate.h">
       <Filter>01. Utility\98. Utils</Filter>
     </ClInclude>
@@ -82,13 +76,28 @@
     <ClInclude Include="..\Public\Utils.h">
       <Filter>01. Utility\98. Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Component_Factory.h" />
-    <ClInclude Include="..\Public\AnimNotify_Factory.h" />
-    <ClInclude Include="..\Public\Controller.h" />
-    <ClInclude Include="..\Public\Event_Manager.h">
-      <Filter>01. Utility\98. Utils</Filter>
+    <ClInclude Include="..\Public\Controller.h">
+      <Filter>01. Utility\03. GameObject\02. Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Prefab_Manager.h" />
+    <ClInclude Include="..\Public\AnimNotify_Factory.h">
+      <Filter>01. Utility\98. Utils\00. Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Component_Factory.h">
+      <Filter>01. Utility\98. Utils\00. Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Object_Manager.h">
+      <Filter>95. Manager\01. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Input_Manager.h">
+      <Filter>95. Manager\00. Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Event_Manager.h">
+      <Filter>95. Manager\02. Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Prefab_Manager.h">
+      <Filter>95. Manager\03. Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Debug_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -130,9 +139,6 @@
     <Filter Include="01. Utility\04. Component">
       <UniqueIdentifier>{e3652022-a538-439c-aa39-ac764fbc9754}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\03. GameObject\00. Manager">
-      <UniqueIdentifier>{d73ccdb2-1050-4159-8179-8fed5024f1f5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\03. GameObject\01. Layer">
       <UniqueIdentifier>{305800e4-13f7-49b5-ab17-1a3bebd037ff}</UniqueIdentifier>
     </Filter>
@@ -156,6 +162,27 @@
     </Filter>
     <Filter Include="97. Protocol">
       <UniqueIdentifier>{657377b8-ee8f-4517-858f-7798fcb6ff4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Manager">
+      <UniqueIdentifier>{41343922-e933-4047-b363-b5870ee2adfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\98. Utils\00. Factory">
+      <UniqueIdentifier>{bdbffd21-70e1-4157-ad87-4c6240476170}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Manager\00. Input">
+      <UniqueIdentifier>{f403f73c-f6d8-45c8-b33a-6765bd503fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Manager\01. Object">
+      <UniqueIdentifier>{efb296bb-cb9d-438b-8a20-e5cca0d6c68a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Manager\02. Event">
+      <UniqueIdentifier>{f0c59842-1936-442f-a88f-8b37f299a976}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Manager\03. Prefab">
+      <UniqueIdentifier>{2bffcd2a-77e1-47cc-bcb0-dcbc38f98a46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Manager\04. Debug">
+      <UniqueIdentifier>{60ee192e-3fbf-4b61-b749-39fe470d692f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -192,12 +219,6 @@
     <ClCompile Include="..\Private\GameObject.cpp">
       <Filter>01. Utility\03. GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Object_Manager.cpp">
-      <Filter>01. Utility\03. GameObject\00. Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Input_Manager.cpp">
-      <Filter>01. Utility\98. Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Delegate.cpp">
       <Filter>01. Utility\98. Utils</Filter>
     </ClCompile>
@@ -219,13 +240,28 @@
     <ClCompile Include="..\Private\Utils.cpp">
       <Filter>01. Utility\98. Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Component_Factory.cpp" />
-    <ClCompile Include="..\Private\AnimNotify_Factory.cpp" />
-    <ClCompile Include="..\Private\Controller.cpp" />
-    <ClCompile Include="..\Private\Event_Manager.cpp">
-      <Filter>01. Utility\98. Utils</Filter>
+    <ClCompile Include="..\Private\Controller.cpp">
+      <Filter>01. Utility\03. GameObject\02. Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Prefab_Manager.cpp" />
+    <ClCompile Include="..\Private\AnimNotify_Factory.cpp">
+      <Filter>01. Utility\98. Utils\00. Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Component_Factory.cpp">
+      <Filter>01. Utility\98. Utils\00. Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Object_Manager.cpp">
+      <Filter>95. Manager\01. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Input_Manager.cpp">
+      <Filter>95. Manager\00. Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Event_Manager.cpp">
+      <Filter>95. Manager\02. Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Prefab_Manager.cpp">
+      <Filter>95. Manager\03. Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Debug_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

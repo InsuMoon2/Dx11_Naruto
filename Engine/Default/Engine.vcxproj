@@ -169,6 +169,7 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\Component_Factory.h" />
     <ClInclude Include="..\Public\Controller.h" />
+    <ClInclude Include="..\Public\Debug_Manager.h" />
     <ClInclude Include="..\Public\Event_Manager.h" />
     <ClInclude Include="..\Public\GameInstance.h" />
     <ClInclude Include="..\Public\GameObject.h" />
@@ -203,6 +204,7 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\Component_Factory.cpp" />
     <ClCompile Include="..\Private\Controller.cpp" />
+    <ClCompile Include="..\Private\Debug_Manager.cpp" />
     <ClCompile Include="..\Private\Event_Manager.cpp" />
     <ClCompile Include="..\Private\GameInstance.cpp" />
     <ClCompile Include="..\Private\GameObject.cpp" />
