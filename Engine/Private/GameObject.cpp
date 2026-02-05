@@ -24,7 +24,7 @@ HRESULT GameObject::Initialize(void* arg)
 
     CHECK_FAILED(_transformCom->Initialize(desc), E_FAIL);
 
-    _components.emplace(Transform::GetComponentID(), _transformCom);
+    _components.emplace(Transform::StaticTypeID(), _transformCom);
 
     return S_OK;
 }
@@ -59,6 +59,48 @@ void GameObject::Render()
     if (_isDestroyed) return;
 
 
+}
+
+json GameObject::To_Json() const
+{
+    json j;
+    j["name"] = _name;
+    j["objectType"] = magic_enum::enum_name(_objectType);
+
+    json components = json::array();
+    for (auto& [id, comp] : _components)
+    {
+        components.emplace_back(comp->To_Json());
+    }
+    j["components"] = components;
+
+    return j;
+}
+
+void GameObject::From_Json(const json& data)
+{
+
+}
+
+shared_ptr<Component> GameObject::Get_Component(uint32 id)
+{
+    auto iter = _components.find(id);
+    if (iter == _components.end())
+        return nullptr;
+
+    return iter->second;
+}
+
+HRESULT GameObject::Add_Component(uint32 id, shared_ptr<Component> component)
+{
+    if (_components.contains(id))
+        return E_FAIL;
+
+    component->Set_Owner(GetSharedPtr());
+
+    _components.emplace(id, component);
+
+    return S_OK;
 }
 
 void GameObject::Free()

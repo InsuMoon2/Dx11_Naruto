@@ -9,12 +9,12 @@ enum ComponentID
     COMPONENT_TYPE_TRANSFORM    = 1;
     COMPONENT_TYPE_TEXTURE      = 2;
     COMPONENT_TYPE_COLLIDER     = 3;
-
+    
     // Test
     COMPONENT_TYPE_TEXTURE_DEFAULT = 100;
 
     // Client ComponentID
-    COMPONENT_TYPE_PLAYER_CONTORLLER = 1001;
+    COMPONENT_TYPE_STAT = 1001;
 
 }
 

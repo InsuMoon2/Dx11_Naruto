@@ -1,4 +1,4 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 package Protocol;
 
 import "Enum.proto";
@@ -41,4 +41,10 @@ message C_Move
 message S_Move
 {
 	ObjectInfo info = 1;
+}
+
+message S_UpdateStat
+{
+    uint64 player_id = 1;
+    PlayerStat stat = 2;
 }

@@ -1,5 +1,8 @@
 ﻿#include "pch.h"
 #include "TestPlayer.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(TestPlayer, OBJECT_TYPE::OBJECT_TYPE_PLAYER)
 
 TestPlayer::TestPlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)

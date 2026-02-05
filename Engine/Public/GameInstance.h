@@ -91,7 +91,8 @@ public: /* Renderer */
     int32                   Get_DrawCallCount();
 
 public: /* Prefeb */
-
+    Shared<GameObject>      Instantiate_Prefab(const wstring& prefabName, const json& overrides = {});
+    HRESULT                 Save_Prefab(const string& prefabPath, shared_ptr<GameObject> gameObject);
 
 private:
 	unique_ptr<Graphic_Device>      _graphicDevice;

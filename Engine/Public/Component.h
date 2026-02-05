@@ -6,7 +6,8 @@ NS_BEGIN(Engine)
 
 class GameObject;
 
-class ENGINE_DLL Component abstract : public Base {
+class ENGINE_DLL Component abstract : public Base
+{
 public:
     explicit Component(ComPtr<Device> device, ComPtr<DeviceContext> context);
     explicit Component(const Component& rhs);
@@ -16,8 +17,14 @@ public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* arg);
 
+    virtual uint32 Get_ComponentID() const = 0;
+
     shared_ptr<GameObject> Get_Owner() { return _owner.lock(); }
     void    Set_Owner(shared_ptr<GameObject> owner) { _owner = owner; }
+
+public:
+    virtual json    To_Json() const;
+    virtual void    From_Json(const json& data);
 
 protected:
     shared_ptr<Component> GetSharedPtr() { return static_pointer_cast<Component>(shared_from_this()); }

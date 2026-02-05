@@ -62,5 +62,4 @@ namespace Engine
     using Texture2D             = ID3D11Texture2D;
     using Buffer                = ID3D11Buffer;
     using ShaderResourceView    = ID3D11ShaderResourceView;
-
 }

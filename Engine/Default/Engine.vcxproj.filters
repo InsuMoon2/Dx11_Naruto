@@ -97,7 +97,12 @@
     <ClInclude Include="..\Public\Prefab_Manager.h">
       <Filter>95. Manager\03. Prefab</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Debug_Manager.h" />
+    <ClInclude Include="..\Public\Debug_Manager.h">
+      <Filter>95. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject_Factory.h">
+      <Filter>01. Utility\98. Utils\00. Factory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -261,7 +266,15 @@
     <ClCompile Include="..\Private\Prefab_Manager.cpp">
       <Filter>95. Manager\03. Prefab</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Debug_Manager.cpp" />
+    <ClCompile Include="..\Private\SimpleMath.cpp">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Debug_Manager.cpp">
+      <Filter>95. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject_Factory.cpp">
+      <Filter>01. Utility\98. Utils\00. Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

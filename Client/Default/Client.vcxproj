@@ -172,6 +172,7 @@
     <ClInclude Include="..\Public\NetworkManager.h" />
     <ClInclude Include="..\Public\Protocol_Wrapper.h" />
     <ClInclude Include="..\Public\ServerSession.h" />
+    <ClInclude Include="..\Public\CombatStat.h" />
     <ClInclude Include="..\Public\TestPlayer.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="pch.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\NetworkManager.cpp" />
     <ClCompile Include="..\Private\ServerSession.cpp" />
+    <ClCompile Include="..\Private\CombatStat.cpp" />
     <ClCompile Include="..\Private\TestPlayer.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">

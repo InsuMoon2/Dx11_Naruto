@@ -28,6 +28,9 @@ public:
     virtual void        Late_Update(float timeDelta);
     virtual void        Render();
 
+    virtual json To_Json() const;
+    virtual void From_Json(const json& data);
+
 public:
     void Set_Destroy() { _isDestroyed = true; }
     bool Is_Destroy() const { return _isDestroyed; }
@@ -39,7 +42,7 @@ public:
     template<typename T>
     shared_ptr<T> Get_Component()
     {
-        uint32 id = T::GetComponentID();
+        uint32 id = T::StaticTypeID();
 
         auto iter = _components.find(id);
 
@@ -49,10 +52,12 @@ public:
         return static_pointer_cast<T>(iter->second);
     }
 
+    shared_ptr<Component> Get_Component(uint32 id);
+
     template<typename T>
     HRESULT Add_Component(uint32 levelIndex, shared_ptr<T>& outCom, void* arg = {})
     {
-        uint32 id = T::GetComponentID();
+        uint32 id = T::StaticTypeID();
 
         if (_components.contains(id))
             return E_FAIL;
@@ -84,6 +89,8 @@ public:
 
         return S_OK;
     }
+
+    HRESULT Add_Component(uint32 id, shared_ptr<Component> component);
 
 protected:
     shared_ptr<GameObject> GetSharedPtr() { return static_pointer_cast<GameObject>(shared_from_this()); }

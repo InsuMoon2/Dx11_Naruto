@@ -3,7 +3,10 @@
 #include "GameInstance.h"
 #include <fstream>
 
+#include "Component_Factory.h"
 #include "GameObject.h"
+#include "GameObject_Factory.h"
+#include "Transform.h"
 
 Prefab_Manager::Prefab_Manager(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -36,7 +39,9 @@ HRESULT Prefab_Manager::Load_Prefab(const string& prefabPath)
     // Prefab 데이터 생성
     auto prefabData = make_shared<FPrefabDesc>();
     prefabData->prefab_name = root["prefab_name"];
-    prefabData->object_type = static_cast<OBJECT_TYPE>(root["object_type"].get<int>());
+    prefabData->object_type = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
+        root["objectType"].get<std::string>()).value_or(Protocol::OBJECT_TYPE_NONE);
+
     prefabData->components = root["components"];
 
     if (root.contains("custom_properties"))
@@ -68,7 +73,8 @@ HRESULT Prefab_Manager::Save_Prefab(const string& prefabPath, shared_ptr<GameObj
 
     LOG_INFO("Save prefab : {}", prefabPath);
 
-    return S_OK;
+    // 저장 후 바로 등록
+    return Load_Prefab(prefabPath);
 }
 
 shared_ptr<GameObject> Prefab_Manager::Instantiate_Prefab(const string& prefabName, const json& overrides)
@@ -96,41 +102,59 @@ shared_ptr<FPrefabDesc> Prefab_Manager::Get_PrefabData(const string& prefabName)
 
 json Prefab_Manager::Serialize_GameObject(shared_ptr<GameObject> gameObject)
 {
-    json root;
-
-    root["prefab_name"] = "NewPrefab"; // TODO : 추후 이름 변경 예정
-    root["object_type"] = static_cast<int>(gameObject->Get_ObjectType());
-
-    json components = json::array();
-
-    auto transform = gameObject->Get_Component<Transform>();
-    if (transform)
-    {
-        //json transformData;
-        //transformData["type"] = "Transform";
-        //
-        //Vec3 pos = transform->Get_State(Transform::STATE_POSITION);
-        //transformData["position"] = { pos.x, pos.y, pos.z };
-        //
-        //Vec3 rot = transform->Get_Rotation();
-        //transformData["rotation"] = { rot.x, rot.y, rot.z };
-        //
-        //Vec3 scale = transform->Get_Scaled();
-        //transformData["scale"] = { scale.x, scale.y, scale.z };
-
-        //components.push_back(transformData);
-    }
-
-    // TODO: 다른 Component들도 직렬화
-
-    root["components"] = components;
+    json root = gameObject->To_Json();
+    root["prefab_name"] = "NewPrefab"; // TODO : 파라미터로 받기
 
     return root;
 }
 
 shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc& desc, const json& overrides)
 {
+    // 팩토리에서 오브젝트 타입으로 생성 (리플렉션 해야함)
+    auto gameObject = GameObject_Factory::Create(desc.object_type, _device, _context);
+    if (!gameObject)
+    {
+        LOG_ERROR("Failed to Create GameObject to Factory");
+        return nullptr;
+    }
 
+    // 기본 초기화 (Transform 세팅)
+    gameObject->Initialize(nullptr);
+
+    // 컴포넌트 데이터 적용
+    for (const auto& compData : desc.components)
+    {
+        uint32 typeId = compData["type"].get<uint32>();
+
+        // 기존 컴포넌트들 가져오기
+        auto comp = gameObject->Get_Component(typeId);
+
+        if (comp == nullptr)
+        {
+            // 없으면 Factory로 생성, Id 기반
+            comp = Component_Factory::Create(typeId, _device, _context);
+            if (comp)
+            {
+                gameObject->Add_Component(typeId, comp);
+            }
+        }
+
+        // 데이터 로드
+        if (comp)
+            comp->From_Json(compData);
+    }
+
+    // Override 적용
+    if (!overrides.empty())
+    {
+        auto transform = gameObject->Get_Component<Transform>();
+        if (transform)
+        {
+            transform->From_Json(overrides);
+        }
+    }
+
+    return gameObject;
 }
 
 unique_ptr<Prefab_Manager> Prefab_Manager::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

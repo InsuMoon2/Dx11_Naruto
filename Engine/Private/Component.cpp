@@ -21,6 +21,19 @@ HRESULT Component::Initialize(void* arg)
     return S_OK;
 }
 
+json Component::To_Json() const
+{
+    json j;
+    j["type"] = Get_ComponentID();
+
+    return j;
+}
+
+void Component::From_Json(const json& data)
+{
+
+}
+
 HRESULT Component::Initialize_Prototype()
 {
 

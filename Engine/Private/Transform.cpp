@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "Transform.h"
 
-
 Transform::Transform(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
@@ -13,8 +12,8 @@ Transform::Transform(const Transform& protoType)
     , _localPosition(protoType._localPosition)
     , _localRotation(protoType._localRotation)
     , _localScale(protoType._localScale)
-    , _speedPerSec(protoType._speedPerSec)
-    , _rotationPerSec(protoType._rotationPerSec)
+    , _speedPerSec(protoType._speedPerSec)          
+    , _rotationPerSec(protoType._rotationPerSec)    
 {
     _isDirty = true;
 }
@@ -45,6 +44,42 @@ HRESULT Transform::Initialize(void* arg)
     Mark_Dirty();
 
     return S_OK;
+}
+
+json Transform::To_Json() const
+{
+    json j = Component::To_Json();
+
+    Vec3 euler = Get_LocalEulerAngles(); // Degree
+
+    j["position"] = { _localPosition.x, _localPosition.y, _localPosition.z };
+    j["rotation"] = { euler.x, euler.y, euler.z };
+    j["scale"] = { _localScale.x, _localScale.y, _localScale.z };
+
+    return j;
+}
+
+void Transform::From_Json(const json& data)
+{
+    Component::From_Json(data);
+
+    if (data.contains("position"))
+    {
+        auto pos = data["position"];
+        Set_LocalPosition(pos[0], pos[1], pos[2]);
+    }
+
+    if (data.contains("rotation"))
+    {
+        auto rot = data["rotation"];
+        Set_LocalRotation(rot[0], rot[1], rot[2]);
+    }
+
+    if (data.contains("scale"))
+    {
+        auto scale = data["scale"];
+        Set_LocalScale(scale[0], scale[1], scale[2]);
+    }
 }
 
 void Transform::Set_LocalPosition(const Vec3& position)
@@ -245,7 +280,7 @@ Vec3 Transform::Get_LocalRight() const
 
 Vec3 Transform::Get_LocalUp() const
 {
-    return Vec3::Transform(Vec3::Up, _localRotation);
+    return Vec3::Transform(Vec3{0.f, 1.f, 0.f}, _localRotation);
 }
 
 void Transform::Move_Forward(float timeDelta)

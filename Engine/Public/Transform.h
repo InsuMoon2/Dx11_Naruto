@@ -14,11 +14,11 @@ public:
         float speedPerSec = {};
         float rotationPerSec = {};
 
-        Vec3 position   = Vec3::Zero;
+        Vec3 position   = Vec3(0.f, 0.f, 0.f);
         float pitch     = 0.f;
         float yaw       = 0.f;
         float roll      = 0.f;
-        Vec3 scale      = Vec3::One;
+        Vec3 scale      = Vec3(1.f, 1.f, 1.f);
     };
 
 public:
@@ -29,6 +29,9 @@ public:
 public:
     virtual HRESULT Initialize_Prototype() override;
     virtual HRESULT Initialize(void* arg) override;
+
+    virtual json To_Json() const override;
+    virtual void From_Json(const json& data) override;
 
 public: /* Position Local */
     Vec3 Get_LocalPosition() const { return _localPosition; }
@@ -54,11 +57,11 @@ public: /* Rotation World */
     void Set_WorldRotation(float pitch, float yaw, float roll);
     void Add_WorldRotation(const Quat& deltaRotation);
 
-    // Euler 각도 (Radian 변환)
+    /* Euler 각도 (Radian 변환) */
     Vec3 Get_LocalEulerAngles() const;
     void Set_LocalEulerAngles(float pitch, float yaw, float roll);
 
-    // 축 회전
+    /* 축 회전 */
     void Rotate_Axis(const Vec3& axis, float degrees);
 
 public: /* Scale */
@@ -119,9 +122,9 @@ private:
     }
 
 private: /* Local */
-    Vec3    _localPosition  = Vec3::Zero;
-    Quat    _localRotation  = Quat::Identity;
-    Vec3    _localScale     = Vec3::One;
+    Vec3    _localPosition = Vec3::Zero;
+    Quat    _localRotation = Quat::Identity;
+    Vec3    _localScale    = Vec3::Zero;
 
 private: /* World */
     mutable Matrix  _worldMatrix = Matrix::Identity;
@@ -135,7 +138,7 @@ private:
     float   _rotationPerSec = 0.f;
 
 public:
-    static shared_ptr<Transform> Create(ComPtr<Device> device,ComPtr<DeviceContext> context);
+    static shared_ptr<Transform>  Create(ComPtr<Device> device,ComPtr<DeviceContext> context);
     virtual shared_ptr<Component> Clone(void* arg) override;
     virtual void Free() override;
 

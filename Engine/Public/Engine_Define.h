@@ -1,9 +1,9 @@
-﻿#ifndef Engine_Define_h__
-#define Engine_Define_h__
+﻿#pragma once
 
 // DirectX
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <directxtk/SimpleMath.h>
 #include <wrl.h>
 
 #include <directxtk/DDSTextureLoader.h>
@@ -37,12 +37,16 @@ using namespace DirectX;
 
 using namespace std;
 
+// Magic Enum
+#include <magic_enum/magic_enum.hpp>
+
 // Engine Header
 #include "Engine_Enum.h"
 #include "Engine_Macro.h"
 #include "Engine_Struct.h"
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
+
 
 // Win
 #include <Windows.h>
@@ -54,9 +58,6 @@ using namespace std;
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
-
-// SimpleMath
-#include <directxtk/SimpleMath.h>
 
 // Json
 #include <nlohmann/json.hpp>
@@ -85,6 +86,3 @@ using json = nlohmann::json;
 
 using namespace Engine;
 using namespace Protocol;
-
-
-#endif // Engine_Define_h__

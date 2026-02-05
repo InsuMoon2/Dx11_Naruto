@@ -67,8 +67,6 @@ shared_ptr<Texture> Texture::Create(ComPtr<Device> device, ComPtr<DeviceContext>
         return nullptr;
     }
 
-    
-
     return instance;
 }
 

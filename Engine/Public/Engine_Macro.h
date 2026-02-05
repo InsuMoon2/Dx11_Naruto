@@ -106,12 +106,13 @@ private:                                                                 \
 //              컴포넌트 ID 세팅
 // ==================================================
 
-#define GENERATED_COMPONENT(ClassName, ProtoID) \
+#define GENERATED_COMPONENT(ClassName, ProtoID)  \
     GENERATED_BODY(ClassName)                    \
-                                                \
-public:                                         \
-    /* Protobuf ID 반환 */                     \
-    static uint32 GetComponentID() { return static_cast<uint32>(ProtoID); }
+                                                 \
+public:                                          \
+    /* Protobuf ID 반환 */                        \
+    static uint32 StaticTypeID() { return static_cast<uint32>(ProtoID); } \
+    virtual uint32 Get_ComponentID() const override { return StaticTypeID(); }
 
 
 

@@ -58,6 +58,9 @@
     <ClInclude Include="..\Public\Client_Enum.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CombatStat.h">
+      <Filter>03. Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -105,6 +108,9 @@
     <ClCompile Include="..\Private\TestPlayer.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CombatStat.cpp">
+      <Filter>03. Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -139,6 +145,9 @@
     </Filter>
     <Filter Include="96. Network">
       <UniqueIdentifier>{88f9c09b-d653-4b7f-a883-1d52d95d8814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component">
+      <UniqueIdentifier>{28328586-fc83-4acc-970a-e40cb2a46d24}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

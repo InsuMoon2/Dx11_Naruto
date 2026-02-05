@@ -1,12 +1,4 @@
 {
-    "Sound": [
-        {
-            "key": "",
-            "path": "",
-            "level": "",
-            "count": 2
-        }
-    ],
     "Texture": [
         {
             "key": "COMPONENT_TYPE_TEXTURE_DEFAULT",
@@ -29,6 +21,14 @@
             "level": "GamePlay",
             "count": 1,
             "type": "NonAnim"
+        }
+    ],
+    "Sound": [
+        {
+            "key": "",
+            "path": "",
+            "level": "",
+            "count": 2
         }
     ]
 }
