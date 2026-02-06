@@ -18,6 +18,7 @@ HRESULT Level_Gameplay::Initialize()
     CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")), E_FAIL);
     CHECK_FAILED(Ready_Layer_TempLayer(TEXT("Layer_TempLayer")), E_FAIL);
 
+
     return S_OK;
 }
 

@@ -11,16 +11,18 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # 입력 폴더 (Data/csv)
 CSV_DIR = os.path.join(BASE_DIR, 'csv')
 
-# 출력 파일 (Data/json/ResourceTable.json)
-OUTPUT_JSON = os.path.join(BASE_DIR, 'json', 'ResourceTable.json')
+# 출력 폴더 (Data/json)
+JSON_DIR = os.path.join(BASE_DIR, 'json')
 
 def convert_all_csv_to_json():
     if not os.path.exists(CSV_DIR):
         print(f"Error: CSV directory not found: {CSV_DIR}")
         return
 
-    # 모든 리소스를 담을 딕셔너리 (Type -> List of items)
-    all_data = collections.defaultdict(list)
+    # 출력 폴더 생성
+    if not os.path.exists(JSON_DIR):
+        os.makedirs(JSON_DIR)
+        print(f"Created directory: {JSON_DIR}")
     
     # csv 폴더 내의 모든 .csv 파일 찾기
     csv_files = glob.glob(os.path.join(CSV_DIR, '*.csv'))
@@ -29,11 +31,16 @@ def convert_all_csv_to_json():
         print(f"Warning: No CSV files found in {CSV_DIR}")
         return
 
-    print(f"🔍 Found {len(csv_files)} CSV files.")
+    print(f"Found {len(csv_files)} CSV files.")
 
     for csv_file in csv_files:
         try:
-            print(f"Processing: {os.path.basename(csv_file)}...")
+            filename = os.path.basename(csv_file)
+            print(f"Processing: {filename}...")
+            
+            # 파일별 데이터 저장소 (Type -> List of items)
+            file_data = collections.defaultdict(list)
+            
             with open(csv_file, 'r', encoding='utf-8-sig') as f:
                 reader = csv.DictReader(f)
                 
@@ -48,39 +55,39 @@ def convert_all_csv_to_json():
                     if not res_type: continue 
 
                     item = {
-                        'key': row.get('Key', '').strip(),
-                        'path': row.get('Path', '').strip(),
+                        'id': row.get('Id', '').strip(),
                         'level': row.get('Level', '').strip()
                     }
+                    
+                    # Path가 있으면 추가 (리소스용)
+                    if 'Path' in row and row['Path'].strip():
+                        item['path'] = row['Path'].strip()
                     
                     # Count 처리 (빈칸이면 1)
                     count_str = row.get('Count', '1').strip()
                     item['count'] = int(count_str) if count_str else 1
 
-                    # 추가 속성 (Model 타입 등)
-                    if res_type == 'Model':
-                        item['type'] = row.get('Extra', 'NonAnim').strip()
+                    # Extra 필드 처리 (Model 타입 등)
+                    extra = row.get('Extra', '').strip()
+                    if extra:
+                        item['type'] = extra
 
-                    all_data[res_type].append(item)
+                    file_data[res_type].append(item)
+            
+            # JSON 파일명 생성 (csv 확장자 -> json)
+            json_filename = os.path.splitext(filename)[0] + '.json'
+            output_json_path = os.path.join(JSON_DIR, json_filename)
+            
+            # 각 CSV별로 JSON 저장
+            with open(output_json_path, 'w', encoding='utf-8') as f:
+                json.dump(file_data, f, indent=4, ensure_ascii=False)
+                
+            print(f"  -> Saved to {json_filename}")
                     
         except Exception as e:
-            print(f"❌ Error processing {os.path.basename(csv_file)}: {e}")
+            print(f"Error processing {os.path.basename(csv_file)}: {e}")
 
-    # JSON 저장
-    try:
-        # 출력 폴더가 없으면 생성
-        output_dir = os.path.dirname(OUTPUT_JSON)
-        if output_dir and not os.path.exists(output_dir):
-            os.makedirs(output_dir)
-            print(f"📁 Created directory: {output_dir}")
-
-        with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
-            json.dump(all_data, f, indent=4, ensure_ascii=False)
-        
-        print(f"✅ Conversion Complete! All data merged into -> {OUTPUT_JSON}")
-
-    except Exception as e:
-        print(f"❌ Error writing JSON: {e}")
+    print(f"Conversion Complete!")
 
 if __name__ == "__main__":
     convert_all_csv_to_json()

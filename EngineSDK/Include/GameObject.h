@@ -92,6 +92,8 @@ public:
 
     HRESULT Add_Component(uint32 id, shared_ptr<Component> component);
 
+    const map<uint32, shared_ptr<class Component>>& Get_Components() const { return _components; }
+
 protected:
     shared_ptr<GameObject> GetSharedPtr() { return static_pointer_cast<GameObject>(shared_from_this()); }
 

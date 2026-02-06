@@ -26,7 +26,6 @@ private:
     HRESULT         Ready_Layer_GameObject(const wstring& layerTag);
     HRESULT         Ready_Layer_TempLayer(const wstring& layerTag);
 
-
 public:
     static shared_ptr<Level_Gameplay> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
 

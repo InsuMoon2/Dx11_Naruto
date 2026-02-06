@@ -36,6 +36,7 @@ using namespace DirectX;
 #include <queue>
 
 using namespace std;
+namespace fs = std::filesystem;
 
 // Magic Enum
 #include <magic_enum/magic_enum.hpp>
@@ -47,11 +48,17 @@ using namespace std;
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
 
-
 // Win
 #include <Windows.h>
 #include <assert.h>
 //#include <optional>
+
+// Protobuf
+#include "Struct.pb.h"
+#include "Enum.pb.h"
+#include "Protocol.pb.h"
+
+using namespace Protocol;
 
 #ifdef _DEBUG
 
@@ -70,11 +77,6 @@ using json = nlohmann::json;
 
 #include "Utils.h"
 
-// Protobuf
-#include "Struct.pb.h"
-#include "Enum.pb.h"
-#include "Protocol.pb.h"
-
 // 메모리 누수 감지
 #ifndef DBG_NEW 
 
@@ -85,4 +87,3 @@ using json = nlohmann::json;
 #endif
 
 using namespace Engine;
-using namespace Protocol;

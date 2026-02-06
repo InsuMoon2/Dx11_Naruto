@@ -91,7 +91,7 @@ public: /* Renderer */
     int32                   Get_DrawCallCount();
 
 public: /* Prefeb */
-    Shared<GameObject>      Instantiate_Prefab(const wstring& prefabName, const json& overrides = {});
+    Shared<GameObject>      Instantiate_Prefab(const string& prefabName, const json& overrides = {});
     HRESULT                 Save_Prefab(const string& prefabPath, shared_ptr<GameObject> gameObject);
 
 private:
@@ -100,11 +100,12 @@ private:
     unique_ptr<Level_Manager>       _levelManager;
     unique_ptr<Prototype_Manager>   _protoManager;
     unique_ptr<Object_Manager>      _objectManager;
-    unique_ptr<Renderer>            _renderer;
     unique_ptr<Prefab_Manager>      _prefabManager;
 
+    unique_ptr<Renderer>            _renderer;
+
 private:
-    EGameState                      _gameState = EGameState::Edit;
+    EGameState                      _gameState = EGameState::Play;
 
 public:
 	void Free() override;

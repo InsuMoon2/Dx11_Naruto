@@ -117,6 +117,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     mainApp = MainApp::Create();
     CHECK_NULL(mainApp, FALSE);
 
+
     GAME->Add_Timer(L"Timer_Default");
     GAME->Add_Timer(L"Timer_60FPS");
 
@@ -202,14 +203,29 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, const LaunchParams& params)
 
    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
+   int windowWidth = rc.right - rc.left;
+   int windowHeight = rc.bottom - rc.top;
+
+   int posX = params.windowX;
+   int posY = params.windowY;
+
+
+   if (posX == CW_USEDEFAULT || posY == CW_USEDEFAULT)
+   {
+       int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+       int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+       posX = (screenWidth - windowWidth) / 2;
+       posY = (screenHeight - windowHeight) / 2;
+   }
+
    HWND hWnd = CreateWindowW(
        szWindowClass,
-       windowTitle.c_str(),  
+       windowTitle.c_str(),
        WS_OVERLAPPEDWINDOW,
-       params.windowX,       
-       params.windowY,       
-       rc.right - rc.left,   
-       rc.bottom - rc.top,   
+       posX,
+       posY,
+       windowWidth,
+       windowHeight,
        nullptr, nullptr, hInstance, nullptr);
 
    ShowWindow(hWnd, nCmdShow);
@@ -243,6 +259,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_CREATE:
     {
         AllocConsole();
+        SetConsoleOutputCP(CP_UTF8);  // UTF-8 출력
+        SetConsoleCP(CP_UTF8);        // UTF-8 입력
 
         HANDLE hConsole = GetStdHandle(STD_INPUT_HANDLE);
         DWORD mode;

@@ -81,6 +81,9 @@
     <ClInclude Include="..\Public\Editor_Macro.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Prefab_View.h">
+      <Filter>03. Viewer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditorTool.cpp">
@@ -133,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Notification_Manager.cpp">
       <Filter>01. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Prefab_View.cpp">
+      <Filter>03. Viewer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

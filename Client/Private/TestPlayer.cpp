@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "TestPlayer.h"
 #include "GameObject_Factory.h"
+#include "CombatStat.h"
 
 REGISTER_GAMEOBJECT(TestPlayer, OBJECT_TYPE::OBJECT_TYPE_PLAYER)
 
@@ -23,6 +24,13 @@ HRESULT TestPlayer::Initialize_Prototype()
 
 HRESULT TestPlayer::Initialize(void* arg)
 {
+    CHECK_FAILED(GameObject::Initialize(arg), E_FAIL);
+
+    CombatStat::FCombatStatDesc desc;
+    desc.maxHp = 200.f;
+    desc.attack = 100.f;
+
+    Add_Component(ETOI(ELevelType::Static), COMPONENT_TYPE_STAT, _combatStat, &desc);
 
     return S_OK;
 }

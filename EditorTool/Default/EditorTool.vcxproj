@@ -144,7 +144,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine\Public;$(SolutionDir)EngineSDK\Inc;$(SolutionDir)EditorTool\Public;$(SolutionDir)EditorTool\Default</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine\Public;$(SolutionDir)EngineSDK\Inclue;$(SolutionDir)EditorTool\Public;$(SolutionDir)EditorTool\Default</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -171,6 +171,7 @@
     <ClInclude Include="..\Public\Console_View.h" />
     <ClInclude Include="..\Public\Notification_Manager.h" />
     <ClInclude Include="..\Public\PlayerSession_Manager.h" />
+    <ClInclude Include="..\Public\Prefab_View.h" />
     <ClInclude Include="..\Public\Profiler_View.h" />
     <ClInclude Include="..\Public\Scene_View.h" />
     <ClInclude Include="pch.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="..\Private\Console_View.cpp" />
     <ClCompile Include="..\Private\Notification_Manager.cpp" />
     <ClCompile Include="..\Private\PlayerSession_Manager.cpp" />
+    <ClCompile Include="..\Private\Prefab_View.cpp" />
     <ClCompile Include="..\Private\Profiler_View.cpp" />
     <ClCompile Include="..\Private\Scene_View.cpp" />
     <ClCompile Include="EditorTool.cpp" />

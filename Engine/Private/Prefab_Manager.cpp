@@ -2,7 +2,6 @@
 #include "Prefab_Manager.h"
 #include "GameInstance.h"
 #include <fstream>
-
 #include "Component_Factory.h"
 #include "GameObject.h"
 #include "GameObject_Factory.h"
@@ -19,8 +18,25 @@ Prefab_Manager::~Prefab_Manager()
 
 HRESULT Prefab_Manager::Initialize()
 {
+    fs::path prefabDir = "../../Client/Bin/Resources/Data/json/Prefabs";
 
+    if (!fs::exists(prefabDir))
+    {
+        fs::create_directories(prefabDir);
+    }
+
+    if (fs::exists(prefabDir))
+    {
+        for (const auto& entry : fs::directory_iterator(prefabDir))
+        {
+            if (entry.path().extension() == ".json")
+            {
+                Load_Prefab(entry.path().string());
+            }
+        }
+    }
     return S_OK;
+
 }
 
 HRESULT Prefab_Manager::Load_Prefab(const string& prefabPath)
@@ -38,9 +54,13 @@ HRESULT Prefab_Manager::Load_Prefab(const string& prefabPath)
 
     // Prefab 데이터 생성
     auto prefabData = make_shared<FPrefabDesc>();
-    prefabData->prefab_name = root["prefab_name"];
+
+    fs::path path(prefabPath);
+    string prefabKey = path.stem().string();
+
+    prefabData->prefab_name = prefabKey;
     prefabData->object_type = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
-        root["objectType"].get<std::string>()).value_or(Protocol::OBJECT_TYPE_NONE);
+        root["object_type"].get<std::string>()).value_or(Protocol::OBJECT_TYPE_NONE);
 
     prefabData->components = root["components"];
 
@@ -50,9 +70,9 @@ HRESULT Prefab_Manager::Load_Prefab(const string& prefabPath)
     }
 
     // 데이터 캐싱
-    _prefabs[prefabData->prefab_name] = prefabData;
+    _prefabs[prefabKey] = prefabData;
 
-    LOG_INFO("Loaded prefab : {}", prefabData->prefab_name);
+    LOG_INFO("Loaded prefab : {}", prefabKey);
 
     return S_OK;
 }
@@ -103,7 +123,8 @@ shared_ptr<FPrefabDesc> Prefab_Manager::Get_PrefabData(const string& prefabName)
 json Prefab_Manager::Serialize_GameObject(shared_ptr<GameObject> gameObject)
 {
     json root = gameObject->To_Json();
-    root["prefab_name"] = "NewPrefab"; // TODO : 파라미터로 받기
+
+    root["prefab_name"] = Utils::ToString(gameObject->Get_Name());
 
     return root;
 }

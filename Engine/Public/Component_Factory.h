@@ -28,12 +28,14 @@ private:
 
 };
 
-#define REGISTER_COMPONENT_FACTORY(TYPE) \
-    static struct Helper_Comp_Factory_##TYPE { \
-        Helper_Comp_Factory_##TYPE() { \
-            Engine::Component_Factory::Register(TYPE::StaticTypeID(), \
-                [](ComPtr<Device> device, ComPtr<DeviceContext> context) { return TYPE::Create(device, context); }); \
+#define REGISTER_COMPONENT_FACTORY(TYPE, ENUM) \
+    static struct Helper_Comp_##TYPE { \
+        Helper_Comp_##TYPE() { \
+            Engine::Component_Factory::Register(ENUM, \
+                [](ComPtr<Device> device, ComPtr<DeviceContext> context) { \
+                    return TYPE::Create(device, context); \
+                }); \
         } \
-    } helper_comp_factory_##TYPE;
+    } helper_comp_##TYPE;
 
 NS_END

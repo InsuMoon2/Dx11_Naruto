@@ -1,5 +1,8 @@
 ﻿#include "pch.h"
 #include "CombatStat.h"
+#include "Component_Factory.h"
+
+REGISTER_COMPONENT_FACTORY(CombatStat, ComponentID::COMPONENT_TYPE_STAT)
 
 CombatStat::CombatStat(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -30,7 +33,8 @@ HRESULT CombatStat::Initialize_Prototype()
 
 HRESULT CombatStat::Initialize(void* arg)
 {
-    FCombatStatDesc* desc = static_cast<FCombatStatDesc*>(arg);
+    FCombatStatDesc defaultDesc = {};
+    FCombatStatDesc* desc = arg ? static_cast<FCombatStatDesc*>(arg) : &defaultDesc;
 
     _maxHp = desc->maxHp;
     _hp = desc->maxHp;
@@ -75,8 +79,10 @@ json CombatStat::To_Json() const
 
     j["hp"] = _hp;
     j["maxHp"] = _maxHp;
+
     j["mp"] = _mp;
     j["maxMp"] = _maxHp;
+
     j["attack"] = _attack;
     j["defense"] = _defense;
     j["speed"] = _speed;
@@ -86,13 +92,15 @@ json CombatStat::To_Json() const
 
 void CombatStat::From_Json(const json& data)
 {
-    if (data.contains("maxHp")) _maxHp = data["maxHp"];
-    if (data.contains("hp")) _hp = data["hp"];
-    if (data.contains("maxMp")) _maxMp = data["maxMp"];
-    if (data.contains("mp")) _mp = data["mp"];
-    if (data.contains("attack")) _attack = data["attack"];
-    if (data.contains("defense")) _defense = data["defense"];
-    if (data.contains("speed")) _speed = data["speed"];
+    if (data.contains("maxHp"))     _maxHp = data["maxHp"];
+    if (data.contains("hp"))        _hp = data["hp"];
+
+    if (data.contains("maxMp"))     _maxMp = data["maxMp"];
+    if (data.contains("mp"))        _mp = data["mp"];
+
+    if (data.contains("attack"))    _attack = data["attack"];
+    if (data.contains("defense"))   _defense = data["defense"];
+    if (data.contains("speed"))     _speed = data["speed"];
 }
 
 shared_ptr<CombatStat> CombatStat::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

@@ -90,7 +90,7 @@ HRESULT Loader::Loading_For_LogoLevel()
 
     lstrcpy(_loadingText, TEXT("리소스 로딩 중"));
 
-    if (FAILED(Load_Resources_From_Json(TEXT("../Bin/Resources/Data/json/ResourceTable.json"))))
+    if (FAILED(Load_Resources_From_Json(TEXT("../Bin/Resources/Data/ResourceTable.json"))))
     {
         MSG_BOX("Failed to Load Resources from JSON");
         return E_FAIL;

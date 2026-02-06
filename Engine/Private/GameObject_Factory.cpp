@@ -25,7 +25,11 @@ shared_ptr<GameObject> GameObject_Factory::Create(OBJECT_TYPE type, ComPtr<Devic
     if (iter == _creators.end())
         return nullptr;
 
-    return iter->second.creator(device, context);
+    auto obj = iter->second.creator(device, context);
+    if (obj)
+        obj->Set_ObjectType(type);
+
+    return obj;
 }
 
 shared_ptr<GameObject> GameObject_Factory::Create(const wstring& name, ComPtr<Device> device,
@@ -34,7 +38,14 @@ shared_ptr<GameObject> GameObject_Factory::Create(const wstring& name, ComPtr<De
     for (const auto& [type, info] : _creators)
     {
         if (info.name == name)
-            return info.creator(device, context);
+        {
+            auto obj = info.creator(device, context);
+            if (obj)
+                obj->Set_ObjectType(type);
+
+            return obj;
+        }
+            
     }
 
     return nullptr;

@@ -25,7 +25,7 @@ private:
     static shared_ptr<GameObject> JsonToGameObject(const json& j);
 
 private:
-    static constexpr const wchar_t* LEVEL_DIRECTORY = L"../../Client/Bin/Resources/Data/Level/";
+    static constexpr const wchar_t* LEVEL_DIRECTORY = L"../../Client/Bin/Resources/Data/json/Level/";
 
 };
 

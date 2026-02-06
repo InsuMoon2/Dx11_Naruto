@@ -103,6 +103,10 @@
     <ClInclude Include="..\Public\GameObject_Factory.h">
       <Filter>01. Utility\98. Utils\00. Factory</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer.h">
+      <Filter>01. Utility\04. Component\02. VIBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Rect.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -188,6 +192,18 @@
     </Filter>
     <Filter Include="95. Manager\04. Debug">
       <UniqueIdentifier>{60ee192e-3fbf-4b61-b749-39fe470d692f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\02. VIBuffer">
+      <UniqueIdentifier>{816d19a3-533b-49ee-b3e4-cf2f6ef7ef54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\02. VIBuffer\00. Rect">
+      <UniqueIdentifier>{a44ef2ca-9dcd-4229-9ed0-515a1557dbee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\02. VIBuffer\01. Cube">
+      <UniqueIdentifier>{a9afdba2-ad69-465c-8e9d-71b1af75e196}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\02. VIBuffer\02. Terrain">
+      <UniqueIdentifier>{b06fd632-779e-4bec-92dd-f6cc4a782fd6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -275,6 +291,10 @@
     <ClCompile Include="..\Private\GameObject_Factory.cpp">
       <Filter>01. Utility\98. Utils\00. Factory</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer.cpp">
+      <Filter>01. Utility\04. Component\02. VIBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

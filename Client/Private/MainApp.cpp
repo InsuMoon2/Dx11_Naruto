@@ -4,6 +4,8 @@
 #include "Level_Loading.h"
 #include "EditorInstance.h"
 #include "NetworkManager.h"
+#include "ResourceLoader.h"
+#include "VIBuffer_Rect.h"
 
 MainApp::MainApp()
 {
@@ -41,6 +43,8 @@ HRESULT MainApp::Initialize()
         if (FAILED(EDITOR->Initialize_Editor(editorDesc, _device, _context)))
             return E_FAIL;
     }
+
+    CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
 
     if (FAILED(Ready_StartLevel(ELevelType::GamePlay)))
         return E_FAIL;
@@ -115,6 +119,18 @@ HRESULT MainApp::Render()
     if (FAILED(GAME->Present()))
         return E_FAIL;
     
+    return S_OK;
+}
+
+HRESULT MainApp::Ready_StaticLevel()
+{
+    auto resourceLoader = ResourceLoader::Create(_device, _context);
+    CHECK_NULL(resourceLoader, E_FAIL);
+
+    CHECK_FAILED(resourceLoader->Load_Table(
+        TEXT("../Bin/Resources/Data/json/StaticLevelComTable.json"),
+        ETOI(ELevelType::Static)), E_FAIL);
+
     return S_OK;
 }
 

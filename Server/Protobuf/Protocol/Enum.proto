@@ -9,6 +9,7 @@ enum ComponentID
     COMPONENT_TYPE_TRANSFORM    = 1;
     COMPONENT_TYPE_TEXTURE      = 2;
     COMPONENT_TYPE_COLLIDER     = 3;
+    COMPONENT_TYPE_RECT         = 4;
     
     // Test
     COMPONENT_TYPE_TEXTURE_DEFAULT = 100;

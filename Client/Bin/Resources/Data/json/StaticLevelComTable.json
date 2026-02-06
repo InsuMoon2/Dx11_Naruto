@@ -1,0 +1,24 @@
+{
+    "Texture": [
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_DEFAULT",
+            "level": "Static",
+            "count": 1
+        }
+    ],
+    "CombatStat": [
+        {
+            "id": "COMPONENT_TYPE_STAT",
+            "level": "Static",
+            "count": 1
+        }
+    ],
+    "Buffer_Rect": [
+        {
+            "id": "COMPONENT_TYPE_RECT",
+            "level": "Static",
+            "count": 1,
+            "type": "NonAnim"
+        }
+    ]
+}

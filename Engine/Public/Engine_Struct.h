@@ -24,4 +24,10 @@ namespace Engine
         uint32      viewportHeight;
 
     } EDITOR_DESC;
+
+    struct FVertexDesc
+    {
+        Vec3        position;
+        Vec2        textCoord;
+    };
 }

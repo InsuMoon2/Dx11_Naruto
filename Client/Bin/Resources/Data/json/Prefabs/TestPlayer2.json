@@ -1,0 +1,6 @@
+{
+    "components": [],
+    "object_type": "OBJECT_TYPE_PLAYER",
+    "prefab_name": "TestPlayer2",
+    "static_class": "TestPlayer"
+}

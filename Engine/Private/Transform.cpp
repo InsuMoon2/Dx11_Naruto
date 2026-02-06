@@ -30,9 +30,8 @@ HRESULT Transform::Initialize_Prototype()
 
 HRESULT Transform::Initialize(void* arg)
 {
-    CHECK_NULL(arg, E_FAIL);
-
-    FTransformDesc* desc = static_cast<FTransformDesc*>(arg);
+    FTransformDesc defaultDesc = {};
+    FTransformDesc* desc = arg ? static_cast<FTransformDesc*>(arg) : &defaultDesc;
 
     _speedPerSec = desc->speedPerSec;
     _rotationPerSec = XMConvertToRadians(desc->rotationPerSec);

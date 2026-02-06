@@ -1,0 +1,25 @@
+{
+    "Texture": [
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_DEFAULT",
+            "level": "Logo",
+            "path": "../Bin/Resources/Textures/Default%d.jpg",
+            "count": 2
+        }
+    ],
+    "Model": [
+        {
+            "id": "Prototype_Texture_Hero",
+            "level": "GamePlay",
+            "path": "../Bin/Resources/Textures/Hero/Hero_Idle.png",
+            "count": 1
+        },
+        {
+            "id": "Prototype_Model_Boss",
+            "level": "GamePlay",
+            "path": "../Bin/Resources/Models/Boss/Boss.m3d",
+            "count": 1,
+            "type": "NonAnim"
+        }
+    ]
+}

@@ -213,11 +213,9 @@ int32 GameInstance::Get_DrawCallCount()
     return _renderer->Get_DrawCallCount();
 }
 
-Shared<GameObject> GameInstance::Instantiate_Prefab(const wstring& prefabName, const json& overrides)
+Shared<GameObject> GameInstance::Instantiate_Prefab(const string& prefabName, const json& overrides)
 {
-    string nameStr = Utils::ToString(prefabName);
-
-    return _prefabManager->Instantiate_Prefab(nameStr, overrides);
+    return _prefabManager->Instantiate_Prefab(prefabName, overrides);
 }
 
 HRESULT GameInstance::Save_Prefab(const string& prefabPath, shared_ptr<GameObject> gameObject)

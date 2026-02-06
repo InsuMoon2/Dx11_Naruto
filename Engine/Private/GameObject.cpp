@@ -64,8 +64,8 @@ void GameObject::Render()
 json GameObject::To_Json() const
 {
     json j;
-    j["name"] = _name;
-    j["objectType"] = magic_enum::enum_name(_objectType);
+    j["static_class"] = Utils::ToString(_name);
+    j["object_type"] = magic_enum::enum_name(_objectType);
 
     json components = json::array();
     for (auto& [id, comp] : _components)
@@ -79,7 +79,18 @@ json GameObject::To_Json() const
 
 void GameObject::From_Json(const json& data)
 {
+    if (data.contains("static_class"))
+    {
+        _name = Utils::ToWString(data["static_class"].get<string>());
+    }
 
+    if (data.contains("object_type"))
+    {
+        _objectType = magic_enum::enum_cast<OBJECT_TYPE>(
+            data["object_type"].get<string>()).value_or(OBJECT_TYPE_NONE);
+    }
+
+    // 컴포넌트 로드는 Prefab_Manager에서 세팅하기
 }
 
 shared_ptr<Component> GameObject::Get_Component(uint32 id)

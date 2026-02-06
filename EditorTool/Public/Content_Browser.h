@@ -31,23 +31,46 @@ public:
 
 private:
     void    Refresh_Resources();
+    void    Refresh_CurrentFolder();
+
     void    Scan_Folder(const wstring& path, FFolderNode& node);
     void    Draw_FolderTree(FFolderNode& node);
     void    Draw_AssetView();
 
     void    Generate_Default_Prefabs();
+    void    Finish_Rename(const wstring& oldPath, const char* newName);
+    void    Create_NewPrefab(const wstring& typeName);
+
+    void    Enter_RenameMode(fs::path savePath);
+
+    // 설정 저장
+    void    Save_Settings();
+    void    Load_Settings();
+
+    FFolderNode*    Find_FolderNode(FFolderNode& node, const wstring& path);
+    void            Expand_PathTo(const wstring& targetPath);
 
 private:
     FFolderNode          _rootFolder;
     FFolderNode*         _currentFolder = { nullptr };
 
-    //
+    // 폴더 뷰
     float                _leftPanelWidth = 200.f;
     float                _thumbnailSize = 64.f;
     char                 _searchBuffer[128] = "";
 
     shared_ptr<Texture>  _iconFolder;
     shared_ptr<Texture>  _iconFile;
+
+private:
+    bool                _isRenaming = false;
+    wstring             _renamingFilePath;
+    char                _renameBuffer[128] = "";
+    bool                _focusRenameInput = false;
+
+
+    set<wstring>        _expandedFolders;
+    const char*          CONTENT_BROWSER_PATH = "../../Client/Bin/Resources/Data/json/EditorSettings/ContentBrowser.json";
 
 public:
     static shared_ptr<Content_Browser> Create();

@@ -4,6 +4,8 @@
 
 NS_BEGIN(Client)
 
+class CombatStat;
+
 class TestPlayer : public GameObject
 {
     GENERATED_BODY(TestPlayer)
@@ -19,6 +21,9 @@ public:
     virtual void    Priority_Update(float timeDelta) override;
     virtual void    Update(float timeDelta) override;
     virtual void    Late_Update(float timeDelta) override;
+
+private:
+    Shared<CombatStat> _combatStat;
 
 public:
     static shared_ptr<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

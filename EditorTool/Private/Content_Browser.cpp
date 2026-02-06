@@ -4,6 +4,8 @@
 #include "Texture.h"
 #include "Utils.h"
 #include "GameObject_Factory.h"
+#include "GameObject.h"
+#include <fstream>
 
 Content_Browser::Content_Browser()
     : EditorWindow(TEXT("Content Browser"))
@@ -12,6 +14,8 @@ Content_Browser::Content_Browser()
 
 Content_Browser::~Content_Browser()
 {
+    // 에디터 종료 시 설정 저장
+    Save_Settings();
 }
 
 void Content_Browser::Initialize()
@@ -25,11 +29,14 @@ void Content_Browser::Initialize()
         TEXT("../../Client/Bin/Resources/Textures/Folder_Icon.png"), 1
     );
 
-    // 디폴트 프리팹 만들기
+    // TODO : 디폴트 프리팹 만들기 -> 추후 삭제 예정. 굳이 필요 없을듯
     Generate_Default_Prefabs();
 
     // 초기 리소스 스캔 Resources 폴더 기준
     Refresh_Resources();
+
+    // 경로 로드
+    Load_Settings();
 }
 
 void Content_Browser::Update(float timeDelta)
@@ -97,6 +104,8 @@ void Content_Browser::OnGui()
 
 void Content_Browser::Refresh_Resources()
 {
+
+#pragma region 루트로 이동
     _rootFolder = {};
 
     fs::path rootPath = TEXT("../../Client/Bin/Resources");
@@ -105,6 +114,24 @@ void Content_Browser::Refresh_Resources()
     {
         Scan_Folder(rootPath, _rootFolder);
         _currentFolder = &_rootFolder;
+    }
+#pragma endregion
+    
+}
+
+void Content_Browser::Refresh_CurrentFolder()
+{
+    if (!_currentFolder)
+        return;
+
+    _currentFolder->files.clear();
+
+    for (const auto& entry : fs::directory_iterator(_currentFolder->fullPath))
+    {
+        if (!entry.is_directory())
+        {
+            _currentFolder->files.emplace_back(entry.path());
+        }
     }
 }
 
@@ -140,8 +167,17 @@ void Content_Browser::Draw_FolderTree(FFolderNode& node)
     if (node.subFolders.empty())
         flags |= ImGuiTreeNodeFlags_Leaf;
 
+    // 펼쳐야 할 폴더면 강제로 열기
+    if (_expandedFolders.contains(node.fullPath))
+    {
+        ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+        _expandedFolders.erase(node.fullPath);
+    }
+
     string id = "##" + Utils::ToString(node.fullPath);
     bool isOpen = ImGui::TreeNodeEx(id.c_str(), flags);
+
+    bool isClicked = ImGui::IsItemClicked();
 
     ImGui::SameLine();
 
@@ -152,13 +188,13 @@ void Content_Browser::Draw_FolderTree(FFolderNode& node)
     }
 
     string folderName = Utils::ToString(node.name);
+
     ImGui::Text("%s", folderName.c_str());
 
-    if (ImGui::IsItemClicked())
+    if (isClicked)
     {
         _currentFolder = &node;
     }
-
     if (isOpen)
     {
         for (auto& child : node.subFolders)
@@ -194,29 +230,20 @@ void Content_Browser::Draw_AssetView()
 
             // GameObject Factory에 등록된지 확인
             wstring pureNameW = Utils::ToWString(pureName);
-            bool isValidPrefab = false;
 
-            if (extension == ".json")
-            {
-                for (const auto& name : validName)
-                {
-                    if (name == pureNameW)
-                    {
-                        isValidPrefab = true;
-                        break;
-                    }
-                }
-            }
+            bool isValidPrefab = (extension == ".json" &&
+                _currentFolder->fullPath.find(L"Prefabs") != wstring::npos);
 
             // 아이콘
             ImGui::PushID(fileName.c_str());
 
-            ImGui::Button(fileName.c_str(), ImVec2(_thumbnailSize, _thumbnailSize));
+            ImGui::Button(pureName.c_str(), ImVec2(_thumbnailSize, _thumbnailSize));
 
-            if (isValidPrefab && ImGui::IsItemHovered && ImGui::IsMouseDoubleClicked(0))
+            // 더블클릭 -> Prefab View 열기
+            if (isValidPrefab && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
             {
                 // Prefab 인스턴스화 (수정 모드)
-                auto newObj = GAME->Instantiate_Prefab(pureNameW, {});
+                auto newObj = GAME->Instantiate_Prefab(pureName, {});
 
                 if (newObj)
                 {
@@ -224,14 +251,50 @@ void Content_Browser::Draw_AssetView()
                 }
             }
 
-            if (isValidPrefab)
+            if (_isRenaming && fs::absolute(_renamingFilePath) == fs::absolute(filePath))
             {
-                ImGui::TextColored(ImVec4(0.5f, 1.f, 0.5f, 1.f), "%s", pureName.c_str());
+                if (_focusRenameInput)
+                {
+                    ImGui::SetKeyboardFocusHere();
+                }
+
+                ImGui::SetNextItemWidth(_thumbnailSize);
+                if (ImGui::InputText("##Rename", _renameBuffer, IM_ARRAYSIZE(_renameBuffer),
+                    ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+                {
+                    // Enter 입력
+                    Finish_Rename(filePath, _renameBuffer);
+                }
+
+                bool hasLostFocus = !_focusRenameInput && !ImGui::IsItemActive() && !ImGui::IsItemFocused();
+
+                // Esc 또는 포커스 잃을 때 처리
+                if (ImGui::IsKeyPressed(ImGuiKey_Escape) || hasLostFocus)
+                {
+                    _isRenaming = false;
+                }
             }
+
             else
             {
-                ImGui::TextWrapped("%s", fileName.c_str());
+                float textWidth = ImGui::CalcTextSize(pureName.c_str()).x;
+                float columnWidth = _thumbnailSize;
+
+                // 가운데 정렬
+                float offset = (columnWidth - textWidth) * 0.5f;
+                if (offset > 0)
+                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
+
+                if (isValidPrefab)
+                {
+                    ImGui::TextColored(ImVec4(0.5f, 1.f, 0.5f, 1.f), "%s", pureName.c_str());
+                }
+                else
+                {
+                    ImGui::TextWrapped("%s", pureName.c_str());
+                }
             }
+
 
             ImGui::PopID();
             ImGui::NextColumn();
@@ -243,7 +306,7 @@ void Content_Browser::Draw_AssetView()
     // 빈 공간 우클릭 -> Create Prefab
     if (ImGui::BeginPopupContextWindow("AssetViewContext", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
     {
-        if (ImGui::BeginMenu("Create Prefab"))
+        if (ImGui::BeginMenu("프리펩 만들기"))
         {
             // Factory에 등록된 이름 가져오기
             vector<wstring> names = GameObject_Factory::Get_RegisteredNames();
@@ -254,19 +317,7 @@ void Content_Browser::Draw_AssetView()
 
                 if (ImGui::MenuItem(typeName.c_str()))
                 {
-                    // Create New Prefab
-                    auto tempObj = GameObject_Factory::Create(nameW, GAME->Get_Device(), GAME->Get_Context());
-
-                    if (tempObj)
-                    {
-                        // 현재 폴더에 json파일로 저장
-                        string fileName = typeName + "_New.json";
-                        fs::path savePath = fs::path(_currentFolder->fullPath) / fileName;
-
-                        GAME->Save_Prefab(savePath.string(), tempObj);
-
-                        Refresh_Resources();
-                    }
+                    Create_NewPrefab(nameW);
                 }
             }
             ImGui::EndMenu();
@@ -280,7 +331,7 @@ void Content_Browser::Generate_Default_Prefabs()
 {
     vector<wstring> names = GameObject_Factory::Get_RegisteredNames();
 
-    fs::path prefabDir = TEXT("../../Client/Bin/Resources/Data/Prefabs");
+    fs::path prefabDir = TEXT("../../Client/Bin/Resources/Data/json/Prefabs");
     if (!fs::exists(prefabDir))
         fs::create_directory(prefabDir);
 
@@ -311,6 +362,158 @@ void Content_Browser::Generate_Default_Prefabs()
 
         Refresh_Resources();
     }
+}
+
+void Content_Browser::Finish_Rename(const wstring& oldPath, const char* newName)
+{
+    fs::path oldFilePath(oldPath);
+    fs::path newFilePath = oldFilePath.parent_path() / (string(newName) + oldFilePath.extension().string());
+
+    if (fs::exists(newFilePath))
+    {
+        LOG_WARN("이미 존재하는 파일명 입니다 : {}", newName);
+        _isRenaming = false;
+
+        return;
+    }
+
+    try
+    {
+        ifstream inFile(oldFilePath);
+
+        json root;
+        inFile >> root;
+        inFile.close();
+
+        root["prefab_name"] = newName;
+
+        ofstream outFile(newFilePath);
+        outFile << root.dump(4);
+        outFile.close();
+
+        fs::remove(oldFilePath);
+
+        LOG_INFO("파일명 변경: {} -> {}", oldFilePath.stem().string(), newName);
+
+        Refresh_CurrentFolder();
+    }
+    catch (const exception& e)
+    {
+        LOG_ERROR("파일명 변경 실패");
+    }
+
+    _isRenaming = false;
+}
+
+void Content_Browser::Create_NewPrefab(const wstring& typeName)
+{
+    string baseFileName = "NewPrefab";
+    fs::path savePath = fs::path(_currentFolder->fullPath) / (baseFileName + ".json");
+
+    // 중복 이름 처리
+    int counter = 1;
+    while (fs::exists(savePath))
+    {
+        savePath = fs::path(_currentFolder->fullPath) / (baseFileName + "_" + to_string(counter++) + ".json");
+    }
+
+    auto tempObj = GameObject_Factory::Create(typeName, GAME->Get_Device(), GAME->Get_Context());
+    if (tempObj)
+    {
+        tempObj->Set_Name(typeName);
+        GAME->Save_Prefab(savePath.string(), tempObj);
+
+        _currentFolder->files.emplace_back(savePath.wstring());
+
+        Enter_RenameMode(savePath);
+    }
+}
+
+void Content_Browser::Enter_RenameMode(fs::path savePath)
+{
+    _isRenaming = true;
+    _renamingFilePath = savePath.wstring();
+
+    strcpy_s(_renameBuffer, savePath.stem().string().c_str());
+    _focusRenameInput = true;
+}
+
+void Content_Browser::Save_Settings()
+{
+    json settings;
+    settings["lastPath"] = Utils::ToString(_currentFolder ? _currentFolder->fullPath : L"");
+
+    fs::path settingPath = CONTENT_BROWSER_PATH;
+
+    if (!fs::exists(settingPath.parent_path()))
+    {
+        fs::create_directory(settingPath.parent_path());
+    }
+
+    ofstream file(settingPath);
+    if (file.is_open())
+    {
+        file << settings.dump(4);
+        file.close();
+    }
+}
+
+void Content_Browser::Load_Settings()
+{
+    ifstream file(CONTENT_BROWSER_PATH);
+    if (!file.is_open())
+        return;
+
+    json settings;
+    file >> settings;
+    file.close();
+
+    if (settings.contains("lastPath"))
+    {
+        wstring lastPath = Utils::ToWString(settings["lastPath"].get<string>());
+
+        // 해당 폴더 찾아서 설정
+        FFolderNode* found = Find_FolderNode(_rootFolder, lastPath);
+        if (found)
+        {
+            _currentFolder = found;
+            Expand_PathTo(lastPath);
+        }
+    }
+
+}
+
+Content_Browser::FFolderNode* Content_Browser::Find_FolderNode(FFolderNode& node, const wstring& path)
+{
+    if (node.fullPath == path)
+        return &node;
+
+    for (auto& child : node.subFolders)
+    {
+        FFolderNode* found = Find_FolderNode(child, path);
+        if (found)
+        {
+            return found;
+        }
+    }
+
+    return nullptr;
+}
+
+void Content_Browser::Expand_PathTo(const wstring& targetPath)
+{
+    _expandedFolders.clear();
+
+    fs::path current(targetPath);
+    fs::path root(_rootFolder.fullPath);
+
+    while (current != root && !current.empty())
+    {
+        _expandedFolders.insert(current.wstring());
+        current = current.parent_path();
+    }
+
+    _expandedFolders.insert(root.wstring());
 }
 
 shared_ptr<Content_Browser> Content_Browser::Create()
