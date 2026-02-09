@@ -109,6 +109,16 @@ vector<shared_ptr<GameObject>> Object_Manager::Get_GameObjects(uint32 levelIndex
     return allObjects;
 }
 
+const umap<wstring, shared_ptr<Layer>>& Object_Manager::Get_Layers(uint32 levelIndex)
+{
+    static umap<wstring, shared_ptr<Layer>> emptyLayers;
+
+    if (levelIndex >= _numLevels)
+        return emptyLayers;
+
+    return _layers[levelIndex];
+}
+
 void Object_Manager::Bind_Events()
 {
     // 삭제
@@ -147,10 +157,40 @@ void Object_Manager::OnDeleteEvent(shared_ptr<FEvent> event)
 void Object_Manager::OnCreateEvent(shared_ptr<FEvent> event)
 {
     auto createEvent = static_pointer_cast<FEvent_Object>(event);
+    auto& targetObj = createEvent->targetObject;
 
-    if (createEvent && createEvent->targetObject)
+    if (targetObj)
     {
-        // TODO : Add GameObject 사용
+        uint32 currentLevelIndex = GAME->Current_Level();
+
+        // 레이어찾기
+        shared_ptr<Layer> targetLayer = {};
+
+        for (auto& [layerTag, layer] : _layers[currentLevelIndex])
+        {
+            if (!layer)
+                continue;
+
+            auto& objects = layer->Get_GameObjects();
+
+            auto iter = find(objects.begin(), objects.end(), targetObj);
+
+            if (iter != objects.end())
+            {
+                targetLayer = layer;
+                break;
+            }
+        }
+
+        auto newObj = targetObj->Clone(nullptr);
+
+        if (targetLayer)
+        {
+            targetLayer->Add_GameObject(newObj);
+
+            // 이름 변경 어떻게 할지 ?
+            newObj->Set_Name(targetObj->Get_Name() + L"_Copy");
+        }
     }
 }
 

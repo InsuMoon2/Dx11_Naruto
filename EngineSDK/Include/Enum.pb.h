@@ -56,13 +56,15 @@ namespace protobuf {
 
 namespace Protocol {
 enum ComponentID : int {
-  COMPONENT_TPYE_NONE = 0,
+  COMPONENT_TPYE_ENGINE_START = 0,
   COMPONENT_TYPE_TRANSFORM = 1,
   COMPONENT_TYPE_TEXTURE = 2,
   COMPONENT_TYPE_COLLIDER = 3,
   COMPONENT_TYPE_RECT = 4,
   COMPONENT_TYPE_TEXTURE_DEFAULT = 100,
-  COMPONENT_TYPE_STAT = 1001,
+  COMPONENT_TYPE_CLIENT_START = 1000,
+  COMPONENT_TYPE_REPLICATOR = 1001,
+  COMPONENT_TYPE_COMBAT_STAT = 1002,
   ComponentID_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   ComponentID_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -72,8 +74,8 @@ enum ComponentID : int {
 bool ComponentID_IsValid(int value);
 extern const uint32_t ComponentID_internal_data_[];
 constexpr ComponentID ComponentID_MIN = static_cast<ComponentID>(0);
-constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1001);
-constexpr int ComponentID_ARRAYSIZE = 1001 + 1;
+constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1002);
+constexpr int ComponentID_ARRAYSIZE = 1002 + 1;
 const ::google::protobuf::EnumDescriptor*
 ComponentID_descriptor();
 template <typename T>

@@ -92,6 +92,8 @@ public:
 
     HRESULT Add_Component(uint32 id, shared_ptr<Component> component);
 
+    void    Remove_Component(uint32 id);
+
     const map<uint32, shared_ptr<class Component>>& Get_Components() const { return _components; }
 
 protected:

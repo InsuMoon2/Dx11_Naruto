@@ -11,5 +11,7 @@ namespace Engine
     enum class EGameState { Edit, Play, Pause, END };
 
     enum class EEventType { Create_Object, Delete_Object, END };
+
+    enum class EBTNodeResult { Succeeded, Failed, InProgress, Aborted };
 }
 

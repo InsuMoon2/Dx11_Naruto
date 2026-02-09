@@ -13,6 +13,7 @@
 #include "RenderTarget.h"
 #include "Game_View.h"
 #include "Notification_Manager.h"
+#include "Prefab_View.h"
 
 Editor_Manager::~Editor_Manager()
 {
@@ -29,7 +30,7 @@ void Editor_Manager::Initialize()
     Add_Window(TEXT("Content Browser"), Content_Browser::Create());
 
     Add_Window(TEXT("Profiler"), Profiler_View::Create());
-
+    Add_Window(TEXT("Prefab"), Prefab_View::Create());
 }
 
 void Editor_Manager::Update(float timeDelta)

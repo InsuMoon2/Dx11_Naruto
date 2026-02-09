@@ -20,6 +20,7 @@ class GameObject;
 class Component;
 
 class Level;
+class Layer;
 
 class ENGINE_DLL GameInstance : public Base
 {
@@ -62,16 +63,16 @@ public: /* Timer Manager */
 	float	                Compute_TimeDelta(const wstring& timerTag);
 
 public: /* LevelType Manager */
-    HRESULT                 Change_Level(uint32 levelIndex, shared_ptr<Level> level);
+    HRESULT                 Change_Level(uint32 levelIndex, Shared<Level> level);
     uint32                  Current_Level();
 
 
 public: /* Prototype Manager */
-    HRESULT                 Add_GameObject_Prototype(uint32 levelIndex, uint32 objID, shared_ptr<GameObject> gameObject);
-    shared_ptr<GameObject>  Clone_GameObject(uint32 levelIndex, uint32 objID, void* arg = {});
+    HRESULT                 Add_GameObject_Prototype(uint32 levelIndex, uint32 objID, Shared<GameObject> gameObject);
+    Shared<GameObject>  Clone_GameObject(uint32 levelIndex, uint32 objID, void* arg = {});
 
-    HRESULT                 Add_Component_Prototype(uint32 levelIndex, uint32 componentID, shared_ptr<Component> component);
-    shared_ptr<Component>   Clone_Component(uint32 levelIndex, uint32 componentID, void* arg = {});
+    HRESULT                 Add_Component_Prototype(uint32 levelIndex, uint32 componentID, Shared<Component> component);
+    Shared<Component>   Clone_Component(uint32 levelIndex, uint32 componentID, void* arg = {});
 
 public: /* Object Manager */
     HRESULT                 Add_GameObject(
@@ -84,15 +85,16 @@ public: /* Object Manager */
                                 const wstring& layerTag,
                                 void* arg = {});
 
-    vector<shared_ptr<GameObject>> Get_GameObjects(uint32 levelIndex);
+    vector<Shared<GameObject>>         Get_GameObjects(uint32 levelIndex);
+    const umap<wstring, Shared<Layer>> Get_Layers(uint32 levelIndex);
 
 public: /* Renderer */
-    void                    Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject);
+    void                    Add_RenderGroup(ERenderGroup renderType, Shared<GameObject> gameObject);
     int32                   Get_DrawCallCount();
 
 public: /* Prefeb */
     Shared<GameObject>      Instantiate_Prefab(const string& prefabName, const json& overrides = {});
-    HRESULT                 Save_Prefab(const string& prefabPath, shared_ptr<GameObject> gameObject);
+    HRESULT                 Save_Prefab(const string& prefabPath, Shared<GameObject> gameObject);
 
 private:
 	unique_ptr<Graphic_Device>      _graphicDevice;

@@ -46,5 +46,5 @@ message S_Move
 message S_UpdateStat
 {
     uint64 player_id = 1;
-    PlayerStat stat = 2;
+    CombatStat stat = 2;
 }

@@ -56,12 +56,12 @@ namespace Protocol {
 class BuffData;
 struct BuffDataDefaultTypeInternal;
 extern BuffDataDefaultTypeInternal _BuffData_default_instance_;
+class CombatStat;
+struct CombatStatDefaultTypeInternal;
+extern CombatStatDefaultTypeInternal _CombatStat_default_instance_;
 class ObjectInfo;
 struct ObjectInfoDefaultTypeInternal;
 extern ObjectInfoDefaultTypeInternal _ObjectInfo_default_instance_;
-class PlayerStat;
-struct PlayerStatDefaultTypeInternal;
-extern PlayerStatDefaultTypeInternal _PlayerStat_default_instance_;
 }  // namespace Protocol
 namespace google {
 namespace protobuf {
@@ -75,31 +75,31 @@ namespace Protocol {
 
 // -------------------------------------------------------------------
 
-class PlayerStat final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:Protocol.PlayerStat) */ {
+class CombatStat final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:Protocol.CombatStat) */ {
  public:
-  inline PlayerStat() : PlayerStat(nullptr) {}
-  ~PlayerStat() PROTOBUF_FINAL;
+  inline CombatStat() : CombatStat(nullptr) {}
+  ~CombatStat() PROTOBUF_FINAL;
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(PlayerStat* msg, std::destroying_delete_t) {
+  void operator delete(CombatStat* msg, std::destroying_delete_t) {
     SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(PlayerStat));
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CombatStat));
   }
 #endif
 
   template <typename = void>
-  explicit PROTOBUF_CONSTEXPR PlayerStat(
+  explicit PROTOBUF_CONSTEXPR CombatStat(
       ::google::protobuf::internal::ConstantInitialized);
 
-  inline PlayerStat(const PlayerStat& from) : PlayerStat(nullptr, from) {}
-  inline PlayerStat(PlayerStat&& from) noexcept
-      : PlayerStat(nullptr, std::move(from)) {}
-  inline PlayerStat& operator=(const PlayerStat& from) {
+  inline CombatStat(const CombatStat& from) : CombatStat(nullptr, from) {}
+  inline CombatStat(CombatStat&& from) noexcept
+      : CombatStat(nullptr, std::move(from)) {}
+  inline CombatStat& operator=(const CombatStat& from) {
     CopyFrom(from);
     return *this;
   }
-  inline PlayerStat& operator=(PlayerStat&& from) noexcept {
+  inline CombatStat& operator=(CombatStat&& from) noexcept {
     if (this == &from) return *this;
     if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
       InternalSwap(&from);
@@ -127,16 +127,16 @@ class PlayerStat final : public ::google::protobuf::Message
   static const ::google::protobuf::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const PlayerStat& default_instance() {
+  static const CombatStat& default_instance() {
     return *internal_default_instance();
   }
-  static inline const PlayerStat* internal_default_instance() {
-    return reinterpret_cast<const PlayerStat*>(
-        &_PlayerStat_default_instance_);
+  static inline const CombatStat* internal_default_instance() {
+    return reinterpret_cast<const CombatStat*>(
+        &_CombatStat_default_instance_);
   }
   static constexpr int kIndexInFileMessages = 1;
-  friend void swap(PlayerStat& a, PlayerStat& b) { a.Swap(&b); }
-  inline void Swap(PlayerStat* other) {
+  friend void swap(CombatStat& a, CombatStat& b) { a.Swap(&b); }
+  inline void Swap(CombatStat* other) {
     if (other == this) return;
     if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
       InternalSwap(other);
@@ -144,7 +144,7 @@ class PlayerStat final : public ::google::protobuf::Message
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(PlayerStat* other) {
+  void UnsafeArenaSwap(CombatStat* other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -152,13 +152,13 @@ class PlayerStat final : public ::google::protobuf::Message
 
   // implements Message ----------------------------------------------
 
-  PlayerStat* New(::google::protobuf::Arena* arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<PlayerStat>(arena);
+  CombatStat* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CombatStat>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const PlayerStat& from);
+  void CopyFrom(const CombatStat& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const PlayerStat& from) { PlayerStat::MergeImpl(*this, from); }
+  void MergeFrom(const CombatStat& from) { CombatStat::MergeImpl(*this, from); }
 
   private:
   static void MergeImpl(
@@ -195,18 +195,18 @@ class PlayerStat final : public ::google::protobuf::Message
   private:
   void SharedCtor(::google::protobuf::Arena* arena);
   static void SharedDtor(MessageLite& self);
-  void InternalSwap(PlayerStat* other);
+  void InternalSwap(CombatStat* other);
  private:
   template <typename T>
   friend ::absl::string_view(
       ::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "Protocol.PlayerStat"; }
+  static ::absl::string_view FullMessageName() { return "Protocol.CombatStat"; }
 
  protected:
-  explicit PlayerStat(::google::protobuf::Arena* arena);
-  PlayerStat(::google::protobuf::Arena* arena, const PlayerStat& from);
-  PlayerStat(::google::protobuf::Arena* arena, PlayerStat&& from) noexcept
-      : PlayerStat(arena) {
+  explicit CombatStat(::google::protobuf::Arena* arena);
+  CombatStat(::google::protobuf::Arena* arena, const CombatStat& from);
+  CombatStat(::google::protobuf::Arena* arena, CombatStat&& from) noexcept
+      : CombatStat(arena) {
     *this = ::std::move(from);
   }
   const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
@@ -299,7 +299,7 @@ class PlayerStat final : public ::google::protobuf::Message
   void _internal_set_speed(float value);
 
   public:
-  // @@protoc_insertion_point(class_scope:Protocol.PlayerStat)
+  // @@protoc_insertion_point(class_scope:Protocol.CombatStat)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
@@ -321,7 +321,7 @@ class PlayerStat final : public ::google::protobuf::Message
                           ::google::protobuf::Arena* arena);
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
-                          const PlayerStat& from_msg);
+                          const CombatStat& from_msg);
     float max_hp_;
     float current_hp_;
     float max_mp_;
@@ -726,19 +726,19 @@ class ObjectInfo final : public ::google::protobuf::Message
   std::string* _internal_mutable_name();
 
   public:
-  // .Protocol.PlayerStat stat = 3;
+  // .Protocol.CombatStat stat = 3;
   bool has_stat() const;
   void clear_stat() ;
-  const ::Protocol::PlayerStat& stat() const;
-  PROTOBUF_NODISCARD ::Protocol::PlayerStat* release_stat();
-  ::Protocol::PlayerStat* mutable_stat();
-  void set_allocated_stat(::Protocol::PlayerStat* value);
-  void unsafe_arena_set_allocated_stat(::Protocol::PlayerStat* value);
-  ::Protocol::PlayerStat* unsafe_arena_release_stat();
+  const ::Protocol::CombatStat& stat() const;
+  PROTOBUF_NODISCARD ::Protocol::CombatStat* release_stat();
+  ::Protocol::CombatStat* mutable_stat();
+  void set_allocated_stat(::Protocol::CombatStat* value);
+  void unsafe_arena_set_allocated_stat(::Protocol::CombatStat* value);
+  ::Protocol::CombatStat* unsafe_arena_release_stat();
 
   private:
-  const ::Protocol::PlayerStat& _internal_stat() const;
-  ::Protocol::PlayerStat* _internal_mutable_stat();
+  const ::Protocol::CombatStat& _internal_stat() const;
+  ::Protocol::CombatStat* _internal_mutable_stat();
 
   public:
   // uint64 objectId = 1;
@@ -777,7 +777,7 @@ class ObjectInfo final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr name_;
-    ::Protocol::PlayerStat* stat_;
+    ::Protocol::CombatStat* stat_;
     ::uint64_t objectid_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -892,158 +892,158 @@ inline ::google::protobuf::RepeatedField<::uint64_t>* BuffData::_internal_mutabl
 
 // -------------------------------------------------------------------
 
-// PlayerStat
+// CombatStat
 
 // float max_hp = 1;
-inline void PlayerStat::clear_max_hp() {
+inline void CombatStat::clear_max_hp() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.max_hp_ = 0;
 }
-inline float PlayerStat::max_hp() const {
-  // @@protoc_insertion_point(field_get:Protocol.PlayerStat.max_hp)
+inline float CombatStat::max_hp() const {
+  // @@protoc_insertion_point(field_get:Protocol.CombatStat.max_hp)
   return _internal_max_hp();
 }
-inline void PlayerStat::set_max_hp(float value) {
+inline void CombatStat::set_max_hp(float value) {
   _internal_set_max_hp(value);
-  // @@protoc_insertion_point(field_set:Protocol.PlayerStat.max_hp)
+  // @@protoc_insertion_point(field_set:Protocol.CombatStat.max_hp)
 }
-inline float PlayerStat::_internal_max_hp() const {
+inline float CombatStat::_internal_max_hp() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.max_hp_;
 }
-inline void PlayerStat::_internal_set_max_hp(float value) {
+inline void CombatStat::_internal_set_max_hp(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.max_hp_ = value;
 }
 
 // float current_hp = 2;
-inline void PlayerStat::clear_current_hp() {
+inline void CombatStat::clear_current_hp() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.current_hp_ = 0;
 }
-inline float PlayerStat::current_hp() const {
-  // @@protoc_insertion_point(field_get:Protocol.PlayerStat.current_hp)
+inline float CombatStat::current_hp() const {
+  // @@protoc_insertion_point(field_get:Protocol.CombatStat.current_hp)
   return _internal_current_hp();
 }
-inline void PlayerStat::set_current_hp(float value) {
+inline void CombatStat::set_current_hp(float value) {
   _internal_set_current_hp(value);
-  // @@protoc_insertion_point(field_set:Protocol.PlayerStat.current_hp)
+  // @@protoc_insertion_point(field_set:Protocol.CombatStat.current_hp)
 }
-inline float PlayerStat::_internal_current_hp() const {
+inline float CombatStat::_internal_current_hp() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.current_hp_;
 }
-inline void PlayerStat::_internal_set_current_hp(float value) {
+inline void CombatStat::_internal_set_current_hp(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.current_hp_ = value;
 }
 
 // float max_mp = 3;
-inline void PlayerStat::clear_max_mp() {
+inline void CombatStat::clear_max_mp() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.max_mp_ = 0;
 }
-inline float PlayerStat::max_mp() const {
-  // @@protoc_insertion_point(field_get:Protocol.PlayerStat.max_mp)
+inline float CombatStat::max_mp() const {
+  // @@protoc_insertion_point(field_get:Protocol.CombatStat.max_mp)
   return _internal_max_mp();
 }
-inline void PlayerStat::set_max_mp(float value) {
+inline void CombatStat::set_max_mp(float value) {
   _internal_set_max_mp(value);
-  // @@protoc_insertion_point(field_set:Protocol.PlayerStat.max_mp)
+  // @@protoc_insertion_point(field_set:Protocol.CombatStat.max_mp)
 }
-inline float PlayerStat::_internal_max_mp() const {
+inline float CombatStat::_internal_max_mp() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.max_mp_;
 }
-inline void PlayerStat::_internal_set_max_mp(float value) {
+inline void CombatStat::_internal_set_max_mp(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.max_mp_ = value;
 }
 
 // float current_mp = 4;
-inline void PlayerStat::clear_current_mp() {
+inline void CombatStat::clear_current_mp() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.current_mp_ = 0;
 }
-inline float PlayerStat::current_mp() const {
-  // @@protoc_insertion_point(field_get:Protocol.PlayerStat.current_mp)
+inline float CombatStat::current_mp() const {
+  // @@protoc_insertion_point(field_get:Protocol.CombatStat.current_mp)
   return _internal_current_mp();
 }
-inline void PlayerStat::set_current_mp(float value) {
+inline void CombatStat::set_current_mp(float value) {
   _internal_set_current_mp(value);
-  // @@protoc_insertion_point(field_set:Protocol.PlayerStat.current_mp)
+  // @@protoc_insertion_point(field_set:Protocol.CombatStat.current_mp)
 }
-inline float PlayerStat::_internal_current_mp() const {
+inline float CombatStat::_internal_current_mp() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.current_mp_;
 }
-inline void PlayerStat::_internal_set_current_mp(float value) {
+inline void CombatStat::_internal_set_current_mp(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.current_mp_ = value;
 }
 
 // float attack = 5;
-inline void PlayerStat::clear_attack() {
+inline void CombatStat::clear_attack() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.attack_ = 0;
 }
-inline float PlayerStat::attack() const {
-  // @@protoc_insertion_point(field_get:Protocol.PlayerStat.attack)
+inline float CombatStat::attack() const {
+  // @@protoc_insertion_point(field_get:Protocol.CombatStat.attack)
   return _internal_attack();
 }
-inline void PlayerStat::set_attack(float value) {
+inline void CombatStat::set_attack(float value) {
   _internal_set_attack(value);
-  // @@protoc_insertion_point(field_set:Protocol.PlayerStat.attack)
+  // @@protoc_insertion_point(field_set:Protocol.CombatStat.attack)
 }
-inline float PlayerStat::_internal_attack() const {
+inline float CombatStat::_internal_attack() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.attack_;
 }
-inline void PlayerStat::_internal_set_attack(float value) {
+inline void CombatStat::_internal_set_attack(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.attack_ = value;
 }
 
 // float defense = 6;
-inline void PlayerStat::clear_defense() {
+inline void CombatStat::clear_defense() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.defense_ = 0;
 }
-inline float PlayerStat::defense() const {
-  // @@protoc_insertion_point(field_get:Protocol.PlayerStat.defense)
+inline float CombatStat::defense() const {
+  // @@protoc_insertion_point(field_get:Protocol.CombatStat.defense)
   return _internal_defense();
 }
-inline void PlayerStat::set_defense(float value) {
+inline void CombatStat::set_defense(float value) {
   _internal_set_defense(value);
-  // @@protoc_insertion_point(field_set:Protocol.PlayerStat.defense)
+  // @@protoc_insertion_point(field_set:Protocol.CombatStat.defense)
 }
-inline float PlayerStat::_internal_defense() const {
+inline float CombatStat::_internal_defense() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.defense_;
 }
-inline void PlayerStat::_internal_set_defense(float value) {
+inline void CombatStat::_internal_set_defense(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.defense_ = value;
 }
 
 // float speed = 7;
-inline void PlayerStat::clear_speed() {
+inline void CombatStat::clear_speed() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.speed_ = 0;
 }
-inline float PlayerStat::speed() const {
-  // @@protoc_insertion_point(field_get:Protocol.PlayerStat.speed)
+inline float CombatStat::speed() const {
+  // @@protoc_insertion_point(field_get:Protocol.CombatStat.speed)
   return _internal_speed();
 }
-inline void PlayerStat::set_speed(float value) {
+inline void CombatStat::set_speed(float value) {
   _internal_set_speed(value);
-  // @@protoc_insertion_point(field_set:Protocol.PlayerStat.speed)
+  // @@protoc_insertion_point(field_set:Protocol.CombatStat.speed)
 }
-inline float PlayerStat::_internal_speed() const {
+inline float CombatStat::_internal_speed() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.speed_;
 }
-inline void PlayerStat::_internal_set_speed(float value) {
+inline void CombatStat::_internal_set_speed(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.speed_ = value;
 }
@@ -1122,7 +1122,7 @@ inline void ObjectInfo::set_allocated_name(std::string* value) {
   // @@protoc_insertion_point(field_set_allocated:Protocol.ObjectInfo.name)
 }
 
-// .Protocol.PlayerStat stat = 3;
+// .Protocol.CombatStat stat = 3;
 inline bool ObjectInfo::has_stat() const {
   bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
   PROTOBUF_ASSUME(!value || _impl_.stat_ != nullptr);
@@ -1133,21 +1133,21 @@ inline void ObjectInfo::clear_stat() {
   if (_impl_.stat_ != nullptr) _impl_.stat_->Clear();
   _impl_._has_bits_[0] &= ~0x00000001u;
 }
-inline const ::Protocol::PlayerStat& ObjectInfo::_internal_stat() const {
+inline const ::Protocol::CombatStat& ObjectInfo::_internal_stat() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::Protocol::PlayerStat* p = _impl_.stat_;
-  return p != nullptr ? *p : reinterpret_cast<const ::Protocol::PlayerStat&>(::Protocol::_PlayerStat_default_instance_);
+  const ::Protocol::CombatStat* p = _impl_.stat_;
+  return p != nullptr ? *p : reinterpret_cast<const ::Protocol::CombatStat&>(::Protocol::_CombatStat_default_instance_);
 }
-inline const ::Protocol::PlayerStat& ObjectInfo::stat() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+inline const ::Protocol::CombatStat& ObjectInfo::stat() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
   // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.stat)
   return _internal_stat();
 }
-inline void ObjectInfo::unsafe_arena_set_allocated_stat(::Protocol::PlayerStat* value) {
+inline void ObjectInfo::unsafe_arena_set_allocated_stat(::Protocol::CombatStat* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.stat_);
   }
-  _impl_.stat_ = reinterpret_cast<::Protocol::PlayerStat*>(value);
+  _impl_.stat_ = reinterpret_cast<::Protocol::CombatStat*>(value);
   if (value != nullptr) {
     _impl_._has_bits_[0] |= 0x00000001u;
   } else {
@@ -1155,11 +1155,11 @@ inline void ObjectInfo::unsafe_arena_set_allocated_stat(::Protocol::PlayerStat* 
   }
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Protocol.ObjectInfo.stat)
 }
-inline ::Protocol::PlayerStat* ObjectInfo::release_stat() {
+inline ::Protocol::CombatStat* ObjectInfo::release_stat() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   _impl_._has_bits_[0] &= ~0x00000001u;
-  ::Protocol::PlayerStat* released = _impl_.stat_;
+  ::Protocol::CombatStat* released = _impl_.stat_;
   _impl_.stat_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -1174,30 +1174,30 @@ inline ::Protocol::PlayerStat* ObjectInfo::release_stat() {
   }
   return released;
 }
-inline ::Protocol::PlayerStat* ObjectInfo::unsafe_arena_release_stat() {
+inline ::Protocol::CombatStat* ObjectInfo::unsafe_arena_release_stat() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:Protocol.ObjectInfo.stat)
 
   _impl_._has_bits_[0] &= ~0x00000001u;
-  ::Protocol::PlayerStat* temp = _impl_.stat_;
+  ::Protocol::CombatStat* temp = _impl_.stat_;
   _impl_.stat_ = nullptr;
   return temp;
 }
-inline ::Protocol::PlayerStat* ObjectInfo::_internal_mutable_stat() {
+inline ::Protocol::CombatStat* ObjectInfo::_internal_mutable_stat() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.stat_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::Protocol::PlayerStat>(GetArena());
-    _impl_.stat_ = reinterpret_cast<::Protocol::PlayerStat*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::Protocol::CombatStat>(GetArena());
+    _impl_.stat_ = reinterpret_cast<::Protocol::CombatStat*>(p);
   }
   return _impl_.stat_;
 }
-inline ::Protocol::PlayerStat* ObjectInfo::mutable_stat() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+inline ::Protocol::CombatStat* ObjectInfo::mutable_stat() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   _impl_._has_bits_[0] |= 0x00000001u;
-  ::Protocol::PlayerStat* _msg = _internal_mutable_stat();
+  ::Protocol::CombatStat* _msg = _internal_mutable_stat();
   // @@protoc_insertion_point(field_mutable:Protocol.ObjectInfo.stat)
   return _msg;
 }
-inline void ObjectInfo::set_allocated_stat(::Protocol::PlayerStat* value) {
+inline void ObjectInfo::set_allocated_stat(::Protocol::CombatStat* value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -1214,7 +1214,7 @@ inline void ObjectInfo::set_allocated_stat(::Protocol::PlayerStat* value) {
     _impl_._has_bits_[0] &= ~0x00000001u;
   }
 
-  _impl_.stat_ = reinterpret_cast<::Protocol::PlayerStat*>(value);
+  _impl_.stat_ = reinterpret_cast<::Protocol::CombatStat*>(value);
   // @@protoc_insertion_point(field_set_allocated:Protocol.ObjectInfo.stat)
 }
 

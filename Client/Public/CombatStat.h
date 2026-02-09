@@ -1,12 +1,13 @@
 ﻿#pragma once
 
 #include "Component.h"
+#include "IReplicable.h"
 
 NS_BEGIN(Client)
 
-class CombatStat : public Component
+class CombatStat : public Component, public IReplicable
 {
-    GENERATED_COMPONENT(CombatStat, COMPONENT_TYPE_STAT)
+    GENERATED_COMPONENT(CombatStat, Protocol::COMPONENT_TYPE_COMBAT_STAT)
 
 public:
     struct FCombatStatDesc
@@ -45,7 +46,8 @@ public:
     void    Heal(float amount);
 
 public: /* Protobuf */
-    void Sync_FromProtobuf();
+    void Sync_FromProtobuf(Message& message) override;
+    void Serialize_ToProtobuf(Message& message) const override;
 
 private:
     float _maxHp        = {};

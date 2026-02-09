@@ -6,7 +6,7 @@ NS_BEGIN(Engine)
 
 class ENGINE_DLL VIBuffer_Rect : public VIBuffer
 {
-    GENERATED_COMPONENT(VIBuffer_Rect, COMPONENT_TYPE_RECT)
+    GENERATED_COMPONENT(VIBuffer_Rect, Protocol::COMPONENT_TYPE_RECT)
 
 public:
     explicit VIBuffer_Rect(ComPtr<Device> device, ComPtr<DeviceContext> context);

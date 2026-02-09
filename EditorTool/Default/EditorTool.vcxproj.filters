@@ -19,7 +19,13 @@
     <Filter Include="03. Viewer">
       <UniqueIdentifier>{f9b8d7c0-ca32-4b3c-9904-03e58eb3ba32}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. Utils">
+    <Filter Include="05. Inspector_Factory">
+      <UniqueIdentifier>{7369c1ef-0d01-46a2-933b-12ece269fede}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Component_Inspector">
+      <UniqueIdentifier>{0f327002-cc59-4f4e-bbfb-487ab9e07541}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Default\97. Utils">
       <UniqueIdentifier>{5ca9452f-be03-47b3-bdb5-f0c666368c41}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -61,7 +67,7 @@
       <Filter>01. Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Editor_Logger.h">
-      <Filter>97. Utils</Filter>
+      <Filter>98. Default\97. Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Profiler_View.h">
       <Filter>03. Viewer</Filter>
@@ -70,7 +76,7 @@
       <Filter>03. Viewer</Filter>
     </ClInclude>
     <ClInclude Include="Level_Serializer.h">
-      <Filter>97. Utils</Filter>
+      <Filter>98. Default\97. Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Notification_Manager.h">
       <Filter>01. Manager</Filter>
@@ -83,6 +89,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Prefab_View.h">
       <Filter>03. Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Inspector_Factory.h">
+      <Filter>05. Inspector_Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CombatStat_Inspector.h">
+      <Filter>04. Component_Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Component_Inspector.h">
+      <Filter>04. Component_Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Transform_Inspector.h">
+      <Filter>04. Component_Inspector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -123,7 +141,7 @@
       <Filter>01. Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Editor_Logger.cpp">
-      <Filter>97. Utils</Filter>
+      <Filter>98. Default\97. Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Profiler_View.cpp">
       <Filter>03. Viewer</Filter>
@@ -132,13 +150,25 @@
       <Filter>03. Viewer</Filter>
     </ClCompile>
     <ClCompile Include="Level_Serializer.cpp">
-      <Filter>97. Utils</Filter>
+      <Filter>98. Default\97. Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Notification_Manager.cpp">
       <Filter>01. Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Prefab_View.cpp">
       <Filter>03. Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Inspector_Factory.cpp">
+      <Filter>05. Inspector_Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CombatStat_Inspector.cpp">
+      <Filter>04. Component_Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Component_Inspector.cpp">
+      <Filter>04. Component_Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Transform_Inspector.cpp">
+      <Filter>04. Component_Inspector</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

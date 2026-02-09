@@ -8,7 +8,7 @@
     ],
     "CombatStat": [
         {
-            "id": "COMPONENT_TYPE_STAT",
+            "id": "COMPONENT_TYPE_COMBAT_STAT",
             "level": "Static",
             "count": 1
         }
@@ -17,8 +17,7 @@
         {
             "id": "COMPONENT_TYPE_RECT",
             "level": "Static",
-            "count": 1,
-            "type": "NonAnim"
+            "count": 1
         }
     ]
 }

@@ -641,19 +641,19 @@ class S_UpdateStat final : public ::google::protobuf::Message
     kStatFieldNumber = 2,
     kPlayerIdFieldNumber = 1,
   };
-  // .Protocol.PlayerStat stat = 2;
+  // .Protocol.CombatStat stat = 2;
   bool has_stat() const;
   void clear_stat() ;
-  const ::Protocol::PlayerStat& stat() const;
-  PROTOBUF_NODISCARD ::Protocol::PlayerStat* release_stat();
-  ::Protocol::PlayerStat* mutable_stat();
-  void set_allocated_stat(::Protocol::PlayerStat* value);
-  void unsafe_arena_set_allocated_stat(::Protocol::PlayerStat* value);
-  ::Protocol::PlayerStat* unsafe_arena_release_stat();
+  const ::Protocol::CombatStat& stat() const;
+  PROTOBUF_NODISCARD ::Protocol::CombatStat* release_stat();
+  ::Protocol::CombatStat* mutable_stat();
+  void set_allocated_stat(::Protocol::CombatStat* value);
+  void unsafe_arena_set_allocated_stat(::Protocol::CombatStat* value);
+  ::Protocol::CombatStat* unsafe_arena_release_stat();
 
   private:
-  const ::Protocol::PlayerStat& _internal_stat() const;
-  ::Protocol::PlayerStat* _internal_mutable_stat();
+  const ::Protocol::CombatStat& _internal_stat() const;
+  ::Protocol::CombatStat* _internal_mutable_stat();
 
   public:
   // uint64 player_id = 1;
@@ -691,7 +691,7 @@ class S_UpdateStat final : public ::google::protobuf::Message
                           const S_UpdateStat& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::Protocol::PlayerStat* stat_;
+    ::Protocol::CombatStat* stat_;
     ::uint64_t player_id_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -2301,27 +2301,27 @@ inline void S_UpdateStat::_internal_set_player_id(::uint64_t value) {
   _impl_.player_id_ = value;
 }
 
-// .Protocol.PlayerStat stat = 2;
+// .Protocol.CombatStat stat = 2;
 inline bool S_UpdateStat::has_stat() const {
   bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
   PROTOBUF_ASSUME(!value || _impl_.stat_ != nullptr);
   return value;
 }
-inline const ::Protocol::PlayerStat& S_UpdateStat::_internal_stat() const {
+inline const ::Protocol::CombatStat& S_UpdateStat::_internal_stat() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::Protocol::PlayerStat* p = _impl_.stat_;
-  return p != nullptr ? *p : reinterpret_cast<const ::Protocol::PlayerStat&>(::Protocol::_PlayerStat_default_instance_);
+  const ::Protocol::CombatStat* p = _impl_.stat_;
+  return p != nullptr ? *p : reinterpret_cast<const ::Protocol::CombatStat&>(::Protocol::_CombatStat_default_instance_);
 }
-inline const ::Protocol::PlayerStat& S_UpdateStat::stat() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+inline const ::Protocol::CombatStat& S_UpdateStat::stat() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
   // @@protoc_insertion_point(field_get:Protocol.S_UpdateStat.stat)
   return _internal_stat();
 }
-inline void S_UpdateStat::unsafe_arena_set_allocated_stat(::Protocol::PlayerStat* value) {
+inline void S_UpdateStat::unsafe_arena_set_allocated_stat(::Protocol::CombatStat* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.stat_);
   }
-  _impl_.stat_ = reinterpret_cast<::Protocol::PlayerStat*>(value);
+  _impl_.stat_ = reinterpret_cast<::Protocol::CombatStat*>(value);
   if (value != nullptr) {
     _impl_._has_bits_[0] |= 0x00000001u;
   } else {
@@ -2329,11 +2329,11 @@ inline void S_UpdateStat::unsafe_arena_set_allocated_stat(::Protocol::PlayerStat
   }
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Protocol.S_UpdateStat.stat)
 }
-inline ::Protocol::PlayerStat* S_UpdateStat::release_stat() {
+inline ::Protocol::CombatStat* S_UpdateStat::release_stat() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   _impl_._has_bits_[0] &= ~0x00000001u;
-  ::Protocol::PlayerStat* released = _impl_.stat_;
+  ::Protocol::CombatStat* released = _impl_.stat_;
   _impl_.stat_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -2348,30 +2348,30 @@ inline ::Protocol::PlayerStat* S_UpdateStat::release_stat() {
   }
   return released;
 }
-inline ::Protocol::PlayerStat* S_UpdateStat::unsafe_arena_release_stat() {
+inline ::Protocol::CombatStat* S_UpdateStat::unsafe_arena_release_stat() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:Protocol.S_UpdateStat.stat)
 
   _impl_._has_bits_[0] &= ~0x00000001u;
-  ::Protocol::PlayerStat* temp = _impl_.stat_;
+  ::Protocol::CombatStat* temp = _impl_.stat_;
   _impl_.stat_ = nullptr;
   return temp;
 }
-inline ::Protocol::PlayerStat* S_UpdateStat::_internal_mutable_stat() {
+inline ::Protocol::CombatStat* S_UpdateStat::_internal_mutable_stat() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.stat_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::Protocol::PlayerStat>(GetArena());
-    _impl_.stat_ = reinterpret_cast<::Protocol::PlayerStat*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::Protocol::CombatStat>(GetArena());
+    _impl_.stat_ = reinterpret_cast<::Protocol::CombatStat*>(p);
   }
   return _impl_.stat_;
 }
-inline ::Protocol::PlayerStat* S_UpdateStat::mutable_stat() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+inline ::Protocol::CombatStat* S_UpdateStat::mutable_stat() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   _impl_._has_bits_[0] |= 0x00000001u;
-  ::Protocol::PlayerStat* _msg = _internal_mutable_stat();
+  ::Protocol::CombatStat* _msg = _internal_mutable_stat();
   // @@protoc_insertion_point(field_mutable:Protocol.S_UpdateStat.stat)
   return _msg;
 }
-inline void S_UpdateStat::set_allocated_stat(::Protocol::PlayerStat* value) {
+inline void S_UpdateStat::set_allocated_stat(::Protocol::CombatStat* value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -2388,7 +2388,7 @@ inline void S_UpdateStat::set_allocated_stat(::Protocol::PlayerStat* value) {
     _impl_._has_bits_[0] &= ~0x00000001u;
   }
 
-  _impl_.stat_ = reinterpret_cast<::Protocol::PlayerStat*>(value);
+  _impl_.stat_ = reinterpret_cast<::Protocol::CombatStat*>(value);
   // @@protoc_insertion_point(field_set_allocated:Protocol.S_UpdateStat.stat)
 }
 

@@ -62,6 +62,10 @@
       <Filter>03. Component</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ResourceLoader.h" />
+    <ClInclude Include="..\Public\Replicator.h" />
+    <ClInclude Include="..\Public\IReplicable.h">
+      <Filter>95. Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -113,6 +117,10 @@
       <Filter>03. Component</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ResourceLoader.cpp" />
+    <ClCompile Include="..\Private\Replicator.cpp" />
+    <ClCompile Include="IReplicable.cpp">
+      <Filter>95. Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -150,6 +158,9 @@
     </Filter>
     <Filter Include="03. Component">
       <UniqueIdentifier>{28328586-fc83-4acc-970a-e40cb2a46d24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Interface">
+      <UniqueIdentifier>{66b6121a-acd5-4ea7-af12-36260b4f830d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

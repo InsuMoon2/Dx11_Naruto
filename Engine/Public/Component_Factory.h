@@ -15,16 +15,20 @@ public:
     static void Initialize();
 
     // Direct Creator
-    static void Register(uint32 typeId, Creator creator);
+    static void Register(uint32 typeId, Creator creator, const wstring& className);
     static shared_ptr<Component> Create(uint32 typeId, ComPtr<Device> device, ComPtr<DeviceContext> context);
 
     // Prototype Clone
     static void Register_Prototype(uint32 typeId, const wstring& prototypeTag);
     static shared_ptr<Component> Clone_Prototype(uint32 typeId, uint32 levelIndex, void* arg = {});
 
+    static vector<uint32> Get_RegisteredComponentIds();
+    static vector<pair<uint32, wstring>> Get_RegisteredComponents();
+
 private:
     static map<uint32, Creator> _creators;
     static map<uint32, wstring> _prototypeMap;
+    static map<uint32, wstring> _classNames;
 
 };
 
@@ -34,7 +38,9 @@ private:
             Engine::Component_Factory::Register(ENUM, \
                 [](ComPtr<Device> device, ComPtr<DeviceContext> context) { \
                     return TYPE::Create(device, context); \
-                }); \
+                }, \
+                TYPE::StaticClassName()  \
+            ); \
         } \
     } helper_comp_##TYPE;
 

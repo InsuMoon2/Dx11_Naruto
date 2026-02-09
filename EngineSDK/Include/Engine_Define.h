@@ -58,7 +58,7 @@ namespace fs = std::filesystem;
 #include "Enum.pb.h"
 #include "Protocol.pb.h"
 
-using namespace Protocol;
+//using namespace Protocol;
 
 #ifdef _DEBUG
 

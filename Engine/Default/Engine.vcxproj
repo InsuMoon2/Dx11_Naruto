@@ -164,8 +164,14 @@ call GenProto.bat</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Behavior.h" />
     <ClInclude Include="..\Public\AnimNotify_Factory.h" />
     <ClInclude Include="..\Public\Base.h" />
+    <ClInclude Include="..\Public\Blackboard.h" />
+    <ClInclude Include="..\Public\BTComposite.h" />
+    <ClInclude Include="..\Public\BTNode.h" />
+    <ClInclude Include="..\Public\BTTask.h" />
+    <ClInclude Include="..\Public\BTTask_Wait.h" />
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\Component_Factory.h" />
     <ClInclude Include="..\Public\Controller.h" />
@@ -202,8 +208,14 @@ call GenProto.bat</Command>
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Behavior.cpp" />
     <ClCompile Include="..\Private\AnimNotify_Factory.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />
+    <ClCompile Include="..\Private\Blackboard.cpp" />
+    <ClCompile Include="..\Private\BTComposite.cpp" />
+    <ClCompile Include="..\Private\BTNode.cpp" />
+    <ClCompile Include="..\Private\BTTask.cpp" />
+    <ClCompile Include="..\Private\BTTask_Wait.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\Component_Factory.cpp" />
     <ClCompile Include="..\Private\Controller.cpp" />

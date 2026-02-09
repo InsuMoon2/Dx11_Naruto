@@ -2,15 +2,18 @@
 #include "Prefab_View.h"
 #include "GameInstance.h"
 #include "GameObject.h"
-
+#include "Inspector.h"
+#include <magic_enum/magic_enum.hpp>
+#include "Component_Factory.h"
 
 Prefab_View::Prefab_View()
-    : EditorWindow(TEXT("Console"))
+    : EditorWindow(TEXT("Prefab"))
 {
 }
 
 Prefab_View::~Prefab_View()
 {
+    Close_Prefab();
 }
 
 void Prefab_View::Initialize()
@@ -29,14 +32,16 @@ void Prefab_View::OnGui()
     if (!_isOpen)
         return;
 
-    ImVec2 windowSize(500, 600);
+    ImVec2 windowSize(800, 600);
     ImVec2 viewportSize = ImGui::GetMainViewport()->Size;
+
     ImVec2 windowPos(
         (viewportSize.x - windowSize.x) * 0.5f,
         (viewportSize.y - windowSize.y) * 0.5f
     );
 
-    ImGui::SetNextWindowPos(windowPos, ImGuiCond_Appearing);
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(windowSize, ImGuiCond_Appearing);
 
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse;
@@ -44,9 +49,37 @@ void Prefab_View::OnGui()
     string title = "Prefab View - " + _prefabName + "###PrefabView";
     if (ImGui::Begin(title.c_str(), &_isOpen, flags))
     {
-        Draw_Header();
+        //Draw_Header();
         ImGui::Separator();
-        Draw_ComponentList();
+
+        if (ImGui::BeginTable("PrefabLayout", 2, ImGuiTableFlags_Resizable| ImGuiTableFlags_BordersInnerV))
+        {
+            ImGui::TableSetupColumn("ModelPreview", ImGuiTableColumnFlags_WidthStretch);
+            ImGui::TableSetupColumn("Inspector", ImGuiTableColumnFlags_WidthStretch);
+
+            ImGui::TableNextRow();
+            // [좌측] 모델 프리뷰
+            ImGui::TableSetColumnIndex(0);
+            {
+                ImGui::Text("모델 프리뷰");
+                ImVec2 previewSize(ImGui::GetContentRegionAvail().x, 300);
+                ImGui::Button("##ModelPreview", previewSize); // 추후 이미지로 대체
+
+                ImGui::Separator();
+                static int currentState = 0;
+                const char* states[] = { "Idle", "Run", "Attack", "Hit", "Dead" };
+
+                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+                ImGui::Combo("##StateCombo", &currentState, states, IM_ARRAYSIZE(states));
+            }
+
+            // [우측] 컴포넌트 리스트
+            ImGui::TableSetColumnIndex(1);
+            {
+                Draw_ComponentList();
+            }
+            ImGui::EndTable();
+        }
         ImGui::Separator();
         Draw_Buttons();
     }
@@ -64,14 +97,14 @@ void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath
     _targetObject = GAME->Instantiate_Prefab(prefabName, {});
 
     if (_targetObject)
-        _isOpen;
+        _isOpen = true;
 
-    else
-        LOG_ERROR("Failed to open prefab {}", prefabName);
 }
 
 void Prefab_View::Close_Prefab()
 {
+    _isOpen = false;
+    _targetObject = nullptr;
 }
 
 void Prefab_View::Draw_Header()
@@ -82,29 +115,82 @@ void Prefab_View::Draw_Header()
 
 void Prefab_View::Draw_ComponentList()
 {
-    if (_targetObject)
-        return;
+    CHECK_NULL(_targetObject);
 
-    ImGui::Text("Components:");
+#pragma region Legacy : Inspector 방식으로 보여주기
+    //Inspector::Draw_Components(_targetObject);
+#pragma endregion
 
-    for (const auto& pair : _targetObject->Get_Components())
+    ImGui::Text("Components Inspector");
+    ImGui::Separator();
+
+    auto& components = _targetObject->Get_Components();
+    uint32 deleteTargetID = 0; // 삭제할 컴포넌트 ID
+
+    for (auto& pair : components)
     {
+        uint32 id = pair.first;
         auto& component = pair.second;
-        if (!component) continue;
 
-        string compName = Utils::ToString(component->Get_Name());
+        if (!component)
+            continue;
 
-        if (compName.empty())
-            compName = "Unknown Component";
+        ImGui::PushID(id);
 
-        if (ImGui::TreeNode(compName.c_str()))
+        ImGui::BeginGroup();
+
+        Inspector::Draw_Component(id, component);
+
+        ImGui::EndGroup();
+
+        if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Right))
         {
-            // TODO : 인스펙터 보여주기
-
-            ImGui::TreePop();
+            ImGui::OpenPopup("ComponentContextMenu");
         }
+        // 4. 팝업 메뉴 열기
+        if (ImGui::BeginPopup("ComponentContextMenu"))
+        {
+            if (ImGui::MenuItem("Remove Component"))
+            {
+                deleteTargetID = id;
+            }
+            ImGui::EndPopup();
+        }
+        ImGui::PopID();
     }
 
+    if (deleteTargetID != 0)
+        _targetObject->Remove_Component(deleteTargetID);
+
+    ImGui::Separator();
+    ImGui::Spacing();
+
+    // 컴포넌트 추가 버튼
+    if (ImGui::Button("Add Component", ImVec2(ImGui::GetContentRegionAvail().x, 30)))
+    {
+        ImGui::OpenPopup("AddComponentPopup");
+    }
+
+    if (ImGui::BeginPopup("AddComponentPopup"))
+    {
+        auto registeredComponents = Component_Factory::Get_RegisteredComponents();
+
+        for (const auto& pair : registeredComponents)
+        {
+            uint32 typeId = pair.first;
+            string name = Utils::ToString(pair.second);
+
+            if (ImGui::MenuItem(name.c_str()))
+            {
+                auto newComp = Component_Factory::Create(typeId, GAME->Get_Device(), GAME->Get_Context());
+                if (newComp)
+                {
+                    _targetObject->Add_Component(typeId, newComp);
+                }
+            }
+        }
+        ImGui::EndPopup();
+    }
 }
 
 void Prefab_View::Draw_Buttons()
@@ -124,6 +210,11 @@ void Prefab_View::Draw_Buttons()
         _isOpen = false;
         _targetObject = nullptr;
     }
+}
+
+void Prefab_View::Add_NewComponent()
+{
+
 }
 
 shared_ptr<Prefab_View> Prefab_View::Create()

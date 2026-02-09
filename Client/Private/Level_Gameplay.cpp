@@ -59,14 +59,14 @@ HRESULT Level_Gameplay::Render()
 
 HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
 {
-    CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), OBJECT_TYPE_PLAYER, layerTag), E_FAIL);
+    CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_PLAYER, layerTag), E_FAIL);
 
     return S_OK;
 }
 
 HRESULT Level_Gameplay::Ready_Layer_TempLayer(const wstring& layerTag)
 {
-    CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), OBJECT_TYPE_PLAYER, layerTag), E_FAIL);
+    CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_PLAYER, layerTag), E_FAIL);
 
     return S_OK;
 }

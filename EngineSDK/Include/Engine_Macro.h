@@ -111,8 +111,8 @@ private:                                                                 \
                                                  \
 public:                                          \
     /* Protobuf ID 반환 */                        \
-    static uint32 StaticTypeID() { return static_cast<uint32>(ProtoID); } \
-    virtual uint32 Get_ComponentID() const override { return StaticTypeID(); }
+    static uint32   StaticTypeID() { return static_cast<uint32>(ProtoID); } \
+    virtual uint32  Get_ComponentID() const override { return StaticTypeID(); }
 
 
 

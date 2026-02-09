@@ -25,7 +25,11 @@ public:
             uint32 layerLevelIndex, const wstring& layerTag,
             void* arg);
 
+    void Delete_GameObject(uint32 levelIndex, shared_ptr<GameObject> gameObject);
+
     vector<shared_ptr<GameObject>> Get_GameObjects(uint32 levelIndex);
+
+    const umap<wstring, shared_ptr<Layer>>& Get_Layers(uint32 levelIndex);
 
 private:
     void Bind_Events();
@@ -33,9 +37,6 @@ private:
 
     void OnCreateEvent(shared_ptr<FEvent> event);
     void OnDeleteEvent(shared_ptr<FEvent> event);
-
-public:
-    void Delete_GameObject(uint32 levelIndex, shared_ptr<GameObject> gameObject);
 
 private:
     using LayerType = umap<wstring, shared_ptr<Layer>>;

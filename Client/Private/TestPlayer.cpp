@@ -3,7 +3,7 @@
 #include "GameObject_Factory.h"
 #include "CombatStat.h"
 
-REGISTER_GAMEOBJECT(TestPlayer, OBJECT_TYPE::OBJECT_TYPE_PLAYER)
+REGISTER_GAMEOBJECT(TestPlayer, Protocol::OBJECT_TYPE_PLAYER)
 
 TestPlayer::TestPlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
@@ -30,7 +30,7 @@ HRESULT TestPlayer::Initialize(void* arg)
     desc.maxHp = 200.f;
     desc.attack = 100.f;
 
-    Add_Component(ETOI(ELevelType::Static), COMPONENT_TYPE_STAT, _combatStat, &desc);
+    Add_Component(ETOI(ELevelType::Static), Protocol::COMPONENT_TYPE_COMBAT_STAT, _combatStat, &desc);
 
     return S_OK;
 }

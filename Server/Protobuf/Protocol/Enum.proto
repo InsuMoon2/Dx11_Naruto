@@ -3,20 +3,20 @@ package Protocol;
 
 enum ComponentID
 {
-    COMPONENT_TPYE_NONE = 0;
+    COMPONENT_TPYE_ENGINE_START = 0;
 
     // Engine ComponentID
     COMPONENT_TYPE_TRANSFORM    = 1;
     COMPONENT_TYPE_TEXTURE      = 2;
     COMPONENT_TYPE_COLLIDER     = 3;
     COMPONENT_TYPE_RECT         = 4;
+
+    COMPONENT_TYPE_AI           = 100;
     
-    // Test
-    COMPONENT_TYPE_TEXTURE_DEFAULT = 100;
-
     // Client ComponentID
-    COMPONENT_TYPE_STAT = 1001;
-
+    COMPONENT_TYPE_CLIENT_START = 1000;
+    COMPONENT_TYPE_REPLICATOR = 1001;
+    COMPONENT_TYPE_COMBAT_STAT = 1002;
 }
 
 enum OBJECT_TYPE

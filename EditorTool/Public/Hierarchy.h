@@ -4,6 +4,7 @@
 
 NS_BEGIN(Engine)
 class GameObject;
+class Layer;
 NS_END
 
 NS_BEGIN(Editor)
@@ -20,30 +21,32 @@ public:
     void    OnGui() override;
 
 public:
-    const vector<shared_ptr<GameObject>>& Get_SelectedObject() const { return _selectedObjects; }
-    const vector<shared_ptr<GameObject>>& Get_LevelObjects() const { return _levelObjects; }
-    const vector<shared_ptr<GameObject>>& Get_CopyObjects() const { return _copiedObjects; }
+    const vector<Shared<GameObject>>& Get_SelectedObject() const { return _selectedObjects; }
+    const vector<Shared<GameObject>>& Get_LevelObjects() const { return _levelObjects; }
+    const vector<Shared<GameObject>>& Get_CopyObjects() const { return _copiedObjects; }
 
 private:
     void Draw_SearchBar();
     void Draw_ObjectList();
+    void Draw_ObjectNode(Shared<GameObject> gameObject, int index);
 
     void Handle_Shotcuts();
 
-    bool Is_Selected(shared_ptr<GameObject> obj);
-    void Select_Object(shared_ptr<GameObject> obj, bool isMultiSelect);
+    bool Is_Selected(Shared<GameObject> obj);
+    void Select_Object(Shared<GameObject> obj, bool isMultiSelect);
 
 private:
-    vector<shared_ptr<GameObject>>  _levelObjects;
+    vector<Shared<GameObject>>      _levelObjects;
+    umap<wstring, shared_ptr<Layer>> _levelLayers;
 
-    vector<shared_ptr<GameObject>>  _selectedObjects;
-    vector<shared_ptr<GameObject>>  _copiedObjects;
+    vector<Shared<GameObject>>  _selectedObjects;
+    vector<Shared<GameObject>>  _copiedObjects;
 
     // 검색 필터
     string _currentSearchFilter;
 
 public:
-    static shared_ptr<Hierarchy> Create();
+    static Shared<Hierarchy> Create();
 
 };
 

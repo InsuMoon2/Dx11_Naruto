@@ -10,12 +10,14 @@ message BuffData
 	repeated uint64 victims = 3;
 }
 
-message PlayerStat
+message CombatStat
 {
     float max_hp = 1;
     float current_hp = 2;
+
     float max_mp = 3;
     float current_mp = 4;
+
     float attack = 5;
     float defense = 6;
     float speed = 7;
@@ -25,5 +27,5 @@ message ObjectInfo
 {
 	uint64 objectId = 1;
 	string name = 2;
-    PlayerStat stat = 3;
+    CombatStat stat = 3;
 }

@@ -1,11 +1,13 @@
 ﻿#include "pch.h"
 #include "Content_Browser.h"
 #include "GameInstance.h"
+#include "EditorInstance.h"
 #include "Texture.h"
 #include "Utils.h"
 #include "GameObject_Factory.h"
 #include "GameObject.h"
 #include <fstream>
+#include "Prefab_View.h"
 
 Content_Browser::Content_Browser()
     : EditorWindow(TEXT("Content Browser"))
@@ -242,12 +244,13 @@ void Content_Browser::Draw_AssetView()
             // 더블클릭 -> Prefab View 열기
             if (isValidPrefab && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
             {
-                // Prefab 인스턴스화 (수정 모드)
-                auto newObj = GAME->Instantiate_Prefab(pureName, {});
+                auto prefabView = dynamic_pointer_cast<Prefab_View>(EDITOR->Get_Window(TEXT("Prefab")));
 
-                if (newObj)
+                if (prefabView)
                 {
-                    LOG_INFO("Prefab Opened for Edit : {}", pureName);
+                    string fullPath = Utils::ToString(filePath);
+
+                    prefabView->Open_Prefab(pureName, fullPath);
                 }
             }
 

@@ -203,6 +203,11 @@ vector<shared_ptr<GameObject>> GameInstance::Get_GameObjects(uint32 levelIndex)
     return _objectManager->Get_GameObjects(levelIndex);
 }
 
+const umap<wstring, Shared<Layer>> GameInstance::Get_Layers(uint32 levelIndex)
+{
+    return _objectManager->Get_Layers(levelIndex);
+}
+
 void GameInstance::Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject)
 {
     return _renderer->Add_RenderGroup(renderType, gameObject);

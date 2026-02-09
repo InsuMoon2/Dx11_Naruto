@@ -2,7 +2,7 @@
 #include "CombatStat.h"
 #include "Component_Factory.h"
 
-REGISTER_COMPONENT_FACTORY(CombatStat, ComponentID::COMPONENT_TYPE_STAT)
+REGISTER_COMPONENT_FACTORY(CombatStat, Protocol::COMPONENT_TYPE_COMBAT_STAT)
 
 CombatStat::CombatStat(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -71,6 +71,32 @@ void CombatStat::Heal(float amount)
     Set_Hp(_hp + amount);
 }
 
+void CombatStat::Sync_FromProtobuf(Message& message)
+{
+    Protocol::CombatStat& stat = dynamic_cast<Protocol::CombatStat&>(message);
+
+    _maxHp = stat.max_hp();
+    _hp = stat.current_hp();
+    _maxMp = stat.max_mp();
+    _mp = stat.current_mp();
+    _attack = stat.attack();
+    _defense = stat.defense();
+    _speed = stat.speed();
+}
+
+void CombatStat::Serialize_ToProtobuf(Message& message) const
+{
+    Protocol::CombatStat& stat = dynamic_cast<Protocol::CombatStat&>(message);
+
+    stat.set_max_hp(_maxHp);
+    stat.set_current_hp(_hp);
+    stat.set_max_mp(_maxMp);
+    stat.set_current_mp(_mp);
+    stat.set_attack(_attack);
+    stat.set_defense(_defense);
+    stat.set_speed(_speed);
+}
+
 json CombatStat::To_Json() const
 {
     json j;
@@ -81,7 +107,7 @@ json CombatStat::To_Json() const
     j["maxHp"] = _maxHp;
 
     j["mp"] = _mp;
-    j["maxMp"] = _maxHp;
+    j["maxMp"] = _maxMp;
 
     j["attack"] = _attack;
     j["defense"] = _defense;

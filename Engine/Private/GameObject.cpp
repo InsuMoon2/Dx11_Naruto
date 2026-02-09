@@ -86,8 +86,8 @@ void GameObject::From_Json(const json& data)
 
     if (data.contains("object_type"))
     {
-        _objectType = magic_enum::enum_cast<OBJECT_TYPE>(
-            data["object_type"].get<string>()).value_or(OBJECT_TYPE_NONE);
+        _objectType = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
+            data["object_type"].get<string>()).value_or(Protocol::OBJECT_TYPE_NONE);
     }
 
     // 컴포넌트 로드는 Prefab_Manager에서 세팅하기
@@ -112,6 +112,16 @@ HRESULT GameObject::Add_Component(uint32 id, shared_ptr<Component> component)
     _components.emplace(id, component);
 
     return S_OK;
+}
+
+void GameObject::Remove_Component(uint32 id)
+{
+    auto iter = _components.find(id);
+
+    if (iter != _components.end())
+    {
+        _components.erase(iter);
+    }
 }
 
 void GameObject::Free()

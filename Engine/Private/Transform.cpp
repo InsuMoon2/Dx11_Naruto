@@ -139,9 +139,9 @@ void Transform::Set_LocalRotation(const Quat& rotation)
 
 void Transform::Set_LocalRotation(float pitch, float yaw, float roll)
 {
-    float pitchRad = XMConvertToRadians(pitch);
-    float yawRad = XMConvertToRadians(yaw);
-    float rollRad = XMConvertToRadians(roll);
+    float pitchRad  = XMConvertToRadians(pitch);
+    float yawRad    = XMConvertToRadians(yaw);
+    float rollRad   = XMConvertToRadians(roll);
 
     Quat quat = Quat::CreateFromYawPitchRoll(yawRad, pitchRad, rollRad);
     Set_LocalRotation(quat);

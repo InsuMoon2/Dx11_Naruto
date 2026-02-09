@@ -29,17 +29,7 @@ void Inspector::OnGui()
     {
         if (_targetObject != nullptr)
         {
-            string name = Utils::ToString(_targetObject->Get_Name());
-            ImGui::Text("Name: %s", name.c_str());
-            ImGui::Separator();
-
-            for (auto& [id, comp] : _targetObject->Get_Components())
-            {
-                if (comp == nullptr)
-                    continue;
-
-                Draw_Component(id, comp);
-            }
+            Draw_Components(_targetObject);
         }
 
     }
@@ -48,48 +38,41 @@ void Inspector::OnGui()
 
 void Inspector::Draw_Component(uint32 id, Shared<Component> component)
 {
-}
+    auto inspector = Inspector_Factory::Get_Insepctor(id);
 
-void Inspector::Draw_CombatStat()
-{
-}
-
-void Inspector::Draw_Transform(Shared<Transform> transform)
-{
-    CHECK_NULL(transform);
-
-    // Position
-    ImGui::SeparatorText("Position");
-
-    Vec3 position = transform->Get_LocalPosition();
-    float pos[3] = { position.x, position.y, position.z };
-
-    if (ImGui::DragFloat3("##Position", pos, 0.1f))
+    if (inspector)
     {
-        transform->Set_LocalPosition(Vec3(pos[0], pos[1], pos[2]));
+        inspector->Draw_Inspector(component);
+
+        ImGui::Spacing();     
+        ImGui::Separator();   
+        ImGui::Spacing();     
     }
 
-    // Rotation
-    ImGui::SeparatorText("Rotation");
-
-    Vec3 eulerRad = transform->Get_LocalEulerAngles();
-    Vec3 eulerDeg = eulerRad * (180.f / XM_PI);
-    float rot[3] = { eulerDeg.x, eulerDeg.y, eulerDeg.z };
-
-    if(ImGui::DragFloat3("##Rotation", rot, 1.0f))
+    else
     {
-        Vec3 newEulerRad = Vec3(rot[0], rot[1], rot[2]) * (XM_PI / 180.f);
-        transform->Set_LocalEulerAngles(newEulerRad.x, newEulerRad.y, newEulerRad.z);
+        //ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.8f, 0.8f, 0.2f, 1.0f));
+        //ImGui::SeparatorText(fmt::format("Component Type: {}", id).c_str());
+        //ImGui::PopStyleColor();
+        //
+        //json data = component->To_Json();
+        //ImGui::TextWrapped("%s", data.dump(2).c_str());
     }
 
-    // Scale
-    ImGui::SeparatorText("Scale");
+}
 
-    Vec3 scale = transform->Get_LocalScale();
-    float scl[3] = { scale.x, scale.y, scale.z };
-    if (ImGui::DragFloat3("##Scale", scl, 0.1f))
+void Inspector::Draw_Components(Shared<GameObject> target)
+{
+    if (!target) return;
+
+    string name = Utils::ToString(target->Get_Name());
+    ImGui::Text("Name: %s", name.c_str());
+    ImGui::Separator();
+
+    for (auto& [id, comp] : target->Get_Components())
     {
-        transform->Set_LocalScale(Vec3(scl[0], scl[1], scl[2]));
+        if (!comp) continue;
+        Draw_Component(id, comp);
     }
 }
 

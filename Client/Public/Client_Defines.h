@@ -7,7 +7,6 @@
 extern HWND g_hWnd;
 extern HINSTANCE g_hInst;
 
-
 namespace Client
 {
     extern unsigned int		g_winSizeX;
@@ -18,3 +17,4 @@ namespace Client
 }
 
 using namespace Client;
+using Message = google::protobuf::Message;

@@ -11,7 +11,7 @@ void GameObject_Factory::Initialize()
     int a = 10;
 }
 
-void GameObject_Factory::Register(OBJECT_TYPE type, const wstring& name, Creator creator)
+void GameObject_Factory::Register(Protocol::OBJECT_TYPE type, const wstring& name, Creator creator)
 {
     if (_creators.contains(type))
         return;
@@ -19,7 +19,7 @@ void GameObject_Factory::Register(OBJECT_TYPE type, const wstring& name, Creator
     _creators.emplace(type, FCreatorDesc{ name, creator });
 }
 
-shared_ptr<GameObject> GameObject_Factory::Create(OBJECT_TYPE type, ComPtr<Device> device, ComPtr<DeviceContext> context)
+shared_ptr<GameObject> GameObject_Factory::Create(Protocol::OBJECT_TYPE type, ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto iter = _creators.find(type);
     if (iter == _creators.end())

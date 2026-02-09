@@ -24,11 +24,13 @@ public:
     void Close_Prefab();
 
     bool Is_Open() const { return _isOpen; }
-private:
 
+private:
     void Draw_Header();
     void Draw_ComponentList();
     void Draw_Buttons();
+
+    void Add_NewComponent();
 
 public:
     static shared_ptr<Prefab_View> Create();

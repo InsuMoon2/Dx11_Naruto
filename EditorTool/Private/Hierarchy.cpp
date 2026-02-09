@@ -6,6 +6,7 @@
 #include "Editor_Manager.h"
 #include "EditorInstance.h"
 #include "Event_Manager.h"
+#include "Layer.h"
 
 Hierarchy::Hierarchy()
     : EditorWindow(TEXT("Hierarchy"))
@@ -25,8 +26,17 @@ void Hierarchy::Update(float timeDelta)
 {
     EditorWindow::Update(timeDelta);
 
+#pragma region Legacy -> 정렬 후 출력
+    //uint32 currentLevelndex = GAME->Current_Level();
+    //_levelObjects = GAME->Get_GameObjects(currentLevelndex);
+#pragma endregion
+
+
+#pragma region Layer별로 출력
     uint32 currentLevelndex = GAME->Current_Level();
-    _levelObjects = GAME->Get_GameObjects(currentLevelndex);
+    _levelLayers = GAME->Get_Layers(currentLevelndex);
+#pragma endregion
+    
 }
 
 void Hierarchy::OnGui()
@@ -56,95 +66,224 @@ void Hierarchy::Draw_SearchBar()
     _currentSearchFilter = searchBuf;
 
     int filteredCount = 0;
+    int totalCount = 0;
 
-    if (_currentSearchFilter.empty())
+    for (auto& [layerTag, layer] : _levelLayers)
     {
-        filteredCount = static_cast<int>(_levelObjects.size());
-    }
-    else
-    {
-        for (auto& obj : _levelObjects)
+        if (!layer) continue;
+        auto& objects = layer->Get_GameObjects();
+
+        totalCount += static_cast<int>(objects.size());
+
+        if (_currentSearchFilter.empty())
         {
-            if (!obj) continue;
+            filteredCount += static_cast<int>(objects.size());
+        }
+        else
+        {
+            for (auto& obj : objects)
+            {
+                if (!obj) continue;
+                wstring nameW = obj->Get_Name();
+                string nameStr = Utils::ToString(nameW);
 
-            wstring nameW = obj->Get_Name();
-            string nameStr = string(nameW.begin(), nameW.end());
-            
-            if (nameStr.find(_currentSearchFilter) != string::npos)
-                filteredCount++;
+                if (nameStr.find(_currentSearchFilter) != string::npos)
+                    filteredCount++;
+            }
         }
     }
 
-    ImGui::Text("Objects: %d / %d", filteredCount, static_cast<int>(_levelObjects.size()));
+    ImGui::Text("Objects: %d / %d", filteredCount, totalCount);
     ImGui::Separator();
 }
 
 void Hierarchy::Draw_ObjectList()
 {
-    sort(_levelObjects.begin(), _levelObjects.end(),
+#pragma region Legacy : 정렬 후 출력
+   /* sort(_levelObjects.begin(), _levelObjects.end(),
         [](shared_ptr<GameObject>& first, shared_ptr<GameObject>& second)
         {
             if (!first || !second)
                 return false;
 
             return first->Get_Name() < second->Get_Name();
-        });
+        });*/
 
-    for (int i = 0; i < _levelObjects.size(); i++)
+    //for (int i = 0; i < _levelObjects.size(); i++)
+    //{
+    //    auto& obj = _levelObjects[i];
+    //    if (!obj) continue;
+
+    //    // 검색 필터링
+    //    wstring nameW = obj->Get_Name();
+    //    string nameStr = string(nameW.begin(), nameW.end());
+
+    //    if (!_currentSearchFilter.empty() && nameStr.find(_currentSearchFilter) == string::npos)
+    //        continue;
+
+    //    // 선택 상태
+    //    bool isSelected = Is_Selected(obj);
+
+    //    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanAvailWidth;
+    //    if (isSelected)
+    //        flags |= ImGuiTreeNodeFlags_Selected;
+
+    //    // 트리 노드 표시
+    //    ImGui::TreeNodeEx((void*)(intptr_t)i, flags, nameStr.c_str());
+
+    //    // 클릭 시 선택
+    //    if (ImGui::IsItemClicked())
+    //    {
+    //        bool isMultiSelect = ImGui::GetIO().KeyCtrl;
+    //        Select_Object(obj, isMultiSelect);
+    //    }
+
+    //    if (ImGui::BeginPopupContextItem())
+    //    {
+    //        if (!Is_Selected(obj))
+    //        {
+    //            Select_Object(obj, false);
+    //        }
+
+    //        if (ImGui::MenuItem("복사"))
+    //        {
+    //            for (auto& obj : _selectedObjects)
+    //            {
+    //                EVENT->Publish(FEvent_Object::Create(EEventType::Create_Object, obj));
+    //            }
+    //        }
+
+    //        if (ImGui::MenuItem("삭제"))
+    //        {
+    //            for (auto& obj : _selectedObjects)
+    //            {
+    //                EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));
+
+    //                _selectedObjects.clear();
+    //            }
+    //        }
+    //        ImGui::EndPopup();
+    //    }
+    //}
+
+#pragma endregion
+
+#pragma region Layer별로 출력
+
+    // 검색어 있을 때는 기존처럼.
+    if (!_currentSearchFilter.empty())
     {
-        auto& obj = _levelObjects[i];
-        if (!obj) continue;
+        for (auto& [layerTag, layer] : _levelLayers)
+        {
+            if (!layer)
+                continue;
 
-        // 검색 필터링
-        wstring nameW = obj->Get_Name();
-        string nameStr = string(nameW.begin(), nameW.end());
+            auto& objects = layer->Get_GameObjects();
 
-        if (!_currentSearchFilter.empty() && nameStr.find(_currentSearchFilter) == string::npos)
+            int index = 0;
+            for (auto& obj : objects)
+            {
+                if (!obj)
+                    continue;
+
+                wstring nameW = obj->Get_Name();
+                string nameStr = Utils::ToString(nameW);
+                
+                if (nameStr.find(_currentSearchFilter) != string::npos)
+                {
+                    Draw_ObjectNode(obj, index);
+                }
+
+                index++;
+            }
+        }
+
+        return;
+    }
+
+    // 검색어 없을 때 레이어 별로 출력
+    for (auto& [layerTag, layer] : _levelLayers)
+    {
+        if (!layer)
             continue;
 
-        // 선택 상태
-        bool isSelected = Is_Selected(obj);
+        auto& objects = layer->Get_GameObjects();
+        // 비어있으면 스킵
+        if (objects.empty())
+            continue;
 
-        ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanAvailWidth;
-        if (isSelected)
-            flags |= ImGuiTreeNodeFlags_Selected;
+        string tagStr = Utils::ToString(layerTag);
 
-        // 트리 노드 표시
-        ImGui::TreeNodeEx((void*)(intptr_t)i, flags, nameStr.c_str());
+        bool isOpen = ImGui::TreeNodeEx(tagStr.c_str(),
+            ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth);
 
-        // 클릭 시 선택
-        if (ImGui::IsItemClicked())
+        if (isOpen)
         {
-            bool isMultiSelect = ImGui::GetIO().KeyCtrl;
-            Select_Object(obj, isMultiSelect);
+            int index = 0;
+            for (auto& obj : objects)
+            {
+                if (!obj)
+                    continue;
+
+                Draw_ObjectNode(obj, index++);
+            }
+            ImGui::TreePop(); 
+        }
+    }
+
+#pragma endregion
+
+}
+
+void Hierarchy::Draw_ObjectNode(shared_ptr<GameObject> gameObject, int index)
+{
+    wstring nameW = gameObject->Get_Name();
+    string nameStr = string(nameW.begin(), nameW.end());
+
+    bool isSelected = Is_Selected(gameObject);
+
+    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
+                               ImGuiTreeNodeFlags_OpenOnDoubleClick |
+                               ImGuiTreeNodeFlags_SpanAvailWidth;
+
+    if (isSelected)
+        flags |= ImGuiTreeNodeFlags_Selected;
+
+    // TODO : 추후에 GameObject 에 Child를 추가할 수 있게 할지?
+    flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+    // ID 주소 겹칠 수 있어서 포인터 주소로
+    ImGui::TreeNodeEx((void*)(intptr_t)gameObject.get(), flags, nameStr.c_str());
+
+    if (ImGui::IsItemClicked())
+    {
+        bool isMultiSelect = ImGui::GetIO().KeyCtrl;
+        Select_Object(gameObject, isMultiSelect);
+    }
+
+    if (ImGui::BeginPopupContextItem())
+    {
+        if (!Is_Selected(gameObject))
+            Select_Object(gameObject, false);
+
+        if (ImGui::MenuItem("복사"))
+        {
+            for (auto& obj : _selectedObjects)
+            {
+                EVENT->Publish(FEvent_Object::Create(EEventType::Create_Object, obj));
+            }
         }
 
-        if (ImGui::BeginPopupContextItem())
+        if (ImGui::MenuItem("삭제"))
         {
-            if (!Is_Selected(obj))
+            for (auto& obj : _selectedObjects)
             {
-                Select_Object(obj, false);
-            }
+                EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));
 
-            if (ImGui::MenuItem("복사"))
-            {
-                for (auto& obj : _selectedObjects)
-                {
-                    EVENT->Publish(FEvent_Object::Create(EEventType::Create_Object, obj));
-                }
+                _selectedObjects.clear();
             }
-
-            if (ImGui::MenuItem("삭제"))
-            {
-                for (auto& obj : _selectedObjects)
-                {
-                    EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));
-
-                    _selectedObjects.clear();
-                }
-            }
-            ImGui::EndPopup();
         }
+        ImGui::EndPopup();
     }
 }
 

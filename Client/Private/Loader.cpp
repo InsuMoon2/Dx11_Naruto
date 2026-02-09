@@ -97,7 +97,7 @@ HRESULT Loader::Loading_For_LogoLevel()
     }
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
-    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, OBJECT_TYPE_BACKGROUND,
+    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, -Protocol::OBJECT_TYPE_BACKGROUND,
         Background::Create(_device, _context))))
     {
         MSG_BOX("Failed to Add Prototype : Background");
@@ -129,7 +129,7 @@ HRESULT Loader::Loading_For_GamePlay()
 
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
-    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, OBJECT_TYPE_PLAYER,
+    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_PLAYER,
         TestPlayer::Create(_device, _context))))
     {
         MSG_BOX("Failed to Add Prototype : Prototype_TestPlayer");
