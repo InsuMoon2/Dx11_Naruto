@@ -28,8 +28,6 @@ HRESULT Level_Loading::Initialize(ELevelType nextLevelID)
     _loader = Loader::Create(_device, _context, nextLevelID);
     CHECK_NULL(_loader, E_FAIL);
 
-
-
     return S_OK;
 }
 

@@ -36,16 +36,16 @@ namespace Engine
 // ==================================================
 //              NULL/FAILED 체크 매크로
 // ==================================================
-#define CHECK_NULL(_ptr, ...)                \
-    if ((_ptr) == nullptr) {                 \
-        LOG_ERROR("NULL");        \
-        return __VA_ARGS__;                  \
+#define CHECK_NULL(_ptr, ...)                                    \
+    if ((_ptr) == nullptr) {                                     \
+        LOG_ERROR("NULL at {}:{}", __FILE__, __LINE__);          \
+        return __VA_ARGS__;                                      \
     }
 
-#define CHECK_FAILED(_hr, ...)               \
-    if (FAILED(_hr)) {                       \
-        LOG_ERROR("FAILED");       \
-        return __VA_ARGS__;                  \
+#define CHECK_FAILED(_hr, ...)                                   \
+    if (FAILED(_hr)) {                                           \
+        LOG_ERROR("FAILED at {}:{}", __FILE__, __LINE__);        \
+        return __VA_ARGS__;                                      \
     }
 
 // ==================================================

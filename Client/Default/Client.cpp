@@ -21,7 +21,6 @@ namespace Client
 {
     unsigned int    g_winSizeX = 1600;
     unsigned int    g_winSizeY = 900;
-    bool            g_enableEditor = true;
 }
 
 struct LaunchParams
@@ -31,7 +30,6 @@ struct LaunchParams
     int32 windowY = CW_USEDEFAULT;
     int32 windowWidth  = g_winSizeX;   
     int32 windowHeight = g_winSizeY;
-    bool  enableEditor = true;
 };
 
 LaunchParams ParseCommandLine(LPWSTR lpCmdLine)
@@ -64,9 +62,6 @@ LaunchParams ParseCommandLine(LPWSTR lpCmdLine)
     if (heightPos != wstring::npos)
         params.windowHeight = _wtoi(cmdLine.c_str() + heightPos + 8);
 
-    if (cmdLine.find(L"--no-editor") != wstring::npos)
-        params.enableEditor = false;
-
     return params;
 }
 
@@ -94,7 +89,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     g_winSizeX = params.windowWidth;
     g_winSizeY = params.windowHeight;
-    g_enableEditor = params.enableEditor;
 
     // TODO: 여기에 코드를 입력합니다.
     unique_ptr<MainApp> mainApp = { nullptr };
@@ -183,16 +177,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassExW(&wcex);
 }
 
-//
-//   함수: InitInstance(HINSTANCE, int)
-//
-//   용도: 인스턴스 핸들을 저장하고 주 창을 만듭니다.
-//
-//   주석:
-//
-//        이 함수를 통해 인스턴스 핸들을 전역 변수에 저장하고
-//        주 프로그램 창을 만든 다음 표시합니다.
-//
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, const LaunchParams& params)
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
@@ -236,23 +220,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, const LaunchParams& params)
    return TRUE;
 }
 
-//
-//  함수: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  용도: 주 창의 메시지를 처리합니다.
-//
-//  WM_COMMAND  - 애플리케이션 메뉴를 처리합니다.
-//  WM_PAINT    - 주 창을 그립니다.
-//  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
-//
-//
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
-        return true;
-
     switch (message)
     {
 #pragma region Debug Log

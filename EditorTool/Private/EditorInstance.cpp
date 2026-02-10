@@ -19,7 +19,7 @@ HRESULT EditorInstance::Initialize_Editor(const EDITOR_DESC& desc, ComPtr<Device
     _imguiManager = ImGui_Manager::Create(desc.hWnd, device, context);
     CHECK_NULL(_imguiManager, E_FAIL);
 
-    Inspector_Factory::Initialize();
+    Inspector_Factory::GetInstance()->Initialize();
 
     _editorManager = Editor_Manager::Create();
     CHECK_NULL(_editorManager, E_FAIL);

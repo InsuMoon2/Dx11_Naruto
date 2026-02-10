@@ -3,7 +3,7 @@
 #include "CombatStat_Inspector.h"
 #include "Transform_Inspector.h"
 
-map<uint32, shared_ptr<Component_Inspector>> Inspector_Factory::_inspectors;
+IMPLEMENT_SINGLETON(Inspector_Factory)
 
 void Inspector_Factory::Initialize()
 {
@@ -24,7 +24,7 @@ void Inspector_Factory::Register_Inspector(uint32 typeId, shared_ptr<Component_I
     //LOG_INFO("Inspector Registered: {}", typeId);
 }
 
-shared_ptr<Component_Inspector> Inspector_Factory::Get_Insepctor(uint32 typeId)
+shared_ptr<Component_Inspector> Inspector_Factory::Get_Inspector(uint32 typeId)
 {
     //LOG_INFO("Get_Insepctor called with id: {}, map size: {}", typeId, _inspectors.size());
 
@@ -35,7 +35,7 @@ shared_ptr<Component_Inspector> Inspector_Factory::Get_Insepctor(uint32 typeId)
     return iter->second;
 }
 
-bool Inspector_Factory::Has_Insepctor(uint32 typeId)
+bool Inspector_Factory::Has_Inspector(uint32 typeId)
 {
     return _inspectors.contains(typeId);
 }

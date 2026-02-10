@@ -2,7 +2,6 @@
 #include "MainApp.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
-#include "EditorInstance.h"
 #include "NetworkManager.h"
 #include "ResourceLoader.h"
 #include "VIBuffer_Rect.h"
@@ -31,19 +30,6 @@ HRESULT MainApp::Initialize()
             return E_FAIL;
     }
 
-    // Editor Setting
-    if (g_enableEditor)
-    {
-        EDITOR_DESC editorDesc;
-        editorDesc.hWnd = g_hWnd;
-        editorDesc.winMode = EWinMode::Win;
-        editorDesc.viewportWidth = g_winSizeX;
-        editorDesc.viewportHeight = g_winSizeY;
-
-        if (FAILED(EDITOR->Initialize_Editor(editorDesc, _device, _context)))
-            return E_FAIL;
-    }
-
     CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
 
     if (FAILED(Ready_StartLevel(ELevelType::GamePlay)))
@@ -56,69 +42,28 @@ HRESULT MainApp::Initialize()
 
 void MainApp::Priority_Update(float timeDelta)
 {
-    if (!g_enableEditor)
-    {
-        GAME->Priority_Update_Engine(timeDelta);
-    }
-    else if (EDITOR->IsPlaying()) 
-    {
-        GAME->Priority_Update_Engine(timeDelta);
-    }
+    GAME->Priority_Update_Engine(timeDelta);
 }
 
 void MainApp::Update(float timeDelta)
 {
-    if (g_enableEditor)
-    {
-        EDITOR->Update_Editor(timeDelta);
-    }
-
-    if (!g_enableEditor)
-    {
-        GAME->Update_Engine(timeDelta);
-    }
-    else if (EDITOR->IsPlaying())  
-    {
-        GAME->Update_Engine(timeDelta);
-    }
-
+    GAME->Update_Engine(timeDelta);
     NetworkManager::GetInstance()->Update();
 }
 
 void MainApp::Late_Update(float timeDelta)
 {
-    if (!g_enableEditor)
-    {
-        GAME->Late_Update_Engine(timeDelta);
-    }
-    else if (EDITOR->IsPlaying())
-    {
-        GAME->Late_Update_Engine(timeDelta);
-    }
+    GAME->Late_Update_Engine(timeDelta);
 }
 
 HRESULT MainApp::Render()
 {
-    Color clearColor = g_enableEditor ?
-        Color{ 0.3f, 0.3f, 0.3f, 1.f } :  // 에디터: 회색
-        Color{ 0.1f, 0.3f, 1.0f, 1.f };   // 게임: 파란색
+    Color clearColor = { 0.1f, 0.3f, 1.0f, 1.f };
 
-    if(FAILED(GAME->Clear_Buffers(clearColor)))
-        return E_FAIL;
+    CHECK_FAILED(GAME->Clear_Buffers(clearColor), E_FAIL);
+    CHECK_FAILED(GAME->Draw(), E_FAIL);
+    CHECK_FAILED(GAME->Present(), E_FAIL);
 
-    if (g_enableEditor) // 에디터 모드
-    {
-        EDITOR->Render_Editor();
-    }
-    else                // 게임 모드
-    {
-        if (FAILED(GAME->Draw()))
-            return E_FAIL;
-    }
-
-    if (FAILED(GAME->Present()))
-        return E_FAIL;
-    
     return S_OK;
 }
 
@@ -169,7 +114,6 @@ void MainApp::Free()
 		NetworkManager::DestroyInstance();
 	}
 
-    EditorInstance::DestroyInstance();
     GameInstance::DestroyInstance();
 
 }

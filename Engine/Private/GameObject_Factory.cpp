@@ -2,13 +2,11 @@
 #include "GameObject_Factory.h"
 #include "GameObject.h"
 
-map<Protocol::OBJECT_TYPE, GameObject_Factory::FCreatorDesc> GameObject_Factory::_creators;
+IMPLEMENT_SINGLETON(GameObject_Factory)
 
 void GameObject_Factory::Initialize()
 {
     //_creators.clear();
-
-    int a = 10;
 }
 
 void GameObject_Factory::Register(Protocol::OBJECT_TYPE type, const wstring& name, Creator creator)

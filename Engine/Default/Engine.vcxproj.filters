@@ -125,6 +125,8 @@
       <Filter>01. Utility\06. Behaviore Tree\03. Task Node</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Behavior.h" />
+    <ClInclude Include="..\Public\Shader.h" />
+    <ClInclude Include="..\Public\ResourceLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -241,6 +243,9 @@
     <Filter Include="01. Utility\06. Behaviore Tree\99. Component">
       <UniqueIdentifier>{5b10fee1-054e-41fa-9caf-99b78909573d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\04. Component\03. Shader">
+      <UniqueIdentifier>{159f17cc-8e39-44f1-bd35-41fc881cbc55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -349,6 +354,8 @@
       <Filter>01. Utility\06. Behaviore Tree\03. Task Node</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Behavior.cpp" />
+    <ClCompile Include="..\Private\Shader.cpp" />
+    <ClCompile Include="..\Private\ResourceLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 #include "GameInstance.h"
-#include "EditorInstance.h"
+//#include "EditorInstance.h"
 
 extern HWND g_hWnd;
 extern HINSTANCE g_hInst;

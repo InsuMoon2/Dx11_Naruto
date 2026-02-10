@@ -144,7 +144,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin;$(SolutionDir)EditorTool\Public</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -154,7 +154,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/;$(SolutionDir)Server\ServerCore\Bin</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libprotobuf.lib;Engine.lib;EditorTool.lib;ServerCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libprotobuf.lib;Engine.lib;ServerCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -173,7 +173,6 @@
     <ClInclude Include="..\Public\Replicator.h" />
     <ClInclude Include="..\Public\NetworkManager.h" />
     <ClInclude Include="..\Public\Protocol_Wrapper.h" />
-    <ClInclude Include="..\Public\ResourceLoader.h" />
     <ClInclude Include="..\Public\ServerSession.h" />
     <ClInclude Include="..\Public\CombatStat.h" />
     <ClInclude Include="..\Public\TestPlayer.h" />
@@ -201,7 +200,6 @@
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\Replicator.cpp" />
     <ClCompile Include="..\Private\NetworkManager.cpp" />
-    <ClCompile Include="..\Private\ResourceLoader.cpp" />
     <ClCompile Include="..\Private\ServerSession.cpp" />
     <ClCompile Include="..\Private\CombatStat.cpp" />
     <ClCompile Include="..\Private\TestPlayer.cpp" />
@@ -216,6 +214,15 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\Shaders\Shader_VtxTex.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VS_MAIN</EntryPointName>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

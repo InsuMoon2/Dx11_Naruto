@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Core_Pch.h"
-#include "Editor_Define.h"
+//#include "Editor_Define.h"
 
 #include "targetver.h"
 #define WIN32_LEAN_AND_MEAN

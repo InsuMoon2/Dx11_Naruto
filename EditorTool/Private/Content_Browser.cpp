@@ -75,7 +75,11 @@ void Content_Browser::OnGui()
         ImGui::SameLine();
 
         // [Splitter] 패널 크기 조절 바
-        ImGui::InvisibleButton("vsplitter", ImVec2(4.f, ImGui::GetContentRegionAvail().y));
+        float availHeight = ImGui::GetContentRegionAvail().y;
+        if (availHeight > 0.f)
+        {
+            ImGui::InvisibleButton("vsplitter", ImVec2(4.f, availHeight));
+        }
         if (ImGui::IsItemActive())
         {
             _leftPanelWidth += ImGui::GetIO().MouseDelta.x;
@@ -218,7 +222,7 @@ void Content_Browser::Draw_AssetView()
     ImGui::Columns(columnCount, 0, false);
 
     // TODO : 매 프레임 찾기말고, 캐싱 해놓기 or 새로고침 버튼 하나 만들기?
-    vector<wstring> validName = GameObject_Factory::Get_RegisteredNames();
+    vector<wstring> validName = GameObject_Factory::GetInstance()->Get_RegisteredNames();
 
     // 파일 목록 표시
     if (_currentFolder)
@@ -312,7 +316,7 @@ void Content_Browser::Draw_AssetView()
         if (ImGui::BeginMenu("프리펩 만들기"))
         {
             // Factory에 등록된 이름 가져오기
-            vector<wstring> names = GameObject_Factory::Get_RegisteredNames();
+            vector<wstring> names = GameObject_Factory::GetInstance()->Get_RegisteredNames();
 
             for (const auto& nameW : names)
             {
@@ -332,7 +336,7 @@ void Content_Browser::Draw_AssetView()
 
 void Content_Browser::Generate_Default_Prefabs()
 {
-    vector<wstring> names = GameObject_Factory::Get_RegisteredNames();
+    vector<wstring> names = GameObject_Factory::GetInstance()->Get_RegisteredNames();
 
     fs::path prefabDir = TEXT("../../Client/Bin/Resources/Data/json/Prefabs");
     if (!fs::exists(prefabDir))
@@ -349,7 +353,7 @@ void Content_Browser::Generate_Default_Prefabs()
         if (fs::exists(filePath))
             continue;
 
-        auto tempObj = GameObject_Factory::Create(nameW, GAME->Get_Device(), GAME->Get_Context());
+        auto tempObj = GameObject_Factory::GetInstance()->Create(nameW, GAME->Get_Device(), GAME->Get_Context());
         if (tempObj)
         {
             GAME->Save_Prefab(filePath.string(), tempObj);
@@ -420,7 +424,7 @@ void Content_Browser::Create_NewPrefab(const wstring& typeName)
         savePath = fs::path(_currentFolder->fullPath) / (baseFileName + "_" + to_string(counter++) + ".json");
     }
 
-    auto tempObj = GameObject_Factory::Create(typeName, GAME->Get_Device(), GAME->Get_Context());
+    auto tempObj = GameObject_Factory::GetInstance()->Create(typeName, GAME->Get_Device(), GAME->Get_Context());
     if (tempObj)
     {
         tempObj->Set_Name(typeName);

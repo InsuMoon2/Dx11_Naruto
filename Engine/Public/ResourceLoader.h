@@ -2,9 +2,9 @@
 
 #include "Base.h"
 
-NS_BEGIN(Client)
+NS_BEGIN(Engine)
 
-class ResourceLoader : public Base
+class ENGINE_DLL ResourceLoader : public Base
 {
 public:
     explicit ResourceLoader(ComPtr<Device> device, ComPtr<DeviceContext> context);

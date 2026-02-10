@@ -1,6 +1,5 @@
 {
-  "$schema":
-    "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
   "name": "dx11-naruto",
   "version": "1.0.0",
   "dependencies": [
@@ -8,12 +7,16 @@
     "spdlog",
     "nlohmann-json",
     "magic-enum",
-    "magic-enum",
     {
       "name": "imgui",
-      "features": [ "docking-experimental", "dx11-binding", "win32-binding" ]
+      "features": [
+        "docking-experimental",
+        "dx11-binding",
+        "win32-binding"
+      ]
     },
     "implot",
-    "protobuf"
+    "protobuf",
+    "effects11"
   ]
 }

@@ -195,6 +195,8 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\Engine_Struct.h" />
     <ClInclude Include="..\Public\Engine_Typedef.h" />
     <ClInclude Include="..\Public\RenderTarget.h" />
+    <ClInclude Include="..\Public\ResourceLoader.h" />
+    <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Timer.h" />
     <ClInclude Include="..\Public\Timer_Manager.h" />
@@ -233,6 +235,8 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\Prefab_Manager.cpp" />
     <ClCompile Include="..\Private\Prototype_Manager.cpp" />
     <ClCompile Include="..\Private\RenderTarget.cpp" />
+    <ClCompile Include="..\Private\ResourceLoader.cpp" />
+    <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\SimpleMath.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />

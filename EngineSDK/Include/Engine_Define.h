@@ -9,6 +9,9 @@
 #include <directxtk/DDSTextureLoader.h>
 #include <directxtk/WICTextureLoader.h>
 
+#include "Effects11/d3dx11effect.h"
+#include <d3dcompiler.h>
+
 using namespace DirectX;
 
 // spdlog

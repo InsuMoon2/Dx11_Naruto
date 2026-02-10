@@ -153,3 +153,13 @@ Abi: 9d338c5792ebb622c8d7a7f0bfc4154f76bdd110235adfb06d89c172c21c8c65
 Description: Header-only C++17 library provides static reflection for enums, work with any enum type without any macro or boilerplate code.
 Status: install ok installed
 
+Package: effects11
+Version: 11.29
+Port-Version: 3
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 506117924fcd686e636d8eaf876fae9ced51a77cf1a2525095b9c419aeb6014e
+Description: Effects for Direct3D 11 (FX11) is a management runtime for authoring HLSL shaders, render state, and runtime variables together.
+Status: install ok installed
+

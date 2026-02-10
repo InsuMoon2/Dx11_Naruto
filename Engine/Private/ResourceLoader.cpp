@@ -55,7 +55,7 @@ HRESULT ResourceLoader::Load_Components(const json& data, uint32 levelIndex, con
         }
 
         // Component_Factory에서 생성
-        auto comp = Component_Factory::Create(protoID, _device, _context);
+        auto comp = Component_Factory::GetInstance()->Create(protoID, _device, _context);
         if (!comp)
         {
             LOG_ERROR("Failed to create component: {} (ID: {})", typeName, idStr);

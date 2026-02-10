@@ -8,34 +8,40 @@ class Component;
 
 class ENGINE_DLL Component_Factory : public Base
 {
+    DECLARE_SINGLETON(Component_Factory)
+
 public:
     using Creator = function<shared_ptr<Component>(ComPtr<Device>, ComPtr<DeviceContext>)>;
 
 public:
-    static void Initialize();
+    explicit Component_Factory() = default;
+    virtual ~Component_Factory() = default;
+
+public:
+    void Initialize();
 
     // Direct Creator
-    static void Register(uint32 typeId, Creator creator, const wstring& className);
-    static shared_ptr<Component> Create(uint32 typeId, ComPtr<Device> device, ComPtr<DeviceContext> context);
+    void Register(uint32 typeId, Creator creator, const wstring& className);
+    shared_ptr<Component> Create(uint32 typeId, ComPtr<Device> device, ComPtr<DeviceContext> context);
 
     // Prototype Clone
-    static void Register_Prototype(uint32 typeId, const wstring& prototypeTag);
-    static shared_ptr<Component> Clone_Prototype(uint32 typeId, uint32 levelIndex, void* arg = {});
+    void Register_Prototype(uint32 typeId, const wstring& prototypeTag);
+    shared_ptr<Component> Clone_Prototype(uint32 typeId, uint32 levelIndex, void* arg = {});
 
-    static vector<uint32> Get_RegisteredComponentIds();
-    static vector<pair<uint32, wstring>> Get_RegisteredComponents();
+    vector<uint32> Get_RegisteredComponentIds();
+    vector<pair<uint32, wstring>> Get_RegisteredComponents();
 
 private:
-    static map<uint32, Creator> _creators;
-    static map<uint32, wstring> _prototypeMap;
-    static map<uint32, wstring> _classNames;
+    map<uint32, Creator> _creators;
+    map<uint32, wstring> _prototypeMap;
+    map<uint32, wstring> _classNames;
 
 };
 
 #define REGISTER_COMPONENT_FACTORY(TYPE, ENUM) \
     static struct Helper_Comp_##TYPE { \
         Helper_Comp_##TYPE() { \
-            Engine::Component_Factory::Register(ENUM, \
+            Engine::Component_Factory::GetInstance()->Register(ENUM, \
                 [](ComPtr<Device> device, ComPtr<DeviceContext> context) { \
                     return TYPE::Create(device, context); \
                 }, \

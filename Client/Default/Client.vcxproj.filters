@@ -61,7 +61,6 @@
     <ClInclude Include="..\Public\CombatStat.h">
       <Filter>03. Component</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ResourceLoader.h" />
     <ClInclude Include="..\Public\Replicator.h" />
     <ClInclude Include="..\Public\IReplicable.h">
       <Filter>95. Interface</Filter>
@@ -116,7 +115,6 @@
     <ClCompile Include="..\Private\CombatStat.cpp">
       <Filter>03. Component</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ResourceLoader.cpp" />
     <ClCompile Include="..\Private\Replicator.cpp" />
     <ClCompile Include="IReplicable.cpp">
       <Filter>95. Interface</Filter>
@@ -162,6 +160,9 @@
     <Filter Include="95. Interface">
       <UniqueIdentifier>{66b6121a-acd5-4ea7-af12-36260b4f830d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="94. Shaders">
+      <UniqueIdentifier>{26187d37-f982-4760-bfd2-5e0e140aba91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -172,5 +173,10 @@
     <ResourceCompile Include="Client.rc">
       <Filter>98. Default</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\Shaders\Shader_VtxTex.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

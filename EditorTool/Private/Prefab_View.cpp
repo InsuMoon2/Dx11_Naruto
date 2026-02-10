@@ -173,7 +173,7 @@ void Prefab_View::Draw_ComponentList()
 
     if (ImGui::BeginPopup("AddComponentPopup"))
     {
-        auto registeredComponents = Component_Factory::Get_RegisteredComponents();
+        auto registeredComponents = Component_Factory::GetInstance()->Get_RegisteredComponents();
 
         for (const auto& pair : registeredComponents)
         {
@@ -182,7 +182,7 @@ void Prefab_View::Draw_ComponentList()
 
             if (ImGui::MenuItem(name.c_str()))
             {
-                auto newComp = Component_Factory::Create(typeId, GAME->Get_Device(), GAME->Get_Context());
+                auto newComp = Component_Factory::GetInstance()->Create(typeId, GAME->Get_Device(), GAME->Get_Context());
                 if (newComp)
                 {
                     _targetObject->Add_Component(typeId, newComp);

@@ -3,9 +3,7 @@
 #include "Component.h"
 #include "GameInstance.h"
 
-map<uint32, Component_Factory::Creator> Component_Factory::_creators;
-map<uint32, wstring> Component_Factory::_prototypeMap;
-map<uint32, wstring> Component_Factory::_classNames;
+IMPLEMENT_SINGLETON(Component_Factory)
 
 void Component_Factory::Initialize()
 {
