@@ -2,7 +2,7 @@
 
 #include "Base.h"
 
-NS_BEGIN(Engine)
+NS_BEGIN(Client)
 
 class ENGINE_DLL ResourceLoader : public Base
 {

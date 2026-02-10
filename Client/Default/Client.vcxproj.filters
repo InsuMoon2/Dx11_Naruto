@@ -65,6 +65,9 @@
     <ClInclude Include="..\Public\IReplicable.h">
       <Filter>95. Interface</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ResourceLoader.h">
+      <Filter>01. Levels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -118,6 +121,9 @@
     <ClCompile Include="..\Private\Replicator.cpp" />
     <ClCompile Include="IReplicable.cpp">
       <Filter>95. Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ResourceLoader.cpp">
+      <Filter>01. Levels\00. Loading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
