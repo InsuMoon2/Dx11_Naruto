@@ -1,7 +1,8 @@
 ﻿#include "pch.h"
 #include "GameInstance.h"
 #include "EditorInstance.h"
-#include "EditorTool_Manager.h"
+#include "Editor_Manager.h"
+#include "BehaviorTree_View.h"
 #include "Scene_View.h"
 #include "Hierarchy.h"
 #include "Console_View.h"
@@ -31,6 +32,8 @@ void Editor_Manager::Initialize()
 
     Add_Window(TEXT("Profiler"), Profiler_View::Create());
     Add_Window(TEXT("Prefab"), Prefab_View::Create());
+
+    Add_Window(TEXT("Behavior"), BehaviorTree_View::Create());
 }
 
 void Editor_Manager::Update(float timeDelta)

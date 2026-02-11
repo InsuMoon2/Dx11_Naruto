@@ -30,4 +30,10 @@ namespace Engine
         Vec3        position;
         Vec2        textCoord;
     };
+
+    struct FBlackboardKeyInfo
+    {
+        string name;
+        EBlackboardValueType type;
+    };
 }

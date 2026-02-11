@@ -21,12 +21,12 @@ public:
     virtual void OnTerminate(EBTNodeResult result) {};
 
     // 블랙보드 세팅
-    void Set_Blackboard(Shared<Blackboard> blackboard) { _blackboard = blackboard; }
+    virtual void Set_Blackboard(Shared<Blackboard> blackboard) { _blackboard = blackboard; }
     void Set_Owner(Shared<GameObject> owner) { _owner = owner; }
 
 protected:
-    Shared<Blackboard>  _blackboard;
-    Weak<GameObject>    _owner;
+    Weak<Blackboard>  _blackboard;
+    Weak<GameObject>  _owner;
 
 };
 

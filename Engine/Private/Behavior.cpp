@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Behavior.h"
 
+#include "Blackboard.h"
 #include "BTNode.h"
 
 //REGISTER_COMPONENT_FACTORY(Behavior, Protocol::COMPONENT_TYPE_AI)
@@ -23,26 +24,29 @@ Behavior::~Behavior()
 
 HRESULT Behavior::Initialize_Prototype()
 {
+    Component::Initialize_Prototype();
 
     return S_OK;
 }
 
 HRESULT Behavior::Initialize(void* arg)
 {
+    _blackboard = Blackboard::Create();
+
 
     return S_OK;
 }
 
 void Behavior::Update(float timeDelta)
 {
-    if (_rootNode)
-    {
-        EBTNodeResult result = _rootNode->Update(timeDelta);
+    if (!_rootNode)
+        return;
 
-        if (result != EBTNodeResult::InProgress)
-        {
-            _rootNode->Initialize();
-        }
+    EBTNodeResult result = _rootNode->Update(timeDelta);
+
+    if (result != EBTNodeResult::InProgress)
+    {
+        _rootNode->Initialize(); // 다음 프레임에 처음부터 다시 실행
     }
 }
 

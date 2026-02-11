@@ -151,18 +151,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Public\Editor_Defines.h" />
+    <ClInclude Include="..\Public\BehaviorTree_View.h" />
+    <ClInclude Include="..\Public\Editor_Define.h" />
     <ClInclude Include="..\Public\Editor_MainApp.h" />
+    <ClInclude Include="..\Public\Editor_Struct.h" />
     <ClInclude Include="..\Public\Level_Editor.h" />
     <ClInclude Include="..\Public\CombatStat_Inspector.h" />
     <ClInclude Include="..\Public\Component_Inspector.h" />
     <ClInclude Include="..\Public\Console_View.h" />
     <ClInclude Include="..\Public\Content_Browser.h" />
     <ClInclude Include="..\Public\EditorInstance.h" />
-    <ClInclude Include="..\Public\EditorTool_Define.h" />
-    <ClInclude Include="..\Public\EditorTool_Enum.h" />
-    <ClInclude Include="..\Public\EditorTool_Macro.h" />
-    <ClInclude Include="..\Public\EditorTool_Manager.h" />
+    <ClInclude Include="..\Public\Editor_Enum.h" />
+    <ClInclude Include="..\Public\Editor_Macro.h" />
+    <ClInclude Include="..\Public\Editor_Manager.h" />
     <ClInclude Include="..\Public\EditorWindow.h" />
     <ClInclude Include="..\Public\Editor_Logger.h" />
     <ClInclude Include="..\Public\Game_View.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\BehaviorTree_View.cpp" />
     <ClCompile Include="..\Private\Editor_MainApp.cpp" />
     <ClCompile Include="..\Private\Level_Editor.cpp" />
     <ClCompile Include="..\Private\CombatStat_Inspector.cpp" />
@@ -192,7 +194,7 @@
     <ClCompile Include="..\Private\Console_View.cpp" />
     <ClCompile Include="..\Private\Content_Browser.cpp" />
     <ClCompile Include="..\Private\EditorInstance.cpp" />
-    <ClCompile Include="..\Private\EditorTool_Manager.cpp" />
+    <ClCompile Include="..\Private\Editor_Manager.cpp" />
     <ClCompile Include="..\Private\EditorWindow.cpp" />
     <ClCompile Include="..\Private\Editor_Logger.cpp" />
     <ClCompile Include="..\Private\Game_View.cpp" />

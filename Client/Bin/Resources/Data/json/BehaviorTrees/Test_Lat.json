@@ -1,0 +1,74 @@
+{
+    "blackboard": {
+        "bools": {},
+        "floats": {},
+        "ints": {},
+        "vectors": {}
+    },
+    "links": [
+        {
+            "end": 4,
+            "id": 8,
+            "start": 2
+        },
+        {
+            "end": 10,
+            "id": 13,
+            "start": 6
+        },
+        {
+            "end": 12,
+            "id": 14,
+            "start": 6
+        }
+    ],
+    "nodes": [
+        {
+            "id": 1,
+            "input_pin_id": 0,
+            "name": "Root",
+            "output_pin_ids": [
+                2
+            ],
+            "parameters": {},
+            "pos_x": 130.0,
+            "pos_y": 306.0,
+            "type": "Root"
+        },
+        {
+            "id": 3,
+            "input_pin_id": 4,
+            "name": "Sequence",
+            "output_pin_ids": [
+                5,
+                6,
+                7
+            ],
+            "parameters": {},
+            "pos_x": 18.0,
+            "pos_y": 498.0,
+            "type": "Sequence"
+        },
+        {
+            "id": 9,
+            "input_pin_id": 10,
+            "name": "Task_Move",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -270.0,
+            "pos_y": 690.0,
+            "type": "Task_Move"
+        },
+        {
+            "id": 11,
+            "input_pin_id": 12,
+            "name": "Task_Attack",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 162.0,
+            "pos_y": 706.0,
+            "type": "Task_Attack"
+        }
+    ],
+    "root_node_id": 1
+}

@@ -20,6 +20,7 @@ HRESULT ImGui_Manager::Initialize(HWND hWnd, ComPtr<Device> device, ComPtr<Devic
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
 
+
     io.Fonts->AddFontFromFileTTF(
         "C:/Windows/Fonts/malgun.ttf",
         18.0f,
@@ -85,6 +86,10 @@ void ImGui_Manager::ImGuiStyleSetting()
     ImGui::StyleColorsDark();
 
     ImGuiStyle& style = ImGui::GetStyle();
+
+    style.WindowPadding = ImVec2(8.0f, 8.0f);
+    style.FramePadding = ImVec2(4.0f, 3.0f);
+    style.ItemSpacing = ImVec2(8.0f, 4.0f);
 
     style.Colors[ImGuiCol_Button] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);       
     style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.30f, 0.30f, 0.30f, 1.00f);

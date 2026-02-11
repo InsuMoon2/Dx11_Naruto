@@ -10,8 +10,29 @@ void Blackboard::Initialize()
 {
     _intValues.clear();
     _floatValues.clear();
+    _boolValues.clear();
     _vecValues.clear();
     _objectValues.clear();
+}
+
+vector<FBlackboardKeyInfo> Blackboard::Get_AllKeys() const
+{
+    vector<FBlackboardKeyInfo> keys;
+
+    for (const auto& [key, _] : _intValues)
+        keys.push_back({ key, EBlackboardValueType::Int });
+
+    for (const auto& [key, _] : _floatValues)
+        keys.push_back({ key, EBlackboardValueType::Float });
+
+    for (const auto& [key, _] : _boolValues)
+        keys.push_back({ key, EBlackboardValueType::Bool });
+
+    for (const auto& [key, _] : _vecValues)
+        keys.push_back({ key, EBlackboardValueType::Vector3 });
+
+
+    return keys;
 }
 
 void Blackboard::Set_ValueAsInt(const string& key, int32 value)
@@ -22,6 +43,11 @@ void Blackboard::Set_ValueAsInt(const string& key, int32 value)
 void Blackboard::Set_ValueAsFloat(const string& key, float value)
 {
     _floatValues[key] = value;
+}
+
+void Blackboard::Set_ValueAsBool(const string& key, bool value)
+{
+    _boolValues[key] = value;
 }
 
 void Blackboard::Set_ValueAsVector(const string& key, Vec3 value)
@@ -54,6 +80,16 @@ float Blackboard::Get_ValueAsFloat(const string& key)
     return 0.0f;
 }
 
+bool Blackboard::Get_ValueAsBool(const string& key)
+{
+    if (_boolValues.contains(key))
+        return _boolValues[key];
+
+    LOG_WARN("Blackboard Key Not Found (Bool): {}", key);
+
+    return false;
+}
+
 Vec3 Blackboard::Get_ValueAsVector(const string& key)
 {
     if (_vecValues.contains(key))
@@ -78,8 +114,88 @@ bool Blackboard::HasKey(const string& key) const
     if (_floatValues.contains(key))     return true;
     if (_vecValues.contains(key))       return true;
     if (_objectValues.contains(key))    return true;
+    if (_boolValues.contains(key))    return true;
 
     return false;
+}
+
+json Blackboard::Serialize_ToJson() const
+{
+    json root;
+
+    // Int
+    json ints = json::object();
+    for (const auto& [key, value] : _intValues)
+        ints[key] = value;
+
+    root["ints"] = ints;
+
+    // FLoat
+    json floats = json::object();
+    for (const auto& [key, value] : _floatValues)
+        floats[key] = value;
+
+    root["floats"] = floats;
+
+    // Bool
+    json bools = json::object();
+
+    for (const auto& [key, value] : _boolValues)
+        bools[key] = value;
+
+    root["bools"] = bools;
+
+    // Vector
+    json vectors = json::object();
+    for (const auto& [key, value] : _vecValues)
+    {
+        vectors[key] =
+        {
+            {"x", value.x},
+            {"y", value.y},
+            {"z", value.z}
+        };
+    }
+    root["vectors"] = vectors;
+
+    // Object는 런타임 참조
+
+    return root;
+}
+
+void Blackboard::Deserialize_FromJson(const json& data)
+{
+    Initialize(); // 기존 값 초기화
+
+    if (data.contains("ints"))
+    {
+        for (auto& [key, value] : data["ints"].items())
+            _intValues[key] = value.get<int32>();
+    }
+
+    if (data.contains("floats"))
+    {
+        for (auto& [key, value] : data["floats"].items())
+            _floatValues[key] = value.get<float>();
+    }
+
+    if (data.contains("bools"))
+    {
+        for (auto& [key, value] : data["bools"].items())
+            _boolValues[key] = value.get<bool>();
+    }
+
+    if (data.contains("vectors"))
+    {
+        for (auto& [key, value] : data["vectors"].items())
+        {
+            Vec3 vec;
+            vec.x = value["x"].get<float>();
+            vec.y = value["y"].get<float>();
+            vec.z = value["z"].get<float>();
+            _vecValues[key] = vec;
+        }
+    }
 }
 
 Shared<Blackboard> Blackboard::Create()

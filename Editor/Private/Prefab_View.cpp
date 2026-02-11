@@ -44,7 +44,7 @@ void Prefab_View::OnGui()
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(windowSize, ImGuiCond_Appearing);
 
-    ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse;
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
 
     string title = "Prefab View - " + _prefabName + "###PrefabView";
     if (ImGui::Begin(title.c_str(), &_isOpen, flags))

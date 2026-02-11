@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "Inspector.h"
-#include "EditorTool_Manager.h"
+#include "Editor_Manager.h"
 #include "EditorInstance.h"
 #include "Event_Manager.h"
 #include "Layer.h"

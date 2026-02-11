@@ -22,6 +22,17 @@ void BTComposite::OnTerminate(EBTNodeResult result)
     }
 }
 
+void BTComposite::Set_Blackboard(Shared<Blackboard> blackboard)
+{
+    BTNode::Set_Blackboard(blackboard);
+
+    for (auto& child : _children)
+    {
+        if (child)
+            child->Set_Blackboard(blackboard);
+    }
+}
+
 // ================= BTSelector =================
 EBTNodeResult BTSelector::Update(float timeDelta)
 {

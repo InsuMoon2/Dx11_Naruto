@@ -1,0 +1,32 @@
+{
+    "blackboard": {
+        "bools": {},
+        "floats": {},
+        "ints": {
+            "PlayHealth": 5
+        },
+        "vectors": {}
+    },
+    "links": [
+        {
+            "end": 10,
+            "id": 12,
+            "start": 6
+        }
+    ],
+    "nodes": [
+        {
+            "id": 1,
+            "input_pin_id": 0,
+            "name": "Root",
+            "output_pin_ids": [
+                2
+            ],
+            "parameters": {},
+            "pos_x": 100.0,
+            "pos_y": 300.0,
+            "type": "Root"
+        }
+    ],
+    "root_node_id": 1
+}

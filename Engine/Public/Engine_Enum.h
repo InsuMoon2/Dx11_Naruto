@@ -13,5 +13,7 @@ namespace Engine
     enum class EEventType { Create_Object, Delete_Object, END };
 
     enum class EBTNodeResult { Succeeded, Failed, InProgress, Aborted };
+
+    enum class EBlackboardValueType { Int, Float, Bool, Vector3, END };
 }
 
