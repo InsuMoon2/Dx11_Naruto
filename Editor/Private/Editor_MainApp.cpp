@@ -65,7 +65,6 @@ void Editor_MainApp::Update(float timeDelta)
         GAME->Update_Engine(timeDelta);
     }
 
-    // TODO: NetworkManager::GetInstance()->Update();
 }
 
 void Editor_MainApp::Late_Update(float timeDelta)
@@ -92,13 +91,13 @@ HRESULT Editor_MainApp::Render()
 
 HRESULT Editor_MainApp::Ready_StaticLevel()
 {
-    auto resourceLoader = ResourceLoader::Create(_device, _context);
-    CHECK_NULL(resourceLoader, E_FAIL);
-
-    CHECK_FAILED(resourceLoader->Load_Table(
-        TEXT("../Bin/Resources/Data/json/StaticLevelComTable.json"),
-        ETOI(ELevelType::Static)),
-        E_FAIL);
+    //auto resourceLoader = ResourceLoader::Create(_device, _context);
+    //CHECK_NULL(resourceLoader, E_FAIL);
+    //
+    //CHECK_FAILED(resourceLoader->Load_Table(
+    //    TEXT("../Bin/Resources/Data/json/StaticLevelComTable.json"),
+    //    ETOI(ELevelType::Static)),
+    //    E_FAIL);
 
     return S_OK;
 }

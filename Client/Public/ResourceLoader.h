@@ -4,7 +4,7 @@
 
 NS_BEGIN(Client)
 
-class ENGINE_DLL ResourceLoader : public Base
+class ResourceLoader : public Base
 {
 public:
     explicit ResourceLoader(ComPtr<Device> device, ComPtr<DeviceContext> context);

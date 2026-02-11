@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "GameInstance.h"
 #include "EditorInstance.h"
-#include "Editor_Manager.h"
+#include "EditorTool_Manager.h"
 #include "Scene_View.h"
 #include "Hierarchy.h"
 #include "Console_View.h"

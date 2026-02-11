@@ -3,7 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 
-#include "Editor_Define.h"
+#include "EditorTool_Define.h"
 #include "Engine_Define.h"
 
 #include "Inspector_Factory.h"

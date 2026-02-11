@@ -10,12 +10,6 @@
     <Filter Include="98. Default">
       <UniqueIdentifier>{d131adf4-a176-461f-a444-aafdfea230b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. Server">
-      <UniqueIdentifier>{851d7d43-7e07-44a7-8913-9cde69f870ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97. Server\00. Protocol">
-      <UniqueIdentifier>{78bd9c96-bb03-4054-a551-7a1df6634079}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96. Ref">
       <UniqueIdentifier>{ec78186d-96b8-4921-8e26-6263a62ec450}</UniqueIdentifier>
     </Filter>
@@ -33,21 +27,21 @@
     <ClInclude Include="pch.h">
       <Filter>98. Default</Filter>
     </ClInclude>
-    <ClInclude Include="EditorApp.h">
-      <Filter>98. Default</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Editor_MainApp.h">
       <Filter>00. Main</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\EditorApp_Defines.h">
+    <ClInclude Include="..\Public\Editor_Defines.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Editor.h">
       <Filter>00. Main</Filter>
     </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>00. Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="EditorApp.ico">
+    <Image Include="Editor.ico">
       <Filter>98. Default</Filter>
     </Image>
     <Image Include="small.ico">
@@ -58,27 +52,18 @@
     <ClCompile Include="pch.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
-    <ClCompile Include="EditorApp.cpp">
-      <Filter>98. Default</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Editor_MainApp.cpp">
       <Filter>00. Main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Server\Protobuf\Bin\Enum.pb.cc">
-      <Filter>97. Server\00. Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Server\Protobuf\Bin\Protocol.pb.cc">
-      <Filter>97. Server\00. Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Server\Protobuf\Bin\Struct.pb.cc">
-      <Filter>97. Server\00. Protocol</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Editor.cpp">
       <Filter>00. Main</Filter>
     </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>00. Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="EditorApp.rc">
+    <ResourceCompile Include="Editor.rc">
       <Filter>98. Default</Filter>
     </ResourceCompile>
   </ItemGroup>

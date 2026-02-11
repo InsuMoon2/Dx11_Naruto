@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "EditorInstance.h"
 #include "ImGui_Manager.h"    
-#include "Editor_Manager.h"
+#include "EditorTool_Manager.h"
 #include "Notification_Manager.h"
 #include "PlayerSession_Manager.h"
 

@@ -13,6 +13,6 @@ namespace Editor
 
 using namespace Editor;
 
-#include "Editor_Macro.h"
-#include "Editor_Enum.h"
+#include "EditorTool_Macro.h"
+#include "EditorTool_Enum.h"
 

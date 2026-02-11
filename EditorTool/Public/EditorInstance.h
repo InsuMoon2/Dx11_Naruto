@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "EditorTool_Define.h"
 #include "Engine_Struct.h"
 #include "GameInstance.h"
 

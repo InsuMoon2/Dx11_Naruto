@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "framework.h"
-#include "EditorApp.h"
+#include "Editor.h"
 
 #include <locale.h>
 #include <tchar.h>
@@ -118,7 +118,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance;
 
-    RECT rc = { 0, 0, static_cast<LONG>(g_winSizeX), static_cast<LONG>(g_winSizeY) };
+    RECT rc = { 0, 0, static_cast<LONG>(EditorApp::g_winSizeX), static_cast<LONG>(EditorApp::g_winSizeY) };
 
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 

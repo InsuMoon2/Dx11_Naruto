@@ -36,11 +36,8 @@
     <ClInclude Include="..\Public\ImGui_Manager.h">
       <Filter>01. Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Editor_Define.h">
+    <ClInclude Include="..\Public\EditorTool_Define.h">
       <Filter>99. Defines</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Editor_Manager.h">
-      <Filter>01. Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EditorWindow.h">
       <Filter>02. Editor</Filter>
@@ -66,9 +63,6 @@
     <ClInclude Include="..\Public\PlayerSession_Manager.h">
       <Filter>01. Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Editor_Logger.h">
-      <Filter>98. Default\97. Utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Profiler_View.h">
       <Filter>03. Viewer</Filter>
     </ClInclude>
@@ -81,10 +75,7 @@
     <ClInclude Include="..\Public\Notification_Manager.h">
       <Filter>01. Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Editor_Enum.h">
-      <Filter>99. Defines</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Editor_Macro.h">
+    <ClInclude Include="..\Public\EditorTool_Enum.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Prefab_View.h">
@@ -102,6 +93,15 @@
     <ClInclude Include="..\Public\Transform_Inspector.h">
       <Filter>04. Component_Inspector</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\EditorTool_Macro.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Editor_Logger.h">
+      <Filter>98. Default\97. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EditorTool_Manager.h">
+      <Filter>01. Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditorTool.cpp">
@@ -111,9 +111,6 @@
       <Filter>98. Default</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ImGui_Manager.cpp">
-      <Filter>01. Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Editor_Manager.cpp">
       <Filter>01. Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EditorWindow.cpp">
@@ -139,9 +136,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerSession_Manager.cpp">
       <Filter>01. Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Editor_Logger.cpp">
-      <Filter>98. Default\97. Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Profiler_View.cpp">
       <Filter>03. Viewer</Filter>
@@ -169,6 +163,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Transform_Inspector.cpp">
       <Filter>04. Component_Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Editor_Logger.cpp">
+      <Filter>98. Default\97. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EditorTool_Manager.cpp">
+      <Filter>01. Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
