@@ -66,7 +66,7 @@
       <Filter>95. Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ResourceLoader.h">
-      <Filter>01. Levels</Filter>
+      <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -123,7 +123,7 @@
       <Filter>95. Interface</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ResourceLoader.cpp">
-      <Filter>01. Levels\00. Loading</Filter>
+      <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

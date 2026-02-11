@@ -126,7 +126,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Behavior.h" />
     <ClInclude Include="..\Public\Shader.h" />
-    <ClInclude Include="..\Public\ResourceLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -355,7 +354,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Behavior.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
-    <ClCompile Include="..\Private\ResourceLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">
