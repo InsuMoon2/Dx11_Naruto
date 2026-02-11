@@ -4,7 +4,6 @@
 #include <fstream>
 #include "Component_Factory.h"
 #include "GameObject.h"
-#include "GameObject_Factory.h"
 #include "Transform.h"
 
 Prefab_Manager::Prefab_Manager(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -132,7 +131,13 @@ json Prefab_Manager::Serialize_GameObject(shared_ptr<GameObject> gameObject)
 shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc& desc, const json& overrides)
 {
     // 팩토리에서 오브젝트 타입으로 생성 (리플렉션 해야함)
-    auto gameObject = GameObject_Factory::GetInstance()->Create(desc.object_type, _device, _context);
+
+#pragma region Legacy : GameObject_Factory 사용
+    //auto gameObject = GameObject_Factory::GetInstance()->Create(desc.object_type, _device, _context);
+#pragma endregion
+
+    auto gameObject = GAME->Clone_GameObject(0, desc.object_type, nullptr);
+
     if (!gameObject)
     {
         LOG_ERROR("Failed to Create GameObject to Factory");

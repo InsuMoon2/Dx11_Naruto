@@ -2,9 +2,8 @@
 #include "Behavior.h"
 
 #include "BTNode.h"
-#include "Component_Factory.h"
 
-REGISTER_COMPONENT_FACTORY(Behavior, Protocol::COMPONENT_TYPE_AI)
+//REGISTER_COMPONENT_FACTORY(Behavior, Protocol::COMPONENT_TYPE_AI)
 
 Behavior::Behavior(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)

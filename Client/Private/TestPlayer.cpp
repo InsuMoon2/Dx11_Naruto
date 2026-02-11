@@ -1,9 +1,6 @@
 ﻿#include "pch.h"
 #include "TestPlayer.h"
-#include "GameObject_Factory.h"
 #include "CombatStat.h"
-
-REGISTER_GAMEOBJECT(TestPlayer, Protocol::OBJECT_TYPE_PLAYER)
 
 TestPlayer::TestPlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)

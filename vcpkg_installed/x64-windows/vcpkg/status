@@ -163,3 +163,13 @@ Abi: 506117924fcd686e636d8eaf876fae9ced51a77cf1a2525095b9c419aeb6014e
 Description: Effects for Direct3D 11 (FX11) is a management runtime for authoring HLSL shaders, render state, and runtime variables together.
 Status: install ok installed
 
+Package: imgui-node-editor
+Version: 0.9.3
+Port-Version: 2
+Depends: imgui, vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: a9204c1bbc4924a29b42b4979cc138ceda4a021e5f574912683a93e686e81430
+Description: Node Editor built using Dear ImGui
+Status: install ok installed
+

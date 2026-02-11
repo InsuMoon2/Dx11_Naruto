@@ -23,6 +23,7 @@ public:
 
 private:
     HRESULT Ready_StaticLevel();
+    HRESULT Ready_StartLevel(ELevelType startLevelID);
 
 private:
     ComPtr<Device>              _device;

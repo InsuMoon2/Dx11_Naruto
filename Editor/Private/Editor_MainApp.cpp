@@ -3,6 +3,7 @@
 #include "EditorInstance.h"
 #include "GameInstance.h"
 #include "Level_Editor.h"
+#include "Level_Loading.h"
 #include "ResourceLoader.h"
 #include "VIBuffer_Rect.h"
 
@@ -37,13 +38,10 @@ HRESULT Editor_MainApp::Initialize()
             return E_FAIL;
     }
 
-    CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
+    //CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
 
-    auto emptyLevel = Level_Editor::Create(_device, _context);
-    CHECK_NULL(emptyLevel, E_FAIL);
-
-    CHECK_FAILED(GAME->Change_Level(ETOI(ELevelType::GamePlay), emptyLevel),
-        E_FAIL);
+    if (FAILED(Ready_StartLevel(ELevelType::GamePlay)))
+        return E_FAIL;
 
     return S_OK;
 }
@@ -91,13 +89,25 @@ HRESULT Editor_MainApp::Render()
 
 HRESULT Editor_MainApp::Ready_StaticLevel()
 {
-    //auto resourceLoader = ResourceLoader::Create(_device, _context);
-    //CHECK_NULL(resourceLoader, E_FAIL);
-    //
-    //CHECK_FAILED(resourceLoader->Load_Table(
-    //    TEXT("../Bin/Resources/Data/json/StaticLevelComTable.json"),
-    //    ETOI(ELevelType::Static)),
-    //    E_FAIL);
+    auto resourceLoader = ResourceLoader::Create(_device, _context);
+    CHECK_NULL(resourceLoader, E_FAIL);
+    
+    CHECK_FAILED(resourceLoader->Load_Table(
+        TEXT("../../Client/Bin/Resources/Data/json/StaticLevelComTable.json"),
+        ETOI(ELevelType::Static)),
+        E_FAIL);
+
+    return S_OK;
+}
+
+HRESULT Editor_MainApp::Ready_StartLevel(ELevelType startLevelID)
+{
+    if (ELevelType::Loading == startLevelID)
+        return E_FAIL;
+
+    if (FAILED(GAME->Change_Level(ETOI(ELevelType::Loading),
+        Level_Loading::Create(_device, _context, startLevelID))))
+        return E_FAIL;
 
     return S_OK;
 }

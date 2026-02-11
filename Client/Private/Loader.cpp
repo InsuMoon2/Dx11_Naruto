@@ -7,6 +7,11 @@
 #include <magic_enum/magic_enum.hpp>
 #include <fstream>
 #include "Utils.h"
+#include "Component_Factory.h"
+#include "Replicator.h"
+#include "Behavior.h"
+#include "CombatStat.h"
+#include "VIBUFFer_Rect.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -84,9 +89,40 @@ HRESULT Loader::Print_LoadingText()
     return S_OK;
 }
 
+void Loader::Register_Components()
+{
+    // 명시적으로 호출해줘야 Editor에서 전역변수들 사용이 가능하다.. 맘에 안듦
+    auto factory = Component_Factory::GetInstance();
+
+    factory->Register<CombatStat>();
+    factory->Register<Replicator>();
+    factory->Register<Behavior>();
+    factory->Register<VIBuffer_Rect>();
+
+    uint32 staticLevel = ETOI(ELevelType::Static);
+
+    GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_COMBAT_STAT,
+        CombatStat::Create(_device, _context));
+
+    GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_REPLICATOR,
+        Replicator::Create(_device, _context));
+
+    GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_AI,
+        Behavior::Create(_device, _context));
+
+    GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_RECT,
+        VIBuffer_Rect::Create(_device, _context));
+
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PLAYER,
+        TestPlayer::Create(_device, _context));
+}
+
 HRESULT Loader::Loading_For_LogoLevel()
 {
     uint32 levelIndex = ETOI(ELevelType::Logo);
+
+    Register_Components();
 
     lstrcpy(_loadingText, TEXT("리소스 로딩 중"));
 
@@ -115,6 +151,8 @@ HRESULT Loader::Loading_For_LogoLevel()
 HRESULT Loader::Loading_For_GamePlay()
 {
     uint32 levelIndex = ETOI(ELevelType::GamePlay);
+
+    Register_Components();
 
     lstrcpy(_loadingText, TEXT("텍스쳐 로딩 중"));
 

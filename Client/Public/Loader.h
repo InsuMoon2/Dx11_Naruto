@@ -22,6 +22,8 @@ public:
     HRESULT Print_LoadingText();
     #endif
 
+    void    Register_Components();
+
 private: /* Loading Level */
     HRESULT Loading_For_LogoLevel();
     HRESULT Loading_For_GamePlay();
