@@ -28,6 +28,11 @@ public:
 
     Shared<Blackboard> Get_Blackboard() const { return _blackboard; }
 
+    HRESULT Load_FromJson(const wstring& filePath);
+
+private:
+    Shared<BTNode> Create_Node(const string& typeName);
+
 private:
     Shared<BTNode>     _rootNode;
     Shared<Blackboard> _blackboard;

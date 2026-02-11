@@ -6,6 +6,13 @@ BTTask_Wait::BTTask_Wait(float waitTime)
 {
 }
 
+BTTask_Wait::BTTask_Wait(const BTTask_Wait& rhs)
+    : BTTask(rhs)
+    , _waitTime(rhs._waitTime)
+{
+
+}
+
 void BTTask_Wait::Initialize()
 {
     _accTime = 0.0f;
@@ -22,4 +29,9 @@ EBTNodeResult BTTask_Wait::Update(float timeDelta)
 
     return EBTNodeResult::InProgress;
 
+}
+
+Shared<BTNode> BTTask_Wait::Clone()
+{
+    return make_shared<BTTask_Wait>(*this);
 }

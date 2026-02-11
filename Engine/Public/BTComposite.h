@@ -35,6 +35,7 @@ public:
 public:
     EBTNodeResult Update(float timeDelta) override;
 
+    virtual Shared<BTNode> Clone() override;
 };
 
 // ==========================================
@@ -50,6 +51,7 @@ public:
 public:
     EBTNodeResult Update(float timeDelta) override;
 
+    virtual Shared<BTNode> Clone() override;
 };
 
 

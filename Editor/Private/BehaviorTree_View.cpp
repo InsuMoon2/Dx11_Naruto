@@ -8,6 +8,7 @@ BehaviorTree_View::BehaviorTree_View()
     : EditorWindow(TEXT("BehaviorTree"))
     , _nextId(1)
 {
+    _isActive = false;
 }
 
 BehaviorTree_View::~BehaviorTree_View()

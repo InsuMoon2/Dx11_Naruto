@@ -2,8 +2,16 @@
     "blackboard": {
         "bools": {},
         "floats": {},
-        "ints": {},
-        "vectors": {}
+        "ints": {
+            "TestInt": 6
+        },
+        "vectors": {
+            "TestZero": {
+                "x": 120.0,
+                "y": 10.0,
+                "z": 5.0
+            }
+        }
     },
     "links": [
         {
