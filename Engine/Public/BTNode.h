@@ -28,6 +28,9 @@ protected:
     Weak<Blackboard>  _blackboard;
     Weak<GameObject>  _owner;
 
+public:
+    virtual Shared<BTNode> Clone() = 0;
+
 };
 
 NS_END

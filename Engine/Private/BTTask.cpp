@@ -5,3 +5,8 @@ BTTask::BTTask()
 {
 
 }
+
+BTTask::BTTask(const BTTask& rhs)
+{
+
+}
