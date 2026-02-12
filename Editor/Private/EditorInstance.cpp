@@ -45,7 +45,6 @@ void EditorInstance::Render_Editor()
     _editorManager->Render();
     //_notificationManager->Render();
 
-
     {
         _imguiManager->Render();
     }

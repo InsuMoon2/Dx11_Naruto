@@ -1,9 +1,13 @@
 ﻿#include "pch.h"
 #include "Scene_View.h"
+
+#include <GameObject.h>
+
 #include "RenderTarget.h"
 #include "GameInstance.h"
 #include "EditorInstance.h"
 #include "Input_Manager.h"
+#include "Hierarchy.h"
 
 Scene_View::Scene_View()
     : EditorWindow(TEXT("Scene"))
@@ -33,6 +37,8 @@ void Scene_View::Update(float timeDelta)
         ToggleFullScreen();
     }
 
+    Handle_Guizmo_Shotcut();
+
 }
 
 void Scene_View::OnGui()
@@ -49,6 +55,13 @@ void Scene_View::OnGui()
         Update_WindowState();
 
         Render_Viewport();
+
+        // Scene View에서만, Edit 모드일 때만 보여주기
+        //if (GAME->Get_GameState() == EGameState::Edit)
+        {
+            Update_ImGuizmo();
+        }
+
     }
     ImGui::End();
     ImGui::PopStyleVar();
@@ -148,6 +161,122 @@ void Scene_View::ToggleFullScreen()
     }
 }
 
+void Scene_View::Update_ImGuizmo()
+{
+    if (_gizmoOperation == (ImGuizmo::OPERATION)0)
+        return;
+
+    ImGuizmo::SetOrthographic(false);
+    ImGuizmo::SetDrawlist();
+
+    ImVec2 vMin = ImGui::GetWindowContentRegionMin();
+    ImVec2 wPos = ImGui::GetWindowPos();
+
+    float x = vMin.x + wPos.x;
+    float y = vMin.y + wPos.y;
+
+    ImGuizmo::SetRect(x, y, _viewportSize.x, _viewportSize.y);
+
+    // 선택된 오브젝트
+    auto hierarchy = dynamic_pointer_cast<Hierarchy>(EDITOR->Get_Window(TEXT("Hierarchy")));
+    CHECK_NULL(hierarchy);
+
+    const auto& selectedObjects = hierarchy->Get_SelectedObject();
+    if (selectedObjects.empty())
+        return;
+
+    // 이건 선택
+    auto targetObject = selectedObjects[0]; // 첫 번째 객체만 조작
+    CHECK_NULL(targetObject);
+
+    auto transform = targetObject->Get_Component<Transform>();
+    CHECK_NULL(transform);
+
+    // 카메라 행렬은 추후 변경 예정
+    //Matrix view = Matrix::Identity;
+    Matrix view = Matrix::CreateLookAt(
+        Vec3(0, 0, -10.f), 
+        Vec3(0, 0, 0),     
+        Vec3(0, 1, 0)      
+    );
+
+    Matrix proj = Matrix::CreatePerspectiveFieldOfView(
+        XMConvertToRadians(60.f),
+        _viewportSize.x / _viewportSize.y,
+        0.1f,
+        1000.f
+    );
+
+    // 오브젝트 월드 행렬
+    Matrix world = transform->Get_WorldMatrix();
+
+    Matrix worldForGizmo = world;
+    worldForGizmo._41 = -worldForGizmo._41;
+
+    ImGuizmo::Manipulate(
+        &view.m[0][0],
+        &proj.m[0][0],
+        _gizmoOperation,
+        _gizmoMode,
+        &worldForGizmo.m[0][0]
+    );
+
+    if (ImGuizmo::IsUsing())
+    {
+        Vec3 scale, translation;
+        Quat rotation;
+
+        worldForGizmo.Decompose(scale, rotation, translation);
+
+        translation.x = -translation.x;
+
+        rotation.y = -rotation.y;
+        rotation.z = -rotation.z;
+
+        transform->Set_WorldPosition(translation);
+        transform->Set_WorldRotation(rotation);
+
+        // 스케일 (부모가 있을 경우 보정 필요)
+        if (transform->Get_Parent())
+        {
+            Vec3 parentScale = transform->Get_Parent()->Get_WorldScale();
+            // 0 나누기 방지
+            if (parentScale.LengthSquared() > 0.0001f)
+            {
+                transform->Set_LocalScale(scale / parentScale);
+            }
+        }
+
+        else
+        {
+            transform->Set_LocalScale(scale);
+        }
+    }
+
+}
+
+void Scene_View::Handle_Guizmo_Shotcut()
+{
+    if (!ImGuizmo::IsUsing())
+    {
+        if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
+            return;
+
+        if (ImGui::IsKeyPressed(ImGuiKey_Q))
+            _gizmoOperation = (ImGuizmo::OPERATION)0;
+
+        if (ImGui::IsKeyPressed(ImGuiKey_W))
+            _gizmoOperation = ImGuizmo::TRANSLATE;
+
+        if (ImGui::IsKeyPressed(ImGuiKey_E))
+            _gizmoOperation = ImGuizmo::ROTATE;
+
+        if (ImGui::IsKeyPressed(ImGuiKey_R))
+            _gizmoOperation = ImGuizmo::SCALE;
+
+    }
+    
+}
 
 shared_ptr<Scene_View> Scene_View::Create()
 {

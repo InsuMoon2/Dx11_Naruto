@@ -36,11 +36,11 @@ private:
     void Select_Object(Shared<GameObject> obj, bool isMultiSelect);
 
 private:
-    vector<Shared<GameObject>>      _levelObjects;
+    vector<Shared<GameObject>>       _levelObjects;
     umap<wstring, shared_ptr<Layer>> _levelLayers;
 
-    vector<Shared<GameObject>>  _selectedObjects;
-    vector<Shared<GameObject>>  _copiedObjects;
+    vector<Shared<GameObject>>      _selectedObjects;
+    vector<Shared<GameObject>>      _copiedObjects;
 
     // 검색 필터
     string _currentSearchFilter;

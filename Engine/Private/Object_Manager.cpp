@@ -61,8 +61,16 @@ void Object_Manager::Late_Update(float timeDelta)
     }
 }
 
+void Object_Manager::Clear_Layers(uint32 levelIndex)
+{
+    if (levelIndex >= _numLevels)
+        return;
+
+    _layers[levelIndex].clear();
+}
+
 HRESULT Object_Manager::Add_GameObject(uint32 protoLevelIndex, uint32 objID, uint32 layerLevelIndex,
-    const wstring& layerTag, void* arg)
+                                       const wstring& layerTag, void* arg)
 {
     if (layerLevelIndex >= _numLevels)
         return E_FAIL;

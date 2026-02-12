@@ -18,6 +18,7 @@
 #include "imgui_internal.h"
 #include "implot.h"
 #include <imgui-node-editor/imgui_node_editor.h>
+#include <ImGuizmo.h>
 
 #include "Client_Defines.h"
 #include "EditorInstance.h"

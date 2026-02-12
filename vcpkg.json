@@ -16,8 +16,10 @@
       ]
     },
     "implot",
+    "imguizmo",
     "imgui-node-editor",
     "protobuf",
-    "effects11"
+    "effects11",
+    "stduuid"
   ]
 }

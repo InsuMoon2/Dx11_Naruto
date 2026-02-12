@@ -103,6 +103,7 @@ void Loader::Register_Components()
 
     uint32 staticLevel = ETOI(ELevelType::Static);
 
+    /* Component */
     GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_COMBAT_STAT,
         CombatStat::Create(_device, _context));
 
@@ -117,9 +118,10 @@ void Loader::Register_Components()
 
     GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_SHADER,
         Shader::Create(_device, _context,
-            TEXT("../Bin/Shaders/Shader_VtxTex.hlsl"),
+            TEXT("../../Client/Bin/Shaders/Shader_VtxTex.hlsl"),
             FVertexDesc::Vertex_Desc_Layout, FVertexDesc::Vertex_Desc_Layout_Count));
 
+    /* GameObject */
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PLAYER,
         TestPlayer::Create(_device, _context));
 }
@@ -130,19 +132,19 @@ HRESULT Loader::Loading_For_LogoLevel()
 
     Register_Components();
 
-    lstrcpy(_loadingText, TEXT("리소스 로딩 중"));
+    lstrcpy(_loadingText, TEXT("로고 리소스 로딩 중"));
 
-    if (FAILED(Load_Resources_From_Json(TEXT("../Bin/Resources/Data/ResourceTable.json"))))
+    if (FAILED(Load_Resources_From_Json(TEXT("../../Client/Bin/Resources/Data/json/ObjectTable.json"))))
     {
-        MSG_BOX("Failed to Load Resources from JSON");
+        LOG_ERROR("Failed to Load Resources from JSON");
         return E_FAIL;
     }
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
-    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, -Protocol::OBJECT_TYPE_BACKGROUND,
+    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_BACKGROUND,
         Background::Create(_device, _context))))
     {
-        MSG_BOX("Failed to Add Prototype : Background");
+        LOG_ERROR("Failed to Add Prototype : Background");
         return E_FAIL;
     }
 
@@ -160,17 +162,13 @@ HRESULT Loader::Loading_For_GamePlay()
 
     Register_Components();
 
-    lstrcpy(_loadingText, TEXT("텍스쳐 로딩 중"));
+    lstrcpy(_loadingText, TEXT("게임플레이 리소스 로딩 중"));
 
-
-    lstrcpy(_loadingText, TEXT("셰이더 로딩 중"));
-
-
-    lstrcpy(_loadingText, TEXT("사운드 로딩 중"));
-
-
-    lstrcpy(_loadingText, TEXT("모델 로딩 중"));
-
+    if (FAILED(Load_Resources_From_Json(TEXT("../../Client/Bin/Resources/Data/json/ObjectTable.json"))))
+    {
+        LOG_ERROR("Failed to Load Resources from JSON");
+        return E_FAIL;
+    }
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
     if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_PLAYER,
@@ -181,8 +179,6 @@ HRESULT Loader::Loading_For_GamePlay()
     }
 
     lstrcpy(_loadingText, TEXT("GamePlay 로딩 완료"));
-
-
 
     _isFinished = true;
 
@@ -208,7 +204,7 @@ HRESULT Loader::Load_Resources_From_Json(const wstring& filePath)
     {
         for (const auto& item : root["Texture"])
         {
-            string keyStr = item["key"];
+            string keyStr = item["id"];
             wstring protoKey = Utils::ToWString(keyStr);
             uint32 protoID = Get_ComponentID_From_String(protoKey);
 

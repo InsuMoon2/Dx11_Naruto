@@ -30,6 +30,9 @@ private:
                      
     void             ToggleFullScreen();
 
+    void             Update_ImGuizmo();
+    void             Handle_Guizmo_Shotcut();
+
 private:
     shared_ptr<RenderTarget>    _renderTarget;
 
@@ -45,7 +48,15 @@ private:
     LONG     _savedStyle = 0;
     ImGuiID  _savedDockId = 0;       
     bool     _shouldRestoreWindow = false;
-            
+
+private: /* ImGuizmo */
+    ImGuizmo::OPERATION _gizmoOperation = ImGuizmo::TRANSLATE;
+
+    // 좌표계 모드
+    // - LOCAL: 오브젝트 기준 (오브젝트가 회전하면 축도 같이 회전)
+    // - WORLD: 월드 기준 (항상 XYZ 축 고정)
+    ImGuizmo::MODE _gizmoMode = ImGuizmo::LOCAL;
+
 public:
     static shared_ptr<Scene_View> Create();
 

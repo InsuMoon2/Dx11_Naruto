@@ -8,6 +8,7 @@ class ENGINE_DLL BTTask : public BTNode
 {
 public:
     explicit BTTask();
+    explicit BTTask(const BTTask& rhs);
     virtual ~BTTask() = default;
 
     // Task는 자식 노드를 가질 수 없다. (Leaf 노드)

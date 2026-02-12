@@ -20,6 +20,9 @@ public:
     void    Update(float timeDelta);
     void    Late_Update(float timeDelta);
 
+    void    Clear_Layers(uint32 levelIndex);
+
+public:
     HRESULT Add_GameObject(
             uint32 protoLevelIndex, uint32 objID,
             uint32 layerLevelIndex, const wstring& layerTag,

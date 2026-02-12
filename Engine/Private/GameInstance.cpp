@@ -84,6 +84,7 @@ void GameInstance::Late_Update_Engine(float timeDelta)
 
 HRESULT GameInstance::Draw()
 {
+    _renderer->Draw();
     _levelManager->Render();
 
     return S_OK;
@@ -91,6 +92,8 @@ HRESULT GameInstance::Draw()
 
 void GameInstance::Clear_Resources(uint32 levelIndex)
 {
+    _objectManager->Clear_Layers(levelIndex);
+    _protoManager->Clear_Prototype(levelIndex);
 }
 
 ComPtr<Device> GameInstance::Get_Device()

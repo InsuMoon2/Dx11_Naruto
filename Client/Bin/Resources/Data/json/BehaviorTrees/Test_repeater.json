@@ -26,8 +26,8 @@
         },
         {
             "end": 14,
-            "id": 18,
-            "start": 11
+            "id": 19,
+            "start": 6
         }
     ],
     "nodes": [
@@ -53,8 +53,8 @@
                 7
             ],
             "parameters": {},
-            "pos_x": -5.0,
-            "pos_y": 521.0,
+            "pos_x": 80.0,
+            "pos_y": 474.0,
             "type": "Selector"
         },
         {
@@ -65,8 +65,8 @@
                 11
             ],
             "parameters": {},
-            "pos_x": -43.0,
-            "pos_y": 634.0,
+            "pos_x": -78.0,
+            "pos_y": 610.0,
             "type": "Repeater"
         },
         {
@@ -79,8 +79,8 @@
                 17
             ],
             "parameters": {},
-            "pos_x": -4.0,
-            "pos_y": 761.0,
+            "pos_x": 240.0,
+            "pos_y": 618.0,
             "type": "Sequence"
         }
     ],

@@ -69,10 +69,10 @@ public: /* LevelType Manager */
 
 public: /* Prototype Manager */
     HRESULT                 Add_GameObject_Prototype(uint32 levelIndex, uint32 objID, Shared<GameObject> gameObject);
-    Shared<GameObject>  Clone_GameObject(uint32 levelIndex, uint32 objID, void* arg = {});
+    Shared<GameObject>      Clone_GameObject(uint32 levelIndex, uint32 objID, void* arg = {});
 
     HRESULT                 Add_Component_Prototype(uint32 levelIndex, uint32 componentID, Shared<Component> component);
-    Shared<Component>   Clone_Component(uint32 levelIndex, uint32 componentID, void* arg = {});
+    Shared<Component>       Clone_Component(uint32 levelIndex, uint32 componentID, void* arg = {});
 
 public: /* Object Manager */
     HRESULT                 Add_GameObject(

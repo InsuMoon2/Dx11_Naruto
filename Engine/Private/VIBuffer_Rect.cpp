@@ -71,9 +71,9 @@ HRESULT VIBuffer_Rect::Initialize_Prototype()
     indices[1] = 1;
     indices[2] = 2;
 
-    indices[0] = 0;
-    indices[1] = 2;
-    indices[2] = 3;
+    indices[3] = 0;
+    indices[4] = 2;
+    indices[5] = 3;
 
     D3D11_SUBRESOURCE_DATA indexData;
     indexData.pSysMem = indices.data();

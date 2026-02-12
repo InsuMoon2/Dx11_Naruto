@@ -1,4 +1,7 @@
 Type,Id,Path,Count,Level,Extra
-Texture,COMPONENT_TYPE_TEXTURE_DEFAULT,../Bin/Resources/Textures/Default%d.jpg,2,Logo,
-Model,Prototype_Texture_Hero,../Bin/Resources/Textures/Hero/Hero_Idle.png,1,GamePlay,
-Model,Prototype_Model_Boss,../Bin/Resources/Models/Boss/Boss.m3d,,GamePlay,NonAnim
+Texture,COMPONENT_TYPE_TEXTURE_DEFAULT,../../Client/Bin/Resources/Textures/Default%d.jpg,2,Logo,
+Texture,COMPONENT_TYPE_TEXTURE_DEFAULT,../../Client/Bin/Resources/Textures/Clip_Icon%d.png,2,GamePlay,
+Model,Prototype_Texture_Hero,../../Client/Bin/Resources/Textures/Hero/Hero_Idle.png,1,GamePlay,
+Model,Prototype_Model_Boss,../../Client/Bin/Resources/Models/Boss/Boss.m3d,,GamePlay,NonAnim
+,,,,,
+,,../../Client/Bin/Resources/Textures/Default%d.jpg,,,

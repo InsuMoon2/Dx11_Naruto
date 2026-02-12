@@ -56,6 +56,8 @@ void ImGui_Manager::Update(float timeDelta)
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
+
+    ImGuizmo::BeginFrame(); // 호출 권장 ?
 }
 
 void ImGui_Manager::Render()

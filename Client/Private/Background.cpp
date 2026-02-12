@@ -21,7 +21,6 @@ Background::~Background()
 
 HRESULT Background::Initialize_Prototype()
 {
-    
 
     return S_OK;
 }
@@ -80,13 +79,13 @@ HRESULT Background::Render()
 
 HRESULT Background::Ready_Components()
 {
-    CHECK_FAILED(Add_Component<Texture>(ETOI(ELevelType::Logo),
+    CHECK_FAILED(Add_Component(ETOI(ELevelType::Logo),
         Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, _textureCom), E_FAIL);
 
-    CHECK_FAILED(Add_Component<Shader>(ETOI(ELevelType::Static),
+    CHECK_FAILED(Add_Component(ETOI(ELevelType::Static),
         Protocol::COMPONENT_TYPE_SHADER, _shaderCom), E_FAIL);
 
-    CHECK_FAILED(Add_Component<VIBuffer_Rect>(ETOI(ELevelType::Static),
+    CHECK_FAILED(Add_Component(ETOI(ELevelType::Static),
         Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
 
     return S_OK;

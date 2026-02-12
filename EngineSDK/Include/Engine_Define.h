@@ -22,6 +22,9 @@ using namespace DirectX;
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
+// UUID Library (stduuid)
+#include <stduuid/uuid.h>
+
 // STL
 #include <memory>
 #include <iostream>

@@ -204,6 +204,7 @@
     <ClCompile Include="..\Private\ResourceLoader.cpp" />
     <!-- <ClCompile Include="..\Private\ServerSession.cpp" /> -->
     <ClCompile Include="..\Private\CombatStat.cpp" />
+    <ClCompile Include="..\Private\SimpleMath.cpp" />
     <ClCompile Include="..\Private\TestPlayer.cpp" />
     <!-- <ClCompile Include="Client.cpp" /> -->
     <ClCompile Include="IReplicable.cpp" />

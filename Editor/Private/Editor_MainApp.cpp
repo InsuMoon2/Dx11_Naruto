@@ -7,9 +7,15 @@
 #include "ResourceLoader.h"
 #include "VIBuffer_Rect.h"
 
-Editor_MainApp::Editor_MainApp() {}
+Editor_MainApp::Editor_MainApp()
+{
+    
+}
 
-Editor_MainApp::~Editor_MainApp() {}
+Editor_MainApp::~Editor_MainApp()
+{
+    
+}
 
 HRESULT Editor_MainApp::Initialize()
 {
@@ -40,15 +46,15 @@ HRESULT Editor_MainApp::Initialize()
 
     //CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
 
-    if (FAILED(Ready_StartLevel(ELevelType::GamePlay)))
-        return E_FAIL;
+    CHECK_FAILED(Ready_StartLevel(ELevelType::GamePlay), E_FAIL);
 
     return S_OK;
 }
 
 void Editor_MainApp::Priority_Update(float timeDelta)
 {
-    if (EDITOR->IsPlaying()) {
+    if (EDITOR->IsPlaying())
+    {
         GAME->Priority_Update_Engine(timeDelta);
     }
 }
@@ -59,17 +65,18 @@ void Editor_MainApp::Update(float timeDelta)
     EDITOR->Update_Editor(timeDelta);
 
     // 게임은 Play 모드일 때만
-    if (EDITOR->IsPlaying()) {
+    //if (EDITOR->IsPlaying())
         GAME->Update_Engine(timeDelta);
-    }
 
 }
 
 void Editor_MainApp::Late_Update(float timeDelta)
 {
-    if (EDITOR->IsPlaying()) {
+    //EDITOR->Update_Editor(timeDelta);
+
+    //if (EDITOR->IsPlaying())
         GAME->Late_Update_Engine(timeDelta);
-    }
+
 }
 
 HRESULT Editor_MainApp::Render()

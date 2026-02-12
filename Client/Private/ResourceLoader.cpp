@@ -88,7 +88,7 @@ shared_ptr<ResourceLoader> ResourceLoader::Create(ComPtr<Device> device, ComPtr<
 
     if (FAILED(instance->Initialize()))
     {
-        MSG_BOX("Failed to Create : Resource Loader");
+        LOG_ERROR("Failed to Create : Resource Loader");
 
         return nullptr;
     }
