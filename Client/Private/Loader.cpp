@@ -11,7 +11,8 @@
 #include "Replicator.h"
 #include "Behavior.h"
 #include "CombatStat.h"
-#include "VIBUFFer_Rect.h"
+#include "VIBuffer_Rect.h"
+#include "Shader.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -98,6 +99,7 @@ void Loader::Register_Components()
     factory->Register<Replicator>();
     factory->Register<Behavior>();
     factory->Register<VIBuffer_Rect>();
+    factory->Register<Shader>();
 
     uint32 staticLevel = ETOI(ELevelType::Static);
 
@@ -113,6 +115,10 @@ void Loader::Register_Components()
     GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_RECT,
         VIBuffer_Rect::Create(_device, _context));
 
+    GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_SHADER,
+        Shader::Create(_device, _context,
+            TEXT("../Bin/Shaders/Shader_VtxTex.hlsl"),
+            FVertexDesc::Vertex_Desc_Layout, FVertexDesc::Vertex_Desc_Layout_Count));
 
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PLAYER,
         TestPlayer::Create(_device, _context));

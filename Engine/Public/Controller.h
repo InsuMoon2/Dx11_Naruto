@@ -14,13 +14,13 @@ public:
     virtual ~Controller();
 
 protected:
-    HRESULT Initialize_Prototype() override;
-    HRESULT Initialize(void* arg) override;
+    HRESULT     Initialize_Prototype() override;
+    HRESULT     Initialize(void* arg) override;
 
-    void    Priority_Update(float timeDelta) override;
-    void    Update(float timeDelta) override;
-    void    Late_Update(float timeDelta) override;
-    void    Render() override;
+    void        Priority_Update(float timeDelta) override;
+    void        Update(float timeDelta) override;
+    void        Late_Update(float timeDelta) override;
+    HRESULT     Render() override;
 
 public:
     void    Free() override;

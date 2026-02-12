@@ -211,6 +211,9 @@
     <ClCompile Include="..\Private\Level_Serializer.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\SimpleMath.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\BehaviorTree_View.cpp">
       <Filter>03. Viewer</Filter>
     </ClCompile>

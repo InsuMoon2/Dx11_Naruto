@@ -187,9 +187,9 @@ void Content_Browser::Draw_FolderTree(FFolderNode& node)
 
     ImGui::SameLine();
 
-    if (_iconFolder && !_iconFolder->_SRVs.empty())
+    if (_iconFolder && !_iconFolder->Get_SRVs().empty())
     {
-        ImGui::Image((ImTextureID)_iconFolder->_SRVs[0].Get(), ImVec2(16.f, 16.f));
+        ImGui::Image((ImTextureID)_iconFolder->Get_SRVs()[0].Get(), ImVec2(16.f, 16.f));
         ImGui::SameLine();
     }
 

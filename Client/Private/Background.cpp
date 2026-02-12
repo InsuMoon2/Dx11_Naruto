@@ -2,6 +2,8 @@
 #include "Background.h"
 #include "GameInstance.h"
 #include "Texture.h"
+#include "Shader.h"
+#include "VIBuffer_Rect.h"
 
 Background::Background(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject { device, context }
@@ -55,10 +57,38 @@ void Background::Late_Update(float timeDelta)
     GAME->Add_RenderGroup(ERenderGroup::UI, this->GetSharedPtr());
 }
 
+HRESULT Background::Render()
+{
+    GameObject::Render();
+
+    Matrix identityMatrix = Matrix::Identity;
+
+    // 변환 행렬 바인딩
+    _shaderCom->Bind_Matrix("g_WorldMatrix", &identityMatrix);
+    _shaderCom->Bind_Matrix("g_ViewMatrix", &identityMatrix);
+    _shaderCom->Bind_Matrix("g_ProjMatrix", &identityMatrix);
+
+    // 텍스처 바인딩 (첫번째 텍스처 사용)
+    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 0), E_FAIL);
+
+    CHECK_FAILED(_shaderCom->Begin(0), E_FAIL);
+    CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
+    CHECK_FAILED(_bufferCom->Render(), E_FAIL);
+
+    return S_OK;
+}
+
 HRESULT Background::Ready_Components()
 {
-    CHECK_FAILED(Add_Component<Texture>(ETOI(ELevelType::Logo), Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, _textureCom), E_FAIL);
-    
+    CHECK_FAILED(Add_Component<Texture>(ETOI(ELevelType::Logo),
+        Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, _textureCom), E_FAIL);
+
+    CHECK_FAILED(Add_Component<Shader>(ETOI(ELevelType::Static),
+        Protocol::COMPONENT_TYPE_SHADER, _shaderCom), E_FAIL);
+
+    CHECK_FAILED(Add_Component<VIBuffer_Rect>(ETOI(ELevelType::Static),
+        Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
+
     return S_OK;
 }
 

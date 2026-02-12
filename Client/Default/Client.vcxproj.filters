@@ -10,9 +10,6 @@
     <ClInclude Include="targetver.h">
       <Filter>98. Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MainApp.h">
-      <Filter>00. MainApp</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>98. Default</Filter>
     </ClInclude>
@@ -40,15 +37,6 @@
     <ClInclude Include="..\Public\Protocol_Wrapper.h">
       <Filter>98. Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Client_PacketHandler.h">
-      <Filter>96. Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\NetworkManager.h">
-      <Filter>96. Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ServerSession.h">
-      <Filter>96. Network</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\TestPlayer.h">
       <Filter>02. GameObject</Filter>
     </ClInclude>
@@ -70,12 +58,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp">
-      <Filter>98. Default</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MainApp.cpp">
-      <Filter>00. MainApp</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
@@ -102,15 +84,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Server\Protobuf\Bin\Struct.pb.cc">
       <Filter>97. Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Client_PacketHandler.cpp">
-      <Filter>96. Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\NetworkManager.cpp">
-      <Filter>96. Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ServerSession.cpp">
-      <Filter>96. Network</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TestPlayer.cpp">
       <Filter>02. GameObject</Filter>

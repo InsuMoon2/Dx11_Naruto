@@ -26,12 +26,12 @@ public:
     virtual void        Priority_Update(float timeDelta);
     virtual void        Update(float timeDelta);
     virtual void        Late_Update(float timeDelta);
-    virtual void        Render();
+    virtual HRESULT         Render();
 
     virtual json To_Json() const;
     virtual void From_Json(const json& data);
 
-public:
+public: /* PendingKill */
     void Set_Destroy() { _isDestroyed = true; }
     bool Is_Destroy() const { return _isDestroyed; }
 

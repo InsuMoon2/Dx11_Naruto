@@ -14,15 +14,24 @@ public:
     virtual ~Shader();
 
 public:
-    virtual HRESULT Initialize_Prototype(const wstring& shaderFilePath);
+    virtual HRESULT Initialize_Prototype(const wstring& shaderFilePath, const D3D11_INPUT_ELEMENT_DESC* desc, uint32 numElements);
     virtual HRESULT Initialize(void* arg) override;
 
+    HRESULT Begin(uint32 passIndex);
+    HRESULT Bind_SRV(const char* constantName, ComPtr<ShaderResourceView> SRV);
+    HRESULT Bind_Matrix(const char* constantName, const Matrix* matrix);
+
 private:
-    ComPtr<ID3DX11Effect>   _effect;
-    uint32                  _numPasses = {};
+    ComPtr<ID3DX11Effect>               _effect;
+    uint32                              _numPasses = {};
+
+    vector<ComPtr<ID3D11InputLayout>>   _inputLayouts;
 
 public:
-    static Shared<Shader> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const wstring& shaderPath);
+    static Shared<Shader> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+
+    static Shared<Shader> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const wstring& shaderPath,
+                                    const D3D11_INPUT_ELEMENT_DESC* desc, uint32 numElements);
     virtual Shared<Component> Clone(void* arg) override;
     virtual void Free() override;
     

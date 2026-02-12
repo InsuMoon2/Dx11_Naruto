@@ -9,6 +9,8 @@ Shader::Shader(ComPtr<Device> device, ComPtr<DeviceContext> context)
 Shader::Shader(const Shader& rhs)
     : Component(rhs)
     , _effect(rhs._effect)
+    , _numPasses(rhs._numPasses)
+    , _inputLayouts(rhs._inputLayouts)
 {
 }
 
@@ -16,7 +18,7 @@ Shader::~Shader()
 {
 }
 
-HRESULT Shader::Initialize_Prototype(const wstring& shaderFilePath)
+HRESULT Shader::Initialize_Prototype(const wstring& shaderFilePath, const D3D11_INPUT_ELEMENT_DESC* desc, uint32 numElements)
 {
     uint32 hlslFlag = {};
 
@@ -41,15 +43,19 @@ HRESULT Shader::Initialize_Prototype(const wstring& shaderFilePath)
 
     for (size_t i = 0; i < _numPasses; i++)
     {
+        ComPtr<ID3D11InputLayout> inputLayout;
+
         ComPtr<ID3DX11EffectPass> pass = technique->GetPassByIndex(i);
         CHECK_NULL(pass, E_FAIL);
 
         D3DX11_PASS_DESC passDesc{};
         pass->GetDesc(&passDesc);
 
-        //passDesc.pIAInputSignature, passDesc.IAInputSignatureSize
-    }
+        CHECK_FAILED(_device->CreateInputLayout(desc, numElements,
+            passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &inputLayout), E_FAIL);
 
+        _inputLayouts.push_back(inputLayout);
+    }
 
     return S_OK;
 }
@@ -60,11 +66,55 @@ HRESULT Shader::Initialize(void* arg)
     return S_OK;
 }
 
-Shared<Shader> Shader::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const wstring& shaderPath)
+HRESULT Shader::Begin(uint32 passIndex)
+{
+    if (passIndex >= _numPasses || _inputLayouts[passIndex] == nullptr)
+        return E_FAIL;
+
+    _effect->GetTechniqueByIndex(0)->GetPassByIndex(passIndex)->Apply(0, _context.Get());
+
+    _context->IASetInputLayout(_inputLayouts[passIndex].Get());
+}
+
+HRESULT Shader::Bind_SRV(const char* constantName, ComPtr<ShaderResourceView> SRV)
+{
+    ComPtr<ID3DX11EffectVariable> variable = _effect->GetVariableByName(constantName);
+    CHECK_NULL(variable, E_FAIL);
+
+    ComPtr<ID3DX11EffectShaderResourceVariable> srvVariable = variable->AsShaderResource();
+    CHECK_NULL(srvVariable, E_FAIL);
+
+    CHECK_FAILED(srvVariable->SetResource(SRV.Get()), E_FAIL);
+
+    return S_OK;
+}
+
+HRESULT Shader::Bind_Matrix(const char* constantName, const Matrix* matrix)
+{
+    ComPtr<ID3DX11EffectVariable> variable = _effect->GetVariableByName(constantName);
+    CHECK_NULL(variable, E_FAIL);
+
+    ComPtr<ID3DX11EffectMatrixVariable> matrixVariable = variable->AsMatrix();
+    CHECK_NULL(matrixVariable, E_FAIL);
+
+    CHECK_FAILED(matrixVariable->SetMatrix(reinterpret_cast<const float*>(matrix)), E_FAIL);
+
+    return S_OK;
+}
+
+Shared<Shader> Shader::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+{
+    return Create(device, context,
+        L"../Bin/Shaders/Shader_VtxTex.hlsl",
+        FVertexDesc::Vertex_Desc_Layout, FVertexDesc::Vertex_Desc_Layout_Count);
+}
+
+Shared<Shader> Shader::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const wstring& shaderPath,
+                              const D3D11_INPUT_ELEMENT_DESC* desc, uint32 numElements)
 {
     auto instance = make_shared<Shader>(device, context);
 
-    if (FAILED(instance->Initialize_Prototype(shaderPath)))
+    if (FAILED(instance->Initialize_Prototype(shaderPath, desc, numElements)))
     {
         MSG_BOX("Failed to Created : Shader");
 
