@@ -3,7 +3,6 @@
 #include "CombatStat.h"
 #include "GameObject.h"
 #include "Transform.h"
-#include "Component_Factory.h"
 
 #ifdef GetMessage
 #undef GetMessage
@@ -11,8 +10,6 @@
 
 #include <google/protobuf/message.h>
 #include <google/protobuf/descriptor.h>
-
-REGISTER_COMPONENT_FACTORY(Replicator, Protocol::COMPONENT_TYPE_REPLICATOR)
 
 Replicator::Replicator(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)

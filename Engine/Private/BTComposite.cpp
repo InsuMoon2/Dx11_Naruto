@@ -22,6 +22,17 @@ void BTComposite::OnTerminate(EBTNodeResult result)
     }
 }
 
+void BTComposite::Set_Blackboard(Shared<Blackboard> blackboard)
+{
+    BTNode::Set_Blackboard(blackboard);
+
+    for (auto& child : _children)
+    {
+        if (child)
+            child->Set_Blackboard(blackboard);
+    }
+}
+
 // ================= BTSelector =================
 EBTNodeResult BTSelector::Update(float timeDelta)
 {
@@ -53,6 +64,19 @@ EBTNodeResult BTSelector::Update(float timeDelta)
     return EBTNodeResult::Failed;
 }
 
+Shared<BTNode> BTSelector::Clone()
+{
+    auto newNode = make_shared<BTSelector>();
+
+    // 자식들 깊은 복사
+    for (auto& child : _children)
+    {
+        newNode->Add_Child(child->Clone());
+    }
+
+    return newNode;
+}
+
 // ================= BTSequence =================
 EBTNodeResult BTSequence::Update(float timeDelta)
 {
@@ -82,4 +106,17 @@ EBTNodeResult BTSequence::Update(float timeDelta)
     _runningChildIndex = 0;
 
     return EBTNodeResult::Succeeded;
+}
+
+Shared<BTNode> BTSequence::Clone()
+{
+    auto newNode = make_shared<BTSequence>();
+
+    // 자식들 깊은 복사
+    for (auto& child : _children)
+    {
+        newNode->Add_Child(child->Clone());
+    }
+
+    return newNode;
 }

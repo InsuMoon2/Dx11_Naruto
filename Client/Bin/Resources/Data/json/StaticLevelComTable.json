@@ -19,5 +19,12 @@
             "level": "Static",
             "count": 1
         }
+    ],
+    "Shader": [
+        {
+            "id": "COMPONENT_TYPE_SHADER",
+            "level": "Static",
+            "count": 1
+        }
     ]
 }

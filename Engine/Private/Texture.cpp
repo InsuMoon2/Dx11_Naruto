@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Texture.h"
 
+#include "Shader.h"
+
 Texture::Texture(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
@@ -54,6 +56,14 @@ HRESULT Texture::Initialize_Prototype(const wstring& texturePath, uint32 numSRVs
 HRESULT Texture::Initialize(void* arg)
 {
     return Component::Initialize(arg);
+}
+
+HRESULT Texture::Bind_SRV(Shared<Shader> shader, const char* constantName, uint32 index)
+{
+    if (index >= _numSRVs)
+        return E_FAIL;
+
+    return shader->Bind_SRV(constantName, _SRVs[index]);
 }
 
 shared_ptr<Texture> Texture::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const wstring& texturePath, uint32 numSRVs)

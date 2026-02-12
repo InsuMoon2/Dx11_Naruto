@@ -10,9 +10,6 @@
     <ClInclude Include="targetver.h">
       <Filter>98. Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MainApp.h">
-      <Filter>00. MainApp</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>98. Default</Filter>
     </ClInclude>
@@ -40,15 +37,6 @@
     <ClInclude Include="..\Public\Protocol_Wrapper.h">
       <Filter>98. Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Client_PacketHandler.h">
-      <Filter>96. Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\NetworkManager.h">
-      <Filter>96. Network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ServerSession.h">
-      <Filter>96. Network</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\TestPlayer.h">
       <Filter>02. GameObject</Filter>
     </ClInclude>
@@ -66,16 +54,10 @@
       <Filter>95. Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ResourceLoader.h">
-      <Filter>01. Levels</Filter>
+      <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp">
-      <Filter>98. Default</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MainApp.cpp">
-      <Filter>00. MainApp</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
@@ -103,15 +85,6 @@
     <ClCompile Include="..\..\Server\Protobuf\Bin\Struct.pb.cc">
       <Filter>97. Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Client_PacketHandler.cpp">
-      <Filter>96. Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\NetworkManager.cpp">
-      <Filter>96. Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ServerSession.cpp">
-      <Filter>96. Network</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\TestPlayer.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
@@ -123,7 +96,7 @@
       <Filter>95. Interface</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ResourceLoader.cpp">
-      <Filter>01. Levels\00. Loading</Filter>
+      <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

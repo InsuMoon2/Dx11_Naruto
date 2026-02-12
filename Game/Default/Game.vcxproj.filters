@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="99. Defiens">
+      <UniqueIdentifier>{a118cf93-f703-4174-8bf2-c471c2b4b8c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Default">
+      <UniqueIdentifier>{bc2e97e3-0fda-4277-9c98-e57b0cf42494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Default\리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="00. Main">
+      <UniqueIdentifier>{667c8f20-1d1c-43ae-a1cc-56b1b6e79ec1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Server">
+      <UniqueIdentifier>{cfe3f000-650b-4bdc-9831-9e6518e2440a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Defines.h">
+      <Filter>99. Defiens</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Enum.h">
+      <Filter>99. Defiens</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Macro.h">
+      <Filter>99. Defiens</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainApp.h">
+      <Filter>00. Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ServerSession.h">
+      <Filter>97. Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_PacketHandler.h">
+      <Filter>97. Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NetworkManager.h">
+      <Filter>97. Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Protocol_Wrapper.h">
+      <Filter>99. Defiens</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>00. Main</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Client_PacketHandler.cpp">
+      <Filter>97. Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NetworkManager.cpp">
+      <Filter>97. Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ServerSession.cpp">
+      <Filter>97. Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainApp.cpp">
+      <Filter>00. Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>00. Main</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game.rc">
+      <Filter>98. Default\리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>98. Default\리소스 파일</Filter>
+    </Image>
+    <Image Include="Game.ico">
+      <Filter>98. Default\리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

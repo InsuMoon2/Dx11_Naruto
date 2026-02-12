@@ -14,6 +14,8 @@ public:
     void            Add_Child(Shared<BTNode> node);
     virtual void    OnTerminate(EBTNodeResult result) override;
 
+    virtual void    Set_Blackboard(Shared<Blackboard> blackboard) override;
+
 protected:
     vector<Shared<BTNode>> _children;
     int32 _runningChildIndex = 0;
@@ -33,6 +35,7 @@ public:
 public:
     EBTNodeResult Update(float timeDelta) override;
 
+    virtual Shared<BTNode> Clone() override;
 };
 
 // ==========================================
@@ -48,6 +51,7 @@ public:
 public:
     EBTNodeResult Update(float timeDelta) override;
 
+    virtual Shared<BTNode> Clone() override;
 };
 
 

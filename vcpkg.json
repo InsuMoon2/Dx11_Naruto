@@ -16,6 +16,7 @@
       ]
     },
     "implot",
+    "imgui-node-editor",
     "protobuf",
     "effects11"
   ]

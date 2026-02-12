@@ -124,9 +124,10 @@
     <ClInclude Include="..\Public\BTTask_Wait.h">
       <Filter>01. Utility\06. Behaviore Tree\03. Task Node</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Behavior.h" />
     <ClInclude Include="..\Public\Shader.h" />
-    <ClInclude Include="..\Public\ResourceLoader.h" />
+    <ClInclude Include="..\Public\Behavior.h">
+      <Filter>01. Utility\06. Behaviore Tree\99. Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -353,9 +354,10 @@
     <ClCompile Include="..\Private\BTTask_Wait.cpp">
       <Filter>01. Utility\06. Behaviore Tree\03. Task Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Behavior.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
-    <ClCompile Include="..\Private\ResourceLoader.cpp" />
+    <ClCompile Include="..\Private\Behavior.cpp">
+      <Filter>01. Utility\06. Behaviore Tree\99. Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

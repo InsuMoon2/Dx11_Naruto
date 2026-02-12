@@ -2,3 +2,4 @@ Type,Id,Path,Count,Level,Extra
 Texture,COMPONENT_TYPE_TEXTURE_DEFAULT,,1,Static,
 CombatStat,COMPONENT_TYPE_COMBAT_STAT,,1,Static,
 Buffer_Rect,COMPONENT_TYPE_RECT,,1,Static,
+Shader,COMPONENT_TYPE_SHADER,,,Static ,

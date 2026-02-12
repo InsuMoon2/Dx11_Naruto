@@ -26,6 +26,13 @@ public:
     void Set_RootNode(Shared<BTNode> rootNode);
     void Set_Blackboard(Shared<Blackboard> blackboard);
 
+    Shared<Blackboard> Get_Blackboard() const { return _blackboard; }
+
+    HRESULT Load_FromJson(const wstring& filePath);
+
+private:
+    Shared<BTNode> Create_Node(const string& typeName);
+
 private:
     Shared<BTNode>     _rootNode;
     Shared<Blackboard> _blackboard;

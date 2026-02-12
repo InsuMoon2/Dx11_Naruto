@@ -31,23 +31,25 @@ public:
     vector<uint32> Get_RegisteredComponentIds();
     vector<pair<uint32, wstring>> Get_RegisteredComponents();
 
+public:
+    template<typename T>
+    void Register()
+    {
+        Register(
+            T::StaticTypeID(),
+            [](auto device, auto context)
+            {
+                return T::Create(device, context);
+            },
+            T::StaticClassName()
+        );
+    }
+
 private:
     map<uint32, Creator> _creators;
     map<uint32, wstring> _prototypeMap;
     map<uint32, wstring> _classNames;
 
 };
-
-#define REGISTER_COMPONENT_FACTORY(TYPE, ENUM) \
-    static struct Helper_Comp_##TYPE { \
-        Helper_Comp_##TYPE() { \
-            Engine::Component_Factory::GetInstance()->Register(ENUM, \
-                [](ComPtr<Device> device, ComPtr<DeviceContext> context) { \
-                    return TYPE::Create(device, context); \
-                }, \
-                TYPE::StaticClassName()  \
-            ); \
-        } \
-    } helper_comp_##TYPE;
 
 NS_END

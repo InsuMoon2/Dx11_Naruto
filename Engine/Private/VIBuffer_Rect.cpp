@@ -2,7 +2,7 @@
 #include "VIBuffer_Rect.h"
 #include "Component_Factory.h"
 
-REGISTER_COMPONENT_FACTORY(VIBuffer_Rect, Protocol::COMPONENT_TYPE_RECT)
+//REGISTER_COMPONENT_FACTORY(VIBuffer_Rect, Protocol::COMPONENT_TYPE_RECT)
 
 VIBuffer_Rect::VIBuffer_Rect(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : VIBuffer(device, context)

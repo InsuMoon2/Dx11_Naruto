@@ -42,23 +42,28 @@ void GameObject::Priority_Update(float timeDelta)
 
 void GameObject::Update(float timeDelta)
 {
-    if (_isDestroyed) return;
+    if (_isDestroyed)
+        return;
 
 
 }
 
 void GameObject::Late_Update(float timeDelta)
 {
-    if (_isDestroyed) return;
+    if (_isDestroyed)
+        return;
 
 
 }
 
-void GameObject::Render()
+HRESULT GameObject::Render()
 {
-    if (_isDestroyed) return;
+    if (_isDestroyed)
+        return E_FAIL;
 
 
+
+    return S_OK;
 }
 
 json GameObject::To_Json() const

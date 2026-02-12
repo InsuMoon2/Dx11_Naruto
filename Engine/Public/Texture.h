@@ -4,6 +4,8 @@
 
 NS_BEGIN(Engine)
 
+class Shader;
+
 class ENGINE_DLL Texture : public Component
 {
     GENERATED_COMPONENT(Texture, Protocol::COMPONENT_TYPE_TEXTURE)
@@ -18,6 +20,11 @@ public:
     HRESULT Initialize(void* arg) override;
 
 public:
+    HRESULT Bind_SRV(Shared<Shader> shader, const char* constantName, uint32 index);
+
+    vector<ComPtr<ShaderResourceView>>& Get_SRVs() { return _SRVs; }
+
+private:
     uint32 _numSRVs = 0;
     vector<ComPtr<ShaderResourceView>> _SRVs;
 

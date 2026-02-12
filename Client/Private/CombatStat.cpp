@@ -1,8 +1,5 @@
 ﻿#include "pch.h"
 #include "CombatStat.h"
-#include "Component_Factory.h"
-
-REGISTER_COMPONENT_FACTORY(CombatStat, Protocol::COMPONENT_TYPE_COMBAT_STAT)
 
 CombatStat::CombatStat(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)

@@ -1,0 +1,88 @@
+{
+    "blackboard": {
+        "bools": {},
+        "floats": {},
+        "ints": {
+            "TestInt": 6
+        },
+        "vectors": {
+            "TestZero": {
+                "x": 120.0,
+                "y": 10.0,
+                "z": 5.0
+            }
+        }
+    },
+    "links": [
+        {
+            "end": 4,
+            "id": 8,
+            "start": 2
+        },
+        {
+            "end": 10,
+            "id": 12,
+            "start": 6
+        },
+        {
+            "end": 14,
+            "id": 18,
+            "start": 11
+        }
+    ],
+    "nodes": [
+        {
+            "id": 1,
+            "input_pin_id": 0,
+            "name": "Root",
+            "output_pin_ids": [
+                2
+            ],
+            "parameters": {},
+            "pos_x": 100.0,
+            "pos_y": 300.0,
+            "type": "Root"
+        },
+        {
+            "id": 3,
+            "input_pin_id": 4,
+            "name": "Selector",
+            "output_pin_ids": [
+                5,
+                6,
+                7
+            ],
+            "parameters": {},
+            "pos_x": -5.0,
+            "pos_y": 521.0,
+            "type": "Selector"
+        },
+        {
+            "id": 9,
+            "input_pin_id": 10,
+            "name": "Repeater",
+            "output_pin_ids": [
+                11
+            ],
+            "parameters": {},
+            "pos_x": -43.0,
+            "pos_y": 634.0,
+            "type": "Repeater"
+        },
+        {
+            "id": 13,
+            "input_pin_id": 14,
+            "name": "Sequence",
+            "output_pin_ids": [
+                15,
+                16,
+                17
+            ],
+            "parameters": {},
+            "pos_x": -4.0,
+            "pos_y": 761.0,
+            "type": "Sequence"
+        }
+    ],
+    "root_node_id": 1
+}

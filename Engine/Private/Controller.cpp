@@ -40,9 +40,11 @@ void Controller::Late_Update(float timeDelta)
     GameObject::Late_Update(timeDelta);
 }
 
-void Controller::Render()
+HRESULT Controller::Render()
 {
     GameObject::Render();
+
+    return S_OK;
 }
 
 void Controller::Free()
