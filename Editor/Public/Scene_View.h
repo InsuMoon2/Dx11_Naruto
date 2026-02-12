@@ -23,18 +23,22 @@ public:
     shared_ptr<RenderTarget> Get_RenderTarget() { return _renderTarget; }
 
 private:
-    ImGuiWindowFlags Get_WindowFlags() const;
-    void             PrePare_Window();
-    void             Render_Viewport();
-    void             Update_WindowState();
-                     
-    void             ToggleFullScreen();
+    ImGuiWindowFlags    Get_WindowFlags() const;
+    void                Prepare_Window();
+    void                Render_Viewport();
+    void                Update_WindowState();
+                        
+    void                ToggleFullScreen();
 
-    void             Update_ImGuizmo();
-    void             Handle_Guizmo_Shotcut();
+    void                Update_ImGuizmo();
+    void                Handle_Guizmo_Shotcut();
+
+    // Prefab Spawn
+    Vec3                Screen_To_World(Vec2 screenPos);
+    void                Spawn_Prefab(const wstring& prefabPath, const Vec3& worldPos);
 
 private:
-    shared_ptr<RenderTarget>    _renderTarget;
+    Shared<RenderTarget>    _renderTarget;
 
     Vec2    _viewportSize = {};
 
@@ -62,5 +66,6 @@ public:
 
 
 };
+
 
 NS_END

@@ -15,6 +15,8 @@
 #include "Game_View.h"
 #include "Notification_Manager.h"
 #include "Prefab_View.h"
+#include "Scene_View.h"
+#include "RenderTarget.h"
 
 Editor_Manager::~Editor_Manager()
 {
@@ -55,7 +57,7 @@ void Editor_Manager::Update(float timeDelta)
 
 void Editor_Manager::Render()
 {
-    shared_ptr<RenderTarget> targetRT = nullptr;
+    Shared<RenderTarget> targetRT = nullptr;
 
     if (GAME->Get_GameState() == EGameState::Play)
     {

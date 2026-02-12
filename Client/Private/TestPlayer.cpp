@@ -9,6 +9,7 @@
 TestPlayer::TestPlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
 {
+    Set_ObjectType(Protocol::OBJECT_TYPE_PLAYER);
 }
 
 TestPlayer::TestPlayer(const TestPlayer& rhs)
@@ -70,7 +71,7 @@ HRESULT TestPlayer::Render()
 
     Matrix worldMatrix = _transformCom->Get_WorldMatrix();
     // Scene_View와 동일한 카메라 설정 사용
-    Matrix viewMatrix = Matrix::Identity;  // ← ImGuizmo와 일치!
+    Matrix viewMatrix = Matrix::Identity;
 
     Matrix projMatrix = Matrix::CreatePerspectiveFieldOfView(
         XMConvertToRadians(60.f),

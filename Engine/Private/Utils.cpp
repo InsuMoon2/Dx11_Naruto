@@ -15,3 +15,11 @@ string Utils::EnumToString(uint32 id)
 {
     return "";
 }
+
+string Utils::Generate_GUID()
+{
+    static uuids::uuid_system_generator gen {};
+    uuids::uuid id = gen();
+
+    return uuids::to_string(id);
+}

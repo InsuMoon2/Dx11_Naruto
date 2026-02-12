@@ -43,7 +43,7 @@ void Scene_View::Update(float timeDelta)
 
 void Scene_View::OnGui()
 {
-    PrePare_Window();
+    Prepare_Window();
 
     ImGuiWindowFlags flags = Get_WindowFlags();
 
@@ -81,7 +81,7 @@ ImGuiWindowFlags Scene_View::Get_WindowFlags() const
     return flags;
 }
 
-void Scene_View::PrePare_Window()
+void Scene_View::Prepare_Window()
 {
     // DockID 복원
     if (_shouldRestoreWindow && _savedDockId != 0)
@@ -109,6 +109,29 @@ void Scene_View::Render_Viewport()
             static_cast<uint32>(panelSize.y));
 
         ImGui::Image(_renderTarget->GetSRV(), panelSize);
+
+        // 드래그 드롭 타겟
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_PREFAB"))
+            {
+
+                wstring prefabPath = (wchar_t*)payload->Data;
+
+                ImVec2 mousePos = ImGui::GetMousePos();
+                ImVec2 windowPos = ImGui::GetWindowPos();
+                ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
+                Vec2 localPos(
+                    mousePos.x - windowPos.x - contentMin.x,
+                    mousePos.y - windowPos.y - contentMin.y
+                );
+
+                Vec3 worldPos = Screen_To_World(localPos);
+
+                Spawn_Prefab(prefabPath, worldPos);
+            }
+            ImGui::EndDragDropTarget();
+        }
     }
 }
 
@@ -276,6 +299,49 @@ void Scene_View::Handle_Guizmo_Shotcut()
 
     }
     
+}
+
+Vec3 Scene_View::Screen_To_World(Vec2 screenPos)
+{
+    float normalizeX = (screenPos.x / _viewportSize.x) * 2.f - 1.f;
+    float normalizeY = 1.f - (screenPos.y / _viewportSize.y) * 2.f;
+
+    return Vec3(normalizeX * 5.f, normalizeY * 5.f, -5.f);
+}
+
+void Scene_View::Spawn_Prefab(const wstring& prefabPath, const Vec3& worldPos)
+{
+    // 파일 경로에서 프리펩 이름 추출
+    fs::path path(prefabPath);
+    wstring nameW = path.stem().wstring();
+    string prefabName = Utils::ToString(nameW);
+
+    // 프리펩 인스턴스 생성 (SR 때처럼 월드에 스폰 전에는 반투명하게 해줄지?)
+    auto newObj = GAME->Instantiate_Prefab(prefabName);
+
+    if (!newObj)
+    {
+        LOG_ERROR("Failed to instantiate prefab: {}", prefabName);
+        return;
+    }
+
+    // UUID 출력 로그 확인
+    LOG_INFO("Spawned '{}' UUID: {}",
+        Utils::ToString(newObj->Get_Name()),
+        newObj->Get_GUID());
+
+    // 위치 세팅
+    auto transform = newObj->Get_Component<Transform>();
+    if (transform)
+    {
+        transform->Set_WorldPosition(worldPos);
+    }
+
+    // 스폰
+    GAME->Add_GameObject(ETOI(ELevelType::GamePlay), TEXT("Layer_GamePlay"), newObj);
+
+    LOG_INFO("Position: ({:.2f}, {:.2f}, {:.2f})", worldPos.x, worldPos.y, worldPos.z);
+
 }
 
 shared_ptr<Scene_View> Scene_View::Create()

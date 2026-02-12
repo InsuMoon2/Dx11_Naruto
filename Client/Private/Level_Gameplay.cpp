@@ -32,20 +32,7 @@ void Level_Gameplay::Late_Update(float timeDelta)
 {
     Level::Late_Update(timeDelta);
 
-    if (INPUT->KeyDown(KEY_TYPE::KEY_1))
-    {
-        LOG_INFO("Info Test");
-    }
 
-    if (INPUT->KeyDown(KEY_TYPE::KEY_2))
-    {
-        LOG_WARN("Warning Test");
-    }
-
-    if (INPUT->KeyDown(KEY_TYPE::KEY_3))
-    {
-        LOG_ERROR("Error Test");
-    }
 }
 
 HRESULT Level_Gameplay::Render()
@@ -60,6 +47,7 @@ HRESULT Level_Gameplay::Render()
 HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
 {
     CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_PLAYER, layerTag), E_FAIL);
+
 
     return S_OK;
 }

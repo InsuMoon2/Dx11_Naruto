@@ -408,6 +408,9 @@ void BehaviorTree_View::Draw_Node(const FBTEditorNode& node)
     ImDrawList* drawList = ImGui::GetWindowDrawList();
     float nodeWidth = 140.0f;
 
+    float pinHitBoxHeight = 24.0f; 
+    float pinVisualHeight = 12.0f; 
+
     // Input Pin (Root 노드는 Input 없음)
     if (node.nodeType != "Root")
     {
@@ -415,9 +418,13 @@ void BehaviorTree_View::Draw_Node(const FBTEditorNode& node)
         ed::BeginPin(node.inputPin, ed::PinKind::Input);
 
         ImVec2 p = ImGui::GetCursorScreenPos();
-        ImGui::Dummy(ImVec2(nodeWidth, 12));
+        ImGui::Dummy(ImVec2(nodeWidth, pinHitBoxHeight));
 
-        drawList->AddRectFilled(p, ImVec2(p.x + nodeWidth, p.y + 12), ImColor(50, 50, 50), 4.0f);
+        float yOffset = (pinHitBoxHeight - pinVisualHeight) * 0.5f;
+        drawList->AddRectFilled(
+            ImVec2(p.x, p.y + yOffset),
+            ImVec2(p.x + nodeWidth, p.y + yOffset + pinVisualHeight),
+            ImColor(50, 50, 50), 4.0f);
 
         ed::EndPin();
         ImGui::PopID();

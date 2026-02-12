@@ -21,6 +21,9 @@ public:
     HRESULT Bind_SRV(const char* constantName, ComPtr<ShaderResourceView> SRV);
     HRESULT Bind_Matrix(const char* constantName, const Matrix* matrix);
 
+    json To_Json() const override;
+    void From_Json(const json& data) override;
+
 private:
     ComPtr<ID3DX11Effect>               _effect;
     uint32                              _numPasses = {};

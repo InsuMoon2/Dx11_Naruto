@@ -245,6 +245,19 @@ void Content_Browser::Draw_AssetView()
 
             ImGui::Button(pureName.c_str(), ImVec2(_thumbnailSize, _thumbnailSize));
 
+            // Prefab 드래그
+            if (isValidPrefab && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            {
+                wstring fullPath = filePath;
+
+                ImGui::SetDragDropPayload("CONTENT_PREFAB",
+                    fullPath.c_str(),
+                    (fullPath.size() + 1) * sizeof(wchar_t));
+
+                //LOG_INFO("Spawn : {}", pureName.c_str());
+                ImGui::EndDragDropSource();
+            }
+
             // 더블클릭 -> Prefab View 열기
             if (isValidPrefab && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
             {

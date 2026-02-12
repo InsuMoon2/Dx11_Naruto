@@ -34,13 +34,12 @@ private:
     Shared<Texture>         _textureCom;
     Shared<VIBuffer_Rect>   _bufferCom;
 
-
 private:
-    Shared<CombatStat> _combatStat;
+    Shared<CombatStat>      _combatStat;
 
 
 public:
-    static shared_ptr<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    static shared_ptr<GameObject>  Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     virtual shared_ptr<GameObject> Clone(void* arg) override;
 
 };

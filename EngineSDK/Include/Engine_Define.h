@@ -22,9 +22,6 @@ using namespace DirectX;
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
-// UUID Library (stduuid)
-#include <stduuid/uuid.h>
-
 // STL
 #include <memory>
 #include <iostream>
@@ -59,6 +56,10 @@ namespace fs = std::filesystem;
 #include <assert.h>
 //#include <optional>
 
+// UUID Library (stduuid)
+#define UUID_SYSTEM_GENERATOR
+#include <stduuid/uuid.h>
+
 // Protobuf
 #include "Struct.pb.h"
 #include "Enum.pb.h"
@@ -70,7 +71,7 @@ namespace fs = std::filesystem;
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
-#include <crtdbg.h>
+#include <crtdbg.h>D
 
 // Json
 #include <nlohmann/json.hpp>

@@ -8,7 +8,7 @@ class Shader;
 
 class ENGINE_DLL Texture : public Component
 {
-    GENERATED_COMPONENT(Texture, Protocol::COMPONENT_TYPE_TEXTURE)
+    GENERATED_COMPONENT(Texture, Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT)
 
 public:
     explicit Texture(ComPtr<Device> device, ComPtr<DeviceContext> context);
@@ -19,6 +19,9 @@ public:
     HRESULT Initialize_Prototype(const wstring& texturePath, uint32 numSRVs);
     HRESULT Initialize(void* arg) override;
 
+    json To_Json() const override;
+    void From_Json(const json& data) override;
+
 public:
     HRESULT Bind_SRV(Shared<Shader> shader, const char* constantName, uint32 index);
 
@@ -27,6 +30,8 @@ public:
 private:
     uint32 _numSRVs = 0;
     vector<ComPtr<ShaderResourceView>> _SRVs;
+
+    wstring _texturePath;
 
 public:
     static shared_ptr<Texture> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const wstring& texturePath, uint32 numSRVs);

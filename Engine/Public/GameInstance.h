@@ -85,6 +85,10 @@ public: /* Object Manager */
                                 const wstring& layerTag,
                                 void* arg = {});
 
+    HRESULT                 Add_GameObject(
+                             uint32 levelIndex, const wstring& layerTag,
+                             Shared<GameObject> gameObject);
+
     vector<Shared<GameObject>>         Get_GameObjects(uint32 levelIndex);
     const umap<wstring, Shared<Layer>> Get_Layers(uint32 levelIndex);
 

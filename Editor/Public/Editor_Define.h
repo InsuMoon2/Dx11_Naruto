@@ -2,7 +2,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
-#define _HAS_STD_BYTE 0
+//#define _HAS_STD_BYTE 0
 
 #include <Windows.h>
 // 표준 라이브러리

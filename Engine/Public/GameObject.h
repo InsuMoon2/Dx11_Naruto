@@ -26,10 +26,10 @@ public:
     virtual void        Priority_Update(float timeDelta);
     virtual void        Update(float timeDelta);
     virtual void        Late_Update(float timeDelta);
-    virtual HRESULT         Render();
+    virtual HRESULT     Render();
 
-    virtual json To_Json() const;
-    virtual void From_Json(const json& data);
+    virtual json        To_Json() const;
+    virtual void        From_Json(const json& data);
 
 public: /* PendingKill */
     void Set_Destroy() { _isDestroyed = true; }
@@ -37,6 +37,8 @@ public: /* PendingKill */
 
     Protocol::OBJECT_TYPE Get_ObjectType() const { return _objectType; }
     void Set_ObjectType(Protocol::OBJECT_TYPE type) { _objectType = type; }
+
+    const string& Get_GUID() const { return _guid; }
 
 public:
     template<typename T>
@@ -96,6 +98,8 @@ public:
 
     const map<uint32, shared_ptr<class Component>>& Get_Components() const { return _components; }
 
+    Shared<Component> Find_Component_ByStaticType(uint32 componentID);
+
 protected:
     shared_ptr<GameObject> GetSharedPtr() { return static_pointer_cast<GameObject>(shared_from_this()); }
 
@@ -112,6 +116,9 @@ protected: /* Values */
     Protocol::OBJECT_TYPE _objectType = Protocol::OBJECT_TYPE::OBJECT_TYPE_NONE;
 
     bool _isDestroyed = false;
+
+    // GUID
+    string _guid; // "550e840... 뭐 이런식으로 결과값이 나옴"
 
 public:
     virtual shared_ptr<GameObject> Clone(void* arg) abstract;

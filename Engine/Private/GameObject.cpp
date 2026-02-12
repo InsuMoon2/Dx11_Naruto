@@ -2,13 +2,15 @@
 #include "GameObject.h"
 
 GameObject::GameObject(ComPtr<Device> device, ComPtr<DeviceContext> context)
-    : _device(device), _context(context)
+    : _device(device), _context(context), _guid(Utils::Generate_GUID())
 {
 }
 
 GameObject::GameObject(const GameObject& rhs)
-    : _device(rhs._device), _context(rhs._context)
+    : _device(rhs._device), _context(rhs._context), _guid(Utils::Generate_GUID())
 {
+    _objectType = rhs._objectType;
+    _name = rhs._name;
 }
 
 GameObject::~GameObject()
@@ -25,6 +27,9 @@ HRESULT GameObject::Initialize(void* arg)
     CHECK_FAILED(_transformCom->Initialize(desc), E_FAIL);
 
     _components.emplace(Transform::StaticTypeID(), _transformCom);
+
+    // Test
+    LOG_INFO(Get_GUID());
 
     return S_OK;
 }
@@ -45,7 +50,7 @@ void GameObject::Update(float timeDelta)
     if (_isDestroyed)
         return;
 
-
+    
 }
 
 void GameObject::Late_Update(float timeDelta)
@@ -71,6 +76,7 @@ json GameObject::To_Json() const
     json j;
     j["static_class"] = Utils::ToString(_name);
     j["object_type"] = magic_enum::enum_name(_objectType);
+    j["guid"] = _guid;
 
     json components = json::array();
     for (auto& [id, comp] : _components)
@@ -93,6 +99,11 @@ void GameObject::From_Json(const json& data)
     {
         _objectType = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
             data["object_type"].get<string>()).value_or(Protocol::OBJECT_TYPE_NONE);
+    }
+
+    if (data.contains("guid"))
+    {
+        _guid = data["guid"].get<string>();
     }
 
     // 컴포넌트 로드는 Prefab_Manager에서 세팅하기
@@ -127,6 +138,19 @@ void GameObject::Remove_Component(uint32 id)
     {
         _components.erase(iter);
     }
+}
+
+Shared<Component> GameObject::Find_Component_ByStaticType(uint32 componentID)
+{
+    for (auto& [key, comp] : _components)
+    {
+        if (comp->Get_ComponentID() == componentID)
+        {
+            return comp;
+        }
+    }
+
+    return nullptr;
 }
 
 void GameObject::Free()

@@ -144,16 +144,13 @@ shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc&
         return nullptr;
     }
 
-    // 기본 초기화 (Transform 세팅)
-    gameObject->Initialize(nullptr);
-
     // 컴포넌트 데이터 적용
     for (const auto& compData : desc.components)
     {
         uint32 typeId = compData["type"].get<uint32>();
 
         // 기존 컴포넌트들 가져오기
-        auto comp = gameObject->Get_Component(typeId);
+        auto comp = gameObject->Find_Component_ByStaticType(typeId);
 
         if (comp == nullptr)
         {

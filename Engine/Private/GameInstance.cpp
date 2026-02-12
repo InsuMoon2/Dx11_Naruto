@@ -201,6 +201,11 @@ HRESULT GameInstance::Add_GameObject(uint32 levelIndex, uint32 objID, const wstr
     return _objectManager->Add_GameObject(levelIndex, objID, levelIndex, layerTag, arg);
 }
 
+HRESULT GameInstance::Add_GameObject(uint32 levelIndex, const wstring& layerTag, Shared<GameObject> gameObject)
+{
+    return _objectManager->Add_GameObject(levelIndex, layerTag, gameObject);
+}
+
 vector<shared_ptr<GameObject>> GameInstance::Get_GameObjects(uint32 levelIndex)
 {
     return _objectManager->Get_GameObjects(levelIndex);

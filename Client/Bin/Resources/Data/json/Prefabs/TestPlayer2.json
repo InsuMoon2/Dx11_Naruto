@@ -19,6 +19,17 @@
             "type": 1
         },
         {
+            "type": 4
+        },
+        {
+            "type": 5
+        },
+        {
+            "num_srvs": 2,
+            "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
+            "type": 99
+        },
+        {
             "attack": 100.0,
             "defense": 5.0,
             "hp": 200.0,
@@ -29,6 +40,7 @@
             "type": 1002
         }
     ],
+    "guid": "3d13ff4a-aeba-4265-9d09-e1545612dce1",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer",
     "static_class": "TestPlayer"

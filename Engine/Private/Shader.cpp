@@ -115,8 +115,24 @@ HRESULT Shader::Bind_Matrix(const char* constantName, const Matrix* matrix)
     return S_OK;
 }
 
+json Shader::To_Json() const
+{
+    json j = Component::To_Json();
+
+
+
+    return j;
+}
+
+void Shader::From_Json(const json& data)
+{
+    Component::From_Json(data);
+
+
+}
+
 Shared<Shader> Shader::Create(ComPtr<Device> device,
-    ComPtr<DeviceContext> context)
+                              ComPtr<DeviceContext> context)
 {
     return Create(device, context, L"../../Client/Bin/Shaders/Shader_VtxTex.hlsl",
         FVertexDesc::Vertex_Desc_Layout,

@@ -1,5 +1,46 @@
 {
-    "components": [],
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                -5.0
+            ],
+            "rotation": [
+                -0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                6.599999904632568,
+                4.400000095367432,
+                4.099999904632568
+            ],
+            "type": 1
+        },
+        {
+            "type": 4
+        },
+        {
+            "type": 5
+        },
+        {
+            "num_srvs": 2,
+            "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
+            "type": 99
+        },
+        {
+            "attack": 100.0,
+            "defense": 5.0,
+            "hp": 200.0,
+            "maxHp": 200.0,
+            "maxMp": 100.0,
+            "mp": 100.0,
+            "speed": 5.0,
+            "type": 1002
+        }
+    ],
+    "guid": "f1ae3f8b-606c-4256-9c13-04f192b6c9f9",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer",
     "static_class": "TestPlayer"

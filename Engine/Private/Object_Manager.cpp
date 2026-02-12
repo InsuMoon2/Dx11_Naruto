@@ -93,6 +93,26 @@ HRESULT Object_Manager::Add_GameObject(uint32 protoLevelIndex, uint32 objID, uin
     return S_OK;
 }
 
+HRESULT Object_Manager::Add_GameObject(uint32 levelIndex, const wstring& layerTag, shared_ptr<GameObject> gameObject)
+{
+    if (levelIndex >= _numLevels || gameObject == nullptr)
+        return E_FAIL;
+
+    shared_ptr<Layer> layer = Find_Layer(levelIndex, layerTag);
+
+    if (layer == nullptr)
+    {
+        layer = Layer::Create();
+
+        if (layer == nullptr)
+            return E_FAIL;
+
+        _layers[levelIndex].emplace(layerTag, layer);
+    }
+
+    return layer->Add_GameObject(gameObject);
+}
+
 vector<shared_ptr<GameObject>> Object_Manager::Get_GameObjects(uint32 levelIndex)
 {
     vector<shared_ptr<GameObject>> allObjects;

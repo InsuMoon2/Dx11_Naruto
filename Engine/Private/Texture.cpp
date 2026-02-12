@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "Texture.h"
-
 #include "Shader.h"
 
 Texture::Texture(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -12,6 +11,7 @@ Texture::Texture(const Texture& rhs)
     : Component(rhs)
     , _numSRVs(rhs._numSRVs)
     , _SRVs(rhs._SRVs)
+    , _texturePath(rhs._texturePath)
 {
     
 }
@@ -22,6 +22,7 @@ Texture::~Texture()
 
 HRESULT Texture::Initialize_Prototype(const wstring& texturePath, uint32 numSRVs)
 {
+    _texturePath = texturePath;
     _numSRVs = numSRVs;
 
     for (uint32 i = 0; i < numSRVs; i++)
@@ -56,6 +57,39 @@ HRESULT Texture::Initialize_Prototype(const wstring& texturePath, uint32 numSRVs
 HRESULT Texture::Initialize(void* arg)
 {
     return Component::Initialize(arg);
+}
+
+json Texture::To_Json() const
+{
+    json j =Component::To_Json();
+
+    j["texture_path"] = Utils::ToString(_texturePath);
+    j["num_srvs"] = _numSRVs;
+
+    return j;
+}
+
+void Texture::From_Json(const json& data)
+{
+    Component::From_Json(data);
+
+    if (data.contains("texture_path"))
+    {
+        wstring newPath = Utils::ToWString(data["texture_path"].get<string>());
+        uint32 newCount = data.value("num_srvs", 1u);
+
+        if (_texturePath == newPath && _numSRVs == newCount && !_SRVs.empty())
+        {
+            LOG_INFO("Texture path match, skipping reload.");
+            return;
+        }
+
+        _texturePath = newPath;
+        _numSRVs = newCount;
+
+        _SRVs.clear();
+        Initialize_Prototype(_texturePath, _numSRVs);
+    }
 }
 
 HRESULT Texture::Bind_SRV(Shared<Shader> shader, const char* constantName, uint32 index)
