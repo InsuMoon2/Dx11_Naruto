@@ -26,8 +26,8 @@ public:
     ComPtr<Device>              Get_Device()         { return _device; }
     ComPtr<DeviceContext>       Get_Context()  { return _context; }
 
-    uint32 GetWidth()   { return _width; }
-    uint32 GetHeight()  { return _height; }
+    float Get_ViewportWidth()   { return _width; }
+    float Get_ViewportHeight()  { return _height; }
 
     HRESULT Resize(uint32 width, uint32 height);
 
@@ -43,8 +43,8 @@ private:
     ComPtr<RenderTargetView>    _renderTarget;
     ComPtr<DepthStencil>        _depthStencil;
 
-    uint32                      _width  = {};
-    uint32                      _height = {};
+    float                       _width  = {};
+    float                       _height = {};
 
 public:
     static unique_ptr<Graphic_Device> Create(HWND hWnd, EWinMode eWinMode,

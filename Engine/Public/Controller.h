@@ -1,29 +1,37 @@
 ﻿#pragma once
 
-#include "GameObject.h"
+#include "Component.h"
 
 NS_BEGIN(Engine)
 
-class Controller abstract : public GameObject
+class GameObject;
+
+class ENGINE_DLL Controller abstract : public Component
 {
-    GENERATED_BODY(Controller)
+    GENERATED_COMPONENT(Controller, Protocol::COMPONENT_TYPE_CONTROLLER)
 
 public:
-    explicit Controller(ComPtr<Device> device, ComPtr<DeviceContext> context);
-    explicit Controller(const Controller& rhs);
-    virtual ~Controller();
+    explicit         Controller(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    explicit         Controller(const Controller& rhs);
+    virtual         ~Controller();
+
+public:
+    HRESULT         Initialize_Prototype() override;
+    HRESULT         Initialize(void* arg) override;
+
+    virtual void    Update(float timeDelta) {};
+
+public:
+    // 네이밍 편의성 함수
+    Shared<GameObject> Get_Pawn() { return Get_Owner(); }
 
 protected:
-    HRESULT     Initialize_Prototype() override;
-    HRESULT     Initialize(void* arg) override;
-
-    void        Priority_Update(float timeDelta) override;
-    void        Update(float timeDelta) override;
-    void        Late_Update(float timeDelta) override;
-    HRESULT     Render() override;
+    json            To_Json() const override;
+    void            From_Json(const json& data) override;
 
 public:
-    void    Free() override;
+    void            Free() override;
+
 };
 
 NS_END

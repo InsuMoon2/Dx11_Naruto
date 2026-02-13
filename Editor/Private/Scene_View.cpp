@@ -342,6 +342,11 @@ void Scene_View::Spawn_Prefab(const wstring& prefabPath, const Vec3& worldPos)
 
     LOG_INFO("Position: ({:.2f}, {:.2f}, {:.2f})", worldPos.x, worldPos.y, worldPos.z);
 
+    auto hierarchy = dynamic_pointer_cast<Hierarchy>(EDITOR->Get_Window(TEXT("Hierarchy")));
+    if (hierarchy)
+    {
+        hierarchy->Select_Object(newObj, false);  // false = 단일 선택
+    }
 }
 
 shared_ptr<Scene_View> Scene_View::Create()

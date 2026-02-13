@@ -158,6 +158,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\AIController.h" />
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Loader.h" />
+    <ClInclude Include="..\Public\PlayerController.h" />
     <!-- <ClInclude Include="..\Public\MainApp.h" /> -->
     <ClInclude Include="..\Public\Replicator.h" />
     <!-- <ClInclude Include="..\Public\NetworkManager.h" /> -->
@@ -192,12 +194,14 @@
     <ClCompile Include="..\..\Server\Protobuf\Bin\Struct.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\AIController.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
     <!-- <ClCompile Include="..\Private\Client_PacketHandler.cpp" /> -->
     <ClCompile Include="..\Private\Level_Gameplay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
+    <ClCompile Include="..\Private\PlayerController.cpp" />
     <!-- <ClCompile Include="..\Private\MainApp.cpp" /> -->
     <ClCompile Include="..\Private\Replicator.cpp" />
     <!-- <ClCompile Include="..\Private\NetworkManager.cpp" /> -->

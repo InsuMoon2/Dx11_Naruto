@@ -6,12 +6,12 @@
 #include "VIBuffer_Rect.h"
 
 Background::Background(ComPtr<Device> device, ComPtr<DeviceContext> context)
-    : GameObject { device, context }
+    : UIObject { device, context }
 {
 }
 
 Background::Background(const Background& rhs)
-    : GameObject { rhs }
+    : UIObject{ rhs }
 {
 }
 
@@ -31,8 +31,12 @@ HRESULT Background::Initialize(void* arg)
 
     desc.speedPerSec = 1.f;
     desc.rotationPerSec = 1.f;
+    desc.posX = 100.f;
+    desc.posY = 100.f;
+    desc.sizeX = 200.f;
+    desc.sizeY = 200.f;
 
-    CHECK_FAILED(GameObject::Initialize(&desc), E_FAIL);
+    CHECK_FAILED(UIObject::Initialize(&desc), E_FAIL);
 
     CHECK_FAILED(Ready_Components(), E_FAIL);
 
@@ -41,31 +45,33 @@ HRESULT Background::Initialize(void* arg)
 
 void Background::Priority_Update(float timeDelta)
 {
-    GameObject::Priority_Update(timeDelta);
+    UIObject::Priority_Update(timeDelta);
 }
 
 void Background::Update(float timeDelta)
 {
-    GameObject::Update(timeDelta);
+    UIObject::Update(timeDelta);
+
+    _posX += 10.f * timeDelta;
+
+    __super::Update_Transform();
 }
 
 void Background::Late_Update(float timeDelta)
 {
-    GameObject::Late_Update(timeDelta);
+    UIObject::Late_Update(timeDelta);
 
     GAME->Add_RenderGroup(ERenderGroup::UI, this->GetSharedPtr());
 }
 
 HRESULT Background::Render()
 {
-    GameObject::Render();
+    UIObject::Render();
 
-    Matrix identityMatrix = Matrix::Identity;
+    _shaderCom->Bind_Matrix("g_WorldMatrix", &_worldMatrix);
 
-    // 변환 행렬 바인딩
-    _shaderCom->Bind_Matrix("g_WorldMatrix", &identityMatrix);
-    _shaderCom->Bind_Matrix("g_ViewMatrix", &identityMatrix);
-    _shaderCom->Bind_Matrix("g_ProjMatrix", &identityMatrix);
+    __super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", EUITransformState::View);
+    __super::Bind_ShaderResource(_shaderCom, "g_ProjMatrix", EUITransformState::Proj);
 
     // 텍스처 바인딩 (첫번째 텍스처 사용)
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 0), E_FAIL);
@@ -91,7 +97,7 @@ HRESULT Background::Ready_Components()
     return S_OK;
 }
 
-shared_ptr<GameObject> Background::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+Shared<UIObject> Background::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<Background>(device, context);
 
@@ -105,7 +111,7 @@ shared_ptr<GameObject> Background::Create(ComPtr<Device> device, ComPtr<DeviceCo
     return instance;
 }
 
-shared_ptr<GameObject> Background::Clone(void* arg)
+Shared<GameObject> Background::Clone(void* arg)
 {
     auto instance = make_shared<Background>(*this);
 
@@ -121,5 +127,5 @@ shared_ptr<GameObject> Background::Clone(void* arg)
 
 void Background::Free()
 {
-    GameObject::Free();
+    UIObject::Free();
 }

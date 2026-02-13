@@ -84,7 +84,7 @@ HRESULT TestPlayer::Render()
     _shaderCom->Bind_Matrix("g_ViewMatrix", &viewMatrix);
     _shaderCom->Bind_Matrix("g_ProjMatrix", &projMatrix);
 
-    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 0), E_FAIL);
+    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureCom->Get_CurrentIndex()), E_FAIL);
     CHECK_FAILED(_shaderCom->Begin(0), E_FAIL);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
     CHECK_FAILED(_bufferCom->Render(), E_FAIL);

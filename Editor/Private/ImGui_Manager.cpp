@@ -57,7 +57,7 @@ void ImGui_Manager::Update(float timeDelta)
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    ImGuizmo::BeginFrame(); // 호출 권장 ?
+    //ImGuizmo::BeginFrame(); // 호출 권장 ? 근데 이거 호출하면 게임 종료할때마다 에러 소리난다
 }
 
 void ImGui_Manager::Render()

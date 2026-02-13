@@ -46,9 +46,6 @@
     <ClInclude Include="..\Public\Client_Enum.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CombatStat.h">
-      <Filter>03. Component</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Replicator.h" />
     <ClInclude Include="..\Public\IReplicable.h">
       <Filter>95. Interface</Filter>
@@ -56,6 +53,11 @@
     <ClInclude Include="..\Public\ResourceLoader.h">
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CombatStat.h">
+      <Filter>03. Component\00. CombatStat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerController.h" />
+    <ClInclude Include="..\Public\AIController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -88,9 +90,6 @@
     <ClCompile Include="..\Private\TestPlayer.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CombatStat.cpp">
-      <Filter>03. Component</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Replicator.cpp" />
     <ClCompile Include="IReplicable.cpp">
       <Filter>95. Interface</Filter>
@@ -101,6 +100,11 @@
     <ClCompile Include="..\Private\SimpleMath.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CombatStat.cpp">
+      <Filter>03. Component\00. CombatStat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerController.cpp" />
+    <ClCompile Include="..\Private\AIController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -144,6 +148,12 @@
     </Filter>
     <Filter Include="94. Shaders">
       <UniqueIdentifier>{26187d37-f982-4760-bfd2-5e0e140aba91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component\00. CombatStat">
+      <UniqueIdentifier>{8af4a132-0c79-4345-92d9-325073c9cdf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component\01. Controlelr">
+      <UniqueIdentifier>{b7e07d63-4597-4452-b2bb-aaf957a8ed88}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

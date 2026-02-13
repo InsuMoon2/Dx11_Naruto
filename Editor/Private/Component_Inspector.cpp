@@ -3,7 +3,8 @@
 
 bool Component_Inspector::Draw_Header(const string& name)
 {
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.2f, 0.8f, 0.9f, 1.f));
+    //ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.2f, 0.8f, 0.9f, 1.f));
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
     bool isOpen = ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
     ImGui::PopStyleColor();
     return isOpen;

@@ -154,12 +154,19 @@ shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc&
 
         if (comp == nullptr)
         {
+            LOG_WARN("Prefab component not found in prototype (typeId: {}). Skipping.", typeId);
+            continue;
+
+#pragma region Legacy
             // 없으면 Factory로 생성, Id 기반
-            comp = Component_Factory::GetInstance()->Create(typeId, _device, _context);
-            if (comp)
-            {
-                gameObject->Add_Component(typeId, comp);
-            }
+            //comp = Component_Factory::GetInstance()->Create(typeId, _device, _context);
+            //if (comp)
+            //{
+            //    gameObject->Add_Component(typeId, comp);
+            //}
+#pragma endregion
+
+            
         }
 
         // 데이터 로드

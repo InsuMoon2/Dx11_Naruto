@@ -65,6 +65,7 @@ json Texture::To_Json() const
 
     j["texture_path"] = Utils::ToString(_texturePath);
     j["num_srvs"] = _numSRVs;
+    j["current_index"] = _currentIndex;
 
     return j;
 }
@@ -72,6 +73,9 @@ json Texture::To_Json() const
 void Texture::From_Json(const json& data)
 {
     Component::From_Json(data);
+
+    if (data.contains("current_index"))
+        _currentIndex = data["current_index"].get<uint32>();
 
     if (data.contains("texture_path"))
     {

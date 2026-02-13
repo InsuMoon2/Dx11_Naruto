@@ -8,7 +8,6 @@ IMPLEMENT_SINGLETON(Component_Factory)
 void Component_Factory::Initialize()
 {
     _creators.clear();
-    _prototypeMap.clear();
     _classNames.clear();
 }
 
@@ -21,6 +20,28 @@ void Component_Factory::Register(uint32 typeId, Creator creator, const wstring& 
     _classNames.emplace(typeId, className);
 }
 
+void Component_Factory::Register_Prototype(uint32 typeId, uint32 levelIndex, ComPtr<Device> device,
+    ComPtr<DeviceContext> context)
+{
+    auto iter = _creators.find(typeId);
+    if (iter == _creators.end())
+    {
+        LOG_ERROR("Component not registered in factory (typeId: {})", typeId);
+        return;
+    }
+
+    // Creator로 프로토타입 인스턴스 생성
+    auto prototype = iter->second(device, context);
+    if (!prototype)
+    {
+        LOG_ERROR("Failed to create prototype (typeId: {})", typeId);
+        return;
+    }
+
+    // 만든 후 프로토타입 등록
+    GAME->Add_Component_Prototype(levelIndex, typeId, prototype);
+}
+
 shared_ptr<Component> Component_Factory::Create(uint32 typeId, ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto iter = _creators.find(typeId);
@@ -28,37 +49,6 @@ shared_ptr<Component> Component_Factory::Create(uint32 typeId, ComPtr<Device> de
         return nullptr;
 
     return iter->second(device, context);
-}
-
-void Component_Factory::Register_Prototype(uint32 typeId, const wstring& prototypeTag)
-{
-    if (_prototypeMap.contains(typeId))
-    {
-        MSG_BOX("Component Id Already Registered");
-        return;
-    }
-    _prototypeMap.emplace(typeId, prototypeTag);
-}
-
-shared_ptr<Component> Component_Factory::Clone_Prototype(uint32 typeId, uint32 levelIndex, void* arg)
-{
-    if (!_prototypeMap.contains(typeId))
-        return nullptr;
-
-    return GAME->Clone_Component(levelIndex, typeId, arg);
-}
-
-vector<uint32> Component_Factory::Get_RegisteredComponentIds()
-{
-    vector<uint32> ids;
-    ids.reserve(_creators.size());
-
-    for (const auto& pair : _creators)
-    {
-        ids.push_back(pair.first);
-    }
-
-    return ids;
 }
 
 vector<pair<uint32, wstring>> Component_Factory::Get_RegisteredComponents()
@@ -71,4 +61,12 @@ vector<pair<uint32, wstring>> Component_Factory::Get_RegisteredComponents()
         components.push_back(pair); 
     }
     return components;
+}
+
+void Component_Factory::Free()
+{
+    _creators.clear();
+    _classNames.clear();
+
+    Base::Free();
 }

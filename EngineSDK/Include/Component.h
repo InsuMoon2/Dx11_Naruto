@@ -19,25 +19,25 @@ public:
 
     virtual uint32 Get_ComponentID() const = 0;
 
-    shared_ptr<GameObject> Get_Owner() { return _owner.lock(); }
-    void    Set_Owner(shared_ptr<GameObject> owner) { _owner = owner; }
+    Shared<GameObject> Get_Owner() { return _owner.lock(); }
+    void    Set_Owner(Shared<GameObject> owner) { _owner = owner; }
 
 public:
     virtual json    To_Json() const;
     virtual void    From_Json(const json& data);
 
 protected:
-    shared_ptr<Component> GetSharedPtr() { return static_pointer_cast<Component>(shared_from_this()); }
+    Shared<Component> GetSharedPtr() { return static_pointer_cast<Component>(shared_from_this()); }
 
 protected:
     ComPtr<Device> _device = { nullptr };
     ComPtr<DeviceContext> _context = { nullptr };
 
 protected:
-    weak_ptr<GameObject> _owner;
+    Weak<GameObject> _owner;
 
 public:
-    virtual shared_ptr<Component> Clone(void* arg) abstract;
+    virtual Shared<Component> Clone(void* arg) abstract;
     virtual void Free() override;
 };
 

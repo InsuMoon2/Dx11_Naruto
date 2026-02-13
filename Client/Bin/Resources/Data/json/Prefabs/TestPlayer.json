@@ -12,9 +12,9 @@
                 0.0
             ],
             "scale": [
-                6.599999904632568,
-                4.400000095367432,
-                4.099999904632568
+                2.4000000953674316,
+                1.5,
+                1.0
             ],
             "type": 1
         },
@@ -25,9 +25,10 @@
             "type": 5
         },
         {
+            "current_index": 1,
             "num_srvs": 2,
             "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
-            "type": 99
+            "type": 2
         },
         {
             "attack": 100.0,
@@ -40,7 +41,7 @@
             "type": 1002
         }
     ],
-    "guid": "f1ae3f8b-606c-4256-9c13-04f192b6c9f9",
+    "guid": "026d22dc-e0be-48e2-8d04-c05875bf65d9",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer",
     "static_class": "TestPlayer"

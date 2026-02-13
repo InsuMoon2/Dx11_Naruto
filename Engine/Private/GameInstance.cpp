@@ -106,14 +106,14 @@ ComPtr<DeviceContext> GameInstance::Get_Context()
     return _graphicDevice->Get_Context();
 }
 
-uint32 GameInstance::Get_ViewportWidth()
+float GameInstance::Get_ViewportWidth()
 {
-    return _graphicDevice->GetWidth();
+    return _graphicDevice->Get_ViewportWidth();
 }
 
-uint32 GameInstance::Get_ViewportHeight()
+float GameInstance::Get_ViewportHeight()
 {
-    return _graphicDevice->GetHeight();
+    return _graphicDevice->Get_ViewportHeight();
 }
 
 void GameInstance::BindBackBuffer()

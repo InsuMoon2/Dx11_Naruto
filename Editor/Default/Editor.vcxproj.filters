@@ -129,6 +129,9 @@
     <ClInclude Include="..\Public\BehaviorTree_View.h">
       <Filter>03. Viewer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Texture_Inspector.h">
+      <Filter>04. Component_Inspector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -216,6 +219,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\SimpleMath.cpp">
       <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Texture_Inspector.cpp">
+      <Filter>04. Component_Inspector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -20,36 +20,48 @@ public:
 public:
     void Initialize();
 
-    // Direct Creator
     void Register(uint32 typeId, Creator creator, const wstring& className);
+    void Register_Prototype(uint32 typeId, uint32 levelIndex,
+                       ComPtr<Device> device, ComPtr<DeviceContext> context);
+
     shared_ptr<Component> Create(uint32 typeId, ComPtr<Device> device, ComPtr<DeviceContext> context);
 
-    // Prototype Clone
-    void Register_Prototype(uint32 typeId, const wstring& prototypeTag);
-    shared_ptr<Component> Clone_Prototype(uint32 typeId, uint32 levelIndex, void* arg = {});
-
-    vector<uint32> Get_RegisteredComponentIds();
     vector<pair<uint32, wstring>> Get_RegisteredComponents();
 
 public:
-    template<typename T>
-    void Register()
+    template <typename T>
+        void Register(uint32 levelIndex, ComPtr<Device> device, ComPtr<DeviceContext> context)
     {
-        Register(
-            T::StaticTypeID(),
-            [](auto device, auto context)
-            {
-                return T::Create(device, context);
-            },
-            T::StaticClassName()
-        );
+        uint32 id = T::StaticTypeID();
+
+        if (!_creators.contains(id))
+        {
+            _creators[id] = [](auto device, auto context) { return T::Create(device, context); };
+            _classNames[id] = T::StaticClassName();
+        }
+
+        Register_Prototype(id, levelIndex, device, context);
     }
 
 private:
     map<uint32, Creator> _creators;
-    map<uint32, wstring> _prototypeMap;
     map<uint32, wstring> _classNames;
 
+public:
+    void Free() override;
+
 };
+
+#define REGISTER_COMPONENT_FACTORY(TYPE, ENUM) \
+    static struct Helper_Comp_##TYPE { \
+        Helper_Comp_##TYPE() { \
+            Engine::Component_Factory::GetInstance()->Register(ENUM, \
+                [](ComPtr<Device> device, ComPtr<DeviceContext> context) { \
+                    return TYPE::Create(device, context); \
+                }, \
+                TYPE::StaticClassName()  \
+            ); \
+        } \
+    } helper_comp_##TYPE;
 
 NS_END

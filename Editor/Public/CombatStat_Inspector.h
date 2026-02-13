@@ -11,7 +11,7 @@ public:
     virtual ~CombatStat_Inspector() = default;
 
 public:
-    void    Draw_Inspector(shared_ptr<Engine::Component> component) override;
+    void    Draw_Inspector(shared_ptr<Component> component) override;
     uint32  Get_ComponentType() const override { return Protocol::COMPONENT_TYPE_COMBAT_STAT; }
 
 

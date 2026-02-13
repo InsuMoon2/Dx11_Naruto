@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "GameObject.h"
+#include "UIObject.h"
 
 NS_BEGIN(Engine)
 class Texture;
@@ -10,14 +10,14 @@ NS_END
 
 NS_BEGIN(Client)
 
-class Background final : public GameObject
+class Background final : public UIObject
 {
     GENERATED_BODY(Background)
 
 public:
-    struct FBackgroundDesc final : public GameObject::FGameObjectDesc
+    struct FBackgroundDesc final : public UIObject::FUIDesc
     {
-        int32 flag = 0;
+        int32 flag = 0; // Temp
     };
 
 public:
@@ -34,7 +34,7 @@ public:
     HRESULT     Render() override;
 
 private:
-    HRESULT Ready_Components();
+    HRESULT     Ready_Components();
 
 private:
     Shared<Texture>         _textureCom;
@@ -42,9 +42,9 @@ private:
     Shared<VIBuffer_Rect>   _bufferCom;
 
 public:
-    static shared_ptr<GameObject>   Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
-    shared_ptr<GameObject>          Clone(void* arg) override;
-    virtual void                    Free() override;
+    static Shared<UIObject>   Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    Shared<GameObject>          Clone(void* arg) override;
+    virtual void                Free() override;
     
 };
 

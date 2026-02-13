@@ -128,8 +128,8 @@ void Graphic_Device::BindBackBuffer()
     D3D11_VIEWPORT vp = {};
     vp.TopLeftX = 0.f;
     vp.TopLeftY = 0.f;
-    vp.Width = static_cast<float>(_width);
-    vp.Height = static_cast<float>(_height);
+    vp.Width = _width;
+    vp.Height = _height;
     vp.MinDepth = 0.f;
     vp.MaxDepth = 1.f;
 

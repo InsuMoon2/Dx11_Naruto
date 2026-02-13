@@ -49,8 +49,8 @@ public: /* Graphic Device */
     ComPtr<Device>          Get_Device();
     ComPtr<DeviceContext>   Get_Context();
 
-    uint32                  Get_ViewportWidth();
-    uint32                  Get_ViewportHeight();
+    float                   Get_ViewportWidth();
+    float                   Get_ViewportHeight();
 
     void                    BindBackBuffer();
     HRESULT                 Resize_BackBuffer(uint32 width, uint32 height);

@@ -92,36 +92,25 @@ HRESULT Loader::Print_LoadingText()
 
 void Loader::Register_Components()
 {
-    // 명시적으로 호출해줘야 Editor에서 전역변수들 사용이 가능하다.. 맘에 안듦
     auto factory = Component_Factory::GetInstance();
-
-    factory->Register<CombatStat>();
-    factory->Register<Replicator>();
-    factory->Register<Behavior>();
-    factory->Register<VIBuffer_Rect>();
-    factory->Register<Shader>();
 
     uint32 staticLevel = ETOI(ELevelType::Static);
 
-    /* Component */
-    GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_COMBAT_STAT,
-        CombatStat::Create(_device, _context));
+    factory->Register<CombatStat>(staticLevel, _device, _context);
+    factory->Register<Replicator>(staticLevel, _device, _context);
+    factory->Register<Behavior>(staticLevel, _device, _context);
+    factory->Register<VIBuffer_Rect>(staticLevel, _device, _context);
+    //factory->Register<Shader>(staticLevel, _device, _context);
 
-    GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_REPLICATOR,
-        Replicator::Create(_device, _context));
-
-    GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_AI,
-        Behavior::Create(_device, _context));
-
-    GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_RECT,
-        VIBuffer_Rect::Create(_device, _context));
-
-    GAME->Add_Component_Prototype(staticLevel, Protocol::COMPONENT_TYPE_SHADER,
-        Shader::Create(_device, _context,
+    factory->Register(
+        Shader::StaticTypeID(),
+        [](auto d, auto c) { return Shader::Create(d, c,
             TEXT("../../Client/Bin/Shaders/Shader_VtxTex.hlsl"),
-            FVertexDesc::Vertex_Desc_Layout, FVertexDesc::Vertex_Desc_Layout_Count));
+            FVertexDesc::Vertex_Desc_Layout,
+            FVertexDesc::Vertex_Desc_Layout_Count); },
+        Shader::StaticClassName());
+    factory->Register_Prototype(Shader::StaticTypeID(), staticLevel, _device, _context);
 
-    /* GameObject */
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PLAYER,
         TestPlayer::Create(_device, _context));
 }

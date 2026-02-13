@@ -14,11 +14,14 @@ enum ComponentID
 
     COMPONENT_TYPE_TEXTURE_DEFAULT      = 99;
     COMPONENT_TYPE_AI                   = 100;
+    COMPONENT_TYPE_CONTROLLER           = 101;
     
     // Client ComponentID
     COMPONENT_TYPE_CLIENT_START         = 1000;
     COMPONENT_TYPE_REPLICATOR           = 1001;
     COMPONENT_TYPE_COMBAT_STAT          = 1002;
+    COMPONENT_TYPE_PLAYER_CONTROLLER    = 1003;
+    COMPONENT_TYPE_AI_CONTROLLER        = 1004;
     
 }
 

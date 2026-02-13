@@ -8,7 +8,7 @@ class Shader;
 
 class ENGINE_DLL Texture : public Component
 {
-    GENERATED_COMPONENT(Texture, Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT)
+    GENERATED_COMPONENT(Texture, Protocol::COMPONENT_TYPE_TEXTURE)
 
 public:
     explicit Texture(ComPtr<Device> device, ComPtr<DeviceContext> context);
@@ -24,11 +24,15 @@ public:
 
 public:
     HRESULT Bind_SRV(Shared<Shader> shader, const char* constantName, uint32 index);
-
     vector<ComPtr<ShaderResourceView>>& Get_SRVs() { return _SRVs; }
+
+    uint32 Get_CurrentIndex() const { return _currentIndex; }
+    void   Set_CurrentIndex(uint32 idx) { _currentIndex = min(idx, _numSRVs - 1); }
 
 private:
     uint32 _numSRVs = 0;
+    uint32 _currentIndex = 0; // 현재 사용중인 Index
+
     vector<ComPtr<ShaderResourceView>> _SRVs;
 
     wstring _texturePath;

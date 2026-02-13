@@ -64,9 +64,12 @@ enum ComponentID : int {
   COMPONENT_TYPE_SHADER = 5,
   COMPONENT_TYPE_TEXTURE_DEFAULT = 99,
   COMPONENT_TYPE_AI = 100,
+  COMPONENT_TYPE_CONTROLLER = 101,
   COMPONENT_TYPE_CLIENT_START = 1000,
   COMPONENT_TYPE_REPLICATOR = 1001,
   COMPONENT_TYPE_COMBAT_STAT = 1002,
+  COMPONENT_TYPE_PLAYER_CONTROLLER = 1003,
+  COMPONENT_TYPE_AI_CONTROLLER = 1004,
   ComponentID_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   ComponentID_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -76,8 +79,8 @@ enum ComponentID : int {
 bool ComponentID_IsValid(int value);
 extern const uint32_t ComponentID_internal_data_[];
 constexpr ComponentID ComponentID_MIN = static_cast<ComponentID>(0);
-constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1002);
-constexpr int ComponentID_ARRAYSIZE = 1002 + 1;
+constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1004);
+constexpr int ComponentID_ARRAYSIZE = 1004 + 1;
 const ::google::protobuf::EnumDescriptor*
 ComponentID_descriptor();
 template <typename T>

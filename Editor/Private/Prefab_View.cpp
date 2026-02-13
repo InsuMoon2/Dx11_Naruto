@@ -199,6 +199,10 @@ void Prefab_View::Draw_Buttons()
     {
         if (_targetObject)
         {
+            string filePath = fs::path(_prefabPath).stem().string();
+
+            LOG_INFO("Saving to: '{}'", filePath);
+
             GAME->Save_Prefab(_prefabPath, _targetObject);
         }
     }

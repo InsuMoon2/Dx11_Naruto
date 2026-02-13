@@ -25,6 +25,8 @@ public:
     const vector<Shared<GameObject>>& Get_LevelObjects() const { return _levelObjects; }
     const vector<Shared<GameObject>>& Get_CopyObjects() const { return _copiedObjects; }
 
+    void Select_Object(Shared<GameObject> obj, bool isMultiSelect);
+
 private:
     void Draw_SearchBar();
     void Draw_ObjectList();
@@ -33,7 +35,6 @@ private:
     void Handle_Shotcuts();
 
     bool Is_Selected(Shared<GameObject> obj);
-    void Select_Object(Shared<GameObject> obj, bool isMultiSelect);
 
 private:
     vector<Shared<GameObject>>       _levelObjects;
