@@ -37,7 +37,6 @@ void Level_Logo::Late_Update(float timeDelta)
 {
     Level::Late_Update(timeDelta);
 
-   
 
 }
 

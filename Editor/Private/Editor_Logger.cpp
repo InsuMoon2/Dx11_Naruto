@@ -25,4 +25,5 @@ void Editor_Logger::Initialize()
 
     spdlog::flush_on(spdlog::level::trace);
     spdlog::set_pattern("[%H:%M:%S] %v");
+
 }

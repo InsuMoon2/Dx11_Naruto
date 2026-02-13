@@ -24,7 +24,9 @@ HRESULT Component::Initialize(void* arg)
 json Component::To_Json() const
 {
     json j;
-    j["type"] = Get_ComponentID();
+
+    auto id = static_cast<Protocol::ComponentID>(Get_ComponentID());
+    j["type"] = string(magic_enum::enum_name(id));
 
     return j;
 }

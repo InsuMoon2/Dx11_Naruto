@@ -1,0 +1,246 @@
+{
+    "gameObjects": [
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        -5.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_RECT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "current_index": 0,
+                    "num_srvs": 2,
+                    "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
+                    "type": "COMPONENT_TYPE_TEXTURE"
+                },
+                {
+                    "attack": 100.0,
+                    "defense": 5.0,
+                    "hp": 200.0,
+                    "maxHp": 200.0,
+                    "maxMp": 100.0,
+                    "mp": 100.0,
+                    "speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                }
+            ],
+            "guid": "f4e6929a-0744-4219-b1a3-12125a33a9e5",
+            "layerTag": "Layer_GameObject",
+            "object_type": "OBJECT_TYPE_PLAYER",
+            "static_class": "TestPlayer"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        -5.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_RECT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "current_index": 0,
+                    "num_srvs": 2,
+                    "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
+                    "type": "COMPONENT_TYPE_TEXTURE"
+                },
+                {
+                    "attack": 100.0,
+                    "defense": 5.0,
+                    "hp": 200.0,
+                    "maxHp": 200.0,
+                    "maxMp": 100.0,
+                    "mp": 100.0,
+                    "speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                }
+            ],
+            "guid": "cad1e3af-546b-4465-bd5c-db71d4493cf3",
+            "layerTag": "Layer_TempLayer",
+            "object_type": "OBJECT_TYPE_PLAYER",
+            "static_class": "TestPlayer"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        -5.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_RECT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "current_index": 0,
+                    "num_srvs": 2,
+                    "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
+                    "type": "COMPONENT_TYPE_TEXTURE"
+                },
+                {
+                    "attack": 100.0,
+                    "defense": 5.0,
+                    "hp": 200.0,
+                    "maxHp": 200.0,
+                    "maxMp": 100.0,
+                    "mp": 100.0,
+                    "speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                }
+            ],
+            "guid": "202cdb57-341c-4f9a-8d3a-f664b8776ecb",
+            "layerTag": "Layer_TempLayer",
+            "object_type": "OBJECT_TYPE_PLAYER",
+            "static_class": "TestPlayer_Copy"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        -5.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_RECT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "current_index": 0,
+                    "num_srvs": 2,
+                    "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
+                    "type": "COMPONENT_TYPE_TEXTURE"
+                },
+                {
+                    "attack": 100.0,
+                    "defense": 5.0,
+                    "hp": 200.0,
+                    "maxHp": 200.0,
+                    "maxMp": 100.0,
+                    "mp": 100.0,
+                    "speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                }
+            ],
+            "guid": "eb44a0b0-1fe8-49be-82df-1097d87af839",
+            "layerTag": "Layer_TempLayer",
+            "object_type": "OBJECT_TYPE_PLAYER",
+            "static_class": "TestPlayer_Copy"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        -5.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_RECT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "current_index": 0,
+                    "num_srvs": 2,
+                    "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
+                    "type": "COMPONENT_TYPE_TEXTURE"
+                },
+                {
+                    "attack": 100.0,
+                    "defense": 5.0,
+                    "hp": 200.0,
+                    "maxHp": 200.0,
+                    "maxMp": 100.0,
+                    "mp": 100.0,
+                    "speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                }
+            ],
+            "guid": "107af233-f37e-471b-a1de-3eca20b2ffe3",
+            "layerTag": "Layer_TempLayer",
+            "object_type": "OBJECT_TYPE_PLAYER",
+            "static_class": "TestPlayer_Copy"
+        }
+    ],
+    "levelIndex": 3,
+    "levelName": "[20260214]Serialize_Test"
+}

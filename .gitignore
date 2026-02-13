@@ -48,6 +48,9 @@ bld/
 !Client/Bin/Resources/**
 !Client/Bin/fmodL.dll
 
+!Client/Bin/
+!Client/Bin/**
+
 vcpkg_installed/
 
 # Visual Studio 2015/2017 cache/options directory

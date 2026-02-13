@@ -562,15 +562,19 @@ void Editor_Manager::Show_DeleteConfirmModal()
 
 void Editor_Manager::On_SaveLevel(const wstring& fileName)
 {
-    Level_Serializer::Save_Level(fileName, GAME->Get_GameObjects(GAME->Current_Level()));
-    _lastLevelPath = fileName; // 경로 갱신
-    
     fs::path path(fileName);
     string pureName = path.stem().stem().string(); // 파일명 자르기
 
+    Level_Serializer::Save_Level(
+        fileName,
+        GAME->Current_Level(),
+        Utils::ToWString(pureName));
+
+    _lastLevelPath = fileName; // 경로 갱신
+
     LOG_WARN("Level Saved: {}", pureName);
     
-    //NOTIFY("Level Saved");
+    //NOTIFY("Level Saved"); 만들긴했는데 로그가 있으면 굳이 필요없는거 같기도 하고
 }
 
 void Editor_Manager::On_LoadLevel(const wstring& fileName)

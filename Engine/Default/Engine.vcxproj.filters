@@ -251,6 +251,9 @@
     <Filter Include="01. Utility\03. GameObject\02. UI">
       <UniqueIdentifier>{31628293-f083-402a-937e-d9d683414bc6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="94. Protocol">
+      <UniqueIdentifier>{2356c5b4-1752-4137-82da-1281193a9d6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">

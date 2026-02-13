@@ -147,7 +147,25 @@ shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc&
     // 컴포넌트 데이터 적용
     for (const auto& compData : desc.components)
     {
-        uint32 typeId = compData["type"].get<uint32>();
+		uint32 typeId = 0;
+
+		if (compData["type"].is_string())
+		{
+			string typeName = compData["type"].get<string>();
+			auto result = magic_enum::enum_cast<Protocol::ComponentID>(typeName);
+
+			if (!result.has_value())
+			{
+				LOG_WARN("Unknown component type: '{}'. Skipping.", typeName);
+				continue;
+			}
+
+			typeId = static_cast<uint32>(result.value());
+		}
+		else
+		{
+			typeId = compData["type"].get<uint32>();
+		}
 
         // 기존 컴포넌트들 가져오기
         auto comp = gameObject->Find_Component_ByStaticType(typeId);

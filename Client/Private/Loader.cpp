@@ -102,6 +102,9 @@ void Loader::Register_Components()
     factory->Register<VIBuffer_Rect>(staticLevel, _device, _context);
     //factory->Register<Shader>(staticLevel, _device, _context);
 
+    // TODO : 셰이더, 텍스처쪽 깔끔하게 바꾸기
+    // Shader, Texture.. Lazy Load 또는 일단 테이블로 따로 빼는게 좋을듯
+
     factory->Register(
         Shader::StaticTypeID(),
         [](auto d, auto c) { return Shader::Create(d, c,

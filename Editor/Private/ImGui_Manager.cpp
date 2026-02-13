@@ -90,8 +90,8 @@ void ImGui_Manager::ImGuiStyleSetting()
     ImGuiStyle& style = ImGui::GetStyle();
 
     style.WindowPadding = ImVec2(8.0f, 8.0f);
-    style.FramePadding = ImVec2(4.0f, 3.0f);
-    style.ItemSpacing = ImVec2(8.0f, 4.0f);
+    style.FramePadding = ImVec2(4.0f, 6.0f);
+    style.ItemSpacing = ImVec2(8.0f, 8.0f);
 
     style.Colors[ImGuiCol_Button] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);       
     style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.30f, 0.30f, 0.30f, 1.00f);

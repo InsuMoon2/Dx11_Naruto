@@ -41,9 +41,6 @@ using namespace DirectX;
 using namespace std;
 namespace fs = std::filesystem;
 
-// Magic Enum
-#include <magic_enum/magic_enum.hpp>
-
 // Engine Header
 #include "Engine_Enum.h"
 #include "Engine_Macro.h"
@@ -64,6 +61,12 @@ namespace fs = std::filesystem;
 #include "Struct.pb.h"
 #include "Enum.pb.h"
 #include "Protocol.pb.h"
+
+// Magic Enum : 범위 지정
+#define MAGIC_ENUM_RANGE_MIN 0
+#define MAGIC_ENUM_RANGE_MAX 2000
+
+#include <magic_enum/magic_enum.hpp>
 
 //using namespace Protocol;
 

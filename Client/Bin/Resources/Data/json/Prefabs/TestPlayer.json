@@ -16,19 +16,19 @@
                 1.5,
                 1.0
             ],
-            "type": 1
+            "type": "COMPONENT_TYPE_TRANSFORM"
         },
         {
-            "type": 4
+            "type": "COMPONENT_TYPE_RECT"
         },
         {
-            "type": 5
+            "type": "COMPONENT_TYPE_SHADER"
         },
         {
             "current_index": 1,
             "num_srvs": 2,
             "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
-            "type": 2
+            "type": "COMPONENT_TYPE_TEXTURE"
         },
         {
             "attack": 100.0,
@@ -38,10 +38,10 @@
             "maxMp": 100.0,
             "mp": 100.0,
             "speed": 5.0,
-            "type": 1002
+            "type": "COMPONENT_TYPE_COMBAT_STAT"
         }
     ],
-    "guid": "026d22dc-e0be-48e2-8d04-c05875bf65d9",
+    "guid": "c173a1fd-4cac-4888-a3e0-1175251a2963",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer",
     "static_class": "TestPlayer"
