@@ -583,7 +583,7 @@ void Editor_Manager::On_LoadLevel(const wstring& fileName)
 
     // TODO : 
     // 1. 현재 레벨 클리어
-    // 2. 로드한 오브젝트 추가
+    // 2. 로드한 오브젝트 추가 -> 이거는 됐다.
 
     _lastLevelPath = fileName;
 

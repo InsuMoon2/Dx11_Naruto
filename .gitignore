@@ -432,5 +432,8 @@ FodyWeavers.xsd
 
 # DirectX shader compiler outputs
 *.cso
-*.hlsl.h
 *.hlsl.obj
+
+.agent/
+.claude/
+
