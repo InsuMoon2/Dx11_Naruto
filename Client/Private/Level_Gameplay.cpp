@@ -3,6 +3,7 @@
 #include "Loader.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "Spawn_Helper.h"
 
 Level_Gameplay::Level_Gameplay(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -17,6 +18,23 @@ HRESULT Level_Gameplay::Initialize()
 {
     CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")), E_FAIL);
     CHECK_FAILED(Ready_Layer_TempLayer(TEXT("Layer_TempLayer")), E_FAIL);
+
+#pragma region Builder 적용 전
+    //json overrides;
+    //overrides["scale"] = { 5.f, 5.f, 5.f };
+    //auto player = GAME->Instantiate_Prefab("TestPlayer", overrides);
+    //if (player)
+    //{
+    //    GAME->Add_GameObject(ETOI(ELevelType::GamePlay), TEXT("Layer_GameObject"), player);
+    //}
+#pragma endregion
+
+    auto player = Spawn_Helper::Prefab("TestPlayer")
+        .AtLevel(ETOI(ELevelType::GamePlay))
+        .InLayer(TEXT("Layer_Builder"))
+        .Position({ 0.f, 0.f, -5.f })
+        .Scale({ 1.f, 1.f, 1.f })
+        .Spawn();
 
 
     return S_OK;

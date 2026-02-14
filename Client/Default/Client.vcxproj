@@ -178,6 +178,7 @@
     <ClInclude Include="..\Public\ResourceLoader.h" />
     <!-- <ClInclude Include="..\Public\ServerSession.h" /> -->
     <ClInclude Include="..\Public\CombatStat.h" />
+    <ClInclude Include="..\Public\Spawn_Helper.h" />
     <ClInclude Include="..\Public\TestPlayer.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="pch.h" />
@@ -218,6 +219,7 @@
     <!-- <ClCompile Include="..\Private\ServerSession.cpp" /> -->
     <ClCompile Include="..\Private\CombatStat.cpp" />
     <ClCompile Include="..\Private\SimpleMath.cpp" />
+    <ClCompile Include="..\Private\Spawn_Helper.cpp" />
     <ClCompile Include="..\Private\TestPlayer.cpp" />
     <!-- <ClCompile Include="Client.cpp" /> -->
     <ClCompile Include="IReplicable.cpp" />

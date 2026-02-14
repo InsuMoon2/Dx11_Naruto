@@ -46,7 +46,6 @@
     <ClInclude Include="..\Public\Client_Enum.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Replicator.h" />
     <ClInclude Include="..\Public\IReplicable.h">
       <Filter>95. Interface</Filter>
     </ClInclude>
@@ -56,8 +55,16 @@
     <ClInclude Include="..\Public\CombatStat.h">
       <Filter>03. Component\00. CombatStat</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerController.h" />
-    <ClInclude Include="..\Public\AIController.h" />
+    <ClInclude Include="..\Public\AIController.h">
+      <Filter>02. GameObject\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerController.h">
+      <Filter>02. GameObject\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Replicator.h">
+      <Filter>03. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spawn_Helper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -81,7 +88,6 @@
     <ClCompile Include="..\Private\TestPlayer.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Replicator.cpp" />
     <ClCompile Include="IReplicable.cpp">
       <Filter>95. Interface</Filter>
     </ClCompile>
@@ -94,8 +100,6 @@
     <ClCompile Include="..\Private\CombatStat.cpp">
       <Filter>03. Component\00. CombatStat</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerController.cpp" />
-    <ClCompile Include="..\Private\AIController.cpp" />
     <ClCompile Include="..\..\Server\Protobuf\Bin\Enum.pb.cc">
       <Filter>97. Protocol</Filter>
     </ClCompile>
@@ -105,6 +109,16 @@
     <ClCompile Include="..\..\Server\Protobuf\Bin\Struct.pb.cc">
       <Filter>97. Protocol</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\AIController.cpp">
+      <Filter>02. GameObject\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerController.cpp">
+      <Filter>02. GameObject\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Replicator.cpp">
+      <Filter>03. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spawn_Helper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -152,8 +166,11 @@
     <Filter Include="03. Component\00. CombatStat">
       <UniqueIdentifier>{8af4a132-0c79-4345-92d9-325073c9cdf8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Component\01. Controlelr">
-      <UniqueIdentifier>{b7e07d63-4597-4452-b2bb-aaf957a8ed88}</UniqueIdentifier>
+    <Filter Include="99. Utils">
+      <UniqueIdentifier>{e168f944-9226-4672-8f80-a5f36baa8f46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Controller">
+      <UniqueIdentifier>{4228c98a-9aa7-4598-b3bc-a3f5f7166def}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
