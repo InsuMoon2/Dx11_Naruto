@@ -101,17 +101,17 @@ public: /* Prefeb */
     HRESULT                 Save_Prefab(const string& prefabPath, Shared<GameObject> gameObject);
 
 private:
-	unique_ptr<Graphic_Device>      _graphicDevice;
-	unique_ptr<Timer_Manager>	    _timerManager;
-    unique_ptr<Level_Manager>       _levelManager;
-    unique_ptr<Prototype_Manager>   _protoManager;
-    unique_ptr<Object_Manager>      _objectManager;
-    unique_ptr<Prefab_Manager>      _prefabManager;
+	unique_ptr<Graphic_Device>      _graphicDevice {};
+	unique_ptr<Timer_Manager>	    _timerManager  {};
+    unique_ptr<Level_Manager>       _levelManager  {};
+    unique_ptr<Prototype_Manager>   _protoManager  {};
+    unique_ptr<Object_Manager>      _objectManager {};
+    unique_ptr<Prefab_Manager>      _prefabManager {};
 
-    unique_ptr<Renderer>            _renderer;
+    unique_ptr<Renderer>            _renderer{};
 
 private:
-    EGameState                      _gameState = EGameState::Play;
+    EGameState                      _gameState = EGameState::Edit;
 
 public:
 	void Free() override;

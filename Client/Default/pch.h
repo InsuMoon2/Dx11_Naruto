@@ -14,8 +14,6 @@
 #include <assert.h>
 
 #include <format>
-#include <filesystem>
-namespace fs = std::filesystem;
 
 #include "Input_Manager.h"
 

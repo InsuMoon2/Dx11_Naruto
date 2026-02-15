@@ -62,11 +62,16 @@ namespace fs = std::filesystem;
 #include "Enum.pb.h"
 #include "Protocol.pb.h"
 
-// Magic Enum : 범위 지정
-#define MAGIC_ENUM_RANGE_MIN 0
-#define MAGIC_ENUM_RANGE_MAX 2000
 
 #include <magic_enum/magic_enum.hpp>
+
+// Magic Enum : 범위 지정
+template<>
+struct magic_enum::customize::enum_range<Protocol::ComponentID>
+{
+    static constexpr int min = 0;
+    static constexpr int max = 2000;
+};
 
 //using namespace Protocol;
 
