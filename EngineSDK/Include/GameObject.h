@@ -23,6 +23,7 @@ public:
 public:
     virtual HRESULT     Initialize_Prototype();
     virtual HRESULT     Initialize(void* arg);
+    virtual void        BeginPlay();
     virtual void        Priority_Update(float timeDelta);
     virtual void        Update(float timeDelta);
     virtual void        Late_Update(float timeDelta);
@@ -57,25 +58,6 @@ public:
     shared_ptr<Component> Get_Component(uint32 id);
 
     template<typename T>
-    HRESULT Add_Component(uint32 levelIndex, shared_ptr<T>& outCom, void* arg = {})
-    {
-        uint32 id = T::StaticTypeID();
-
-        if (_components.contains(id))
-            return E_FAIL;
-
-        shared_ptr<Component> component = GAME->Clone_Component(levelIndex, id, arg);
-        CHECK_NULL(component, E_FAIL);
-
-        component->Set_Owner(this->GetSharedPtr());
-
-        _components.emplace(id, component);
-        outCom = static_pointer_cast<T>(component);
-
-        return S_OK;
-    };
-
-    template<typename T>
     HRESULT Add_Component(uint32 levelIndex, uint32 componentID, shared_ptr<T>& outCom, void* arg = {})
     {
         if (_components.contains(componentID))
@@ -92,7 +74,24 @@ public:
         return S_OK;
     }
 
-    HRESULT Add_Component(uint32 id, shared_ptr<Component> component);
+    template<typename T>
+    HRESULT Add_Component(uint32 componentID, shared_ptr<T>& outCom, void* arg = {})
+    {
+        if (_components.contains(componentID))
+            return E_FAIL;
+
+        shared_ptr<Component> component = GAME->Clone_Component(componentID, arg);
+        CHECK_NULL(component, E_FAIL);
+
+        component->Set_Owner(this->GetSharedPtr());
+
+        _components.emplace(componentID, component);
+        outCom = static_pointer_cast<T>(component);
+
+        return S_OK;
+    };
+
+    HRESULT Add_Component(uint32 id, Shared<Component> component);
 
     void    Remove_Component(uint32 id);
 
@@ -116,6 +115,7 @@ protected: /* Values */
     Protocol::OBJECT_TYPE _objectType = Protocol::OBJECT_TYPE::OBJECT_TYPE_NONE;
 
     bool _isDestroyed = false;
+    bool _hasBegunPlay = false;
 
     // GUID
     string _guid; // "550e840... 뭐 이런식으로 결과값이 나옴"

@@ -191,6 +191,11 @@ shared_ptr<Component> GameInstance::Clone_Component(uint32 levelIndex, uint32 co
     return _protoManager->Clone_Component(levelIndex, componentID, arg);
 }
 
+Shared<Component> GameInstance::Clone_Component(uint32 componentID, void* arg)
+{
+    return _protoManager->Clone_Component(componentID, arg);
+}
+
 HRESULT GameInstance::Add_GameObject(uint32 protoIndex, uint32 objID, uint32 layerIndex, const wstring& layerTag, void* arg)
 {
     return _objectManager->Add_GameObject(protoIndex, objID, layerIndex, layerTag, arg);

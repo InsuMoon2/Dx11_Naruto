@@ -164,12 +164,14 @@
     <ClInclude Include="..\Public\Client_Macro.h" />
     <!-- <ClInclude Include="..\Public\Client_PacketHandler.h" /> -->
     <ClInclude Include="..\Public\IconsFontAwesome6.h" />
+    <ClInclude Include="..\Public\InputComponent.h" />
     <ClInclude Include="..\Public\IReplicable.h" />
     <ClInclude Include="..\Public\Level_Gameplay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Loader.h" />
+    <ClInclude Include="..\Public\MovementComponent.h" />
     <ClInclude Include="..\Public\PlayerController.h" />
     <!-- <ClInclude Include="..\Public\MainApp.h" /> -->
     <ClInclude Include="..\Public\Replicator.h" />
@@ -179,7 +181,7 @@
     <!-- <ClInclude Include="..\Public\ServerSession.h" /> -->
     <ClInclude Include="..\Public\CombatStat.h" />
     <ClInclude Include="..\Public\Spawn_Helper.h" />
-    <ClInclude Include="..\Public\TestPlayer.h" />
+    <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -206,11 +208,13 @@
     </ClCompile>
     <ClCompile Include="..\Private\AIController.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
+    <ClCompile Include="..\Private\InputComponent.cpp" />
     <!-- <ClCompile Include="..\Private\Client_PacketHandler.cpp" /> -->
     <ClCompile Include="..\Private\Level_Gameplay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
+    <ClCompile Include="..\Private\MovementComponent.cpp" />
     <ClCompile Include="..\Private\PlayerController.cpp" />
     <!-- <ClCompile Include="..\Private\MainApp.cpp" /> -->
     <ClCompile Include="..\Private\Replicator.cpp" />
@@ -220,7 +224,7 @@
     <ClCompile Include="..\Private\CombatStat.cpp" />
     <ClCompile Include="..\Private\SimpleMath.cpp" />
     <ClCompile Include="..\Private\Spawn_Helper.cpp" />
-    <ClCompile Include="..\Private\TestPlayer.cpp" />
+    <ClCompile Include="..\Private\Player.cpp" />
     <!-- <ClCompile Include="Client.cpp" /> -->
     <ClCompile Include="IReplicable.cpp" />
     <ClCompile Include="pch.cpp">

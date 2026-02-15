@@ -2,10 +2,12 @@
 #include "Loader.h"
 #include "Background.h"
 #include "GameInstance.h"
-#include "TestPlayer.h"
+#include "Player.h"
 #include "Texture.h"
 #include <magic_enum/magic_enum.hpp>
 #include <fstream>
+
+#include "AIController.h"
 #include "Utils.h"
 #include "Component_Factory.h"
 #include "Replicator.h"
@@ -13,6 +15,9 @@
 #include "CombatStat.h"
 #include "VIBuffer_Rect.h"
 #include "Shader.h"
+#include "MovementComponent.h"
+#include "InputComponent.h"
+#include "PlayerController.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -98,9 +103,14 @@ void Loader::Register_Components()
 
     factory->Register<CombatStat>(staticLevel, _device, _context);
     factory->Register<Replicator>(staticLevel, _device, _context);
-    factory->Register<Behavior>(staticLevel, _device, _context);
     factory->Register<VIBuffer_Rect>(staticLevel, _device, _context);
     //factory->Register<Shader>(staticLevel, _device, _context);
+    factory->Register<MovementComponent>(staticLevel, _device, _context);
+    factory->Register<InputComponent>(staticLevel, _device, _context);
+
+    factory->Register<Behavior>(staticLevel, _device, _context);
+    factory->Register<PlayerController>(staticLevel, _device, _context);
+    factory->Register<AIController>(staticLevel, _device, _context);
 
     // TODO : 셰이더, 텍스처쪽 깔끔하게 바꾸기
     // Shader, Texture.. Lazy Load 또는 일단 테이블로 따로 빼는게 좋을듯
@@ -115,7 +125,7 @@ void Loader::Register_Components()
     factory->Register_Prototype(Shader::StaticTypeID(), staticLevel, _device, _context);
 
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PLAYER,
-        TestPlayer::Create(_device, _context));
+        Player::Create(_device, _context));
 }
 
 HRESULT Loader::Loading_For_LogoLevel()
@@ -164,7 +174,7 @@ HRESULT Loader::Loading_For_GamePlay()
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
     if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_PLAYER,
-        TestPlayer::Create(_device, _context))))
+        Player::Create(_device, _context))))
     {
         MSG_BOX("Failed to Add Prototype : Prototype_TestPlayer");
         return E_FAIL;

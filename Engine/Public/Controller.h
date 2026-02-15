@@ -18,6 +18,7 @@ public:
 public:
     HRESULT         Initialize_Prototype() override;
     HRESULT         Initialize(void* arg) override;
+    void            BeginPlay() override {};
 
     virtual void    Update(float timeDelta) {};
 

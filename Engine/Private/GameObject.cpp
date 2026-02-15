@@ -2,12 +2,18 @@
 #include "GameObject.h"
 
 GameObject::GameObject(ComPtr<Device> device, ComPtr<DeviceContext> context)
-    : _device(device), _context(context), _guid(Utils::Generate_GUID())
+    : _device(device), _context(context)
+    , _guid(Utils::Generate_GUID())
+    , _isDestroyed(false)
+    , _hasBegunPlay(false)
 {
 }
 
 GameObject::GameObject(const GameObject& rhs)
-    : _device(rhs._device), _context(rhs._context), _guid(Utils::Generate_GUID())
+    : _device(rhs._device), _context(rhs._context)
+    , _guid(Utils::Generate_GUID())
+    , _isDestroyed(false)
+    , _hasBegunPlay(false)
 {
     _objectType = rhs._objectType;
     _name = rhs._name;
@@ -34,6 +40,20 @@ HRESULT GameObject::Initialize(void* arg)
     return S_OK;
 }
 
+void GameObject::BeginPlay()
+{
+    if (_hasBegunPlay) return;
+    _hasBegunPlay = true;
+
+    for (auto& [id, component] : _components)
+    {
+        if (component)
+        {
+            component->BeginPlay();
+        }
+    }
+}
+
 HRESULT GameObject::Initialize_Prototype()
 {
 
@@ -42,6 +62,9 @@ HRESULT GameObject::Initialize_Prototype()
 
 void GameObject::Priority_Update(float timeDelta)
 {
+    if (_isDestroyed)
+        return;
+
 
 }
 

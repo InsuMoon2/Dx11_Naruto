@@ -8,7 +8,7 @@
         },
         {
             "id": "COMPONENT_TYPE_TEXTURE_DEFAULT",
-            "level": "GamePlay",
+            "level": "Static",
             "path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
             "count": 2
         }

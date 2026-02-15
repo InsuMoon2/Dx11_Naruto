@@ -66,6 +66,19 @@ shared_ptr<Component> Prototype_Manager::Clone_Component(uint32 levelIndex, uint
     return component->Clone(arg);
 }
 
+shared_ptr<Component> Prototype_Manager::Clone_Component(uint32 componentID, void* arg)
+{
+    // 전역으로 우선 탐색 후, 없다면 최근 레벨에서 탐색
+    auto component = Find_Component_Prototype(0, componentID);
+
+    if (!component)
+        component = Find_Component_Prototype(GAME->Current_Level(), componentID);
+
+    CHECK_NULL(component, nullptr);
+
+    return component->Clone(arg);
+}
+
 HRESULT Prototype_Manager::Clear_Prototype(uint32 levelIndex)
 {
     if (levelIndex >= _numLevels)

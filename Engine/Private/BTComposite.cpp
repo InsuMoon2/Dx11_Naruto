@@ -61,6 +61,7 @@ EBTNodeResult BTSelector::Update(float timeDelta)
     // 모든 자식이 실패할 경우 -> 실패
     _runningChildIndex = 0;
 
+    _lastResult = EBTNodeResult::Failed;
     return EBTNodeResult::Failed;
 }
 
@@ -105,6 +106,7 @@ EBTNodeResult BTSequence::Update(float timeDelta)
     // 모든 자식이 성공 -> 성공
     _runningChildIndex = 0;
 
+    _lastResult = EBTNodeResult::Succeeded;
     return EBTNodeResult::Succeeded;
 }
 

@@ -16,6 +16,7 @@ public:
 public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* arg);
+    virtual void    BeginPlay() {}; // 컴포넌트 추가 후, 호출
 
     virtual uint32 Get_ComponentID() const = 0;
 
@@ -35,6 +36,7 @@ protected:
 
 protected:
     Weak<GameObject> _owner;
+
 
 public:
     virtual Shared<Component> Clone(void* arg) abstract;

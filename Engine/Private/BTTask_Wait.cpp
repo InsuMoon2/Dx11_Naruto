@@ -24,9 +24,11 @@ EBTNodeResult BTTask_Wait::Update(float timeDelta)
 
     if (_accTime >= _waitTime)
     {
+        _lastResult = EBTNodeResult::Succeeded;
         return EBTNodeResult::Succeeded;
     }
 
+    _lastResult = EBTNodeResult::InProgress;
     return EBTNodeResult::InProgress;
 
 }

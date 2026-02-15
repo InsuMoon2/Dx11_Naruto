@@ -1,8 +1,10 @@
 ﻿#include "pch.h"
 #include "PlayerController.h"
 #include "GameObject.h"
+#include "InputComponent.h"
 #include "Transform.h"
 #include "Input_Manager.h"
+#include "MovementComponent.h"
 //#include "ServerSession.h"
 
 PlayerController::PlayerController(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -33,18 +35,36 @@ HRESULT PlayerController::Initialize(void* arg)
     return S_OK;
 }
 
+void PlayerController::BeginPlay()
+{
+    Controller::BeginPlay();
+
+    auto pawn = Get_Pawn();
+
+    _input = pawn->Get_Component<InputComponent>();
+    _movement = pawn->Get_Component<MovementComponent>();
+}
+
 void PlayerController::Update(float timeDelta)
 {
     Controller::Update(timeDelta);
 
-    Handle_Input(timeDelta);
+    Update_Input(timeDelta);
 }
 
-void PlayerController::Handle_Input(float timeDelta)
+void PlayerController::Update_Input(float timeDelta)
 {
-    auto pawn = Get_Pawn();
+    _input->Update_Input(timeDelta);
 
+    MovementComponent::FMoveCommand command;
+    auto& frame = _input->Get_Frame();
+    command.moveAxis = Vec2(frame.moveX, frame.moveY);
+    command.sprint = frame.sprintPress;
+    command.jump = frame.jumpDown;
+    command.lookDelta = Vec2(frame.lookYaw, frame.lookPitch);
 
+    _movement->Apply_Command(command);
+    _movement->Update(timeDelta);
 }
 
 void PlayerController::Send_MovePacket()

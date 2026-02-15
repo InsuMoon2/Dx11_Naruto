@@ -37,7 +37,7 @@
     <ClInclude Include="..\Public\Protocol_Wrapper.h">
       <Filter>98. Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TestPlayer.h">
+    <ClInclude Include="..\Public\Player.h">
       <Filter>02. GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Macro.h">
@@ -62,9 +62,15 @@
       <Filter>02. GameObject\Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Replicator.h">
-      <Filter>03. Component</Filter>
+      <Filter>03. Component\99. Replicator</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Spawn_Helper.h" />
+    <ClInclude Include="..\Public\InputComponent.h">
+      <Filter>03. Component\01. Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spawn_Helper.h">
+      <Filter>99. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MovementComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -85,7 +91,7 @@
     <ClCompile Include="..\Private\Background.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TestPlayer.cpp">
+    <ClCompile Include="..\Private\Player.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
     <ClCompile Include="IReplicable.cpp">
@@ -116,9 +122,15 @@
       <Filter>02. GameObject\Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Replicator.cpp">
-      <Filter>03. Component</Filter>
+      <Filter>03. Component\99. Replicator</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Spawn_Helper.cpp" />
+    <ClCompile Include="..\Private\InputComponent.cpp">
+      <Filter>03. Component\01. Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spawn_Helper.cpp">
+      <Filter>99. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MovementComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -171,6 +183,15 @@
     </Filter>
     <Filter Include="02. GameObject\Controller">
       <UniqueIdentifier>{4228c98a-9aa7-4598-b3bc-a3f5f7166def}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component\99. Replicator">
+      <UniqueIdentifier>{11214562-e2ee-4f0d-9f94-7303adc8ff54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component\01. Input">
+      <UniqueIdentifier>{3538dc33-7726-469e-9faf-5ce0cf6988cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component\02. Movement">
+      <UniqueIdentifier>{2c2afcac-3899-4bf5-a77e-096e9b48e67e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

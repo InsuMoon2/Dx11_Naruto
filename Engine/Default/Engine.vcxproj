@@ -172,6 +172,7 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\BTNode.h" />
     <ClInclude Include="..\Public\BTTask.h" />
     <ClInclude Include="..\Public\BTTask_Wait.h" />
+    <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\Component_Factory.h" />
     <ClInclude Include="..\Public\Controller.h" />
@@ -218,6 +219,7 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\BTNode.cpp" />
     <ClCompile Include="..\Private\BTTask.cpp" />
     <ClCompile Include="..\Private\BTTask_Wait.cpp" />
+    <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\Component_Factory.cpp" />
     <ClCompile Include="..\Private\Controller.cpp" />

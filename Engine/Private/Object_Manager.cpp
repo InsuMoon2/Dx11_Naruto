@@ -89,6 +89,7 @@ HRESULT Object_Manager::Add_GameObject(uint32 protoLevelIndex, uint32 objID, uin
 
     // 레이어가 있으면, 추가
     layer->Add_GameObject(gameObject);
+    gameObject->BeginPlay();
 
     return S_OK;
 }
@@ -110,7 +111,12 @@ HRESULT Object_Manager::Add_GameObject(uint32 levelIndex, const wstring& layerTa
         _layers[levelIndex].emplace(layerTag, layer);
     }
 
-    return layer->Add_GameObject(gameObject);
+    HRESULT hr = layer->Add_GameObject(gameObject);
+
+    if (SUCCEEDED(hr))
+        gameObject->BeginPlay();
+
+    return hr;
 }
 
 vector<shared_ptr<GameObject>> Object_Manager::Get_GameObjects(uint32 levelIndex)
@@ -218,6 +224,8 @@ void Object_Manager::OnCreateEvent(shared_ptr<FEvent> event)
 
             // 이름 변경 어떻게 할지 ?
             newObj->Set_Name(targetObj->Get_Name() + L"_Copy");
+
+            newObj->BeginPlay();
         }
     }
 }

@@ -129,6 +129,7 @@
       <Filter>01. Utility\06. Behaviore Tree\99. Component</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIObject.h" />
+    <ClInclude Include="..\Public\Character.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -366,6 +367,7 @@
       <Filter>01. Utility\06. Behaviore Tree\99. Component</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIObject.cpp" />
+    <ClCompile Include="..\Private\Character.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">
