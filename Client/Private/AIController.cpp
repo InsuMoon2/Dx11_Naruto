@@ -1,5 +1,8 @@
 ﻿#include "pch.h"
 #include "AIController.h"
+#include "Behavior.h"
+#include "MovementComponent.h"
+#include "GameObject.h"
 
 AIController::AIController(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Controller(device, context)
@@ -25,16 +28,28 @@ HRESULT AIController::Initialize(void* arg)
     return Controller::Initialize(arg);
 }
 
+void AIController::BeginPlay()
+{
+    Controller::BeginPlay();
+
+    auto pawn = Get_Pawn();
+
+    _behavior = pawn->Get_Component<Behavior>();
+    _movement = pawn->Get_Component<MovementComponent>();
+
+}
+
 void AIController::Update(float timeDelta)
 {
     Controller::Update(timeDelta);
 
-    Update_BehaviorTree(timeDelta);
-}
+    if (_behavior)
+        _behavior->Update(timeDelta);
 
-void AIController::Update_BehaviorTree(float timeDelta)
-{
-
+    // Movement
+    // TODO : Blackboard 에서 moveAxis 읽어서 Apply_Command 진행
+    if (_movement)
+        _movement->Update(timeDelta);
 }
 
 json AIController::To_Json() const

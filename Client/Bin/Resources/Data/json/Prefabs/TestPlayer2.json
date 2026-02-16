@@ -16,18 +16,19 @@
                 1.0,
                 1.0
             ],
-            "type": 1
+            "type": "COMPONENT_TYPE_TRANSFORM"
         },
         {
-            "type": 4
+            "type": "COMPONENT_TYPE_RECT"
         },
         {
-            "type": 5
+            "type": "COMPONENT_TYPE_SHADER"
         },
         {
+            "current_index": 0,
             "num_srvs": 2,
             "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
-            "type": 99
+            "type": "COMPONENT_TYPE_TEXTURE"
         },
         {
             "attack": 100.0,
@@ -37,11 +38,25 @@
             "maxMp": 100.0,
             "mp": 100.0,
             "speed": 5.0,
-            "type": 1002
+            "type": "COMPONENT_TYPE_COMBAT_STAT"
+        },
+        {
+            "type": "COMPONENT_TYPE_PLAYER_CONTROLLER"
+        },
+        {
+            "acceleration": 20.0,
+            "deceleration": 24.0,
+            "max_sprint_speed": 7.0,
+            "max_walk_speed": 4.0,
+            "type": "COMPONENT_TYPE_MOVEMENT",
+            "yaw_speed": 0.20000000298023224
+        },
+        {
+            "type": "COMPONENT_TYPE_INPUT"
         }
     ],
-    "guid": "3d13ff4a-aeba-4265-9d09-e1545612dce1",
+    "guid": "c1a9150a-d91c-47f8-988b-17be517cf490",
     "object_type": "OBJECT_TYPE_PLAYER",
-    "prefab_name": "TestPlayer",
-    "static_class": "TestPlayer"
+    "prefab_name": "Player",
+    "static_class": "Player"
 }

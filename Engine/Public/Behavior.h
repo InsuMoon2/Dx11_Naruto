@@ -20,6 +20,7 @@ public:
 public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* arg);
+    virtual void    BeginPlay() override;
     virtual void    Update(float timeDelta);
 
 public:

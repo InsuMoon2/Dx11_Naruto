@@ -76,6 +76,8 @@ public: /* Prototype Manager */
 
     Shared<Component>       Clone_Component(uint32 componentID, void* arg = {});
 
+    vector<pair<uint32, wstring>>  Get_RegisteredGameObjects();
+
 public: /* Object Manager */
     HRESULT                 Add_GameObject(
                                 uint32 protoIndex, uint32 objID,
@@ -101,6 +103,7 @@ public: /* Renderer */
 public: /* Prefeb */
     Shared<GameObject>      Instantiate_Prefab(const string& prefabName, const json& overrides = {});
     HRESULT                 Save_Prefab(const string& prefabPath, Shared<GameObject> gameObject);
+    HRESULT                 Load_Prefab(const string& prefabPath);
 
 private:
 	unique_ptr<Graphic_Device>      _graphicDevice {};

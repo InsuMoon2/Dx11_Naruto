@@ -40,6 +40,11 @@ HRESULT Behavior::Initialize(void* arg)
     return S_OK;
 }
 
+void Behavior::BeginPlay()
+{
+    Component::BeginPlay();
+}
+
 void Behavior::Update(float timeDelta)
 {
     if (!_rootNode)

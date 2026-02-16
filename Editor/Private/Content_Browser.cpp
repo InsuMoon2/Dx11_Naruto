@@ -222,7 +222,7 @@ void Content_Browser::Draw_AssetView()
     ImGui::Columns(columnCount, 0, false);
 
     // TODO : 매 프레임 찾기말고, 캐싱 해놓기 or 새로고침 버튼 하나 만들기?
-    vector<wstring> validName = GameObject_Factory::GetInstance()->Get_RegisteredNames();
+    auto name = GAME->Get_RegisteredGameObjects();
 
     // 파일 목록 표시
     if (_currentFolder)
@@ -329,15 +329,15 @@ void Content_Browser::Draw_AssetView()
         if (ImGui::BeginMenu("프리펩 만들기"))
         {
             // Factory에 등록된 이름 가져오기
-            vector<wstring> names = GameObject_Factory::GetInstance()->Get_RegisteredNames();
+            auto names = GAME->Get_RegisteredGameObjects();
 
-            for (const auto& nameW : names)
+            for (const auto& [objectID, nameW] : names)
             {
                 string typeName = Utils::ToString(nameW);
 
                 if (ImGui::MenuItem(typeName.c_str()))
                 {
-                    Create_NewPrefab(nameW);
+                    Create_NewPrefab(objectID, nameW);
                 }
             }
             ImGui::EndMenu();
@@ -349,7 +349,8 @@ void Content_Browser::Draw_AssetView()
 
 void Content_Browser::Generate_Default_Prefabs()
 {
-    vector<wstring> names = GameObject_Factory::GetInstance()->Get_RegisteredNames();
+    //vector<wstring> names = GameObject_Factory::GetInstance()->Get_RegisteredNames();
+    auto names = GAME->Get_RegisteredGameObjects();
 
     fs::path prefabDir = TEXT("../../Client/Bin/Resources/Data/json/Prefabs");
     if (!fs::exists(prefabDir))
@@ -357,7 +358,7 @@ void Content_Browser::Generate_Default_Prefabs()
 
     int createCount = 0;
 
-    for (const auto& nameW : names)
+    for (const auto& [objectID, nameW] : names)
     {
         string typeName = Utils::ToString(nameW);
         string fileName = typeName + ".json";
@@ -413,6 +414,8 @@ void Content_Browser::Finish_Rename(const wstring& oldPath, const char* newName)
 
         fs::remove(oldFilePath);
 
+        GAME->Load_Prefab(newFilePath.string());
+
         LOG_INFO("파일명 변경: {} -> {}", oldFilePath.stem().string(), newName);
 
         Refresh_CurrentFolder();
@@ -425,7 +428,7 @@ void Content_Browser::Finish_Rename(const wstring& oldPath, const char* newName)
     _isRenaming = false;
 }
 
-void Content_Browser::Create_NewPrefab(const wstring& typeName)
+void Content_Browser::Create_NewPrefab(uint32 objectID, const wstring& typeName)
 {
     string baseFileName = "NewPrefab";
     fs::path savePath = fs::path(_currentFolder->fullPath) / (baseFileName + ".json");
@@ -437,7 +440,8 @@ void Content_Browser::Create_NewPrefab(const wstring& typeName)
         savePath = fs::path(_currentFolder->fullPath) / (baseFileName + "_" + to_string(counter++) + ".json");
     }
 
-    auto tempObj = GameObject_Factory::GetInstance()->Create(typeName, GAME->Get_Device(), GAME->Get_Context());
+    auto tempObj = GAME->Clone_GameObject(0, objectID, nullptr);
+
     if (tempObj)
     {
         tempObj->Set_Name(typeName);

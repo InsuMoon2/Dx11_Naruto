@@ -3,6 +3,7 @@
 #include "Background.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "Monster.h"
 #include "Texture.h"
 #include <magic_enum/magic_enum.hpp>
 #include <fstream>
@@ -126,6 +127,9 @@ void Loader::Register_Components()
 
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PLAYER,
         Player::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_MONSTER,
+        Monster::Create(_device, _context));
 }
 
 HRESULT Loader::Loading_For_LogoLevel()

@@ -196,6 +196,11 @@ Shared<Component> GameInstance::Clone_Component(uint32 componentID, void* arg)
     return _protoManager->Clone_Component(componentID, arg);
 }
 
+vector<pair<uint32, wstring>> GameInstance::Get_RegisteredGameObjects()
+{
+    return _protoManager->Get_RegisteredGameObjects();
+}
+
 HRESULT GameInstance::Add_GameObject(uint32 protoIndex, uint32 objID, uint32 layerIndex, const wstring& layerTag, void* arg)
 {
     return _objectManager->Add_GameObject(protoIndex, objID, layerIndex, layerTag, arg);
@@ -239,6 +244,11 @@ Shared<GameObject> GameInstance::Instantiate_Prefab(const string& prefabName, co
 HRESULT GameInstance::Save_Prefab(const string& prefabPath, shared_ptr<GameObject> gameObject)
 {
     return _prefabManager->Save_Prefab(prefabPath, gameObject);
+}
+
+HRESULT GameInstance::Load_Prefab(const string& prefabPath)
+{
+    return _prefabManager->Load_Prefab(prefabPath);
 }
 
 void GameInstance::Free()

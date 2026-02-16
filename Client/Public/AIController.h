@@ -2,7 +2,12 @@
 
 #include "Controller.h"
 
+NS_BEGIN(Engine)
+class Behavior;
+NS_END
+
 NS_BEGIN(Client)
+class MovementComponent;
 
 class AIController : public Controller
 {
@@ -16,18 +21,16 @@ public:
 public:
     HRESULT Initialize_Prototype() override;
     HRESULT Initialize(void* arg) override;
+    void    BeginPlay() override;
     void    Update(float timeDelta) override;
-
-public:
-    void    Update_BehaviorTree(float timeDelta);
 
 protected:
     json    To_Json() const override;
     void    From_Json(const json& data) override;
 
 private:
-    // TODO : BehaviorTree Com, Blackboard 추가
-
+    Shared<Behavior> _behavior;
+    Shared<MovementComponent> _movement;
 
 public:
     static Shared<AIController> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

@@ -39,10 +39,24 @@
             "mp": 100.0,
             "speed": 5.0,
             "type": "COMPONENT_TYPE_COMBAT_STAT"
+        },
+        {
+            "type": "COMPONENT_TYPE_PLAYER_CONTROLLER"
+        },
+        {
+            "acceleration": 20.0,
+            "deceleration": 24.0,
+            "max_sprint_speed": 7.0,
+            "max_walk_speed": 4.0,
+            "type": "COMPONENT_TYPE_MOVEMENT",
+            "yaw_speed": 0.20000000298023224
+        },
+        {
+            "type": "COMPONENT_TYPE_INPUT"
         }
     ],
-    "guid": "c173a1fd-4cac-4888-a3e0-1175251a2963",
+    "guid": "3176e5e8-d42a-4768-8934-f74bad569431",
     "object_type": "OBJECT_TYPE_PLAYER",
-    "prefab_name": "TestPlayer",
-    "static_class": "TestPlayer"
+    "prefab_name": "Player",
+    "static_class": "Player"
 }

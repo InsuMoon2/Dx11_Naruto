@@ -90,6 +90,19 @@ HRESULT Prototype_Manager::Clear_Prototype(uint32 levelIndex)
     return S_OK;
 }
 
+vector<pair<uint32, wstring>> Prototype_Manager::Get_RegisteredGameObjects()
+{
+    vector<pair<uint32, wstring>> result;
+
+    // Static 레벨에서 가져오기
+    for (const auto& [objID, proto] : _gameObjectPrototypes[0])
+    {
+        result.emplace_back(objID, proto->Get_Name());
+    }
+
+    return result;
+}
+
 shared_ptr<GameObject> Prototype_Manager::Find_GameObject_Prototype(uint32 levelIndex, uint32 objID)
 {
     if (levelIndex >= _numLevels)

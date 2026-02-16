@@ -30,6 +30,8 @@ public:
 public:
     void                        Set_CurrentLevelIndex(uint32 index) { _currentLevelIndex = index; }
 
+    vector<pair<uint32, wstring>> Get_RegisteredGameObjects();
+
 private:
     shared_ptr<GameObject>      Find_GameObject_Prototype(uint32 levelIndex, uint32 objID);
     shared_ptr<Component>       Find_Component_Prototype(uint32 levelIndex, uint32 componentID);

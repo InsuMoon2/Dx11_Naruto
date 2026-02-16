@@ -153,8 +153,8 @@ shared_ptr<GameObject> Level_Serializer::JsonToGameObject(const json& j, uint32 
         objType = static_cast<Protocol::OBJECT_TYPE>(j["object_type"].get<uint32>());
     }
 
-    // 프로토타입에서 복사
-    auto gameObject = GAME->Clone_GameObject(levelIndex, objType, nullptr);
+    // 프로토타입에서 복사 (항상 Static 레벨에서 찾기)
+    auto gameObject = GAME->Clone_GameObject(0, objType, nullptr);
     if (!gameObject)
     {
         LOG_ERROR("Failed to clone GameObject for type: {}", magic_enum::enum_name(objType));

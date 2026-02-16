@@ -171,6 +171,7 @@
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Loader.h" />
+    <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\MovementComponent.h" />
     <ClInclude Include="..\Public\PlayerController.h" />
     <!-- <ClInclude Include="..\Public\MainApp.h" /> -->
@@ -214,6 +215,7 @@
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\MovementComponent.cpp" />
     <ClCompile Include="..\Private\PlayerController.cpp" />
     <!-- <ClCompile Include="..\Private\MainApp.cpp" /> -->

@@ -39,7 +39,7 @@ private:
 
     void    Generate_Default_Prefabs();
     void    Finish_Rename(const wstring& oldPath, const char* newName);
-    void    Create_NewPrefab(const wstring& typeName);
+    void    Create_NewPrefab(uint32 objectID, const wstring& typeName);
 
     void    Enter_RenameMode(fs::path savePath);
 

@@ -71,6 +71,7 @@
       <Filter>99. Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MovementComponent.h" />
+    <ClInclude Include="..\Public\Monster.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -131,6 +132,7 @@
       <Filter>99. Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MovementComponent.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
