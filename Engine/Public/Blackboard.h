@@ -39,12 +39,11 @@ public:
     json Serialize_ToJson() const;
     void Deserialize_FromJson(const json& data);
 
-
 private:
-    map<string, int32> _intValues;
-    map<string, float> _floatValues;
-    map<string, bool> _boolValues;
-    map<string, Vec3> _vecValues;
+    map<string, int32>              _intValues;
+    map<string, float>              _floatValues;
+    map<string, bool>               _boolValues;
+    map<string, Vec3>               _vecValues;
     map<string, Shared<GameObject>> _objectValues;
 
 public:

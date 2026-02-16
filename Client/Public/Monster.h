@@ -43,6 +43,7 @@ private:
     Shared<AIController>        _aiController{};
     Shared<Behavior>            _behavior;
 
+
 public:
     static Shared<Monster> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     shared_ptr<GameObject> Clone(void* arg) override;

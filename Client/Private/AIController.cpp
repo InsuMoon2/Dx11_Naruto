@@ -3,6 +3,7 @@
 #include "Behavior.h"
 #include "MovementComponent.h"
 #include "GameObject.h"
+#include "Blackboard.h"
 
 AIController::AIController(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Controller(device, context)
@@ -34,8 +35,11 @@ void AIController::BeginPlay()
 
     auto pawn = Get_Pawn();
 
-    _behavior = pawn->Get_Component<Behavior>();
     _movement = pawn->Get_Component<MovementComponent>();
+    _behavior = pawn->Get_Component<Behavior>();
+
+    if (_behavior)
+        _blackboard = _behavior->Get_Blackboard();
 
 }
 
@@ -46,17 +50,31 @@ void AIController::Update(float timeDelta)
     if (_behavior)
         _behavior->Update(timeDelta);
 
-    // Movement
-    // TODO : Blackboard 에서 moveAxis 읽어서 Apply_Command 진행
-    if (_movement)
+    if (_movement && _blackboard)
+    {
+        MovementComponent::FMoveCommand command;
+
+        if (_blackboard->HasKey("MoveAxisX"))
+            command.moveAxis.x = _blackboard->Get_ValueAsFloat("MoveAxisX");
+
+        if (_blackboard->HasKey("MoveAxisY"))
+            command.moveAxis.x = _blackboard->Get_ValueAsFloat("MoveAxisY");
+
+        if (_blackboard->HasKey("Sprint"))
+            command.sprint = _blackboard->Get_ValueAsBool("Sprint");
+
+        _movement->Apply_Command(command);
         _movement->Update(timeDelta);
+    }
+
 }
 
 json AIController::To_Json() const
 {
     json j = Controller::To_Json();
 
-    // TODO : BehaviorTree json 경로 저장
+    if (_btFilePath.length() > 0)
+        j["bt_path"] = Utils::ToString(_btFilePath);
 
     return j;
 }
@@ -64,6 +82,15 @@ json AIController::To_Json() const
 void AIController::From_Json(const json& data)
 {
     Controller::From_Json(data);
+
+    if (data.contains("bt_path"))
+    {
+        wstring path = Utils::ToWString(data["bt_path"].get<string>());
+        _btFilePath = path;
+
+        if (_behavior)
+            _behavior->Load_FromJson(path);
+    }
 }
 
 Shared<AIController> AIController::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

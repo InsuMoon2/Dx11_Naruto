@@ -23,6 +23,7 @@ public:
     #endif
 
     void    Register_Components();
+    void    Initialize_BT_Nodes();
 
 private: /* Loading Level */
     HRESULT Loading_For_LogoLevel();

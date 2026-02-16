@@ -20,6 +20,8 @@
 #include "InputComponent.h"
 #include "PlayerController.h"
 
+#include "BTNode_Factory.h"
+
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
 {
@@ -130,6 +132,16 @@ void Loader::Register_Components()
 
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_MONSTER,
         Monster::Create(_device, _context));
+}
+
+void Loader::Initialize_BT_Nodes()
+{
+    auto& factory = BTNode_Factory::GetInstance();
+
+    factory->Register_EngineNodes();
+
+    // TODO : 클라이언트 노드 여기에 추가하기
+    // Patrol, Attack, Skill 이런거
 }
 
 HRESULT Loader::Loading_For_LogoLevel()

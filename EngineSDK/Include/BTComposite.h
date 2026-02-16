@@ -30,11 +30,13 @@ class ENGINE_DLL BTSelector : public BTComposite
 {
 public:
     explicit BTSelector() = default;
+    explicit BTSelector(const BTSelector& rhs);
     virtual ~BTSelector() = default;
 
 public:
     EBTNodeResult Update(float timeDelta) override;
 
+    virtual Shared<BTNode> Clone() override;
 };
 
 // ==========================================
@@ -45,11 +47,13 @@ class ENGINE_DLL BTSequence : public BTComposite
 {
 public:
     explicit BTSequence() = default;
+    explicit BTSequence(const BTSequence& rhs);
     virtual ~BTSequence() = default;
     
 public:
     EBTNodeResult Update(float timeDelta) override;
 
+    virtual Shared<BTNode> Clone() override;
 };
 
 

@@ -17,7 +17,7 @@ public:
 
 public:
     float _waitTime = 1.f;
-    float _accTime = 0.f;
+    float _elapsed = 0.f;
 
 public:
     virtual Shared<BTNode> Clone() override;

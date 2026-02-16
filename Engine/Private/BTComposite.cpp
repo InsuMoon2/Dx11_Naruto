@@ -33,9 +33,22 @@ void BTComposite::Set_Blackboard(Shared<Blackboard> blackboard)
     }
 }
 
+BTSelector::BTSelector(const BTSelector& rhs)
+    : BTComposite(rhs)
+{
+
+}
+
 // ================= BTSelector =================
 EBTNodeResult BTSelector::Update(float timeDelta)
 {
+    if (_children.empty())
+    {
+        _lastResult = EBTNodeResult::Failed;
+
+        return _lastResult;
+    }
+
     for (int i = _runningChildIndex; i < _children.size(); i++)
     {
         EBTNodeResult result = _children[i]->Update(timeDelta);
@@ -78,9 +91,20 @@ Shared<BTNode> BTSelector::Clone()
     return newNode;
 }
 
+BTSequence::BTSequence(const BTSequence& rhs)
+{
+
+}
+
 // ================= BTSequence =================
 EBTNodeResult BTSequence::Update(float timeDelta)
 {
+    if (_children.empty())
+    {
+        _lastResult = EBTNodeResult::Failed;
+        return _lastResult;
+    }
+
     for (int i = _runningChildIndex; i < _children.size(); i++)
     {
         EBTNodeResult result = _children[i]->Update(timeDelta);

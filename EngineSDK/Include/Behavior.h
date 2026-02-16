@@ -20,6 +20,7 @@ public:
 public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* arg);
+    virtual void    BeginPlay() override;
     virtual void    Update(float timeDelta);
 
 public:
@@ -28,12 +29,17 @@ public:
 
     Shared<Blackboard> Get_Blackboard() const { return _blackboard; }
 
+    HRESULT Load_FromJson(const wstring& filePath);
+
+private:
+    Shared<BTNode> Create_Node(const string& typeName);
+
 private:
     Shared<BTNode>     _rootNode;
     Shared<Blackboard> _blackboard;
 
 public:
-    static Shared<Behavior> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    static Shared<Behavior>   Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     virtual Shared<Component> Clone(void* arg = nullptr) override;
 
 };

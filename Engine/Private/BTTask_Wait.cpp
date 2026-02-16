@@ -2,29 +2,34 @@
 #include "BTTask_Wait.h"
 
 BTTask_Wait::BTTask_Wait(float waitTime)
-    : _waitTime(waitTime), _accTime(0.f)
+    : _waitTime(waitTime), _elapsed(0.f)
 {
 }
 
 BTTask_Wait::BTTask_Wait(const BTTask_Wait& rhs)
     : BTTask(rhs)
     , _waitTime(rhs._waitTime)
+    , _elapsed(0.f)
 {
 
 }
 
 void BTTask_Wait::Initialize()
 {
-    _accTime = 0.0f;
+    BTNode::Initialize();
+
+    _elapsed = 0.0f;
 }
 
 EBTNodeResult BTTask_Wait::Update(float timeDelta)
 {
-    _accTime += timeDelta;
+    _elapsed += timeDelta;
 
-    if (_accTime >= _waitTime)
+    if (_elapsed >= _waitTime)
     {
         _lastResult = EBTNodeResult::Succeeded;
+        _elapsed = 0.f;
+
         return EBTNodeResult::Succeeded;
     }
 
@@ -35,5 +40,9 @@ EBTNodeResult BTTask_Wait::Update(float timeDelta)
 
 Shared<BTNode> BTTask_Wait::Clone()
 {
-    return make_shared<BTTask_Wait>(*this);
+    auto clone = make_shared<BTTask_Wait>(*this);
+
+    clone->Initialize();
+
+    return clone;
 }

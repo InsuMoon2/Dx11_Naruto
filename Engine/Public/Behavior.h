@@ -39,7 +39,7 @@ private:
     Shared<Blackboard> _blackboard;
 
 public:
-    static Shared<Behavior> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    static Shared<Behavior>   Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     virtual Shared<Component> Clone(void* arg = nullptr) override;
 
 };

@@ -11,6 +11,7 @@ class ENGINE_DLL BTNode : public Base
 {
 public:
     explicit BTNode();
+    explicit BTNode(const BTNode& rhs);
     virtual ~BTNode();
 
 public:

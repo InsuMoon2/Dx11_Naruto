@@ -4,6 +4,7 @@
 
 NS_BEGIN(Engine)
 class Behavior;
+class Blackboard;
 NS_END
 
 NS_BEGIN(Client)
@@ -31,6 +32,9 @@ protected:
 private:
     Shared<Behavior> _behavior;
     Shared<MovementComponent> _movement;
+    Shared<Blackboard> _blackboard;
+
+    wstring _btFilePath;
 
 public:
     static Shared<AIController> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

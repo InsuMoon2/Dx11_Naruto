@@ -7,6 +7,7 @@ BTTask::BTTask()
 }
 
 BTTask::BTTask(const BTTask& rhs)
+    : BTNode(rhs)
 {
 
 }

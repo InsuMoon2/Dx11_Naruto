@@ -130,6 +130,8 @@
     </ClInclude>
     <ClInclude Include="..\Public\UIObject.h" />
     <ClInclude Include="..\Public\Character.h" />
+    <ClInclude Include="..\Public\BTTask_MoveTo.h" />
+    <ClInclude Include="..\Public\BTNode_Factory.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -368,6 +370,8 @@
     </ClCompile>
     <ClCompile Include="..\Private\UIObject.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
+    <ClCompile Include="..\Private\BTTask_MoveTo.cpp" />
+    <ClCompile Include="..\Private\BTNode_Factory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">
