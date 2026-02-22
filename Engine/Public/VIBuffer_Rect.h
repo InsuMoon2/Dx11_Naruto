@@ -16,6 +16,7 @@ public:
 public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* pArg);
+    void    BeginPlay() override;
 
 public:
     static Shared<VIBuffer_Rect> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

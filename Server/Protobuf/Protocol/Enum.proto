@@ -11,6 +11,7 @@ enum ComponentID
     COMPONENT_TYPE_COLLIDER             = 3;
     COMPONENT_TYPE_RECT                 = 4;
     COMPONENT_TYPE_SHADER               = 5;
+    COMPONENT_TYPE_TERRAIN              = 6;
 
     COMPONENT_TYPE_TEXTURE_DEFAULT      = 99;
     COMPONENT_TYPE_AI                   = 100;

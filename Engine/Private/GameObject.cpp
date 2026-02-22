@@ -25,14 +25,23 @@ GameObject::~GameObject()
 
 HRESULT GameObject::Initialize(void* arg)
 {
-    FGameObjectDesc* desc = static_cast<FGameObjectDesc*>(arg);
+    // Transform
+    {
+        _transformCom = Transform::Create(_device, _context);
+        CHECK_NULL(_transformCom, E_FAIL);
 
-    _transformCom = Transform::Create(_device, _context);
-    CHECK_NULL(_transformCom, E_FAIL);
+        CHECK_FAILED(_transformCom->Initialize(arg), E_FAIL);
 
-    CHECK_FAILED(_transformCom->Initialize(desc), E_FAIL);
+        _components.emplace(Transform::StaticTypeID(), _transformCom);
+    }
 
-    _components.emplace(Transform::StaticTypeID(), _transformCom);
+    if (arg != nullptr)
+    {
+        FGameObjectDesc* desc = static_cast<FGameObjectDesc*>(arg);
+
+        // TODO : 게임 오브젝트 멤버를 채워넣어야 하면, 여기서 진행
+
+    }
 
     // Test
     LOG_INFO(Get_GUID());

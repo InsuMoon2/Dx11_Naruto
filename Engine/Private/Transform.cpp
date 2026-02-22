@@ -30,6 +30,9 @@ HRESULT Transform::Initialize_Prototype()
 
 HRESULT Transform::Initialize(void* arg)
 {
+    if (arg == nullptr)
+        return S_OK;
+
     FTransformDesc defaultDesc = {};
     FTransformDesc* desc = arg ? static_cast<FTransformDesc*>(arg) : &defaultDesc;
 

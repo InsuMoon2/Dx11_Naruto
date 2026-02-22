@@ -23,7 +23,7 @@ HRESULT VIBuffer_Rect::Initialize_Prototype()
 {
     _numVertexBuffers = 1;
     _numVertices = 4;
-    _vertexStride = sizeof(FVertexDesc);
+    _vertexStride = sizeof(FVertexTex);
     _numIndices = 6;
     _indexStride = sizeof(uint16);
     _primitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -36,20 +36,20 @@ HRESULT VIBuffer_Rect::Initialize_Prototype()
     vertexDesc.CPUAccessFlags = 0;
     vertexDesc.MiscFlags = 0;
 
-    vector<FVertexDesc> vertices;
+    vector<FVertexTex> vertices;
     vertices.resize(_numVertices);
 
     vertices[0].position = Vec3(-0.5f, 0.5f, 0.f);
-    vertices[0].textCoord = Vec2(0.f, 0.f);
+    vertices[0].texCoord = Vec2(0.f, 0.f);
 
     vertices[1].position = Vec3(0.5f, 0.5f, 0.f);
-    vertices[1].textCoord = Vec2(1.f, 0.f);
+    vertices[1].texCoord = Vec2(1.f, 0.f);
 
     vertices[2].position = Vec3(0.5f, -0.5f, 0.f);
-    vertices[2].textCoord = Vec2(1.f, 1.f);
+    vertices[2].texCoord = Vec2(1.f, 1.f);
 
     vertices[3].position = Vec3(-0.5f, -0.5f, 0.f);
-    vertices[3].textCoord = Vec2(0.f, 1.f);
+    vertices[3].texCoord = Vec2(0.f, 1.f);
 
     D3D11_SUBRESOURCE_DATA vertexData;
     vertexData.pSysMem = vertices.data();
@@ -87,6 +87,13 @@ HRESULT VIBuffer_Rect::Initialize(void* pArg)
 {
 
     return S_OK;
+}
+
+void VIBuffer_Rect::BeginPlay()
+{
+    VIBuffer::BeginPlay();
+
+
 }
 
 Shared<VIBuffer_Rect> VIBuffer_Rect::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

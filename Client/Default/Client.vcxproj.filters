@@ -72,6 +72,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\MovementComponent.h" />
     <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -133,6 +134,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\MovementComponent.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -194,6 +196,9 @@
     </Filter>
     <Filter Include="03. Component\02. Movement">
       <UniqueIdentifier>{2c2afcac-3899-4bf5-a77e-096e9b48e67e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\Terrain">
+      <UniqueIdentifier>{4cffa5f5-ca7f-46cc-821a-5d4a9aa3f8ab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

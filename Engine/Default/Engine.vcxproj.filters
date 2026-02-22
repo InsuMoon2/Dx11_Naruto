@@ -110,29 +110,32 @@
       <Filter>01. Utility\04. Component\02. VIBuffer\00. Rect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Blackboard.h">
-      <Filter>01. Utility\06. Behaviore Tree\00. Blackboard</Filter>
+      <Filter>01. Utility\06. Behavior Tree\00. Blackboard</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BTNode.h">
-      <Filter>01. Utility\06. Behaviore Tree\01. BT Node</Filter>
+      <Filter>01. Utility\06. Behavior Tree\01. BT Node</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BTComposite.h">
-      <Filter>01. Utility\06. Behaviore Tree\02. Composite Node</Filter>
+      <Filter>01. Utility\06. Behavior Tree\02. Composite Node</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BTTask.h">
-      <Filter>01. Utility\06. Behaviore Tree\03. Task Node</Filter>
+      <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BTTask_Wait.h">
-      <Filter>01. Utility\06. Behaviore Tree\03. Task Node</Filter>
+      <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\BehaviorTree.h">
-      <Filter>01. Utility\06. Behaviore Tree\99. Component</Filter>
+      <Filter>01. Utility\06. Behavior Tree\99. Component</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIObject.h" />
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\BTTask_MoveTo.h" />
     <ClInclude Include="..\Public\BTNode_Factory.h" />
     <ClInclude Include="..\Public\BTRoot.h" />
+    <ClInclude Include="..\Public\VIBuffer_Terrain.h">
+      <Filter>01. Utility\04. Component\02. VIBuffer\02. Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -225,27 +228,6 @@
     <Filter Include="01. Utility\05. Rendering">
       <UniqueIdentifier>{a4e2c1a3-14f0-4285-817e-4b0033f0ae53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\06. Behaviore Tree">
-      <UniqueIdentifier>{b8f619ba-e797-4601-b104-b4d9aab48936}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\06. Behaviore Tree\00. Blackboard">
-      <UniqueIdentifier>{f989a3aa-a2f4-462e-a7d8-59d18f76b17b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\06. Behaviore Tree\04. Decorator Node">
-      <UniqueIdentifier>{9fa38af0-c64f-45e5-8bd6-37429fa1b60e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\06. Behaviore Tree\03. Task Node">
-      <UniqueIdentifier>{78df8247-2612-4f42-a9c9-ab49e9a6b110}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\06. Behaviore Tree\02. Composite Node">
-      <UniqueIdentifier>{203f4867-37d0-4e27-9d76-9fe75070f9ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\06. Behaviore Tree\01. BT Node">
-      <UniqueIdentifier>{52174536-102a-4f8d-8749-5c17f50a38e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\06. Behaviore Tree\99. Component">
-      <UniqueIdentifier>{5b10fee1-054e-41fa-9caf-99b78909573d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\04. Component\03. Shader">
       <UniqueIdentifier>{159f17cc-8e39-44f1-bd35-41fc881cbc55}</UniqueIdentifier>
     </Filter>
@@ -257,6 +239,27 @@
     </Filter>
     <Filter Include="94. Protocol">
       <UniqueIdentifier>{2356c5b4-1752-4137-82da-1281193a9d6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\06. Behavior Tree">
+      <UniqueIdentifier>{b8f619ba-e797-4601-b104-b4d9aab48936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\06. Behavior Tree\00. Blackboard">
+      <UniqueIdentifier>{f989a3aa-a2f4-462e-a7d8-59d18f76b17b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\06. Behavior Tree\04. Decorator Node">
+      <UniqueIdentifier>{9fa38af0-c64f-45e5-8bd6-37429fa1b60e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\06. Behavior Tree\03. Task Node">
+      <UniqueIdentifier>{78df8247-2612-4f42-a9c9-ab49e9a6b110}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\06. Behavior Tree\02. Composite Node">
+      <UniqueIdentifier>{203f4867-37d0-4e27-9d76-9fe75070f9ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\06. Behavior Tree\01. BT Node">
+      <UniqueIdentifier>{52174536-102a-4f8d-8749-5c17f50a38e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\06. Behavior Tree\99. Component">
+      <UniqueIdentifier>{5b10fee1-054e-41fa-9caf-99b78909573d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -351,29 +354,32 @@
       <Filter>01. Utility\04. Component\02. VIBuffer\00. Rect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Blackboard.cpp">
-      <Filter>01. Utility\06. Behaviore Tree\00. Blackboard</Filter>
+      <Filter>01. Utility\06. Behavior Tree\00. Blackboard</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BTNode.cpp">
-      <Filter>01. Utility\06. Behaviore Tree\01. BT Node</Filter>
+      <Filter>01. Utility\06. Behavior Tree\01. BT Node</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BTComposite.cpp">
-      <Filter>01. Utility\06. Behaviore Tree\02. Composite Node</Filter>
+      <Filter>01. Utility\06. Behavior Tree\02. Composite Node</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BTTask.cpp">
-      <Filter>01. Utility\06. Behaviore Tree\03. Task Node</Filter>
+      <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BTTask_Wait.cpp">
-      <Filter>01. Utility\06. Behaviore Tree\03. Task Node</Filter>
+      <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\BehaviorTree.cpp">
-      <Filter>01. Utility\06. Behaviore Tree\99. Component</Filter>
+      <Filter>01. Utility\06. Behavior Tree\99. Component</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIObject.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\BTTask_MoveTo.cpp" />
     <ClCompile Include="..\Private\BTNode_Factory.cpp" />
     <ClCompile Include="..\Private\BTRoot.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
+      <Filter>01. Utility\04. Component\02. VIBuffer\02. Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

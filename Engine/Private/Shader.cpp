@@ -135,8 +135,8 @@ Shared<Shader> Shader::Create(ComPtr<Device> device,
                               ComPtr<DeviceContext> context)
 {
     return Create(device, context, L"../../Client/Bin/Shaders/Shader_VtxTex.hlsl",
-        FVertexDesc::Vertex_Desc_Layout,
-        FVertexDesc::Vertex_Desc_Layout_Count);
+        FVertexTex::Vertex_Desc_Layout,
+        FVertexTex::Vertex_Desc_Layout_Count);
 }
 
 Shared<Shader> Shader::Create(ComPtr<Device> device, ComPtr<DeviceContext> context,

@@ -183,6 +183,7 @@
     <ClInclude Include="..\Public\CombatStat.h" />
     <ClInclude Include="..\Public\Spawn_Helper.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="..\Private\SimpleMath.cpp" />
     <ClCompile Include="..\Private\Spawn_Helper.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\Terrain.cpp" />
     <!-- <ClCompile Include="Client.cpp" /> -->
     <ClCompile Include="IReplicable.cpp" />
     <ClCompile Include="pch.cpp">

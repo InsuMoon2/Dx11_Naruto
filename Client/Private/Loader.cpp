@@ -122,8 +122,8 @@ void Loader::Register_Components()
         Shader::StaticTypeID(),
         [](auto d, auto c) { return Shader::Create(d, c,
             TEXT("../../Client/Bin/Shaders/Shader_VtxTex.hlsl"),
-            FVertexDesc::Vertex_Desc_Layout,
-            FVertexDesc::Vertex_Desc_Layout_Count); },
+            FVertexTex::Vertex_Desc_Layout,
+            FVertexTex::Vertex_Desc_Layout_Count); },
         Shader::StaticClassName());
     factory->Register_Prototype(Shader::StaticTypeID(), staticLevel, _device, _context);
 

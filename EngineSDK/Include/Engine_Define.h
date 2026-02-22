@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <directxtk/SimpleMath.h>
+#include <DirectXCollision.h>
 #include <wrl.h>
 
 #include <directxtk/DDSTextureLoader.h>
