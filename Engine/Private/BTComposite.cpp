@@ -33,6 +33,18 @@ void BTComposite::Set_Blackboard(Shared<Blackboard> blackboard)
     }
 }
 
+void BTComposite::Gather_NodeResults(map<int, EBTNodeResult>& outResults)
+{
+    // 자신의 상태 저장
+    BTNode::Gather_NodeResults(outResults);
+
+    // 보유한 모든 자식들에게 재귀
+    for (auto child : _children)
+    {
+        child->Gather_NodeResults(outResults);
+    }
+}
+
 BTSelector::BTSelector(const BTSelector& rhs)
     : BTComposite(rhs)
 {

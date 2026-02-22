@@ -18,16 +18,23 @@ public:
     virtual void Initialize() {};
     virtual EBTNodeResult Update(float timeDelta);
 
+public:
     // 종료 (Success/Fail/Abort 시 호출)
     virtual void OnTerminate(EBTNodeResult result) {};
 
     // 블랙보드 세팅
-    virtual void Set_Blackboard(Shared<Blackboard> blackboard) { _blackboard = blackboard; }
-    void Set_Owner(Shared<GameObject> owner) { _owner = owner; }
+    virtual void  Set_Blackboard(Shared<Blackboard> blackboard) { _blackboard = blackboard; }
+    void          Set_Owner(Shared<GameObject> owner) { _owner = owner; }
 
     EBTNodeResult Get_LastResult() const { return _lastResult; }
     int           Get_DebugId() const { return _debugId; }
     void          Set_DebugId(int id) { _debugId = id; }
+
+    virtual void  OnDraw_Inspector() {};
+    virtual json  Serialize_ToJson() { return json::object(); }
+    virtual void  Deserialize_FromJson(const json& data) {};
+
+    virtual void  Gather_NodeResults(map<int, EBTNodeResult>& outResults);
 
 protected:
     Weak<Blackboard>  _blackboard;

@@ -15,6 +15,7 @@ public:
     virtual void    OnTerminate(EBTNodeResult result) override;
 
     virtual void    Set_Blackboard(Shared<Blackboard> blackboard) override;
+    virtual void    Gather_NodeResults(map<int, EBTNodeResult>& outResults) override;
 
 protected:
     vector<Shared<BTNode>> _children;

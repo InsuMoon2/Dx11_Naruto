@@ -12,8 +12,12 @@ public:
     virtual ~BTTask_Wait() = default;
 
 public:
-    virtual void Initialize() override;
-    virtual EBTNodeResult Update(float timeDelta) override;
+    void Initialize() override;
+    EBTNodeResult Update(float timeDelta) override;
+
+    void OnDraw_Inspector() override;
+    json Serialize_ToJson() override;
+    void Deserialize_FromJson(const json& data) override;
 
 public:
     float _waitTime = 1.f;

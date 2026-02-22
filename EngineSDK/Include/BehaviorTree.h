@@ -7,21 +7,24 @@ NS_BEGIN(Engine)
 class BTNode;
 class Blackboard;
 
-class ENGINE_DLL Behavior : public Component
+class ENGINE_DLL BehaviorTree : public Component
 {
 public:
     GENERATED_COMPONENT(Behavior, Protocol::COMPONENT_TYPE_AI)
 
 public:
-    explicit Behavior(ComPtr<Device> device, ComPtr<DeviceContext> context);
-    explicit Behavior(const Behavior& rhs);
-    virtual ~Behavior();
+    explicit BehaviorTree(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    explicit BehaviorTree(const BehaviorTree& rhs);
+    virtual ~BehaviorTree();
 
 public:
     virtual HRESULT Initialize_Prototype();
     virtual HRESULT Initialize(void* arg);
     virtual void    BeginPlay() override;
     virtual void    Update(float timeDelta);
+
+    virtual json    To_Json() const override;
+    virtual void    From_Json(const json& data) override;
 
 public:
     void Set_RootNode(Shared<BTNode> rootNode);
@@ -33,6 +36,7 @@ public:
 
     map<int, EBTNodeResult> Get_AllNodeResults() const;
 
+
 private:
     Shared<BTNode> Create_Node(const string& typeName);
 
@@ -40,8 +44,10 @@ private:
     Shared<BTNode>     _rootNode;
     Shared<Blackboard> _blackboard;
 
+    string _btFilePath = "(None)";
+
 public:
-    static Shared<Behavior>   Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    static Shared<BehaviorTree>   Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     virtual Shared<Component> Clone(void* arg = nullptr) override;
 
 };

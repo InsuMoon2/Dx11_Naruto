@@ -3,7 +3,7 @@
 #include "Character.h"
 
 NS_BEGIN(Engine)
-class Behavior;
+class BehaviorTree;
 NS_END
 
 NS_BEGIN(Client)
@@ -41,7 +41,7 @@ private:
     Shared<CombatStat>          _combatStat{};
     Shared<MovementComponent>   _movement{};
     Shared<AIController>        _aiController{};
-    Shared<Behavior>            _behavior;
+    Shared<BehaviorTree>            _behavior;
 
 
 public:

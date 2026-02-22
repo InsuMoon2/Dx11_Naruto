@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "AIController.h"
-#include "Behavior.h"
+#include "BehaviorTree.h"
 #include "MovementComponent.h"
 #include "GameObject.h"
 #include "Blackboard.h"
@@ -36,7 +36,7 @@ void AIController::BeginPlay()
     auto pawn = Get_Pawn();
 
     _movement = pawn->Get_Component<MovementComponent>();
-    _behavior = pawn->Get_Component<Behavior>();
+    _behavior = pawn->Get_Component<BehaviorTree>();
 
     if (_behavior)
         _blackboard = _behavior->Get_Blackboard();

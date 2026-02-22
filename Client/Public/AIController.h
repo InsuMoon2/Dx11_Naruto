@@ -3,7 +3,7 @@
 #include "Controller.h"
 
 NS_BEGIN(Engine)
-class Behavior;
+class BehaviorTree;
 class Blackboard;
 NS_END
 
@@ -30,7 +30,7 @@ protected:
     void    From_Json(const json& data) override;
 
 private:
-    Shared<Behavior> _behavior;
+    Shared<BehaviorTree> _behavior;
     Shared<MovementComponent> _movement;
     Shared<Blackboard> _blackboard;
 

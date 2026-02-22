@@ -31,6 +31,7 @@
             "type": "COMPONENT_TYPE_TEXTURE"
         },
         {
+            "bt_filepath": "../../Client/Bin/Resources\\Data\\json\\BehaviorTrees\\Test_WaitMove.json",
             "type": "COMPONENT_TYPE_AI"
         },
         {
@@ -55,7 +56,7 @@
             "yaw_speed": 0.20000000298023224
         }
     ],
-    "guid": "ea128e29-7f2d-4391-a9a9-50afa9710116",
+    "guid": "bdebf710-7b96-422b-bc9f-96a03bf804a0",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster",
     "static_class": "Monster"

@@ -7,6 +7,7 @@ namespace ed = ax::NodeEditor;
 
 NS_BEGIN(Engine)
 class Blackboard;
+class BehaviorTree;
 NS_END
 
 NS_BEGIN(Editor)
@@ -25,7 +26,7 @@ public:
 public:
     void Load_BehaviorTree(const string& path);
     void Save_BehaviorTree(const string& path);
-    void New_BehaviorTree();
+    void Create_BehaviorTree();
 
 private:
     // UI
@@ -41,8 +42,10 @@ private:
     // 노드 관리
     void Create_Node(const string& nodeType, ImVec2 position);
     void Delete_Node(ed::NodeId nodeId);
+
     void Create_Link(ed::PinId startPin, ed::PinId endPin);
     void Delete_Link(ed::LinkId linkId);
+
     void Handle_LinkCreation();
     void Handle_Deletion();
 
@@ -51,6 +54,9 @@ private:
     void Desirialize_FromJson(const json& json);
 
     ImColor Get_NodeColor(const string& nodeType) const;
+
+public:
+    void Set_DebugTarget(Weak<BehaviorTree> targetBehavior) { _debugTarget = targetBehavior; }
 
 private:
     ed::EditorContext* _editorContext = {};
@@ -81,6 +87,10 @@ private: /* Blackboard */
     char    _newKeyNameBuf[64] = "";
 
     int     _newKeyTypeIndex = 0;
+
+    // 현재 보고있는 AI의 Behavior
+    Weak<BehaviorTree> _debugTarget;
+    map<int, EBTNodeResult> _nodeStateCache; // 매 프레임 업데이트되는 상태값 캐싱
 
 public:
     static Shared<BehaviorTree_View> Create();

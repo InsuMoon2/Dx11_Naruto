@@ -1,0 +1,74 @@
+{
+    "blackboard": {
+        "bools": {},
+        "floats": {},
+        "ints": {},
+        "vectors": {}
+    },
+    "links": [
+        {
+            "end": 4,
+            "id": 8,
+            "start": 2
+        },
+        {
+            "end": 10,
+            "id": 13,
+            "start": 6
+        },
+        {
+            "end": 12,
+            "id": 14,
+            "start": 7
+        }
+    ],
+    "nodes": [
+        {
+            "id": 1,
+            "input_pin_id": 0,
+            "name": "Root",
+            "output_pin_ids": [
+                2
+            ],
+            "parameters": {},
+            "pos_x": 100.0,
+            "pos_y": 300.0,
+            "type": "Root"
+        },
+        {
+            "id": 3,
+            "input_pin_id": 4,
+            "name": "Selector",
+            "output_pin_ids": [
+                5,
+                6,
+                7
+            ],
+            "parameters": {},
+            "pos_x": 99.0,
+            "pos_y": 460.0,
+            "type": "Selector"
+        },
+        {
+            "id": 9,
+            "input_pin_id": 10,
+            "name": "Task_Wait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -62.0,
+            "pos_y": 668.0,
+            "type": "Task_Wait"
+        },
+        {
+            "id": 11,
+            "input_pin_id": 12,
+            "name": "Task_Move",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 258.0,
+            "pos_y": 668.0,
+            "type": "Task_Move"
+        }
+    ],
+    "root_node_id": 1
+}

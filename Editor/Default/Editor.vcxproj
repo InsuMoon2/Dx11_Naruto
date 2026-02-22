@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\BehaviorTree_Inspector.h" />
     <ClInclude Include="..\Public\BehaviorTree_View.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
     <ClInclude Include="..\Public\Editor_MainApp.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\BehaviorTree_Inspector.cpp" />
     <ClCompile Include="..\Private\BehaviorTree_View.cpp" />
     <ClCompile Include="..\Private\Editor_MainApp.cpp" />
     <ClCompile Include="..\Private\Level_Editor.cpp" />

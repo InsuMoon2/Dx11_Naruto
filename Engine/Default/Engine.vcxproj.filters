@@ -125,13 +125,14 @@
       <Filter>01. Utility\06. Behaviore Tree\03. Task Node</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Shader.h" />
-    <ClInclude Include="..\Public\Behavior.h">
+    <ClInclude Include="..\Public\BehaviorTree.h">
       <Filter>01. Utility\06. Behaviore Tree\99. Component</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIObject.h" />
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\BTTask_MoveTo.h" />
     <ClInclude Include="..\Public\BTNode_Factory.h" />
+    <ClInclude Include="..\Public\BTRoot.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -365,13 +366,14 @@
       <Filter>01. Utility\06. Behaviore Tree\03. Task Node</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Shader.cpp" />
-    <ClCompile Include="..\Private\Behavior.cpp">
+    <ClCompile Include="..\Private\BehaviorTree.cpp">
       <Filter>01. Utility\06. Behaviore Tree\99. Component</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIObject.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\BTTask_MoveTo.cpp" />
     <ClCompile Include="..\Private\BTNode_Factory.cpp" />
+    <ClCompile Include="..\Private\BTRoot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include <fstream>
 #include "Prefab_View.h"
+#include "BehaviorTree_View.h"
 
 Content_Browser::Content_Browser()
     : EditorWindow(TEXT("Content Browser"))
@@ -240,6 +241,9 @@ void Content_Browser::Draw_AssetView()
             bool isValidPrefab = (extension == ".json" &&
                 _currentFolder->fullPath.find(L"Prefabs") != wstring::npos);
 
+            bool isBehaviorTree = (extension == ".json" &&
+                _currentFolder->fullPath.find(L"BehaviorTrees") != wstring::npos);
+
             // 아이콘
             ImGui::PushID(fileName.c_str());
 
@@ -250,11 +254,17 @@ void Content_Browser::Draw_AssetView()
             {
                 wstring fullPath = filePath;
 
-                ImGui::SetDragDropPayload("CONTENT_PREFAB",
-                    fullPath.c_str(),
-                    (fullPath.size() + 1) * sizeof(wchar_t));
+                ImGui::SetDragDropPayload("CONTENT_PREFAB", fullPath.c_str(), (fullPath.size() + 1) * sizeof(wchar_t));
+                ImGui::EndDragDropSource();
+            }
 
-                //LOG_INFO("Spawn : {}", pureName.c_str());
+            // BehaviorTree 드래그
+            else if (isBehaviorTree && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            {
+                wstring fullPath = filePath;
+
+                ImGui::SetDragDropPayload("CONTENT_BEHAVIORTREE", fullPath.c_str(), (fullPath.size() + 1) * sizeof(wchar_t));
+                ImGui::SetTooltip("%s", pureName.c_str());
                 ImGui::EndDragDropSource();
             }
 
@@ -268,6 +278,19 @@ void Content_Browser::Draw_AssetView()
                     string fullPath = Utils::ToString(filePath);
 
                     prefabView->Open_Prefab(pureName, fullPath);
+                }
+            }
+
+            // 더블클릭 -> BehaviorTree View열기
+            if (isBehaviorTree && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+            {
+                auto behaviorView = dynamic_pointer_cast<BehaviorTree_View>(EDITOR->Get_Window(TEXT("BehaviorTree")));
+
+                if (behaviorView)
+                {
+                    string fullPath = Utils::ToString(filePath);
+
+                    behaviorView->Load_BehaviorTree(fullPath);
                 }
             }
 
@@ -305,7 +328,8 @@ void Content_Browser::Draw_AssetView()
                 if (offset > 0)
                     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
 
-                if (isValidPrefab)
+                // 있다면, 초록색으로 세팅, 없다면 레거시 파일 새로고침 필요
+                if (isValidPrefab || isBehaviorTree)
                 {
                     ImGui::TextColored(ImVec4(0.5f, 1.f, 0.5f, 1.f), "%s", pureName.c_str());
                 }

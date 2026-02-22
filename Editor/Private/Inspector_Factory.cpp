@@ -3,6 +3,7 @@
 #include "CombatStat_Inspector.h"
 #include "Transform_Inspector.h"
 #include "Texture_Inspector.h"
+#include "BehaviorTree_Inspector.h"
 
 IMPLEMENT_SINGLETON(Inspector_Factory)
 
@@ -11,6 +12,7 @@ void Inspector_Factory::Initialize()
     Register_Inspector(Protocol::COMPONENT_TYPE_TRANSFORM, make_shared<Transform_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_COMBAT_STAT, make_shared<CombatStat_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, make_shared<Texture_Inspector>());
+    Register_Inspector(Protocol::COMPONENT_TYPE_AI, make_shared<BehaviorTree_Inspector>());
 
 }
 

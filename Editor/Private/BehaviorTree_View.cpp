@@ -3,6 +3,9 @@
 #include <fstream>
 #include <commdlg.h>
 #include "Blackboard.h"
+#include "BehaviorTree.h"
+#include "BTNode_Factory.h"
+#include "BTNode.h"
 
 BehaviorTree_View::BehaviorTree_View()
     : EditorWindow(TEXT("BehaviorTree"))
@@ -30,12 +33,21 @@ void BehaviorTree_View::Initialize()
     config.SettingsFile = nullptr;
     _editorContext = ed::CreateEditor(&config);
 
-    New_BehaviorTree();
+    Create_BehaviorTree();
 }
 
 void BehaviorTree_View::Update(float timeDelta)
 {
     EditorWindow::Update(timeDelta);
+
+    if (!_debugTarget.expired())
+    {
+        _nodeStateCache = _debugTarget.lock()->Get_AllNodeResults();
+    }
+    else
+    {
+        _nodeStateCache.clear();
+    }
 }
 
 void BehaviorTree_View::OnGui()
@@ -124,6 +136,8 @@ void BehaviorTree_View::Load_BehaviorTree(const string& path)
 
     _currentFilePath = path;
     _isDirty = false;
+
+    _isActive = true;
 }
 
 void BehaviorTree_View::Save_BehaviorTree(const string& path)
@@ -137,7 +151,7 @@ void BehaviorTree_View::Save_BehaviorTree(const string& path)
     _isDirty = false;
 }
 
-void BehaviorTree_View::New_BehaviorTree()
+void BehaviorTree_View::Create_BehaviorTree()
 {
     _nodes.clear();
     _links.clear();
@@ -158,7 +172,7 @@ void BehaviorTree_View::Draw_ToolBar()
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 4));
 
     if (ImGui::Button(ICON_FA_FILE "  New  "))
-        New_BehaviorTree();
+        Create_BehaviorTree();
 
     ImGui::SameLine();
 
@@ -405,6 +419,40 @@ void BehaviorTree_View::Draw_Node(const FBTEditorNode& node)
     ed::BeginNode(node.id);
     ImGui::PushID(node.id.AsPointer());
 
+    // 상태에 따른 테두리 테두리 색상 처리
+    EBTNodeResult nodeState = EBTNodeResult::Failed; // 기본 Failed
+    bool hasState = _nodeStateCache.contains(node.id.Get());
+    if (hasState)
+    {
+        nodeState = _nodeStateCache[node.id.Get()];
+    }
+
+    // 디버그 타겟이 있으면 색상 처리, 없으면 기본 회색
+    if (hasState)
+    {
+        ImColor borderColor;
+        float borderThickness = 1.f;
+
+        switch (nodeState)
+        {
+        case EBTNodeResult::Succeeded:
+            borderColor = ImColor(0, 255, 0, 255); 
+            borderThickness = 2.0f;
+            break;
+        case EBTNodeResult::Failed:
+            borderColor = ImColor(255, 0, 0, 255); 
+            borderThickness = 2.0f;
+            break;
+        case EBTNodeResult::InProgress:
+            borderColor = ImColor(255, 200, 0, 255);
+            borderThickness = 3.0f;
+            break;
+        }
+
+        ed::PushStyleColor(ed::StyleColor_NodeBorder, borderColor);
+        ed::PushStyleVar(ed::StyleVar_NodeBorderWidth, borderThickness);
+    }
+
     ImDrawList* drawList = ImGui::GetWindowDrawList();
     float nodeWidth = 140.0f;
 
@@ -482,6 +530,13 @@ void BehaviorTree_View::Draw_Node(const FBTEditorNode& node)
 
     ImGui::PopID();
     ed::EndNode();
+
+    if (hasState)
+    {
+        ed::PopStyleColor();
+        ed::PopStyleVar();
+    }
+
     ed::PopStyleColor();
     ed::PopStyleVar(2);
 }
@@ -502,7 +557,9 @@ void BehaviorTree_View::Draw_ContextMenu()
 
     if (ImGui::BeginPopup("CreateNodeMenu"))
     {
-        if (ImGui::BeginMenu("Composite"))
+#pragma region Legacy
+
+        /*if (ImGui::BeginMenu("Composite"))
         {
             if (ImGui::MenuItem("Sequence")) Create_Node("Sequence", _popupPosition);
             if (ImGui::MenuItem("Selector")) Create_Node("Selector", _popupPosition);
@@ -525,7 +582,42 @@ void BehaviorTree_View::Draw_ContextMenu()
             if (ImGui::MenuItem("Attack"))  Create_Node("Task_Attack", _popupPosition);
 
             ImGui::EndMenu();
+        }*/
+
+#pragma endregion
+        auto& registeredNode = GET_SINGLE(BTNode_Factory)->Get_RegisteredNodes();
+
+        // 정렬
+        map<string, vector<string>> categoryMap;
+        for (const auto& pair : registeredNode)
+        {
+            const string& nodeName = pair.first;
+            const string& nodeCategory = pair.second.category;
+
+            // Root 무시
+            if (nodeCategory == "Hidden") continue;
+
+            categoryMap[nodeCategory].push_back(nodeName);
         }
+
+        for (const auto& categoryPair : categoryMap)
+        {
+            const string& categoryName = categoryPair.first;
+            const vector<string>& nodeNames = categoryPair.second;
+
+            if (ImGui::BeginMenu(categoryName.c_str()))
+            {
+                for (const string& nodeName : nodeNames)
+                {
+                    if (ImGui::MenuItem(nodeName.c_str())) 
+                    {
+                        Create_Node(nodeName, _popupPosition);
+                    }
+                }
+                ImGui::EndMenu();
+            }
+        }
+
         ImGui::EndPopup();
     }
     ed::Resume();
@@ -567,7 +659,10 @@ void BehaviorTree_View::Draw_NodeInspector()
 
     // 파라미터 편집
     ImGui::Text("Parameters:");
-    for (auto& [key, value] : selectedNode->parameters)
+    ImGui::Separator();
+#pragma region Legacy
+
+    /*for (auto& [key, value] : selectedNode->parameters)
     {
         vector<FBlackboardKeyInfo> allKeys = _blackboard->Get_AllKeys();
 
@@ -594,16 +689,27 @@ void BehaviorTree_View::Draw_NodeInspector()
                 _isDirty = true;
             }
         }
+    }*/
+
+#pragma endregion
+    if (selectedNode->runtimeInstance)
+    {
+        selectedNode->runtimeInstance->OnDraw_Inspector();
     }
+
 }
 
 void BehaviorTree_View::Create_Node(const string& nodeType, ImVec2 position)
 {
-    FBTEditorNode newNode;
+    _nodes.push_back(FBTEditorNode());
+
+    FBTEditorNode& newNode = _nodes.back();
+
     newNode.id = ed::NodeId(_nextId++);
     newNode.name = nodeType;
     newNode.nodeType = nodeType;
     newNode.position = position;
+    newNode.runtimeInstance = GET_SINGLE(BTNode_Factory)->Create(nodeType);
 
     if (nodeType == "Root")
         newNode.inputPin = ed::PinId(0);
@@ -630,7 +736,7 @@ void BehaviorTree_View::Create_Node(const string& nodeType, ImVec2 position)
         newNode.outputPins.push_back(ed::PinId(_nextId++));
     }
 
-    _nodes.push_back(newNode);
+    //_nodes.push_back(newNode);
     _isDirty = true;
 
     _pendingPositions.insert(newNode.id.Get());

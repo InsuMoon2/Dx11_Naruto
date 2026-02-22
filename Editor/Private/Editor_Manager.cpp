@@ -35,7 +35,7 @@ void Editor_Manager::Initialize()
     Add_Window(TEXT("Profiler"), Profiler_View::Create());
     Add_Window(TEXT("Prefab"), Prefab_View::Create());
 
-    Add_Window(TEXT("Behavior"), BehaviorTree_View::Create());
+    Add_Window(TEXT("BehaviorTree"), BehaviorTree_View::Create());
 }
 
 void Editor_Manager::Update(float timeDelta)

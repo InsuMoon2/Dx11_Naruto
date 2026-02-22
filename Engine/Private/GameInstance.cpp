@@ -15,6 +15,8 @@
 #include "Prefab_Manager.h"
 #include "Renderer.h"
 
+#include "BTNode_Factory.h"
+
 IMPLEMENT_SINGLETON(GameInstance)
 
 GameInstance::GameInstance()
@@ -143,6 +145,11 @@ HRESULT GameInstance::Present()
         return E_FAIL;
 
     return _graphicDevice->Present();
+}
+
+void GameInstance::Set_ImGuiContext(void* context)
+{
+    ImGui::SetCurrentContext(static_cast<ImGuiContext*>(context));
 }
 
 HRESULT GameInstance::Add_Timer(const wstring& timerTag)

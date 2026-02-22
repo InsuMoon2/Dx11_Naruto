@@ -12,7 +12,7 @@
 #include "Utils.h"
 #include "Component_Factory.h"
 #include "Replicator.h"
-#include "Behavior.h"
+#include "BehaviorTree.h"
 #include "CombatStat.h"
 #include "VIBuffer_Rect.h"
 #include "Shader.h"
@@ -111,7 +111,7 @@ void Loader::Register_Components()
     factory->Register<MovementComponent>(staticLevel, _device, _context);
     factory->Register<InputComponent>(staticLevel, _device, _context);
 
-    factory->Register<Behavior>(staticLevel, _device, _context);
+    factory->Register<BehaviorTree>(staticLevel, _device, _context);
     factory->Register<PlayerController>(staticLevel, _device, _context);
     factory->Register<AIController>(staticLevel, _device, _context);
 
@@ -149,6 +149,7 @@ HRESULT Loader::Loading_For_LogoLevel()
     uint32 levelIndex = ETOI(ELevelType::Logo);
 
     Register_Components();
+    Initialize_BT_Nodes();
 
     lstrcpy(_loadingText, TEXT("로고 리소스 로딩 중"));
 
@@ -179,6 +180,7 @@ HRESULT Loader::Loading_For_GamePlay()
     uint32 levelIndex = ETOI(ELevelType::GamePlay);
 
     Register_Components();
+    Initialize_BT_Nodes();
 
     lstrcpy(_loadingText, TEXT("게임플레이 리소스 로딩 중"));
 

@@ -3,7 +3,7 @@
 #include "CombatStat.h"
 #include "MovementComponent.h"
 #include "AIController.h"
-#include "Behavior.h"
+#include "BehaviorTree.h"
 #include "Texture.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"

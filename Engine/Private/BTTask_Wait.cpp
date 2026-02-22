@@ -38,6 +38,27 @@ EBTNodeResult BTTask_Wait::Update(float timeDelta)
 
 }
 
+void BTTask_Wait::OnDraw_Inspector()
+{
+    BTTask::OnDraw_Inspector();
+
+    ImGui::InputFloat("Wait Time##WaitTimeUnique", &_waitTime, 0.1f, 1.f, "%.2f");
+}
+
+json BTTask_Wait::Serialize_ToJson()
+{
+    json j = BTTask::Serialize_ToJson();
+
+    j["wait_time"] = _waitTime;
+
+    return j;
+}
+
+void BTTask_Wait::Deserialize_FromJson(const json& data)
+{
+    _waitTime = data.value("wait_time", 1.0f);
+}
+
 Shared<BTNode> BTTask_Wait::Clone()
 {
     auto clone = make_shared<BTTask_Wait>(*this);

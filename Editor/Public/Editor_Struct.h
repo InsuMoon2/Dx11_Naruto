@@ -2,6 +2,10 @@
 
 namespace ed = ax::NodeEditor;
 
+NS_BEGIN(Engine)
+class BTNode;
+NS_END
+
 struct FBTEditorNode
 {
     ed::NodeId id;
@@ -14,6 +18,7 @@ struct FBTEditorNode
     vector<ed::PinId> outputPins;   // 자식 연결들
     map<string, string> parameters;
 
+    Shared<BTNode> runtimeInstance;
 };
 
 struct FBTEditorLink

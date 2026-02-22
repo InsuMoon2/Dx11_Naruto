@@ -1,19 +1,20 @@
 ﻿#include "pch.h"
-#include "Behavior.h"
+#include "BehaviorTree.h"
 #include <fstream>
 #include "Blackboard.h"
 #include "BTComposite.h"
 #include "BTNode.h"
+#include "BTNode_Factory.h"
 #include "BTTask_Wait.h"
 
 //REGISTER_COMPONENT_FACTORY(Behavior, Protocol::COMPONENT_TYPE_AI)
 
-Behavior::Behavior(ComPtr<Device> device, ComPtr<DeviceContext> context)
+BehaviorTree::BehaviorTree(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
 }
 
-Behavior::Behavior(const Behavior& rhs)
+BehaviorTree::BehaviorTree(const BehaviorTree& rhs)
     : Component(rhs)
     , _rootNode(rhs._rootNode)
     , _blackboard(rhs._blackboard)
@@ -21,18 +22,18 @@ Behavior::Behavior(const Behavior& rhs)
 
 }
 
-Behavior::~Behavior()
+BehaviorTree::~BehaviorTree()
 {
 }
 
-HRESULT Behavior::Initialize_Prototype()
+HRESULT BehaviorTree::Initialize_Prototype()
 {
     Component::Initialize_Prototype();
 
     return S_OK;
 }
 
-HRESULT Behavior::Initialize(void* arg)
+HRESULT BehaviorTree::Initialize(void* arg)
 {
     _blackboard = Blackboard::Create();
 
@@ -40,12 +41,12 @@ HRESULT Behavior::Initialize(void* arg)
     return S_OK;
 }
 
-void Behavior::BeginPlay()
+void BehaviorTree::BeginPlay()
 {
     Component::BeginPlay();
 }
 
-void Behavior::Update(float timeDelta)
+void BehaviorTree::Update(float timeDelta)
 {
     if (!_rootNode)
         return;
@@ -58,7 +59,30 @@ void Behavior::Update(float timeDelta)
     }
 }
 
-void Behavior::Set_RootNode(Shared<BTNode> rootNode)
+json BehaviorTree::To_Json() const
+{
+    json j = Component::To_Json();
+
+    j["bt_filepath"] = _btFilePath;
+
+    return j;
+}
+
+void BehaviorTree::From_Json(const json& data)
+{
+    Component::From_Json(data);
+
+    _btFilePath = data.value("bt_filepath", string("(None)"));
+
+    if (_btFilePath != "(None)" && _btFilePath != "")
+    {
+        wstring pathW = Utils::ToWString(_btFilePath);
+
+        Load_FromJson(pathW);
+    }
+}
+
+void BehaviorTree::Set_RootNode(Shared<BTNode> rootNode)
 {
     _rootNode = rootNode;
 
@@ -68,7 +92,7 @@ void Behavior::Set_RootNode(Shared<BTNode> rootNode)
     }
 }
 
-void Behavior::Set_Blackboard(Shared<Blackboard> blackboard)
+void BehaviorTree::Set_Blackboard(Shared<Blackboard> blackboard)
 {
     _blackboard = blackboard;
 
@@ -78,7 +102,7 @@ void Behavior::Set_Blackboard(Shared<Blackboard> blackboard)
     }
 }
 
-HRESULT Behavior::Load_FromJson(const wstring& filePath)
+HRESULT BehaviorTree::Load_FromJson(const wstring& filePath)
 {
     ifstream file(filePath);
     if (!file.is_open())
@@ -86,6 +110,8 @@ HRESULT Behavior::Load_FromJson(const wstring& filePath)
         LOG_ERROR("Failed to Open BT JSON");
         return E_FAIL;
     }
+
+    _btFilePath = Utils::ToString(filePath);
 
     json root;
     file >> root;
@@ -105,15 +131,15 @@ HRESULT Behavior::Load_FromJson(const wstring& filePath)
             Shared<BTNode> newNode = Create_Node(type);
             if (!newNode) continue;
 
-            // TODO : 파라미터 (Wait 시간 등) 로드 <- 아직 안됐음 내일할거
-            // if (nodeJson.contains("parameters")) { ... }
+            // 노드 DebugId 할당
+            newNode->Set_DebugId(id);
+            newNode->Deserialize_FromJson(nodeJson);
 
             nodeMap[id] = newNode;
         }
     }
 
     // 부모 자식 연결. (Links 정보 이용)
-
     map<int, int> pinToNodeMap; // PinID -> NodeID로 매핑
 
     for (const auto& nodeJson : root["nodes"])
@@ -174,34 +200,36 @@ HRESULT Behavior::Load_FromJson(const wstring& filePath)
     return S_OK;
 }
 
-Shared<BTNode> Behavior::Create_Node(const string& typeName)
+map<int, EBTNodeResult> BehaviorTree::Get_AllNodeResults() const
 {
-    // Composite
-    if (typeName == "Sequence") return make_shared<BTSequence>();
-    if (typeName == "Selector") return make_shared<BTSelector>();
+    map<int, EBTNodeResult> result;
 
-    // Task
-    if (typeName == "Task_Wait") return make_shared<BTTask_Wait>(1.0f);
+    if (_rootNode)
+    {
+        _rootNode->Gather_NodeResults(result);
+    }
 
-    // 근데.. 클라에서 만들 테스크들은 어떻게할지?..
-    // Behavior Component를 상속받아서 클라이언트 Behavior를 만들어서 사용하는게 좋을거같은데
-
-    return nullptr;
+    return result;
 }
 
-Shared<Behavior> Behavior::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+Shared<BTNode> BehaviorTree::Create_Node(const string& typeName)
 {
-    auto instance = make_shared<Behavior>(device, context);
+    return GET_SINGLE(BTNode_Factory)->Create(typeName);
+}
+
+Shared<BehaviorTree> BehaviorTree::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+{
+    auto instance = make_shared<BehaviorTree>(device, context);
 
     instance->Initialize_Prototype();
 
     return instance;
 }
 
-Shared<Component> Behavior::Clone(void* arg)
+Shared<Component> BehaviorTree::Clone(void* arg)
 {
     // 기본 복사 생성자 호출
-    auto instance = make_shared<Behavior>(*this);
+    auto instance = make_shared<BehaviorTree>(*this);
 
     if (_rootNode)
     {

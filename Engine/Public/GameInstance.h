@@ -58,6 +58,9 @@ public: /* Graphic Device */
 	HRESULT                 Clear_Buffers(const Color& clearColor);
 	HRESULT                 Present();
 
+public: /* ImGui */
+    void                    Set_ImGuiContext(void* context);
+
 public: /* Timer Manager */
 	HRESULT                 Add_Timer(const wstring& timerTag);
 	float	                Compute_TimeDelta(const wstring& timerTag);

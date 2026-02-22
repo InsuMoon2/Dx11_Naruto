@@ -132,6 +132,7 @@
     <ClInclude Include="..\Public\Texture_Inspector.h">
       <Filter>04. Component_Inspector</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BehaviorTree_Inspector.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -223,6 +224,7 @@
     <ClCompile Include="..\Private\Texture_Inspector.cpp">
       <Filter>04. Component_Inspector</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\BehaviorTree_Inspector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">
