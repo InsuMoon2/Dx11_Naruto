@@ -46,8 +46,8 @@ HRESULT UIObject::Initialize(void* arg)
     _viewportWidth = GAME->Get_ViewportWidth();
     _viewportHeight = GAME->Get_ViewportHeight();
 
-    _transformMatrices[ETOI(EUITransformState::View)] = Matrix::Identity;
-    _transformMatrices[ETOI(EUITransformState::Proj)] = XMMatrixOrthographicLH(
+    _transformMatrices[ETOI(ETransformState::View)] = Matrix::Identity;
+    _transformMatrices[ETOI(ETransformState::Proj)] = XMMatrixOrthographicLH(
         _viewportWidth, _viewportHeight, 0.f, 1.f);
 
     // 초기 변환 행렬 계산
@@ -92,7 +92,7 @@ void UIObject::Update_Transform()
     _worldMatrix = scaleMatrix * transMatrix;
 }
 
-HRESULT UIObject::Bind_ShaderResource(Shared<Shader> shader, const char* constantName, EUITransformState transformState)
+HRESULT UIObject::Bind_ShaderResource(Shared<Shader> shader, const char* constantName, ETransformState transformState)
 {
     CHECK_NULL(shader, E_FAIL);
 

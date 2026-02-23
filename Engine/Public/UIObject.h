@@ -39,7 +39,7 @@ protected:
     void    Update_Transform();
 
     // 셰이더에 변환 행렬 바인딩용
-    HRESULT Bind_ShaderResource(Shared<Shader> shader, const char* constantName, EUITransformState transformState);
+    HRESULT Bind_ShaderResource(Shared<Shader> shader, const char* constantName, ETransformState transformState);
 
 protected:
     float _posX{}, _posY{}, _sizeX{}, _sizeY{};
@@ -49,7 +49,7 @@ protected:
 
     // UI 전용 변환 행렬
     Matrix _worldMatrix = Matrix::Identity;
-    Matrix _transformMatrices[ETOI(EUITransformState::END)];
+    Matrix _transformMatrices[ETOI(ETransformState::END)];
 
 public:
     virtual Shared<GameObject> Clone(void* arg) abstract;

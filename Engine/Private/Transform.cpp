@@ -207,9 +207,9 @@ Vec3 Transform::Get_LocalEulerAngles() const
 {
     Vec3 euler = _localRotation.ToEuler();  // Radian
 
-    euler.x = XMConvertToDegrees(euler.x);  // Pitch
-    euler.y = XMConvertToDegrees(euler.y);  // Yaw
-    euler.z = XMConvertToDegrees(euler.z);  // Roll
+    //euler.x = XMConvertToDegrees(euler.x);  // Pitch
+    //euler.y = XMConvertToDegrees(euler.y);  // Yaw
+    //euler.z = XMConvertToDegrees(euler.z);  // Roll
 
     return euler;  // Degree
 }
@@ -257,7 +257,7 @@ Vec3 Transform::Get_WorldScale() const
 
 Vec3 Transform::Get_WorldForward() const
 {
-    return Get_WorldMatrix().Forward();
+    return -Get_WorldMatrix().Forward();
 }
 
 Vec3 Transform::Get_WorldRight() const
@@ -351,7 +351,7 @@ void Transform::LookAt(const Vec3& targetWorldPos, const Vec3& upVector)
     direction.Normalize();
 
     // 회전 행렬 생성
-    Matrix lookAtMatrix = Matrix::CreateLookAt(Vec3::Zero, direction, upVector);
+    Matrix lookAtMatrix = XMMatrixLookAtLH(Vec3::Zero, direction, upVector);
     lookAtMatrix = lookAtMatrix.Invert(); // View -> World로 전환
 
     // Quaternion 추출

@@ -21,6 +21,9 @@
 #include "PlayerController.h"
 
 #include "BTNode_Factory.h"
+#include "Camera_Free.h"
+#include "Terrain.h"
+#include "VIBuffer_Terrain.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -116,22 +119,57 @@ void Loader::Register_Components()
     factory->Register<AIController>(staticLevel, _device, _context);
 
     // TODO : 셰이더, 텍스처쪽 깔끔하게 바꾸기
-    // Shader, Texture.. Lazy Load 또는 일단 테이블로 따로 빼는게 좋을듯
+    // Shader, Texture.. Lazy Load 또는 일단 테이블로 따로 빼는게 좋을듯..
+    // 일단 카메라까지만 적용해보고 이쪽먼저 건들자. 너무 맘에 안듦
 
-    factory->Register(
-        Shader::StaticTypeID(),
-        [](auto d, auto c) { return Shader::Create(d, c,
-            TEXT("../../Client/Bin/Shaders/Shader_VtxTex.hlsl"),
-            FVertexTex::Vertex_Desc_Layout,
-            FVertexTex::Vertex_Desc_Layout_Count); },
-        Shader::StaticClassName());
-    factory->Register_Prototype(Shader::StaticTypeID(), staticLevel, _device, _context);
+    // VertexTex 셰이더
+    {
+        factory->Register(
+            Shader::StaticTypeID(),
+            [](auto d, auto c) { return Shader::Create(d, c,
+                TEXT("../../Client/Bin/Shaders/Shader_VtxTex.hlsl"),
+                FVertexTex::Vertex_Desc_Layout,
+                FVertexTex::Vertex_Desc_Layout_Count); },
+            Shader::StaticClassName());
+
+        factory->Register_Prototype(Shader::StaticTypeID(), staticLevel, _device, _context);
+    }
+
+    // VertexNorTex 셰이더
+    {
+        factory->Register(
+            Protocol::COMPONENT_TYPE_SHADER_VTXNORTEX,
+            [](auto d, auto c) { return Shader::Create(d, c,
+                TEXT("../../Client/Bin/Shaders/Shader_VtxNorTex.hlsl"),
+                FVertexNormalTex::NormalTex_Layout,
+                ARRAYSIZE(FVertexNormalTex::NormalTex_Layout)); },
+            L"Shader_VtxNorTex");
+
+        factory->Register_Prototype(Protocol::COMPONENT_TYPE_SHADER_VTXNORTEX,
+            staticLevel, _device, _context);
+    }
+
+    // HeightMap
+    {
+        factory->Register(
+            Protocol::COMPONENT_TYPE_TERRAIN,
+            [](auto d, auto c) { return VIBuffer_Terrain::Create(d, c,
+                TEXT("../../Client/Bin/Resources/Textures/Terrain/Height.bmp")); },
+            L"VIBuffer_Terrain");
+
+        factory->Register_Prototype(Protocol::COMPONENT_TYPE_TERRAIN,
+            staticLevel, _device, _context);
+    }
 
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PLAYER,
         Player::Create(_device, _context));
 
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_MONSTER,
         Monster::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_TERRAIN,
+        Terrain::Create(_device, _context));
+
 }
 
 void Loader::Initialize_BT_Nodes()
@@ -167,6 +205,7 @@ HRESULT Loader::Loading_For_LogoLevel()
         return E_FAIL;
     }
 
+
     lstrcpy(_loadingText, TEXT("Logo 로딩 완료"));
 
 
@@ -194,9 +233,24 @@ HRESULT Loader::Loading_For_GamePlay()
     if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_PLAYER,
         Player::Create(_device, _context))))
     {
-        MSG_BOX("Failed to Add Prototype : Prototype_TestPlayer");
+        MSG_BOX("Failed to Add Prototype : Prototype_Player");
         return E_FAIL;
     }
+
+    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_TERRAIN,
+        Terrain::Create(_device, _context))))
+    {
+        MSG_BOX("Failed to Add Prototype : Prototype_Terrain");
+        return E_FAIL;
+    }
+
+    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_CAMERA_FREE,
+        Camera_Free::Create(_device, _context))))
+    {
+        MSG_BOX("Failed to Add Prototype : Camera_Free");
+        return E_FAIL;
+    }
+
 
     lstrcpy(_loadingText, TEXT("GamePlay 로딩 완료"));
 

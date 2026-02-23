@@ -12,6 +12,8 @@ NS_BEGIN(Client)
 
 class Terrain final : public GameObject
 {
+    GENERATED_BODY(Terrain)
+
 public:
     explicit Terrain(ComPtr<Device> device, ComPtr<DeviceContext> context);
     explicit Terrain(const Terrain& rhs);

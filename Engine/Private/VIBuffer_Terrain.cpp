@@ -69,7 +69,7 @@ HRESULT VIBuffer_Terrain::Initialize_Prototype(const wstring& heightMapPath)
             );
         }
     }
-
+     
     Safe_Delete_Array(pixel);
 
     // 3. 인덱스 버퍼 생성

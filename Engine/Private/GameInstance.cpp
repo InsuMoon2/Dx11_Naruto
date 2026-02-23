@@ -16,6 +16,7 @@
 #include "Renderer.h"
 
 #include "BTNode_Factory.h"
+#include "PipeLine.h"
 
 IMPLEMENT_SINGLETON(GameInstance)
 
@@ -59,6 +60,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     _prefabManager = Prefab_Manager::Create(Get_Device(), Get_Context());
     CHECK_NULL(_prefabManager, E_FAIL);
 
+    _pipeLine = PipeLine::Create();
+    CHECK_NULL(_pipeLine, E_FAIL);
+
     return S_OK;
 }
 
@@ -66,6 +70,7 @@ void GameInstance::Priority_Update_Engine(float timeDelta)
 {
     _objectManager->Priority_Update(timeDelta);
 
+    _pipeLine->Update();
 }
 
 void GameInstance::Update_Engine(float timeDelta)
@@ -258,6 +263,21 @@ HRESULT GameInstance::Load_Prefab(const string& prefabPath)
     return _prefabManager->Load_Prefab(prefabPath);
 }
 
+const Matrix* GameInstance::Get_Transform(ETransformState state) const
+{
+    return _pipeLine->Get_Transform(state);
+}
+
+const Vec4* GameInstance::Get_CamPosition() const
+{
+    return _pipeLine->Get_CamPosition();
+}
+
+void GameInstance::Set_Transform(ETransformState state, const Matrix& matrix)
+{
+    return _pipeLine->Set_Transform(state, matrix);
+}
+
 void GameInstance::Free()
 {
     Base::Free();
@@ -267,5 +287,7 @@ void GameInstance::Free()
     _protoManager.reset();  
     _timerManager.reset();  
     _graphicDevice.reset();
+
     _renderer.reset();
+    _pipeLine.reset();
 }

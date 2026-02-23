@@ -1,0 +1,45 @@
+﻿#include "pch.h"
+#include "PipeLine.h"
+
+PipeLine::PipeLine()
+{
+    for (uint32 i = 0; i < ETOI(ETransformState::END); ++i)
+    {
+        _transformMatrices[i] = Matrix::Identity;
+        _transformInverseMatrices[i] = Matrix::Identity;
+    }
+}
+
+void PipeLine::Update()
+{
+    for (uint32 i = 0; i < ETOI(ETransformState::END); ++i)
+    {
+        _transformInverseMatrices[i] = _transformMatrices[i].Invert();
+    }
+}
+
+const Matrix* PipeLine::Get_Transform(ETransformState state) const
+{
+    return &_transformMatrices[ETOI(state)];
+}
+
+const Vec4* PipeLine::Get_CamPosition() const
+{
+    return reinterpret_cast<const Vec4*>(
+        &_transformInverseMatrices[ETOI(ETransformState::View)].m[3]);
+}
+
+void PipeLine::Set_Transform(ETransformState state, const Matrix& matrix)
+{
+    _transformMatrices[ETOI(state)] = matrix;
+}
+
+Unique<PipeLine> PipeLine::Create()
+{
+    return make_unique<PipeLine>();
+}
+
+void PipeLine::Free()
+{
+    Base::Free();
+}

@@ -14,6 +14,7 @@ class Object_Manager;
 class Prefab_Manager;
 
 class Renderer;
+class PipeLine;
 
 /* Base */
 class GameObject;
@@ -108,18 +109,24 @@ public: /* Prefeb */
     HRESULT                 Save_Prefab(const string& prefabPath, Shared<GameObject> gameObject);
     HRESULT                 Load_Prefab(const string& prefabPath);
 
-private:
-	unique_ptr<Graphic_Device>      _graphicDevice {};
-	unique_ptr<Timer_Manager>	    _timerManager  {};
-    unique_ptr<Level_Manager>       _levelManager  {};
-    unique_ptr<Prototype_Manager>   _protoManager  {};
-    unique_ptr<Object_Manager>      _objectManager {};
-    unique_ptr<Prefab_Manager>      _prefabManager {};
-
-    unique_ptr<Renderer>            _renderer{};
+public: /* PipeLine */
+    const Matrix *          Get_Transform(ETransformState state) const;
+    const Vec4 *            Get_CamPosition() const;
+    void                    Set_Transform(ETransformState state, const Matrix & matrix);
 
 private:
-    EGameState                      _gameState = EGameState::Edit;
+	Unique<Graphic_Device>      _graphicDevice {};
+	Unique<Timer_Manager>	    _timerManager  {};
+    Unique<Level_Manager>       _levelManager  {};
+    Unique<Prototype_Manager>   _protoManager  {};
+    Unique<Object_Manager>      _objectManager {};
+    Unique<Prefab_Manager>      _prefabManager {};
+
+    Unique<Renderer>            _renderer {};
+    Unique<PipeLine>            _pipeLine {};
+
+private:
+    EGameState                  _gameState = EGameState::Play;
 
 public:
 	void Free() override;

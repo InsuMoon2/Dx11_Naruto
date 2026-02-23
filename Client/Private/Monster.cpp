@@ -62,14 +62,9 @@ HRESULT Monster::Render()
     Character::Render();
 
     Matrix worldMatrix = _transformCom->Get_WorldMatrix();
-    Matrix viewMatrix = Matrix::Identity;
-
-    Matrix projMatrix = Matrix::CreatePerspectiveFieldOfView(
-        XMConvertToRadians(60.f), 1280.f / 720.f, 0.1f, 1000.f);
-
     _shaderCom->Bind_Matrix("g_WorldMatrix", &worldMatrix);
-    _shaderCom->Bind_Matrix("g_ViewMatrix", &viewMatrix);
-    _shaderCom->Bind_Matrix("g_ProjMatrix", &projMatrix);
+    _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
+    _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
 
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureCom->Get_CurrentIndex()), E_FAIL);
     CHECK_FAILED(_shaderCom->Begin(0), E_FAIL);

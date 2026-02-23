@@ -175,6 +175,7 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\BTTask.h" />
     <ClInclude Include="..\Public\BTTask_MoveTo.h" />
     <ClInclude Include="..\Public\BTTask_Wait.h" />
+    <ClInclude Include="..\Public\Camera.h" />
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\Component_Factory.h" />
@@ -190,6 +191,7 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\Level.h" />
     <ClInclude Include="..\Public\Level_Manager.h" />
     <ClInclude Include="..\Public\Object_Manager.h" />
+    <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\Prefab_Manager.h" />
     <ClInclude Include="..\Public\Prototype_Manager.h" />
     <ClInclude Include="..\Public\Engine_Define.h" />
@@ -226,6 +228,7 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\BTTask.cpp" />
     <ClCompile Include="..\Private\BTTask_MoveTo.cpp" />
     <ClCompile Include="..\Private\BTTask_Wait.cpp" />
+    <ClCompile Include="..\Private\Camera.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\Component_Factory.cpp" />
@@ -241,6 +244,7 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\Level.cpp" />
     <ClCompile Include="..\Private\Level_Manager.cpp" />
     <ClCompile Include="..\Private\Object_Manager.cpp" />
+    <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\Prefab_Manager.cpp" />
     <ClCompile Include="..\Private\Prototype_Manager.cpp" />
     <ClCompile Include="..\Private\RenderTarget.cpp" />

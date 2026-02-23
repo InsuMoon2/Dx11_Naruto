@@ -9,6 +9,7 @@ sampler DefaultSampler = sampler_state
 struct VS_IN
 {
     float3 vPosition : POSITION;
+    float3 vNormal   : NORMAL;
     float2 vTexcoord : TEXCOORD0;
 };
 
@@ -21,12 +22,9 @@ struct VS_OUT
 VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out;
-    
-    /* 정점의 위치 * 월드 * 뷰 * 투영 */
+
     float4x4 matWV, matWVP;
-    
-    /* mul : 행렬끼리의 곱하기연산을 수행한다. */ 
-    /* XMVector3TransformCoord : 벡터와 행렬의 곱하기연산을 수행하고 w나눈다.*/
+
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
@@ -57,25 +55,15 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
     
-    // Out.vColor = float4(In.vTexcoord.y, In.vTexcoord.y, In.vTexcoord.y, 1.f);
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    //Out.vColor.gb = Out.vColor.r;
-    
+
     return Out;
-
 }
-
-RasterizerState CullNone
-{
-    CullMode = None;
-};
 
 technique11 DefaultTechnique
 {
     pass DefaultPass
     {
-        SetRasterizerState(CullNone);
-
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
     }

@@ -11,6 +11,12 @@
             "level": "Static",
             "path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
             "count": 2
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_TERRAIN",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/Terrain/Tile%d.jpg",
+            "count": 1
         }
     ],
     "Model": [

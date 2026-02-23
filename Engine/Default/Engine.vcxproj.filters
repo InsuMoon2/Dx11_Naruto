@@ -124,17 +124,35 @@
     <ClInclude Include="..\Public\BTTask_Wait.h">
       <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\BehaviorTree.h">
       <Filter>01. Utility\06. Behavior Tree\99. Component</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UIObject.h" />
-    <ClInclude Include="..\Public\Character.h" />
-    <ClInclude Include="..\Public\BTTask_MoveTo.h" />
-    <ClInclude Include="..\Public\BTNode_Factory.h" />
-    <ClInclude Include="..\Public\BTRoot.h" />
     <ClInclude Include="..\Public\VIBuffer_Terrain.h">
       <Filter>01. Utility\04. Component\02. VIBuffer\02. Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PipeLine.h">
+      <Filter>01. Utility\07. PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera.h">
+      <Filter>01. Utility\03. GameObject\03. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BTNode_Factory.h">
+      <Filter>96. Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BTRoot.h">
+      <Filter>01. Utility\06. Behavior Tree\01. BT Node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BTTask_MoveTo.h">
+      <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIObject.h">
+      <Filter>01. Utility\03. GameObject\02. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Character.h">
+      <Filter>01. Utility\03. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Shader.h">
+      <Filter>01. Utility\04. Component\03. Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -261,6 +279,12 @@
     <Filter Include="01. Utility\06. Behavior Tree\99. Component">
       <UniqueIdentifier>{5b10fee1-054e-41fa-9caf-99b78909573d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\07. PipeLine">
+      <UniqueIdentifier>{8ea98d06-b6fc-4173-aa41-452248a35627}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. GameObject\03. Camera">
+      <UniqueIdentifier>{dbbae1dd-0a30-4b40-8a83-5da3647c6464}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -368,17 +392,35 @@
     <ClCompile Include="..\Private\BTTask_Wait.cpp">
       <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\BehaviorTree.cpp">
       <Filter>01. Utility\06. Behavior Tree\99. Component</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UIObject.cpp" />
-    <ClCompile Include="..\Private\Character.cpp" />
-    <ClCompile Include="..\Private\BTTask_MoveTo.cpp" />
-    <ClCompile Include="..\Private\BTNode_Factory.cpp" />
-    <ClCompile Include="..\Private\BTRoot.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
       <Filter>01. Utility\04. Component\02. VIBuffer\02. Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PipeLine.cpp">
+      <Filter>01. Utility\07. PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera.cpp">
+      <Filter>01. Utility\03. GameObject\03. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BTNode_Factory.cpp">
+      <Filter>96. Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BTRoot.cpp">
+      <Filter>01. Utility\06. Behavior Tree\01. BT Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BTTask_MoveTo.cpp">
+      <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIObject.cpp">
+      <Filter>01. Utility\03. GameObject\02. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Character.cpp">
+      <Filter>01. Utility\03. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Shader.cpp">
+      <Filter>01. Utility\04. Component\03. Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

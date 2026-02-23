@@ -3,9 +3,8 @@ package Protocol;
 
 enum ComponentID
 {
-    COMPONENT_TPYE_ENGINE_START = 0;
-
     // Engine ComponentID
+    COMPONENT_TPYE_ENGINE_START = 0;
     COMPONENT_TYPE_TRANSFORM            = 1;
     COMPONENT_TYPE_TEXTURE              = 2;
     COMPONENT_TYPE_COLLIDER             = 3;
@@ -13,10 +12,18 @@ enum ComponentID
     COMPONENT_TYPE_SHADER               = 5;
     COMPONENT_TYPE_TERRAIN              = 6;
 
-    COMPONENT_TYPE_TEXTURE_DEFAULT      = 99;
     COMPONENT_TYPE_AI                   = 100;
     COMPONENT_TYPE_CONTROLLER           = 101;
-    
+
+    // Texture : 200+
+    COMPONENT_TYPE_TEXTURE_START        = 200;
+    COMPONENT_TYPE_TEXTURE_DEFAULT      = 201;
+    COMPONENT_TYPE_TEXTURE_TERRAIN      = 202;
+
+    // Shader : 300+
+    COMPONENT_TYPE_SHADER_START         = 300;
+    COMPONENT_TYPE_SHADER_VTXNORTEX       = 301;
+
     // Client ComponentID
     COMPONENT_TYPE_CLIENT_START         = 1000;
     COMPONENT_TYPE_REPLICATOR           = 1001;
@@ -32,6 +39,8 @@ enum OBJECT_TYPE
 	OBJECT_TYPE_NONE = 0;
 	OBJECT_TYPE_PLAYER = 1;
 	OBJECT_TYPE_MONSTER = 2;
+    OBJECT_TYPE_TERRAIN = 3;
+    OBJECT_TYPE_CAMERA_FREE = 4;
 
     OBJECT_TYPE_BACKGROUND = 10;
 }

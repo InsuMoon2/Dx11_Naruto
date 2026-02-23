@@ -9,7 +9,7 @@
 Terrain::Terrain(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
 {
-
+    Set_ObjectType(Protocol::OBJECT_TYPE_TERRAIN);
 }
 
 Terrain::Terrain(const Terrain& rhs)
@@ -19,7 +19,9 @@ Terrain::Terrain(const Terrain& rhs)
 
 HRESULT Terrain::Initialize_Prototype()
 {
-    return GameObject::Initialize_Prototype();
+    GameObject::Initialize_Prototype();
+
+    return S_OK;
 }
 
 HRESULT Terrain::Initialize(void* arg)
@@ -27,6 +29,8 @@ HRESULT Terrain::Initialize(void* arg)
     CHECK_FAILED(GameObject::Initialize(arg), E_FAIL);
 
     CHECK_FAILED(Ready_Components(), E_FAIL);
+
+    return S_OK;
 }
 
 void Terrain::BeginPlay()
@@ -61,35 +65,26 @@ HRESULT Terrain::Render()
 
     Matrix worldMatrix = _transformCom->Get_WorldMatrix();
     _shaderCom->Bind_Matrix("g_WorldMatrix", &worldMatrix);
-
-    //if (FAILED(__super::Bind_ShaderResource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW)))
-    //	return E_FAIL;
-
-    //if (FAILED(__super::Bind_ShaderResource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ)))
-    //	return E_FAIL;
-
+    _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
+    _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
+    
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 0), E_FAIL);
-    CHECK_FAILED(_shaderCom->Begin(0), E_FAIL);
-
-    CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
-    CHECK_FAILED(_bufferCom->Render(), E_FAIL);
 
     _shaderCom->Begin(0);
-
+    CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
+    CHECK_FAILED(_bufferCom->Render(), E_FAIL);
 
     return S_OK;
 }
 
 HRESULT Terrain::Ready_Components()
 {
-    CHECK_FAILED(Add_Component(ETOI(ELevelType::Logo),
-        Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, _textureCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TEXTURE_TERRAIN, _textureCom), E_FAIL);
 
-    CHECK_FAILED(Add_Component(ETOI(ELevelType::Static),
-        Protocol::COMPONENT_TYPE_SHADER, _shaderCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXNORTEX, _shaderCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TERRAIN, _bufferCom), E_FAIL);
 
-    CHECK_FAILED(Add_Component(ETOI(ELevelType::Static),
-        Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
+    return S_OK;
 }
 
 Shared<Terrain> Terrain::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -108,16 +103,17 @@ Shared<Terrain> Terrain::Create(ComPtr<Device> device, ComPtr<DeviceContext> con
 
 Shared<GameObject> Terrain::Clone(void* arg)
 {
-    auto instance = make_shared<Terrain>(*this);
-    if (FAILED(instance->Initialize(arg)))
+    auto clone = make_shared<Terrain>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
     {
-        MSG_BOX("Failed to Created : Terrain");
-        instance->Free();
+        MSG_BOX("Failed to Cloned : Terrain");
+        clone->Free();
 
         return nullptr;
     }
 
-    return instance;
+    return clone;
 }
 
 void Terrain::Free()

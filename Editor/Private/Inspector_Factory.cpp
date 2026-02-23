@@ -4,11 +4,14 @@
 #include "Transform_Inspector.h"
 #include "Texture_Inspector.h"
 #include "BehaviorTree_Inspector.h"
+#include "Texture.h"
 
 IMPLEMENT_SINGLETON(Inspector_Factory)
 
 void Inspector_Factory::Initialize()
 {
+    _textureInspector = make_shared<Texture_Inspector>();
+
     Register_Inspector(Protocol::COMPONENT_TYPE_TRANSFORM, make_shared<Transform_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_COMBAT_STAT, make_shared<CombatStat_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, make_shared<Texture_Inspector>());
@@ -38,6 +41,14 @@ shared_ptr<Component_Inspector> Inspector_Factory::Get_Inspector(uint32 typeId)
         return nullptr;
 
     return iter->second;
+}
+
+Shared<Component_Inspector> Inspector_Factory::Get_Inspector_ByType(Shared<Component> component)
+{
+    if (dynamic_pointer_cast<Texture>(component))
+        return _textureInspector;
+
+    return nullptr;
 }
 
 bool Inspector_Factory::Has_Inspector(uint32 typeId)

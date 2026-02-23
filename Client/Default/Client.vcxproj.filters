@@ -28,17 +28,11 @@
     <ClInclude Include="..\Public\Level_Gameplay.h">
       <Filter>01. Levels\02. GamePlay</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Background.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\IconsFontAwesome6.h">
       <Filter>98. Default</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Protocol_Wrapper.h">
       <Filter>98. Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player.h">
-      <Filter>02. GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Macro.h">
       <Filter>99. Defines</Filter>
@@ -56,10 +50,10 @@
       <Filter>03. Component\00. CombatStat</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AIController.h">
-      <Filter>02. GameObject\Controller</Filter>
+      <Filter>02. GameObject\05. Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerController.h">
-      <Filter>02. GameObject\Controller</Filter>
+      <Filter>02. GameObject\05. Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Replicator.h">
       <Filter>03. Component\99. Replicator</Filter>
@@ -70,9 +64,24 @@
     <ClInclude Include="..\Public\Spawn_Helper.h">
       <Filter>99. Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MovementComponent.h" />
-    <ClInclude Include="..\Public\Monster.h" />
-    <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02. GameObject\03, Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Free.h">
+      <Filter>02. GameObject\04. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MovementComponent.h">
+      <Filter>03. Component\02. Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02. GameObject\00. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02. GameObject\01. Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Background.h">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -89,12 +98,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Gameplay.cpp">
       <Filter>01. Levels\02. GamePlay</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Background.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player.cpp">
-      <Filter>02. GameObject</Filter>
     </ClCompile>
     <ClCompile Include="IReplicable.cpp">
       <Filter>95. Interface</Filter>
@@ -118,10 +121,10 @@
       <Filter>97. Protocol</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AIController.cpp">
-      <Filter>02. GameObject\Controller</Filter>
+      <Filter>02. GameObject\05. Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerController.cpp">
-      <Filter>02. GameObject\Controller</Filter>
+      <Filter>02. GameObject\05. Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Replicator.cpp">
       <Filter>03. Component\99. Replicator</Filter>
@@ -132,9 +135,24 @@
     <ClCompile Include="..\Private\Spawn_Helper.cpp">
       <Filter>99. Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MovementComponent.cpp" />
-    <ClCompile Include="..\Private\Monster.cpp" />
-    <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\Terrain.cpp">
+      <Filter>02. GameObject\03, Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Free.cpp">
+      <Filter>02. GameObject\04. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MovementComponent.cpp">
+      <Filter>03. Component\02. Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02. GameObject\00. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02. GameObject\01. Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Background.cpp">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -185,9 +203,6 @@
     <Filter Include="99. Utils">
       <UniqueIdentifier>{e168f944-9226-4672-8f80-a5f36baa8f46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Controller">
-      <UniqueIdentifier>{4228c98a-9aa7-4598-b3bc-a3f5f7166def}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03. Component\99. Replicator">
       <UniqueIdentifier>{11214562-e2ee-4f0d-9f94-7303adc8ff54}</UniqueIdentifier>
     </Filter>
@@ -197,8 +212,23 @@
     <Filter Include="03. Component\02. Movement">
       <UniqueIdentifier>{2c2afcac-3899-4bf5-a77e-096e9b48e67e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\Terrain">
+    <Filter Include="02. GameObject\00. Player">
+      <UniqueIdentifier>{5fd4480e-ee6a-4cec-8fca-07b61b0c938d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Controller">
+      <UniqueIdentifier>{4228c98a-9aa7-4598-b3bc-a3f5f7166def}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Camera">
+      <UniqueIdentifier>{9076e403-9028-4b8e-a5c3-2dd6cc13a5ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03, Terrain">
       <UniqueIdentifier>{4cffa5f5-ca7f-46cc-821a-5d4a9aa3f8ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster">
+      <UniqueIdentifier>{744380cc-90fc-472d-b6fa-13d58adb3e87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. UI">
+      <UniqueIdentifier>{c8733bd2-02cf-45d7-9874-db793f337d84}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +243,9 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\Shaders\Shader_Vtxtex.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_VtxNorTex.hlsl">
       <Filter>94. Shaders</Filter>
     </FxCompile>
   </ItemGroup>

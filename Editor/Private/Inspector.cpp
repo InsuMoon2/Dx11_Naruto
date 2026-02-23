@@ -40,6 +40,9 @@ void Inspector::Draw_Component(uint32 id, Shared<Component> component)
 {
     auto inspector = Inspector_Factory::GetInstance()->Get_Inspector(id);
 
+    if (!inspector)
+        inspector = Inspector_Factory::GetInstance()->Get_Inspector_ByType(component);
+
     if (inspector)
     {
         inspector->Draw_Inspector(component);

@@ -75,8 +75,8 @@ void Input_Manager::Update(float timeDleta)
         ::GetCursorPos(&currentPos);
         ::ScreenToClient(_hwnd, &currentPos);
 
-        _mouseDelta.x = (float)(currentPos.x - _screenCenter.x);
-        _mouseDelta.y = (float)(currentPos.y - _screenCenter.y);
+        _mouseDelta.x = (float)(currentPos.x - _mousePos.x);
+        _mouseDelta.y = (float)(currentPos.y - _mousePos.y);
 
         // 마우스를 화면 중앙으로 리셋
         POINT centerScreen = _screenCenter;
@@ -87,8 +87,13 @@ void Input_Manager::Update(float timeDleta)
     }
     else
     {
-        ::GetCursorPos(&_mousePos);
-        ::ScreenToClient(_hwnd, &_mousePos);
+        POINT currentPos;
+        ::GetCursorPos(&currentPos);
+        ::ScreenToClient(_hwnd, &currentPos);
+
+        _mouseDelta.x = 0.f;
+        _mouseDelta.y = 0.f;
+        _mousePos = currentPos;
     }
 }
 

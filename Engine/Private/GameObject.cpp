@@ -42,6 +42,11 @@ HRESULT GameObject::Initialize(void* arg)
         // TODO : 게임 오브젝트 멤버를 채워넣어야 하면, 여기서 진행
 
     }
+    // 초기 스케일 보장
+    else
+    {
+        _transformCom->Set_LocalScale(1.f, 1.f, 1.f);
+    }
 
     // Test
     LOG_INFO(Get_GUID());
