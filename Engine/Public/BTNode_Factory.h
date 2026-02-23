@@ -8,8 +8,6 @@ class BTNode;
 
 class ENGINE_DLL BTNode_Factory : public Base
 {
-    DECLARE_SINGLETON(BTNode_Factory)
-
 public:
     using Creator = function<Shared<BTNode>()>;
 
@@ -31,12 +29,13 @@ public:
     void Register_EngineNodes();
 
     const umap<string, NodeInfo>& Get_RegisteredNodes() const { return _creators; }
+    Shared<BTNode> Instantiate(const string& typeName);
 
 private:
     umap<string, NodeInfo> _creators;
 
 public:
-    Shared<BTNode> Create(const string& typeName);
+    static Unique<BTNode_Factory> Create();
     void Free() override;
 };
 NS_END

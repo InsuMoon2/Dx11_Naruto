@@ -1,0 +1,48 @@
+{
+    "blackboard": {
+        "bools": {},
+        "floats": {},
+        "ints": {},
+        "vectors": {}
+    },
+    "links": [],
+    "nodes": [
+        {
+            "id": 1,
+            "input_pin_id": 0,
+            "name": "Root",
+            "output_pin_ids": [
+                2
+            ],
+            "parameters": {},
+            "pos_x": 100.0,
+            "pos_y": 300.0,
+            "type": "Root"
+        },
+        {
+            "id": 3,
+            "input_pin_id": 4,
+            "name": "Sequence",
+            "output_pin_ids": [
+                5,
+                6,
+                7
+            ],
+            "parameters": {},
+            "pos_x": 32.0,
+            "pos_y": 526.0,
+            "type": "Sequence"
+        },
+        {
+            "id": 8,
+            "input_pin_id": 9,
+            "name": "Task_Wait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 265.0,
+            "pos_y": 598.0,
+            "type": "Task_Wait"
+        }
+    ],
+    "root_node_id": 1
+}

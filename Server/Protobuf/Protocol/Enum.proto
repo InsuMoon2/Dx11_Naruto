@@ -22,7 +22,8 @@ enum ComponentID
 
     // Shader : 300+
     COMPONENT_TYPE_SHADER_START         = 300;
-    COMPONENT_TYPE_SHADER_VTXNORTEX       = 301;
+    COMPONENT_TYPE_SHADER_VTXTEX        = 301;
+    COMPONENT_TYPE_SHADER_VTXNORTEX     = 302;
 
     // Client ComponentID
     COMPONENT_TYPE_CLIENT_START         = 1000;

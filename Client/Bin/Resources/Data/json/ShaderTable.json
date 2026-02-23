@@ -1,0 +1,18 @@
+{
+    "Shader": [
+        {
+            "id": "COMPONENT_TYPE_SHADER_VTXTEX",
+            "level": "Static",
+            "path": "../../Client/Bin/Shaders/Shader_VtxTex.hlsl",
+            "count": 1,
+            "type": "VtxTex"
+        },
+        {
+            "id": "COMPONENT_TYPE_SHADER_VTXNORTEX",
+            "level": "Static",
+            "path": "../../Client/Bin/Shaders/Shader_VtxNorTex.hlsl",
+            "count": 1,
+            "type": "VtxNorTex"
+        }
+    ]
+}

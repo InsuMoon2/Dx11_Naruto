@@ -12,14 +12,14 @@
             "start": 2
         },
         {
-            "end": 12,
-            "id": 14,
-            "start": 7
-        },
-        {
             "end": 16,
             "id": 17,
             "start": 5
+        },
+        {
+            "end": 19,
+            "id": 20,
+            "start": 7
         }
     ],
     "nodes": [
@@ -50,24 +50,26 @@
             "type": "Selector"
         },
         {
-            "id": 11,
-            "input_pin_id": 12,
-            "name": "Task_Move",
-            "output_pin_ids": [],
-            "parameters": {},
-            "pos_x": 258.0,
-            "pos_y": 668.0,
-            "type": "Task_Move"
-        },
-        {
             "id": 15,
             "input_pin_id": 16,
             "name": "Task_Wait",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 18.0,
+            "pos_x": -62.0,
             "pos_y": 668.0,
-            "type": "Task_Wait"
+            "type": "Task_Wait",
+            "wait_time": 1.0
+        },
+        {
+            "id": 18,
+            "input_pin_id": 19,
+            "name": "Task_Wait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 274.0,
+            "pos_y": 668.0,
+            "type": "Task_Wait",
+            "wait_time": 3.0
         }
     ],
     "root_node_id": 1

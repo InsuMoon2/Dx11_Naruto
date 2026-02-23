@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "BehaviorTree_Inspector.h"
 #include "BehaviorTree.h"
+#include "BehaviorTree_View.h"
 
 void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
 {
@@ -52,4 +53,35 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
     }
 
     ImGui::Spacing();
+
+    if (GAME->Get_GameState() == EGameState::Play)
+    {
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.8f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.7f, 0.9f, 1.0f));
+
+        if (ImGui::Button(ICON_FA_BUG " Debug In Node Editor", ImVec2(-1, 35)))
+        {
+            auto btView = dynamic_pointer_cast<BehaviorTree_View>(
+                EDITOR->Get_Window(TEXT("BehaviorTree")));
+
+            if (btView)
+            {
+                if (!fullPath.empty() && fullPath != "(None)")
+                {
+                    btView->Load_BehaviorTree(fullPath);
+                }
+
+                btView->Set_DebugTarget(behavior);
+                btView->Set_DebugMode(true);
+                btView->Set_Active(true);
+
+            }
+
+
+        }
+
+    }
 }

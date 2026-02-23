@@ -1,9 +1,11 @@
 ﻿#pragma once
 
 #include "Base.h"
+#include "Component_Factory.h"
+#include "BTNode_Factory.h"
 
 NS_BEGIN(Engine)
-/* Device */
+    /* Device */
 class Graphic_Device;
 
 /* Manager */
@@ -22,6 +24,10 @@ class Component;
 
 class Level;
 class Layer;
+
+/* Factory */
+class Component_Factory;
+class BTNode_Factory;
 
 class ENGINE_DLL GameInstance : public Base
 {
@@ -110,9 +116,29 @@ public: /* Prefeb */
     HRESULT                 Load_Prefab(const string& prefabPath);
 
 public: /* PipeLine */
-    const Matrix *          Get_Transform(ETransformState state) const;
-    const Vec4 *            Get_CamPosition() const;
+    const Matrix*           Get_Transform(ETransformState state) const;
+    const Vec4*             Get_CamPosition() const;
     void                    Set_Transform(ETransformState state, const Matrix & matrix);
+
+public: /* Component_Factory */
+    template<typename T>
+    void Register_ComponentFactory(uint32 levelIndex)
+    {
+        _componentFactory->Register<T>(levelIndex, Get_Device(), Get_Context());
+    }
+
+    // Shader Texture 등 람다 필요
+    void                            Register_ComponentFactory(uint32 typeId, Component_Factory::Creator creator, const wstring& className);
+    void                            Register_ComponentFactory_Prototype(uint32 typeId, uint32 levelIndex);
+    Shared<Component>               Instantiate_FromFactory(uint32 typeId);
+
+    // 에디터 조회용
+    vector<pair<uint32, wstring>>   Get_RegisteredComponents();
+
+public: /* BTNode_Factory */
+    void                            Register_BTNode(const string& category, const string& typeName, BTNode_Factory::Creator creator);
+    Shared<BTNode>                  Instantiate_BTNode(const string& typeName);
+    const umap<string, BTNode_Factory::NodeInfo>& Get_RegisteredBTNodes() const;
 
 private:
 	Unique<Graphic_Device>      _graphicDevice {};
@@ -124,6 +150,10 @@ private:
 
     Unique<Renderer>            _renderer {};
     Unique<PipeLine>            _pipeLine {};
+
+private: /* Factory */
+    Unique<Component_Factory>   _componentFactory {};
+    Unique<BTNode_Factory>      _btNodeFactory    {};
 
 private:
     EGameState                  _gameState = EGameState::Play;

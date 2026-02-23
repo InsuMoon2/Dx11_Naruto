@@ -4,7 +4,6 @@
 #include "GameObject.h"
 #include "Inspector.h"
 #include <magic_enum/magic_enum.hpp>
-#include "Component_Factory.h"
 
 Prefab_View::Prefab_View()
     : EditorWindow(TEXT("Prefab"))
@@ -173,7 +172,7 @@ void Prefab_View::Draw_ComponentList()
 
     if (ImGui::BeginPopup("AddComponentPopup"))
     {
-        auto registeredComponents = Component_Factory::GetInstance()->Get_RegisteredComponents();
+        auto registeredComponents = GAME->Get_RegisteredComponents();
 
         for (const auto& pair : registeredComponents)
         {
@@ -182,7 +181,8 @@ void Prefab_View::Draw_ComponentList()
 
             if (ImGui::MenuItem(name.c_str()))
             {
-                auto newComp = Component_Factory::GetInstance()->Create(typeId, GAME->Get_Device(), GAME->Get_Context());
+                auto newComp = GAME->Instantiate_FromFactory(typeId);
+
                 if (newComp)
                 {
                     _targetObject->Add_Component(typeId, newComp);

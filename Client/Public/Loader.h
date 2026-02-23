@@ -5,6 +5,8 @@
 
 NS_BEGIN(Client)
 
+class ResourceLoader;
+
 class Loader : public Base, public enable_shared_from_this<Loader>
 {
 public:
@@ -29,11 +31,6 @@ private: /* Loading Level */
     HRESULT Loading_For_LogoLevel();
     HRESULT Loading_For_GamePlay();
 
-private: /* json Data */ 
-    HRESULT Load_Resources_From_Json(const wstring& filePath);
-    uint32  Get_LevelIndex_From_String(const wstring& levelName);
-    uint32  Get_ComponentID_From_String(const wstring& key);
-
 private:
     ComPtr<Device>          _device;
     ComPtr<DeviceContext>   _context;
@@ -43,7 +40,9 @@ private:
     ELevelType              _nextLevelID = { ELevelType::END };
     bool                    _isFinished = { false };
     tchar                   _loadingText[MAX_PATH] = {};
-        
+
+    Shared<ResourceLoader>  _resourceLoader;
+
 public:
     static shared_ptr<Loader> Create(
         ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID);

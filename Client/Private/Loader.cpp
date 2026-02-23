@@ -4,26 +4,21 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Monster.h"
-#include "Texture.h"
-#include <magic_enum/magic_enum.hpp>
 #include <fstream>
 
 #include "AIController.h"
 #include "Utils.h"
-#include "Component_Factory.h"
 #include "Replicator.h"
 #include "BehaviorTree.h"
 #include "CombatStat.h"
 #include "VIBuffer_Rect.h"
-#include "Shader.h"
 #include "MovementComponent.h"
 #include "InputComponent.h"
 #include "PlayerController.h"
 
-#include "BTNode_Factory.h"
 #include "Camera_Free.h"
+#include "ResourceLoader.h"
 #include "Terrain.h"
-#include "VIBuffer_Terrain.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -73,6 +68,14 @@ HRESULT Loader::Loading()
 
     CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
+    _resourceLoader = ResourceLoader::Create(_device, _context);
+    if (!_resourceLoader)
+    {
+        LOG_ERROR("Failed to Create ResourceLoader");
+        LeaveCriticalSection(&_criticalSection);
+        return E_FAIL;
+    }
+
     HRESULT hr = { };
 
     switch (_nextLevelID)
@@ -103,64 +106,19 @@ HRESULT Loader::Print_LoadingText()
 
 void Loader::Register_Components()
 {
-    auto factory = Component_Factory::GetInstance();
-
     uint32 staticLevel = ETOI(ELevelType::Static);
 
-    factory->Register<CombatStat>(staticLevel, _device, _context);
-    factory->Register<Replicator>(staticLevel, _device, _context);
-    factory->Register<VIBuffer_Rect>(staticLevel, _device, _context);
-    //factory->Register<Shader>(staticLevel, _device, _context);
-    factory->Register<MovementComponent>(staticLevel, _device, _context);
-    factory->Register<InputComponent>(staticLevel, _device, _context);
+    /* Component */
+    GAME->Register_ComponentFactory<CombatStat>(staticLevel);
+    GAME->Register_ComponentFactory<Replicator>(staticLevel);
+    GAME->Register_ComponentFactory<VIBuffer_Rect>(staticLevel);
+    GAME->Register_ComponentFactory<MovementComponent>(staticLevel);
+    GAME->Register_ComponentFactory<InputComponent>(staticLevel);
+    GAME->Register_ComponentFactory<BehaviorTree>(staticLevel);
+    GAME->Register_ComponentFactory<PlayerController>(staticLevel);
+    GAME->Register_ComponentFactory<AIController>(staticLevel);
 
-    factory->Register<BehaviorTree>(staticLevel, _device, _context);
-    factory->Register<PlayerController>(staticLevel, _device, _context);
-    factory->Register<AIController>(staticLevel, _device, _context);
-
-    // TODO : 셰이더, 텍스처쪽 깔끔하게 바꾸기
-    // Shader, Texture.. Lazy Load 또는 일단 테이블로 따로 빼는게 좋을듯..
-    // 일단 카메라까지만 적용해보고 이쪽먼저 건들자. 너무 맘에 안듦
-
-    // VertexTex 셰이더
-    {
-        factory->Register(
-            Shader::StaticTypeID(),
-            [](auto d, auto c) { return Shader::Create(d, c,
-                TEXT("../../Client/Bin/Shaders/Shader_VtxTex.hlsl"),
-                FVertexTex::Vertex_Desc_Layout,
-                FVertexTex::Vertex_Desc_Layout_Count); },
-            Shader::StaticClassName());
-
-        factory->Register_Prototype(Shader::StaticTypeID(), staticLevel, _device, _context);
-    }
-
-    // VertexNorTex 셰이더
-    {
-        factory->Register(
-            Protocol::COMPONENT_TYPE_SHADER_VTXNORTEX,
-            [](auto d, auto c) { return Shader::Create(d, c,
-                TEXT("../../Client/Bin/Shaders/Shader_VtxNorTex.hlsl"),
-                FVertexNormalTex::NormalTex_Layout,
-                ARRAYSIZE(FVertexNormalTex::NormalTex_Layout)); },
-            L"Shader_VtxNorTex");
-
-        factory->Register_Prototype(Protocol::COMPONENT_TYPE_SHADER_VTXNORTEX,
-            staticLevel, _device, _context);
-    }
-
-    // HeightMap
-    {
-        factory->Register(
-            Protocol::COMPONENT_TYPE_TERRAIN,
-            [](auto d, auto c) { return VIBuffer_Terrain::Create(d, c,
-                TEXT("../../Client/Bin/Resources/Textures/Terrain/Height.bmp")); },
-            L"VIBuffer_Terrain");
-
-        factory->Register_Prototype(Protocol::COMPONENT_TYPE_TERRAIN,
-            staticLevel, _device, _context);
-    }
-
+    /* GameObject */
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PLAYER,
         Player::Create(_device, _context));
 
@@ -174,9 +132,7 @@ void Loader::Register_Components()
 
 void Loader::Initialize_BT_Nodes()
 {
-    auto& factory = BTNode_Factory::GetInstance();
-
-    factory->Register_EngineNodes();
+    // 엔진 노드는 Initialize_Engine에서 호출
 
     // TODO : 클라이언트 노드 여기에 추가하기
     // Patrol, Attack, Skill 이런거
@@ -191,13 +147,20 @@ HRESULT Loader::Loading_For_LogoLevel()
 
     lstrcpy(_loadingText, TEXT("로고 리소스 로딩 중"));
 
-    if (FAILED(Load_Resources_From_Json(TEXT("../../Client/Bin/Resources/Data/json/ObjectTable.json"))))
-    {
-        LOG_ERROR("Failed to Load Resources from JSON");
+    if (FAILED(_resourceLoader->Load_ShaderTable(
+        TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"))))
         return E_FAIL;
-    }
+
+    if (FAILED(_resourceLoader->Load_TerrainTable(
+        TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"))))
+        return E_FAIL;
+
+    if (FAILED(_resourceLoader->Load_TextureTable(
+        TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"))))
+        return E_FAIL;
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
+
     if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_BACKGROUND,
         Background::Create(_device, _context))))
     {
@@ -223,11 +186,17 @@ HRESULT Loader::Loading_For_GamePlay()
 
     lstrcpy(_loadingText, TEXT("게임플레이 리소스 로딩 중"));
 
-    if (FAILED(Load_Resources_From_Json(TEXT("../../Client/Bin/Resources/Data/json/ObjectTable.json"))))
-    {
-        LOG_ERROR("Failed to Load Resources from JSON");
+    if (FAILED(_resourceLoader->Load_ShaderTable(
+        TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"))))
         return E_FAIL;
-    }
+
+    if (FAILED(_resourceLoader->Load_TerrainTable(
+        TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"))))
+        return E_FAIL;
+
+    if (FAILED(_resourceLoader->Load_TextureTable(
+        TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"))))
+        return E_FAIL;
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
     if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_PLAYER,
@@ -257,92 +226,6 @@ HRESULT Loader::Loading_For_GamePlay()
     _isFinished = true;
 
     return S_OK;
-}
-
-HRESULT Loader::Load_Resources_From_Json(const wstring& filePath)
-{
-    // Json 로드
-    ifstream file(filePath);
-    if (!file.is_open())
-    {
-        MSG_BOX("Failed to open Resource JSON file !");
-
-        return E_FAIL;
-    }
-
-    json root;
-    file >> root;
-
-    // Texture 로드
-    if (root.contains("Texture"))
-    {
-        for (const auto& item : root["Texture"])
-        {
-            string keyStr = item["id"];
-            wstring protoKey = Utils::ToWString(keyStr);
-            uint32 protoID = Get_ComponentID_From_String(protoKey);
-
-            if (protoID == 0)
-                continue;
-
-            // Path
-            string pathStr = item["path"];
-            wstring texturePath = Utils::ToWString(pathStr);
-
-            // Count, Level
-            int32 count = item.value("count", 1);
-            string levelStr = item.value("level", "Static");
-            uint32 levelIndex = Get_LevelIndex_From_String(Utils::ToWString(levelStr));
-
-            // 로딩 텍스트 업데이트
-            lstrcpy(_loadingText, (TEXT("Texture: ") + protoKey).c_str());
-
-            if (FAILED(GAME->Add_Component_Prototype(levelIndex, protoID,
-                    Texture::Create(_device, _context, texturePath.c_str(), count))))
-            {
-                wstring errorMsg = L"Failed to load: " + protoKey;
-                MSG_BOX_S(errorMsg.c_str());
-            }
-        }
-    }
-
-    // TODO : 모델 로드, 다른 리소스 로드 추후 추가
-
-
-    return S_OK;
-}
-
-uint32 Loader::Get_LevelIndex_From_String(const wstring& levelName)
-{
-    string levelNameStr = Utils::ToString(levelName);
-
-    auto levelEnum = magic_enum::enum_cast<ELevelType>(levelNameStr);
-
-    // 주의, Enum값과 csv에 세팅된 이름이 똑같아야함 [Loading, Logo, GamePlay]
-    if (levelEnum.has_value())
-    {
-        return ETOI(levelEnum.value());
-    }
-
-    return ETOI(ELevelType::Static);
-}
-
-uint32 Loader::Get_ComponentID_From_String(const wstring& key)
-{
-    const google::protobuf::EnumDescriptor* descriptor = Protocol::ComponentID_descriptor();
-
-    const google::protobuf::EnumValueDescriptor* valueDesc =
-        descriptor->FindValueByName(Utils::ToString(key));
-
-    if (valueDesc == nullptr)
-    {
-        wstring errorMsg = L"CRITICAL: Unknown Component Key -> " + key;
-        MSG_BOX_S(errorMsg.c_str());
-
-        return 0; 
-    }
-
-    return static_cast<uint32>(valueDesc->number());
 }
 
 shared_ptr<Loader> Loader::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID)

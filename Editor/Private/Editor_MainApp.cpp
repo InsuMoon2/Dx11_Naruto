@@ -99,10 +99,8 @@ HRESULT Editor_MainApp::Ready_StaticLevel()
     auto resourceLoader = ResourceLoader::Create(_device, _context);
     CHECK_NULL(resourceLoader, E_FAIL);
     
-    CHECK_FAILED(resourceLoader->Load_Table(
-        TEXT("../../Client/Bin/Resources/Data/json/StaticLevelComTable.json"),
-        ETOI(ELevelType::Static)),
-        E_FAIL);
+    CHECK_FAILED(resourceLoader->Load_TextureTable(
+        TEXT("../../Client/Bin/Resources/Data/json/StaticLevelComTable.json")),E_FAIL);
 
     return S_OK;
 }

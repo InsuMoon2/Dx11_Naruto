@@ -4,7 +4,6 @@
 #include <commdlg.h>
 #include "Blackboard.h"
 #include "BehaviorTree.h"
-#include "BTNode_Factory.h"
 #include "BTNode.h"
 
 BehaviorTree_View::BehaviorTree_View()
@@ -78,11 +77,44 @@ void BehaviorTree_View::OnGui()
             Draw_Node(node);
 
         for (const auto& link : _links)
-            ed::Link(link.id, link.startPinId, link.endPinId);
+        {
+            ImColor linkColor = ImColor(200, 200, 200, 128); 
+            float linkThickness = 1.0f;
 
-        Handle_LinkCreation();
-        Handle_Deletion();
-        Draw_ContextMenu();
+            if (_isDebugMode && !_nodeStateCache.empty())
+            {
+                int childNodeId = Find_NodeIdByInputPin(link.endPinId);
+                if (childNodeId != -1 && _nodeStateCache.contains(childNodeId))
+                {
+                    EBTNodeResult childState = _nodeStateCache[childNodeId];
+                    switch (childState)
+                    {
+                    case EBTNodeResult::Succeeded:
+                        linkColor = ImColor(0, 200, 0, 255);
+                        linkThickness = 2.5f;
+                        break;
+                    case EBTNodeResult::InProgress:
+                        linkColor = ImColor(255, 200, 0, 255);
+                        linkThickness = 3.0f;
+                        break;
+                    case EBTNodeResult::Failed:
+                        linkColor = ImColor(200, 0, 0, 200);
+                        linkThickness = 1.5f;
+                        break;
+                    }
+                }
+            }
+
+            ed::Link(link.id, link.startPinId, link.endPinId, linkColor, linkThickness);
+        }
+            
+
+        if (!_isDebugMode)
+        {
+            Handle_LinkCreation();
+            Handle_Deletion();
+            Draw_ContextMenu();
+        }
 
         for (auto& node : _nodes)
         {
@@ -171,6 +203,9 @@ void BehaviorTree_View::Draw_ToolBar()
 {
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 4));
 
+    if (_isDebugMode)
+        ImGui::BeginDisabled();
+
     if (ImGui::Button(ICON_FA_FILE "  New  "))
         Create_BehaviorTree();
 
@@ -200,12 +235,28 @@ void BehaviorTree_View::Draw_ToolBar()
         }
     }
 
+    if (_isDebugMode)
+        ImGui::EndDisabled();
+
     ImGui::PopStyleVar();
 
     if (_isDirty)
     {
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), " * Unsaved Changes");
+    }
+
+    if (_isDebugMode)
+    {
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(0.3f, 0.8f, 1.0f, 1.0f),
+            ICON_FA_BUG " Debug Mode (Read-Only)");
+
+        ImGui::SameLine();
+        if (ImGui::SmallButton("Stop Debug"))
+        {
+            Clear_DebugMode();
+        }
     }
 
     Draw_FilePopup();
@@ -298,107 +349,119 @@ void BehaviorTree_View::Draw_Blackboard()
     ImGui::Text("Blackboard");
     ImGui::Separator();
 
-    // 새 키 추가
-    ImGui::InputText("Key Name", _newKeyNameBuf, sizeof(_newKeyNameBuf));
-
-    const char* types[] = { "Int", "Float", "Bool", "Vector3" };
-    ImGui::Combo("Type", &_newKeyTypeIndex, types, IM_ARRAYSIZE(types));
-
-    if (ImGui::Button("Add Key", ImVec2(-1, 0)))
+    Shared<Blackboard> displayBB = _blackboard;
+    if (_isDebugMode && !_debugTarget.expired())
     {
-        string keyName = _newKeyNameBuf;
-        if (!keyName.empty() && _blackboard)
-        {
-            // 타입에 따라 기본값 초기 세팅
-            // Int = 0, Float = 1, Bool = 2, Vector = 3
-            switch (_newKeyTypeIndex)
-            {
-            case 0: _blackboard->Set_ValueAsInt(keyName, 0); break;
-            case 1: _blackboard->Set_ValueAsFloat(keyName, 0.f); break;
-            case 2: _blackboard->Set_ValueAsBool(keyName, false); break;
-            case 3: _blackboard->Set_ValueAsVector(keyName, Vec3(0.f)); break;
-            }
-
-            memset(_newKeyNameBuf, 0, sizeof(_newKeyNameBuf));
-            _isDirty = true;
-        }
+        displayBB = _debugTarget.lock()->Get_Blackboard();
+        ImGui::TextColored(ImVec4(0.3f, 0.8f, 1.0f, 1.0f), "(Live Runtime Values)");
     }
 
+    if (!_isDebugMode)
+    {
+        // 새 키 추가
+        ImGui::InputText("Key Name", _newKeyNameBuf, sizeof(_newKeyNameBuf));
+
+        const char* types[] = { "Int", "Float", "Bool", "Vector3" };
+        ImGui::Combo("Type", &_newKeyTypeIndex, types, IM_ARRAYSIZE(types));
+
+        if (ImGui::Button("Add Key", ImVec2(-1, 0)))
+        {
+            string keyName = _newKeyNameBuf;
+            if (!keyName.empty() && _blackboard)
+            {
+                // 타입에 따라 기본값 초기 세팅
+                // Int = 0, Float = 1, Bool = 2, Vector = 3
+                switch (_newKeyTypeIndex)
+                {
+                case 0: _blackboard->Set_ValueAsInt(keyName, 0); break;
+                case 1: _blackboard->Set_ValueAsFloat(keyName, 0.f); break;
+                case 2: _blackboard->Set_ValueAsBool(keyName, false); break;
+                case 3: _blackboard->Set_ValueAsVector(keyName, Vec3(0.f)); break;
+                }
+
+                memset(_newKeyNameBuf, 0, sizeof(_newKeyNameBuf));
+                _isDirty = true;
+            }
+        }
+    }
     ImGui::Separator();
 
-    if (_blackboard)
+    if (displayBB)
     {
-        vector<FBlackboardKeyInfo> allKeys = _blackboard->Get_AllKeys();
+        if (_blackboard)
+        {
+            vector<FBlackboardKeyInfo> allKeys = _blackboard->Get_AllKeys();
 
-        if (allKeys.empty())
-        {
-            ImGui::TextDisabled("No Key Registered");
-        }
-        else
-        {
-            for (const auto& keyInfo : allKeys)
+            if (allKeys.empty())
             {
-                ImGui::PushID(keyInfo.name.c_str());
+                ImGui::TextDisabled("No Key Registered");
+            }
+            else
+            {
+                for (const auto& keyInfo : allKeys)
+                {
+                    ImGui::PushID(keyInfo.name.c_str());
 
-                // 키 이름 + 타입까지 표시
-                const char* typeStr = "";
-                switch (keyInfo.type)
-                {
-                case EBlackboardValueType::Int:     typeStr = "(Int)";    break;
-                case EBlackboardValueType::Float:   typeStr = "(Float)";  break;
-                case EBlackboardValueType::Bool:    typeStr = "(Bool)";   break;
-                case EBlackboardValueType::Vector3: typeStr = "(Vec3)";   break;
-                }
-                ImGui::Text("%s %s", keyInfo.name.c_str(), typeStr);
-                ImGui::SameLine();
+                    // 키 이름 + 타입까지 표시
+                    const char* typeStr = "";
+                    switch (keyInfo.type)
+                    {
+                    case EBlackboardValueType::Int:     typeStr = "(Int)";    break;
+                    case EBlackboardValueType::Float:   typeStr = "(Float)";  break;
+                    case EBlackboardValueType::Bool:    typeStr = "(Bool)";   break;
+                    case EBlackboardValueType::Vector3: typeStr = "(Vec3)";   break;
+                    }
+                    ImGui::Text("%s %s", keyInfo.name.c_str(), typeStr);
+                    ImGui::SameLine();
 
-                // 타입별로 값 편집
-                switch (keyInfo.type)
-                {
-                case EBlackboardValueType::Int:
-                {
-                    int val = _blackboard->Get_ValueAsInt(keyInfo.name);
-                    if (ImGui::InputInt("##value", &val))
+                    // 타입별로 값 편집
+                    switch (keyInfo.type)
                     {
-                        _blackboard->Set_ValueAsInt(keyInfo.name, val);
-                        _isDirty = true;
-                    }
-                    break;
-                }
-                case EBlackboardValueType::Float:
-                {
-                    float val = _blackboard->Get_ValueAsFloat(keyInfo.name);
-                    if (ImGui::InputFloat("##value", &val))
+                    case EBlackboardValueType::Int:
                     {
-                        _blackboard->Set_ValueAsFloat(keyInfo.name, val);
-                        _isDirty = true;
+                        int val = _blackboard->Get_ValueAsInt(keyInfo.name);
+                        if (ImGui::InputInt("##value", &val))
+                        {
+                            _blackboard->Set_ValueAsInt(keyInfo.name, val);
+                            _isDirty = true;
+                        }
+                        break;
                     }
-                    break;
-                }
-                case EBlackboardValueType::Bool:
-                {
-                    bool val = _blackboard->Get_ValueAsBool(keyInfo.name);
-                    if (ImGui::Checkbox("##value", &val))
+                    case EBlackboardValueType::Float:
                     {
-                        _blackboard->Set_ValueAsBool(keyInfo.name, val);
-                        _isDirty = true;
+                        float val = _blackboard->Get_ValueAsFloat(keyInfo.name);
+                        if (ImGui::InputFloat("##value", &val))
+                        {
+                            _blackboard->Set_ValueAsFloat(keyInfo.name, val);
+                            _isDirty = true;
+                        }
+                        break;
                     }
-                    break;
-                }
-                case EBlackboardValueType::Vector3:
-                {
-                    Vec3 val = _blackboard->Get_ValueAsVector(keyInfo.name);
-                    if (ImGui::InputFloat3("##value", &val.x))
+                    case EBlackboardValueType::Bool:
                     {
-                        _blackboard->Set_ValueAsVector(keyInfo.name, val);
-                        _isDirty = true;
+                        bool val = _blackboard->Get_ValueAsBool(keyInfo.name);
+                        if (ImGui::Checkbox("##value", &val))
+                        {
+                            _blackboard->Set_ValueAsBool(keyInfo.name, val);
+                            _isDirty = true;
+                        }
+                        break;
                     }
-                    break;
-                }
-                }
+                    case EBlackboardValueType::Vector3:
+                    {
+                        Vec3 val = _blackboard->Get_ValueAsVector(keyInfo.name);
+                        if (ImGui::InputFloat3("##value", &val.x))
+                        {
+                            _blackboard->Set_ValueAsVector(keyInfo.name, val);
+                            _isDirty = true;
+                        }
+                        break;
+                    }
+                    }
 
 
-                ImGui::PopID();
+                    ImGui::PopID();
+                }
             }
         }
     }
@@ -585,7 +648,7 @@ void BehaviorTree_View::Draw_ContextMenu()
         }*/
 
 #pragma endregion
-        auto& registeredNode = GET_SINGLE(BTNode_Factory)->Get_RegisteredNodes();
+        auto& registeredNode = GAME->Get_RegisteredBTNodes();
 
         // 정렬
         map<string, vector<string>> categoryMap;
@@ -643,6 +706,9 @@ void BehaviorTree_View::Draw_NodeInspector()
     if (!selectedNode)
         return;
 
+    if (_isDebugMode)
+        ImGui::BeginDisabled();
+
     ImGui::Text("Node Type: %s", selectedNode->nodeType.c_str());
 
     // 이름 편집
@@ -697,6 +763,9 @@ void BehaviorTree_View::Draw_NodeInspector()
         selectedNode->runtimeInstance->OnDraw_Inspector();
     }
 
+    if (_isDebugMode)
+        ImGui::EndDisabled();
+
 }
 
 void BehaviorTree_View::Create_Node(const string& nodeType, ImVec2 position)
@@ -709,7 +778,7 @@ void BehaviorTree_View::Create_Node(const string& nodeType, ImVec2 position)
     newNode.name = nodeType;
     newNode.nodeType = nodeType;
     newNode.position = position;
-    newNode.runtimeInstance = GET_SINGLE(BTNode_Factory)->Create(nodeType);
+    newNode.runtimeInstance = GAME->Instantiate_BTNode(nodeType);
 
     if (nodeType == "Root")
         newNode.inputPin = ed::PinId(0);
@@ -915,6 +984,12 @@ json BehaviorTree_View::Serialize_ToJson() const
 
         nodeJson["parameters"] = node.parameters;
 
+        if (node.runtimeInstance)
+        {
+            json runtimeData = node.runtimeInstance->Serialize_ToJson();
+            nodeJson.merge_patch(runtimeData);
+        }
+
         // 핀 ID 저장
         nodeJson["input_pin_id"] = node.inputPin.Get();
 
@@ -998,6 +1073,13 @@ void BehaviorTree_View::Desirialize_FromJson(const json& jsonRoot)
                     maxId = max(maxId, outId);
                 }
             }
+
+            node.runtimeInstance = GAME->Instantiate_BTNode(node.nodeType);
+            if (node.runtimeInstance)
+            {
+                node.runtimeInstance->Deserialize_FromJson(nodeJson);
+            }
+
             _nodes.push_back(node);
         }
     }
@@ -1066,6 +1148,24 @@ ImColor BehaviorTree_View::Get_NodeColor(const string& nodeType) const
     {
         return ImColor(120, 70, 180);   // 보라 (Task)
     }
+}
+
+int BehaviorTree_View::Find_NodeIdByInputPin(ed::PinId pinId) const
+{
+    for (const auto& node : _nodes)
+    {
+        if (node.inputPin == pinId)
+            return node.id.Get();
+    }
+
+    return -1;
+}
+
+void BehaviorTree_View::Clear_DebugMode()
+{
+    _isDebugMode = false;
+    _debugTarget.reset();
+    _nodeStateCache.clear();
 }
 
 Shared<BehaviorTree_View> BehaviorTree_View::Create()

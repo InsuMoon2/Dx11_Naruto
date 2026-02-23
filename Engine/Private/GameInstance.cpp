@@ -15,8 +15,10 @@
 #include "Prefab_Manager.h"
 #include "Renderer.h"
 
-#include "BTNode_Factory.h"
 #include "PipeLine.h"
+
+#include "BTNode_Factory.h"
+#include "Component_Factory.h"
 
 IMPLEMENT_SINGLETON(GameInstance)
 
@@ -62,6 +64,13 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _pipeLine = PipeLine::Create();
     CHECK_NULL(_pipeLine, E_FAIL);
+
+    _componentFactory = Component_Factory::Create();
+    CHECK_NULL(_componentFactory, E_FAIL);
+
+    _btNodeFactory = BTNode_Factory::Create();
+    CHECK_NULL(_btNodeFactory, E_FAIL);
+    _btNodeFactory->Register_EngineNodes();
 
     return S_OK;
 }
@@ -278,10 +287,50 @@ void GameInstance::Set_Transform(ETransformState state, const Matrix& matrix)
     return _pipeLine->Set_Transform(state, matrix);
 }
 
+void GameInstance::Register_ComponentFactory(uint32 typeId, Component_Factory::Creator creator,
+    const wstring& className)
+{
+    _componentFactory->Register(typeId, creator, className);
+}
+
+void GameInstance::Register_ComponentFactory_Prototype(uint32 typeId, uint32 levelIndex)
+{
+    _componentFactory->Register_Prototype(typeId, levelIndex, Get_Device(), Get_Context());
+}
+
+Shared<Component> GameInstance::Instantiate_FromFactory(uint32 typeId)
+{
+    return _componentFactory->Instantiate(typeId, Get_Device(), Get_Context());
+}
+
+vector<pair<uint32, wstring>> GameInstance::Get_RegisteredComponents()
+{
+    return _componentFactory->Get_RegisteredComponents();
+}
+
+void GameInstance::Register_BTNode(const string& category, const string& typeName, BTNode_Factory::Creator creator)
+{
+    _btNodeFactory->Register(category, typeName, creator);
+}
+
+Shared<BTNode> GameInstance::Instantiate_BTNode(const string& typeName)
+{
+    return _btNodeFactory->Instantiate(typeName);
+}
+
+const umap<string, BTNode_Factory::NodeInfo>& GameInstance::Get_RegisteredBTNodes() const
+{
+    return _btNodeFactory->Get_RegisteredNodes();
+}
+
 void GameInstance::Free()
 {
     Base::Free();
 
+    _componentFactory.reset();
+    _btNodeFactory.reset();
+
+    _prefabManager.reset();
     _objectManager.reset(); 
     _levelManager.reset();  
     _protoManager.reset();  

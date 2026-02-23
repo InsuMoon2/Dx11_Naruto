@@ -1,0 +1,3 @@
+Type,Id,Path,Count,Level,Extra
+Shader,COMPONENT_TYPE_SHADER_VTXTEX,../../Client/Bin/Shaders/Shader_VtxTex.hlsl,,Static,VtxTex
+Shader,COMPONENT_TYPE_SHADER_VTXNORTEX,../../Client/Bin/Shaders/Shader_VtxNorTex.hlsl,,Static,VtxNorTex

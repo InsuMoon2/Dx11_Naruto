@@ -13,16 +13,31 @@ public:
 public:
     HRESULT Initialize();
 
-    HRESULT Load_Table(const wstring& tablePath, uint32 levelIndex);
+    HRESULT Load_TextureTable(const wstring& tablePath);
+    HRESULT Load_ShaderTable(const wstring& tablePath);
+    HRESULT Load_TerrainTable(const wstring& tablePath);
 
 private:
-    HRESULT Load_Components(const json& data, uint32 levelIndex, const string& typeName);
+    HRESULT Load_Textures(const json& data);
+    HRESULT Load_Shaders(const json& data);
+    HRESULT Load_Terrains(const json& data);
 
     uint32  Get_ComponentID_From_String(const string& idStr);
+    uint32  Get_LevelIndex_From_String(const string& levelName);
+
 
 private:
     ComPtr<Device> _device;
     ComPtr<DeviceContext> _context;
+
+private:
+    struct FInputLayoutInfo
+    {
+        const D3D11_INPUT_ELEMENT_DESC* desc;
+        uint32 count;
+    };
+
+    static FInputLayoutInfo Get_InputLayout(const string& name);
 
 public:
     static shared_ptr<ResourceLoader> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

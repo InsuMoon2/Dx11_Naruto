@@ -32,19 +32,19 @@ HRESULT Level_Gameplay::Initialize()
     //}
 #pragma endregion
 
-    /*auto player = Spawn_Helper::Prefab("TestPlayer")
-        .AtLevel(ETOI(ELevelType::GamePlay))
-        .InLayer(TEXT("Layer_Builder"))
-        .Position({ 0.f, 0.f, -5.f })
-        .Scale({ 1.f, 1.f, 1.f })
-        .Spawn();
+    //auto player = Spawn_Helper::Prefab("TestPlayer")
+    //    .AtLevel(ETOI(ELevelType::GamePlay))
+    //    .InLayer(TEXT("Layer_Builder"))
+    //    .Position({ 0.f, 0.f, -5.f })
+    //    .Scale({ 1.f, 1.f, 1.f })
+    //    .Spawn();
 
     auto monster = Spawn_Helper::Prefab("Monster1")
         .AtLevel(ETOI(ELevelType::GamePlay))
         .InLayer(TEXT("Layer_Builder"))
         .Position({ 1.f, 1.f, -5.f })
         .Scale({ 1.5f, 1.5f, 1.5f })
-        .Spawn();*/
+        .Spawn();
 
 
     return S_OK;
@@ -94,10 +94,7 @@ HRESULT Level_Gameplay::Ready_Layer_Camera(const wstring& layerTag)
 HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
 {
     CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_PLAYER, layerTag), E_FAIL);
-
     CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_TERRAIN, layerTag), E_FAIL);
-
-
 
     return S_OK;
 }

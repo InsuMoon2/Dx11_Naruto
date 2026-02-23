@@ -52,7 +52,7 @@ HRESULT Player::Initialize(void* arg)
     _transformCom->Set_LocalPosition(0.f, 0.f, -5.f);
 
     // Temp : 렌더링
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER, _shaderCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXTEX, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, _textureCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
 

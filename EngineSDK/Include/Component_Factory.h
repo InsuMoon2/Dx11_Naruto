@@ -8,8 +8,6 @@ class Component;
 
 class ENGINE_DLL Component_Factory : public Base
 {
-    DECLARE_SINGLETON(Component_Factory)
-
 public:
     using Creator = function<shared_ptr<Component>(ComPtr<Device>, ComPtr<DeviceContext>)>;
 
@@ -24,7 +22,7 @@ public:
     void Register_Prototype(uint32 typeId, uint32 levelIndex,
                        ComPtr<Device> device, ComPtr<DeviceContext> context);
 
-    shared_ptr<Component> Create(uint32 typeId, ComPtr<Device> device, ComPtr<DeviceContext> context);
+    Shared<Component> Instantiate(uint32 typeId, ComPtr<Device> device, ComPtr<DeviceContext> context);
 
     vector<pair<uint32, wstring>> Get_RegisteredComponents();
 
@@ -48,20 +46,9 @@ private:
     map<uint32, wstring> _classNames;
 
 public:
+    static Unique<Component_Factory> Create();
     void Free() override;
 
 };
-
-#define REGISTER_COMPONENT_FACTORY(TYPE, ENUM) \
-    static struct Helper_Comp_##TYPE { \
-        Helper_Comp_##TYPE() { \
-            Engine::Component_Factory::GetInstance()->Register(ENUM, \
-                [](ComPtr<Device> device, ComPtr<DeviceContext> context) { \
-                    return TYPE::Create(device, context); \
-                }, \
-                TYPE::StaticClassName()  \
-            ); \
-        } \
-    } helper_comp_##TYPE;
 
 NS_END

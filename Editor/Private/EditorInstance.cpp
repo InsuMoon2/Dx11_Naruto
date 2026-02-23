@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "EditorInstance.h"
+
+#include "BehaviorTree_View.h"
 #include "ImGui_Manager.h"    
 #include "Editor_Manager.h"
 #include "Notification_Manager.h"
@@ -75,6 +77,12 @@ void EditorInstance::Pause()
 void EditorInstance::Stop()
 {
     GAME->Set_GameState(EGameState::Edit);
+
+    auto btView = dynamic_pointer_cast<BehaviorTree_View>(Get_Window(TEXT("BehaviorTree")));
+    if (btView && btView->Is_DebugMode())
+    {
+        btView->Clear_DebugMode();
+    }
 }
 
 shared_ptr<EditorWindow> EditorInstance::Get_Window(const wstring& key)

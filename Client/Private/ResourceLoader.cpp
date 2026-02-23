@@ -2,9 +2,12 @@
 #include "ResourceLoader.h"
 #include "GameInstance.h"
 #include "Texture.h"
-#include "Component_Factory.h"
 #include "VIBuffer_Rect.h"
+#include "VIBuffer_Terrain.h"
 #include <fstream>
+#include <magic_enum/magic_enum.hpp>
+
+#include "Shader.h"
 
 ResourceLoader::ResourceLoader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -17,7 +20,7 @@ HRESULT ResourceLoader::Initialize()
     return S_OK;
 }
 
-HRESULT ResourceLoader::Load_Table(const wstring& tablePath, uint32 levelIndex)
+HRESULT ResourceLoader::Load_TextureTable(const wstring& tablePath)
 {
     // Json 열기
     ifstream file(tablePath);
@@ -31,41 +34,155 @@ HRESULT ResourceLoader::Load_Table(const wstring& tablePath, uint32 levelIndex)
     file >> root;
     file.close();
 
-    for (auto& [typeName, items] : root.items())
-    {
-        CHECK_FAILED(Load_Components(items, levelIndex, typeName), E_FAIL);
-    }
+    if (root.contains("Texture"))
+        CHECK_FAILED(Load_Textures(root["Texture"]), E_FAIL);
 
-    LOG_INFO("Loaded table: {}", Utils::ToString(tablePath));
-    
+    LOG_INFO("Loaded TextureTable: {}", Utils::ToString(tablePath));
+
     return S_OK;
 }
 
-HRESULT ResourceLoader::Load_Components(const json& data, uint32 levelIndex, const string& typeName)
+HRESULT ResourceLoader::Load_ShaderTable(const wstring& tablePath)
+{
+    ifstream file(tablePath);
+    if (!file.is_open())
+    {
+        LOG_ERROR("Failed to open: {}", Utils::ToString(tablePath));
+        return E_FAIL;
+    }
+
+    json root;
+    file >> root;
+    file.close();
+
+    if (root.contains("Shader"))
+        CHECK_FAILED(Load_Shaders(root["Shader"]), E_FAIL);
+
+    LOG_INFO("Loaded: {}", Utils::ToString(tablePath));
+
+    return S_OK;
+}
+
+HRESULT ResourceLoader::Load_TerrainTable(const wstring& tablePath)
+{
+    ifstream file(tablePath);
+    if (!file.is_open())
+    {
+        LOG_ERROR("Failed to open: {}", Utils::ToString(tablePath));
+        return E_FAIL;
+    }
+
+    json root;
+    file >> root;
+    file.close();
+
+    if (root.contains("Terrain"))
+        CHECK_FAILED(Load_Terrains(root["Terrain"]), E_FAIL);
+
+    LOG_INFO("Loaded: {}", Utils::ToString(tablePath));
+
+    return S_OK;
+}
+
+HRESULT ResourceLoader::Load_Shaders(const json& data)
+{
+    for (const auto& item : data)
+    {
+        string idStr    = item["id"];
+        string pathStr  = item["path"];
+        string layoutStr  = item.value("type", "");
+        string levelStr   = item.value("level", "Static");
+
+        uint32 typeId = Get_ComponentID_From_String(idStr);
+        uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+        if (typeId == 0)
+        {
+            LOG_WARN("Unknown Shader ID : {}", idStr);
+            continue;
+        }
+
+        auto layout = Get_InputLayout(layoutStr);
+        if (!layout.desc) continue;
+
+        wstring wPath = Utils::ToWString(pathStr);
+        auto desc = layout.desc;
+        auto count = layout.count;
+
+        GAME->Register_ComponentFactory(
+            typeId,
+            [wPath, desc, count](ComPtr<Device> device, ComPtr<DeviceContext> context)
+            {
+                return Shader::Create(device, context, wPath, desc, count);
+            },
+            Utils::ToWString(idStr));
+
+        GAME->Register_ComponentFactory_Prototype(typeId, levelIndex);
+
+        LOG_INFO("Shader registered: {} ({})", idStr, layoutStr);
+    }
+
+    return S_OK;
+}
+
+HRESULT ResourceLoader::Load_Terrains(const json& data)
 {
     for (const auto& item : data)
     {
         string idStr = item["id"];
-        uint32 protoID = Get_ComponentID_From_String(idStr);
+        string pathStr = item["path"];
+        string levelStr = item.value("level", "Static");
 
-        if (protoID == 0)
+        uint32 typeId = Get_ComponentID_From_String(idStr);
+        uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+        if (typeId == 0)
+        {
+            LOG_WARN("Unknown terrain ID: {}", idStr); continue;
+        }
+
+        wstring wPath = Utils::ToWString(pathStr);
+
+        GAME->Register_ComponentFactory(
+            typeId,
+            [wPath](ComPtr<Device> device, ComPtr<DeviceContext> context)
+            {
+                return VIBuffer_Terrain::Create(device, context, wPath);
+            },
+            Utils::ToWString(idStr));
+
+        GAME->Register_ComponentFactory_Prototype(typeId, levelIndex);
+
+        LOG_INFO("Terrain registered: {}", idStr);
+    }
+    return S_OK;
+}
+
+HRESULT ResourceLoader::Load_Textures(const json& data)
+{
+    for (const auto& item : data)
+    {
+        string idStr    = item["id"];
+        string pathStr  = item["path"];
+        string levelStr   = item.value("level", "Static");
+        int32  count      = item.value("count", 1);
+
+        uint32 typeId = Get_ComponentID_From_String(idStr);
+        uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+        if (typeId == 0)
         {
             LOG_WARN("Unknown component ID: {}", idStr);
             continue;
         }
 
-        // Component_Factory에서 생성
-        auto comp = Component_Factory::GetInstance()->Create(protoID, _device, _context);
-        if (!comp)
+        wstring wPath = Utils::ToWString(pathStr);
+
+        if (FAILED(GAME->Add_Component_Prototype(levelIndex, typeId,
+            Texture::Create(_device, _context, wPath.c_str(), count))))
         {
-            LOG_ERROR("Failed to create component: {} (ID: {})", typeName, idStr);
-            continue;
+            LOG_ERROR("Failed to load Texture: {}", idStr);
         }
-
-        // 프로토타입 등록
-        CHECK_FAILED(GAME->Add_Component_Prototype(levelIndex, protoID, comp), E_FAIL);
-
-        LOG_INFO("Registered prototype: {} -> {}", typeName, idStr);
     }
     return S_OK;
 }
@@ -80,6 +197,31 @@ uint32 ResourceLoader::Get_ComponentID_From_String(const string& idStr)
         return 0;
 
     return static_cast<uint32>(valueDesc->number());
+}
+
+uint32 ResourceLoader::Get_LevelIndex_From_String(const string& levelName)
+{
+    auto levelEnum = magic_enum::enum_cast<ELevelType>(levelName);
+
+    if (levelEnum.has_value())
+        return ETOI(levelEnum.value());
+
+    return ETOI(ELevelType::Static);
+}
+
+ResourceLoader::FInputLayoutInfo ResourceLoader::Get_InputLayout(const string& name)
+{
+    if (name == "VtxTex")
+    {
+        return { FVertexTex::Vertex_Layout, FVertexTex::Vertex_Layout_Count };
+    }
+
+    if (name == "VtxNorTex")
+    {
+        return { FVertexNormalTex::Vertex_Normaltex_Layout, FVertexNormalTex::Vertex_Normaltex_Layout_Count };
+    }
+
+    return { nullptr, 0 };
 }
 
 shared_ptr<ResourceLoader> ResourceLoader::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

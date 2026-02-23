@@ -55,8 +55,13 @@ private:
 
     ImColor Get_NodeColor(const string& nodeType) const;
 
+    int     Find_NodeIdByInputPin(ed::PinId pinId) const;
+
 public:
-    void Set_DebugTarget(Weak<BehaviorTree> targetBehavior) { _debugTarget = targetBehavior; }
+    void    Set_DebugTarget(Weak<BehaviorTree> targetBehavior) { _debugTarget = targetBehavior; }
+    void    Set_DebugMode(bool enable) { _isDebugMode = enable; }
+    bool    Is_DebugMode() const { return _isDebugMode; }
+    void    Clear_DebugMode();
 
 private:
     ed::EditorContext* _editorContext = {};
@@ -91,6 +96,8 @@ private: /* Blackboard */
     // 현재 보고있는 AI의 Behavior
     Weak<BehaviorTree> _debugTarget;
     map<int, EBTNodeResult> _nodeStateCache; // 매 프레임 업데이트되는 상태값 캐싱
+
+    bool    _isDebugMode = false;
 
 public:
     static Shared<BehaviorTree_View> Create();

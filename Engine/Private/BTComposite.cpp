@@ -94,6 +94,8 @@ Shared<BTNode> BTSelector::Clone()
 {
     auto newNode = make_shared<BTSelector>();
 
+    newNode->Set_DebugId(_debugId);
+
     // 자식들 깊은 복사
     for (auto& child : _children)
     {

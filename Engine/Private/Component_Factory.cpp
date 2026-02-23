@@ -3,8 +3,6 @@
 #include "Component.h"
 #include "GameInstance.h"
 
-IMPLEMENT_SINGLETON(Component_Factory)
-
 void Component_Factory::Initialize()
 {
     _creators.clear();
@@ -42,7 +40,7 @@ void Component_Factory::Register_Prototype(uint32 typeId, uint32 levelIndex, Com
     GAME->Add_Component_Prototype(levelIndex, typeId, prototype);
 }
 
-shared_ptr<Component> Component_Factory::Create(uint32 typeId, ComPtr<Device> device, ComPtr<DeviceContext> context)
+shared_ptr<Component> Component_Factory::Instantiate(uint32 typeId, ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto iter = _creators.find(typeId);
     if (iter == _creators.end())
@@ -61,6 +59,14 @@ vector<pair<uint32, wstring>> Component_Factory::Get_RegisteredComponents()
         components.push_back(pair); 
     }
     return components;
+}
+
+Unique<Component_Factory> Component_Factory::Create()
+{
+    auto instance = make_unique<Component_Factory>();
+    instance->Initialize();
+
+    return instance;
 }
 
 void Component_Factory::Free()

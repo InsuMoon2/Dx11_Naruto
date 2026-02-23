@@ -6,8 +6,6 @@
 #include "BTTask_MoveTo.h"
 #include "BTTask_Wait.h"
 
-IMPLEMENT_SINGLETON(BTNode_Factory)
-
 void BTNode_Factory::Initialize()
 {
     _creators.clear();
@@ -28,24 +26,22 @@ void BTNode_Factory::Register(const string& category, const string& typeName, Cr
 
 void BTNode_Factory::Register_EngineNodes()
 {
-    auto& factory = GetInstance();
-
     // Root는 안보이게 (초기 생성 시 자동 생성)
 
     /* Composite */
-    factory->Register("Hidden", "Root", []() {return make_shared<BTRoot>(); });
-    factory->Register("Composite", "Sequence", []() {return make_shared<BTSequence>(); });
-    factory->Register("Composite", "Selector", []() {return make_shared<BTSelector>(); });
+    Register("Hidden", "Root", []() {return make_shared<BTRoot>(); });
+    Register("Composite", "Sequence", []() {return make_shared<BTSequence>(); });
+    Register("Composite", "Selector", []() {return make_shared<BTSelector>(); });
 
     // TODO : Decorator (Invertor, Repeater) 추가 예정
 
     /* Task */
-    factory->Register("Task", "Task_Wait", []() {return make_shared<BTTask_Wait>(); });
-    factory->Register("Task", "Task_Move", []() {return make_shared<BTTask_MoveTo>(); });
+    Register("Task", "Task_Wait", []() {return make_shared<BTTask_Wait>(); });
+    Register("Task", "Task_Move", []() {return make_shared<BTTask_MoveTo>(); });
 
 }
 
-Shared<BTNode> BTNode_Factory::Create(const string& typeName)
+Shared<BTNode> BTNode_Factory::Instantiate(const string& typeName)
 {
     auto it = _creators.find(typeName);
 
@@ -56,6 +52,14 @@ Shared<BTNode> BTNode_Factory::Create(const string& typeName)
     }
 
     return it->second.creator();
+}
+
+Unique<BTNode_Factory> BTNode_Factory::Create()
+{
+    auto instance = make_unique<BTNode_Factory>();
+    instance->Initialize();
+
+    return instance;
 }
 
 void BTNode_Factory::Free()

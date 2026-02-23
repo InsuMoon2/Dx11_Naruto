@@ -4,10 +4,8 @@
 #include "Blackboard.h"
 #include "BTComposite.h"
 #include "BTNode.h"
-#include "BTNode_Factory.h"
 #include "BTTask_Wait.h"
-
-//REGISTER_COMPONENT_FACTORY(Behavior, Protocol::COMPONENT_TYPE_AI)
+#include "GameInstance.h"
 
 BehaviorTree::BehaviorTree(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -214,7 +212,7 @@ map<int, EBTNodeResult> BehaviorTree::Get_AllNodeResults() const
 
 Shared<BTNode> BehaviorTree::Create_Node(const string& typeName)
 {
-    return GET_SINGLE(BTNode_Factory)->Create(typeName);
+    return GAME->Instantiate_BTNode(typeName);
 }
 
 Shared<BehaviorTree> BehaviorTree::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
