@@ -17,6 +17,8 @@
 #include "PlayerController.h"
 
 #include "Camera_Free.h"
+#include "MyPlayer.h"
+#include "RemotePlayer.h"
 #include "ResourceLoader.h"
 #include "Terrain.h"
 
@@ -120,14 +122,16 @@ void Loader::Register_Components()
 
     /* GameObject */
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PLAYER,
-        Player::Create(_device, _context));
+        MyPlayer::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_REMOTE_PLAYER,
+        RemotePlayer::Create(_device, _context));
 
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_MONSTER,
         Monster::Create(_device, _context));
 
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_TERRAIN,
         Terrain::Create(_device, _context));
-
 }
 
 void Loader::Initialize_BT_Nodes()

@@ -4,6 +4,7 @@
 RemotePlayer::RemotePlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Player(device, context)
 {
+    Set_ObjectType(Protocol::OBJECT_TYPE_REMOTE_PLAYER);
 }
 
 RemotePlayer::RemotePlayer(const RemotePlayer& rhs)
@@ -43,7 +44,10 @@ void RemotePlayer::Update(float timeDelta)
 
 void RemotePlayer::Sync(const Protocol::ObjectInfo& info)
 {
-    Player::Sync(info);
+    // 목표 위치만 갱신 후 Update에서 보간 진행 (자연스러운 움직임을 위해)
+    _targetPos = Vec3(info.pos().x(), info.pos().y(), info.pos().z());
+    _targetRotY = info.rot_y();
+
 }
 
 shared_ptr<GameObject> RemotePlayer::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

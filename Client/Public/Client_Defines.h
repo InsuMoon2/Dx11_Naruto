@@ -18,5 +18,3 @@ namespace Client
 
 using namespace Client;
 using Message = google::protobuf::Message;
-
-#include "Client_PacketHandler.h"

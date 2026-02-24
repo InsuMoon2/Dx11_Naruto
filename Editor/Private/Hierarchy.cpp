@@ -334,7 +334,7 @@ void Hierarchy::Handle_Shotcuts()
     {
         for (auto& obj : _selectedObjects)
         {
-            obj->Set_Destroy();
+            //obj->Set_Destroy();
 
             EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));
         }

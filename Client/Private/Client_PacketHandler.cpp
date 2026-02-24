@@ -2,8 +2,15 @@
 #include "Client_PacketHandler.h"
 #include "BufferReader.h"
 #include "Level_Manager.h"
+#include "Event_Manager.h"
+#include "Player.h"
+#include "MyPlayer.h"
+#include "RemotePlayer.h"
 
-void Client_PacketHandler::HandlePacket(shared_ptr<ServerSession> session, BYTE* buffer, int32 len)
+static uint64 s_MyNetworkId = 0;
+static umap<uint64, Weak<Player>> s_NetworkPlayers;
+
+void Client_PacketHandler::HandlePacket(Shared<ServerSession> session, BYTE* buffer, int32 len)
 {
     BufferReader br(buffer, len);
 
@@ -15,24 +22,28 @@ void Client_PacketHandler::HandlePacket(shared_ptr<ServerSession> session, BYTE*
     case S_TEST:
         Handle_S_TEST(session, buffer, len);
         break;
+    case S_MyPlayer:
+        Handle_S_MyPlayer(session, buffer, len);
+        break;
+    case S_AddObject:
+        Handle_S_AddObject(session, buffer, len);
+        break;
+    case S_RemoveObject:
+        Handle_S_RemoveObject(session, buffer, len);
+        break;
 
     case S_Move:
         Handle_S_Move(session, buffer, len);
         break;
-    default:
-        break;
-
     }
+
+
 }
 
-void Client_PacketHandler::Handle_S_TEST(shared_ptr<ServerSession> session, BYTE* buffer, int32 len)
+void Client_PacketHandler::Handle_S_TEST(Shared<ServerSession> session, BYTE* buffer, int32 len)
 {
-    PacketHeader* header = (PacketHeader*)(buffer);
-    //uint16 Id = header->id;
-    uint16 size = header->size;
-
     Protocol::S_TEST pkt;
-    pkt.ParseFromArray(&header[1], size - sizeof(PacketHeader));
+    ParsePacket(buffer, pkt);
 
     uint64 id = pkt.id();
     uint64 hp = pkt.hp();
@@ -47,13 +58,91 @@ void Client_PacketHandler::Handle_S_TEST(shared_ptr<ServerSession> session, BYTE
     }
 }
 
-void Client_PacketHandler::Handle_S_Move(shared_ptr<ServerSession> session, BYTE* buffer, int32 len)
+void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE* buffer, int32 len)
 {
-    PacketHeader* header = (PacketHeader*)buffer;
-    uint16 size = header->size;
+    Protocol::S_MyPlayer pkt;
+    ParsePacket(buffer, pkt);
 
+    uint64 myId = pkt.info().objectid();
+    s_MyNetworkId = myId;
+
+}
+
+void Client_PacketHandler::Handle_S_AddObject(Shared<ServerSession> session, BYTE* buffer, int32 len)
+{
+    Protocol::S_AddObject pkt;
+    ParsePacket(buffer, pkt);
+
+    // 오브젝트 순회
+    for (int i = 0; i < pkt.objects_size(); i++)
+    {
+        const Protocol::ObjectInfo& info = pkt.objects(i);
+        uint64 objectId = info.objectid();
+
+        // 자기 아이디는 무시
+        if (objectId == s_MyNetworkId)
+            continue;
+
+        // 등록 된 플레이언지 확인
+        auto it = s_NetworkPlayers.find(objectId);
+        if (it != s_NetworkPlayers.end())
+        {
+            // 아직 존재하면, 스킵
+            if (!it->second.expired())
+                continue;
+        }
+
+        // RemotePlayer 스폰
+        uint32 levelIndex = GAME->Current_Level();
+
+        auto gameObject = GAME->Clone_And_Add_GameObject(
+            ETOI(ELevelType::Static),
+            Protocol::OBJECT_TYPE_REMOTE_PLAYER,
+            levelIndex,
+            TEXT("Layer_GameObject"));
+
+        if (!gameObject)
+            continue;
+
+        // NetworkId 세팅, map에 등록
+        auto remote = dynamic_pointer_cast<Player>(gameObject);
+        if (remote)
+        {
+            remote->Set_NetworkId(objectId);
+            s_NetworkPlayers[objectId] = remote;
+        }
+
+    }
+}
+
+void Client_PacketHandler::Handle_S_RemoveObject(Shared<ServerSession> session, BYTE* buffer, int32 len)
+{
+    Protocol::S_RemoveObject pkt;
+    ParsePacket(buffer, pkt);
+
+    // 삭제 대상 순회
+    for (int i = 0; i < pkt.ids_size(); i++)
+    {
+        int64 id = pkt.ids(i);
+
+        auto it = s_NetworkPlayers.find(id);
+        if (it == s_NetworkPlayers.end())
+            continue;
+
+        auto player = it->second.lock();
+        if (player)
+        {
+            EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, player));
+        }
+
+        s_NetworkPlayers.erase(it);
+    }
+}
+
+void Client_PacketHandler::Handle_S_Move(Shared<ServerSession> session, BYTE* buffer, int32 len)
+{
     Protocol::S_Move pkt;
-    pkt.ParseFromArray(&header[1], size - sizeof(PacketHeader));
+    ParsePacket(buffer, pkt);
 
     uint64 objectId = pkt.info().objectid();
     float x = pkt.info().pos().x();
@@ -61,8 +150,25 @@ void Client_PacketHandler::Handle_S_Move(shared_ptr<ServerSession> session, BYTE
     float z = pkt.info().pos().z();
     float rotY = pkt.info().rot_y();
 
-    // TODO : ObjectManager에서 objefctId로 GameObject를 찾아서 위치 갱신
-    // 자기 자신이면 무시?
+    // 내 캐릭터 패킷이라면 무시
+    if (objectId == s_MyNetworkId)
+        return;
+
+    // 해당 objectId의 RemotePlayer 찾기
+    auto it = s_NetworkPlayers.find(objectId);
+    if (it == s_NetworkPlayers.end())
+        return;     // 모르는 ID -> 무시
+
+    auto player = it->second.lock();
+    if (!player)
+    {
+        // 이미 파괴된 오브젝트
+        s_NetworkPlayers.erase(it);
+        return;
+    }
+
+    // Snyc -> RemotePlayer에서 보간처리
+    player->Sync(pkt.info());
 }
 
 SendBufferRef Client_PacketHandler::Make_C_Move(float x, float y, float z, float rotY)

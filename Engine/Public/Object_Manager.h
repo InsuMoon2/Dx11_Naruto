@@ -25,11 +25,16 @@ public:
 public:
     HRESULT Add_GameObject(
             uint32 protoLevelIndex, uint32 objID,
-            uint32 layerLevelIndex, const wstring& layerTag,
-            void* arg);
+            uint32 layerLevelIndex, const wstring& layerTag, void* arg);
+
+    Shared<GameObject>      Clone_And_Add_GameObject(
+            uint32 protoIndex, uint32 objID,
+            uint32 levelIndex, const wstring& layerTag, void* arg);
 
     // 이미 생성된 포인터 등록
     HRESULT Add_GameObject(uint32 levelIndex, const wstring& layerTag, shared_ptr<GameObject> gameObject);
+
+
 
     void Delete_GameObject(uint32 levelIndex, shared_ptr<GameObject> gameObject);
 

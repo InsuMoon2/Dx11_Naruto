@@ -5,6 +5,7 @@
 NS_BEGIN(Client)
 
 class ServerSession;
+class Player;
 
 enum PacketID
 {
@@ -21,15 +22,19 @@ enum PacketID
 class Client_PacketHandler
 {
 public:
-	static void HandlePacket(shared_ptr<ServerSession> session, BYTE* buffer, int32 len);
+	static void HandlePacket(Shared<ServerSession> session, BYTE* buffer, int32 len);
 
 	// 받기
-	static void Handle_S_TEST(shared_ptr<ServerSession> session, BYTE* buffer, int32 len);
-    static void Handle_S_Move(shared_ptr<ServerSession> session, BYTE* buffer, int32 len);
+	static void Handle_S_TEST(Shared<ServerSession> session, BYTE* buffer, int32 len);
+    static void Handle_S_MyPlayer(Shared<ServerSession> session, BYTE* buffer, int32 len);
+    static void Handle_S_AddObject(Shared<ServerSession> session, BYTE* buffer, int32 len);
+    static void Handle_S_RemoveObject(Shared<ServerSession> session, BYTE* buffer, int32 len);
+    static void Handle_S_Move(Shared<ServerSession> session, BYTE* buffer, int32 len);
 
 	// 보내기
 	static SendBufferRef Make_C_Move(float x, float y, float z, float rotY);
 
+public:
 	template<typename T>
 	static SendBufferRef MakeSendBuffer(T& pkt, uint16 pktId)
 	{
@@ -45,6 +50,14 @@ public:
 
 		return sendBuffer;
 	}
+
+    template<typename T>
+    static void ParsePacket(BYTE* buffer, T& outPkt)
+    {
+        PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
+
+        outPkt.ParseFromArray(&header[1], header->size - sizeof(PacketHeader));
+    }
 
 };
 

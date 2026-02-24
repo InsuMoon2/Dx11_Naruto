@@ -17,7 +17,6 @@
 #include "Client_Defines.h"
 #include "Client_Enum.h"
 #include "Client_Macro.h"
-
 #include <assert.h>
 
 #include <format>

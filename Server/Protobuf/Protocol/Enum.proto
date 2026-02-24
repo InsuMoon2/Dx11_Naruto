@@ -37,26 +37,27 @@ enum ComponentID
 
 enum OBJECT_TYPE
 {
-	OBJECT_TYPE_NONE = 0;
-	OBJECT_TYPE_PLAYER = 1;
-	OBJECT_TYPE_MONSTER = 2;
-    OBJECT_TYPE_TERRAIN = 3;
-    OBJECT_TYPE_CAMERA_FREE = 4;
+	OBJECT_TYPE_NONE                    = 0;
+	OBJECT_TYPE_PLAYER                  = 1;
+    OBJECT_TYPE_REMOTE_PLAYER           = 2;
+	OBJECT_TYPE_MONSTER                 = 4;
+    OBJECT_TYPE_TERRAIN                 = 3;
+    OBJECT_TYPE_CAMERA_FREE             = 5;
 
-    OBJECT_TYPE_BACKGROUND = 10;
+    OBJECT_TYPE_BACKGROUND              = 10;
 }
 
 enum OBJECT_STATE_TYPE
 {
-	OBJECT_STATE_TYPE_IDLE = 0;
-	OBJECT_STATE_TYPE_MOVE = 1;
-	OBJECT_STATE_TYPE_SKILL = 2;
+	OBJECT_STATE_TYPE_IDLE              = 0;
+	OBJECT_STATE_TYPE_MOVE              = 1;
+	OBJECT_STATE_TYPE_SKILL             = 2;
 }
 
 enum DIR_TYPE
 {
-	DIR_TYPE_UP = 0;
-	DIR_TYPE_DOWN = 1;
-	DIR_TYPE_LEFT = 2;
-	DIR_TYPE_RIGHT = 3;
+	DIR_TYPE_UP                         = 0;
+	DIR_TYPE_DOWN                       = 1;
+	DIR_TYPE_LEFT                       = 2;
+	DIR_TYPE_RIGHT                      = 3;
 }

@@ -2,9 +2,11 @@
 #include "MyPlayer.h"
 
 #include "CombatStat.h"
+#include "InputComponent.h"
 #include "MovementComponent.h"
 #include "NetworkManager.h"
 #include "PlayerController.h"
+#include "Client_PacketHandler.h"
 
 MyPlayer::MyPlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Player(device, context)

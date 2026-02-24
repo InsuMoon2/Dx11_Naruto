@@ -94,6 +94,32 @@ HRESULT Object_Manager::Add_GameObject(uint32 protoLevelIndex, uint32 objID, uin
     return S_OK;
 }
 
+Shared<GameObject> Object_Manager::Clone_And_Add_GameObject(uint32 protoIndex, uint32 objID, uint32 levelIndex,
+    const wstring& layerTag, void* arg)
+{
+    if (levelIndex >= _numLevels)
+        return nullptr;
+
+    auto gameObject = GAME->Clone_GameObject(protoIndex, objID, arg);
+
+    if (!gameObject)
+        return nullptr;
+
+    shared_ptr<Layer> layer = Find_Layer(levelIndex, layerTag);
+
+    if (layer == nullptr)
+    {
+        layer = Layer::Create();
+        _layers[levelIndex].emplace(layerTag, layer);
+    }
+
+    layer->Add_GameObject(gameObject);
+
+    gameObject->BeginPlay();
+
+    return gameObject;    
+}
+
 HRESULT Object_Manager::Add_GameObject(uint32 levelIndex, const wstring& layerTag, shared_ptr<GameObject> gameObject)
 {
     if (levelIndex >= _numLevels || gameObject == nullptr)

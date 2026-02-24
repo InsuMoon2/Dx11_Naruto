@@ -101,8 +101,12 @@ public: /* Object Manager */
                                 void* arg = {});
 
     HRESULT                 Add_GameObject(
-                             uint32 levelIndex, const wstring& layerTag,
-                             Shared<GameObject> gameObject);
+                                uint32 levelIndex, const wstring& layerTag,
+                                Shared<GameObject> gameObject);
+
+    Shared<GameObject>      Clone_And_Add_GameObject(
+                                uint32 protoIndex, uint32 objID,
+                                uint32 levelIndex, const wstring& layerTag, void* arg = {});
 
     vector<Shared<GameObject>>         Get_GameObjects(uint32 levelIndex);
     const umap<wstring, Shared<Layer>> Get_Layers(uint32 levelIndex);
