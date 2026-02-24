@@ -63,10 +63,9 @@ HRESULT Terrain::Render()
 {
     GameObject::Render();
 
-    Matrix worldMatrix = _transformCom->Get_WorldMatrix();
-    _shaderCom->Bind_Matrix("g_WorldMatrix", &worldMatrix);
-    _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
-    _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
+    _shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix());
+    GAME->Bind_TransformMatrix(ETransformState::View, _shaderCom, "g_ViewMatrix");
+    GAME->Bind_TransformMatrix(ETransformState::Proj, _shaderCom, "g_ProjMatrix");
     
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 0), E_FAIL);
 

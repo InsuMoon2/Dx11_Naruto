@@ -3,6 +3,13 @@ package Protocol;
 
 import "Enum.proto";
 
+message Vec3
+{
+    float x = 1;
+    float y = 2;
+    float z = 3;
+}
+
 message BuffData
 {
 	uint64 buffId = 1;
@@ -11,7 +18,7 @@ message BuffData
 }
 
 message CombatStat
-{
+{ 
     float max_hp = 1;
     float current_hp = 2;
 
@@ -28,4 +35,7 @@ message ObjectInfo
 	uint64 objectId = 1;
 	string name = 2;
     CombatStat stat = 3;
+
+    Vec3  pos = 4;
+    float rot_y = 5;
 }

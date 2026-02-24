@@ -82,6 +82,21 @@
     <ClInclude Include="..\Public\Background.h">
       <Filter>02. GameObject\02. UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Client_PacketHandler.h">
+      <Filter>96. Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NetworkManager.h">
+      <Filter>96. Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ServerSession.h">
+      <Filter>96. Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyPlayer.h">
+      <Filter>02. GameObject\00. Player\00. Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RemotePlayer.h">
+      <Filter>02. GameObject\00. Player\00. Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -153,6 +168,21 @@
     <ClCompile Include="..\Private\Background.cpp">
       <Filter>02. GameObject\02. UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Client_PacketHandler.cpp">
+      <Filter>96. Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NetworkManager.cpp">
+      <Filter>96. Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ServerSession.cpp">
+      <Filter>96. Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MyPlayer.cpp">
+      <Filter>02. GameObject\00. Player\00. Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RemotePlayer.cpp">
+      <Filter>02. GameObject\00. Player\00. Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -160,9 +190,6 @@
     </Filter>
     <Filter Include="98. Default">
       <UniqueIdentifier>{9390e98b-3174-42d8-a93e-75848ddd0bde}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. MainApp">
-      <UniqueIdentifier>{be7ebf18-777a-47a0-b9ee-317405d664f9}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Levels">
       <UniqueIdentifier>{602279df-a6bf-4d0d-a5d7-36c9f139fad8}</UniqueIdentifier>
@@ -229,6 +256,12 @@
     </Filter>
     <Filter Include="02. GameObject\02. UI">
       <UniqueIdentifier>{c8733bd2-02cf-45d7-9874-db793f337d84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager">
+      <UniqueIdentifier>{be7ebf18-777a-47a0-b9ee-317405d664f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00. Player\00. Network">
+      <UniqueIdentifier>{7f9b4d43-fc1b-49d8-a698-695a12504ab7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -22,7 +22,8 @@
             "type": "COMPONENT_TYPE_RECT"
         },
         {
-            "type": "COMPONENT_TYPE_SHADER"
+            "bt_filepath": "../../Client/Bin/Resources\\Data\\json\\BehaviorTrees\\Wait1~3.json",
+            "type": "COMPONENT_TYPE_AI"
         },
         {
             "current_index": 0,
@@ -31,8 +32,7 @@
             "type": "COMPONENT_TYPE_TEXTURE"
         },
         {
-            "bt_filepath": "../../Client/Bin/Resources\\Data\\json\\BehaviorTrees\\Test_WaitMove.json",
-            "type": "COMPONENT_TYPE_AI"
+            "type": "COMPONENT_TYPE_SHADER"
         },
         {
             "attack": 10.0,
@@ -56,7 +56,7 @@
             "yaw_speed": 0.20000000298023224
         }
     ],
-    "guid": "bdebf710-7b96-422b-bc9f-96a03bf804a0",
+    "guid": "f5263a9a-6bd9-4f57-9378-3c5492e90636",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster",
     "static_class": "Monster"

@@ -70,7 +70,7 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _btNodeFactory = BTNode_Factory::Create();
     CHECK_NULL(_btNodeFactory, E_FAIL);
-    _btNodeFactory->Register_EngineNodes();
+    //_btNodeFactory->Register_EngineNodes();
 
     return S_OK;
 }
@@ -287,8 +287,19 @@ void GameInstance::Set_Transform(ETransformState state, const Matrix& matrix)
     return _pipeLine->Set_Transform(state, matrix);
 }
 
+HRESULT GameInstance::Bind_TransformMatrix(ETransformState state, Shared<Shader> shader, const char* constantName)
+{
+    return _pipeLine->Bind_TransformMatrix(state, shader, constantName);
+}
+
+HRESULT GameInstance::Bind_TransformMatrix_Invsere(ETransformState state, Shared<Shader> shader,
+    const char* constantName)
+{
+    return _pipeLine->Bind_TransformMatrix_Inverse(state, shader, constantName);
+}
+
 void GameInstance::Register_ComponentFactory(uint32 typeId, Component_Factory::Creator creator,
-    const wstring& className)
+                                             const wstring& className)
 {
     _componentFactory->Register(typeId, creator, className);
 }

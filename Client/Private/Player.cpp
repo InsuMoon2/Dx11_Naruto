@@ -9,6 +9,8 @@
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
 
+#include "NetworkManager.h"
+
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
 {
@@ -31,27 +33,8 @@ HRESULT Player::Initialize(void* arg)
 {
     CHECK_FAILED(Character::Initialize(arg), E_FAIL);
 
-    {
-        CombatStat::FCombatStatDesc desc;
-        desc.maxHp = 200.f;
-        desc.attack = 100.f;
-
-        CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COMBAT_STAT, _combatStat, &desc), E_FAIL);
-    }
-
-    {
-        MovementComponent::FMovementDesc moveDesc;
-        moveDesc.maxWalkSpeed = 4.f;
-        moveDesc.maxSprintSpeed = 7.f;
-
-        CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MOVEMENT, _movement, &moveDesc), E_FAIL);
-        CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_INPUT, _input), E_FAIL);
-    }
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PLAYER_CONTROLLER, _playerController), E_FAIL);
-    
     _transformCom->Set_LocalPosition(0.f, 0.f, -5.f);
 
-    // Temp : 렌더링
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXTEX, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, _textureCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
@@ -75,7 +58,6 @@ void Player::Update(float timeDelta)
 {
     Character::Update(timeDelta);
 
-    //_playerController->Update(timeDelta);
 }
 
 void Player::Late_Update(float timeDelta)
@@ -91,8 +73,8 @@ HRESULT Player::Render()
 
     Matrix worldMatrix = _transformCom->Get_WorldMatrix();
     _shaderCom->Bind_Matrix("g_WorldMatrix", &worldMatrix);
-    _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
-    _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
+    GAME->Bind_TransformMatrix(ETransformState::View, _shaderCom, "g_ViewMatrix");
+    GAME->Bind_TransformMatrix(ETransformState::Proj, _shaderCom, "g_ProjMatrix");
 
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureCom->Get_CurrentIndex()), E_FAIL);
 
@@ -101,6 +83,12 @@ HRESULT Player::Render()
     CHECK_FAILED(_bufferCom->Render(), E_FAIL);
 
     return S_OK;
+}
+
+void Player::Sync(const Protocol::ObjectInfo& info)
+{
+    // TODO : Rotation도 추가 예정?
+    _transformCom->Set_LocalPosition(info.pos().x(), info.pos().y(), info.pos().z());
 }
 
 HRESULT Player::Ready_Components()

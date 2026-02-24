@@ -121,7 +121,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -144,7 +144,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -163,6 +163,7 @@
     <ClInclude Include="..\Public\Camera_Free.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
+    <ClInclude Include="..\Public\Client_PacketHandler.h" />
     <!-- <ClInclude Include="..\Public\Client_PacketHandler.h" /> -->
     <ClInclude Include="..\Public\IconsFontAwesome6.h" />
     <ClInclude Include="..\Public\InputComponent.h" />
@@ -174,7 +175,10 @@
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\MovementComponent.h" />
+    <ClInclude Include="..\Public\MyPlayer.h" />
+    <ClInclude Include="..\Public\NetworkManager.h" />
     <ClInclude Include="..\Public\PlayerController.h" />
+    <ClInclude Include="..\Public\RemotePlayer.h" />
     <!-- <ClInclude Include="..\Public\MainApp.h" /> -->
     <ClInclude Include="..\Public\Replicator.h" />
     <!-- <ClInclude Include="..\Public\NetworkManager.h" /> -->
@@ -182,6 +186,7 @@
     <ClInclude Include="..\Public\ResourceLoader.h" />
     <!-- <ClInclude Include="..\Public\ServerSession.h" /> -->
     <ClInclude Include="..\Public\CombatStat.h" />
+    <ClInclude Include="..\Public\ServerSession.h" />
     <ClInclude Include="..\Public\Spawn_Helper.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -212,6 +217,7 @@
     <ClCompile Include="..\Private\AIController.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
+    <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
     <ClCompile Include="..\Private\InputComponent.cpp" />
     <!-- <ClCompile Include="..\Private\Client_PacketHandler.cpp" /> -->
     <ClCompile Include="..\Private\Level_Gameplay.cpp" />
@@ -220,13 +226,17 @@
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\MovementComponent.cpp" />
+    <ClCompile Include="..\Private\MyPlayer.cpp" />
+    <ClCompile Include="..\Private\NetworkManager.cpp" />
     <ClCompile Include="..\Private\PlayerController.cpp" />
+    <ClCompile Include="..\Private\RemotePlayer.cpp" />
     <!-- <ClCompile Include="..\Private\MainApp.cpp" /> -->
     <ClCompile Include="..\Private\Replicator.cpp" />
     <!-- <ClCompile Include="..\Private\NetworkManager.cpp" /> -->
     <ClCompile Include="..\Private\ResourceLoader.cpp" />
     <!-- <ClCompile Include="..\Private\ServerSession.cpp" /> -->
     <ClCompile Include="..\Private\CombatStat.cpp" />
+    <ClCompile Include="..\Private\ServerSession.cpp" />
     <ClCompile Include="..\Private\SimpleMath.cpp" />
     <ClCompile Include="..\Private\Spawn_Helper.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />

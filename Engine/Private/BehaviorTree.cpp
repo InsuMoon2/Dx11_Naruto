@@ -49,12 +49,20 @@ void BehaviorTree::Update(float timeDelta)
     if (!_rootNode)
         return;
 
+    if (_pendingInitialize)
+    {
+        _rootNode->Initialize();
+        _pendingInitialize = false;
+    }
+
     EBTNodeResult result = _rootNode->Update(timeDelta);
 
     if (result != EBTNodeResult::InProgress)
     {
-        _rootNode->Initialize(); // 다음 프레임에 처음부터 다시 실행
+        _pendingInitialize = true; // 다음 프레임에 리셋될 수 있게
     }
+
+    //LOG_INFO();
 }
 
 json BehaviorTree::To_Json() const
@@ -125,44 +133,60 @@ HRESULT BehaviorTree::Load_FromJson(const wstring& filePath)
             int id = nodeJson["id"].get<int>();
             string type = nodeJson["type"].get<string>();
 
-            // 타입에 맞는 노드 생성
             Shared<BTNode> newNode = Create_Node(type);
+
             if (!newNode) continue;
 
-            // 노드 DebugId 할당
             newNode->Set_DebugId(id);
+            newNode->Set_Name(nodeJson.value("name", "Unknown"));
             newNode->Deserialize_FromJson(nodeJson);
 
             nodeMap[id] = newNode;
         }
     }
 
-    // 부모 자식 연결. (Links 정보 이용)
-    map<int, int> pinToNodeMap; // PinID -> NodeID로 매핑
+    // Pin -> NodeID 매핑
+    map<int, int> pinToNodeMap;
 
     for (const auto& nodeJson : root["nodes"])
     {
         int nodeId = nodeJson["id"].get<int>();
 
-        // Input Pin
         if (nodeJson.contains("input_pin_id"))
             pinToNodeMap[nodeJson["input_pin_id"].get<int>()] = nodeId;
 
-        // Output Pins
         if (nodeJson.contains("output_pin_ids"))
         {
             for (const auto& pinId : nodeJson["output_pin_ids"])
+            {
                 pinToNodeMap[pinId.get<int>()] = nodeId;
+            }
         }
     }
 
-    // 링크 순회
+    // Output Pin
+    map<int, int> outputPinOrder;
+    for (const auto& nodeJson : root["nodes"])
+    {
+        if (nodeJson.contains("output_pin_ids"))
+        {
+            int order = 0;
+
+            for (const auto& pinId : nodeJson["output_pin_ids"])
+            {
+                outputPinOrder[pinId.get<int>()] = order++;
+            }
+        }
+    }
+    
+    map<int, vector<pair<int, Shared<BTNode>>>> compositeChildren;
+
     if (root.contains("links"))
     {
         for (const auto& linkJson : root["links"])
         {
-            int startPin = linkJson["start"].get<int>(); // 부모의 Output Pin
-            int endPin = linkJson["end"].get<int>();   // 자식의 Input Pin
+            int startPin = linkJson["start"].get<int>();
+            int endPin = linkJson["end"].get<int>();
 
             int parentNodeId = pinToNodeMap[startPin];
             int childNodeId = pinToNodeMap[endPin];
@@ -172,28 +196,40 @@ HRESULT BehaviorTree::Load_FromJson(const wstring& filePath)
 
             if (parent && child)
             {
-                // 부모가 Composite라면 자식 추가
                 auto composite = dynamic_pointer_cast<BTComposite>(parent);
+
                 if (composite)
                 {
-                    composite->Add_Child(child);
+                    int order = outputPinOrder.count(startPin) ? outputPinOrder[startPin] : 0;
+                    compositeChildren[parentNodeId].push_back({ order, child });
                 }
             }
         }
+    }
 
+    // 정렬 후 Add
+    for (auto& [parentId, children] : compositeChildren)
+    {
+        sort(children.begin(), children.end(),
+            [](const auto& a, const auto& b) { return a.first < b.first; });
+
+        auto composite = dynamic_pointer_cast<BTComposite>(nodeMap[parentId]);
+
+        for (auto& [order, child] : children)
+        {
+            LOG_INFO("Add_Child order={}, debugId={}", order, child->Get_DebugId());
+
+            composite->Add_Child(child);
+        }
     }
 
     // Root Node 설정
     if (nodeMap.contains(rootId))
-    {
         Set_RootNode(nodeMap[rootId]);
-    }
 
     // Blackboard 로드
     if (root.contains("blackboard") && _blackboard)
-    {
         _blackboard->Deserialize_FromJson(root["blackboard"]);
-    }
 
     return S_OK;
 }

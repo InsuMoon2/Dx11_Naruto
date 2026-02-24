@@ -48,9 +48,22 @@ HRESULT Prototype_Manager::Add_Component_Prototype(uint32 levelIndex, uint32 com
 {
     if (Find_Component_Prototype(levelIndex, componentID) != nullptr)
     {
-        MSG_BOX("This component is already exists.");
+#pragma region Return
+        {
+            //MSG_BOX("This component is already exists.");
+            //return E_FAIL;
+        }
+#pragma endregion
 
-        return E_FAIL;
+
+#pragma region Skip
+        {
+            LOG_WARN("Exist Component ID : {} ", componentID);
+            return S_OK;
+        }
+#pragma endregion
+            
+
     }
 
     _componentPrototypes[levelIndex].emplace(componentID, prototype);

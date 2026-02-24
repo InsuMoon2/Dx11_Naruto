@@ -33,9 +33,11 @@ EBTNodeResult BTTask_Wait::Update(float timeDelta)
         return EBTNodeResult::Succeeded;
     }
 
-    _lastResult = EBTNodeResult::InProgress;
-    return EBTNodeResult::InProgress;
+    //LOG_INFO("[BT] {} (id={}) 실행 중", _name, _debugId);
 
+    _lastResult = EBTNodeResult::InProgress;
+
+    return EBTNodeResult::InProgress;
 }
 
 void BTTask_Wait::OnDraw_Inspector()

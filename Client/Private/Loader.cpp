@@ -181,8 +181,8 @@ HRESULT Loader::Loading_For_GamePlay()
 {
     uint32 levelIndex = ETOI(ELevelType::GamePlay);
 
-    Register_Components();
-    Initialize_BT_Nodes();
+    //Register_Components();
+    //Initialize_BT_Nodes();
 
     lstrcpy(_loadingText, TEXT("게임플레이 리소스 로딩 중"));
 

@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-
 NS_BEGIN(Server)
 
 class GameSession;

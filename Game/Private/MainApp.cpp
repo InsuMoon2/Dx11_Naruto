@@ -30,6 +30,8 @@ HRESULT MainApp::Initialize()
 
 	NetworkManager::GetInstance()->Initialize();
 
+    CHECK_FAILED(Ready_StartLevel(ELevelType::Logo), E_FAIL);
+
     return S_OK;
 }
 
@@ -41,6 +43,7 @@ void MainApp::Priority_Update(float timeDelta)
 void MainApp::Update(float timeDelta)
 {
     GAME->Update_Engine(timeDelta);
+
     NetworkManager::GetInstance()->Update();
 }
 
@@ -60,6 +63,17 @@ HRESULT MainApp::Render()
     return S_OK;
 }
 
+HRESULT MainApp::Ready_StartLevel(ELevelType startLevelID)
+{
+    if (ELevelType::Loading == startLevelID)
+        return E_FAIL;
+    
+    if (FAILED(GAME->Change_Level(ETOI(ELevelType::Loading),
+        Level_Loading::Create(_device, _context, startLevelID))))
+        return E_FAIL;
+
+    return S_OK;
+}
 
 unique_ptr<MainApp> MainApp::Create()
 {

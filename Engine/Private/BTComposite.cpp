@@ -6,6 +6,16 @@ BTComposite::BTComposite()
 {
 }
 
+void BTComposite::Initialize()
+{
+    BTNode::Initialize();
+
+    _runningChildIndex = 0;
+
+    for (auto& child : _children)
+        child->Initialize();
+}
+
 void BTComposite::Add_Child(Shared<BTNode> node)
 {
     _children.emplace_back(node);
@@ -14,6 +24,8 @@ void BTComposite::Add_Child(Shared<BTNode> node)
 void BTComposite::OnTerminate(EBTNodeResult result)
 {
     _runningChildIndex = 0; // 상태 초기화
+
+    _lastResult = EBTNodeResult::Failed;
 
     // 자식들에게도 상태 전파
     for (auto& child : _children)
@@ -69,15 +81,15 @@ EBTNodeResult BTSelector::Update(float timeDelta)
         if (result == EBTNodeResult::Succeeded)
         {
             _runningChildIndex = 0;
-
-            return EBTNodeResult::Succeeded;
+            _lastResult = EBTNodeResult::Succeeded;
+            return _lastResult;
         }
         // 진행 중 -> 이번 프레임 리턴, 다음 프레임에 여기서부터 다시 시작
         if (result == EBTNodeResult::InProgress)
         {
             _runningChildIndex = i;
-
-            return EBTNodeResult::InProgress;
+            _lastResult = EBTNodeResult::InProgress;
+            return _lastResult;
         }
 
         // 실패 -> 다음 자식 (i+1)로 넘어감
@@ -106,6 +118,7 @@ Shared<BTNode> BTSelector::Clone()
 }
 
 BTSequence::BTSequence(const BTSequence& rhs)
+    : BTComposite(rhs)
 {
 
 }
@@ -128,14 +141,16 @@ EBTNodeResult BTSequence::Update(float timeDelta)
         {
             _runningChildIndex = 0;
 
-            return EBTNodeResult::Failed;
+            _lastResult = EBTNodeResult::Failed;
+            return _lastResult;
         }
         // 진행 중 -> 여기서 정지
         if (result == EBTNodeResult::InProgress)
         {
             _runningChildIndex = i;
 
-            return EBTNodeResult::InProgress;
+            _lastResult = EBTNodeResult::InProgress;
+            return _lastResult;
         }
 
         // 성공 -> 다음 자식 (i+1)로 넘어감
@@ -151,6 +166,8 @@ EBTNodeResult BTSequence::Update(float timeDelta)
 Shared<BTNode> BTSequence::Clone()
 {
     auto newNode = make_shared<BTSequence>();
+
+    newNode->Set_DebugId(_debugId);
 
     // 자식들 깊은 복사
     for (auto& child : _children)

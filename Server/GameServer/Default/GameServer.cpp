@@ -5,6 +5,8 @@
 
 int main()
 {
+    SetConsoleOutputCP(CP_UTF8);
+
     SocketUtils::Init();
 
     shared_ptr<ServerService> service = make_shared<ServerService>(

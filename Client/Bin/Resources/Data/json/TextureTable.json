@@ -15,7 +15,7 @@
         {
             "id": "COMPONENT_TYPE_TEXTURE_TERRAIN",
             "level": "Static",
-            "path": "../../Client/Bin/Resources/Textures/Terrain/Tile%d.jpg",
+            "path": "../../Client/Bin/Resources/Textures/Terrain/Tile%d.dds",
             "count": 1
         }
     ],

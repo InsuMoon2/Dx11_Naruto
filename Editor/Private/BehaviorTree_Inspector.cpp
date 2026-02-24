@@ -83,5 +83,6 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
 
         }
 
+        ImGui::PopStyleColor(2);
     }
 }

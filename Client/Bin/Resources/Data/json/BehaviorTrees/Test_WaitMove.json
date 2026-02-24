@@ -7,11 +7,6 @@
     },
     "links": [
         {
-            "end": 4,
-            "id": 8,
-            "start": 2
-        },
-        {
             "end": 16,
             "id": 17,
             "start": 5
@@ -20,6 +15,21 @@
             "end": 19,
             "id": 20,
             "start": 7
+        },
+        {
+            "end": 22,
+            "id": 26,
+            "start": 2
+        },
+        {
+            "end": 16,
+            "id": 27,
+            "start": 24
+        },
+        {
+            "end": 19,
+            "id": 28,
+            "start": 24
         }
     ],
     "nodes": [
@@ -34,20 +44,6 @@
             "pos_x": 100.0,
             "pos_y": 300.0,
             "type": "Root"
-        },
-        {
-            "id": 3,
-            "input_pin_id": 4,
-            "name": "Selector",
-            "output_pin_ids": [
-                5,
-                6,
-                7
-            ],
-            "parameters": {},
-            "pos_x": 83.0,
-            "pos_y": 460.0,
-            "type": "Selector"
         },
         {
             "id": 15,
@@ -70,6 +66,20 @@
             "pos_y": 668.0,
             "type": "Task_Wait",
             "wait_time": 3.0
+        },
+        {
+            "id": 21,
+            "input_pin_id": 22,
+            "name": "Sequence",
+            "output_pin_ids": [
+                23,
+                24,
+                25
+            ],
+            "parameters": {},
+            "pos_x": 99.0,
+            "pos_y": 430.0,
+            "type": "Sequence"
         }
     ],
     "root_node_id": 1

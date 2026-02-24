@@ -15,7 +15,7 @@ public:
     virtual ~BTNode();
 
 public:
-    virtual void Initialize() {};
+    virtual void Initialize();
     virtual EBTNodeResult Update(float timeDelta);
 
 public:
@@ -30,6 +30,9 @@ public:
     int           Get_DebugId() const { return _debugId; }
     void          Set_DebugId(int id) { _debugId = id; }
 
+    string        Get_Name() const { return _name; }
+    void          Set_Name(const string& name) { _name = name; }
+
     virtual void  OnDraw_Inspector() {};
     virtual json  Serialize_ToJson() { return json::object(); }
     virtual void  Deserialize_FromJson(const json& data) {};
@@ -42,6 +45,8 @@ protected:
 
     EBTNodeResult     _lastResult = EBTNodeResult::Failed;
     int               _debugId = -1; // 에디터 노드 ID랑 매칭
+
+    string            _name = "";
 
 public:
     virtual Shared<BTNode> Clone() = 0;

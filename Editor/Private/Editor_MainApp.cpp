@@ -46,7 +46,7 @@ HRESULT Editor_MainApp::Initialize()
 
     //CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
 
-    CHECK_FAILED(Ready_StartLevel(ELevelType::GamePlay), E_FAIL);
+    CHECK_FAILED(Ready_StartLevel(ELevelType::Logo), E_FAIL);
 
     return S_OK;
 }
@@ -90,17 +90,6 @@ HRESULT Editor_MainApp::Render()
 
     if (FAILED(GAME->Present()))
         return E_FAIL;
-
-    return S_OK;
-}
-
-HRESULT Editor_MainApp::Ready_StaticLevel()
-{
-    auto resourceLoader = ResourceLoader::Create(_device, _context);
-    CHECK_NULL(resourceLoader, E_FAIL);
-    
-    CHECK_FAILED(resourceLoader->Load_TextureTable(
-        TEXT("../../Client/Bin/Resources/Data/json/StaticLevelComTable.json")),E_FAIL);
 
     return S_OK;
 }

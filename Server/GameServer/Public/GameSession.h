@@ -19,6 +19,12 @@ public:
 public:
     shared_ptr<GameSession> GetGameSessionRef();
 
+public:
+    uint64  Get_PlayerId() const { return _playerId; }
+    void    Set_PlayerId(uint64 id) { _playerId = id; }
+
+private:
+    uint64 _playerId = 0;
 
 };
 

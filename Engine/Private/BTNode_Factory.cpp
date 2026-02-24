@@ -59,6 +59,8 @@ Unique<BTNode_Factory> BTNode_Factory::Create()
     auto instance = make_unique<BTNode_Factory>();
     instance->Initialize();
 
+    instance->Register_EngineNodes();
+
     return instance;
 }
 

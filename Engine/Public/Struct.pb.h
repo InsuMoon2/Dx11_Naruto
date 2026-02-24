@@ -62,6 +62,9 @@ extern CombatStatDefaultTypeInternal _CombatStat_default_instance_;
 class ObjectInfo;
 struct ObjectInfoDefaultTypeInternal;
 extern ObjectInfoDefaultTypeInternal _ObjectInfo_default_instance_;
+class Vec3;
+struct Vec3DefaultTypeInternal;
+extern Vec3DefaultTypeInternal _Vec3_default_instance_;
 }  // namespace Protocol
 namespace google {
 namespace protobuf {
@@ -73,6 +76,220 @@ namespace Protocol {
 // ===================================================================
 
 
+// -------------------------------------------------------------------
+
+class Vec3 final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:Protocol.Vec3) */ {
+ public:
+  inline Vec3() : Vec3(nullptr) {}
+  ~Vec3() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(Vec3* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(Vec3));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR Vec3(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline Vec3(const Vec3& from) : Vec3(nullptr, from) {}
+  inline Vec3(Vec3&& from) noexcept
+      : Vec3(nullptr, std::move(from)) {}
+  inline Vec3& operator=(const Vec3& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Vec3& operator=(Vec3&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const Vec3& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const Vec3* internal_default_instance() {
+    return reinterpret_cast<const Vec3*>(
+        &_Vec3_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 0;
+  friend void swap(Vec3& a, Vec3& b) { a.Swap(&b); }
+  inline void Swap(Vec3* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Vec3* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  Vec3* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<Vec3>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const Vec3& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const Vec3& from) { Vec3::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(Vec3* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "Protocol.Vec3"; }
+
+ protected:
+  explicit Vec3(::google::protobuf::Arena* arena);
+  Vec3(::google::protobuf::Arena* arena, const Vec3& from);
+  Vec3(::google::protobuf::Arena* arena, Vec3&& from) noexcept
+      : Vec3(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kXFieldNumber = 1,
+    kYFieldNumber = 2,
+    kZFieldNumber = 3,
+  };
+  // float x = 1;
+  void clear_x() ;
+  float x() const;
+  void set_x(float value);
+
+  private:
+  float _internal_x() const;
+  void _internal_set_x(float value);
+
+  public:
+  // float y = 2;
+  void clear_y() ;
+  float y() const;
+  void set_y(float value);
+
+  private:
+  float _internal_y() const;
+  void _internal_set_y(float value);
+
+  public:
+  // float z = 3;
+  void clear_z() ;
+  float z() const;
+  void set_z(float value);
+
+  private:
+  float _internal_z() const;
+  void _internal_set_z(float value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:Protocol.Vec3)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      2, 3, 0,
+      0, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const Vec3& from_msg);
+    float x_;
+    float y_;
+    float z_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Struct_2eproto;
+};
 // -------------------------------------------------------------------
 
 class CombatStat final : public ::google::protobuf::Message
@@ -134,7 +351,7 @@ class CombatStat final : public ::google::protobuf::Message
     return reinterpret_cast<const CombatStat*>(
         &_CombatStat_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 1;
+  static constexpr int kIndexInFileMessages = 2;
   friend void swap(CombatStat& a, CombatStat& b) { a.Swap(&b); }
   inline void Swap(CombatStat* other) {
     if (other == this) return;
@@ -396,7 +613,7 @@ class BuffData final : public ::google::protobuf::Message
     return reinterpret_cast<const BuffData*>(
         &_BuffData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 0;
+  static constexpr int kIndexInFileMessages = 1;
   friend void swap(BuffData& a, BuffData& b) { a.Swap(&b); }
   inline void Swap(BuffData* other) {
     if (other == this) return;
@@ -619,7 +836,7 @@ class ObjectInfo final : public ::google::protobuf::Message
     return reinterpret_cast<const ObjectInfo*>(
         &_ObjectInfo_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 2;
+  static constexpr int kIndexInFileMessages = 3;
   friend void swap(ObjectInfo& a, ObjectInfo& b) { a.Swap(&b); }
   inline void Swap(ObjectInfo* other) {
     if (other == this) return;
@@ -708,7 +925,9 @@ class ObjectInfo final : public ::google::protobuf::Message
   enum : int {
     kNameFieldNumber = 2,
     kStatFieldNumber = 3,
+    kPosFieldNumber = 4,
     kObjectIdFieldNumber = 1,
+    kRotYFieldNumber = 5,
   };
   // string name = 2;
   void clear_name() ;
@@ -741,6 +960,21 @@ class ObjectInfo final : public ::google::protobuf::Message
   ::Protocol::CombatStat* _internal_mutable_stat();
 
   public:
+  // .Protocol.Vec3 pos = 4;
+  bool has_pos() const;
+  void clear_pos() ;
+  const ::Protocol::Vec3& pos() const;
+  PROTOBUF_NODISCARD ::Protocol::Vec3* release_pos();
+  ::Protocol::Vec3* mutable_pos();
+  void set_allocated_pos(::Protocol::Vec3* value);
+  void unsafe_arena_set_allocated_pos(::Protocol::Vec3* value);
+  ::Protocol::Vec3* unsafe_arena_release_pos();
+
+  private:
+  const ::Protocol::Vec3& _internal_pos() const;
+  ::Protocol::Vec3* _internal_mutable_pos();
+
+  public:
   // uint64 objectId = 1;
   void clear_objectid() ;
   ::uint64_t objectid() const;
@@ -751,12 +985,22 @@ class ObjectInfo final : public ::google::protobuf::Message
   void _internal_set_objectid(::uint64_t value);
 
   public:
+  // float rot_y = 5;
+  void clear_rot_y() ;
+  float rot_y() const;
+  void set_rot_y(float value);
+
+  private:
+  float _internal_rot_y() const;
+  void _internal_set_rot_y(float value);
+
+  public:
   // @@protoc_insertion_point(class_scope:Protocol.ObjectInfo)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      2, 3, 1,
+      3, 5, 2,
       32, 2>
       _table_;
 
@@ -778,7 +1022,9 @@ class ObjectInfo final : public ::google::protobuf::Message
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr name_;
     ::Protocol::CombatStat* stat_;
+    ::Protocol::Vec3* pos_;
     ::uint64_t objectid_;
+    float rot_y_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -797,6 +1043,76 @@ class ObjectInfo final : public ::google::protobuf::Message
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// Vec3
+
+// float x = 1;
+inline void Vec3::clear_x() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = 0;
+}
+inline float Vec3::x() const {
+  // @@protoc_insertion_point(field_get:Protocol.Vec3.x)
+  return _internal_x();
+}
+inline void Vec3::set_x(float value) {
+  _internal_set_x(value);
+  // @@protoc_insertion_point(field_set:Protocol.Vec3.x)
+}
+inline float Vec3::_internal_x() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.x_;
+}
+inline void Vec3::_internal_set_x(float value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = value;
+}
+
+// float y = 2;
+inline void Vec3::clear_y() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = 0;
+}
+inline float Vec3::y() const {
+  // @@protoc_insertion_point(field_get:Protocol.Vec3.y)
+  return _internal_y();
+}
+inline void Vec3::set_y(float value) {
+  _internal_set_y(value);
+  // @@protoc_insertion_point(field_set:Protocol.Vec3.y)
+}
+inline float Vec3::_internal_y() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.y_;
+}
+inline void Vec3::_internal_set_y(float value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = value;
+}
+
+// float z = 3;
+inline void Vec3::clear_z() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.z_ = 0;
+}
+inline float Vec3::z() const {
+  // @@protoc_insertion_point(field_get:Protocol.Vec3.z)
+  return _internal_z();
+}
+inline void Vec3::set_z(float value) {
+  _internal_set_z(value);
+  // @@protoc_insertion_point(field_set:Protocol.Vec3.z)
+}
+inline float Vec3::_internal_z() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.z_;
+}
+inline void Vec3::_internal_set_z(float value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.z_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // BuffData
@@ -1216,6 +1532,124 @@ inline void ObjectInfo::set_allocated_stat(::Protocol::CombatStat* value) {
 
   _impl_.stat_ = reinterpret_cast<::Protocol::CombatStat*>(value);
   // @@protoc_insertion_point(field_set_allocated:Protocol.ObjectInfo.stat)
+}
+
+// .Protocol.Vec3 pos = 4;
+inline bool ObjectInfo::has_pos() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000002u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.pos_ != nullptr);
+  return value;
+}
+inline void ObjectInfo::clear_pos() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.pos_ != nullptr) _impl_.pos_->Clear();
+  _impl_._has_bits_[0] &= ~0x00000002u;
+}
+inline const ::Protocol::Vec3& ObjectInfo::_internal_pos() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::Protocol::Vec3* p = _impl_.pos_;
+  return p != nullptr ? *p : reinterpret_cast<const ::Protocol::Vec3&>(::Protocol::_Vec3_default_instance_);
+}
+inline const ::Protocol::Vec3& ObjectInfo::pos() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.pos)
+  return _internal_pos();
+}
+inline void ObjectInfo::unsafe_arena_set_allocated_pos(::Protocol::Vec3* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.pos_);
+  }
+  _impl_.pos_ = reinterpret_cast<::Protocol::Vec3*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000002u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000002u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Protocol.ObjectInfo.pos)
+}
+inline ::Protocol::Vec3* ObjectInfo::release_pos() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000002u;
+  ::Protocol::Vec3* released = _impl_.pos_;
+  _impl_.pos_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::Protocol::Vec3* ObjectInfo::unsafe_arena_release_pos() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Protocol.ObjectInfo.pos)
+
+  _impl_._has_bits_[0] &= ~0x00000002u;
+  ::Protocol::Vec3* temp = _impl_.pos_;
+  _impl_.pos_ = nullptr;
+  return temp;
+}
+inline ::Protocol::Vec3* ObjectInfo::_internal_mutable_pos() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.pos_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::Protocol::Vec3>(GetArena());
+    _impl_.pos_ = reinterpret_cast<::Protocol::Vec3*>(p);
+  }
+  return _impl_.pos_;
+}
+inline ::Protocol::Vec3* ObjectInfo::mutable_pos() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000002u;
+  ::Protocol::Vec3* _msg = _internal_mutable_pos();
+  // @@protoc_insertion_point(field_mutable:Protocol.ObjectInfo.pos)
+  return _msg;
+}
+inline void ObjectInfo::set_allocated_pos(::Protocol::Vec3* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete (_impl_.pos_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = (value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000002u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000002u;
+  }
+
+  _impl_.pos_ = reinterpret_cast<::Protocol::Vec3*>(value);
+  // @@protoc_insertion_point(field_set_allocated:Protocol.ObjectInfo.pos)
+}
+
+// float rot_y = 5;
+inline void ObjectInfo::clear_rot_y() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.rot_y_ = 0;
+}
+inline float ObjectInfo::rot_y() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.rot_y)
+  return _internal_rot_y();
+}
+inline void ObjectInfo::set_rot_y(float value) {
+  _internal_set_rot_y(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.rot_y)
+}
+inline float ObjectInfo::_internal_rot_y() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.rot_y_;
+}
+inline void ObjectInfo::_internal_set_rot_y(float value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.rot_y_ = value;
 }
 
 #ifdef __GNUC__

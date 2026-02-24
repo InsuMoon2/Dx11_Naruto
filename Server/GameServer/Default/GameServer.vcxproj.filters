@@ -4,9 +4,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
-    <ClCompile Include="GameServer.cpp">
-      <Filter>98. Default</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\GameSession.cpp">
       <Filter>01. Session</Filter>
     </ClCompile>
@@ -22,6 +19,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Protobuf\Bin\Enum.pb.cc">
       <Filter>02. Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="GameServer.cpp">
+      <Filter>00. Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

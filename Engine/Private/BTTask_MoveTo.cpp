@@ -65,7 +65,7 @@ EBTNodeResult BTTask_MoveTo::Update(float timeDelta)
 
 Shared<BTNode> BTTask_MoveTo::Clone()
 {
-    auto clone = make_shared<BTTask_MoveTo>();
+    auto clone = make_shared<BTTask_MoveTo>(*this);
 
     clone->Initialize();
 

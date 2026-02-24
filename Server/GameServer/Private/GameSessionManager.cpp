@@ -2,7 +2,11 @@
 #include "GameSessionManager.h"
 #include "GameSession.h"
 
+NS_BEGIN(Server)
+
 GameSessionManager GSessionManager;
+
+NS_END
 
 void GameSessionManager::Add(shared_ptr<GameSession> session)
 {

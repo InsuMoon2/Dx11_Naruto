@@ -151,14 +151,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Public\Client_Defines.h" />
-    <ClInclude Include="..\Public\Client_Enum.h" />
-    <ClInclude Include="..\Public\Client_Macro.h" />
-    <ClInclude Include="..\Public\Client_PacketHandler.h" />
+    <ClInclude Include="..\Public\Game_Defines.h" />
+    <ClInclude Include="..\Public\Game_Enum.h" />
+    <ClInclude Include="..\Public\Game_Macro.h" />
     <ClInclude Include="..\Public\MainApp.h" />
-    <ClInclude Include="..\Public\NetworkManager.h" />
-    <ClInclude Include="..\Public\Protocol_Wrapper.h" />
-    <ClInclude Include="..\Public\ServerSession.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="pch.h" />
@@ -166,10 +162,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
-    <ClCompile Include="..\Private\NetworkManager.cpp" />
-    <ClCompile Include="..\Private\ServerSession.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

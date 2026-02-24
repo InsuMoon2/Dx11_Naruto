@@ -1,10 +1,14 @@
 ﻿#pragma once
 
-#include "Core_Pch.h"
-#include "Engine_Define.h"
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <mswsock.h>
 
+#include "Engine_Define.h"
+#include "Core_Pch.h"
+
+//#define WIN32_LEAN_AND_MEAN
 #include "targetver.h"
-#define WIN32_LEAN_AND_MEAN
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
@@ -12,19 +16,19 @@
 
 #include "Protocol_Wrapper.h"
 
-#include "Client_Defines.h"
-#include "Client_Enum.h"
-#include "Client_Macro.h"
+#include "Game_Defines.h"
+#include "Game_Enum.h"
+#include "Game_Macro.h"
 
 #include "Service.h"
 #include <assert.h>
-
 
 #include "Client_PacketHandler.h"
 #include "NetworkManager.h"
 
 #include <format>
 #include <filesystem>
+
 namespace fs = std::filesystem;
 
 #include "Input_Manager.h"

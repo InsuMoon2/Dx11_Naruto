@@ -107,20 +107,19 @@ void BehaviorTree_View::OnGui()
 
             ed::Link(link.id, link.startPinId, link.endPinId, linkColor, linkThickness);
         }
-            
 
         if (!_isDebugMode)
         {
             Handle_LinkCreation();
             Handle_Deletion();
             Draw_ContextMenu();
-        }
 
-        for (auto& node : _nodes)
-        {
-            if (!_pendingPositions.contains(node.id.Get()))
+            for (auto& node : _nodes)
             {
-                node.position = ed::GetNodePosition(node.id);
+                if (!_pendingPositions.contains(node.id.Get()))
+                {
+                    node.position = ed::GetNodePosition(node.id);
+                }
             }
         }
 
@@ -479,9 +478,6 @@ void BehaviorTree_View::Draw_Node(const FBTEditorNode& node)
     ed::PushStyleVar(ed::StyleVar_NodeRounding, 10.0f);
     ed::PushStyleColor(ed::StyleColor_NodeBg, ImColor(80, 80, 80, 255));
 
-    ed::BeginNode(node.id);
-    ImGui::PushID(node.id.AsPointer());
-
     // 상태에 따른 테두리 테두리 색상 처리
     EBTNodeResult nodeState = EBTNodeResult::Failed; // 기본 Failed
     bool hasState = _nodeStateCache.contains(node.id.Get());
@@ -490,8 +486,10 @@ void BehaviorTree_View::Draw_Node(const FBTEditorNode& node)
         nodeState = _nodeStateCache[node.id.Get()];
     }
 
+    bool shouldHightlight = hasState && nodeState != EBTNodeResult::NotExecuted;
+
     // 디버그 타겟이 있으면 색상 처리, 없으면 기본 회색
-    if (hasState)
+    if (shouldHightlight)
     {
         ImColor borderColor;
         float borderThickness = 1.f;
@@ -500,21 +498,24 @@ void BehaviorTree_View::Draw_Node(const FBTEditorNode& node)
         {
         case EBTNodeResult::Succeeded:
             borderColor = ImColor(0, 255, 0, 255); 
-            borderThickness = 2.0f;
-            break;
-        case EBTNodeResult::Failed:
-            borderColor = ImColor(255, 0, 0, 255); 
-            borderThickness = 2.0f;
+            borderThickness = 2.f;
             break;
         case EBTNodeResult::InProgress:
             borderColor = ImColor(255, 200, 0, 255);
-            borderThickness = 3.0f;
+            borderThickness = 3.f;
+            break;
+        case EBTNodeResult::Failed:
+            borderColor = ImColor(200, 0, 0, 200);
+            borderThickness = 3.f;
             break;
         }
 
         ed::PushStyleColor(ed::StyleColor_NodeBorder, borderColor);
         ed::PushStyleVar(ed::StyleVar_NodeBorderWidth, borderThickness);
     }
+
+    ed::BeginNode(node.id);
+    ImGui::PushID(node.id.AsPointer());
 
     ImDrawList* drawList = ImGui::GetWindowDrawList();
     float nodeWidth = 140.0f;
@@ -594,7 +595,7 @@ void BehaviorTree_View::Draw_Node(const FBTEditorNode& node)
     ImGui::PopID();
     ed::EndNode();
 
-    if (hasState)
+    if (shouldHightlight)
     {
         ed::PopStyleColor();
         ed::PopStyleVar();

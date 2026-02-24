@@ -3,7 +3,9 @@ Texture2D g_Texture;
 
 sampler DefaultSampler = sampler_state
 {
-    Filter = MIN_MAG_MIP_LINEAR;    
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = wrap;
+    AddressV = wrap;
 };
 
 struct VS_IN
@@ -29,7 +31,7 @@ VS_OUT VS_MAIN(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
     
     Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP); 
-    Out.vTexcoord = In.vTexcoord;
+    Out.vTexcoord = In.vTexcoord * 30.f;
     
     return Out;
 }

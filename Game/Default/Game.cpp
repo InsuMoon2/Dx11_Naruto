@@ -11,18 +11,20 @@ FILE* debug;
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
-HWND g_hWnd;
-HINSTANCE g_hInst;
-HINSTANCE hInst;                     // 현재 인스턴스입니다.
-WCHAR szTitle[MAX_LOADSTRING];       // 제목 표시줄 텍스트입니다.
-WCHAR szWindowClass[MAX_LOADSTRING]; // 기본 창 클래스 이름입니다.
+HWND        g_hWnd;
+HINSTANCE   g_hInst;
+HINSTANCE   hInst;                          // 현재 인스턴스입니다.
+WCHAR       szTitle[MAX_LOADSTRING];        // 제목 표시줄 텍스트입니다.
+WCHAR       szWindowClass[MAX_LOADSTRING];  // 기본 창 클래스 이름입니다.
 
-namespace Client {
-    unsigned int g_winSizeX = 1600;
-    unsigned int g_winSizeY = 900;
-} // namespace Client
+namespace Client
+{
+    unsigned int g_winSizeX = 800;
+    unsigned int g_winSizeY = 600;
+}
 
-struct LaunchParams {
+struct LaunchParams
+{
     int32 playerIndex = 0;
     int32 windowX = CW_USEDEFAULT;
     int32 windowY = CW_USEDEFAULT;
@@ -30,7 +32,8 @@ struct LaunchParams {
     int32 windowHeight = g_winSizeY;
 };
 
-LaunchParams ParseCommandLine(LPWSTR lpCmdLine) {
+LaunchParams ParseCommandLine(LPWSTR lpCmdLine)
+{
     LaunchParams params;
     wstring cmdLine(lpCmdLine);
 
@@ -112,12 +115,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     float timeAcc = {};
 
     // 기본 메시지 루프입니다:
-    while (true) {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+    while (true)
+    {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
             if (WM_QUIT == msg.message)
                 break;
 
-            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) {
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            {
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
             }
@@ -125,10 +131,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         timeAcc += GAME->Compute_TimeDelta(L"Timer_Default");
 
-        if (timeAcc >= 1.f / 60.f) {
-            mainApp->Priority_Update(GAME->Compute_TimeDelta(L"Timer_60FPS"));
-            mainApp->Update(GAME->Compute_TimeDelta(L"Timer_60FPS"));
-            mainApp->Late_Update(GAME->Compute_TimeDelta(L"Timer_60FPS"));
+        if (timeAcc >= 1.f / 60.f)
+        {
+            float dt = GAME->Compute_TimeDelta(L"Timer_60FPS");
+
+            mainApp->Priority_Update(dt);
+            mainApp->Update(dt);
+            mainApp->Late_Update(dt);
             mainApp->Render();
 
             timeAcc = 0.f;

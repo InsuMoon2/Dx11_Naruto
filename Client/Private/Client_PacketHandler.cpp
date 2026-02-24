@@ -16,6 +16,9 @@ void Client_PacketHandler::HandlePacket(shared_ptr<ServerSession> session, BYTE*
         Handle_S_TEST(session, buffer, len);
         break;
 
+    case S_Move:
+        Handle_S_Move(session, buffer, len);
+        break;
     default:
         break;
 
@@ -44,14 +47,33 @@ void Client_PacketHandler::Handle_S_TEST(shared_ptr<ServerSession> session, BYTE
     }
 }
 
-SendBufferRef Client_PacketHandler::Make_C_Move()
+void Client_PacketHandler::Handle_S_Move(shared_ptr<ServerSession> session, BYTE* buffer, int32 len)
 {
-    //Protocol::C_MOVE pkt;
-    //pkt.set_objectid(1234); // 테스트 ID
-    //pkt.set_posx(10.5f);
-    //pkt.set_posy(20.5f);
-    //pkt.set_posz(0.0f);
-    //return MakeSendBuffer(pkt, C_MOVE);
+    PacketHeader* header = (PacketHeader*)buffer;
+    uint16 size = header->size;
 
-    return nullptr;
+    Protocol::S_Move pkt;
+    pkt.ParseFromArray(&header[1], size - sizeof(PacketHeader));
+
+    uint64 objectId = pkt.info().objectid();
+    float x = pkt.info().pos().x();
+    float y = pkt.info().pos().y();
+    float z = pkt.info().pos().z();
+    float rotY = pkt.info().rot_y();
+
+    // TODO : ObjectManager에서 objefctId로 GameObject를 찾아서 위치 갱신
+    // 자기 자신이면 무시?
+}
+
+SendBufferRef Client_PacketHandler::Make_C_Move(float x, float y, float z, float rotY)
+{
+    Protocol::C_Move pkt;
+    auto* info = pkt.mutable_info();
+    auto* pos = info->mutable_pos();
+    pos->set_x(x);
+    pos->set_y(y);
+    pos->set_z(z);
+    info->set_rot_y(rotY);
+
+    return MakeSendBuffer(pkt, C_Move);
 }

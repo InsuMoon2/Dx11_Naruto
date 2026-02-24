@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "GameSession.h"
-
+#include "GameSessionManager.h"
 #include "Server_PacketHandler.h"
 
 GameSession::GameSession()
@@ -16,28 +16,30 @@ GameSession::~GameSession()
 
 void GameSession::OnConnected()
 {
-    cout << "Client 입장" << endl;
+    static atomic<uint64> s_idCounter = 1;
+    _playerId = s_idCounter++;
 
-    vector<BuffData> dummy;
-    auto sendBuffer = Server_PacketHandler::Make_S_TEST(0, 0, 0, dummy);
-    Send(sendBuffer);
+    GSessionManager.Add(GetGameSessionRef());
+
+    // 패킷 생성은 ServerPacket 핸들러에서
+    Send(Server_PacketHandler::Make_S_MyPlayer(_playerId));
+    GSessionManager.Broadcast(Server_PacketHandler::Make_S_AddObject(_playerId));
+
+    cout << "Player " << _playerId << "입장" << endl;
 }
 
 void GameSession::OnDisconnected()
 {
-    cout << "Client 탈주" << endl;
+    GSessionManager.Remove(GetGameSessionRef());
+    GSessionManager.Broadcast(Server_PacketHandler::Make_S_RemoveObject(_playerId));
+
+    cout << "Player " << _playerId << " 퇴장" << endl;
 }
 
 void GameSession::OnRecvPacket(BYTE* buffer, int32 len)
 {
     cout << "Recv Packet : " << len << "bytes" << endl;
-
-    // Echo back
-    shared_ptr<SendBuffer> sendBuffer = make_shared<SendBuffer>(len);
-    ::memcpy(sendBuffer->Buffer(), buffer, len);
-    sendBuffer->Close(len);
-
-    Send(sendBuffer);
+    Server_PacketHandler::HandlePacket(GetGameSessionRef(), buffer, len);
 }
 
 void GameSession::OnSend(int32 len)

@@ -1,7 +1,14 @@
 ﻿#pragma once
 
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <mswsock.h>
+
+#include "Engine_Define.h"
+#include "Core_Pch.h"
+
 #include "targetver.h"
-#define WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>

@@ -4,12 +4,7 @@
 
 NS_BEGIN(Client)
 
-class CombatStat;
-class PlayerController;
-class InputComponent;
-class MovementComponent;
-
-class Player final : public Character
+class Player : public Character
 {
     GENERATED_BODY(Player)
 
@@ -19,22 +14,24 @@ public:
     virtual ~Player() = default;
 
 public:
-    virtual HRESULT Initialize_Prototype() override;
-    virtual HRESULT Initialize(void* arg) override;
-    virtual void    BeginPlay() override;
-    virtual void    Priority_Update(float timeDelta) override;
-    virtual void    Update(float timeDelta) override;
-    virtual void    Late_Update(float timeDelta) override;
-    virtual HRESULT Render() override;
+    HRESULT Initialize_Prototype() override;
+    HRESULT Initialize(void* arg) override;
+    void    BeginPlay() override;
+    void    Priority_Update(float timeDelta) override;
+    void    Update(float timeDelta) override;
+    void    Late_Update(float timeDelta) override;
+    HRESULT Render() override;
+
+public: /* Network */
+    uint64  Get_NetworkId() const { return _networkId; }
+    void    Set_NetworkId(uint64 id) { _networkId = id; }
+    virtual void Sync(const Protocol::ObjectInfo& info);
 
 private:
-    HRESULT         Ready_Components() override;
+    HRESULT Ready_Components() override;
 
 private:
-    Shared<CombatStat>          _combatStat;
-    Shared<InputComponent>      _input;
-    Shared<MovementComponent>   _movement;
-    Shared<PlayerController>    _playerController;
+    uint64 _networkId = 0;
 
 public:
     static shared_ptr<GameObject>  Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

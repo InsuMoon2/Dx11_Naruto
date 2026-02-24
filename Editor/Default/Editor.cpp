@@ -45,6 +45,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EDITORAPP));
+
     MSG msg;
     mainApp = Editor_MainApp::Create();
 
@@ -64,9 +66,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             if (WM_QUIT == msg.message)
                 break;
 
-            TranslateMessage(&msg);
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            {
+                TranslateMessage(&msg);
 
-            DispatchMessage(&msg);
+                DispatchMessage(&msg);
+            }
         }
 
         timeAcc += GAME->Compute_TimeDelta(L"Timer_Default");

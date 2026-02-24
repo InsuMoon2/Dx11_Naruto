@@ -22,7 +22,9 @@ public:
     void    Update(float timeDelta);
     void    Late_Update(float timeDelta);
     HRESULT Render();
-    
+
+public:
+    HRESULT Ready_StartLevel(ELevelType startLevelID);
 
 private:
     ComPtr<Device>              _device;

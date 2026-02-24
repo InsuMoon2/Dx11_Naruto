@@ -46,6 +46,9 @@ private:
 
     string _btFilePath = "(None)";
 
+    bool _pendingInitialize = false;
+    map<int, EBTNodeResult> _cachedNodeResults;
+
 public:
     static Shared<BehaviorTree>   Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     virtual Shared<Component> Clone(void* arg = nullptr) override;

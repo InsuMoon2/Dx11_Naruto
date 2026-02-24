@@ -27,9 +27,10 @@ void Level_Logo::Update(float timeDelta)
 {
     Level::Update(timeDelta);
 
-    if (GetKeyState(VK_SPACE) & 0x8000)
+    if (INPUT->KeyDown(KEY_TYPE::SPACE))
     {
-        //GAME->Change_Level(ETOI(LevelType::Loading), Level_Loading::Create(_device, _context, LevelType::GamePlay));
+        GAME->Change_Level(ETOI(ELevelType::Loading),
+            Level_Loading::Create(_device, _context, ELevelType::GamePlay));
     }
 }
 

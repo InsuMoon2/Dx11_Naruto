@@ -14,9 +14,6 @@
     <Filter Include="00. Main">
       <UniqueIdentifier>{667c8f20-1d1c-43ae-a1cc-56b1b6e79ec1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. Server">
-      <UniqueIdentifier>{cfe3f000-650b-4bdc-9831-9e6518e2440a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -31,29 +28,17 @@
     <ClInclude Include="targetver.h">
       <Filter>98. Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Client_Defines.h">
+    <ClInclude Include="..\Public\Game_Defines.h">
       <Filter>99. Defiens</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Client_Enum.h">
+    <ClInclude Include="..\Public\Game_Enum.h">
       <Filter>99. Defiens</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Client_Macro.h">
+    <ClInclude Include="..\Public\Game_Macro.h">
       <Filter>99. Defiens</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MainApp.h">
       <Filter>00. Main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ServerSession.h">
-      <Filter>97. Server</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Client_PacketHandler.h">
-      <Filter>97. Server</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\NetworkManager.h">
-      <Filter>97. Server</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Protocol_Wrapper.h">
-      <Filter>99. Defiens</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>00. Main</Filter>
@@ -62,15 +47,6 @@
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>98. Default</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Client_PacketHandler.cpp">
-      <Filter>97. Server</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\NetworkManager.cpp">
-      <Filter>97. Server</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ServerSession.cpp">
-      <Filter>97. Server</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MainApp.cpp">
       <Filter>00. Main</Filter>

@@ -11,6 +11,8 @@ public:
     virtual ~BTComposite() = default;
 
 public:
+    void            Initialize() override;
+
     void            Add_Child(Shared<BTNode> node);
     virtual void    OnTerminate(EBTNodeResult result) override;
 
