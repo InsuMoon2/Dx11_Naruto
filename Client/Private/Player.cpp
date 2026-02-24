@@ -96,7 +96,6 @@ HRESULT Player::Ready_Components()
     Character::Ready_Components();
 
 
-
     return S_OK;
 }
 

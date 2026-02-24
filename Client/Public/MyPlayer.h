@@ -39,7 +39,7 @@ private:
 
 private:
     float _syncTimer = 0.f;
-    float _syncInverval = 0.1f; // 일단 0.1초마다. 나중에 늘릴 예정
+    float _syncInterval = 0.1f; // 일단 0.1초마다. 나중에 늘릴 예정
     Vec3 _lastSyncPos = {};
 
 public:

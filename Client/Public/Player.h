@@ -27,7 +27,7 @@ public: /* Network */
     void    Set_NetworkId(uint64 id) { _networkId = id; }
     virtual void Sync(const Protocol::ObjectInfo& info);
 
-private:
+protected:
     HRESULT Ready_Components() override;
 
 private:
