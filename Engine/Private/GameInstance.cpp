@@ -385,6 +385,11 @@ void GameInstance::Register_Camera(Shared<Camera> camera)
     _cameraManager->Register_Camera(camera);
 }
 
+Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)
+{
+    return _cameraManager->Find_Camera(type);
+}
+
 void GameInstance::Free()
 {
     Base::Free();

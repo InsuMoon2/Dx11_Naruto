@@ -63,7 +63,7 @@ void Editor_MainApp::Priority_Update(float timeDelta)
 
 void Editor_MainApp::Update(float timeDelta)
 {
-    //INPUT->Update(timeDelta);
+    INPUT->Update(timeDelta);
 
     // 에디터는 항상 업데이트
     EDITOR->Update_Editor(timeDelta);
@@ -76,8 +76,8 @@ void Editor_MainApp::Update(float timeDelta)
 
 void Editor_MainApp::Late_Update(float timeDelta)
 {
-    if (EDITOR->IsPlaying())
-        GAME->Late_Update_Engine(timeDelta);
+    // Edit 모드에서도 Late_Update를 돌려야 RenderGroup에 오브젝트가 등록됨
+    GAME->Late_Update_Engine(timeDelta);
 }
 
 HRESULT Editor_MainApp::Render()

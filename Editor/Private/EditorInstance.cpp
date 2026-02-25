@@ -67,16 +67,27 @@ void EditorInstance::Release()
 void EditorInstance::Play()
 {
     GAME->Set_GameState(EGameState::Play);
+
+    auto targetCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_TARGET);
+
+    if (targetCam)
+        GAME->Set_ActiveCamera(targetCam);
 }
 
 void EditorInstance::Pause()
 {
     GAME->Set_GameState(EGameState::Pause);
+
+
 }
 
 void EditorInstance::Stop()
 {
     GAME->Set_GameState(EGameState::Edit);
+
+    auto freeCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_FREE);
+    if (freeCam)
+        GAME->Set_ActiveCamera(freeCam);
 
     auto btView = dynamic_pointer_cast<BehaviorTree_View>(Get_Window(TEXT("BehaviorTree")));
     if (btView && btView->Is_DebugMode())
