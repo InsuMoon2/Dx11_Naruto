@@ -23,6 +23,7 @@ public: /* Setter */
     void Set_Transform(ETransformState state, const Matrix& matrix);
 
 public:
+    HRESULT Bind_CamPosition(Shared<Shader> shader, const char* constantName);
     HRESULT Bind_TransformMatrix(ETransformState state, Shared<Shader> shader, const char* constantName);
     HRESULT Bind_TransformMatrix_Inverse(ETransformState state, Shared<Shader> shader, const char* constantName);
 

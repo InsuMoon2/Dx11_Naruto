@@ -127,6 +127,8 @@ void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> trans
 void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transform)
 {
     transform->Add_WorldOffset(_velocity * timeDelta);
+
+    
 }
 
 Shared<MovementComponent> MovementComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

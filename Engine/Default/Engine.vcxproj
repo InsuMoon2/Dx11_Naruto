@@ -176,12 +176,15 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\BTTask_MoveTo.h" />
     <ClInclude Include="..\Public\BTTask_Wait.h" />
     <ClInclude Include="..\Public\Camera.h" />
+    <ClInclude Include="..\Public\Camera_Manager.h" />
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\Component_Factory.h" />
     <ClInclude Include="..\Public\Controller.h" />
     <ClInclude Include="..\Public\Debug_Manager.h" />
+    <ClInclude Include="..\Public\Delegate.h" />
     <ClInclude Include="..\Public\Event_Manager.h" />
+    <ClInclude Include="..\Public\DelegateHub.h" />
     <ClInclude Include="..\Public\GameInstance.h" />
     <ClInclude Include="..\Public\GameObject.h" />
     <ClInclude Include="..\Public\GameObject_Factory.h" />
@@ -192,6 +195,7 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\Level_Manager.h" />
     <ClInclude Include="..\Public\Object_Manager.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
+    <ClInclude Include="..\Public\PlayerStart.h" />
     <ClInclude Include="..\Public\Prefab_Manager.h" />
     <ClInclude Include="..\Public\Prototype_Manager.h" />
     <ClInclude Include="..\Public\Engine_Define.h" />
@@ -212,7 +216,6 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\VIBuffer.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
-    <ClInclude Include="Delegate.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
@@ -229,12 +232,15 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\BTTask_MoveTo.cpp" />
     <ClCompile Include="..\Private\BTTask_Wait.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />
+    <ClCompile Include="..\Private\Camera_Manager.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\Component_Factory.cpp" />
     <ClCompile Include="..\Private\Controller.cpp" />
     <ClCompile Include="..\Private\Debug_Manager.cpp" />
+    <ClCompile Include="..\Private\Delegate.cpp" />
     <ClCompile Include="..\Private\Event_Manager.cpp" />
+    <ClCompile Include="..\Private\DelegateHub.cpp" />
     <ClCompile Include="..\Private\GameInstance.cpp" />
     <ClCompile Include="..\Private\GameObject.cpp" />
     <ClCompile Include="..\Private\GameObject_Factory.cpp" />
@@ -245,6 +251,7 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\Level_Manager.cpp" />
     <ClCompile Include="..\Private\Object_Manager.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
+    <ClCompile Include="..\Private\PlayerStart.cpp" />
     <ClCompile Include="..\Private\Prefab_Manager.cpp" />
     <ClCompile Include="..\Private\Prototype_Manager.cpp" />
     <ClCompile Include="..\Private\RenderTarget.cpp" />
@@ -260,7 +267,6 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\VIBuffer.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
-    <ClCompile Include="Delegate.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>

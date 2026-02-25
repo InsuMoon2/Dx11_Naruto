@@ -22,13 +22,13 @@
             "type": "COMPONENT_TYPE_RECT"
         },
         {
-            "type": "COMPONENT_TYPE_SHADER"
-        },
-        {
-            "current_index": 1,
+            "current_index": 0,
             "num_srvs": 2,
             "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
             "type": "COMPONENT_TYPE_TEXTURE"
+        },
+        {
+            "type": "COMPONENT_TYPE_SHADER"
         },
         {
             "attack": 100.0,
@@ -55,8 +55,8 @@
             "type": "COMPONENT_TYPE_INPUT"
         }
     ],
-    "guid": "3176e5e8-d42a-4768-8934-f74bad569431",
+    "guid": "173be3f0-fcbe-42c5-ae9b-709dc83ee03f",
     "object_type": "OBJECT_TYPE_PLAYER",
-    "prefab_name": "Player",
-    "static_class": "Player"
+    "prefab_name": "MyPlayer",
+    "static_class": "MyPlayer"
 }

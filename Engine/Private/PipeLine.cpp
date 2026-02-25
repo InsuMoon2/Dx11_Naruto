@@ -36,6 +36,11 @@ void PipeLine::Set_Transform(ETransformState state, const Matrix& matrix)
     _transformMatrices[ETOI(state)] = matrix;
 }
 
+HRESULT PipeLine::Bind_CamPosition(Shared<Shader> shader, const char* constantName)
+{
+    return shader->Bind_RawValue(constantName, Get_CamPosition(), sizeof(Vec4));
+}
+
 HRESULT PipeLine::Bind_TransformMatrix(ETransformState state, Shared<Shader> shader, const char* constantName)
 {
     return shader->Bind_Matrix(constantName, &_transformMatrices[ETOI(state)]);

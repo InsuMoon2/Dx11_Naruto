@@ -38,11 +38,10 @@ public:
     static void Handle_C_Move(shared_ptr<GameSession> session, BYTE* buffer, int32 len);
 
     // 보내기
-    static SendBufferRef Make_S_TEST(uint64 id, uint32 hp, uint16 attack, vector<BuffData> buffs);
-    static SendBufferRef Make_S_MyPlayer(uint64 playerId);
-    static SendBufferRef Make_S_AddObject(uint64 playerId);
-    static SendBufferRef Make_S_RemoveObject(uint64 playerId);
-    static SendBufferRef Make_S_Move(Protocol::C_Move& recvPkt, uint64 playerId);
+    static SendBufferRef Make_S_MyPlayer(Protocol::ObjectInfo& info);
+    static SendBufferRef Make_S_AddObject(Protocol::S_AddObject& pkt);
+    static SendBufferRef Make_S_RemoveObject(Protocol::S_RemoveObject& pkt);
+    static SendBufferRef Make_S_Move(Protocol::ObjectInfo& info);
 
     template<typename T>
     static SendBufferRef MakeSendBuffer(T& pkt, uint16 pktId)
@@ -59,6 +58,15 @@ public:
 
         return sendBuffer;
     }
+
+    template<typename T>
+    static void ParsePacket(BYTE* buffer, T& outPkt)
+    {
+        PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
+
+        outPkt.ParseFromArray(&header[1], header->size - sizeof(PacketHeader));
+    }
+
 };
 
 NS_END

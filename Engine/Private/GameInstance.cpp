@@ -9,6 +9,7 @@
 #include "Object_Manager.h"
 #include "Input_Manager.h"
 #include "Event_Manager.h"
+#include "Camera_Manager.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -18,6 +19,7 @@
 #include "PipeLine.h"
 
 #include "BTNode_Factory.h"
+#include "Camera.h"
 #include "Component_Factory.h"
 
 IMPLEMENT_SINGLETON(GameInstance)
@@ -70,7 +72,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _btNodeFactory = BTNode_Factory::Create();
     CHECK_NULL(_btNodeFactory, E_FAIL);
-    //_btNodeFactory->Register_EngineNodes();
+
+    _cameraManager = Camera_Manager::Create();
+    CHECK_NULL(_cameraManager, E_FAIL);
 
     return S_OK;
 }
@@ -78,13 +82,14 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 void GameInstance::Priority_Update_Engine(float timeDelta)
 {
     _objectManager->Priority_Update(timeDelta);
+    _cameraManager->Update(timeDelta);
 
     _pipeLine->Update();
 }
 
 void GameInstance::Update_Engine(float timeDelta)
 {
-    INPUT->Update(timeDelta);
+    //INPUT->Update(timeDelta);
     _levelManager->Update(timeDelta);
     _objectManager->Update(timeDelta);
 
@@ -96,6 +101,17 @@ void GameInstance::Late_Update_Engine(float timeDelta)
     _objectManager->Late_Update(timeDelta);
 
     EVENT->ProcessEvents();
+}
+
+void GameInstance::Update_CameraOnly(float timeDelta)
+{
+    auto activeCamera = _cameraManager->Get_ActiveCamer();
+    if (activeCamera)
+    {
+        activeCamera->Priority_Update(timeDelta);
+    }
+
+    _pipeLine->Update();
 }
 
 HRESULT GameInstance::Draw()
@@ -292,6 +308,11 @@ void GameInstance::Set_Transform(ETransformState state, const Matrix& matrix)
     return _pipeLine->Set_Transform(state, matrix);
 }
 
+HRESULT GameInstance::Bind_CamPosition(Shared<Shader> shader, const char* constantName)
+{
+    return _pipeLine->Bind_CamPosition(shader, constantName);
+}
+
 HRESULT GameInstance::Bind_TransformMatrix(ETransformState state, Shared<Shader> shader, const char* constantName)
 {
     return _pipeLine->Bind_TransformMatrix(state, shader, constantName);
@@ -339,12 +360,38 @@ const umap<string, BTNode_Factory::NodeInfo>& GameInstance::Get_RegisteredBTNode
     return _btNodeFactory->Get_RegisteredNodes();
 }
 
+void GameInstance::Set_ActiveCamera(Shared<Camera> camera)
+{
+    _cameraManager->Set_ActiveCamera(camera);
+}
+
+Shared<Camera> GameInstance::Get_ActiveCamera()
+{
+    return _cameraManager->Get_ActiveCamer();
+}
+
+bool GameInstance::Is_ActiveCamera(Shared<Camera> camera)
+{
+    return _cameraManager->Is_ActiveCamera(camera);
+}
+
+void GameInstance::Toggle_Camera()
+{
+    _cameraManager->Toggle_Camera();
+}
+
+void GameInstance::Register_Camera(Shared<Camera> camera)
+{
+    _cameraManager->Register_Camera(camera);
+}
+
 void GameInstance::Free()
 {
     Base::Free();
 
     _componentFactory.reset();
     _btNodeFactory.reset();
+    _cameraManager.reset();
 
     _prefabManager.reset();
     _objectManager.reset(); 

@@ -2,10 +2,13 @@
 #include "Level_Gameplay.h"
 
 #include "Camera_Free.h"
+#include "Camera_Target.h"
 #include "Loader.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "NetworkManager.h"
 #include "Spawn_Helper.h"
+#include "PlayerStart.h"
 
 Level_Gameplay::Level_Gameplay(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -19,6 +22,7 @@ Level_Gameplay::~Level_Gameplay()
 HRESULT Level_Gameplay::Initialize()
 {
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
+    CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
     CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")), E_FAIL);
     CHECK_FAILED(Ready_Layer_TempLayer(TEXT("Layer_TempLayer")), E_FAIL);
 
@@ -39,13 +43,18 @@ HRESULT Level_Gameplay::Initialize()
     //    .Scale({ 1.f, 1.f, 1.f })
     //    .Spawn();
 
-    auto monster = Spawn_Helper::Prefab("Monster1")
-        .AtLevel(ETOI(ELevelType::GamePlay))
-        .InLayer(TEXT("Layer_Builder"))
-        .Position({ 1.f, 1.f, -5.f })
-        .Scale({ 1.5f, 1.5f, 1.5f })
-        .Spawn();
+    //auto monster = Spawn_Helper::Prefab("Monster1")
+    //    .AtLevel(ETOI(ELevelType::GamePlay))
+    //    .InLayer(TEXT("Layer_Builder"))
+    //    .Position({ 1.f, 1.f, -5.f })
+    //    .Scale({ 1.5f, 1.5f, 1.5f })
+    //    .Spawn();
 
+    // 서버 연결 없으면 플레이어 스폰
+    if (!NetworkManager::GetInstance()->IsConnected())
+    {
+        Spawn_LocalPlayer();
+    }
 
     return S_OK;
 }
@@ -74,26 +83,62 @@ HRESULT Level_Gameplay::Render()
 
 HRESULT Level_Gameplay::Ready_Layer_Camera(const wstring& layerTag)
 {
-    Camera_Free::FCameraFreeDesc desc;
-    desc.speedPerSec = 10.f;
-    desc.rotationPerSec = 90.f;
-    desc.eye = Vec3(0.f, 15.f, -15.f);
-    desc.at = Vec3(0.f, 0.f, 0.f);
-    desc.fovY = XMConvertToRadians(60.f);
-    desc.nearZ = 0.1f;
-    desc.farZ = 1000.f;
-    desc.mouseSensor = 1.65f; // 마우스 감도
-    desc.scale = Vec3(1.f, 1.f, 1.f);
+    // Camera Free
+    {
+        Camera_Free::FCameraFreeDesc desc;
+        desc.speedPerSec = 10.f;
+        desc.rotationPerSec = 90.f;
+        desc.eye = Vec3(0.f, 15.f, -15.f);
+        desc.at = Vec3(0.f, 0.f, 0.f);
+        desc.fovY = XMConvertToRadians(60.f);
+        desc.nearZ = 0.1f;
+        desc.farZ = 1000.f;
+        desc.scale = Vec3(1.f, 1.f, 1.f);
 
-    CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay),
+        desc.mouseSensor = 1.65f; // 마우스 감도
+
+        CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay),
             Protocol::OBJECT_TYPE_CAMERA_FREE, layerTag, &desc), E_FAIL);
+    }
+
+    // Camera Target
+    {
+        Camera_Target::FCameraTargetDesc desc;
+        desc.speedPerSec = 10.f;
+        desc.rotationPerSec = 90.f;
+        desc.eye = Vec3(0.f, 15.f, -15.f);
+        desc.at = Vec3(0.f, 0.f, 0.f);
+        desc.fovY = XMConvertToRadians(60.f);
+        desc.nearZ = 0.1f;
+        desc.farZ = 1000.f;
+        desc.scale = Vec3(1.f, 1.f, 1.f);
+
+        desc.offset = Vec3(0.f, 10.f, -10.f);
+        desc.followSpeed = 5.f;
+
+        CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay),
+            Protocol::OBJECT_TYPE_CAMERA_TARGET, layerTag, &desc), E_FAIL);
+    }
 
     return S_OK;
 }
 
+HRESULT Level_Gameplay::Ready_Layer_PlayerStart(const wstring& layerTag)
+{
+    // 스폰 포인트 1
+    {
+        PlayerStart::FPlayerStartDesc desc;
+        desc.position = Vec3(0.f, 5.f, 0.f);
+        desc.spawnIndex = 0;
+
+        CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_PLAYER_START, layerTag, &desc), E_FAIL);
+    }
+
+}
+
 HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
 {
-    CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_PLAYER, layerTag), E_FAIL);
+    //CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_PLAYER, layerTag), E_FAIL);
     CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_TERRAIN, layerTag), E_FAIL);
 
     return S_OK;
@@ -104,6 +149,35 @@ HRESULT Level_Gameplay::Ready_Layer_TempLayer(const wstring& layerTag)
     //CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_MONSTER, layerTag), E_FAIL);
 
     return S_OK;
+}
+
+void Level_Gameplay::Spawn_LocalPlayer()
+{
+    auto gameObjects = GAME->Get_GameObjects(ETOI(ELevelType::GamePlay));
+
+    Vec3 spawnPos = Vec3(0.f, 0.f, 0.f);
+
+    for (auto& obj : gameObjects)
+    {
+        if (obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER_START)
+        {
+            spawnPos = obj->Get_Component<Transform>()->Get_WorldPosition();
+            break;
+        }
+    }
+
+    auto player = Spawn_Helper::Prefab("TestPlayer")
+        .AtLevel(ETOI(ELevelType::GamePlay))
+        .Position(spawnPos)
+        .InLayer(TEXT("Layer_Builder"))
+        .Scale({ 1.f, 1.f, 1.f })
+        .Spawn();
+
+    CHECK_NULL(player);
+
+    // Camera Target 세팅
+    GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(player->Get_Component<Transform>());
+
 }
 
 shared_ptr<Level_Gameplay> Level_Gameplay::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

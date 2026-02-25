@@ -7,9 +7,6 @@
     <ClCompile Include="..\Private\GameSession.cpp">
       <Filter>01. Session</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\GameSessionManager.cpp">
-      <Filter>01. Session</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Server_PacketHandler.cpp" />
     <ClCompile Include="..\..\Protobuf\Bin\Protocol.pb.cc">
       <Filter>02. Protocol</Filter>
@@ -22,6 +19,18 @@
     </ClCompile>
     <ClCompile Include="GameServer.cpp">
       <Filter>00. Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameRoom.cpp">
+      <Filter>00. Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject.cpp">
+      <Filter>03. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>03. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>03. GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,15 +52,15 @@
     <Filter Include="02. Protocol\00. Proto">
       <UniqueIdentifier>{b5784ea9-f683-492b-aa22-26e60aeb7152}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. GameObject">
+      <UniqueIdentifier>{4fcc8cca-e86a-4cd7-b70e-666fec4fa9a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>98. Default</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameSession.h">
-      <Filter>01. Session</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\GameSessionManager.h">
       <Filter>01. Session</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Server_Macro.h">
@@ -66,6 +75,21 @@
     </ClInclude>
     <ClInclude Include="..\..\Protobuf\Bin\Enum.pb.h">
       <Filter>02. Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameRoom.h">
+      <Filter>00. Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Server_Typedef.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject.h">
+      <Filter>03. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>03. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>03. GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -100,7 +100,11 @@ public:
     Shared<Component> Find_Component_ByStaticType(uint32 componentID);
 
 protected:
-    shared_ptr<GameObject> GetSharedPtr() { return static_pointer_cast<GameObject>(shared_from_this()); }
+    template<typename T = GameObject>
+    shared_ptr<T> GetSharedPtr()
+    {
+        return static_pointer_cast<T>(shared_from_this());
+    }
 
 protected: /* Device */
     ComPtr<Device>          _device = { nullptr };

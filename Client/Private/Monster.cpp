@@ -112,7 +112,7 @@ HRESULT Monster::Ready_Components()
 
     // Temp : 렌더링
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXTEX, _shaderCom), E_FAIL);
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, _textureCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TEXTURE_MONSTER, _textureCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
 
     return S_OK;

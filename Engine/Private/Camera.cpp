@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "Camera.h"
+#include "Input_Manager.h"
 
 Camera::Camera(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
@@ -52,10 +53,15 @@ HRESULT Camera::Initialize(void* arg)
 void Camera::BeginPlay()
 {
     GameObject::BeginPlay();
+
+    GAME->Register_Camera(static_pointer_cast<Camera>(GetSharedPtr()));
 }
 
 void Camera::Priority_Update(float timeDelta)
 {
+    if (!GAME->Is_ActiveCamera(GetSharedPtr<Camera>()))
+        return;
+
     GameObject::Priority_Update(timeDelta);
 
     // 클라이언트 카메라에서 카메라 이동/회전 후 호출
@@ -78,6 +84,9 @@ HRESULT Camera::Render()
 
 void Camera::Update_TransformMatrices()
 {
+    if(GAME->Is_ActiveCamera(static_pointer_cast<Camera>(GetSharedPtr())) == false)
+        return;
+
     /* View */
     {
         Matrix worldMatrix = _transformCom->Get_WorldMatrix();

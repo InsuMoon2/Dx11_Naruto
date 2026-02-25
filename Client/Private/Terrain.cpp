@@ -3,7 +3,6 @@
 #include "GameInstance.h"
 #include "Texture.h"
 #include "Shader.h"
-#include "VIBuffer_Rect.h"
 #include "VIBuffer_Terrain.h"
 
 Terrain::Terrain(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -67,7 +66,9 @@ HRESULT Terrain::Render()
     GAME->Bind_TransformMatrix(ETransformState::View, _shaderCom, "g_ViewMatrix");
     GAME->Bind_TransformMatrix(ETransformState::Proj, _shaderCom, "g_ProjMatrix");
     
-    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 0), E_FAIL);
+    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);
+
+    GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
 
     _shaderCom->Begin(0);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);

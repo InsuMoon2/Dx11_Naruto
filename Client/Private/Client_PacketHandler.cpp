@@ -66,6 +66,40 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
     uint64 myId = pkt.info().objectid();
     s_MyNetworkId = myId;
 
+    // MyPlayer 스폰
+    uint32 levelIndex = GAME->Current_Level();
+
+    auto gameObject = GAME->Clone_And_Add_GameObject(
+        ETOI(ELevelType::Static),
+        Protocol::OBJECT_TYPE_PLAYER,   
+        levelIndex,
+        TEXT("Layer_GameObject"));
+
+    if (!gameObject)
+        return;
+
+    auto player = dynamic_pointer_cast<Player>(gameObject);
+    if (player)
+    {
+        player->Set_NetworkId(myId);
+        s_NetworkPlayers[myId] = player;
+
+        // PlayerStart 위치 찾기
+        auto gameObjects = GAME->Get_GameObjects(GAME->Current_Level());
+        for (auto& obj : gameObjects)
+        {
+            if (obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER_START)
+            {
+                player->Get_Component<Transform>()->Set_LocalPosition(
+                    obj->Get_Component<Transform>()->Get_WorldPosition());
+                break;
+            }
+        }
+
+        GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(
+            player->Get_Component<Transform>());
+    }
+
 }
 
 void Client_PacketHandler::Handle_S_AddObject(Shared<ServerSession> session, BYTE* buffer, int32 len)

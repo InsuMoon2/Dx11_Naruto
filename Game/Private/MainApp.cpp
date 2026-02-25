@@ -28,8 +28,6 @@ HRESULT MainApp::Initialize()
             return E_FAIL;
     }
 
-	NetworkManager::GetInstance()->Initialize();
-
     CHECK_FAILED(Ready_StartLevel(ELevelType::Logo), E_FAIL);
 
     return S_OK;
@@ -42,7 +40,15 @@ void MainApp::Priority_Update(float timeDelta)
 
 void MainApp::Update(float timeDelta)
 {
+    INPUT->Update(timeDelta);
+
     GAME->Update_Engine(timeDelta);
+
+    if (!_networkConnected && GAME->Current_Level() == ETOI(ELevelType::GamePlay))
+    {
+        NetworkManager::GetInstance()->Initialize();
+        _networkConnected = true;
+    }
 
     NetworkManager::GetInstance()->Update();
 }

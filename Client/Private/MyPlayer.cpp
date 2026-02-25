@@ -73,11 +73,13 @@ void MyPlayer::Send_MovePacket()
 {
     Vec3 pos = _transformCom->Get_LocalPosition();
 
-    if (pos == _lastSyncPos)
-        return;
+    //if (pos == _lastSyncPos)
+    //    return;
 
     _lastSyncPos = pos;
-    float rotY = _transformCom->Get_LocalRotation().y;
+    float rotY = _transformCom->Get_LocalRotation().ToEuler().y;
+
+    //LOG_INFO("Send rotY: {}", rotY);
 
     auto buf = Client_PacketHandler::Make_C_Move(pos.x, pos.y, pos.z, rotY);
 

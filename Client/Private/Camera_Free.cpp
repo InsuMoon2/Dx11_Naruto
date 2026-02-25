@@ -28,36 +28,27 @@ HRESULT Camera_Free::Initialize(void* arg)
 
     CHECK_FAILED(Camera::Initialize(desc), E_FAIL);
 
-    INPUT->LockMouse();
-
     return S_OK;
 }
 
 void Camera_Free::BeginPlay()
 {
     Camera::BeginPlay();
+
+    GAME->Set_ActiveCamera(GetSharedPtr<Camera>());
 }
 
 void Camera_Free::Priority_Update(float timeDelta)
 {
     Camera::Priority_Update(timeDelta);
 
-    if (INPUT->KeyDown(KEY_TYPE::F8))
+    if (INPUT->KeyPress(KEY_TYPE::RBUTTON))
     {
-        if (INPUT->IsMouseLocked())
-            INPUT->UnlockMouse();
-        else
-            INPUT->LockMouse();
-    }
-
-    //if (INPUT->IsMouseLocked())
-    {
-
         // 이동
-        //if (INPUT->KeyPress(KEY_TYPE::W)) _transformCom->Move_Forward(timeDelta);
-        //if (INPUT->KeyPress(KEY_TYPE::S)) _transformCom->Move_Backward(timeDelta);
-        //if (INPUT->KeyPress(KEY_TYPE::A)) _transformCom->Move_Left(timeDelta);
-        //if (INPUT->KeyPress(KEY_TYPE::D)) _transformCom->Move_Right(timeDelta);
+        if (INPUT->KeyPress(KEY_TYPE::W)) _transformCom->Move_Forward(timeDelta);
+        if (INPUT->KeyPress(KEY_TYPE::S)) _transformCom->Move_Backward(timeDelta);
+        if (INPUT->KeyPress(KEY_TYPE::A)) _transformCom->Move_Left(timeDelta);
+        if (INPUT->KeyPress(KEY_TYPE::D)) _transformCom->Move_Right(timeDelta);
 
         // 회전
         {

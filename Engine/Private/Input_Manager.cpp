@@ -91,8 +91,8 @@ void Input_Manager::Update(float timeDleta)
         ::GetCursorPos(&currentPos);
         ::ScreenToClient(_hwnd, &currentPos);
 
-        _mouseDelta.x = 0.f;
-        _mouseDelta.y = 0.f;
+        _mouseDelta.x = (float)(currentPos.x - _mousePos.x);
+        _mouseDelta.y = (float)(currentPos.y - _mousePos.y);
         _mousePos = currentPos;
     }
 }

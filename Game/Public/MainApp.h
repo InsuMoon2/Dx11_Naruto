@@ -30,6 +30,9 @@ private:
     ComPtr<Device>              _device;
     ComPtr<DeviceContext>       _context;
 
+private:
+    bool _networkConnected = false;
+
 public:
     static unique_ptr<MainApp> Create();
     virtual void Free() override;

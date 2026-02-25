@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Monster.h"
 #include <fstream>
+#include "PlayerStart.h"
 
 #include "AIController.h"
 #include "Utils.h"
@@ -17,6 +18,7 @@
 #include "PlayerController.h"
 
 #include "Camera_Free.h"
+#include "Camera_Target.h"
 #include "MyPlayer.h"
 #include "RemotePlayer.h"
 #include "ResourceLoader.h"
@@ -221,6 +223,20 @@ HRESULT Loader::Loading_For_GamePlay()
         Camera_Free::Create(_device, _context))))
     {
         MSG_BOX("Failed to Add Prototype : Camera_Free");
+        return E_FAIL;
+    }
+
+    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_CAMERA_TARGET,
+        Camera_Target::Create(_device, _context))))
+    {
+        MSG_BOX("Failed to Add Prototype : Camera_Target");
+        return E_FAIL;
+    }
+
+    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_PLAYER_START,
+        PlayerStart::Create(_device, _context))))
+    {
+        MSG_BOX("Failed to Add Prototype : PlayerStart");
         return E_FAIL;
     }
 

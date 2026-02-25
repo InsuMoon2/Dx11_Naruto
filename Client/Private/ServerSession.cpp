@@ -28,10 +28,10 @@ void ServerSession::OnDisconnected()
 
 void ServerSession::OnRecvPacket(BYTE* buffer, int32 len)
 {
-    LOG_INFO("========================================");
-    LOG_INFO("[Client] Received Packet!");
-    LOG_INFO("Size: {} bytes", len);
-    LOG_INFO("========================================");
+    //LOG_INFO("========================================");
+    //LOG_INFO("[Client] Received Packet!");
+    //LOG_INFO("Size: {} bytes", len);
+    //LOG_INFO("========================================");
 
     Client_PacketHandler::HandlePacket(static_pointer_cast<ServerSession>(shared_from_this()), buffer, len);
 }

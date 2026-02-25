@@ -1,5 +1,15 @@
+
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-Texture2D g_Texture;
+
+vector g_LightDir = vector(1.f, -1.f, 1.f, 0.f);
+vector g_LightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
+vector g_LightAmbient = vector(1.f, 1.f, 1.f, 1.f);
+vector g_LightSpecular = vector(1.f, 1.f, 1.f, 1.f);
+
+Texture2D g_DiffuseTexture;
+vector g_MtrlAmbiment = vector(0.3f, 0.3f, 0.3, 1.f);
+vector g_MtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
+vector g_CamPosition;
 
 sampler DefaultSampler = sampler_state
 {
@@ -18,7 +28,9 @@ struct VS_IN
 struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
+    float4 vNormal   : NORMAL;
     float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -30,8 +42,11 @@ VS_OUT VS_MAIN(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP); 
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    // Terrian의 픽셀 좌표는 Local이기 때문에 World로 맞춰줘야한다. LightDir이 월드공간임
+    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
     Out.vTexcoord = In.vTexcoord * 30.f;
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     
     return Out;
 }
@@ -43,7 +58,9 @@ VS_OUT VS_MAIN(VS_IN In)
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
-    float2 vTexcoord : TEXCOORD0;    
+    float4 vNormal   : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
 };
 
 struct PS_OUT
@@ -56,9 +73,19 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
-    
-    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
 
+    vector mtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    vector shade = saturate(max(dot(normalize(g_LightDir) * -1.f, In.vNormal), 0.f) + (g_LightAmbient * g_MtrlAmbiment));
+
+    vector lookDir = In.vWorldPos - g_CamPosition;
+    vector refelctDir = reflect(normalize(g_LightDir), In.vNormal);
+
+    float specular = pow(max(dot(normalize(lookDir) * -1.f, normalize(refelctDir)), 0.f), 50.f);
+    vector specularColor = g_LightSpecular * g_MtrlSpecular * specular;;
+    
+    Out.vColor = g_LightDiffuse * mtrlDiffuse * shade + specularColor;
+    
     return Out;
 }
 

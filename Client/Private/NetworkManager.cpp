@@ -63,6 +63,11 @@ void NetworkManager::Send_Packet(shared_ptr<SendBuffer> sendBuffer)
         _session->Send(sendBuffer);
 }
 
+bool NetworkManager::IsConnected() const
+{
+    return _session && _session->IsConnected();
+}
+
 void NetworkManager::Free()
 {
     if (_service)

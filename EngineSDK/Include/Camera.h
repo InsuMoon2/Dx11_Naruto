@@ -23,7 +23,7 @@ protected:
     explicit Camera(const Camera& rhs);
     virtual ~Camera() = default;
 
-protected:
+public:
     HRESULT Initialize_Prototype() override;
     HRESULT Initialize(void* arg) override;
     void    BeginPlay() override;

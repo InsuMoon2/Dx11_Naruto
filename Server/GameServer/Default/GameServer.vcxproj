@@ -151,8 +151,11 @@
     <ClCompile Include="..\..\Protobuf\Bin\Struct.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\GameObject.cpp" />
+    <ClCompile Include="..\Private\GameRoom.cpp" />
     <ClCompile Include="..\Private\GameSession.cpp" />
-    <ClCompile Include="..\Private\GameSessionManager.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Server_PacketHandler.cpp" />
     <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="pch.cpp">
@@ -164,10 +167,14 @@
     <ClInclude Include="..\..\Protobuf\Bin\Enum.pb.h" />
     <ClInclude Include="..\..\Protobuf\Bin\Protocol.pb.h" />
     <ClInclude Include="..\..\Protobuf\Bin\Struct.pb.h" />
+    <ClInclude Include="..\Public\GameObject.h" />
+    <ClInclude Include="..\Public\GameRoom.h" />
     <ClInclude Include="..\Public\GameSession.h" />
-    <ClInclude Include="..\Public\GameSessionManager.h" />
+    <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Server_Macro.h" />
     <ClInclude Include="..\Public\Server_PacketHandler.h" />
+    <ClInclude Include="..\Public\Server_Typedef.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>

@@ -161,6 +161,7 @@
     <ClInclude Include="..\Public\AIController.h" />
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
+    <ClInclude Include="..\Public\Camera_Target.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\Public\Client_PacketHandler.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="..\Private\AIController.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
+    <ClCompile Include="..\Private\Camera_Target.cpp" />
     <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
     <ClCompile Include="..\Private\InputComponent.cpp" />
     <!-- <ClCompile Include="..\Private\Client_PacketHandler.cpp" /> -->

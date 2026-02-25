@@ -19,6 +19,8 @@ enum ComponentID
     COMPONENT_TYPE_TEXTURE_START        = 200;
     COMPONENT_TYPE_TEXTURE_DEFAULT      = 201;
     COMPONENT_TYPE_TEXTURE_TERRAIN      = 202;
+    COMPONENT_TYPE_TEXTURE_PLAYER       = 203;
+    COMPONENT_TYPE_TEXTURE_MONSTER      = 204;
 
     // Shader : 300+
     COMPONENT_TYPE_SHADER_START         = 300;
@@ -43,6 +45,8 @@ enum OBJECT_TYPE
 	OBJECT_TYPE_MONSTER                 = 4;
     OBJECT_TYPE_TERRAIN                 = 3;
     OBJECT_TYPE_CAMERA_FREE             = 5;
+    OBJECT_TYPE_CAMERA_TARGET           = 6;
+    OBJECT_TYPE_PLAYER_START            = 7;
 
     OBJECT_TYPE_BACKGROUND              = 10;
 }

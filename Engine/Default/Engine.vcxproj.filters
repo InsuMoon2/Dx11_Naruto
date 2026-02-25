@@ -55,9 +55,6 @@
     <ClInclude Include="..\Public\GameObject.h">
       <Filter>01. Utility\03. GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Delegate.h">
-      <Filter>01. Utility\98. Utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Layer.h">
       <Filter>01. Utility\03. GameObject\01. Layer</Filter>
     </ClInclude>
@@ -96,9 +93,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Prefab_Manager.h">
       <Filter>95. Manager\03. Prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Debug_Manager.h">
-      <Filter>95. Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GameObject_Factory.h">
       <Filter>01. Utility\98. Utils\00. Factory</Filter>
@@ -154,6 +148,19 @@
     <ClInclude Include="..\Public\Shader.h">
       <Filter>01. Utility\04. Component\03. Shader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Debug_Manager.h">
+      <Filter>95. Manager\04. Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Manager.h">
+      <Filter>95. Manager\05. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DelegateHub.h">
+      <Filter>01. Utility\98. Utils\01. Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Delegate.h">
+      <Filter>01. Utility\98. Utils\01. Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerStart.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -285,6 +292,15 @@
     <Filter Include="01. Utility\03. GameObject\03. Camera">
       <UniqueIdentifier>{dbbae1dd-0a30-4b40-8a83-5da3647c6464}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95. Manager\05. Camera">
+      <UniqueIdentifier>{6714d96b-0ebe-4c27-ade4-c64c87e0b237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\98. Utils\01. Delegate">
+      <UniqueIdentifier>{a9f5b547-df29-4448-8d8b-fa273cce4c12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. GameObject\98. PlayerStart">
+      <UniqueIdentifier>{80f2e44f-ee3a-4742-b20b-1e989ab77b7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -319,9 +335,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameObject.cpp">
       <Filter>01. Utility\03. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Delegate.cpp">
-      <Filter>01. Utility\98. Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Layer.cpp">
       <Filter>01. Utility\03. GameObject\01. Layer</Filter>
@@ -364,9 +377,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\SimpleMath.cpp">
       <Filter>01. Utility\98. Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Debug_Manager.cpp">
-      <Filter>95. Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_Factory.cpp">
       <Filter>01. Utility\98. Utils\00. Factory</Filter>
@@ -422,6 +432,19 @@
     <ClCompile Include="..\Private\Shader.cpp">
       <Filter>01. Utility\04. Component\03. Shader</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Debug_Manager.cpp">
+      <Filter>95. Manager\04. Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Manager.cpp">
+      <Filter>95. Manager\05. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DelegateHub.cpp">
+      <Filter>01. Utility\98. Utils\01. Delegate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Delegate.cpp">
+      <Filter>01. Utility\98. Utils\01. Delegate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerStart.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

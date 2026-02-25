@@ -44,8 +44,6 @@ HRESULT Editor_MainApp::Initialize()
             return E_FAIL;
     }
 
-    //CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
-
     CHECK_FAILED(Ready_StartLevel(ELevelType::Logo), E_FAIL);
 
     return S_OK;
@@ -57,26 +55,29 @@ void Editor_MainApp::Priority_Update(float timeDelta)
     {
         GAME->Priority_Update_Engine(timeDelta);
     }
+    else
+    {
+        GAME->Update_CameraOnly(timeDelta);
+    }
 }
 
 void Editor_MainApp::Update(float timeDelta)
 {
+    //INPUT->Update(timeDelta);
+
     // 에디터는 항상 업데이트
     EDITOR->Update_Editor(timeDelta);
 
     // 게임은 Play 모드일 때만
-    //if (EDITOR->IsPlaying())
+    if (EDITOR->IsPlaying())
         GAME->Update_Engine(timeDelta);
 
 }
 
 void Editor_MainApp::Late_Update(float timeDelta)
 {
-    //EDITOR->Update_Editor(timeDelta);
-
-    //if (EDITOR->IsPlaying())
+    if (EDITOR->IsPlaying())
         GAME->Late_Update_Engine(timeDelta);
-
 }
 
 HRESULT Editor_MainApp::Render()
@@ -121,12 +122,6 @@ unique_ptr<Editor_MainApp> Editor_MainApp::Create()
 void Editor_MainApp::Free()
 {
     Base::Free();
-
-    // Network
-    {
-        // NetworkManager::GetInstance()->Free();
-        // NetworkManager::DestroyInstance();
-    }
 
     EditorInstance::DestroyInstance();
     GameInstance::DestroyInstance();

@@ -928,6 +928,7 @@ class ObjectInfo final : public ::google::protobuf::Message
     kPosFieldNumber = 4,
     kObjectIdFieldNumber = 1,
     kRotYFieldNumber = 5,
+    kObjectTypeFieldNumber = 6,
   };
   // string name = 2;
   void clear_name() ;
@@ -995,12 +996,22 @@ class ObjectInfo final : public ::google::protobuf::Message
   void _internal_set_rot_y(float value);
 
   public:
+  // .Protocol.OBJECT_TYPE objectType = 6;
+  void clear_objecttype() ;
+  ::Protocol::OBJECT_TYPE objecttype() const;
+  void set_objecttype(::Protocol::OBJECT_TYPE value);
+
+  private:
+  ::Protocol::OBJECT_TYPE _internal_objecttype() const;
+  void _internal_set_objecttype(::Protocol::OBJECT_TYPE value);
+
+  public:
   // @@protoc_insertion_point(class_scope:Protocol.ObjectInfo)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      3, 5, 2,
+      3, 6, 2,
       32, 2>
       _table_;
 
@@ -1025,6 +1036,7 @@ class ObjectInfo final : public ::google::protobuf::Message
     ::Protocol::Vec3* pos_;
     ::uint64_t objectid_;
     float rot_y_;
+    int objecttype_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1650,6 +1662,28 @@ inline float ObjectInfo::_internal_rot_y() const {
 inline void ObjectInfo::_internal_set_rot_y(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.rot_y_ = value;
+}
+
+// .Protocol.OBJECT_TYPE objectType = 6;
+inline void ObjectInfo::clear_objecttype() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.objecttype_ = 0;
+}
+inline ::Protocol::OBJECT_TYPE ObjectInfo::objecttype() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.objectType)
+  return _internal_objecttype();
+}
+inline void ObjectInfo::set_objecttype(::Protocol::OBJECT_TYPE value) {
+  _internal_set_objecttype(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.objectType)
+}
+inline ::Protocol::OBJECT_TYPE ObjectInfo::_internal_objecttype() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::Protocol::OBJECT_TYPE>(_impl_.objecttype_);
+}
+inline void ObjectInfo::_internal_set_objecttype(::Protocol::OBJECT_TYPE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.objecttype_ = value;
 }
 
 #ifdef __GNUC__

@@ -3,9 +3,10 @@
 #include "Base.h"
 #include "Component_Factory.h"
 #include "BTNode_Factory.h"
+#include "DelegateHub.h"
 
 NS_BEGIN(Engine)
-    /* Device */
+/* Device */
 class Graphic_Device;
 
 /* Manager */
@@ -14,6 +15,7 @@ class Level_Manager;
 class Prototype_Manager;
 class Object_Manager;
 class Prefab_Manager;
+class Camera_Manager;
 
 class Renderer;
 class PipeLine;
@@ -26,9 +28,16 @@ class Level;
 class Layer;
 class Shader;
 
+class Camera;
+
+/* Component */
+class Transform;
+
 /* Factory */
 class Component_Factory;
 class BTNode_Factory;
+
+class DelegateHub;
 
 class ENGINE_DLL GameInstance : public Base
 {
@@ -44,6 +53,9 @@ public:
     void                    Priority_Update_Engine(float timeDelta);
 	void	                Update_Engine(float timeDelta);
 	void	                Late_Update_Engine(float timeDelta);
+
+    // 에디터용 Camera Free만 업데이트
+    void                    Update_CameraOnly(float timeDelta);
 
 	HRESULT                 Draw();
 	void	                Clear_Resources(uint32 levelIndex);
@@ -125,6 +137,7 @@ public: /* PipeLine */
     const Vec4*             Get_CamPosition() const;
     void                    Set_Transform(ETransformState state, const Matrix & matrix);
 
+    HRESULT                 Bind_CamPosition(Shared<Shader> shader, const char* constantName);
     HRESULT                 Bind_TransformMatrix(ETransformState state, Shared<Shader> shader, const char* constantName);
     HRESULT                 Bind_TransformMatrix_Invsere(ETransformState state, Shared<Shader> shader, const char* constantName);
 
@@ -148,6 +161,17 @@ public: /* BTNode_Factory */
     Shared<BTNode>                  Instantiate_BTNode(const string& typeName);
     const umap<string, BTNode_Factory::NodeInfo>& Get_RegisteredBTNodes() const;
 
+public: /* Camera */
+    void                            Set_ActiveCamera(Shared<Camera> camera);
+    Shared<Camera>                  Get_ActiveCamera();
+    bool                            Is_ActiveCamera(Shared<Camera> camera);
+
+    void                            Toggle_Camera();
+    void                            Register_Camera(Shared<Camera> camera);
+
+public: /* DelegateHub */
+    DelegateHub&                    Get_DelegateHub() { return _delegateHub; }
+
 private:
 	Unique<Graphic_Device>      _graphicDevice {};
 	Unique<Timer_Manager>	    _timerManager  {};
@@ -155,6 +179,7 @@ private:
     Unique<Prototype_Manager>   _protoManager  {};
     Unique<Object_Manager>      _objectManager {};
     Unique<Prefab_Manager>      _prefabManager {};
+    Unique<Camera_Manager>      _cameraManager {};
 
     Unique<Renderer>            _renderer {};
     Unique<PipeLine>            _pipeLine {};
@@ -163,8 +188,11 @@ private: /* Factory */
     Unique<Component_Factory>   _componentFactory {};
     Unique<BTNode_Factory>      _btNodeFactory    {};
 
+private: /* Delegate Hub */
+    DelegateHub                 _delegateHub;
+
 private:
-    EGameState                  _gameState = EGameState::Play;
+    EGameState                  _gameState = EGameState::Edit;
 
 public:
 	void Free() override;

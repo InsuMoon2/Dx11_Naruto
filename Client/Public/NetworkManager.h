@@ -23,6 +23,9 @@ public:
     shared_ptr<ServerSession> Create_Session();
     void Send_Packet(shared_ptr<SendBuffer> sendBuffer);
 
+    shared_ptr<ServerSession> Get_Session();
+    bool IsConnected() const;
+
 private:
     shared_ptr<ClientService> _service;
     shared_ptr<ServerSession> _session;

@@ -38,4 +38,6 @@ message ObjectInfo
 
     Vec3  pos = 4;
     float rot_y = 5;
+
+    OBJECT_TYPE objectType = 6;
 }

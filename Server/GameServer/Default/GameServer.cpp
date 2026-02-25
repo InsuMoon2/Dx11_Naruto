@@ -1,4 +1,6 @@
 ﻿#include "pch.h"
+
+#include "GameRoom.h"
 #include "GameSession.h"
 #include "Service.h"
 #include "ThreadManager.h"
@@ -22,6 +24,8 @@ int main()
     while (true)
     {
         service->GetIocpCore()->Dispatch(0);
+
+        GRoom->Update();
     }
 
     GThreadManager->Join();

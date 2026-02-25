@@ -86,8 +86,7 @@ HRESULT Shader::Begin(uint32 passIndex)
 
 HRESULT Shader::Bind_SRV(const char* constantName, ComPtr<ShaderResourceView> SRV)
 {
-    ComPtr<ID3DX11EffectVariable> variable =
-        _effect->GetVariableByName(constantName);
+    ComPtr<ID3DX11EffectVariable> variable = _effect->GetVariableByName(constantName);
     CHECK_NULL(variable, E_FAIL);
 
     ComPtr<ID3DX11EffectShaderResourceVariable> srvVariable =
@@ -101,8 +100,7 @@ HRESULT Shader::Bind_SRV(const char* constantName, ComPtr<ShaderResourceView> SR
 
 HRESULT Shader::Bind_Matrix(const char* constantName, const Matrix* matrix)
 {
-    ComPtr<ID3DX11EffectVariable> variable =
-        _effect->GetVariableByName(constantName);
+    ComPtr<ID3DX11EffectVariable> variable = _effect->GetVariableByName(constantName);
     CHECK_NULL(variable, E_FAIL);
 
     ComPtr<ID3DX11EffectMatrixVariable> matrixVariable = variable->AsMatrix();
@@ -113,6 +111,14 @@ HRESULT Shader::Bind_Matrix(const char* constantName, const Matrix* matrix)
         E_FAIL);
 
     return S_OK;
+}
+
+HRESULT Shader::Bind_RawValue(const char* constantName, const void* data, uint32 length)
+{
+    ComPtr<ID3DX11EffectVariable> variable = _effect->GetVariableByName(constantName);
+    CHECK_NULL(variable, E_FAIL);
+
+    return variable->SetRawValue(data, 0, length);
 }
 
 json Shader::To_Json() const

@@ -18,14 +18,19 @@ public:
 
 public:
     virtual HRESULT Initialize();
+
     virtual void    Update(float timeDelta) override;
     virtual void    Late_Update(float timeDelta) override;
     virtual HRESULT Render() override;
 
 private:
     HRESULT         Ready_Layer_Camera(const wstring& layerTag);
+    HRESULT         Ready_Layer_PlayerStart(const wstring& layerTag);
     HRESULT         Ready_Layer_GameObject(const wstring& layerTag);
     HRESULT         Ready_Layer_TempLayer(const wstring& layerTag);
+
+private:
+    void            Spawn_LocalPlayer();
 
 public:
     static shared_ptr<Level_Gameplay> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

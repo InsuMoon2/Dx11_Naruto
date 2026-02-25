@@ -20,6 +20,7 @@ public:
     HRESULT Begin(uint32 passIndex);
     HRESULT Bind_SRV(const char* constantName, ComPtr<ShaderResourceView> SRV);
     HRESULT Bind_Matrix(const char* constantName, const Matrix* matrix);
+    HRESULT Bind_RawValue(const char* constantName, const void* data, uint32 length);
 
     json To_Json() const override;
     void From_Json(const json& data) override;
