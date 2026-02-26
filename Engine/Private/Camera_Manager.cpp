@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "Camera_Manager.h"
+
+#include "Camera.h"
 #include "Input_Manager.h"
 
 void Camera_Manager::Update(float timeDelta)
@@ -44,6 +46,21 @@ void Camera_Manager::Register_Camera(Shared<Camera> camera)
     // 첫번째 카메라 액티브로 세팅
     if (!_activeCamera.lock())
         _activeCamera = camera;
+}
+
+Shared<Camera> Camera_Manager::Find_Camera(Protocol::OBJECT_TYPE type)
+{
+    for (auto& weak : _cameras)
+    {
+        auto camera = weak.lock();
+
+        if (camera && camera->Get_ObjectType() == type)
+        {
+            return camera;
+        }
+    }
+
+    return nullptr;
 }
 
 Unique<Camera_Manager> Camera_Manager::Create()

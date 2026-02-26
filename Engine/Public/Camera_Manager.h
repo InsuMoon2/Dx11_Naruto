@@ -23,6 +23,8 @@ public:
     void            Toggle_Camera();
     void            Register_Camera(Shared<Camera> camera);
 
+    Shared<Camera>  Find_Camera(Protocol::OBJECT_TYPE type);
+
 private:
     vector<Weak<Camera>> _cameras;
     Weak<Camera>         _activeCamera;

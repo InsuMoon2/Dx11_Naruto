@@ -402,6 +402,9 @@ HRESULT GameInstance::Add_Light(const FLightDesc& desc)
 void GameInstance::Clear_Lights()
 {
     return _lightManager->Clear_Lights();
+Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)
+{
+    return _cameraManager->Find_Camera(type);
 }
 
 void GameInstance::Free()

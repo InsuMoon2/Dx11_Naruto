@@ -170,6 +170,8 @@ public: /* Camera */
     void                            Toggle_Camera();
     void                            Register_Camera(Shared<Camera> camera);
 
+    Shared<Camera>                  Find_Camera(Protocol::OBJECT_TYPE type);
+
 public: /* DelegateHub */
     DelegateHub&                    Get_DelegateHub() { return _delegateHub; }
 
