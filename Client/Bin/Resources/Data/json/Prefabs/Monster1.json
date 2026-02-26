@@ -22,7 +22,7 @@
             "type": "COMPONENT_TYPE_RECT"
         },
         {
-            "bt_filepath": "../../Client/Bin/Resources\\Data\\json\\BehaviorTrees\\Wait1~3.json",
+            "bt_filepath": "D:\\GitDesktop\\Dx11_Naruto\\Client\\Bin\\Resources\\Data\\json\\BehaviorTrees\\PlayerHealthTest.json",
             "type": "COMPONENT_TYPE_AI"
         },
         {
@@ -56,7 +56,7 @@
             "yaw_speed": 0.20000000298023224
         }
     ],
-    "guid": "785b39c8-7722-4289-b717-1eb93d738443",
+    "guid": "92ed9de7-04ba-4d0f-9780-65b22edb3e2e",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster",
     "static_class": "Monster"

@@ -31,8 +31,7 @@ void Transform_Inspector::Draw_Inspector(shared_ptr<Component> component)
 
     if (ImGui::DragFloat3("##Rotation", rot, 1.0f))
     {
-        Vec3 newEulerRad = Vec3(rot[0], rot[1], rot[2]) * (XM_PI / 180.f);
-        transform->Set_LocalEulerAngles(newEulerRad.x, newEulerRad.y, newEulerRad.z);
+        transform->Set_LocalEulerAngles(rot[0], rot[1], rot[2]);
     }
 
     // Scale

@@ -76,4 +76,13 @@ namespace Engine
         Color       ambient;
         Color       specular;
     };
+
+    struct FAssetMeta
+    {
+        string  guid;
+        string  type;           // prefab, texture, behavior 등등
+
+        wstring relativePath;
+        wstring fullPath;
+    };
 }

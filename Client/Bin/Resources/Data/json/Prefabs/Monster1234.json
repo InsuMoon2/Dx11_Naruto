@@ -1,0 +1,63 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                -5.0
+            ],
+            "rotation": [
+                -0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                5.0,
+                5.0,
+                5.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "type": "COMPONENT_TYPE_RECT"
+        },
+        {
+            "bt_filepath": "(None)",
+            "type": "COMPONENT_TYPE_AI"
+        },
+        {
+            "current_index": 0,
+            "num_srvs": 1,
+            "texture_path": "../../Client/Bin/Resources/Textures/Clip_Icon1.png",
+            "type": "COMPONENT_TYPE_TEXTURE"
+        },
+        {
+            "type": "COMPONENT_TYPE_SHADER"
+        },
+        {
+            "attack": 10.0,
+            "defense": 5.0,
+            "hp": 100.0,
+            "maxHp": 100.0,
+            "maxMp": 100.0,
+            "mp": 100.0,
+            "speed": 5.0,
+            "type": "COMPONENT_TYPE_COMBAT_STAT"
+        },
+        {
+            "type": "COMPONENT_TYPE_AI_CONTROLLER"
+        },
+        {
+            "acceleration": 20.0,
+            "deceleration": 24.0,
+            "max_sprint_speed": 4.0,
+            "max_walk_speed": 2.0,
+            "type": "COMPONENT_TYPE_MOVEMENT",
+            "yaw_speed": 0.20000000298023224
+        }
+    ],
+    "guid": "9402b250-5e5d-48a5-95b3-5021a9347ed9",
+    "object_type": "OBJECT_TYPE_MONSTER",
+    "prefab_name": "Monster",
+    "static_class": "Monster"
+}

@@ -1,7 +1,7 @@
 # Dx11_Naruto 프로젝트 구조
 
 > **AI 어시스턴트는 매 대화 시작 시 이 파일을 반드시 읽을 것!**
-> 마지막 갱신: 2026-02-25
+> 마지막 갱신: 2026-02-26
 
 ---
 
@@ -20,6 +20,7 @@ DirectX 11 기반 3D 게임 엔진 + 나루토 게임 프로젝트.
 | `Client` | DLL | 게임 로직, 레벨, 네트워크, 리소스 로딩 | `Client` |
 | `Game` | EXE | 게임 실행 진입점 (WinMain, 메인 루프) | — |
 | `Editor` | EXE | ImGui 기반 에디터 (Hierarchy, Inspector, Scene View 등) | `Editor` |
+| `AssimpTool` | EXE | Assimp 기반 모델 컨버터 (FBX → 커스텀 바이너리) | `Assimp` |
 | `Server/GameServer` | EXE | IOCP 게임 서버 | `Server` |
 | `Server/ServerCore` | LIB | IOCP 네트워크 코어 라이브러리 | — |
 | `Server/Protobuf` | — | .proto 파일 및 생성된 코드 | `Protocol` |
@@ -37,6 +38,8 @@ Client (DLL) ─── Engine + ServerCore + Protobuf
 Game   (EXE) ──── Engine.dll + Client.dll 동적 로드
 Editor (EXE) ──── Engine.dll + Client.dll 동적 로드
 
+AssimpTool (EXE) ── Assimp + Engine 헤더 참조 (DLL 비링크)
+
 ServerCore (LIB) ← 독립
     ↑
 GameServer (EXE) ── ServerCore + Protobuf
@@ -46,6 +49,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 > - `Game`과 `Editor`는 `Client.dll`을 동적 로드 → **Game/Editor → Client 단방향**
 > - Client에서 Game/Editor 프로젝트 코드 참조 불가
 > - `EngineSDK/Include`에 Engine Public 헤더 복사, `EngineSDK/Lib`에 .lib 파일
+> - `AssimpTool`은 Assimp만 링크, Engine/Client와 독립 빌드
 
 ---
 
@@ -53,6 +57,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 
 | 패키지 | 용도 |
 |---|---|
+| `assimp` | 3D 모델 임포트 (AssimpTool에서 사용) |
 | `directxtk` | SimpleMath, DDSTextureLoader, WICTextureLoader |
 | `effects11` | D3DX11Effect (셰이더 Effect 프레임워크) |
 | `spdlog` | 로깅 (LOG_INFO/WARN/ERROR 매크로) |
@@ -95,6 +100,10 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Event_Manager` | 이벤트 큐 (Create/Delete Object) |
 | `Component_Factory` | 컴포넌트 팩토리 (타입ID → Creator 등록/생성) |
 | `BTNode_Factory` | BT 노드 팩토리 |
+| `Camera_Manager` | 카메라 관리 (등록, 활성 카메라 전환, Toggle) |
+| `Light_Manager` | 라이트 관리 (Add/Get/Clear) |
+| `Debug_Manager` | 디버그 관리 (현재 빈 껍데기) |
+| `DelegateHub` | 전역 델리게이트 허브 (OnPlayerSpawned 등 이벤트 모음) |
 
 ### 기반 클래스
 
@@ -126,6 +135,8 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Character` | 캐릭터 기반 (Engine 레이어) |
 | `Controller` | 컨트롤러 기반 |
 | `UIObject` | UI 오브젝트 (직교 투영) |
+| `PlayerStart` | 스폰 포인트 (멀티 스폰 인덱스 지원) |
+| `Light` | 라이트 오브젝트 (Directional/Point, FLightDesc 보유) |
 
 ### BT (Behavior Tree)
 
@@ -160,6 +171,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Monster` | 몬스터 (AIController + BT) |
 | `Terrain` | 지형 (Shader + Texture + VIBuffer_Terrain) |
 | `Camera_Free` | 자유 카메라 |
+| `Camera_Target` | 타겟 추적 카메라 (오프셋 + 스무딩 팔로우) |
 | `Background` | UI 배경 |
 
 ### 컴포넌트
@@ -229,6 +241,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 
 | 클래스 | 설명 |
 |---|---|
+| `EditorWindow` | 에디터 윈도우 기반 클래스 |
 | `Scene_View` | 3D 씬 뷰 (ImGuizmo 연동) |
 | `Game_View` | 게임 뷰 |
 | `Hierarchy` | 오브젝트 계층구조 트리 |
@@ -257,6 +270,28 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Notification_Manager` | 토스트 알림 |
 | `Editor_Logger` | spdlog 에디터 통합 |
 | `PlayerSession_Manager` | 플레이어 세션 에디터 관리 |
+
+---
+
+## AssimpTool (EXE)
+
+모델 컨버터 — Assimp으로 FBX/OBJ 읽고 커스텀 바이너리로 변환.
+Engine에 Assimp 의존성 없이, 이 도구에서만 사용.
+
+| 파일 | 설명 |
+|---|---|
+| `pch.h` | Assimp 헤더, SimpleMath, spdlog, Engine_Macro.h 포함 |
+| `Assimp_Macro.h` | Engine_Macro.h 참조 (LOG_INFO 등 공유) |
+| `Converter.h/cpp` | FBX → 커스텀 변환 핵심 (`ReadAssetFile`) |
+| `AssimpTool.cpp` | 진입점 (main) |
+
+### 빌드 후 이벤트
+```
+xcopy /y "$(SolutionDir)vcpkg_installed\x64-windows\x64-windows\bin\assimp-vc143-mt.dll" "$(OutDir)\"
+```
+
+> [!NOTE]
+> vcpkg 경로가 `x64-windows\x64-windows\`로 중첩되어 있음에 주의.
 
 ---
 
@@ -331,6 +366,23 @@ GENERATED_COMPONENT(ClassName, Protocol::COMPONENT_TYPE_XXX)
 ### 현재 등록된 컴포넌트 (Static 레벨)
 CombatStat, Replicator, VIBuffer_Rect, MovementComponent,
 InputComponent, BehaviorTree, PlayerController, AIController
+
+---
+
+## 주요 구조체
+
+### FLightDesc (Engine_Struct.h)
+```cpp
+struct FLightDesc {
+    ELightType  type;       // Directional, Point
+    Vec4        direction;
+    Vec4        position;
+    float       range;
+    Color       diffuse;
+    Color       ambient;
+    Color       specular;
+};
+```
 
 ---
 
@@ -456,17 +508,6 @@ enum PacketID {
     S_AddObject = 4, S_RemoveObject = 5, S_Move = 6,
     C_Move = 50,
 };
-```
-
----
-
-## Game.cpp 메인 루프
-
-```cpp
-float dt = GAME->Compute_TimeDelta(L"Timer_60FPS");  // 한 번만!
-mainApp->Priority_Update(dt);
-mainApp->Update(dt);
-mainApp->Late_Update(dt);
 ```
 
 ---

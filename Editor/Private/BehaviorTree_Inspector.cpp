@@ -2,6 +2,7 @@
 #include "BehaviorTree_Inspector.h"
 #include "BehaviorTree.h"
 #include "BehaviorTree_View.h"
+#include "Asset_Manager.h"
 
 void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
 {
@@ -19,18 +20,87 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
     ImGui::Text("Asset : ");
     ImGui::SameLine();
 
+    string displayName = (fileName.empty() || fullPath == "(None)") ? "(None)" : fileName;
+
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
-    ImGui::Button(fileName.c_str(), ImVec2(ImGui::GetContentRegionAvail().x - 10.f, 30));
-    ImGui::PopStyleColor();
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.25f, 0.25f, 0.25f, 1.0f));
+
+    if (ImGui::Button(displayName.c_str(), ImVec2(ImGui::GetContentRegionAvail().x - 10.f, 30)))
+    {
+        ImGui::OpenPopup("##BTPicker");
+    }
+
+    ImGui::PopStyleColor(2);
+
+    // Picker
+    if (ImGui::BeginPopup("##BTPicker"))
+    {
+        ImGui::Text(ICON_FA_MAGNIFYING_GLASS " BehaviorTree 선택");
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        auto assets = GAME->Get_AssetsByType("behavior_tree");
+
+        if (assets.empty())
+        {
+            ImGui::TextDisabled("(등록된 BehaviorTree 없음)");
+        }
+
+        for (auto* meta : assets)
+        {
+            string name = fs::path(meta->fullPath).stem().string();
+            // 현재 세팅된 거 하이라이트
+
+            bool isSelected = (meta->fullPath == Utils::ToWString(fullPath));
+
+            if (isSelected)
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+
+            if (ImGui::Selectable(name.c_str(), isSelected, ImGuiSelectableFlags_None, ImVec2(200.f, 0)))
+            {
+                // 선택 -> 즉시 세팅
+                data["bt_filepath"] = Utils::ToString(meta->fullPath);
+                behavior->From_Json(data);
+
+                LOG_INFO("BehaviorTree Assigned : {}", name);
+
+                ImGui::CloseCurrentPopup();
+            }
+
+            if (isSelected)
+                ImGui::PopStyleColor();
+        }
+
+        ImGui::Spacing();
+        ImGui::Separator();
+
+        if (ImGui::Selectable("(None) - 해제", false))
+        {
+            data["bt_filepath"] = "(None)";
+            behavior->From_Json(data);
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+
+    }
 
     // 드래그앤 드롭
     if (ImGui::BeginDragDropTarget())
     {
         if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BEHAVIORTREE"))
         {
-            const tchar* droppedPathW = (const tchar*)payload->Data;
+            //const tchar* droppedPathW = (const tchar*)payload->Data;
+            string guid = (const char*)payload->Data;
+            wstring resolvedPath = GAME->Resolve_AssetPath(guid);
 
-            string droppedPath = Utils::ToString(droppedPathW);
+            if (resolvedPath.empty())
+            {
+                LOG_ERROR("Unknown BT asset GUID: {}", guid);
+                ImGui::EndDragDropTarget();
+                return;
+            }
+
+            string droppedPath = Utils::ToString(resolvedPath);
             string pureName = fs::path(droppedPath).filename().stem().string();
 
             // 받아온 경로로 Json 갱신
@@ -79,8 +149,6 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
                 btView->Set_Active(true);
 
             }
-
-
         }
 
         ImGui::PopStyleColor(2);

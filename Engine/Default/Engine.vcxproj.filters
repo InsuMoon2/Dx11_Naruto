@@ -165,6 +165,7 @@
       <Filter>01. Utility\08. Lights</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Light_Manager.h" />
+    <ClInclude Include="..\Public\Asset_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -310,6 +311,9 @@
     </Filter>
     <Filter Include="95. Manager\06. Light">
       <UniqueIdentifier>{ba15af3b-95e3-4893-b1ff-aaa61ce1adf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Manager\07. Asset">
+      <UniqueIdentifier>{5ea4a05e-533b-449f-8c9f-64c3ac898179}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -459,6 +463,7 @@
       <Filter>01. Utility\08. Lights</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Light_Manager.cpp" />
+    <ClCompile Include="..\Private\Asset_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

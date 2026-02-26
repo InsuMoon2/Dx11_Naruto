@@ -98,7 +98,7 @@ StyleCopReport.xml
 *_p.c
 *_h.h
 *.ilk
-*.meta
+# *.meta  ← 에셋 GUID 보존을 위해 Git 추적 필요, 제외하지 않음
 *.obj
 *.idb
 *.iobj
@@ -436,3 +436,6 @@ FodyWeavers.xsd
 
 .agent/
 .claude/
+
+# 에셋 캐시 (로컬 자동 생성, 커밋 불필요)
+.asset_cache.json

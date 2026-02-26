@@ -180,6 +180,8 @@ void BehaviorTree_View::Save_BehaviorTree(const string& path)
 
     _currentFilePath = path;
     _isDirty = false;
+
+    GAME->Register_Asset(Utils::ToWString(path));
 }
 
 void BehaviorTree_View::Create_BehaviorTree()

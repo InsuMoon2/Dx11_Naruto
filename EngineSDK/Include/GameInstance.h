@@ -17,6 +17,7 @@ class Object_Manager;
 class Prefab_Manager;
 class Camera_Manager;
 class Light_Manager;
+class Asset_Manager;
 
 class Renderer;
 class PipeLine;
@@ -181,28 +182,36 @@ public: /* Light */
     HRESULT                         Add_Light(const FLightDesc& desc);
     void                            Clear_Lights();
 
-private:
-	Unique<Graphic_Device>      _graphicDevice  {};
-	Unique<Timer_Manager>	    _timerManager   {};
-    Unique<Level_Manager>       _levelManager   {};
-    Unique<Prototype_Manager>   _protoManager   {};
-    Unique<Object_Manager>      _objectManager  {};
-    Unique<Prefab_Manager>      _prefabManager  {};
-    Unique<Camera_Manager>      _cameraManager  {};
-    Unique<Light_Manager>       _lightManager   {};
+public: /* Asset */
+    string                          Find_AssetGUID(const wstring& filePath);
+    wstring                         Resolve_AssetPath(const string& guid);
+    string                          Register_Asset(const wstring& filePath, const string& type = "");
+    void                            Scan_Assets(const wstring& directory);
+    vector<const FAssetMeta*>       Get_AssetsByType(const string& type);
 
-    Unique<Renderer>            _renderer {};
-    Unique<PipeLine>            _pipeLine {};
+private: /* Manager */
+	Unique<Graphic_Device>          _graphicDevice  {};
+	Unique<Timer_Manager>	        _timerManager   {};
+    Unique<Level_Manager>           _levelManager   {};
+    Unique<Prototype_Manager>       _protoManager   {};
+    Unique<Object_Manager>          _objectManager  {};
+    Unique<Prefab_Manager>          _prefabManager  {};
+    Unique<Camera_Manager>          _cameraManager  {};
+    Unique<Light_Manager>           _lightManager   {};
+    Unique<Asset_Manager>           _assetManager   {};
+
+    Unique<Renderer>                _renderer {};
+    Unique<PipeLine>                _pipeLine {};
 
 private: /* Factory */
-    Unique<Component_Factory>   _componentFactory {};
-    Unique<BTNode_Factory>      _btNodeFactory    {};
+    Unique<Component_Factory>       _componentFactory {};
+    Unique<BTNode_Factory>          _btNodeFactory    {};
 
 private: /* Delegate Hub */
-    DelegateHub                 _delegateHub;
+    DelegateHub                     _delegateHub;
 
 private:
-    EGameState                  _gameState = EGameState::Edit;
+    EGameState                      _gameState = EGameState::Edit;
 
 public:
 	void Free() override;

@@ -7,6 +7,7 @@
 #include "EditorInstance.h"
 #include "Event_Manager.h"
 #include "Layer.h"
+#include "Scene_View.h"
 
 Hierarchy::Hierarchy()
     : EditorWindow(TEXT("Hierarchy"))
@@ -255,10 +256,29 @@ void Hierarchy::Draw_ObjectNode(shared_ptr<GameObject> gameObject, int index)
     // ID 주소 겹칠 수 있어서 포인터 주소로
     ImGui::TreeNodeEx((void*)(intptr_t)gameObject.get(), flags, nameStr.c_str());
 
+    // 단일 선택
     if (ImGui::IsItemClicked())
     {
         bool isMultiSelect = ImGui::GetIO().KeyCtrl;
         Select_Object(gameObject, isMultiSelect);
+    }
+
+    // 더블 클릭
+    if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+    {
+        auto sceneView = dynamic_pointer_cast<Scene_View>(
+            EDITOR->Get_Window(L"Scene"));
+
+        if (sceneView)
+        {
+            auto transform = gameObject->Get_Component<Transform>();
+
+            if (transform)
+            {
+                sceneView->Focus_OnPosition(transform->Get_WorldPosition());
+            }
+
+        }
     }
 
     if (ImGui::BeginPopupContextItem())

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Scene_View.h"
 
+#include <Camera.h>
 #include <GameObject.h>
 
 #include "RenderTarget.h"
@@ -8,6 +9,7 @@
 #include "EditorInstance.h"
 #include "Input_Manager.h"
 #include "Hierarchy.h"
+#include "Asset_Manager.h"
 
 Scene_View::Scene_View()
     : EditorWindow(TEXT("Scene"))
@@ -30,7 +32,7 @@ void Scene_View::Update(float timeDelta)
 {
     EditorWindow::Update(timeDelta);
 
-    // TODO : 카메라 추가 후, 이동 세팅
+    Update_CameraLerp(timeDelta);
 
     if (INPUT->KeyDown(KEY_TYPE::F11))
     {
@@ -38,7 +40,6 @@ void Scene_View::Update(float timeDelta)
     }
 
     Handle_Guizmo_Shotcut();
-
 }
 
 void Scene_View::OnGui()
@@ -65,6 +66,39 @@ void Scene_View::OnGui()
     }
     ImGui::End();
     ImGui::PopStyleVar();
+}
+
+void Scene_View::Focus_OnPosition(const Vec3& targetPos)
+{
+    _isCameraLerping = true;
+    _lerpTargetPos = targetPos;
+}
+
+void Scene_View::Update_CameraLerp(float timeDelta)
+{
+    if (!_isCameraLerping)
+        return;
+
+    auto camera = GAME->Get_ActiveCamera();
+    CHECK_NULL(camera);
+
+    auto camTransform = camera->Get_Component<Transform>();
+    CHECK_NULL(camTransform);
+
+    Vec3 currentPos = camTransform->Get_WorldPosition();
+
+    // 타겟 뒤쪽 계산
+    Vec3 look = camTransform->Get_WorldForward();
+    Vec3 targetCamPos = _lerpTargetPos - look * _lerpDistance;
+    targetCamPos.y += 4.f;
+
+    // Lerp
+    Vec3 newPos = Vec3::Lerp(currentPos, targetCamPos, timeDelta * 5.f);
+    camTransform->Set_WorldPosition(newPos);
+
+    // 도착하면 종료
+    if ((newPos - targetCamPos).Length() < 0.1f)
+        _isCameraLerping = false;
 }
 
 ImGuiWindowFlags Scene_View::Get_WindowFlags() const
@@ -115,8 +149,18 @@ void Scene_View::Render_Viewport()
         {
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_PREFAB"))
             {
+                //wstring prefabPath = (wchar_t*)payload->Data;
 
-                wstring prefabPath = (wchar_t*)payload->Data;
+                // GUID -> 파일 경로 역변환
+                string guid = (const char*)payload->Data;
+                wstring prefabPath = GAME->Resolve_AssetPath(guid);
+
+                if (prefabPath.empty())
+                {
+                    LOG_ERROR("Unknown asset GUID: {}", guid);
+                    ImGui::EndDragDropTarget();
+                    return;
+                }
 
                 ImVec2 mousePos = ImGui::GetMousePos();
                 ImVec2 windowPos = ImGui::GetWindowPos();
@@ -215,34 +259,19 @@ void Scene_View::Update_ImGuizmo()
     auto transform = targetObject->Get_Component<Transform>();
     CHECK_NULL(transform);
 
-    // 카메라 행렬은 추후 변경 예정
-    //Matrix view = Matrix::Identity;
-    Matrix view = Matrix::CreateLookAt(
-        Vec3(0, 0, -10.f), 
-        Vec3(0, 0, 0),     
-        Vec3(0, 1, 0)      
-    );
+    // 행렬
+    const Matrix* pView = GAME->Get_Transform(ETransformState::View);
+    const Matrix* pProj = GAME->Get_Transform(ETransformState::Proj);
+    if (!pView || !pProj) return;
 
-    Matrix proj = Matrix::CreatePerspectiveFieldOfView(
-        XMConvertToRadians(60.f),
-        _viewportSize.x / _viewportSize.y,
-        0.1f,
-        1000.f
-    );
-
-    // 오브젝트 월드 행렬
     Matrix world = transform->Get_WorldMatrix();
+    Matrix view = *pView;
+    Matrix proj = *pProj;
 
     Matrix worldForGizmo = world;
-    worldForGizmo._41 = -worldForGizmo._41;
 
-    ImGuizmo::Manipulate(
-        &view.m[0][0],
-        &proj.m[0][0],
-        _gizmoOperation,
-        _gizmoMode,
-        &worldForGizmo.m[0][0]
-    );
+    ImGuizmo::Manipulate(&view.m[0][0], &proj.m[0][0],
+        _gizmoOperation, _gizmoMode, &worldForGizmo.m[0][0]);
 
     if (ImGuizmo::IsUsing())
     {
@@ -250,11 +279,6 @@ void Scene_View::Update_ImGuizmo()
         Quat rotation;
 
         worldForGizmo.Decompose(scale, rotation, translation);
-
-        translation.x = -translation.x;
-
-        rotation.y = -rotation.y;
-        rotation.z = -rotation.z;
 
         transform->Set_WorldPosition(translation);
         transform->Set_WorldRotation(rotation);

@@ -13,6 +13,9 @@
     <Filter Include="99. Defines">
       <UniqueIdentifier>{7f344272-29c7-4c67-900a-510b01caedea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98. Default\SimpleMath">
+      <UniqueIdentifier>{b9dd232f-9b04-4e21-bc5a-4438e2ee314f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssimpTool.cpp">
@@ -21,11 +24,11 @@
     <ClCompile Include="pch.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\SimpleMath.cpp">
-      <Filter>98. Default</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Converter.cpp">
       <Filter>01. Converter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SimpleMath.cpp">
+      <Filter>98. Default\SimpleMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

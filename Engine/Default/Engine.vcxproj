@@ -164,6 +164,7 @@ call GenProto.bat</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Asset_Manager.h" />
     <ClInclude Include="..\Public\BehaviorTree.h" />
     <ClInclude Include="..\Public\AnimNotify_Factory.h" />
     <ClInclude Include="..\Public\Base.h" />
@@ -222,6 +223,7 @@ call GenProto.bat</Command>
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Asset_Manager.cpp" />
     <ClCompile Include="..\Private\BehaviorTree.cpp" />
     <ClCompile Include="..\Private\AnimNotify_Factory.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />

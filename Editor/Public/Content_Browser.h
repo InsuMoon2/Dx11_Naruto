@@ -69,7 +69,7 @@ private:
     bool                _focusRenameInput = false;
 
 
-    set<wstring>        _expandedFolders;
+    set<wstring>        _expandedFolders{};
     const char*          CONTENT_BROWSER_PATH = "../../Client/Bin/Resources/Data/json/EditorSettings/ContentBrowser.json";
 
 public:

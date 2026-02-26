@@ -17,6 +17,7 @@ class Object_Manager;
 class Prefab_Manager;
 class Camera_Manager;
 class Light_Manager;
+class Asset_Manager;
 
 class Renderer;
 class PipeLine;
@@ -181,6 +182,13 @@ public: /* Light */
     HRESULT                         Add_Light(const FLightDesc& desc);
     void                            Clear_Lights();
 
+public: /* Asset */
+    string                          Find_AssetGUID(const wstring& filePath);
+    wstring                         Resolve_AssetPath(const string& guid);
+    string                          Register_Asset(const wstring& filePath, const string& type = "");
+    void                            Scan_Assets(const wstring& directory);
+    vector<const FAssetMeta*>       Get_AssetsByType(const string& type);
+
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};
 	Unique<Timer_Manager>	        _timerManager   {};
@@ -190,6 +198,7 @@ private: /* Manager */
     Unique<Prefab_Manager>          _prefabManager  {};
     Unique<Camera_Manager>          _cameraManager  {};
     Unique<Light_Manager>           _lightManager   {};
+    Unique<Asset_Manager>           _assetManager   {};
 
     Unique<Renderer>                _renderer {};
     Unique<PipeLine>                _pipeLine {};

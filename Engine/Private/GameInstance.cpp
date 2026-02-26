@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "GameInstance.h"
+
+#include "Asset_Manager.h"
 #include "Graphic_Device.h"
 
 #include "Level_Manager.h"
@@ -79,6 +81,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _lightManager = Light_Manager::Create();
     CHECK_NULL(_lightManager, E_FAIL);
+
+    _assetManager = Asset_Manager::Create(TEXT("../../Client/Bin/Resources"));
+    CHECK_NULL(_assetManager, E_FAIL);
 
     return S_OK;
 }
@@ -402,6 +407,31 @@ HRESULT GameInstance::Add_Light(const FLightDesc& desc)
 void GameInstance::Clear_Lights()
 {
     return _lightManager->Clear_Lights();
+}
+
+string GameInstance::Find_AssetGUID(const wstring& filePath)
+{
+    return _assetManager->Find_GUID(filePath);
+}
+
+wstring GameInstance::Resolve_AssetPath(const string& guid)
+{
+    return _assetManager->Resolve_Path(guid);
+}
+
+string GameInstance::Register_Asset(const wstring& filePath, const string& type)
+{
+    return _assetManager->Register_Asset(filePath, type);
+}
+
+void GameInstance::Scan_Assets(const wstring& directory)
+{
+    return _assetManager->Scan_And_Register(directory);
+}
+
+vector<const FAssetMeta*> GameInstance::Get_AssetsByType(const string& type)
+{
+    return _assetManager->Get_AssetByType(type);
 }
 
 Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)

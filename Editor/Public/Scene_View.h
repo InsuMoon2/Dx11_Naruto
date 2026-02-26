@@ -22,6 +22,8 @@ public:
 public:
     shared_ptr<RenderTarget> Get_RenderTarget() { return _renderTarget; }
 
+    void                Focus_OnPosition(const Vec3& targetPos);
+
 private:
     ImGuiWindowFlags    Get_WindowFlags() const;
     void                Prepare_Window();
@@ -36,6 +38,9 @@ private:
     // Prefab Spawn
     Vec3                Screen_To_World(Vec2 screenPos);
     void                Spawn_Prefab(const wstring& prefabPath, const Vec3& worldPos);
+
+    // Camera
+    void                Update_CameraLerp(float timeDelta);
 
 private:
     Shared<RenderTarget>    _renderTarget;
@@ -52,6 +57,11 @@ private:
     LONG     _savedStyle = 0;
     ImGuiID  _savedDockId = 0;       
     bool     _shouldRestoreWindow = false;
+
+private: /* Camera*/
+    bool     _isCameraLerping = false;
+    Vec3     _lerpTargetPos = {};
+    float    _lerpDistance = 5.f; // 타겟과 카메라 간의 거리
 
 private: /* ImGuizmo */
     ImGuizmo::OPERATION _gizmoOperation = ImGuizmo::TRANSLATE;

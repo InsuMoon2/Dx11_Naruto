@@ -9,6 +9,7 @@
 #include <fstream>
 #include "Prefab_View.h"
 #include "BehaviorTree_View.h"
+#include "Asset_Manager.h"
 
 Content_Browser::Content_Browser()
     : EditorWindow(TEXT("Content Browser"))
@@ -98,8 +99,20 @@ void Content_Browser::OnGui()
             if (_currentFolder)
             {
                 ImGui::Text("Path %s", Utils::ToString(_currentFolder->fullPath).c_str());
-                ImGui::Separator();
 
+                float width = 100.f;
+                ImGui::SameLine(ImGui::GetContentRegionAvail().x - width);
+
+                if (ImGui::Button(ICON_FA_ROTATE_RIGHT " 새로고침", ImVec2(width, 24)))
+                {
+                    Refresh_Resources();
+                    GAME->Scan_Assets(TEXT("../../Client/Bin/Resources")); // Asset_Manager도 동기화
+                }
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("새로고침 [F5]");
+
+
+                ImGui::Separator();
                 Draw_AssetView();
             }
         }
@@ -111,8 +124,7 @@ void Content_Browser::OnGui()
 
 void Content_Browser::Refresh_Resources()
 {
-
-#pragma region 루트로 이동
+    wstring savedPath = _currentFolder ? _currentFolder->fullPath : L"";
     _rootFolder = {};
 
     fs::path rootPath = TEXT("../../Client/Bin/Resources");
@@ -120,9 +132,17 @@ void Content_Browser::Refresh_Resources()
     if (fs::exists(rootPath))
     {
         Scan_Folder(rootPath, _rootFolder);
-        _currentFolder = &_rootFolder;
+
+        if (!savedPath.empty())
+        {
+            FFolderNode* found = Find_FolderNode(_rootFolder, savedPath);
+            _currentFolder = found ? found : &_rootFolder;
+        }
+        else
+        {
+            _currentFolder = &_rootFolder;
+        }
     }
-#pragma endregion
     
 }
 
@@ -135,7 +155,7 @@ void Content_Browser::Refresh_CurrentFolder()
 
     for (const auto& entry : fs::directory_iterator(_currentFolder->fullPath))
     {
-        if (!entry.is_directory())
+        if (!entry.is_directory() && entry.path().extension() != L".meta")
         {
             _currentFolder->files.emplace_back(entry.path());
         }
@@ -157,7 +177,8 @@ void Content_Browser::Scan_Folder(const wstring& path, FFolderNode& node)
         }
         else
         {
-            node.files.emplace_back(entry.path());
+            if (entry.path().extension() != L".meta")
+                node.files.emplace_back(entry.path());
         }
     }
 
@@ -252,19 +273,34 @@ void Content_Browser::Draw_AssetView()
             // Prefab 드래그
             if (isValidPrefab && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
-                wstring fullPath = filePath;
+#pragma region Legacy : 경로 기반 Payload
+                //wstring fullPath = filePath;
+                //ImGui::SetDragDropPayload("CONTENT_PREFAB", fullPath.c_str(), (fullPath.size() + 1) * sizeof(wchar_t));
+#pragma endregion
 
-                ImGui::SetDragDropPayload("CONTENT_PREFAB", fullPath.c_str(), (fullPath.size() + 1) * sizeof(wchar_t));
+#pragma region GUID 기반 Payload
+                string guid = GAME->Find_AssetGUID(filePath);
+                ImGui::SetDragDropPayload("CONTENT_PREFAB", guid.c_str(), guid.size() + 1);
+                ImGui::SetTooltip("%s", pureName.c_str());
+#pragma endregion
+                
                 ImGui::EndDragDropSource();
             }
 
             // BehaviorTree 드래그
             else if (isBehaviorTree && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
-                wstring fullPath = filePath;
+#pragma region Legacy : 경로 기반 Payload
+                //wstring fullPath = filePath;
+                //ImGui::SetDragDropPayload("CONTENT_BEHAVIORTREE", fullPath.c_str(), (fullPath.size() + 1) * sizeof(wchar_t));
+#pragma endregion
 
-                ImGui::SetDragDropPayload("CONTENT_BEHAVIORTREE", fullPath.c_str(), (fullPath.size() + 1) * sizeof(wchar_t));
+#pragma region GUID 기반 Payload
+                string guid = GAME->Find_AssetGUID(filePath);
+                ImGui::SetDragDropPayload("CONTENT_BEHAVIORTREE", guid.c_str(), guid.size() + 1);
                 ImGui::SetTooltip("%s", pureName.c_str());
+#pragma endregion
+                
                 ImGui::EndDragDropSource();
             }
 
