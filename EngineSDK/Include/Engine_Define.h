@@ -13,6 +13,11 @@
 #include "Effects11/d3dx11effect.h"
 #include <d3dcompiler.h>
 
+// Assimp
+#include <assimp/scene.h>
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+
 using namespace DirectX;
 
 // spdlog

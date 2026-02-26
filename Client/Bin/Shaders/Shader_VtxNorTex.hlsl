@@ -1,10 +1,10 @@
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-vector g_LightDir = vector(1.f, -1.f, 1.f, 0.f);
-vector g_LightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
-vector g_LightAmbient = vector(1.f, 1.f, 1.f, 1.f);
-vector g_LightSpecular = vector(1.f, 1.f, 1.f, 1.f);
+vector g_LightDir;
+vector g_LightDiffuse;
+vector g_LightAmbient;
+vector g_LightSpecular;
 
 Texture2D g_DiffuseTexture;
 vector g_MtrlAmbiment = vector(0.3f, 0.3f, 0.3, 1.f);

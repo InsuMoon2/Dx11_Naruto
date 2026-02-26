@@ -21,6 +21,7 @@
 #include "BTNode_Factory.h"
 #include "Camera.h"
 #include "Component_Factory.h"
+#include "Light_Manager.h"
 
 IMPLEMENT_SINGLETON(GameInstance)
 
@@ -75,6 +76,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _cameraManager = Camera_Manager::Create();
     CHECK_NULL(_cameraManager, E_FAIL);
+
+    _lightManager = Light_Manager::Create();
+    CHECK_NULL(_lightManager, E_FAIL);
 
     return S_OK;
 }
@@ -385,6 +389,21 @@ void GameInstance::Register_Camera(Shared<Camera> camera)
     _cameraManager->Register_Camera(camera);
 }
 
+const FLightDesc* GameInstance::Get_LightDesc(uint32 index)
+{
+    return _lightManager->Get_LightDesc(index);
+}
+
+HRESULT GameInstance::Add_Light(const FLightDesc& desc)
+{
+    return _lightManager->Add_Light(desc);
+}
+
+void GameInstance::Clear_Lights()
+{
+    return _lightManager->Clear_Lights();
+}
+
 void GameInstance::Free()
 {
     Base::Free();
@@ -392,6 +411,7 @@ void GameInstance::Free()
     _componentFactory.reset();
     _btNodeFactory.reset();
     _cameraManager.reset();
+    _lightManager.reset();
 
     _prefabManager.reset();
     _objectManager.reset(); 

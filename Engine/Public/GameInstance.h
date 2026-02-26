@@ -16,6 +16,7 @@ class Prototype_Manager;
 class Object_Manager;
 class Prefab_Manager;
 class Camera_Manager;
+class Light_Manager;
 
 class Renderer;
 class PipeLine;
@@ -172,14 +173,21 @@ public: /* Camera */
 public: /* DelegateHub */
     DelegateHub&                    Get_DelegateHub() { return _delegateHub; }
 
+
+public: /* Light */
+    const FLightDesc*               Get_LightDesc(uint32 index);
+    HRESULT                         Add_Light(const FLightDesc& desc);
+    void                            Clear_Lights();
+
 private:
-	Unique<Graphic_Device>      _graphicDevice {};
-	Unique<Timer_Manager>	    _timerManager  {};
-    Unique<Level_Manager>       _levelManager  {};
-    Unique<Prototype_Manager>   _protoManager  {};
-    Unique<Object_Manager>      _objectManager {};
-    Unique<Prefab_Manager>      _prefabManager {};
-    Unique<Camera_Manager>      _cameraManager {};
+	Unique<Graphic_Device>      _graphicDevice  {};
+	Unique<Timer_Manager>	    _timerManager   {};
+    Unique<Level_Manager>       _levelManager   {};
+    Unique<Prototype_Manager>   _protoManager   {};
+    Unique<Object_Manager>      _objectManager  {};
+    Unique<Prefab_Manager>      _prefabManager  {};
+    Unique<Camera_Manager>      _cameraManager  {};
+    Unique<Light_Manager>       _lightManager   {};
 
     Unique<Renderer>            _renderer {};
     Unique<PipeLine>            _pipeLine {};

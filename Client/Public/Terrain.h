@@ -31,6 +31,7 @@ public:
 
 protected:
     HRESULT Ready_Components();
+    HRESULT Bind_ShaderResources();
 
 private:
     Shared<Shader>              _shaderCom;

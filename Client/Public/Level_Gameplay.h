@@ -24,6 +24,7 @@ public:
     virtual HRESULT Render() override;
 
 private:
+    HRESULT         Ready_Lights();
     HRESULT         Ready_Layer_Camera(const wstring& layerTag);
     HRESULT         Ready_Layer_PlayerStart(const wstring& layerTag);
     HRESULT         Ready_Layer_GameObject(const wstring& layerTag);

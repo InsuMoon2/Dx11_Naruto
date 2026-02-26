@@ -62,4 +62,18 @@ namespace Engine
         string name;
         EBlackboardValueType type;
     };
+
+    struct FLightDesc
+    {
+        ELightType  type;
+
+        Vec4        direction;
+
+        Vec4        position;
+        float       range;
+
+        Color       diffuse;
+        Color       ambient;
+        Color       specular;
+    };
 }

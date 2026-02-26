@@ -21,6 +21,8 @@ Level_Gameplay::~Level_Gameplay()
 
 HRESULT Level_Gameplay::Initialize()
 {
+    CHECK_FAILED(Ready_Lights(), E_FAIL);
+
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
     CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
     CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")), E_FAIL);
@@ -81,6 +83,21 @@ HRESULT Level_Gameplay::Render()
     return S_OK;
 }
 
+HRESULT Level_Gameplay::Ready_Lights()
+{
+    FLightDesc lightDesc{};
+
+    lightDesc.type = ELightType::Directional;
+    lightDesc.direction  = Vec4(1.f, -1.f, 1.f, 0.f);
+    lightDesc.diffuse  = Vec4(1.f, 1.f, 1.f, 1.f);
+    lightDesc.ambient  = Vec4(1.f, 1.f, 1.f, 1.f);
+    lightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+
+    CHECK_FAILED(GAME->Add_Light(lightDesc), E_FAIL);
+
+    return S_OK; 
+}
+
 HRESULT Level_Gameplay::Ready_Layer_Camera(const wstring& layerTag)
 {
     // Camera Free
@@ -125,7 +142,7 @@ HRESULT Level_Gameplay::Ready_Layer_Camera(const wstring& layerTag)
 
 HRESULT Level_Gameplay::Ready_Layer_PlayerStart(const wstring& layerTag)
 {
-    // 스폰 포인트 1
+    // TODO : Spawn Point Save&Load로 위치 세팅
     {
         PlayerStart::FPlayerStartDesc desc;
         desc.position = Vec3(0.f, 5.f, 0.f);

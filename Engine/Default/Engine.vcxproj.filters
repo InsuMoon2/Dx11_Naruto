@@ -161,6 +161,10 @@
       <Filter>01. Utility\98. Utils\01. Delegate</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerStart.h" />
+    <ClInclude Include="..\Public\Light.h">
+      <Filter>01. Utility\08. Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -300,6 +304,12 @@
     </Filter>
     <Filter Include="01. Utility\03. GameObject\98. PlayerStart">
       <UniqueIdentifier>{80f2e44f-ee3a-4742-b20b-1e989ab77b7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\08. Lights">
+      <UniqueIdentifier>{6cde95c6-8f7e-4231-a435-18025786ab76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Manager\06. Light">
+      <UniqueIdentifier>{ba15af3b-95e3-4893-b1ff-aaa61ce1adf8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -445,6 +455,10 @@
       <Filter>01. Utility\98. Utils\01. Delegate</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerStart.cpp" />
+    <ClCompile Include="..\Private\Light.cpp">
+      <Filter>01. Utility\08. Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

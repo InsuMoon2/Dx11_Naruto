@@ -17,5 +17,7 @@ namespace Engine
     enum class EBlackboardValueType { Int, Float, Bool, Vector3, END };
  
     enum class ETransformState { View, Proj, END };
+
+    enum class ELightType { Directional, Point, END };
 }
 

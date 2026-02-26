@@ -62,13 +62,7 @@ HRESULT Terrain::Render()
 {
     GameObject::Render();
 
-    _shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix());
-    GAME->Bind_TransformMatrix(ETransformState::View, _shaderCom, "g_ViewMatrix");
-    GAME->Bind_TransformMatrix(ETransformState::Proj, _shaderCom, "g_ProjMatrix");
-    
-    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);
-
-    GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
+    CHECK_FAILED(Bind_ShaderResources(), E_FAIL);
 
     _shaderCom->Begin(0);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
@@ -83,6 +77,27 @@ HRESULT Terrain::Ready_Components()
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXNORTEX, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TERRAIN, _bufferCom), E_FAIL);
+
+    return S_OK;
+}
+
+HRESULT Terrain::Bind_ShaderResources()
+{
+    _shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix());
+    GAME->Bind_TransformMatrix(ETransformState::View, _shaderCom, "g_ViewMatrix");
+    GAME->Bind_TransformMatrix(ETransformState::Proj, _shaderCom, "g_ProjMatrix");
+
+    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);
+
+    GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
+
+    const FLightDesc* lightDesc = GAME->Get_LightDesc(0);
+    CHECK_NULL(lightDesc, E_FAIL);
+
+    _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Vec4));
 
     return S_OK;
 }

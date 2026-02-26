@@ -9,7 +9,7 @@ class Transform;
 
 DECLARE_DELEGATE(FOnPlayerSpawned, Shared<Transform>);
 
-// 델리게이트들을 모아놓을 허브
+// 델리게이트들을 모아놓을 허브 : 매니저 역할이긴하네..
 class ENGINE_DLL DelegateHub : public Base
 {
 public:
@@ -23,7 +23,7 @@ public:
     FOnPlayerSpawned    OnPlayerSpawned;
 
     // 추후 확장 할 것들
-    // LevelChanged, OnBossKill, MonsterKill 등등? 이벤트들 관리하는 허브.
+    // LevelChanged, OnBossKill, MonsterKill .. etc
 
     
 };
