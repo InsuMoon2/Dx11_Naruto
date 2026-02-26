@@ -181,28 +181,28 @@ public: /* Light */
     HRESULT                         Add_Light(const FLightDesc& desc);
     void                            Clear_Lights();
 
-private:
-	Unique<Graphic_Device>      _graphicDevice  {};
-	Unique<Timer_Manager>	    _timerManager   {};
-    Unique<Level_Manager>       _levelManager   {};
-    Unique<Prototype_Manager>   _protoManager   {};
-    Unique<Object_Manager>      _objectManager  {};
-    Unique<Prefab_Manager>      _prefabManager  {};
-    Unique<Camera_Manager>      _cameraManager  {};
-    Unique<Light_Manager>       _lightManager   {};
+private: /* Manager */
+	Unique<Graphic_Device>          _graphicDevice  {};
+	Unique<Timer_Manager>	        _timerManager   {};
+    Unique<Level_Manager>           _levelManager   {};
+    Unique<Prototype_Manager>       _protoManager   {};
+    Unique<Object_Manager>          _objectManager  {};
+    Unique<Prefab_Manager>          _prefabManager  {};
+    Unique<Camera_Manager>          _cameraManager  {};
+    Unique<Light_Manager>           _lightManager   {};
 
-    Unique<Renderer>            _renderer {};
-    Unique<PipeLine>            _pipeLine {};
+    Unique<Renderer>                _renderer {};
+    Unique<PipeLine>                _pipeLine {};
 
 private: /* Factory */
-    Unique<Component_Factory>   _componentFactory {};
-    Unique<BTNode_Factory>      _btNodeFactory    {};
+    Unique<Component_Factory>       _componentFactory {};
+    Unique<BTNode_Factory>          _btNodeFactory    {};
 
 private: /* Delegate Hub */
-    DelegateHub                 _delegateHub;
+    DelegateHub                     _delegateHub;
 
 private:
-    EGameState                  _gameState = EGameState::Edit;
+    EGameState                      _gameState = EGameState::Edit;
 
 public:
 	void Free() override;

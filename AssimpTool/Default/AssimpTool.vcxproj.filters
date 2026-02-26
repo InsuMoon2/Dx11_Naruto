@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00. Main">
+      <UniqueIdentifier>{704c6702-e73f-4a01-8f80-16aa68810a70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Converter">
+      <UniqueIdentifier>{bdb6dcaa-37c2-4994-91e6-a511d473e12a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Default">
+      <UniqueIdentifier>{81b26e01-e726-4c78-85be-61e3d8de12ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defines">
+      <UniqueIdentifier>{7f344272-29c7-4c67-900a-510b01caedea}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssimpTool.cpp">
+      <Filter>00. Main</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SimpleMath.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Converter.cpp">
+      <Filter>01. Converter</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Converter.h">
+      <Filter>01. Converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp_Macro.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
