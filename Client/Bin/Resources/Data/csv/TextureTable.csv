@@ -3,5 +3,6 @@ Texture,COMPONENT_TYPE_TEXTURE_DEFAULT,../../Client/Bin/Resources/Textures/Defau
 Texture,COMPONENT_TYPE_TEXTURE_PLAYER,../../Client/Bin/Resources/Textures/Clip_Icon0.png,1,Static,
 Texture,COMPONENT_TYPE_TEXTURE_MONSTER,../../Client/Bin/Resources/Textures/Clip_Icon1.png,1,Static,
 Texture,COMPONENT_TYPE_TEXTURE_TERRAIN,../../Client/Bin/Resources/Textures/Terrain/Tile%d.dds,1,Static,
-Model,Prototype_Texture_Hero,../../Client/Bin/Resources/Textures/Hero/Hero_Idle.png,1,GamePlay,
-Model,Prototype_Model_Boss,../../Client/Bin/Resources/Models/Boss/Boss.m3d,,GamePlay,NonAnim
+Texture,COMPONENT_TYPE_TEXTURE_MAIN_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle%d.png,2,Static,
+Texture,COMPONENT_TYPE_TEXTURE_MAIN_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle_Logo.png,1,Static,
+Texture,COMPONENT_TYPE_TEXTURE_MAIN_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle_Text%d.png,3,Static,

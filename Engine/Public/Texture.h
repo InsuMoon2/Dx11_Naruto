@@ -26,6 +26,8 @@ public:
     HRESULT Bind_SRV(Shared<Shader> shader, const char* constantName, uint32 index);
     vector<ComPtr<ShaderResourceView>>& Get_SRVs() { return _SRVs; }
 
+    HRESULT Add_SRV(const wstring& filePath);
+
     uint32 Get_CurrentIndex() const { return _currentIndex; }
     void   Set_CurrentIndex(uint32 idx) { _currentIndex = min(idx, _numSRVs - 1); }
 

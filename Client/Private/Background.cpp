@@ -52,7 +52,7 @@ void Background::Update(float timeDelta)
 {
     UIObject::Update(timeDelta);
 
-    _posX += 10.f * timeDelta;
+    //_posX += 10.f * timeDelta;
 
     __super::Update_Transform();
 }

@@ -104,6 +104,32 @@ HRESULT Texture::Bind_SRV(Shared<Shader> shader, const char* constantName, uint3
     return shader->Bind_SRV(constantName, _SRVs[index]);
 }
 
+HRESULT Texture::Add_SRV(const wstring& filePath)
+{
+    // 확장자 확인
+    wchar_t ext[MAX_PATH] = {};
+    _wsplitpath_s(filePath.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, ext, MAX_PATH);
+
+    ComPtr<ShaderResourceView> srv;
+    HRESULT hr = {};
+
+    if (wcscmp(ext, TEXT(".dds")) == 0)
+        hr = CreateDDSTextureFromFile(_device.Get(), filePath.c_str(), nullptr, srv.GetAddressOf());
+
+    else if (wcscmp(ext, TEXT(".tga")) == 0)
+        return E_FAIL;
+
+    else
+        hr = CreateWICTextureFromFile(_device.Get(), filePath.c_str(), nullptr, srv.GetAddressOf());
+
+    CHECK_FAILED(hr, E_FAIL);
+
+    _SRVs.emplace_back(srv);
+    _numSRVs = static_cast<uint32>(_SRVs.size());
+
+    return S_OK;
+}
+
 shared_ptr<Texture> Texture::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const wstring& texturePath, uint32 numSRVs)
 {
     auto instance = make_shared<Texture>(device, context);

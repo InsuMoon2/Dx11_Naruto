@@ -23,21 +23,24 @@
             "level": "Static",
             "path": "../../Client/Bin/Resources/Textures/Terrain/Tile%d.dds",
             "count": 1
-        }
-    ],
-    "Model": [
+        },
         {
-            "id": "Prototype_Texture_Hero",
-            "level": "GamePlay",
-            "path": "../../Client/Bin/Resources/Textures/Hero/Hero_Idle.png",
+            "id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle%d.png",
+            "count": 2
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle_Logo.png",
             "count": 1
         },
         {
-            "id": "Prototype_Model_Boss",
-            "level": "GamePlay",
-            "path": "../../Client/Bin/Resources/Models/Boss/Boss.m3d",
-            "count": 1,
-            "type": "NonAnim"
+            "id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle_Text%d.png",
+            "count": 3
         }
     ]
 }

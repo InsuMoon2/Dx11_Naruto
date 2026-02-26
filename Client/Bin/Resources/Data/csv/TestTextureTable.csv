@@ -1,0 +1,5 @@
+Type,Id,Path,Count,Level,Extra
+Texture,COMPONENT_TYPE_TEXTURE_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitle%d.png,2,Logo,
+Texture,COMPONENT_TYPE_TEXTURE_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitleText0.png,1,Logo,
+Texture,COMPONENT_TYPE_TEXTURE_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitleText1.png,1,Logo,
+Texture,COMPONENT_TYPE_TEXTURE_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitleText2.png,1,Logo,

@@ -160,6 +160,8 @@ HRESULT ResourceLoader::Load_Terrains(const json& data)
 
 HRESULT ResourceLoader::Load_Textures(const json& data)
 {
+    umap<uint32, Shared<Texture>> createdTextures;
+
     for (const auto& item : data)
     {
         string idStr    = item["id"];
@@ -178,12 +180,49 @@ HRESULT ResourceLoader::Load_Textures(const json& data)
 
         wstring wPath = Utils::ToWString(pathStr);
 
-        if (FAILED(GAME->Add_Component_Prototype(levelIndex, typeId,
-            Texture::Create(_device, _context, wPath.c_str(), count))))
+        // 이미 같은 ID로 만든 텍스처가 있는지 확인
+        auto iter = createdTextures.find(typeId);
+
+        if (iter == createdTextures.end())
         {
-            LOG_ERROR("Failed to load Texture: {}", idStr);
+            // 첫 번째, 새로 만들어야함
+            auto texture = Texture::Create(_device, _context, wPath.c_str(), count);
+            if (!texture)
+            {
+                LOG_ERROR("Failed to load Texture: {}", idStr);
+                continue;
+            }
+
+            if (FAILED(GAME->Add_Component_Prototype(levelIndex, typeId, texture)))
+            {
+                LOG_ERROR("Failed to load Texture: {}", idStr);
+            }
+
+            createdTextures[typeId] = texture;
+        }
+        else
+        {
+            auto& existingTexture = iter->second;
+            if (pathStr.find("%d") != string::npos)
+            {
+                // count만큼 반복 추가
+                for (int32 i = 0; i < count; i++)
+                {
+                    wchar_t fullPath[MAX_PATH] = {};
+                    wsprintf(fullPath, wPath.c_str(), i);
+                    if (FAILED(existingTexture->Add_SRV(fullPath)))
+                        LOG_ERROR("Failed to add SRV: {}", Utils::ToString(fullPath));
+                }
+            }
+            else
+            {
+                // 개별 파일은 하나만 추가
+                if (FAILED(existingTexture->Add_SRV(wPath)))
+                    LOG_ERROR("Failed to add SRV: {}", pathStr);
+            }
         }
     }
+
     return S_OK;
 }
 
