@@ -87,11 +87,12 @@ HRESULT Shader::Begin(uint32 passIndex)
 HRESULT Shader::Bind_SRV(const char* constantName, ComPtr<ShaderResourceView> SRV)
 {
     ComPtr<ID3DX11EffectVariable> variable = _effect->GetVariableByName(constantName);
-    CHECK_NULL(variable, E_FAIL);
+    if (!variable->IsValid())
+        return E_FAIL;
 
-    ComPtr<ID3DX11EffectShaderResourceVariable> srvVariable =
-        variable->AsShaderResource();
-    CHECK_NULL(srvVariable, E_FAIL);
+    ComPtr<ID3DX11EffectShaderResourceVariable> srvVariable = variable->AsShaderResource();
+    if (!srvVariable->IsValid())
+        return E_FAIL;
 
     CHECK_FAILED(srvVariable->SetResource(SRV.Get()), E_FAIL);
 
@@ -101,10 +102,12 @@ HRESULT Shader::Bind_SRV(const char* constantName, ComPtr<ShaderResourceView> SR
 HRESULT Shader::Bind_Matrix(const char* constantName, const Matrix* matrix)
 {
     ComPtr<ID3DX11EffectVariable> variable = _effect->GetVariableByName(constantName);
-    CHECK_NULL(variable, E_FAIL);
+    if (!variable->IsValid())
+        return E_FAIL;
 
     ComPtr<ID3DX11EffectMatrixVariable> matrixVariable = variable->AsMatrix();
-    CHECK_NULL(matrixVariable, E_FAIL);
+    if (!matrixVariable->IsValid())
+        return E_FAIL;
 
     CHECK_FAILED(
         matrixVariable->SetMatrix(reinterpret_cast<const float*>(matrix)),
@@ -116,7 +119,8 @@ HRESULT Shader::Bind_Matrix(const char* constantName, const Matrix* matrix)
 HRESULT Shader::Bind_RawValue(const char* constantName, const void* data, uint32 length)
 {
     ComPtr<ID3DX11EffectVariable> variable = _effect->GetVariableByName(constantName);
-    CHECK_NULL(variable, E_FAIL);
+    if (!variable->IsValid())
+        return E_FAIL;
 
     return variable->SetRawValue(data, 0, length);
 }

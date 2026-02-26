@@ -25,6 +25,9 @@ HRESULT VIBuffer_Terrain::Initialize_Prototype(const wstring& heightMapPath)
     HANDLE hFile = CreateFile(heightMapPath.c_str(),
         GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
+    if (INVALID_HANDLE_VALUE == hFile)
+        return E_FAIL;
+
     BITMAPFILEHEADER    fileHeader;
     BITMAPINFOHEADER    infoHeader;
     DWORD               dwByte = {};
