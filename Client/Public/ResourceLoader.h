@@ -16,11 +16,13 @@ public:
     HRESULT Load_TextureTable(const wstring& tablePath);
     HRESULT Load_ShaderTable(const wstring& tablePath);
     HRESULT Load_TerrainTable(const wstring& tablePath);
+    HRESULT Load_ModelTable(const wstring& tablePath);
 
 private:
     HRESULT Load_Textures(const json& data);
     HRESULT Load_Shaders(const json& data);
     HRESULT Load_Terrains(const json& data);
+    HRESULT Load_Model(const json& data);
 
     uint32  Get_ComponentID_From_String(const string& idStr);
     uint32  Get_LevelIndex_From_String(const string& levelName);

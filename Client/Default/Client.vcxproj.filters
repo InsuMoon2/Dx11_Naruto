@@ -283,5 +283,8 @@
     <FxCompile Include="..\Bin\Shaders\Shader_VtxNorTex.hlsl">
       <Filter>94. Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_VtxMesh.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

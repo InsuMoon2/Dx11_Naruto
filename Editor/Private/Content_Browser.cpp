@@ -41,6 +41,9 @@ void Content_Browser::Initialize()
 
     // 경로 로드
     Load_Settings();
+
+    // 썸네일 로드
+    Load_AllThumbnails();
 }
 
 void Content_Browser::Update(float timeDelta)
@@ -268,7 +271,24 @@ void Content_Browser::Draw_AssetView()
             // 아이콘
             ImGui::PushID(fileName.c_str());
 
-            ImGui::Button(pureName.c_str(), ImVec2(_thumbnailSize, _thumbnailSize));
+            // TODO : TextButton 썸네일 테스트 후 지우기
+            //ImGui::Button(pureName.c_str(), ImVec2(_thumbnailSize, _thumbnailSize));
+
+            string guid = GAME->Find_AssetGUID(filePath);
+
+            auto it = _thumbnailCache.find(guid);
+
+            if (it != _thumbnailCache.end() && it->second)
+            {
+                ImGui::ImageButton(fileName.c_str(),
+                    (ImTextureID)it->second.Get(),
+                    ImVec2(_thumbnailSize, _thumbnailSize));
+            }
+            else
+            {
+                ImGui::Button(pureName.c_str(),
+                    ImVec2(_thumbnailSize, _thumbnailSize));
+            }
 
             // Prefab 드래그
             if (isValidPrefab && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
@@ -598,6 +618,63 @@ void Content_Browser::Expand_PathTo(const wstring& targetPath)
     }
 
     _expandedFolders.insert(root.wstring());
+}
+
+void Content_Browser::Load_AllThumbnails()
+{
+    _thumbnailCache.clear();
+
+    fs::path rootPath = "../../Client/Bin/Resources";
+
+    for (auto& entry : fs::recursive_directory_iterator(rootPath))
+    {
+        if (!entry.is_regular_file())
+            continue;
+
+        wstring ext = entry.path().extension().wstring();
+        if (ext == L".png" || ext == L".jpg" || ext == L".dds")
+        {
+            // 폴더가 Thumbnails이면 스킵 (프리팹 썸네일은 아래에서 처리)
+            if (entry.path().parent_path().filename() == L"Thumbnails")
+                continue;
+
+            wstring filePath = entry.path().wstring();
+            string guid = GAME->Find_AssetGUID(filePath);
+
+            if (!guid.empty())
+                Load_Thumbnail(guid, filePath);
+        }
+    }
+
+    fs::path thumbDir = "../../Client/Bin/Resources/Thumbnails";
+    fs::create_directories(thumbDir);
+
+    for (auto& entry : fs::directory_iterator(thumbDir))
+    {
+        if (entry.path().extension() != L".png")
+            continue;
+
+        string guid = entry.path().stem().string();
+
+        Load_Thumbnail(guid, entry.path().wstring());
+    }
+
+    LOG_INFO("Thumbnails cached: {}", _thumbnailCache.size());
+}
+
+void Content_Browser::Load_Thumbnail(const string& key, const wstring& thumb)
+{
+    if (_thumbnailCache.contains(key))
+        return;
+
+    auto texture = Texture::Create(
+        GAME->Get_Device(), GAME->Get_Context(), thumb, 1);
+
+    if (texture && !texture->Get_SRVs().empty())
+    {
+        _thumbnailCache[key] = texture->Get_SRVs()[0];
+    }
+
 }
 
 shared_ptr<Content_Browser> Content_Browser::Create()

@@ -10,6 +10,12 @@ NS_BEGIN(Client)
 
 class Loader;
 
+enum class EMainTitle
+{
+    BG_0, BG_1,
+    Text0, Text1, Text2
+};
+
 class Level_Logo final : public Level
 {
 public:

@@ -62,8 +62,6 @@ HRESULT Terrain::Render()
 {
     GameObject::Render();
 
-    CHECK_FAILED(Bind_ShaderResources(), E_FAIL);
-
     _shaderCom->Begin(0);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
     CHECK_FAILED(_bufferCom->Render(), E_FAIL);
@@ -91,13 +89,16 @@ HRESULT Terrain::Bind_ShaderResources()
 
     GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
 
-    const FLightDesc* lightDesc = GAME->Get_LightDesc(0);
-    CHECK_NULL(lightDesc, E_FAIL);
+    {
+        const FLightDesc* lightDesc = GAME->Get_LightDesc(0);
+        CHECK_NULL(lightDesc, E_FAIL);
 
-    _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
-    _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Vec4));
-    _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Vec4));
-    _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Vec4));
+        _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
+        _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Vec4));
+        _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Vec4));
+        _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Vec4));
+    }
+    
 
     return S_OK;
 }

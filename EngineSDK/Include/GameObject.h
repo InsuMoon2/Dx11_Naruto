@@ -32,6 +32,8 @@ public:
     virtual json        To_Json() const;
     virtual void        From_Json(const json& data);
 
+    virtual HRESULT     Bind_ShaderResources();
+
 public: /* PendingKill */
     void Set_Destroy() { _isDestroyed = true; }
     bool Is_Destroy() const { return _isDestroyed; }

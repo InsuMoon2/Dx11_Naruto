@@ -12,6 +12,7 @@ public:
     virtual void    Initialize() { }
     virtual void    Update(float timeDelta) { }
     virtual void    OnGui() = 0;
+    virtual void    Pre_Render() {};
 
 public:
     const wstring&  Get_Name() const { return _name; }

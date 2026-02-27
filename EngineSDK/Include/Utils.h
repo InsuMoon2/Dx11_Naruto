@@ -13,6 +13,8 @@ public:
     // GUID
     static string   Generate_GUID();
 
+    static HRESULT  Save_To_File(const wstring& outputPath);
+
 };
 
 NS_END

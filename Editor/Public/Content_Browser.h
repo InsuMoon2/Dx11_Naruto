@@ -29,6 +29,11 @@ public:
     void    Update(float timeDelta) override;
     void    OnGui() override;
 
+public:
+    // 썸네일 세팅
+    void    Load_AllThumbnails();
+    void    Load_Thumbnail(const string& key, const wstring& thumb);
+
 private:
     void    Refresh_Resources();
     void    Refresh_CurrentFolder();
@@ -49,6 +54,10 @@ private:
 
     FFolderNode*    Find_FolderNode(FFolderNode& node, const wstring& path);
     void            Expand_PathTo(const wstring& targetPath);
+
+    
+    
+    
 
 private:
     FFolderNode          _rootFolder;
@@ -71,6 +80,10 @@ private:
 
     set<wstring>        _expandedFolders{};
     const char*          CONTENT_BROWSER_PATH = "../../Client/Bin/Resources/Data/json/EditorSettings/ContentBrowser.json";
+
+private: /* 썸네일 */
+    map<string, ComPtr<ShaderResourceView>> _thumbnailCache;
+
 
 public:
     static shared_ptr<Content_Browser> Create();

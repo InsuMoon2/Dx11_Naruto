@@ -1,0 +1,16 @@
+{
+    "Model": [
+        {
+            "id": "COMPONENT_TYPE_MODEL_PLAYER",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Models/Fiona/Fiona.fbx",
+            "count": 1
+        },
+        {
+            "id": "COMPONENT_TYPE_MODEL_MONSTER",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Models/ForkLift/ForkLift.fbx",
+            "count": 1
+        }
+    ]
+}

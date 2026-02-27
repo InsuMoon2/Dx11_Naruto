@@ -11,6 +11,7 @@ enum ComponentID
     COMPONENT_TYPE_RECT                 = 4;
     COMPONENT_TYPE_SHADER               = 5;
     COMPONENT_TYPE_TERRAIN              = 6;
+    COMPONENT_TYPE_MODEL                = 7;
 
     COMPONENT_TYPE_AI                   = 100;
     COMPONENT_TYPE_CONTROLLER           = 101;
@@ -23,10 +24,20 @@ enum ComponentID
     COMPONENT_TYPE_TEXTURE_MONSTER      = 204;
     COMPONENT_TYPE_TEXTURE_MAIN_TITLE   = 205;
 
-    // Shader : 300+
-    COMPONENT_TYPE_SHADER_START         = 300;
-    COMPONENT_TYPE_SHADER_VTXTEX        = 301;
-    COMPONENT_TYPE_SHADER_VTXNORTEX     = 302;
+    // Mesh
+    COMPONENT_TYPE_MESH                 = 299;
+
+    // Model : 300+
+    COMPONENT_TYPE_MODEL_START          = 300;
+    COMPONENT_TYPE_MODEL_PLAYER         = 301;
+    COMPONENT_TYPE_MODEL_MONSTER        = 302;
+
+    // Shader : 400+
+    COMPONENT_TYPE_SHADER_START         = 400;
+    COMPONENT_TYPE_SHADER_VTXTEX        = 401;
+    COMPONENT_TYPE_SHADER_VTXNORTEX     = 402;
+    COMPONENT_TYPE_SHADER_VTXMESH       = 403;
+
 
     // Client ComponentID
     COMPONENT_TYPE_CLIENT_START         = 1000;

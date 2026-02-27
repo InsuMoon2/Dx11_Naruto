@@ -23,6 +23,7 @@
 #include "RemotePlayer.h"
 #include "ResourceLoader.h"
 #include "Terrain.h"
+#include "Model.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -121,6 +122,7 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<BehaviorTree>(staticLevel);
     GAME->Register_ComponentFactory<PlayerController>(staticLevel);
     GAME->Register_ComponentFactory<AIController>(staticLevel);
+    //GAME->Register_ComponentFactory<Model>(staticLevel);
 
     /* GameObject */
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PLAYER,
@@ -163,6 +165,10 @@ HRESULT Loader::Loading_For_LogoLevel()
 
     if (FAILED(_resourceLoader->Load_TextureTable(
         TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"))))
+        return E_FAIL;
+
+    if (FAILED(_resourceLoader->Load_ModelTable(
+        TEXT("../../Client/Bin/Resources/Data/json/ModelTable.json"))))
         return E_FAIL;
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));

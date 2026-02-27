@@ -7,6 +7,7 @@
 
 #include "Texture.h"
 #include "Shader.h"
+#include "Model.h"
 #include "VIBuffer_Rect.h"
 
 #include "NetworkManager.h"
@@ -35,9 +36,8 @@ HRESULT Player::Initialize(void* arg)
 
     _transformCom->Set_LocalPosition(0.f, 0.f, -5.f);
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXTEX, _shaderCom), E_FAIL);
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TEXTURE_PLAYER, _textureCom), E_FAIL);
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXMESH, _shaderCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_PLAYER, _model), E_FAIL);
 
     return S_OK;
 }
@@ -71,23 +71,14 @@ HRESULT Player::Render()
 {
     Character::Render();
 
-    Matrix worldMatrix = _transformCom->Get_WorldMatrix();
-    _shaderCom->Bind_Matrix("g_WorldMatrix", &worldMatrix);
-    GAME->Bind_TransformMatrix(ETransformState::View, _shaderCom, "g_ViewMatrix");
-    GAME->Bind_TransformMatrix(ETransformState::Proj, _shaderCom, "g_ProjMatrix");
-
-    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureCom->Get_CurrentIndex()), E_FAIL);
-
     CHECK_FAILED(_shaderCom->Begin(0), E_FAIL);
-    CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
-    CHECK_FAILED(_bufferCom->Render(), E_FAIL);
+    CHECK_FAILED(_model->Render(), E_FAIL);
 
     return S_OK;
 }
 
 void Player::Sync(const Protocol::ObjectInfo& info)
 {
-    // TODO : Rotation도 추가 예정?
     _transformCom->Set_LocalPosition(info.pos().x(), info.pos().y(), info.pos().z());
 }
 
@@ -97,6 +88,42 @@ HRESULT Player::Ready_Components()
 
 
     return S_OK;
+}
+
+HRESULT Player::Bind_ShaderResources()
+{
+    Matrix worldMatrix = _transformCom->Get_WorldMatrix();
+    _shaderCom->Bind_Matrix("g_WorldMatrix", &worldMatrix);
+    _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
+    _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
+
+    GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
+
+    CHECK_FAILED(Bind_Lights(), E_FAIL);
+
+    return S_OK;
+}
+
+HRESULT Player::Bind_Lights()
+{
+    const FLightDesc* lightDesc = GAME->Get_LightDesc(0);
+
+    FLightDesc defaultLight;
+    if (!lightDesc)
+    {
+        defaultLight.direction = Vec4(0.f, -1.f, 1.f, 0.f);
+        defaultLight.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
+        defaultLight.ambient = Vec4(0.4f, 0.4f, 0.4f, 1.f);
+        defaultLight.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+        lightDesc = &defaultLight;
+    }
+
+    CHECK_NULL(lightDesc, E_FAIL);
+
+    _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Vec4));
 }
 
 shared_ptr<GameObject> Player::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

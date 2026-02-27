@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
+#include "Model.h"
 
 Monster::Monster(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
@@ -61,17 +62,32 @@ HRESULT Monster::Render()
 {
     Character::Render();
 
-    Matrix worldMatrix = _transformCom->Get_WorldMatrix();
-    _shaderCom->Bind_Matrix("g_WorldMatrix", &worldMatrix);
-    _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
-    _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
-
-    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureCom->Get_CurrentIndex()), E_FAIL);
     CHECK_FAILED(_shaderCom->Begin(0), E_FAIL);
-    CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
-    CHECK_FAILED(_bufferCom->Render(), E_FAIL);
+    CHECK_FAILED(_model->Render(), E_FAIL);
 
     return S_OK;
+}
+
+HRESULT Monster::Bind_Lights()
+{
+    const FLightDesc* lightDesc = GAME->Get_LightDesc(0);
+
+    FLightDesc defaultLight;
+    if (!lightDesc)
+    {
+        defaultLight.direction = Vec4(0.f, -1.f, 1.f, 0.f);
+        defaultLight.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
+        defaultLight.ambient = Vec4(0.4f, 0.4f, 0.4f, 1.f);
+        defaultLight.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+        lightDesc = &defaultLight;
+    }
+
+    CHECK_NULL(lightDesc, E_FAIL);
+
+    _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Vec4));
 }
 
 json Monster::To_Json() const
@@ -110,10 +126,22 @@ HRESULT Monster::Ready_Components()
 
     _transformCom->Set_LocalPosition(0.f, 0.f, -5.f);
 
-    // Temp : 렌더링
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXTEX, _shaderCom), E_FAIL);
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TEXTURE_MONSTER, _textureCom), E_FAIL);
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXMESH, _shaderCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_MONSTER, _model), E_FAIL);
+
+    return S_OK;
+}
+
+HRESULT Monster::Bind_ShaderResources()
+{
+    Matrix worldMatrix = _transformCom->Get_WorldMatrix();
+    _shaderCom->Bind_Matrix("g_WorldMatrix", &worldMatrix);
+    _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
+    _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
+
+    GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
+
+    CHECK_FAILED(Bind_Lights(), E_FAIL);
 
     return S_OK;
 }

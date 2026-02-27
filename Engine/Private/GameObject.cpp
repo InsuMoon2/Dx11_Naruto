@@ -103,7 +103,7 @@ HRESULT GameObject::Render()
     if (_isDestroyed)
         return E_FAIL;
 
-
+    CHECK_FAILED(Bind_ShaderResources(), E_FAIL);
 
     return S_OK;
 }
@@ -144,6 +144,12 @@ void GameObject::From_Json(const json& data)
     }
 
     // 컴포넌트 로드는 Prefab_Manager에서 세팅하기
+}
+
+HRESULT GameObject::Bind_ShaderResources()
+{
+
+    return S_OK;
 }
 
 shared_ptr<Component> GameObject::Get_Component(uint32 id)

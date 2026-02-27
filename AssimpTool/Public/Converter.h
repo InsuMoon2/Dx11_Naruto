@@ -15,6 +15,8 @@ private:
     shared_ptr<Assimp::Importer> _importer;
     const aiScene*               _scene = nullptr;
 
+
+
 public:
     static unique_ptr<Converter> Create();
 

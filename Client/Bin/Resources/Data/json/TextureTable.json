@@ -7,18 +7,6 @@
             "count": 2
         },
         {
-            "id": "COMPONENT_TYPE_TEXTURE_PLAYER",
-            "level": "Static",
-            "path": "../../Client/Bin/Resources/Textures/Clip_Icon0.png",
-            "count": 1
-        },
-        {
-            "id": "COMPONENT_TYPE_TEXTURE_MONSTER",
-            "level": "Static",
-            "path": "../../Client/Bin/Resources/Textures/Clip_Icon1.png",
-            "count": 1
-        },
-        {
             "id": "COMPONENT_TYPE_TEXTURE_TERRAIN",
             "level": "Static",
             "path": "../../Client/Bin/Resources/Textures/Terrain/Tile%d.dds",
@@ -41,6 +29,18 @@
             "level": "Static",
             "path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle_Text%d.png",
             "count": 3
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_PLAYER",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
+            "count": 2
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_MONSTER",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
+            "count": 2
         }
     ]
 }

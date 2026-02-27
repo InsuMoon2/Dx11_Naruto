@@ -64,6 +64,12 @@ HRESULT Character::Render()
     return S_OK;
 }
 
+HRESULT Character::Bind_Lights()
+{
+
+    return S_OK;
+}
+
 HRESULT Character::Ready_Components()
 {
     _transformCom->Set_LocalPosition(0.f, 0.f, -5.f);

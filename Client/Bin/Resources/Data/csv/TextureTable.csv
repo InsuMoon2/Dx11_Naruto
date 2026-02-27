@@ -1,8 +1,8 @@
 Type,Id,Path,Count,Level,Extra
 Texture,COMPONENT_TYPE_TEXTURE_DEFAULT,../../Client/Bin/Resources/Textures/Default%d.jpg,2,Logo,
-Texture,COMPONENT_TYPE_TEXTURE_PLAYER,../../Client/Bin/Resources/Textures/Clip_Icon0.png,1,Static,
-Texture,COMPONENT_TYPE_TEXTURE_MONSTER,../../Client/Bin/Resources/Textures/Clip_Icon1.png,1,Static,
 Texture,COMPONENT_TYPE_TEXTURE_TERRAIN,../../Client/Bin/Resources/Textures/Terrain/Tile%d.dds,1,Static,
 Texture,COMPONENT_TYPE_TEXTURE_MAIN_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle%d.png,2,Static,
 Texture,COMPONENT_TYPE_TEXTURE_MAIN_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle_Logo.png,1,Static,
 Texture,COMPONENT_TYPE_TEXTURE_MAIN_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle_Text%d.png,3,Static,
+Texture,COMPONENT_TYPE_TEXTURE_PLAYER,../../Client/Bin/Resources/Textures/Clip_Icon%d.png,2,Static,
+Texture,COMPONENT_TYPE_TEXTURE_MONSTER,../../Client/Bin/Resources/Textures/Clip_Icon%d.png,2,Static,

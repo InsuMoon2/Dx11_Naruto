@@ -13,6 +13,13 @@
             "path": "../../Client/Bin/Shaders/Shader_VtxNorTex.hlsl",
             "count": 1,
             "type": "VtxNorTex"
+        },
+        {
+            "id": "COMPONENT_TYPE_SHADER_VTXMESH",
+            "level": "Static",
+            "path": "../../Client/Bin/Shaders/Shader_VtxMesh.hlsl",
+            "count": 1,
+            "type": "VtxMesh"
         }
     ]
 }

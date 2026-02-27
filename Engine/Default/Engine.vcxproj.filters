@@ -164,8 +164,19 @@
     <ClInclude Include="..\Public\Light.h">
       <Filter>01. Utility\08. Lights</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Light_Manager.h" />
-    <ClInclude Include="..\Public\Asset_Manager.h" />
+    <ClInclude Include="..\Public\Asset_Manager.h">
+      <Filter>95. Manager\07. Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light_Manager.h">
+      <Filter>95. Manager\06. Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Vertex_Struct.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mesh.h">
+      <Filter>01. Utility\04. Component\05. Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -315,6 +326,12 @@
     <Filter Include="95. Manager\07. Asset">
       <UniqueIdentifier>{5ea4a05e-533b-449f-8c9f-64c3ac898179}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\04. Component\05. Mesh">
+      <UniqueIdentifier>{64a4bec6-1c43-4c2c-8d35-5fa5811305ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\04. Model">
+      <UniqueIdentifier>{cf9118a9-f19b-42de-928a-89d86b473076}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -462,8 +479,16 @@
     <ClCompile Include="..\Private\Light.cpp">
       <Filter>01. Utility\08. Lights</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Light_Manager.cpp" />
-    <ClCompile Include="..\Private\Asset_Manager.cpp" />
+    <ClCompile Include="..\Private\Asset_Manager.cpp">
+      <Filter>95. Manager\07. Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light_Manager.cpp">
+      <Filter>95. Manager\06. Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mesh.cpp">
+      <Filter>01. Utility\04. Component\05. Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

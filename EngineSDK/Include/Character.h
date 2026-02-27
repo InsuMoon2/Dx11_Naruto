@@ -35,6 +35,8 @@ public:
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
 
+    virtual HRESULT Bind_Lights();
+
 protected:
     virtual HRESULT Ready_Components();
 

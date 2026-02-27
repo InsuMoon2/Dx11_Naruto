@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "RenderTarget.h"
+#include <wincodec.h>
+#pragma comment(lib, "windowscodecs.lib")
 
 RenderTarget::RenderTarget()
 {
@@ -117,6 +119,60 @@ void RenderTarget::UnbindAll()
     _context->OMSetRenderTargets(1, &nullRTV, nullptr);
 
     // 백버퍼 복원은 Graphic_Device에서 처리 ㄱㄱ
+}
+
+HRESULT RenderTarget::Save_To_File(const wstring& outputPath)
+{
+    // Staging 텍스처 생성
+
+    D3D11_TEXTURE2D_DESC stagingDesc = {};
+
+    stagingDesc.Width = _width;
+    stagingDesc.Height = _height;
+    stagingDesc.MipLevels = 1;
+    stagingDesc.ArraySize = 1;
+    stagingDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    stagingDesc.SampleDesc.Count = 1;
+    stagingDesc.Usage = D3D11_USAGE_STAGING;
+    stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+
+    ComPtr<ID3D11Texture2D> stagingTex;
+    CHECK_FAILED(_device->CreateTexture2D(&stagingDesc, nullptr, stagingTex.GetAddressOf()), E_FAIL);
+
+    _context->CopyResource(stagingTex.Get(), _texture.Get());
+    D3D11_MAPPED_SUBRESOURCE mapped = {};
+    CHECK_FAILED(_context->Map(stagingTex.Get(), 0, D3D11_MAP_READ, 0, &mapped), E_FAIL);
+
+    // WIC PNG 저장
+    IWICImagingFactory* wicFactory = nullptr;
+    CoCreateInstance(CLSID_WICImagingFactory, nullptr,
+        CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&wicFactory));
+
+    IWICStream* stream = nullptr;
+    wicFactory->CreateStream(&stream);
+    stream->InitializeFromFilename(outputPath.c_str(), GENERIC_WRITE);
+
+    IWICBitmapEncoder* encoder = nullptr;
+    wicFactory->CreateEncoder(GUID_ContainerFormatPng, nullptr, &encoder);
+    encoder->Initialize(stream, WICBitmapEncoderNoCache);
+
+    IWICBitmapFrameEncode* frame = nullptr;
+    encoder->CreateNewFrame(&frame, nullptr);
+    frame->Initialize(nullptr);
+    frame->SetSize(_width, _height);
+
+    WICPixelFormatGUID fmt = GUID_WICPixelFormat32bppRGBA;
+    frame->SetPixelFormat(&fmt);
+    frame->WritePixels(_height, mapped.RowPitch,
+        mapped.RowPitch * _height, (BYTE*)mapped.pData);
+    frame->Commit();
+    encoder->Commit();
+
+    _context->Unmap(stagingTex.Get(), 0);
+    frame->Release();  encoder->Release();
+    stream->Release(); wicFactory->Release();
+
+    return S_OK;
 }
 
 void RenderTarget::Release()

@@ -2,6 +2,10 @@
 
 #include "Character.h"
 
+NS_BEGIN(Engine)
+class Model;
+NS_END
+
 NS_BEGIN(Client)
 
 class Player : public Character
@@ -29,8 +33,12 @@ public: /* Network */
 
 protected:
     HRESULT Ready_Components() override;
+    HRESULT Bind_ShaderResources() override;
+    HRESULT Bind_Lights() override;
 
 private:
+    Shared<Model>   _model;
+
     uint64 _networkId = 0;
 
 public:

@@ -4,6 +4,7 @@
 
 NS_BEGIN(Engine)
 class BehaviorTree;
+class Model;
 NS_END
 
 NS_BEGIN(Client)
@@ -30,18 +31,23 @@ public:
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
 
+    HRESULT Bind_Lights() override;
+
 public:
     json    To_Json() const override;
     void    From_Json(const json& data) override;
 
 protected:
     HRESULT Ready_Components() override;
+    HRESULT Bind_ShaderResources() override;
 
 private:
+    Shared<Model>               _model{};
+
     Shared<CombatStat>          _combatStat{};
     Shared<MovementComponent>   _movement{};
     Shared<AIController>        _aiController{};
-    Shared<BehaviorTree>            _behavior;
+    Shared<BehaviorTree>        _behavior{};
 
 
 public:

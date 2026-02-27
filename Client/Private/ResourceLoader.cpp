@@ -8,6 +8,7 @@
 #include <magic_enum/magic_enum.hpp>
 
 #include "Shader.h"
+#include "Model.h"
 
 ResourceLoader::ResourceLoader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -80,6 +81,59 @@ HRESULT ResourceLoader::Load_TerrainTable(const wstring& tablePath)
         CHECK_FAILED(Load_Terrains(root["Terrain"]), E_FAIL);
 
     LOG_INFO("Loaded: {}", Utils::ToString(tablePath));
+
+    return S_OK;
+}
+
+HRESULT ResourceLoader::Load_ModelTable(const wstring& tablePath)
+{
+    ifstream file(tablePath);
+    if (!file.is_open())
+    {
+        LOG_ERROR("Failed to open: {}", Utils::ToString(tablePath));
+        return E_FAIL;
+    }
+
+    json root;
+    file >> root;
+    file.close();
+
+    if (root.contains("Model"))
+        CHECK_FAILED(Load_Model(root["Model"]), E_FAIL);
+
+    LOG_INFO("Loaded : {}", Utils::ToString(tablePath));
+
+    return S_OK;
+}
+
+HRESULT ResourceLoader::Load_Model(const json& data)
+{
+    for (const auto& item : data)
+    {
+        string idStr = item["id"];
+        string pathStr = item["path"];
+        string levelStr = item.value("level", "Static");
+
+        uint32 typeId = Get_ComponentID_From_String(idStr);
+        uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+        if (typeId == 0)
+        {
+            LOG_WARN("Unknown Model ID: {}", idStr);
+            continue;
+        }
+
+        GAME->Register_ComponentFactory(
+            typeId, [pathStr](ComPtr<Device> device, ComPtr<DeviceContext> context)
+            {
+                return Model::Create(device, context, pathStr);
+            },
+            Utils::ToWString(idStr));
+
+        GAME->Register_ComponentFactory_Prototype(typeId, levelIndex);
+
+        LOG_INFO("Model registered: {}", idStr);
+    }
 
     return S_OK;
 }
@@ -252,12 +306,17 @@ ResourceLoader::FInputLayoutInfo ResourceLoader::Get_InputLayout(const string& n
 {
     if (name == "VtxTex")
     {
-        return { FVertexTex::Vertex_Layout, FVertexTex::Vertex_Layout_Count };
+        return { FVertexTex::Elements, FVertexTex::numElements };
     }
 
     if (name == "VtxNorTex")
     {
-        return { FVertexNormalTex::Vertex_Normaltex_Layout, FVertexNormalTex::Vertex_Normaltex_Layout_Count };
+        return { FVertexNormalTex::Elements, FVertexNormalTex::numElements };
+    }
+
+    if (name == "VtxMesh")
+    {
+        return { FVertexMesh::Elements, FVertexMesh::numElements };
     }
 
     return { nullptr, 0 };

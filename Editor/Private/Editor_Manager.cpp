@@ -48,6 +48,12 @@ void Editor_Manager::Update(float timeDelta)
     for (auto& [key, window] : _windows)
     {
         if (window && window->IsActive())
+            window->Pre_Render();
+    }
+
+    for (auto& [key, window] : _windows)
+    {
+        if (window && window->IsActive())
         {
             window->Update(timeDelta);
             window->OnGui();

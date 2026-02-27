@@ -86,6 +86,7 @@ HRESULT Camera_Target::Render()
 {
     Camera::Render();
 
+
     return S_OK;
 }
 

@@ -45,12 +45,12 @@ HRESULT Level_Gameplay::Initialize()
     //    .Scale({ 1.f, 1.f, 1.f })
     //    .Spawn();
 
-    //auto monster = Spawn_Helper::Prefab("Monster1")
-    //    .AtLevel(ETOI(ELevelType::GamePlay))
-    //    .InLayer(TEXT("Layer_Builder"))
-    //    .Position({ 1.f, 1.f, -5.f })
-    //    .Scale({ 1.5f, 1.5f, 1.5f })
-    //    .Spawn();
+    auto monster = Spawn_Helper::Prefab("Monster1")
+        .AtLevel(ETOI(ELevelType::GamePlay))
+        .InLayer(TEXT("Layer_Builder"))
+        .Position({ 1.f, 1.f, -5.f })
+        .Scale({ 1.5f, 1.5f, 1.5f })
+        .Spawn();
 
     // 서버 연결 없으면 플레이어 스폰
     if (!NetworkManager::GetInstance()->IsConnected())
@@ -123,14 +123,14 @@ HRESULT Level_Gameplay::Ready_Layer_Camera(const wstring& layerTag)
         Camera_Target::FCameraTargetDesc desc;
         desc.speedPerSec = 10.f;
         desc.rotationPerSec = 90.f;
-        desc.eye = Vec3(0.f, 15.f, -15.f);
+        desc.eye = Vec3(0.f, 10.f, -10.f);
         desc.at = Vec3(0.f, 0.f, 0.f);
         desc.fovY = XMConvertToRadians(60.f);
         desc.nearZ = 0.1f;
         desc.farZ = 1000.f;
         desc.scale = Vec3(1.f, 1.f, 1.f);
 
-        desc.offset = Vec3(0.f, 10.f, -10.f);
+        desc.offset = Vec3(0.f, 2.f, -2.f);
         desc.followSpeed = 5.f;
 
         CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay),
@@ -187,7 +187,6 @@ void Level_Gameplay::Spawn_LocalPlayer()
         .AtLevel(ETOI(ELevelType::GamePlay))
         .Position(spawnPos)
         .InLayer(TEXT("Layer_Builder"))
-        .Scale({ 1.f, 1.f, 1.f })
         .Spawn();
 
     CHECK_NULL(player);

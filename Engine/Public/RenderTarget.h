@@ -24,6 +24,8 @@ public:
     uint32 GetWidth() const { return _width; }
     uint32 GetHeight() const { return _height; }
 
+    HRESULT Save_To_File(const wstring& outputPath);
+
 private:
     void Release();
 
