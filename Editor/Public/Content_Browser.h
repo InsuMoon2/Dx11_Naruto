@@ -30,9 +30,7 @@ public:
     void    OnGui() override;
 
 public:
-    // 썸네일 세팅
-    void    Load_AllThumbnails();
-    void    Load_Thumbnail(const string& key, const wstring& thumb);
+    void    Load_Thumbnail(const string& guid);
 
 private:
     void    Refresh_Resources();
@@ -54,10 +52,6 @@ private:
 
     FFolderNode*    Find_FolderNode(FFolderNode& node, const wstring& path);
     void            Expand_PathTo(const wstring& targetPath);
-
-    
-    
-    
 
 private:
     FFolderNode          _rootFolder;
@@ -84,6 +78,7 @@ private:
 private: /* 썸네일 */
     map<string, ComPtr<ShaderResourceView>> _thumbnailCache;
 
+    set<string> _noThumbnailGuids;
 
 public:
     static shared_ptr<Content_Browser> Create();

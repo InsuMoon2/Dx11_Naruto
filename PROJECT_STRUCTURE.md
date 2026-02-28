@@ -1,7 +1,7 @@
 # Dx11_Naruto 프로젝트 구조
 
 > **AI 어시스턴트는 매 대화 시작 시 이 파일을 반드시 읽을 것!**
-> 마지막 갱신: 2026-02-26
+> 마지막 갱신: 2026-02-28
 
 ---
 
@@ -93,12 +93,14 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Object_Manager` | 레벨별 GameObject/Layer 저장, 생명주기(Update/Render) |
 | `Prototype_Manager` | 프로토타입 등록/클론 (Component + GameObject) |
 | `Prefab_Manager` | JSON 기반 프리팹 저장/로드/인스턴스화 |
+| `Asset_Manager` | GUID 기반 에셋 메타(.meta) 관리, 경로↔GUID 변환, 타입별 목록 조회 |
 | `Renderer` | 렌더 그룹 관리 (Priority, NonBlend, Blend, UI) |
 | `PipeLine` | View/Proj 행렬, 카메라 위치 바인딩 |
 | `Timer_Manager` / `Timer` | 프레임 델타 타임 계산 |
 | `Input_Manager` | 키 입력 (`INPUT` 매크로) |
 | `Event_Manager` | 이벤트 큐 (Create/Delete Object) |
 | `Component_Factory` | 컴포넌트 팩토리 (타입ID → Creator 등록/생성) |
+| `GameObject_Factory` | GameObject 타입별 팩토리 (`REGISTER_GAMEOBJECT` 매크로, 이름/타입 기반 생성) |
 | `BTNode_Factory` | BT 노드 팩토리 |
 | `Camera_Manager` | 카메라 관리 (등록, 활성 카메라 전환, Toggle) |
 | `Light_Manager` | 라이트 관리 (Add/Get/Clear) |
@@ -124,6 +126,8 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `VIBuffer` | 정점/인덱스 버퍼 기반 |
 | `VIBuffer_Rect` | 사각형 (UI용) |
 | `VIBuffer_Terrain` | 하이트맵 기반 지형 메쉬 |
+| `Mesh` | Assimp aiMesh 기반 메쉬 (VIBuffer 상속, VTXMESH 정점 사용) |
+| `Model` | Assimp 모델 로드 컴포넌트 (다수 Mesh 소유, 렌더) |
 | `Transform` | 위치/회전/스케일, 로컬/월드, 부모-자식 계층 |
 | `RenderTarget` | 렌더 타겟 텍스처 |
 
@@ -156,6 +160,14 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Utils` | wstring ↔ string 변환 |
 | `Delegate.h` | 이벤트 델리게이트 시스템 |
 | `AnimNotify_Factory` | 애니메이션 노티파이 팩토리 |
+| `Vertex_Struct.h` | 정점 구조체 정의 (`VTXTEX`, `VTXNORTEX`, `VTXMESH`) + InputLayout |
+| `Engine_Define.h` | 엔진 공통 정의 |
+| `Engine_Enum.h` | 엔진 열거형 |
+| `Engine_Function.h` | 엔진 유틸 함수 |
+| `Engine_Macro.h` | 엔진 매크로 모음 |
+| `Engine_Struct.h` | 엔진 구조체 (`FLightDesc` 등) |
+| `Engine_Typedef.h` | 타입 별칭 |
+| `Enum.pb.h` / `Struct.pb.h` / `Protocol.pb.h` | Protobuf 코드젠 (ComponentID, ObjectType, 패킷 등) |
 
 ---
 
@@ -173,6 +185,15 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Camera_Free` | 자유 카메라 |
 | `Camera_Target` | 타겟 추적 카메라 (오프셋 + 스무딩 팔로우) |
 | `Background` | UI 배경 |
+
+### 클라이언트 정의 헤더
+
+| 파일 | 설명 |
+|---|---|
+| `Client_Defines.h` | Client 네임스페이스 공통 정의 |
+| `Client_Enum.h` | Client 전용 열거형 |
+| `Client_Macro.h` | Client 전용 매크로 |
+| `Protocol_Wrapper.h` | Protobuf 헤더 래퍼 (pch 격리용) |
 
 ### 컴포넌트
 
@@ -216,11 +237,11 @@ GameServer (EXE) ── ServerCore + Protobuf
 
 | 파일 | 설명 |
 |---|---|
-| `Game.cpp` | WinMain, 메인 루프, 메시지 처리 |
-| `MainApp.cpp` | Initialize/Update/Render 루프 (`Client::MainApp` 위임) |
-
-> [!WARNING]
-> Game에도 `Client_PacketHandler`와 `NetworkManager` 복사본이 있었음 — Client로 이동 필요한 이슈 있음
+| `Game.cpp` (Default/) | WinMain, 메인 루프, 메시지 처리 |
+| `MainApp.h/cpp` | Initialize/Update/Render 루프 (`Client::MainApp` 위임) |
+| `Game_Defines.h` | Game 프로젝트 공통 정의 |
+| `Game_Enum.h` | Game 전용 열거형 |
+| `Game_Macro.h` | Game 전용 매크로 |
 
 ---
 
@@ -270,6 +291,16 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Notification_Manager` | 토스트 알림 |
 | `Editor_Logger` | spdlog 에디터 통합 |
 | `PlayerSession_Manager` | 플레이어 세션 에디터 관리 |
+| `IconsFontAwesome6.h` | FontAwesome 6 아이콘 유니코드 상수 |
+
+### 에디터 정의 헤더
+
+| 파일 | 설명 |
+|---|---|
+| `Editor_Define.h` | 에디터 공통 정의 |
+| `Editor_Enum.h` | 에디터 열거형 |
+| `Editor_Macro.h` | 에디터 매크로 |
+| `Editor_Struct.h` | 에디터 구조체 |
 
 ---
 
@@ -425,12 +456,13 @@ Client/Bin/Resources/
 
 ---
 
-## 정점 구조체
+## 정점 구조체 (Vertex_Struct.h)
 
 | 이름 | 구성 | 용도 |
 |---|---|---|
 | `VTXTEX` | Position(Vec3) + TexCoord(Vec2) | UI, 단순 텍스처 |
-| `VTXNORTEX` | Position(Vec3) + Normal(Vec3) + TexCoord(Vec2) | 라이팅 지원 메쉬 |
+| `VTXNORTEX` | Position(Vec3) + Normal(Vec3) + TexCoord(Vec2) | 라이팅 지원 메쉬 (Terrain 등) |
+| `VTXMESH` | Position(Vec3) + Normal(Vec3) + Tangent(Vec3) + TexCoord(Vec2) | 3D 모델 메쉬 (Assimp 로드) |
 
 ---
 
@@ -514,10 +546,11 @@ enum PacketID {
 
 ## 미해결 이슈
 
-- [ ] `Client_PacketHandler` → Game에서 Client 프로젝트로 이동 필요
+- [x] `Client_PacketHandler` → Client 프로젝트로 이동 완료
 - [ ] `Handle_S_Move`에서 ObjectManager 연동 (다른 플레이어 위치 갱신)
 - [ ] `Handle_S_AddObject` / `Handle_S_RemoveObject` 클라이언트 구현
 - [ ] 이동 동기화 패킷 throttle (매 프레임 전송 → 주기적 전송)
+- [ ] `Model` 컴포넌트 GENERATED_COMPONENT 매크로 정식 적용 (현재 주석 처리됨)
 
 ---
 

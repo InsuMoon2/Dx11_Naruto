@@ -42,8 +42,6 @@ void Content_Browser::Initialize()
     // 경로 로드
     Load_Settings();
 
-    // 썸네일 로드
-    Load_AllThumbnails();
 }
 
 void Content_Browser::Update(float timeDelta)
@@ -129,6 +127,8 @@ void Content_Browser::Refresh_Resources()
 {
     wstring savedPath = _currentFolder ? _currentFolder->fullPath : L"";
     _rootFolder = {};
+
+    _noThumbnailGuids.clear();
 
     fs::path rootPath = TEXT("../../Client/Bin/Resources");
 
@@ -271,10 +271,14 @@ void Content_Browser::Draw_AssetView()
             // 아이콘
             ImGui::PushID(fileName.c_str());
 
-            // TODO : TextButton 썸네일 테스트 후 지우기
-            //ImGui::Button(pureName.c_str(), ImVec2(_thumbnailSize, _thumbnailSize));
-
             string guid = GAME->Find_AssetGUID(filePath);
+
+            if (!guid.empty()
+                && !_thumbnailCache.contains(guid)
+                && !_noThumbnailGuids.contains(guid))
+            {
+                Load_Thumbnail(guid);
+            }
 
             auto it = _thumbnailCache.find(guid);
 
@@ -620,61 +624,48 @@ void Content_Browser::Expand_PathTo(const wstring& targetPath)
     _expandedFolders.insert(root.wstring());
 }
 
-void Content_Browser::Load_AllThumbnails()
+void Content_Browser::Load_Thumbnail(const string& guid)
 {
-    _thumbnailCache.clear();
-
-    fs::path rootPath = "../../Client/Bin/Resources";
-
-    for (auto& entry : fs::recursive_directory_iterator(rootPath))
-    {
-        if (!entry.is_regular_file())
-            continue;
-
-        wstring ext = entry.path().extension().wstring();
-        if (ext == L".png" || ext == L".jpg" || ext == L".dds")
-        {
-            // 폴더가 Thumbnails이면 스킵 (프리팹 썸네일은 아래에서 처리)
-            if (entry.path().parent_path().filename() == L"Thumbnails")
-                continue;
-
-            wstring filePath = entry.path().wstring();
-            string guid = GAME->Find_AssetGUID(filePath);
-
-            if (!guid.empty())
-                Load_Thumbnail(guid, filePath);
-        }
-    }
-
-    fs::path thumbDir = "../../Client/Bin/Resources/Thumbnails";
-    fs::create_directories(thumbDir);
-
-    for (auto& entry : fs::directory_iterator(thumbDir))
-    {
-        if (entry.path().extension() != L".png")
-            continue;
-
-        string guid = entry.path().stem().string();
-
-        Load_Thumbnail(guid, entry.path().wstring());
-    }
-
-    LOG_INFO("Thumbnails cached: {}", _thumbnailCache.size());
-}
-
-void Content_Browser::Load_Thumbnail(const string& key, const wstring& thumb)
-{
-    if (_thumbnailCache.contains(key))
+    if (_thumbnailCache.contains(guid))
+        return;
+    
+    if (_noThumbnailGuids.contains(guid))
         return;
 
-    auto texture = Texture::Create(
-        GAME->Get_Device(), GAME->Get_Context(), thumb, 1);
-
-    if (texture && !texture->Get_SRVs().empty())
+    wstring absPath = GAME->Resolve_AssetPath(guid);
+    bool isImage = false;
+    if (!absPath.empty())
     {
-        _thumbnailCache[key] = texture->Get_SRVs()[0];
+        wstring ext = fs::path(absPath).extension().wstring();
+        isImage = (ext == L".png" || ext == L".jpg" || ext == L".dds");
     }
 
+    wstring loadPath;
+    if (isImage)
+    {
+        loadPath = absPath;
+    }
+    else
+    {
+        fs::path thumbPath = fs::path("../../Client/Bin/Resources/Thumbnails") / (guid + ".png");
+        if (fs::exists(thumbPath))
+            loadPath = thumbPath.wstring();
+    }
+
+    if (loadPath.empty())
+    {
+        _noThumbnailGuids.insert(guid);
+        return;
+    }
+
+    auto texture = Texture::Create(
+        GAME->Get_Device(), GAME->Get_Context(), loadPath, 1);
+
+    if (texture && !texture->Get_SRVs().empty())
+        _thumbnailCache[guid] = texture->Get_SRVs()[0];
+
+    else
+        _noThumbnailGuids.insert(guid);
 }
 
 shared_ptr<Content_Browser> Content_Browser::Create()

@@ -28,7 +28,11 @@ HRESULT Texture::Initialize_Prototype(const wstring& texturePath, uint32 numSRVs
     for (uint32 i = 0; i < numSRVs; i++)
     {
         wchar_t fullPath[MAX_PATH] = {};
-        wsprintf(fullPath, texturePath.c_str(), i);
+
+        if (numSRVs == 1)
+            wcscpy_s(fullPath, texturePath.c_str());
+        else
+            wsprintf(fullPath, texturePath.c_str(), i);
 
         // 확장자 확인
         wchar_t ext[MAX_PATH] = {};
