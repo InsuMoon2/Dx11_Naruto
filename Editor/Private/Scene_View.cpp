@@ -80,7 +80,11 @@ void Scene_View::Update_CameraLerp(float timeDelta)
         return;
 
     auto camera = GAME->Get_ActiveCamera();
-    CHECK_NULL(camera);
+    if (!camera)
+    {
+        _isCameraLerping = false; 
+        return;
+    }
 
     auto camTransform = camera->Get_Component<Transform>();
     CHECK_NULL(camTransform);

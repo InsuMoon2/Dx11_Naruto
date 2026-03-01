@@ -19,6 +19,9 @@ HRESULT Graphic_Device::Initialize(HWND hWnd, EWinMode eWinMode, uint32 winSizeX
     _width  = winSizeX;
     _height = winSizeY;
 
+    _originalWidth = winSizeX;
+    _originalHeight = winSizeY;
+
 #ifdef _DEBUG
     //flag = D3D11_CREATE_DEVICE_DEBUG;
     flag = 0;
@@ -138,7 +141,6 @@ void Graphic_Device::BindBackBuffer()
 
 HRESULT Graphic_Device::Resize(uint32 width, uint32 height)
 {
-
     _width = width;
     _height = height;
 

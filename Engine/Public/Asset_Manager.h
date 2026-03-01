@@ -33,13 +33,18 @@ public: /* .meta 관리 */
     // 에셋 타입별 목록 조회
     vector<const FAssetMeta*> Get_AssetByType(const string& type);
 
-private:
-    bool    Load_Meta(const wstring& metaPath);
-    bool    Save_Meta(const wstring& metaPath, const FAssetMeta& meta);
-    string  Detect_AssetType(const wstring& filePath) const;
+    void                Update_AssetPath(const string& guid, const wstring& newFilePath);
+    void                Refresh_Cache();
 
-    void    Load_Cache();
-    void    Save_Cache();
+private:
+    bool                Load_Meta(const wstring& metaPath);
+    bool                Save_Meta(const wstring& metaPath, const FAssetMeta& meta);
+    string              Detect_AssetType(const wstring& filePath) const;
+
+    void                Load_Cache();
+    void                Save_Cache();
+
+    
 
 private:
     wstring                     _resourceRoot;

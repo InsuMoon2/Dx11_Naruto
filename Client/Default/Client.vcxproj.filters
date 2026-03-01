@@ -22,7 +22,7 @@
     <ClInclude Include="..\Public\Loader.h">
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_Logo.h">
+    <ClInclude Include="..\Public\Level_MainTitle.h">
       <Filter>01. Levels\01. Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Gameplay.h">
@@ -109,7 +109,7 @@
     <ClCompile Include="..\Private\Loader.cpp">
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Level_Logo.cpp">
+    <ClCompile Include="..\Private\Level_MainTitle.cpp">
       <Filter>01. Levels\01. Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Gameplay.cpp">

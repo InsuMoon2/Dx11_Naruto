@@ -2,7 +2,7 @@
     "Texture": [
         {
             "id": "COMPONENT_TYPE_TEXTURE_DEFAULT",
-            "level": "Logo",
+            "level": "MainTitle",
             "path": "../../Client/Bin/Resources/Textures/Default%d.jpg",
             "count": 2
         },
@@ -40,6 +40,12 @@
             "id": "COMPONENT_TYPE_TEXTURE_MONSTER",
             "level": "Static",
             "path": "../../Client/Bin/Resources/Textures/Clip_Icon%d.png",
+            "count": 2
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_LOADING",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadingScreen_%03d_BC.png",
             "count": 2
         }
     ]

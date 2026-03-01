@@ -29,6 +29,9 @@ public:
     float Get_ViewportWidth()   { return _width; }
     float Get_ViewportHeight()  { return _height; }
 
+    float Get_WindowWidth()     { return _originalWidth; }
+    float Get_WindowHeight()    { return _originalHeight; }
+
     HRESULT Resize(uint32 width, uint32 height);
 
 private:
@@ -45,6 +48,9 @@ private:
 
     float                       _width  = {};
     float                       _height = {};
+
+    float                       _originalWidth = {};
+    float                       _originalHeight = {};
 
 public:
     static unique_ptr<Graphic_Device> Create(HWND hWnd, EWinMode eWinMode,

@@ -35,7 +35,7 @@ void Camera_Free::BeginPlay()
 {
     Camera::BeginPlay();
 
-    GAME->Set_ActiveCamera(GetSharedPtr<Camera>());
+    //GAME->Set_ActiveCamera(GetSharedPtr<Camera>());
 }
 
 void Camera_Free::Priority_Update(float timeDelta)

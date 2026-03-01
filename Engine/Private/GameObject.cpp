@@ -39,7 +39,10 @@ HRESULT GameObject::Initialize(void* arg)
     {
         FGameObjectDesc* desc = static_cast<FGameObjectDesc*>(arg);
 
-        // TODO : 게임 오브젝트 멤버를 채워넣어야 하면, 여기서 진행
+        if (!desc->name.empty())
+        {
+            _name = desc->name;
+        }
 
     }
     // 초기 스케일 보장

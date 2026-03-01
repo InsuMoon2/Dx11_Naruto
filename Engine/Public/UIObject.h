@@ -18,6 +18,7 @@ public:
         float posY = {};
         float sizeX = {};
         float sizeY = {};
+        float zOrder = 0.5f;
     };
 
 public:
@@ -43,6 +44,7 @@ protected:
 
 protected:
     float _posX{}, _posY{}, _sizeX{}, _sizeY{};
+    float _zOrder{};
 
     // 뷰포트 크기 (직교투영 계산용)
     float _viewportWidth{}, _viewportHeight{};

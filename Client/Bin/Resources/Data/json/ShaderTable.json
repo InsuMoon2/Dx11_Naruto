@@ -3,7 +3,7 @@
         {
             "id": "COMPONENT_TYPE_SHADER_VTXTEX",
             "level": "Static",
-            "path": "../../Client/Bin/Shaders/Shader_VtxTex.hlsl",
+            "path": "../../Client/Bin/Shaders/Shader_Vtxtex.hlsl",
             "count": 1,
             "type": "VtxTex"
         },

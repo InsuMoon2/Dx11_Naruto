@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "GameInstance.h"
 
 Texture::Texture(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -29,7 +30,7 @@ HRESULT Texture::Initialize_Prototype(const wstring& texturePath, uint32 numSRVs
     {
         wchar_t fullPath[MAX_PATH] = {};
 
-        if (numSRVs == 1)
+        if (numSRVs == 1 && texturePath.find(L"%d") == wstring::npos)
             wcscpy_s(fullPath, texturePath.c_str());
         else
             wsprintf(fullPath, texturePath.c_str(), i);
@@ -65,9 +66,18 @@ HRESULT Texture::Initialize(void* arg)
 
 json Texture::To_Json() const
 {
-    json j =Component::To_Json();
+    json j = Component::To_Json();
 
-    j["texture_path"] = Utils::ToString(_texturePath);
+    string guid = GAME->Find_AssetGUID(_texturePath);
+    if (!guid.empty())
+    {
+        j["texture_guid"] = guid;
+    }
+    else
+    {
+        j["texture_path"] = Utils::ToString(_texturePath);
+    }
+
     j["num_srvs"] = _numSRVs;
     j["current_index"] = _currentIndex;
 
@@ -81,18 +91,42 @@ void Texture::From_Json(const json& data)
     if (data.contains("current_index"))
         _currentIndex = data["current_index"].get<uint32>();
 
-    if (data.contains("texture_path"))
+    wstring loadPath = L"";
+
+    // 경로가 아닌, GUID 기반으로 로드 시도
+    if (data.contains("texture_guid"))
     {
-        wstring newPath = Utils::ToWString(data["texture_path"].get<string>());
+        string guid = data["texture_guid"].get<string>();
+        wstring resolvePath = GAME->Resolve_AssetPath(guid);
+
+        if (!resolvePath.empty())
+        {
+            loadPath = resolvePath;
+        }
+        else
+        {
+            LOG_ERROR("텍스처 로드 실패: GUID에 해당하는 에셋을 찾을 수 없음 - {}", guid);
+        }
+    }
+    // 경로 기반 로드 시도 (이전에 남아있던 데이터들 때문에)
+    else if(data.contains("texture_path"))
+    {
+        loadPath = Utils::ToWString(data["texture_path"].get<string>());
+    }
+
+    // 텍스처 초기화
+    if (!loadPath.empty())
+    {
         uint32 newCount = data.value("num_srvs", 1u);
 
-        if (_texturePath == newPath && _numSRVs == newCount && !_SRVs.empty())
+        // 이미 같은 텍스처 로드 시 스킵
+        if (_texturePath == loadPath && _numSRVs == newCount && !_SRVs.empty())
         {
-            LOG_INFO("Texture path match, skipping reload.");
+            LOG_INFO("이미 텍스처 로드 완료, 스킵");
             return;
         }
 
-        _texturePath = newPath;
+        _texturePath = loadPath;
         _numSRVs = newCount;
 
         _SRVs.clear();

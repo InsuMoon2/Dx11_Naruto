@@ -24,6 +24,7 @@ public:
     HRESULT Render();
 
 public:
+    HRESULT Ready_StaticLevel();
     HRESULT Ready_StartLevel(ELevelType startLevelID);
 
 private:

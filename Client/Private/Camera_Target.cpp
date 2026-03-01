@@ -41,7 +41,7 @@ void Camera_Target::BeginPlay()
 {
     Camera::BeginPlay();
 
-    //GAME->Set_ActiveCamera(GetSharedPtr<Camera>());
+    GAME->Set_ActiveCamera(GetSharedPtr<Camera>());
 
     GAME->Get_DelegateHub().OnPlayerSpawned.Add(
         this, &Camera_Target::Set_TargetTransform);

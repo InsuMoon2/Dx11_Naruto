@@ -28,7 +28,7 @@ public:
     void    Initialize_BT_Nodes();
 
 private: /* Loading Level */
-    HRESULT Loading_For_LogoLevel();
+    HRESULT Loading_For_Maintitle();
     HRESULT Loading_For_GamePlay();
 
 private:

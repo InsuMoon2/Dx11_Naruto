@@ -43,14 +43,14 @@ void InputComponent::Update_Input(float timeDelta)
 {
     _frame = {};
 
-    if (INPUT->KeyPress(KEY_TYPE::A)) _frame.moveX -= 1.f;
-    if (INPUT->KeyPress(KEY_TYPE::D)) _frame.moveX += 1.f;
-    if (INPUT->KeyPress(KEY_TYPE::S)) _frame.moveY -= 1.f;
     if (INPUT->KeyPress(KEY_TYPE::W)) _frame.moveY += 1.f;
+    if (INPUT->KeyPress(KEY_TYPE::S)) _frame.moveY -= 1.f;
+    if (INPUT->KeyPress(KEY_TYPE::A)) _frame.moveX += 1.f;
+    if (INPUT->KeyPress(KEY_TYPE::D)) _frame.moveX -= 1.f;
 
-    _frame.sprintPress = INPUT->KeyPress(KEY_TYPE::SHIFT);
-    _frame.sprintDown = INPUT->KeyDown(KEY_TYPE::SHIFT);
-    _frame.jumpDown = INPUT->KeyDown(KEY_TYPE::SPACE);
+    _frame.sprintPress  = INPUT->KeyPress(KEY_TYPE::SHIFT);
+    _frame.sprintDown   = INPUT->KeyDown(KEY_TYPE::SHIFT);
+    _frame.jumpDown     = INPUT->KeyDown(KEY_TYPE::SPACE);
 
     Vec2 mouseDelta = INPUT->GetMouseDelta();
     _frame.lookYaw = mouseDelta.x;

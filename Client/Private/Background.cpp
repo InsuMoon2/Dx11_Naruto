@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
+#include "Level_MainTitle.h"
 
 Background::Background(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject { device, context }
@@ -27,17 +28,14 @@ HRESULT Background::Initialize_Prototype()
 
 HRESULT Background::Initialize(void* arg)
 {
-    FBackgroundDesc desc{};
+    FBackgroundDesc* desc = static_cast<FBackgroundDesc*>(arg);
+    CHECK_NULL(desc, E_FAIL);
 
-    desc.speedPerSec = 1.f;
-    desc.rotationPerSec = 1.f;
-    desc.posX = 100.f;
-    desc.posY = 100.f;
-    desc.sizeX = 200.f;
-    desc.sizeY = 200.f;
+    _levelIndex = desc->levelIndex;
+    _textureIndex = desc->textureIndex;
+    _textureType = desc->textureType;
 
-    CHECK_FAILED(UIObject::Initialize(&desc), E_FAIL);
-
+    CHECK_FAILED(UIObject::Initialize(desc), E_FAIL);
     CHECK_FAILED(Ready_Components(), E_FAIL);
 
     return S_OK;
@@ -74,7 +72,7 @@ HRESULT Background::Render()
     __super::Bind_ShaderResource(_shaderCom, "g_ProjMatrix", ETransformState::Proj);
 
     // 텍스처 바인딩 (첫번째 텍스처 사용)
-    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 0), E_FAIL);
+    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureIndex), E_FAIL);
 
     CHECK_FAILED(_shaderCom->Begin(0), E_FAIL);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
@@ -85,8 +83,7 @@ HRESULT Background::Render()
 
 HRESULT Background::Ready_Components()
 {
-    CHECK_FAILED(Add_Component(ETOI(ELevelType::Logo),
-        Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, _textureCom), E_FAIL);
+    CHECK_FAILED(Add_Component(_textureType, _textureCom), E_FAIL);
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXTEX, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);

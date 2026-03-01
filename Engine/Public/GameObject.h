@@ -12,7 +12,7 @@ class ENGINE_DLL GameObject abstract : public Base
 public:
     struct FGameObjectDesc : public Transform::FTransformDesc
     {
-        uint32		iFlag = {};
+        wstring name = TEXT("");
     };
 
 public:

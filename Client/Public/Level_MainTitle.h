@@ -13,14 +13,15 @@ class Loader;
 enum class EMainTitle
 {
     BG_0, BG_1,
+    Logo,
     Text0, Text1, Text2
 };
 
-class Level_Logo final : public Level
+class Level_MainTitle final : public Level
 {
 public:
-    explicit Level_Logo(ComPtr<Device> device, ComPtr<DeviceContext> context);
-    virtual ~Level_Logo();
+    explicit Level_MainTitle(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    virtual ~Level_MainTitle();
 
 public:
     virtual HRESULT Initialize();
@@ -33,7 +34,7 @@ private:
 
 
 public:
-    static shared_ptr<Level_Logo> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    static shared_ptr<Level_MainTitle> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
 
     virtual void Free() override;
 

@@ -10,6 +10,11 @@ NS_BEGIN(Client)
 
 class Loader;
 
+enum class ELoadingTexture
+{
+    MainLoading,
+};
+
 class Level_Loading final : public Level
 {
 public:
@@ -17,17 +22,16 @@ public:
     virtual ~Level_Loading();
 
 public:
-    virtual HRESULT Initialize(ELevelType nextLevelID);
-    virtual void    Update(float timeDelta) override;
-    virtual void    Late_Update(float timeDelta) override;
-     virtual HRESULT Render() override;
+    virtual HRESULT     Initialize(ELevelType nextLevelID);
+    virtual void        Update(float timeDelta) override;
+    virtual void        Late_Update(float timeDelta) override;
+     virtual HRESULT    Render() override;
 
 private:
     shared_ptr<Loader>      _loader;
-    ELevelType               _nextLevelID = { ELevelType::END };
+    ELevelType              _nextLevelID = { ELevelType::END };
 
 private:
-    HRESULT  Ready_Layer_Background(const wstring& layerTag);
     HRESULT  Ready_Layer_UI(const wstring& uiTag);
 
 public:

@@ -17,7 +17,9 @@ class Background final : public UIObject
 public:
     struct FBackgroundDesc final : public UIObject::FUIDesc
     {
-        int32 flag = 0; // Temp
+        uint32 levelIndex = 0;
+        uint32 textureIndex = 0;
+        uint32 textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;
     };
 
 public:
@@ -40,6 +42,11 @@ private:
     Shared<Texture>         _textureCom;
     Shared<Shader>          _shaderCom;
     Shared<VIBuffer_Rect>   _bufferCom;
+
+private:
+    uint32                  _levelIndex = 0;
+    uint32                  _textureIndex = 0;
+    uint32                  _textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;
 
 public:
     static Shared<UIObject>   Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

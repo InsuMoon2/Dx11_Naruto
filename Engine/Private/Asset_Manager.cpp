@@ -147,6 +147,54 @@ vector<const FAssetMeta*> Asset_Manager::Get_AssetByType(const string& type)
     return result;
 }
 
+void Asset_Manager::Update_AssetPath(const string& guid, const wstring& newFilePath)
+{
+    auto iter = _guidToMeta.find(guid);
+    if (iter == _guidToMeta.end())
+        return;
+
+    // 기존 경로 찾아서 갱신
+    wstring oldPath = iter->second.fullPath;
+    _pathToGuid.erase(oldPath);
+
+    wstring absNewPath = fs::absolute(newFilePath).wstring();
+    iter->second.fullPath = absNewPath;
+    iter->second.relativePath = fs::relative(absNewPath, _resourceRoot).wstring();
+
+    _pathToGuid[absNewPath] = guid;
+
+    Save_Cache();
+}
+
+void Asset_Manager::Refresh_Cache()
+{
+    vector<string> invalidGuids;
+
+    // 존재하지 않는 파일 검사
+    for (const auto& [guid, meta] : _guidToMeta)
+    {
+        if (!fs::exists(meta.fullPath))
+        {
+            invalidGuids.push_back(guid);
+        }
+    }
+
+    // 무효화된 에셋 삭제
+    for (const string& guid : invalidGuids)
+    {
+        wstring path = _guidToMeta[guid].fullPath;
+        _pathToGuid.erase(path);
+        _guidToMeta.erase(guid);
+    }
+
+    if (!invalidGuids.empty())
+    {
+        Save_Cache(); // 캐시 파일 다시 쓰기
+        LOG_INFO("{} 개의 유실된 에셋을 레지스트리에서 정리", invalidGuids.size());
+    }
+
+}
+
 bool Asset_Manager::Load_Meta(const wstring& metaPath)
 {
     ifstream file(metaPath);
@@ -208,16 +256,24 @@ string Asset_Manager::Detect_AssetType(const wstring& filePath) const
     fs::path path(filePath);
     string extension = path.extension().string();
 
-    if (extension == ".json")
-    {
-        // 폴더 추가될떄마다 세팅해줘야함
-        string pathStr = Utils::ToString(filePath);
-        if (pathStr.find("Prefabs") != string::npos)         return "prefab";
-        if (pathStr.find("BehaviorTrees") != string::npos)   return "behavior_tree";
-        if (pathStr.find("Levels") != string::npos)          return "level";
+#pragma region Legacy
 
-        return "json";
-    }
+    //if (extension == ".json")
+    //{
+    //    string pathStr = Utils::ToString(filePath);
+    //    if (pathStr.find("Prefabs") != string::npos)         return "prefab";
+    //    if (pathStr.find("BehaviorTrees") != string::npos)   return "behavior_tree";
+    //    if (pathStr.find("Levels") != string::npos)          return "level";
+    //
+    //    return "json";
+    //}
+#pragma endregion
+
+    if (extension == ".json") return "json";          // 순수 데이터 테이블 등
+    if (extension == ".prefab") return "prefab";      // 프리팹
+    if (extension == ".bt") return "behavior_tree";   // 비헤이비어 트리
+    if (extension == ".level") return "level";        // 씬/레벨 데이터
+   
 
     if (extension == ".png" || extension == ".jpg" || extension == ".dds" || extension == ".tga")
         return "texture";

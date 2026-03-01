@@ -28,7 +28,8 @@ HRESULT Prefab_Manager::Initialize()
     {
         for (const auto& entry : fs::directory_iterator(prefabDir))
         {
-            if (entry.path().extension() == ".json")
+            string pathStr = entry.path().string();
+            if (pathStr.ends_with(".prefab.json"))
             {
                 Load_Prefab(entry.path().string());
             }
@@ -55,9 +56,11 @@ HRESULT Prefab_Manager::Load_Prefab(const string& prefabPath)
     auto prefabData = make_shared<FPrefabDesc>();
 
     fs::path path(prefabPath);
-    string prefabKey = path.stem().string();
-
+    string fileName = path.filename().string();
+    size_t dotPos = fileName.find('.'); // 첫번째 마침표 위치 찾기
+    string prefabKey = (dotPos != string::npos) ? fileName.substr(0, dotPos) : path.stem().string();
     prefabData->prefab_name = prefabKey;
+
     prefabData->object_type = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
         root["object_type"].get<std::string>()).value_or(Protocol::OBJECT_TYPE_NONE);
 

@@ -286,9 +286,9 @@ void BehaviorTree_View::Draw_FilePopup()
             {
                 for (const auto& entry : filesystem::directory_iterator(targetPath))
                 {
-                    if (entry.is_regular_file() && entry.path().extension() == ".json")
+                    string filename = entry.path().filename().string();
+                    if (entry.is_regular_file() && filename.ends_with(".bt.json"))
                     {
-                        string filename = entry.path().filename().string();
                         if (ImGui::Selectable(filename.c_str(), _selectedFileName == filename))
                         {
                             _selectedFileName = filename;
@@ -325,8 +325,8 @@ void BehaviorTree_View::Draw_FilePopup()
                 string filename = _saveFileNameBuf;
                 if (!filename.empty())
                 {
-                    if (filename.find(".json") == string::npos)
-                        filename += ".json";
+                    if (filename.find(".bt.json") == string::npos)
+                        filename += ".bt.json";
 
                     filesystem::path fullPath = targetPath / filename;
                     Save_BehaviorTree(fullPath.string());

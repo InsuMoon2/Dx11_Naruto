@@ -1,11 +1,14 @@
 ﻿#include "pch.h"
 #include "Editor_MainApp.h"
+#include "Texture.h"
+#include "Background.h"
 #include "EditorInstance.h"
 #include "GameInstance.h"
 #include "Level_Editor.h"
 #include "Level_Loading.h"
 #include "ResourceLoader.h"
 #include "VIBuffer_Rect.h"
+#include "Shader.h"
 
 Editor_MainApp::Editor_MainApp()
 {
@@ -44,7 +47,8 @@ HRESULT Editor_MainApp::Initialize()
             return E_FAIL;
     }
 
-    CHECK_FAILED(Ready_StartLevel(ELevelType::Logo), E_FAIL);
+    CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
+    CHECK_FAILED(Ready_StartLevel(ELevelType::MainTitle), E_FAIL);
 
     return S_OK;
 }
@@ -95,6 +99,38 @@ HRESULT Editor_MainApp::Render()
     return S_OK;
 }
 
+HRESULT Editor_MainApp::Ready_StaticLevel()
+{
+    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
+        Protocol::COMPONENT_TYPE_SHADER_VTXTEX,
+        Shader::Create(_device, _context, TEXT("../../Client/Bin/Shaders/Shader_Vtxtex.hlsl"),
+            VTXTEX::Elements, VTXTEX::numElements))))
+    {
+        return E_FAIL;
+    }
+
+    shared_ptr<Texture> loadingTex = Texture::Create(_device, _context, TEXT("../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadingScreen_%03d_BC.png"), 2);
+    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
+        Protocol::COMPONENT_TYPE_TEXTURE_LOADING, loadingTex)))
+    {
+        return E_FAIL;
+    }
+
+    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
+        Protocol::COMPONENT_TYPE_RECT, VIBuffer_Rect::Create(_device, _context))))
+    {
+        return E_FAIL;
+    }
+
+    if (FAILED(GAME->Add_GameObject_Prototype(ETOI(ELevelType::Static),
+        Protocol::OBJECT_TYPE_BACKGROUND, Background::Create(_device, _context))))
+    {
+        return E_FAIL;
+    }
+
+    return S_OK;
+}
+
 HRESULT Editor_MainApp::Ready_StartLevel(ELevelType startLevelID)
 {
     if (ELevelType::Loading == startLevelID)
@@ -111,7 +147,8 @@ unique_ptr<Editor_MainApp> Editor_MainApp::Create()
 {
     auto instance = make_unique<Editor_MainApp>();
 
-    if (FAILED(instance->Initialize())) {
+    if (FAILED(instance->Initialize()))
+    {
         MSG_BOX("Failed to Created : EditorMainApp");
 
         return nullptr;

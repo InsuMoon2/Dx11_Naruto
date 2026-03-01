@@ -85,8 +85,8 @@ HRESULT Loader::Loading()
 
     switch (_nextLevelID)
     {
-    case ELevelType::Logo:
-        hr = Loading_For_LogoLevel();
+    case ELevelType::MainTitle:
+        hr = Loading_For_Maintitle();
         break;
 
     case ELevelType::GamePlay:
@@ -146,9 +146,9 @@ void Loader::Initialize_BT_Nodes()
     // Patrol, Attack, Skill 이런거
 }
 
-HRESULT Loader::Loading_For_LogoLevel()
+HRESULT Loader::Loading_For_Maintitle()
 {
-    uint32 levelIndex = ETOI(ELevelType::Logo);
+    uint32 levelIndex = ETOI(ELevelType::MainTitle);
 
     Register_Components();
     Initialize_BT_Nodes();
@@ -183,6 +183,7 @@ HRESULT Loader::Loading_For_LogoLevel()
 
     lstrcpy(_loadingText, TEXT("Logo 로딩 완료"));
 
+    Sleep(3000);
 
     _isFinished = true;
 

@@ -236,7 +236,7 @@
     <ClInclude Include="..\Public\IReplicable.h" />
     <ClInclude Include="..\Public\Level_Gameplay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
-    <ClInclude Include="..\Public\Level_Logo.h" />
+    <ClInclude Include="..\Public\Level_MainTitle.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\Monster.h" />
@@ -295,7 +295,7 @@
     <!-- <ClCompile Include="..\Private\Client_PacketHandler.cpp" /> -->
     <ClCompile Include="..\Private\Level_Gameplay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
-    <ClCompile Include="..\Private\Level_Logo.cpp" />
+    <ClCompile Include="..\Private\Level_MainTitle.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\MovementComponent.cpp" />

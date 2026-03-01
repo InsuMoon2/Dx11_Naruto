@@ -157,6 +157,16 @@ float GameInstance::Get_ViewportHeight()
     return _graphicDevice->Get_ViewportHeight();
 }
 
+float GameInstance::Get_WindowWidth()
+{
+    return _graphicDevice->Get_WindowWidth();
+}
+
+float GameInstance::Get_WindowHeight()
+{
+    return _graphicDevice->Get_WindowHeight();
+}
+
 void GameInstance::BindBackBuffer()
 {
     _graphicDevice->BindBackBuffer();
@@ -432,6 +442,16 @@ void GameInstance::Scan_Assets(const wstring& directory)
 vector<const FAssetMeta*> GameInstance::Get_AssetsByType(const string& type)
 {
     return _assetManager->Get_AssetByType(type);
+}
+
+void GameInstance::Update_AssetPath(const string& guid, const wstring& newFilePath)
+{
+    return _assetManager->Update_AssetPath(guid, newFilePath);
+}
+
+void GameInstance::Refresh_Cache()
+{
+    return _assetManager->Refresh_Cache();
 }
 
 Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)

@@ -126,6 +126,8 @@ private: /* Local */
     Quat    _localRotation = Quat::Identity;
     Vec3    _localScale    = Vec3::Zero;
 
+    Vec3    _localEulerAngles = Vec3::Zero;
+
 private: /* World */
     mutable Matrix  _worldMatrix = Matrix::Identity;
     mutable bool    _isDirty = true;

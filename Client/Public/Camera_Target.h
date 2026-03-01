@@ -32,11 +32,22 @@ public:
 
 public:
     void    Set_TargetTransform(Shared<Transform> target) { _targetTransform = target; }
+    void    Set_UseControllerRotationYaw(bool bUse) { _bUseControllerRotationYaw = bUse; }
 
 private:
     Weak<Transform> _targetTransform;
+
     Vec3            _offset = { 0.f, 10.f, -10.f };
     float           _followSpeed = 5.f;
+
+    float           _pitch = 0.f;
+    float           _yaw = 0.f;
+
+    float           _distance = 10.f;
+    float           _heightOffset = 2.f;
+    float           _mouseSensor = 10.f;
+
+    bool            _bUseControllerRotationYaw = true;
 
 public:
     static Shared<Camera_Target> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

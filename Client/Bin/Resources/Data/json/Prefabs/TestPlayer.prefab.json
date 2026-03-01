@@ -2,19 +2,19 @@
     "components": [
         {
             "position": [
-                0.0,
-                0.0,
-                -5.0
+                10.0,
+                10.0,
+                10.0
             ],
             "rotation": [
                 -0.0,
-                0.0,
+                -179.99998474121094,
                 0.0
             ],
             "scale": [
-                100.0,
-                100.0,
-                100.0
+                1.0,
+                1.0,
+                1.0
             ],
             "type": "COMPONENT_TYPE_TRANSFORM"
         },
@@ -49,7 +49,7 @@
             "type": "COMPONENT_TYPE_INPUT"
         }
     ],
-    "guid": "f99e2479-47a0-40b4-8664-df49553d2b66",
+    "guid": "4f7c2e52-409f-4213-ae35-779d10d91c15",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "MyPlayer",
     "static_class": "MyPlayer"

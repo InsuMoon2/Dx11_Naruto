@@ -1,8 +1,12 @@
 ﻿#include "pch.h"
 #include "MainApp.h"
+
+#include "Background.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "NetworkManager.h"
+#include "VIBuffer_Rect.h"
+#include "Shader.h"
 
 MainApp::MainApp()
 {
@@ -28,7 +32,8 @@ HRESULT MainApp::Initialize()
             return E_FAIL;
     }
 
-    CHECK_FAILED(Ready_StartLevel(ELevelType::Logo), E_FAIL);
+    CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
+    CHECK_FAILED(Ready_StartLevel(ELevelType::MainTitle), E_FAIL);
 
     return S_OK;
 }
@@ -65,6 +70,31 @@ HRESULT MainApp::Render()
     CHECK_FAILED(GAME->Clear_Buffers(clearColor), E_FAIL);
     CHECK_FAILED(GAME->Draw(), E_FAIL);
     CHECK_FAILED(GAME->Present(), E_FAIL);
+
+    return S_OK;
+}
+
+HRESULT MainApp::Ready_StaticLevel()
+{
+    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
+        Protocol::COMPONENT_TYPE_SHADER_VTXTEX,
+        Shader::Create(_device, _context, TEXT("../../Client/Bin/Shaders/Shader_Vtxtex.hlsl"),
+            VTXTEX::Elements, VTXTEX::numElements))))
+    {
+        return E_FAIL;
+    }
+
+    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
+        Protocol::COMPONENT_TYPE_RECT, VIBuffer_Rect::Create(_device, _context))))
+    {
+        return E_FAIL;
+    }
+
+    if (FAILED(GAME->Add_GameObject_Prototype(ETOI(ELevelType::Static),
+        Protocol::OBJECT_TYPE_BACKGROUND, Background::Create(_device, _context))))
+    {
+        return E_FAIL;
+    }
 
     return S_OK;
 }

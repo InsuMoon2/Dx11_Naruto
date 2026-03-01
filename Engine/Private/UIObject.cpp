@@ -42,9 +42,13 @@ HRESULT UIObject::Initialize(void* arg)
     _posY = desc->posY;
     _sizeX = desc->sizeX;
     _sizeY = desc->sizeY;
+    _zOrder = desc->zOrder;
 
     _viewportWidth = GAME->Get_ViewportWidth();
     _viewportHeight = GAME->Get_ViewportHeight();
+
+    _transformCom->Set_LocalPosition(_posX, _posY, 0.f);
+    _transformCom->Set_LocalScale(_sizeX, _sizeY, 1.f);
 
     _transformMatrices[ETOI(ETransformState::View)] = Matrix::Identity;
     _transformMatrices[ETOI(ETransformState::Proj)] = XMMatrixOrthographicLH(
@@ -64,6 +68,11 @@ void UIObject::Priority_Update(float timeDelta)
 void UIObject::Update(float timeDelta)
 {
     GameObject::Update(timeDelta);
+
+    _posX = _transformCom->Get_LocalPosition().x;
+    _posY = _transformCom->Get_LocalPosition().y;
+    _sizeX = _transformCom->Get_LocalScale().x;
+    _sizeY = _transformCom->Get_LocalScale().y;
 }
 
 void UIObject::Late_Update(float timeDelta)
@@ -80,14 +89,29 @@ HRESULT UIObject::Render()
 
 void UIObject::Update_Transform()
 {
+    float designX = GAME->Get_WindowWidth();
+    float designY = GAME->Get_WindowHeight();
+
+    float currentViewX = GAME->Get_ViewportWidth();
+    float currentViewY = GAME->Get_ViewportHeight();
+
+    // 현재 크기 / 원본 크기
+    float ratioX = currentViewX / designX;
+    float ratioY = currentViewY / designY;
+
+    float finalSizeX = _sizeX * ratioX;
+    float finalSizeY = _sizeY * ratioY;
+    float finalPosX = _posX * ratioX;
+    float finalPosY = _posY * ratioY;
+
     // UI 크기 (픽셀 단위로)
-    Matrix scaleMatrix = XMMatrixScaling(_sizeX, _sizeY, 1.f);
+    Matrix scaleMatrix = XMMatrixScaling(finalSizeX, finalSizeY, 1.f);
 
     // Translatino : 화면 좌표 -> NDC 좌표 변환
-    float ndcX = _posX - (_viewportWidth * 0.5f);
-    float ndcY = -_posY + (_viewportHeight * 0.5f);
+    float ndcX = finalPosX - (currentViewX * 0.5f);
+    float ndcY = -finalPosY + (currentViewY * 0.5f);
 
-    Matrix transMatrix = XMMatrixTranslation(ndcX, ndcY, 0.f);
+    Matrix transMatrix = XMMatrixTranslation(ndcX, ndcY, _zOrder);
 
     _worldMatrix = scaleMatrix * transMatrix;
 }

@@ -74,6 +74,9 @@ public: /* Graphic Device */
     float                   Get_ViewportWidth();
     float                   Get_ViewportHeight();
 
+    float                   Get_WindowWidth();
+    float                   Get_WindowHeight();
+
     void                    BindBackBuffer();
     HRESULT                 Resize_BackBuffer(uint32 width, uint32 height);
 
@@ -188,6 +191,8 @@ public: /* Asset */
     string                          Register_Asset(const wstring& filePath, const string& type = "");
     void                            Scan_Assets(const wstring& directory);
     vector<const FAssetMeta*>       Get_AssetsByType(const string& type);
+    void                            Update_AssetPath(const string& guid, const wstring& newFilePath);
+    void                            Refresh_Cache();
 
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};

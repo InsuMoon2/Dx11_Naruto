@@ -4,7 +4,7 @@
 Transform::Transform(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
-    
+
 }
 
 Transform::Transform(const Transform& protoType)
@@ -12,15 +12,15 @@ Transform::Transform(const Transform& protoType)
     , _localPosition(protoType._localPosition)
     , _localRotation(protoType._localRotation)
     , _localScale(protoType._localScale)
-    , _speedPerSec(protoType._speedPerSec)          
-    , _rotationPerSec(protoType._rotationPerSec)    
+    , _speedPerSec(protoType._speedPerSec)
+    , _rotationPerSec(protoType._rotationPerSec)
 {
     _isDirty = true;
 }
 
 Transform::~Transform()
 {
-    
+
 }
 
 HRESULT Transform::Initialize_Prototype()
@@ -112,7 +112,7 @@ void Transform::Set_WorldPosition(const Vec3& worldPos)
 {
     if (auto parent = _parent.lock())
     {
-        Matrix parentInverse = parent->Get_WorldMatrix().Invert();  
+        Matrix parentInverse = parent->Get_WorldMatrix().Invert();
         Vec3 localPos = Vec3::Transform(worldPos, parentInverse);   // 월드 -> 로컬 역행렬
         Set_LocalPosition(localPos);
     }
@@ -137,14 +137,19 @@ void Transform::Set_LocalRotation(const Quat& rotation)
     _localRotation = rotation;
     _localRotation.Normalize();
 
+    Vec3 euler = _localRotation.ToEuler();
+    _localEulerAngles.x = XMConvertToDegrees(euler.x);
+    _localEulerAngles.y = XMConvertToDegrees(euler.y);
+    _localEulerAngles.z = XMConvertToDegrees(euler.z);
+
     Mark_Dirty();
 }
 
 void Transform::Set_LocalRotation(float pitch, float yaw, float roll)
 {
-    float pitchRad  = XMConvertToRadians(pitch);
-    float yawRad    = XMConvertToRadians(yaw);
-    float rollRad   = XMConvertToRadians(roll);
+    float pitchRad = XMConvertToRadians(pitch);
+    float yawRad = XMConvertToRadians(yaw);
+    float rollRad = XMConvertToRadians(roll);
 
     Quat quat = Quat::CreateFromYawPitchRoll(yawRad, pitchRad, rollRad);
     Set_LocalRotation(quat);
@@ -205,18 +210,14 @@ void Transform::Add_WorldRotation(const Quat& deltaRotation)
 
 Vec3 Transform::Get_LocalEulerAngles() const
 {
-    Vec3 euler = _localRotation.ToEuler();  // Radian
-
-    //euler.x = XMConvertToDegrees(euler.x);  // Pitch
-    //euler.y = XMConvertToDegrees(euler.y);  // Yaw
-    //euler.z = XMConvertToDegrees(euler.z);  // Roll
-
-    return euler;  // Degree
+    return _localEulerAngles;
 }
 
 void Transform::Set_LocalEulerAngles(float pitch, float yaw, float roll)
 {
     Set_LocalRotation(pitch, yaw, roll);
+
+    _localEulerAngles = Vec3(pitch, yaw, roll);
 }
 
 void Transform::Rotate_Axis(const Vec3& axis, float degrees)
@@ -257,7 +258,7 @@ Vec3 Transform::Get_WorldScale() const
 
 Vec3 Transform::Get_WorldForward() const
 {
-    return -Get_WorldMatrix().Forward();
+    return Get_WorldMatrix().Forward();
 }
 
 Vec3 Transform::Get_WorldRight() const
@@ -282,7 +283,7 @@ Vec3 Transform::Get_LocalRight() const
 
 Vec3 Transform::Get_LocalUp() const
 {
-    return Vec3::Transform(Vec3{0.f, 1.f, 0.f}, _localRotation);
+    return Vec3::Transform(Vec3{ 0.f, 1.f, 0.f }, _localRotation);
 }
 
 void Transform::Move_Forward(float timeDelta)
@@ -473,7 +474,7 @@ void Transform::Update_WorldMatrix() const
 }
 
 shared_ptr<Transform> Transform::Create(ComPtr<Device> device,
-                                        ComPtr<DeviceContext> context)
+    ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<Transform>(device, context);
 
@@ -508,6 +509,6 @@ void Transform::Free()
     }
 
     _children.clear();
-        
+
     Component::Free();
 }

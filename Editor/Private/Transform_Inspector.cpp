@@ -25,8 +25,9 @@ void Transform_Inspector::Draw_Inspector(shared_ptr<Component> component)
     // Rotation
     ImGui::SeparatorText("Rotation");
 
-    Vec3 eulerRad = transform->Get_LocalEulerAngles();
-    Vec3 eulerDeg = eulerRad * (180.f / XM_PI);
+    //Vec3 eulerRad = transform->Get_LocalEulerAngles();
+    //Vec3 eulerDeg = eulerRad * (180.f / XM_PI);
+    Vec3 eulerDeg = transform->Get_LocalEulerAngles();
     float rot[3] = { eulerDeg.x, eulerDeg.y, eulerDeg.z };
 
     if (ImGui::DragFloat3("##Rotation", rot, 1.0f))

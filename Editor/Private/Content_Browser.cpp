@@ -224,6 +224,10 @@ void Content_Browser::Draw_FolderTree(FFolderNode& node)
 
     if (isClicked)
     {
+        // 다른 폴더 클릭 시 기존 썸네일 캐시 비우기
+        if (_currentFolder != &node)
+            _thumbnailCache.clear();
+
         _currentFolder = &node;
     }
     if (isOpen)
@@ -257,16 +261,15 @@ void Content_Browser::Draw_AssetView()
             fs::path path(filePath);
             string fileName = path.filename().string();
             string extension = path.extension().string();
-            string pureName = path.stem().string(); // 확장자 제거 (.json, .csv)
 
-            // GameObject Factory에 등록된지 확인
-            wstring pureNameW = Utils::ToWString(pureName);
+            size_t dotPos = fileName.find('.');
+            string pureName = (dotPos != string::npos) ? fileName.substr(0, dotPos) : path.stem().string();
 
-            bool isValidPrefab = (extension == ".json" &&
-                _currentFolder->fullPath.find(L"Prefabs") != wstring::npos);
+            string pathStr = Utils::ToString(filePath);
 
-            bool isBehaviorTree = (extension == ".json" &&
-                _currentFolder->fullPath.find(L"BehaviorTrees") != wstring::npos);
+            bool isValidPrefab = pathStr.ends_with(".prefab.json");
+
+            bool isBehaviorTree = pathStr.ends_with(".bt.json");
 
             // 아이콘
             ImGui::PushID(fileName.c_str());
@@ -472,50 +475,67 @@ void Content_Browser::Generate_Default_Prefabs()
 void Content_Browser::Finish_Rename(const wstring& oldPath, const char* newName)
 {
     fs::path oldFilePath(oldPath);
-    fs::path newFilePath = oldFilePath.parent_path() / (string(newName) + oldFilePath.extension().string());
+    string oldFileName = oldFilePath.filename().string();
 
+    size_t firstDotIdx = oldFileName.find('.');
+    string fullExtension = (firstDotIdx != string::npos) ? oldFileName.substr(firstDotIdx) : oldFilePath.extension().string();
+
+    fs::path newFilePath = oldFilePath.parent_path() / (string(newName) + fullExtension);
     if (fs::exists(newFilePath))
     {
         LOG_WARN("이미 존재하는 파일명 입니다 : {}", newName);
-        _isRenaming = false;
-
-        return;
+        _isRenaming = false; return;
     }
 
     try
     {
         ifstream inFile(oldFilePath);
-
         json root;
-        inFile >> root;
-        inFile.close();
+        if (inFile.is_open()) {
+            inFile >> root;
+            inFile.close();
 
-        root["prefab_name"] = newName;
+            if (root.contains("prefab_name"))
+                root["prefab_name"] = newName;
 
-        ofstream outFile(newFilePath);
-        outFile << root.dump(4);
-        outFile.close();
+            ofstream outFile(newFilePath);
+            outFile << root.dump(4);
+            outFile.close();
+            fs::remove(oldFilePath);
+        }
+        else
+        {
+            fs::rename(oldFilePath, newFilePath);
+        }
 
-        fs::remove(oldFilePath);
+        fs::path oldMetaPath = oldFilePath.wstring() + L".meta";
+        fs::path newMetaPath = newFilePath.wstring() + L".meta";
 
-        GAME->Load_Prefab(newFilePath.string());
+        if (fs::exists(oldMetaPath))
+        {
+            fs::rename(oldMetaPath, newMetaPath);
+        }
 
-        LOG_INFO("파일명 변경: {} -> {}", oldFilePath.stem().string(), newName);
+        string guid = GAME->Find_AssetGUID(oldFilePath.wstring());
+        if (!guid.empty())
+        {
+            GAME->Update_AssetPath(guid, newFilePath.wstring());
+        }
 
+        LOG_INFO("파일명 변경 완료: {} -> {}", oldFileName, newName);
         Refresh_CurrentFolder();
     }
+
     catch (const exception& e)
     {
-        LOG_ERROR("파일명 변경 실패");
+        LOG_ERROR("파일명 변경 실패: {}", e.what());
     }
-
     _isRenaming = false;
 }
-
 void Content_Browser::Create_NewPrefab(uint32 objectID, const wstring& typeName)
 {
     string baseFileName = "NewPrefab";
-    fs::path savePath = fs::path(_currentFolder->fullPath) / (baseFileName + ".json");
+    fs::path savePath = fs::path(_currentFolder->fullPath) / (baseFileName + ".prefab.json");
 
     // 중복 이름 처리
     int counter = 1;

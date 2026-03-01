@@ -1,9 +1,11 @@
 ﻿#include "pch.h"
 #include "Level_Loading.h"
+
+#include "Background.h"
 #include "Loader.h"
 #include "GameInstance.h"
 #include "Level_Gameplay.h"
-#include "Level_Logo.h"
+#include "Level_MainTitle.h"
 
 Level_Loading::Level_Loading(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -17,9 +19,6 @@ Level_Loading::~Level_Loading()
 HRESULT Level_Loading::Initialize(ELevelType nextLevelID)
 {
     _nextLevelID = nextLevelID;
-
-    if (FAILED(Ready_Layer_Background(TEXT("Layer_Background"))))
-        return E_FAIL;
 
     if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
         return E_FAIL;
@@ -39,8 +38,8 @@ void Level_Loading::Update(float timeDelta)
 
         switch (_nextLevelID)
         {
-        case ELevelType::Logo:
-            nextLevel = Level_Logo::Create(_device, _context);
+        case ELevelType::MainTitle:
+            nextLevel = Level_MainTitle::Create(_device, _context);
             break;
 
         case ELevelType::GamePlay:
@@ -78,14 +77,32 @@ HRESULT Level_Loading::Render()
     return S_OK;
 }
 
-HRESULT Level_Loading::Ready_Layer_Background(const wstring& layerTag)
-{
-
-    return S_OK;
-}
-
 HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
 {
+    Vec2 viewport = Vec2(GAME->Get_WindowWidth(), GAME->Get_WindowHeight());
+
+    {
+        Background::FBackgroundDesc desc{};
+        desc.name = TEXT("Loading Screen");
+        desc.posX = viewport.x * 0.5f;
+        desc.posY = viewport.y * 0.5f;
+        desc.sizeX = viewport.x;
+        desc.sizeY = viewport.y;
+
+        desc.levelIndex = ETOI(ELevelType::Static);
+        desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_LOADING;
+        desc.textureIndex = ETOI(ELoadingTexture::MainLoading);
+
+        desc.zOrder = 0.5f;
+
+        CHECK_FAILED(GAME->Add_GameObject(
+            ETOI(ELevelType::Static),            // <-- 1. 여기서 견본(Prototype)을 찾아와!
+            Protocol::OBJECT_TYPE_BACKGROUND,    // <-- 2. Background 모형을!
+            ETOI(ELevelType::Loading),           // <-- 3. 지금 현재 띄울 여기 화면(Loading)에 복제해라!
+            uiTag,                               // <-- 4. 레이어 이름
+            &desc),                              // <-- 5. 설정값
+            E_FAIL);
+    }
 
     return S_OK;
 }

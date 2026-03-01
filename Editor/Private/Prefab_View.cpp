@@ -345,7 +345,7 @@ void Prefab_View::Draw_Buttons()
                         EDITOR->Get_Window(TEXT("Content Browser")));
 
                     if (browser)
-                        browser->Load_Thumbnail(guid, thumbPath);
+                        browser->Load_Thumbnail(guid);
                 }
                 
             }
