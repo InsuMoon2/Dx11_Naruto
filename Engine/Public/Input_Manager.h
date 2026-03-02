@@ -15,6 +15,7 @@ enum class KEY_TYPE
     DEL = VK_DELETE,
     CTRL = VK_CONTROL,
     ENTER = VK_END,
+    ESCAPE = VK_ESCAPE,
 
     F8 = VK_F8,
     F9 = VK_F9,
@@ -82,7 +83,10 @@ public:
     void UnlockMouse();
     bool IsMouseLocked() const { return _mouseLocked; }
 
-    Vec2 GetMouseDelta() const { return _mouseDelta; }
+    Vec2  GetMouseDelta() const { return _mouseDelta; }
+    float GetMouseWheel() const { return _mouseWheelDelta; }
+
+    void  Set_MouseWheel(float delta) { _mouseWheelDelta = delta; }
 
 private:
     inline KEY_STATE GetState(KEY_TYPE key) { return _states[static_cast<uint8>(key)]; }
@@ -96,6 +100,8 @@ private:
     bool    _mouseLocked = false;
     POINT   _screenCenter = { };
     Vec2    _mouseDelta = { };
+
+    float   _mouseWheelDelta = 0.f;
 };
 
 NS_END

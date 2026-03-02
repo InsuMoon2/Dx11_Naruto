@@ -114,7 +114,7 @@ void GameInstance::Late_Update_Engine(float timeDelta)
 
 void GameInstance::Update_CameraOnly(float timeDelta)
 {
-    auto activeCamera = _cameraManager->Get_ActiveCamer();
+    auto activeCamera = _cameraManager->Get_ActiveCamera();
     if (activeCamera)
     {
         activeCamera->Priority_Update(timeDelta);
@@ -317,6 +317,11 @@ const Matrix* GameInstance::Get_Transform(ETransformState state) const
     return _pipeLine->Get_Transform(state);
 }
 
+const Matrix* GameInstance::Get_TransformInverse(ETransformState state) const
+{
+    return _pipeLine->Get_TransformInverse(state);
+}
+
 const Vec4* GameInstance::Get_CamPosition() const
 {
     return _pipeLine->Get_CamPosition();
@@ -337,7 +342,7 @@ HRESULT GameInstance::Bind_TransformMatrix(ETransformState state, Shared<Shader>
     return _pipeLine->Bind_TransformMatrix(state, shader, constantName);
 }
 
-HRESULT GameInstance::Bind_TransformMatrix_Invsere(ETransformState state, Shared<Shader> shader,
+HRESULT GameInstance::Bind_TransformMatrix_Inverse(ETransformState state, Shared<Shader> shader,
     const char* constantName)
 {
     return _pipeLine->Bind_TransformMatrix_Inverse(state, shader, constantName);
@@ -386,7 +391,7 @@ void GameInstance::Set_ActiveCamera(Shared<Camera> camera)
 
 Shared<Camera> GameInstance::Get_ActiveCamera()
 {
-    return _cameraManager->Get_ActiveCamer();
+    return _cameraManager->Get_ActiveCamera();
 }
 
 bool GameInstance::Is_ActiveCamera(Shared<Camera> camera)

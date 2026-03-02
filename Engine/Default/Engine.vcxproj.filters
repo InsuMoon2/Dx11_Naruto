@@ -177,6 +177,10 @@
       <Filter>01. Utility\04. Component\05. Mesh</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Model.h" />
+    <ClInclude Include="..\Public\Property_Types.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Reflection_Macro.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

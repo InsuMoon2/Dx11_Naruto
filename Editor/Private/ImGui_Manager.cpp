@@ -20,7 +20,6 @@ HRESULT ImGui_Manager::Initialize(HWND hWnd, ComPtr<Device> device, ComPtr<Devic
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
 
-
     io.Fonts->AddFontFromFileTTF(
         "C:/Windows/Fonts/malgun.ttf",
         18.0f,

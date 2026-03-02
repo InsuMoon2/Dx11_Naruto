@@ -21,6 +21,90 @@ HRESULT Component::Initialize(void* arg)
     return S_OK;
 }
 
+json Component::Reflect_ToJson() const
+{
+    json root;
+    auto& info = const_cast<Component*>(this)->Get_ReflectionInfo();
+    const char* basePtr = reinterpret_cast<const char*>(this);
+
+    for (const auto& prop : info.properties)
+    {
+        const void* memberPtr = basePtr + prop.offset;
+
+        switch (prop.type)
+        {
+        case EPropertyType::Float:
+        case EPropertyType::ReadOnly:
+            root[prop.name] = *static_cast<const float*>(memberPtr);
+            break;
+        case EPropertyType::Int:
+        case EPropertyType::Enum:
+            root[prop.name] = *static_cast<const int*>(memberPtr);
+            break;
+        case EPropertyType::Bool:
+            root[prop.name] = *static_cast<const bool*>(memberPtr);
+            break;
+        case EPropertyType::Vec3:
+        {
+            const float* v = static_cast<const float*>(memberPtr);
+            root[prop.name] = { v[0], v[1], v[2] };
+            break;
+        }
+        case EPropertyType::Vec4:
+        case EPropertyType::Color:
+        {
+            const float* v = static_cast<const float*>(memberPtr);
+            root[prop.name] = { v[0], v[1], v[2], v[3] };
+            break;
+        }
+        }
+    }
+
+    return root;
+}
+
+void Component::Reflect_FromJson(const json& data)
+{
+    auto& info = Get_ReflectionInfo();
+    char* basePtr = reinterpret_cast<char*>(this);
+
+    for (const auto& prop : info.properties)
+    {
+        if (!data.contains(prop.name)) continue;
+        void* memberPtr = basePtr + prop.offset;
+
+        switch (prop.type)
+        {
+        case EPropertyType::Float:
+        case EPropertyType::ReadOnly:
+            *static_cast<float*>(memberPtr) = data[prop.name].get<float>();
+            break;
+        case EPropertyType::Int:
+        case EPropertyType::Enum:
+            *static_cast<int*>(memberPtr) = data[prop.name].get<int>();
+            break;
+        case EPropertyType::Bool:
+            *static_cast<bool*>(memberPtr) = data[prop.name].get<bool>();
+            break;
+        case EPropertyType::Vec3:
+        {
+            auto arr = data[prop.name];
+            float* v = static_cast<float*>(memberPtr);
+            v[0] = arr[0]; v[1] = arr[1]; v[2] = arr[2];
+            break;
+        }
+        case EPropertyType::Vec4:
+        case EPropertyType::Color:
+        {
+            auto arr = data[prop.name];
+            float* v = static_cast<float*>(memberPtr);
+            v[0] = arr[0]; v[1] = arr[1]; v[2] = arr[2]; v[3] = arr[3];
+            break;
+        }
+        }
+    }
+}
+
 json Component::To_Json() const
 {
     json j;
@@ -28,12 +112,14 @@ json Component::To_Json() const
     auto id = static_cast<Protocol::ComponentID>(Get_ComponentID());
     j["type"] = string(magic_enum::enum_name(id));
 
+    j.merge_patch(Reflect_ToJson());
+
     return j;
 }
 
 void Component::From_Json(const json& data)
 {
-
+    Reflect_FromJson(data);
 }
 
 HRESULT Component::Initialize_Prototype()

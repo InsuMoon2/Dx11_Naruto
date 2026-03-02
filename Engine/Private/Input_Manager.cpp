@@ -25,6 +25,8 @@ void Input_Manager::Init(HWND hwnd)
 
 void Input_Manager::Update(float timeDleta)
 {
+    _mouseWheelDelta = 0.f;
+
     HWND hwnd = ::GetActiveWindow();
     if (_hwnd != hwnd)
     {
@@ -95,6 +97,8 @@ void Input_Manager::Update(float timeDleta)
         _mouseDelta.y = (float)(currentPos.y - _mousePos.y);
         _mousePos = currentPos;
     }
+
+    //LOG_INFO("Wheel Detal Test : {}", _mouseWheelDelta);
 }
 
 void Input_Manager::LockMouse()

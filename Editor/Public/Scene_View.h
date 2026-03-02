@@ -19,10 +19,14 @@ public:
     void    Update(float timeDelta) override;
     void    OnGui() override;
 
+    void    Pre_Render() override;
+
+
 public:
     shared_ptr<RenderTarget> Get_RenderTarget() { return _renderTarget; }
 
     void                Focus_OnPosition(const Vec3& targetPos);
+
 
 private:
     ImGuiWindowFlags    Get_WindowFlags() const;
@@ -37,10 +41,21 @@ private:
 
     // Prefab Spawn
     Vec3                Screen_To_World(Vec2 screenPos);
-    void                Spawn_Prefab(const wstring& prefabPath, const Vec3& worldPos);
+    string              GUID_To_PrefabName(const string& guid);
+    void                Spawn_Prefab(const string& guid, const Vec3& worldPos);
+
+    void                Render_Preview();
+    void                Clear_Drag();
 
     // Camera
     void                Update_CameraLerp(float timeDelta);
+
+    
+
+private: /* Prefab Preview */
+    Shared<GameObject>      _previewObject;
+    bool                    _isDraggingPrefab = false;
+    string                  _draggingPrefabGuid;
 
 private:
     Shared<RenderTarget>    _renderTarget;

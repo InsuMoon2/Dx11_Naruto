@@ -3,6 +3,25 @@
 #include "GameObject.h"
 #include "Transform.h"
 
+IMPLEMENT_REFLECTION(MovementComponent)
+
+bool MovementComponent::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "MovementComponent";
+
+    PROPERTY_FLOAT("Max Walk Speed", _moveDesc.maxWalkSpeed, 0.f, 30.f);
+    PROPERTY_FLOAT("Max Sprint Speed", _moveDesc.maxSprintSpeed, 0.f, 30.f);
+    PROPERTY_FLOAT("Acceleration", _moveDesc.acceleration, 0.f, 50.f);
+    PROPERTY_FLOAT("Deceleration", _moveDesc.deceleration, 0.f, 50.f);
+    PROPERTY_FLOAT("Yaw Speed", _moveDesc.yawSpeed, 0.f, 5.f);
+    PROPERTY_FLOAT("Jump Velocity", _moveDesc.jumpVelocity, 0.f, 30.f);
+    PROPERTY_FLOAT("Gravity", _moveDesc.gravity, -50.f, 0.f);
+    PROPERTY_FLOAT("Ground Y", _moveDesc.groundY, -100.f, 100.f);
+
+    return true;
+}
+
 MovementComponent::MovementComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
@@ -65,30 +84,6 @@ void MovementComponent::Update(float timeDelta)
     Apply_Movement(timeDelta, _transform);
 }
 
-json MovementComponent::To_Json() const
-{
-    json j = Component::To_Json();
-
-    j["max_walk_speed"] = _moveDesc.maxWalkSpeed;
-    j["max_sprint_speed"] = _moveDesc.maxSprintSpeed;
-    j["acceleration"] = _moveDesc.acceleration;
-    j["deceleration"] = _moveDesc.deceleration;
-    j["yaw_speed"] = _moveDesc.yawSpeed;
-
-    return j;
-}
-
-void MovementComponent::From_Json(const json& data)
-{
-    Component::From_Json(data);
-
-    if (data.contains("max_walk_speed"))    _moveDesc.maxWalkSpeed = data["max_walk_speed"].get<float>();
-    if (data.contains("max_sprint_speed"))  _moveDesc.maxSprintSpeed = data["max_sprint_speed"].get<float>();
-    if (data.contains("acceleration"))      _moveDesc.acceleration = data["acceleration"].get<float>();
-    if (data.contains("deceleration"))      _moveDesc.deceleration = data["deceleration"].get<float>();
-    if (data.contains("yaw_speed"))         _moveDesc.yawSpeed = data["yaw_speed"].get<float>();
-}
-
 void MovementComponent::Update_Rotation(float timeDelta, Shared<Transform> transform)
 {
     float yawDelta = _commandDesc.lookDelta.x * _moveDesc.yawSpeed;
@@ -120,15 +115,46 @@ void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> trans
     bool    hasInput = (input.LengthSquared() > FLT_EPSILON);
     float   accel = hasInput ? _moveDesc.acceleration : _moveDesc.deceleration;
     float   alpha = ::clamp(accel * timeDelta, 0.f, 1.f);
-    
-    _velocity = Vec3::Lerp(_velocity, targetVelocity, alpha);
+
+    // 수평 이동
+    _velocity.x = ::lerp(_velocity.x, targetVelocity.x, alpha);
+    _velocity.z = ::lerp(_velocity.z, targetVelocity.z, alpha);
+
+    if (_onGround && _commandDesc.jump)
+    {
+        _verticalVelocity = _moveDesc.jumpVelocity;
+        _onGround = false;
+    }
+
+    if (!_onGround)
+    {
+        _verticalVelocity += _moveDesc.gravity * timeDelta;
+    }
+
+    _velocity.y = _verticalVelocity;
+
 }
 
 void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transform)
 {
     transform->Add_WorldOffset(_velocity * timeDelta);
 
-    
+    // TODO : Temp 바닥 충돌처리, 나중에는 충돌체 기준으로
+    Vec3 currentPos = transform->Get_WorldPosition();
+
+    if (currentPos.y <= _moveDesc.groundY)
+    {
+        currentPos.y = _moveDesc.groundY;
+        transform->Set_LocalPosition(currentPos);
+
+        _verticalVelocity = 0.f; // 떨어지는 속도 초기화
+        _onGround = true;
+    }
+    else
+    {
+        _onGround = false;
+    }
+
 }
 
 Shared<MovementComponent> MovementComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

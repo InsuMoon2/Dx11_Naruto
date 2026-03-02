@@ -7,7 +7,7 @@ NS_BEGIN(Client)
 
 class CombatStat : public Component, public IReplicable
 {
-    GENERATED_COMPONENT(CombatStat, Protocol::COMPONENT_TYPE_COMBAT_STAT)
+    GENERATED_COMPONENT(CombatStat, Protocol::COMPONENT_TYPE_COMBAT_STAT);
 
 public:
     struct FCombatStatDesc
@@ -28,9 +28,6 @@ public:
     HRESULT Initialize_Prototype() override;
     HRESULT Initialize(void* arg) override;
 
-    json    To_Json() const override;
-    void    From_Json(const json& data) override;
-
 public:
     float   Get_Hp() const { return _hp; }
     float   Get_Mp() const { return _mp; }
@@ -46,8 +43,8 @@ public:
     void    Heal(float amount);
 
 public: /* Protobuf */
-    void Sync_FromProtobuf(Message& message) override;
-    void Serialize_ToProtobuf(Message& message) const override;
+    void    Sync_FromProtobuf(Message& message) override;
+    void    Serialize_ToProtobuf(Message& message) const override;
 
 private:
     float _maxHp        = {};

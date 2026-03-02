@@ -1,6 +1,24 @@
 ﻿#include "pch.h"
 #include "CombatStat.h"
 
+IMPLEMENT_REFLECTION(CombatStat)
+
+bool CombatStat::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "CombatStat";
+
+    PROPERTY_READONLY("HP", _hp);
+    PROPERTY_FLOAT("Max HP", _maxHp, 1.f, 9999.f);
+    PROPERTY_READONLY("MP", _mp);
+    PROPERTY_FLOAT("Max MP", _maxMp, 0.f, 9999.f);
+    PROPERTY_FLOAT("Attack", _attack, 0.f, 999.f);
+    PROPERTY_FLOAT("Defense", _defense, 0.f, 999.f);
+    PROPERTY_FLOAT("Speed", _speed, 0.f, 100.f);
+
+    return true;
+}
+
 CombatStat::CombatStat(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
@@ -72,13 +90,13 @@ void CombatStat::Sync_FromProtobuf(Message& message)
 {
     Protocol::CombatStat& stat = dynamic_cast<Protocol::CombatStat&>(message);
 
-    _maxHp = stat.max_hp();
-    _hp = stat.current_hp();
-    _maxMp = stat.max_mp();
-    _mp = stat.current_mp();
-    _attack = stat.attack();
-    _defense = stat.defense();
-    _speed = stat.speed();
+    _maxHp      = stat.max_hp();
+    _hp         = stat.current_hp();
+    _maxMp      = stat.max_mp();
+    _mp         = stat.current_mp();
+    _attack     = stat.attack();
+    _defense    = stat.defense();
+    _speed      = stat.speed();
 }
 
 void CombatStat::Serialize_ToProtobuf(Message& message) const
@@ -92,38 +110,6 @@ void CombatStat::Serialize_ToProtobuf(Message& message) const
     stat.set_attack(_attack);
     stat.set_defense(_defense);
     stat.set_speed(_speed);
-}
-
-json CombatStat::To_Json() const
-{
-    json j;
-
-    j = Component::To_Json(); // 타입 받아오기
-
-    j["hp"] = _hp;
-    j["maxHp"] = _maxHp;
-
-    j["mp"] = _mp;
-    j["maxMp"] = _maxMp;
-
-    j["attack"] = _attack;
-    j["defense"] = _defense;
-    j["speed"] = _speed;
-
-    return j;
-}
-
-void CombatStat::From_Json(const json& data)
-{
-    if (data.contains("maxHp"))     _maxHp = data["maxHp"];
-    if (data.contains("hp"))        _hp = data["hp"];
-
-    if (data.contains("maxMp"))     _maxMp = data["maxMp"];
-    if (data.contains("mp"))        _mp = data["mp"];
-
-    if (data.contains("attack"))    _attack = data["attack"];
-    if (data.contains("defense"))   _defense = data["defense"];
-    if (data.contains("speed"))     _speed = data["speed"];
 }
 
 shared_ptr<CombatStat> CombatStat::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

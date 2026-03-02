@@ -25,6 +25,11 @@ const Matrix* PipeLine::Get_Transform(ETransformState state) const
     return &_transformMatrices[ETOI(state)];
 }
 
+const Matrix* PipeLine::Get_TransformInverse(ETransformState state) const
+{
+    return  &_transformInverseMatrices[ETOI(state)];
+}
+
 const Vec4* PipeLine::Get_CamPosition() const
 {
     return reinterpret_cast<const Vec4*>(

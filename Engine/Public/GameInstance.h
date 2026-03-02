@@ -139,12 +139,14 @@ public: /* Prefeb */
 
 public: /* PipeLine */
     const Matrix*           Get_Transform(ETransformState state) const;
+    const Matrix*           Get_TransformInverse(ETransformState state) const;
+
     const Vec4*             Get_CamPosition() const;
     void                    Set_Transform(ETransformState state, const Matrix & matrix);
 
     HRESULT                 Bind_CamPosition(Shared<Shader> shader, const char* constantName);
     HRESULT                 Bind_TransformMatrix(ETransformState state, Shared<Shader> shader, const char* constantName);
-    HRESULT                 Bind_TransformMatrix_Invsere(ETransformState state, Shared<Shader> shader, const char* constantName);
+    HRESULT                 Bind_TransformMatrix_Inverse(ETransformState state, Shared<Shader> shader, const char* constantName);
 
 public: /* Component_Factory */
     template<typename T>

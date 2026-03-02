@@ -1,6 +1,21 @@
 ﻿#include "pch.h"
 #include "Camera_Target.h"
 
+IMPLEMENT_REFLECTION(Camera_Target);
+
+bool Camera_Target::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "Camera_Target";
+
+    PROPERTY_VEC3("Offset : ", _offset, 0.1f);
+    PROPERTY_FLOAT("Mouse Sensor", _mouseSensor, 0.1f, 20.f);  
+    PROPERTY_FLOAT("Distance", _distance, 1.f, 50.f);  
+    PROPERTY_FLOAT("Follow Speed", _followSpeed, 0.f, 20.f);   
+
+    return true;
+}
+
 Camera_Target::Camera_Target(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Camera(device, context)
 {
@@ -57,9 +72,31 @@ void Camera_Target::Priority_Update(float timeDelta)
     auto target = _targetTransform.lock();
     if (!target) return;
 
-    // 타겟 위치 + 오프셋 = 최종 위치
+    float dx = INPUT->GetMouseDelta().x; 
+    float dy = INPUT->GetMouseDelta().y;
+
+    _yaw    += dx * _mouseSensor;
+    _pitch  += dy * _mouseSensor;
+
+    _pitch = ::clamp(_pitch, _pitchMin, _pitchMax);
+
+    // 줌
+    float wheel = INPUT->GetMouseWheel();
+    _distance -= wheel * _zoomSpeed;
+    _distance = ::clamp(_distance, _distanceMin, _distanceMax);
+
+    float pitchRad = XMConvertToRadians(_pitch);
+    float yawRad = XMConvertToRadians(_yaw);
+
     Vec3 targetPos = target->Get_WorldPosition();
-    Vec3 desiredPos = targetPos + _offset;
+    targetPos.y += _heightOffset;  
+    Vec3 camOffset;
+
+    camOffset.x = -cosf(pitchRad) * sinf(yawRad) * _distance;
+    camOffset.y = sinf(pitchRad) * _distance;
+    camOffset.z = -cosf(pitchRad) * cosf(yawRad) * _distance;
+
+    Vec3 desiredPos = targetPos + camOffset;
 
     // 위치 보간
     Vec3 currentPos = _transformCom->Get_LocalPosition();
@@ -68,7 +105,6 @@ void Camera_Target::Priority_Update(float timeDelta)
     _transformCom->Set_LocalPosition(newPos);
     _transformCom->LookAt(targetPos);
 
-    // View/Proj 세팅
     Update_TransformMatrices();
 }
 

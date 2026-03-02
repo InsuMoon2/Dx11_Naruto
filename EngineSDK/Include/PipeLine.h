@@ -17,6 +17,7 @@ public:
 
 public: /* Getter */
     const Matrix* Get_Transform(ETransformState state) const;
+    const Matrix* Get_TransformInverse(ETransformState state) const;
     const Vec4*   Get_CamPosition() const;
 
 public: /* Setter */
@@ -26,6 +27,7 @@ public:
     HRESULT Bind_CamPosition(Shared<Shader> shader, const char* constantName);
     HRESULT Bind_TransformMatrix(ETransformState state, Shared<Shader> shader, const char* constantName);
     HRESULT Bind_TransformMatrix_Inverse(ETransformState state, Shared<Shader> shader, const char* constantName);
+
 
 private:
     Matrix _transformMatrices[ETOI(ETransformState::END)];

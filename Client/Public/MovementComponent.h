@@ -20,6 +20,10 @@ public:
         float acceleration = 20.f;
         float deceleration = 24.f;
         float yawSpeed = 0.2f;      // Mouse delta -> Yaw factor
+
+        float jumpVelocity = 8.f;
+        float gravity = -20.f;
+        float groundY = 5.f;        // Temp값. 일단 0으로 조절
     };
 
     struct FMoveCommand
@@ -44,10 +48,6 @@ public:
     void Apply_Command(const FMoveCommand& cmd);
     void Update(float timeDelta);
 
-protected:
-    json To_Json() const override;
-    void From_Json(const json& data) override;
-
 private:
     void Update_Rotation(float timeDelta, Shared<Transform> transform);
     void Update_Velocity(float timeDelta, Shared<Transform> transform);
@@ -58,6 +58,9 @@ private:
     FMoveCommand _commandDesc;
 
     Vec3 _velocity = Vec3::Zero;
+
+    bool    _onGround = true;
+    float   _verticalVelocity = 0.f;
 
     Shared<Transform> _transform;
 

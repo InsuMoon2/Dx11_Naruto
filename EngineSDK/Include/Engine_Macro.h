@@ -88,15 +88,24 @@ namespace Engine
 	            m_pInstance.reset();									 \
 	        }
 
-
 // ==================================================
 //              클래스 이름 세팅
 // ==================================================
 #define GENERATED_BODY(ClassName)                                         \
 public:                                                                  \
     static const wchar_t* StaticClassName() { return L#ClassName; }      \
+    using SelfType = ClassName;                                           \
+    static Engine::FClassReflectionInfo& GetStaticReflectionInfo() {      \
+        static Engine::FClassReflectionInfo info;                         \
+        return info;                                                      \
+    }                                                                     \
+    virtual Engine::FClassReflectionInfo& Get_ReflectionInfo() {          \
+        return GetStaticReflectionInfo();                                 \
+    }                                                                     \
+    static bool _s_reflectionRegistered;                                  \
 private:                                                                 \
-                                                                         \
+    static bool Register_Properties();                                    \
+                                                                          \
     bool _name_setter_ = [this](){                                       \
             this->Set_Name(StaticClassName());                           \
         return true;                                                     \
@@ -105,15 +114,16 @@ private:                                                                 \
 // ==================================================
 //              컴포넌트 ID 세팅
 // ==================================================
-
-#define GENERATED_COMPONENT(ClassName, ProtoID)  \
-    GENERATED_BODY(ClassName)                    \
-                                                 \
-public:                                          \
-    /* Protobuf ID 반환 */                        \
-    static uint32   StaticTypeID() { return static_cast<uint32>(ProtoID); } \
-    virtual uint32  Get_ComponentID() const override { return StaticTypeID(); }
+#define GENERATED_COMPONENT(ClassName, ProtoID)                              \
+    GENERATED_BODY(ClassName)                                                \
+ public:                                                                     \
+    static uint32 StaticTypeID() { return static_cast<uint32>(ProtoID); }   \
+    virtual uint32 Get_ComponentID() const override { return StaticTypeID(); }
 
 
+
+#define IMPLEMENT_REFLECTION(ClassName)                                  \
+    bool ClassName::_s_reflectionRegistered =                            \
+        ClassName::Register_Properties();
 
 }

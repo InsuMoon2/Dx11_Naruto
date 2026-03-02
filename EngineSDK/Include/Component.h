@@ -18,10 +18,17 @@ public:
     virtual HRESULT Initialize(void* arg);
     virtual void    BeginPlay() {}; // 컴포넌트 추가 후, 호출
 
-    virtual uint32 Get_ComponentID() const = 0;
+public:
+    virtual uint32      Get_ComponentID() const = 0;
 
-    Shared<GameObject> Get_Owner() { return _owner.lock(); }
-    void    Set_Owner(Shared<GameObject> owner) { _owner = owner; }
+    Shared<GameObject>  Get_Owner() { return _owner.lock(); }
+    void                Set_Owner(Shared<GameObject> owner) { _owner = owner; }
+
+    virtual             FClassReflectionInfo& Get_ReflectionInfo()
+    {
+        static FClassReflectionInfo empty;
+        return empty;
+    }
 
 public:
     virtual json    To_Json() const;
@@ -29,6 +36,10 @@ public:
 
 protected:
     Shared<Component> GetSharedPtr() { return static_pointer_cast<Component>(shared_from_this()); }
+
+private:
+    virtual json    Reflect_ToJson() const;
+    virtual void    Reflect_FromJson(const json& data);
 
 protected:
     ComPtr<Device> _device = { nullptr };

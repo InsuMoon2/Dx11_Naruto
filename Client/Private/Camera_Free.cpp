@@ -1,6 +1,18 @@
 ﻿#include "pch.h"
 #include "Camera_Free.h"
 
+IMPLEMENT_REFLECTION(Camera_Free)
+
+bool Camera_Free::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "Camera_Free";
+
+    PROPERTY_FLOAT("Mouse Sensor : ", _mouseSensor, 0.1f, 5.f);
+
+    return true;
+}
+
 Camera_Free::Camera_Free(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Camera(device, context)
 {
@@ -45,8 +57,8 @@ void Camera_Free::Priority_Update(float timeDelta)
     if (INPUT->KeyPress(KEY_TYPE::RBUTTON))
     {
         // 이동
-        if (INPUT->KeyPress(KEY_TYPE::W)) _transformCom->Move_Forward(timeDelta);
-        if (INPUT->KeyPress(KEY_TYPE::S)) _transformCom->Move_Backward(timeDelta);
+        if (INPUT->KeyPress(KEY_TYPE::W)) _transformCom->Move_Backward(timeDelta);
+        if (INPUT->KeyPress(KEY_TYPE::S)) _transformCom->Move_Forward(timeDelta);
         if (INPUT->KeyPress(KEY_TYPE::A)) _transformCom->Move_Left(timeDelta);
         if (INPUT->KeyPress(KEY_TYPE::D)) _transformCom->Move_Right(timeDelta);
 

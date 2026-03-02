@@ -7,6 +7,7 @@
 #include "NetworkManager.h"
 #include "VIBuffer_Rect.h"
 #include "Shader.h"
+#include "Texture.h"
 
 MainApp::MainApp()
 {
@@ -34,6 +35,8 @@ HRESULT MainApp::Initialize()
 
     CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
     CHECK_FAILED(Ready_StartLevel(ELevelType::MainTitle), E_FAIL);
+
+    GAME->Set_GameState(EGameState::Play);
 
     return S_OK;
 }
@@ -80,6 +83,13 @@ HRESULT MainApp::Ready_StaticLevel()
         Protocol::COMPONENT_TYPE_SHADER_VTXTEX,
         Shader::Create(_device, _context, TEXT("../../Client/Bin/Shaders/Shader_Vtxtex.hlsl"),
             VTXTEX::Elements, VTXTEX::numElements))))
+    {
+        return E_FAIL;
+    }
+
+    shared_ptr<Texture> loadingTex = Texture::Create(_device, _context, TEXT("../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadingScreen_%03d_BC.png"), 2);
+    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
+        Protocol::COMPONENT_TYPE_TEXTURE_LOADING, loadingTex)))
     {
         return E_FAIL;
     }

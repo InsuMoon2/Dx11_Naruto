@@ -19,8 +19,8 @@ WCHAR       szWindowClass[MAX_LOADSTRING];  // 기본 창 클래스 이름입니
 
 namespace Client
 {
-    unsigned int g_winSizeX = 800;
-    unsigned int g_winSizeY = 600;
+    unsigned int g_winSizeX = 1600;
+    unsigned int g_winSizeY = 900;
 }
 
 struct LaunchParams

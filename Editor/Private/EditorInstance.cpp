@@ -6,6 +6,7 @@
 #include "Editor_Manager.h"
 #include "Notification_Manager.h"
 #include "PlayerSession_Manager.h"
+#include "Camera_Target.h"
 
 IMPLEMENT_SINGLETON(EditorInstance)
 
@@ -72,6 +73,8 @@ void EditorInstance::Play()
 
     if (targetCam)
         GAME->Set_ActiveCamera(targetCam);
+
+    //INPUT->LockMouse();
 }
 
 void EditorInstance::Pause()
@@ -87,7 +90,20 @@ void EditorInstance::Stop()
 
     auto freeCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_FREE);
     if (freeCam)
+    {
+        auto targetCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_TARGET);
+        if (targetCam)
+        {
+            auto srcTransform = targetCam->Get_Component<Transform>();
+            auto destTransform = freeCam->Get_Component<Transform>();
+            if (srcTransform && destTransform)
+                destTransform->Set_LocalPosition(srcTransform->Get_WorldPosition());
+        }
+
         GAME->Set_ActiveCamera(freeCam);
+        INPUT->UnlockMouse();
+    }
+        
 
     auto btView = dynamic_pointer_cast<BehaviorTree_View>(Get_Window(TEXT("BehaviorTree")));
     if (btView && btView->Is_DebugMode())

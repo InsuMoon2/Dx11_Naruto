@@ -10,6 +10,7 @@
 #include "Input_Manager.h"
 #include "Hierarchy.h"
 #include "Asset_Manager.h"
+#include "Spawn_Helper.h"
 
 Scene_View::Scene_View()
     : EditorWindow(TEXT("Scene"))
@@ -68,6 +69,13 @@ void Scene_View::OnGui()
     ImGui::PopStyleVar();
 }
 
+void Scene_View::Pre_Render()
+{
+    EditorWindow::Pre_Render();
+
+    Render_Preview();
+}
+
 void Scene_View::Focus_OnPosition(const Vec3& targetPos)
 {
     _isCameraLerping = true;
@@ -103,6 +111,13 @@ void Scene_View::Update_CameraLerp(float timeDelta)
     // 도착하면 종료
     if ((newPos - targetCamPos).Length() < 0.1f)
         _isCameraLerping = false;
+}
+
+void Scene_View::Clear_Drag()
+{
+    _previewObject = nullptr;
+    _isDraggingPrefab = false;
+    _draggingPrefabGuid.clear();
 }
 
 ImGuiWindowFlags Scene_View::Get_WindowFlags() const
@@ -151,21 +166,9 @@ void Scene_View::Render_Viewport()
         // 드래그 드롭 타겟
         if (ImGui::BeginDragDropTarget())
         {
-            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_PREFAB"))
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_PREFAB",
+                ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_AcceptNoDrawDefaultRect))
             {
-                //wstring prefabPath = (wchar_t*)payload->Data;
-
-                // GUID -> 파일 경로 역변환
-                string guid = (const char*)payload->Data;
-                wstring prefabPath = GAME->Resolve_AssetPath(guid);
-
-                if (prefabPath.empty())
-                {
-                    LOG_ERROR("Unknown asset GUID: {}", guid);
-                    ImGui::EndDragDropTarget();
-                    return;
-                }
-
                 ImVec2 mousePos = ImGui::GetMousePos();
                 ImVec2 windowPos = ImGui::GetWindowPos();
                 ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
@@ -173,14 +176,58 @@ void Scene_View::Render_Viewport()
                     mousePos.x - windowPos.x - contentMin.x,
                     mousePos.y - windowPos.y - contentMin.y
                 );
-
                 Vec3 worldPos = Screen_To_World(localPos);
 
-                Spawn_Prefab(prefabPath, worldPos);
+                if (!_previewObject)
+                {
+                    _draggingPrefabGuid = (const char*)payload->Data;
+
+                    string prefabName = GUID_To_PrefabName(_draggingPrefabGuid);
+                    if (!prefabName.empty())
+                    {
+                        _previewObject = GAME->Instantiate_Prefab(prefabName);
+                        _isDraggingPrefab = true;
+                    }
+                }
+
+                // 프리뷰 위치 업데이트
+                if (_previewObject)
+                {
+                    auto transform = _previewObject->Get_Component<Transform>();
+                    if (transform)
+                        transform->Set_WorldPosition(worldPos);
+                }
+
+                // 드롭 확정
+                if (payload->IsDelivery())
+                {
+                    if (_previewObject)
+                    {
+                        GAME->Add_GameObject(GAME->Current_Level(), TEXT("Layer_GamePlay"), _previewObject);
+
+                        LOG_INFO("Spawned at ({:.1f}, {:.1f}, {:.1f})", worldPos.x, worldPos.y, worldPos.z);
+
+                        auto hierarchy = dynamic_pointer_cast<Hierarchy>(
+                            EDITOR->Get_Window(TEXT("Hierarchy")));
+
+                        if (hierarchy)
+                            hierarchy->Select_Object(_previewObject, false);
+
+                        Clear_Drag();
+                    }
+                }
             }
             ImGui::EndDragDropTarget();
         }
+        else
+        {
+            if (_previewObject)
+            {
+                Clear_Drag();
+            }
+        }
     }
+    
 }
 
 void Scene_View::Update_WindowState()
@@ -331,50 +378,125 @@ void Scene_View::Handle_Guizmo_Shotcut()
 
 Vec3 Scene_View::Screen_To_World(Vec2 screenPos)
 {
-    float normalizeX = (screenPos.x / _viewportSize.x) * 2.f - 1.f;
-    float normalizeY = 1.f - (screenPos.y / _viewportSize.y) * 2.f;
+    // NDC로 변환
+    float ndcX = (screenPos.x / _viewportSize.x) * 2.f - 1.f;
+    float ndcY = 1.f - (screenPos.y / _viewportSize.y) * 2.f;
 
-    return Vec3(normalizeX * 5.f, normalizeY * 5.f, -5.f);
+    // 역행렬 세팅
+    const Matrix* invertView = GAME->Get_TransformInverse(ETransformState::View);
+    const Matrix* invertProj = GAME->Get_TransformInverse(ETransformState::Proj);
+
+    if (!invertView || !invertProj)
+        return Vec3::Zero;
+
+    // NDC -> View Space
+    Vec3 nearNDC(ndcX, ndcY, 0.f);
+    Vec3 farNDC(ndcX, ndcY, 1.f);
+
+    Vec3 nearView = Vec3::Transform(nearNDC, *invertProj);
+    Vec3 farView = Vec3::Transform(farNDC, *invertProj);
+
+    // View -> World
+    Vec3 nearWorld = Vec3::Transform(nearView, *invertView);
+    Vec3 farWorld = Vec3::Transform(farView, *invertView);
+
+    // 레이 방향
+    Vec3 rayDir = farWorld - nearWorld;
+    rayDir.Normalize();
+
+    // 일단 임시값으로 y = 5 평면과의 교차점 계산으로 세팅
+    float targetY = 5;
+    if (fabsf(rayDir.y) < FLT_EPSILON)
+        return Vec3(nearWorld.x, targetY, nearWorld.z);
+
+    float t = (targetY - nearWorld.y) / rayDir.y;
+
+    return nearWorld + rayDir * t;
 }
 
-void Scene_View::Spawn_Prefab(const wstring& prefabPath, const Vec3& worldPos)
+string Scene_View::GUID_To_PrefabName(const string& guid)
 {
-    // 파일 경로에서 프리펩 이름 추출
-    fs::path path(prefabPath);
-    wstring nameW = path.stem().wstring();
-    string prefabName = Utils::ToString(nameW);
+    wstring assetPath = GAME->Resolve_AssetPath(guid);
+    if (assetPath.empty())
+    {
+        LOG_ERROR("Unknown asset GUID: {}", guid);
+        return "";
+    }
 
-    // 프리펩 인스턴스 생성 (SR 때처럼 월드에 스폰 전에는 반투명하게 해줄지?)
-    auto newObj = GAME->Instantiate_Prefab(prefabName);
+    fs::path path(assetPath);
+    string fileName = path.filename().string();
+    size_t dotPos = fileName.find('.');
+
+    return (dotPos != string::npos) ? fileName.substr(0, dotPos) : path.stem().string();
+}
+
+void Scene_View::Spawn_Prefab(const string& guid, const Vec3& worldPos)
+{
+#pragma region Legacy : 경로 기반 소환
+    // 파일 경로에서 프리펩 이름 추출
+    //fs::path path(prefabPath);
+    //string fileName = path.filename().string();
+    //size_t dotPos = fileName.find('.');
+    //string prefabName = (dotPos != string::npos) ? fileName.substr(0, dotPos) : path.stem().string();
+    //
+    //auto newObj = GAME->Instantiate_Prefab(prefabName);
+    //
+    //if (!newObj)
+    //{
+    //    LOG_ERROR("Failed to instantiate prefab: {}", prefabName);
+    //    return;
+    //}
+    //
+    //// UUID 출력 로그 확인
+    //LOG_INFO("Spawned '{}' UUID: {}",
+    //    Utils::ToString(newObj->Get_Name()),
+    //    newObj->Get_GUID());
+    //
+    //// 위치 세팅
+    //auto transform = newObj->Get_Component<Transform>();
+    //if (transform)
+    //{
+    //    transform->Set_WorldPosition(worldPos);
+    //}
+    //
+    //// 스폰
+    //GAME->Add_GameObject(ETOI(ELevelType::GamePlay), TEXT("Layer_GamePlay"), newObj);
+    //
+    //LOG_INFO("Position: ({:.2f}, {:.2f}, {:.2f})", worldPos.x, worldPos.y, worldPos.z);
+    //
+    //auto hierarchy = dynamic_pointer_cast<Hierarchy>(EDITOR->Get_Window(TEXT("Hierarchy")));
+    //if (hierarchy)
+    //{
+    //    hierarchy->Select_Object(newObj, false);  // false = 단일 선택
+    //}
+#pragma endregion
+
+    string prefabName = GUID_To_PrefabName(guid);
+    if (prefabName.empty()) return;
+
+    auto newObj = Spawn_Helper::Prefab(prefabName)
+        .AtLevel(GAME->Current_Level())
+        .InLayer(TEXT("Layer_GameObject"))
+        .Position(worldPos)
+        .Spawn();
 
     if (!newObj)
-    {
-        LOG_ERROR("Failed to instantiate prefab: {}", prefabName);
         return;
-    }
 
-    // UUID 출력 로그 확인
-    LOG_INFO("Spawned '{}' UUID: {}",
-        Utils::ToString(newObj->Get_Name()),
-        newObj->Get_GUID());
+    auto hierarchy = dynamic_pointer_cast<Hierarchy>(
+        EDITOR->Get_Window(TEXT("Hierarchy")));
 
-    // 위치 세팅
-    auto transform = newObj->Get_Component<Transform>();
-    if (transform)
-    {
-        transform->Set_WorldPosition(worldPos);
-    }
-
-    // 스폰
-    GAME->Add_GameObject(ETOI(ELevelType::GamePlay), TEXT("Layer_GamePlay"), newObj);
-
-    LOG_INFO("Position: ({:.2f}, {:.2f}, {:.2f})", worldPos.x, worldPos.y, worldPos.z);
-
-    auto hierarchy = dynamic_pointer_cast<Hierarchy>(EDITOR->Get_Window(TEXT("Hierarchy")));
     if (hierarchy)
-    {
-        hierarchy->Select_Object(newObj, false);  // false = 단일 선택
-    }
+        hierarchy->Select_Object(newObj, false);
+
+}
+
+void Scene_View::Render_Preview()
+{
+    if (!_previewObject)
+        return;
+
+    GAME->Add_RenderGroup(ERenderGroup::NonBlend, _previewObject);
 }
 
 shared_ptr<Scene_View> Scene_View::Create()

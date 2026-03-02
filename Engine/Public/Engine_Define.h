@@ -54,6 +54,8 @@ namespace fs = std::filesystem;
 #include "Engine_Struct.h"
 #include "Vertex_Struct.h"
 #include "Engine_Function.h"
+#include "Property_Types.h"
+#include "Reflection_Macro.h"
 
 // Win
 #include <Windows.h>

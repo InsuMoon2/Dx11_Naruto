@@ -69,6 +69,11 @@ void Editor_MainApp::Update(float timeDelta)
 {
     INPUT->Update(timeDelta);
 
+    if (GAME->IsPlaying() && INPUT->KeyDown(KEY_TYPE::ESCAPE))
+    {
+        EDITOR->Stop();
+    }
+
     // 에디터는 항상 업데이트
     EDITOR->Update_Editor(timeDelta);
 

@@ -34,6 +34,11 @@ public:
     void    Set_TargetTransform(Shared<Transform> target) { _targetTransform = target; }
     void    Set_UseControllerRotationYaw(bool bUse) { _bUseControllerRotationYaw = bUse; }
 
+    bool    Get_UseControlYaw() const { return _bUseControllerRotationYaw; }
+    void    Set_UseControlYaw(bool check) { _bUseControllerRotationYaw = check; }
+    float   Get_Yaw() const { return _yaw; }
+
+
 private:
     Weak<Transform> _targetTransform;
 
@@ -42,10 +47,16 @@ private:
 
     float           _pitch = 0.f;
     float           _yaw = 0.f;
+    float           _heightOffset = 2.f;
+    float           _mouseSensor = 0.5f;
+
+    float           _pitchMin = -30.f;
+    float           _pitchMax = 60.f;
 
     float           _distance = 10.f;
-    float           _heightOffset = 2.f;
-    float           _mouseSensor = 10.f;
+    float           _distanceMin = 3.f;
+    float           _distanceMax = 15.f;
+    float           _zoomSpeed = 2.f;
 
     bool            _bUseControllerRotationYaw = true;
 

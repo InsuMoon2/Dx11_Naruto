@@ -16,7 +16,7 @@ public:
     void            Update(float timeDelta);
 
     void            Set_ActiveCamera(Shared<Camera> camera);
-    Shared<Camera>  Get_ActiveCamer() const { return _activeCamera.lock(); }
+    Shared<Camera>  Get_ActiveCamera() const { return _activeCamera.lock(); }
 
     bool            Is_ActiveCamera(const Shared<Camera> camera) const;
 

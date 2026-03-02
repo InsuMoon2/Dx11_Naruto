@@ -95,6 +95,9 @@ void UIObject::Update_Transform()
     float currentViewX = GAME->Get_ViewportWidth();
     float currentViewY = GAME->Get_ViewportHeight();
 
+    _transformMatrices[ETOI(ETransformState::Proj)] = XMMatrixOrthographicLH(
+        currentViewX, currentViewY, 0.f, 1.f);
+
     // 현재 크기 / 원본 크기
     float ratioX = currentViewX / designX;
     float ratioY = currentViewY / designY;

@@ -7,8 +7,8 @@
                 10.0
             ],
             "rotation": [
-                -0.0,
-                -179.99998474121094,
+                0.0,
+                0.0,
                 0.0
             ],
             "scale": [
@@ -25,13 +25,13 @@
             "type": "COMPONENT_TYPE_SHADER"
         },
         {
-            "attack": 100.0,
-            "defense": 5.0,
-            "hp": 200.0,
-            "maxHp": 200.0,
-            "maxMp": 100.0,
-            "mp": 100.0,
-            "speed": 5.0,
+            "Attack": 100.0,
+            "Defense": 5.0,
+            "HP": 200.0,
+            "MP": 100.0,
+            "Max HP": 200.0,
+            "Max MP": 100.0,
+            "Speed": 5.0,
             "type": "COMPONENT_TYPE_COMBAT_STAT"
         },
         {
@@ -49,7 +49,7 @@
             "type": "COMPONENT_TYPE_INPUT"
         }
     ],
-    "guid": "4f7c2e52-409f-4213-ae35-779d10d91c15",
+    "guid": "3d366abd-914e-404b-b94e-a4e62248a08c",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "MyPlayer",
     "static_class": "MyPlayer"
