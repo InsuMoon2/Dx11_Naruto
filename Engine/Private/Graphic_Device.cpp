@@ -86,8 +86,8 @@ HRESULT Graphic_Device::Clear_BackBufferView(const Color& clearColor)
     D3D11_VIEWPORT vp;
     vp.TopLeftX = 0;
     vp.TopLeftY = 0;
-    vp.Width = static_cast<float>(1600); // 이거 지금 클라에있는데.. 엔진으로 옮길지?
-    vp.Height = static_cast<float>(900);
+    vp.Width = _width;
+    vp.Height = _height;
     vp.MinDepth = 0.f;
     vp.MaxDepth = 1.f;
     _context->RSSetViewports(1, &vp);

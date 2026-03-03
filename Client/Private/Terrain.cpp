@@ -62,7 +62,7 @@ HRESULT Terrain::Render()
 {
     GameObject::Render();
 
-    _shaderCom->Begin(0);
+    _shaderCom->Begin_Pass(0);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
     CHECK_FAILED(_bufferCom->Render(), E_FAIL);
 

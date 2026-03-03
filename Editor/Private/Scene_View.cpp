@@ -11,6 +11,7 @@
 #include "Hierarchy.h"
 #include "Asset_Manager.h"
 #include "Spawn_Helper.h"
+#include "StaticMeshActor.h"
 
 Scene_View::Scene_View()
     : EditorWindow(TEXT("Scene"))
@@ -117,7 +118,61 @@ void Scene_View::Clear_Drag()
 {
     _previewObject = nullptr;
     _isDraggingPrefab = false;
-    _draggingPrefabGuid.clear();
+}
+
+Shared<GameObject> Scene_View::Create_StaticMesh(const string& guid, const Vec3& position)
+{
+    wstring assetPath = GAME->Resolve_AssetPath(guid);
+    if (assetPath.empty())
+    {
+        LOG_ERROR("Create_StaticMeshActor: GUID {} 를 찾을 수 없습니다.", guid);
+        return nullptr;
+    }
+
+    StaticMeshActor::FStaticMeshDesc desc;
+    desc.modelGuid = guid;
+    desc.name = Utils::ToWString(fs::path(assetPath).stem().string());
+
+    auto meshActor = StaticMeshActor::Create(GAME->Get_Device(), GAME->Get_Context());
+    if (!meshActor)
+        return nullptr;
+
+    if (FAILED(meshActor->Initialize(&desc)))
+        return nullptr;
+
+    auto transform = meshActor->Get_Component<Transform>();
+    if (transform)
+        transform->Set_WorldPosition(position);
+
+    return meshActor;
+}
+
+void Scene_View::Handle_DragDrop(Shared<GameObject> previewObj, const Vec3& worldPos, const ImGuiPayload* payload)
+{
+    if (!_previewObject)
+    {
+        _previewObject = previewObj;
+        _isDraggingPrefab = true;
+    }
+
+    if (_previewObject)
+    {
+        auto transform = _previewObject->Get_Component<Transform>();
+        if (transform) transform->Set_WorldPosition(worldPos);
+    }
+
+    if (payload->IsDelivery() && _previewObject)
+    {
+        GAME->Add_GameObject(GAME->Current_Level(),
+            TEXT("Layer_GameObject"), _previewObject);
+
+        auto hierarchy = dynamic_pointer_cast<Hierarchy>(
+            EDITOR->Get_Window(TEXT("Hierarchy")));
+        if (hierarchy) hierarchy->Select_Object(_previewObject, false);
+
+        Clear_Drag();
+    }
+
 }
 
 ImGuiWindowFlags Scene_View::Get_WindowFlags() const
@@ -166,57 +221,37 @@ void Scene_View::Render_Viewport()
         // 드래그 드롭 타겟
         if (ImGui::BeginDragDropTarget())
         {
+            ImVec2 mousePos = ImGui::GetMousePos();
+            ImVec2 windowPos = ImGui::GetWindowPos();
+            ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
+
+            Vec2 localPos(
+                mousePos.x - windowPos.x - contentMin.x,
+                mousePos.y - windowPos.y - contentMin.y
+            );
+            Vec3 worldPos = Screen_To_World(localPos);
+
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_PREFAB",
                 ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_AcceptNoDrawDefaultRect))
             {
-                ImVec2 mousePos = ImGui::GetMousePos();
-                ImVec2 windowPos = ImGui::GetWindowPos();
-                ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
-                Vec2 localPos(
-                    mousePos.x - windowPos.x - contentMin.x,
-                    mousePos.y - windowPos.y - contentMin.y
-                );
-                Vec3 worldPos = Screen_To_World(localPos);
+                string guid = (const char*)payload->Data;
+                string prefabName = GUID_To_PrefabName(guid);
 
-                if (!_previewObject)
-                {
-                    _draggingPrefabGuid = (const char*)payload->Data;
+                auto obj = _previewObject ? nullptr : GAME->Instantiate_Prefab(prefabName);
 
-                    string prefabName = GUID_To_PrefabName(_draggingPrefabGuid);
-                    if (!prefabName.empty())
-                    {
-                        _previewObject = GAME->Instantiate_Prefab(prefabName);
-                        _isDraggingPrefab = true;
-                    }
-                }
-
-                // 프리뷰 위치 업데이트
-                if (_previewObject)
-                {
-                    auto transform = _previewObject->Get_Component<Transform>();
-                    if (transform)
-                        transform->Set_WorldPosition(worldPos);
-                }
-
-                // 드롭 확정
-                if (payload->IsDelivery())
-                {
-                    if (_previewObject)
-                    {
-                        GAME->Add_GameObject(GAME->Current_Level(), TEXT("Layer_GamePlay"), _previewObject);
-
-                        LOG_INFO("Spawned at ({:.1f}, {:.1f}, {:.1f})", worldPos.x, worldPos.y, worldPos.z);
-
-                        auto hierarchy = dynamic_pointer_cast<Hierarchy>(
-                            EDITOR->Get_Window(TEXT("Hierarchy")));
-
-                        if (hierarchy)
-                            hierarchy->Select_Object(_previewObject, false);
-
-                        Clear_Drag();
-                    }
-                }
+                Handle_DragDrop(obj, worldPos, payload);
             }
+
+            // Content Mesh
+            if (auto* payload = ImGui::AcceptDragDropPayload("CONTENT_MESH",
+                ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_AcceptNoDrawDefaultRect))
+            {
+                string guid = (const char*)payload->Data;
+                auto obj = _previewObject ? nullptr : Create_StaticMesh(guid, worldPos);
+
+                Handle_DragDrop(obj, worldPos, payload);
+            }
+
             ImGui::EndDragDropTarget();
         }
         else

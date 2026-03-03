@@ -74,7 +74,7 @@ HRESULT Background::Render()
     // 텍스처 바인딩 (첫번째 텍스처 사용)
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureIndex), E_FAIL);
 
-    CHECK_FAILED(_shaderCom->Begin(0), E_FAIL);
+    CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
     CHECK_FAILED(_bufferCom->Render(), E_FAIL);
 

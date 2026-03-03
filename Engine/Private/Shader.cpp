@@ -72,7 +72,7 @@ HRESULT Shader::Initialize(void* arg)
     return S_OK;
 }
 
-HRESULT Shader::Begin(uint32 passIndex)
+HRESULT Shader::Begin_Pass(uint32 passIndex)
 {
     if (passIndex >= _numPasses || _inputLayouts[passIndex] == nullptr)
         return E_FAIL;

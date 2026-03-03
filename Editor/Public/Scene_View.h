@@ -47,6 +47,12 @@ private:
     void                Render_Preview();
     void                Clear_Drag();
 
+    // Static Mesh Spawn
+    Shared<GameObject>  Create_StaticMesh(const string& guid, const Vec3& position);
+    void                Handle_DragDrop(Shared<GameObject> previewObj,
+                                            const Vec3& worldPos,
+                                            const ImGuiPayload* payload);
+
     // Camera
     void                Update_CameraLerp(float timeDelta);
 
@@ -55,7 +61,6 @@ private:
 private: /* Prefab Preview */
     Shared<GameObject>      _previewObject;
     bool                    _isDraggingPrefab = false;
-    string                  _draggingPrefabGuid;
 
 private:
     Shared<RenderTarget>    _renderTarget;
@@ -85,6 +90,8 @@ private: /* ImGuizmo */
     // - LOCAL: 오브젝트 기준 (오브젝트가 회전하면 축도 같이 회전)
     // - WORLD: 월드 기준 (항상 XYZ 축 고정)
     ImGuizmo::MODE _gizmoMode = ImGuizmo::LOCAL;
+
+
 
 public:
     static shared_ptr<Scene_View> Create();

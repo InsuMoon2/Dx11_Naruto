@@ -268,8 +268,8 @@ void Content_Browser::Draw_AssetView()
             string pathStr = Utils::ToString(filePath);
 
             bool isValidPrefab = pathStr.ends_with(".prefab.json");
-
             bool isBehaviorTree = pathStr.ends_with(".bt.json");
+            bool isMeshFile = (extension == ".fbx" || extension == ".FBX");
 
             // 아이콘
             ImGui::PushID(fileName.c_str());
@@ -300,34 +300,35 @@ void Content_Browser::Draw_AssetView()
             // Prefab 드래그
             if (isValidPrefab && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
-#pragma region Legacy : 경로 기반 Payload
-                //wstring fullPath = filePath;
-                //ImGui::SetDragDropPayload("CONTENT_PREFAB", fullPath.c_str(), (fullPath.size() + 1) * sizeof(wchar_t));
-#pragma endregion
-
-#pragma region GUID 기반 Payload
                 string guid = GAME->Find_AssetGUID(filePath);
-                ImGui::SetDragDropPayload("CONTENT_PREFAB", guid.c_str(), guid.size() + 1);
-                ImGui::SetTooltip("%s", pureName.c_str());
-#pragma endregion
-                
+                if (!guid.empty())
+                {
+                    ImGui::SetDragDropPayload("CONTENT_PREFAB", guid.c_str(), guid.size() + 1);
+                    ImGui::SetTooltip("%s", pureName.c_str());
+                }
                 ImGui::EndDragDropSource();
             }
 
             // BehaviorTree 드래그
             else if (isBehaviorTree && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
-#pragma region Legacy : 경로 기반 Payload
-                //wstring fullPath = filePath;
-                //ImGui::SetDragDropPayload("CONTENT_BEHAVIORTREE", fullPath.c_str(), (fullPath.size() + 1) * sizeof(wchar_t));
-#pragma endregion
-
-#pragma region GUID 기반 Payload
                 string guid = GAME->Find_AssetGUID(filePath);
-                ImGui::SetDragDropPayload("CONTENT_BEHAVIORTREE", guid.c_str(), guid.size() + 1);
-                ImGui::SetTooltip("%s", pureName.c_str());
-#pragma endregion
-                
+                if (!guid.empty())
+                {
+                    ImGui::SetDragDropPayload("CONTENT_BEHAVIORTREE", guid.c_str(), guid.size() + 1);
+                    ImGui::SetTooltip("%s", pureName.c_str());
+                }
+                ImGui::EndDragDropSource();
+            }
+            // Static Mesh 드래그
+            else if (isMeshFile && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            {
+                string guid = GAME->Find_AssetGUID(filePath);
+                if (!guid.empty())
+                {
+                    ImGui::SetDragDropPayload("CONTENT_MESH", guid.c_str(), guid.size() + 1);
+                    ImGui::SetTooltip(ICON_FA_CUBE " %s", pureName.c_str());
+                }
                 ImGui::EndDragDropSource();
             }
 

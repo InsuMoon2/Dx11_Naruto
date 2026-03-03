@@ -1,7 +1,7 @@
 # Dx11_Naruto 프로젝트 구조
 
 > **AI 어시스턴트는 매 대화 시작 시 이 파일을 반드시 읽을 것!**
-> 마지막 갱신: 2026-02-28
+> 마지막 갱신: 2026-03-03
 
 ---
 
@@ -50,6 +50,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 > - Client에서 Game/Editor 프로젝트 코드 참조 불가
 > - `EngineSDK/Include`에 Engine Public 헤더 복사, `EngineSDK/Lib`에 .lib 파일
 > - `AssimpTool`은 Assimp만 링크, Engine/Client와 독립 빌드
+> - Assimp 라이브러리는 `Engine/ThirdPartyLib/`에 수동 배치, 헤더는 `Engine/Public/Assimp/`에 배치
 
 ---
 
@@ -57,7 +58,6 @@ GameServer (EXE) ── ServerCore + Protobuf
 
 | 패키지 | 용도 |
 |---|---|
-| `assimp` | 3D 모델 임포트 (AssimpTool에서 사용) |
 | `directxtk` | SimpleMath, DDSTextureLoader, WICTextureLoader |
 | `effects11` | D3DX11Effect (셰이더 Effect 프레임워크) |
 | `spdlog` | 로깅 (LOG_INFO/WARN/ERROR 매크로) |
@@ -70,6 +70,15 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `protobuf` | 네트워크 직렬화 + ComponentID 정의 |
 | `stduuid` | UUID 생성 (GameObject GUID) |
 
+## 수동 라이브러리 (ThirdPartyLib)
+
+| 라이브러리 | 위치 | 용도 |
+|---|---|---|
+| `assimp` | `Engine/ThirdPartyLib/` (lib), `Engine/Public/Assimp/` (헤더) | 3D 모델 임포트 (AssimpTool에서 사용) |
+
+> [!NOTE]
+> Assimp는 vcpkg manifest 모드에 문제가 있어 직접 다운로드 후 수동 배치 방식으로 전환됨.
+
 ---
 
 ## 디렉토리 구조
@@ -78,6 +87,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 - `Default/` — pch, .vcxproj, 진입점 코드
 - `Public/` — 헤더 파일 (.h)
 - `Private/` — 소스 파일 (.cpp)
+- `ThirdPartyLib/` — (Engine 전용) 수동 배치된 외부 라이브러리 (.lib)
 
 ---
 
@@ -161,6 +171,8 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Delegate.h` | 이벤트 델리게이트 시스템 |
 | `AnimNotify_Factory` | 애니메이션 노티파이 팩토리 |
 | `Vertex_Struct.h` | 정점 구조체 정의 (`VTXTEX`, `VTXNORTEX`, `VTXMESH`) + InputLayout |
+| `Property_Types.h` | 프로퍼티 타입 정의 (리플렉션 시스템용) |
+| `Reflection_Macro.h` | 리플렉션 매크로 (컴포넌트 프로퍼티 자동 노출) |
 | `Engine_Define.h` | 엔진 공통 정의 |
 | `Engine_Enum.h` | 엔진 열거형 |
 | `Engine_Function.h` | 엔진 유틸 함수 |
@@ -210,7 +222,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 
 | 클래스 | 설명 |
 |---|---|
-| `Level_Logo` | 로고 레벨 (Space 키 대기) |
+| `Level_MainTitle` | 메인 타이틀 레벨 (기존 Level_Logo에서 변경) |
 | `Level_Loading` | 로딩 레벨 (비동기 로드 관리) |
 | `Level_Gameplay` | 게임플레이 레벨 |
 | `Loader` | 비동기 리소스/프로토타입 로딩 (별도 쓰레드) |
@@ -283,6 +295,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `CombatStat_Inspector` | CombatStat 인스펙터 |
 | `BehaviorTree_Inspector` | BT 인스펙터 |
 | `Texture_Inspector` | 텍스처 인스펙터 |
+| `Reflection_Inspector` | 리플렉션 기반 자동 인스펙터 |
 
 ### 기타
 
@@ -307,7 +320,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 ## AssimpTool (EXE)
 
 모델 컨버터 — Assimp으로 FBX/OBJ 읽고 커스텀 바이너리로 변환.
-Engine에 Assimp 의존성 없이, 이 도구에서만 사용.
+Assimp 헤더는 `Engine/Public/Assimp/`에서, 라이브러리는 `Engine/ThirdPartyLib/`에서 참조.
 
 | 파일 | 설명 |
 |---|---|
@@ -316,13 +329,14 @@ Engine에 Assimp 의존성 없이, 이 도구에서만 사용.
 | `Converter.h/cpp` | FBX → 커스텀 변환 핵심 (`ReadAssetFile`) |
 | `AssimpTool.cpp` | 진입점 (main) |
 
-### 빌드 후 이벤트
-```
-xcopy /y "$(SolutionDir)vcpkg_installed\x64-windows\x64-windows\bin\assimp-vc143-mt.dll" "$(OutDir)\"
-```
+### 빌드 설정
+- **추가 포함 디렉터리**: `../../Engine/Public/` (Assimp 헤더 접근용)
+- **추가 라이브러리 디렉터리**: `../../Engine/ThirdPartyLib/`
+- **추가 종속성**: `assimp-vc143-mtd.lib` (Debug) / `assimp-vc143-mt.lib` (Release)
+- **추가 옵션**: `/utf-8` (C/C++ 명령줄, Unicode 지원용)
 
-> [!NOTE]
-> vcpkg 경로가 `x64-windows\x64-windows\`로 중첩되어 있음에 주의.
+> [!IMPORTANT]
+> `assimp-vc143-mt.dll`을 실행 폴더(`AssimpTool/Bin/`)에 수동 복사 필요.
 
 ---
 
@@ -349,20 +363,20 @@ IOCP 기반 네트워크 코어:
 
 ### ELevelType 인덱스
 ```
-Loading = 0, Static = 1, Logo = 2, GamePlay = 3
+Loading = 0, Static = 1, MainTitle = 2, GamePlay = 3
 ```
 
 ### 로딩 흐름
 ```
-Ready_StartLevel(Logo)
+Ready_StartLevel(MainTitle)
   └─ Level_Loading 생성
-       └─ Loader::Loading_For_LogoLevel() [비동기 쓰레드]
+       └─ Loader::Loading_For_MainTitleLevel() [비동기 쓰레드]
             ├─ Register_Components()     → Static 레벨에 컴포넌트/오브젝트 등록
             ├─ Initialize_BT_Nodes()
             ├─ ResourceLoader::Load_ShaderTable()
             ├─ ResourceLoader::Load_TerrainTable()
             └─ ResourceLoader::Load_TextureTable()
-  └─ Level_Logo 생성 (Space 키 대기)
+  └─ Level_MainTitle 생성
 
 [Space 입력]
   └─ Level_Loading 생성

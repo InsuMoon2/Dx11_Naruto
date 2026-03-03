@@ -62,7 +62,7 @@ HRESULT Monster::Render()
 {
     Character::Render();
 
-    CHECK_FAILED(_shaderCom->Begin(0), E_FAIL);
+    CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
     CHECK_FAILED(_model->Render(), E_FAIL);
 
     return S_OK;

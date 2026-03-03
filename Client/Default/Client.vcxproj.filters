@@ -98,6 +98,9 @@
       <Filter>02. GameObject\00. Player\00. Network</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Target.h" />
+    <ClInclude Include="..\Public\StaticMeshActor.h">
+      <Filter>02. GameObject\06. StaticMesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -185,6 +188,9 @@
       <Filter>02. GameObject\00. Player\00. Network</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Target.cpp" />
+    <ClCompile Include="..\Private\StaticMeshActor.cpp">
+      <Filter>02. GameObject\06. StaticMesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -264,6 +270,9 @@
     </Filter>
     <Filter Include="02. GameObject\00. Player\00. Network">
       <UniqueIdentifier>{7f9b4d43-fc1b-49d8-a698-695a12504ab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. StaticMesh">
+      <UniqueIdentifier>{fcff067d-2d76-4f0d-bcbd-a228bef07322}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

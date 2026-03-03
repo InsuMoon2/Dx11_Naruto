@@ -17,7 +17,7 @@ public:
     virtual HRESULT Initialize_Prototype(const wstring& shaderFilePath, const D3D11_INPUT_ELEMENT_DESC* desc, uint32 numElements);
     virtual HRESULT Initialize(void* arg) override;
 
-    HRESULT Begin(uint32 passIndex);
+    HRESULT Begin_Pass(uint32 passIndex);
     HRESULT Bind_SRV(const char* constantName, ComPtr<ShaderResourceView> SRV);
     HRESULT Bind_Matrix(const char* constantName, const Matrix* matrix);
     HRESULT Bind_RawValue(const char* constantName, const void* data, uint32 length);

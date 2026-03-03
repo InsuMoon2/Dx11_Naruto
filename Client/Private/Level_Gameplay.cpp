@@ -112,7 +112,7 @@ HRESULT Level_Gameplay::Ready_Layer_Camera(const wstring& layerTag)
         desc.farZ = 1000.f;
         desc.scale = Vec3(1.f, 1.f, 1.f);
 
-        desc.mouseSensor = 1.65f; // 마우스 감도
+        desc.mouseSensor = 15.65f; // 마우스 감도
 
         CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay),
             Protocol::OBJECT_TYPE_CAMERA_FREE, layerTag, &desc), E_FAIL);

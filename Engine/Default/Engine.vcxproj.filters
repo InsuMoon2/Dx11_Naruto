@@ -336,6 +336,9 @@
     <Filter Include="01. Utility\04. Component\04. Model">
       <UniqueIdentifier>{cf9118a9-f19b-42de-928a-89d86b473076}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. GameObject\04. StaticMesh">
+      <UniqueIdentifier>{c8ff0aec-fb57-40b8-952a-dc98ee15ff39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">

@@ -122,6 +122,7 @@ enum OBJECT_TYPE : int {
   OBJECT_TYPE_CAMERA_TARGET = 6,
   OBJECT_TYPE_PLAYER_START = 7,
   OBJECT_TYPE_BACKGROUND = 10,
+  OBJECT_TYPE_STATIC_MESH = 11,
   OBJECT_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   OBJECT_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -131,8 +132,8 @@ enum OBJECT_TYPE : int {
 bool OBJECT_TYPE_IsValid(int value);
 extern const uint32_t OBJECT_TYPE_internal_data_[];
 constexpr OBJECT_TYPE OBJECT_TYPE_MIN = static_cast<OBJECT_TYPE>(0);
-constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(10);
-constexpr int OBJECT_TYPE_ARRAYSIZE = 10 + 1;
+constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(11);
+constexpr int OBJECT_TYPE_ARRAYSIZE = 11 + 1;
 const ::google::protobuf::EnumDescriptor*
 OBJECT_TYPE_descriptor();
 template <typename T>
@@ -145,7 +146,7 @@ const std::string& OBJECT_TYPE_Name(T value) {
 template <>
 inline const std::string& OBJECT_TYPE_Name(OBJECT_TYPE value) {
   return ::google::protobuf::internal::NameOfDenseEnum<OBJECT_TYPE_descriptor,
-                                                 0, 10>(
+                                                 0, 11>(
       static_cast<int>(value));
 }
 inline bool OBJECT_TYPE_Parse(absl::string_view name, OBJECT_TYPE* value) {

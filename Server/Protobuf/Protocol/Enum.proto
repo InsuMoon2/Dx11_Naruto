@@ -62,6 +62,7 @@ enum OBJECT_TYPE
     OBJECT_TYPE_PLAYER_START            = 7;
 
     OBJECT_TYPE_BACKGROUND              = 10;
+    OBJECT_TYPE_STATIC_MESH             = 11;
 }
 
 enum OBJECT_STATE_TYPE
