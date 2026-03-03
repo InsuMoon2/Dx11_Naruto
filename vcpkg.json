@@ -3,7 +3,6 @@
   "name": "dx11-naruto",
   "version": "1.0.0",
   "dependencies": [
-    "assimp",
     "directxtk",
     "spdlog",
     "nlohmann-json",

@@ -14,9 +14,9 @@
 #include <d3dcompiler.h>
 
 // Assimp
-#include <assimp/scene.h>
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
+#include <Assimp/scene.h>
+#include <Assimp/Importer.hpp>
+#include <Assimp/postprocess.h>
 
 using namespace DirectX;
 

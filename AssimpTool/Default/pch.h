@@ -22,9 +22,9 @@ using Vec4 = Vector4;
 #include "Assimp_Macro.h"
 
 // Assimp
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include <Assimp/Importer.hpp>
+#include <Assimp/scene.h>
+#include <Assimp/postprocess.h>
 
 // spdlog
 #include <spdlog/spdlog.h>
