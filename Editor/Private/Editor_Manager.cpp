@@ -63,6 +63,13 @@ void Editor_Manager::Update(float timeDelta)
 
 void Editor_Manager::Render()
 {
+    static bool firstFrameCheck = true;
+    if (firstFrameCheck)
+    {
+        ImGui::SetWindowFocus("Game");
+        firstFrameCheck = false;
+    }
+
     Shared<RenderTarget> targetRT = nullptr;
 
     if (GAME->Get_GameState() == EGameState::Play)

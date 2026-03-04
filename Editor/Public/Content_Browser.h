@@ -59,6 +59,8 @@ private:
     FFolderNode* Find_FolderNode(FFolderNode& node, const wstring& path);
     void Expand_PathTo(const wstring& targetPath);
 
+    static bool IsFolderMatchingSearch(const Content_Browser::FFolderNode& node, const string& searchStr);
+
 private:
     FFolderNode _rootFolder;
     FFolderNode* _currentFolder = { nullptr };

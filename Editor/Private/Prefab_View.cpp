@@ -248,7 +248,8 @@ void Prefab_View::Draw_Header()
 
 void Prefab_View::Draw_ComponentList()
 {
-    CHECK_NULL(_targetObject);
+    if (!_targetObject)
+        return;
 
 #pragma region Legacy : Inspector 방식으로 보여주기
     //Inspector::Draw_Components(_targetObject);
@@ -380,15 +381,19 @@ void Prefab_View::Draw_Buttons()
                 }
                 
             }
+
+            EDITOR->Get_Notification()->Add_Notification("Capture Thumbnail: {}", _prefabName);
         }
     }
 }
 
 void Prefab_View::Update_ImGuizmo()
 {
+    if (!_targetObject)
+        return;
+
     auto transform = _targetObject->Get_Component<Transform>();
-    if (
-        transform && _gizmoOperation != (ImGuizmo::OPERATION)0)
+    if (transform && _gizmoOperation != (ImGuizmo::OPERATION)0)
     {
         ImGuizmo::SetOrthographic(false);
         ImGuizmo::SetDrawlist();

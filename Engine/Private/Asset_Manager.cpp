@@ -229,7 +229,7 @@ bool Asset_Manager::Load_Meta(const wstring& metaPath)
 
     catch (const exception& e)
     {
-        LOG_ERROR("Failed to parse meta: {}", e.what());
+        //LOG_ERROR("Failed to parse meta: {}", e.what());
         return false;
     }
 }

@@ -200,6 +200,19 @@ void Content_Browser::Scan_Folder(const wstring& path, FFolderNode& node)
 
 void Content_Browser::Draw_FolderTree(FFolderNode& node)
 {
+    if (strlen(_searchBuffer) > 0 && _currentFolder != &node)
+    {
+        string searchLower = _searchBuffer;
+        transform(searchLower.begin(), searchLower.end(), searchLower.begin(), ::tolower);
+
+        if (node.fullPath != _rootFolder.fullPath && !IsFolderMatchingSearch(node, searchLower))
+            return;
+
+        // 검색어가 포함된 폴더 경로라면 보기 편하게 트리를 강제로 펼쳐둠
+        ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    }
+
+
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
     if (_currentFolder == &node)
@@ -281,6 +294,7 @@ void Content_Browser::Draw_AssetView()
             bool isValidPrefab = pathStr.ends_with(".prefab.json");
             bool isBehaviorTree = pathStr.ends_with(".bt.json");
             bool isMeshFile = (extension == ".fbx" || extension == ".FBX");
+
 
             // 아이콘
             ImGui::PushID(fileName.c_str());
@@ -681,6 +695,22 @@ void Content_Browser::Expand_PathTo(const wstring& targetPath)
     }
 
     _expandedFolders.insert(root.wstring());
+}
+
+bool Content_Browser::IsFolderMatchingSearch(const Content_Browser::FFolderNode& node, const string& searchStr)
+{
+    string nameLower = Utils::ToString(node.name);
+    transform(nameLower.begin(), nameLower.end(), nameLower.begin(), ::tolower);
+
+    if (nameLower.find(searchStr) != string::npos)
+        return true;
+
+    for (const auto& child : node.subFolders)
+    {
+        if (IsFolderMatchingSearch(child, searchStr))
+            return true;
+    }
+    return false;
 }
 
 void Content_Browser::Load_Thumbnail(const string& guid)
