@@ -181,6 +181,9 @@
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Reflection_Macro.h" />
+    <ClInclude Include="..\Public\ICommand.h">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -496,6 +499,9 @@
       <Filter>01. Utility\04. Component\05. Mesh</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Model.cpp" />
+    <ClCompile Include="..\Private\ICommand.cpp">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

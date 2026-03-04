@@ -183,7 +183,7 @@ HRESULT Loader::Loading_For_Maintitle()
 
     lstrcpy(_loadingText, TEXT("Logo 로딩 완료"));
 
-    Sleep(3000);
+    //Sleep(3000);
 
     _isFinished = true;
 

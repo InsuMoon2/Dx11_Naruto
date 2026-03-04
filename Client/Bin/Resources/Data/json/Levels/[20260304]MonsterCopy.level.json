@@ -1,0 +1,142 @@
+{
+    "gameObjects": [
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                null,
+                {
+                    "current_index": 0,
+                    "num_srvs": 1,
+                    "texture_path": "../../Client/Bin/Resources/Textures/Terrain/Tile%d.dds"
+                },
+                null
+            ],
+            "guid": "d89c7596-5cbf-400d-8818-18e021362945",
+            "layerTag": "Layer_Terrain",
+            "object_type": "OBJECT_TYPE_TERRAIN",
+            "static_class": "Terrain"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        3.3418631553649902,
+                        5.0,
+                        -5.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        -0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "bt_filepath": "(None)"
+                },
+                null,
+                null,
+                {
+                    "Attack": 10.0,
+                    "Defense": 5.0,
+                    "HP": 100.0,
+                    "MP": 100.0,
+                    "Max HP": 100.0,
+                    "Max MP": 100.0,
+                    "Speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                },
+                null,
+                {
+                    "Acceleration": 20.0,
+                    "Deceleration": 24.0,
+                    "Gravity": -20.0,
+                    "Ground Y": 5.0,
+                    "Jump Velocity": 8.0,
+                    "Max Sprint Speed": 4.0,
+                    "Max Walk Speed": 2.0,
+                    "Yaw Speed": 0.20000000298023224,
+                    "type": "COMPONENT_TYPE_MOVEMENT"
+                }
+            ],
+            "guid": "a0f1611d-b849-4301-b260-370edf302301",
+            "layerTag": "Layer_GameObject",
+            "object_type": "OBJECT_TYPE_MONSTER",
+            "static_class": "Monster"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        5.0,
+                        -5.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "bt_filepath": "(None)"
+                },
+                null,
+                null,
+                {
+                    "Attack": 10.0,
+                    "Defense": 5.0,
+                    "HP": 100.0,
+                    "MP": 100.0,
+                    "Max HP": 100.0,
+                    "Max MP": 100.0,
+                    "Speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                },
+                null,
+                {
+                    "Acceleration": 20.0,
+                    "Deceleration": 24.0,
+                    "Gravity": -20.0,
+                    "Ground Y": 5.0,
+                    "Jump Velocity": 8.0,
+                    "Max Sprint Speed": 4.0,
+                    "Max Walk Speed": 2.0,
+                    "Yaw Speed": 0.20000000298023224,
+                    "type": "COMPONENT_TYPE_MOVEMENT"
+                }
+            ],
+            "guid": "cea6b84a-8e62-44ee-8fbf-e436e92b9a74",
+            "layerTag": "Layer_GameObject",
+            "object_type": "OBJECT_TYPE_MONSTER",
+            "static_class": "Monster"
+        }
+    ],
+    "levelIndex": 3,
+    "levelName": "[20260304]MonsterCopy"
+}

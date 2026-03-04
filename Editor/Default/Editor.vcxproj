@@ -216,9 +216,11 @@
   <ItemGroup>
     <ClInclude Include="..\Public\BehaviorTree_Inspector.h" />
     <ClInclude Include="..\Public\BehaviorTree_View.h" />
+    <ClInclude Include="..\Public\CommandHistory.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
     <ClInclude Include="..\Public\Editor_MainApp.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
+    <ClInclude Include="..\Public\Action_Command.h" />
     <ClInclude Include="..\Public\Level_Editor.h" />
     <ClInclude Include="..\Public\CombatStat_Inspector.h" />
     <ClInclude Include="..\Public\Component_Inspector.h" />
@@ -240,6 +242,7 @@
     <ClInclude Include="..\Public\PlayerSession_Manager.h" />
     <ClInclude Include="..\Public\Prefab_View.h" />
     <ClInclude Include="..\Public\Profiler_View.h" />
+    <ClInclude Include="..\Public\Property_Command.h" />
     <ClInclude Include="..\Public\Reflection_Inspector.h" />
     <ClInclude Include="..\Public\Scene_View.h" />
     <ClInclude Include="..\Public\Texture_Inspector.h" />
@@ -254,7 +257,9 @@
   <ItemGroup>
     <ClCompile Include="..\Private\BehaviorTree_Inspector.cpp" />
     <ClCompile Include="..\Private\BehaviorTree_View.cpp" />
+    <ClCompile Include="..\Private\CommandHistory.cpp" />
     <ClCompile Include="..\Private\Editor_MainApp.cpp" />
+    <ClCompile Include="..\Private\Action_Command.cpp" />
     <ClCompile Include="..\Private\Level_Editor.cpp" />
     <ClCompile Include="..\Private\CombatStat_Inspector.cpp" />
     <ClCompile Include="..\Private\Component_Inspector.cpp" />
@@ -273,6 +278,7 @@
     <ClCompile Include="..\Private\PlayerSession_Manager.cpp" />
     <ClCompile Include="..\Private\Prefab_View.cpp" />
     <ClCompile Include="..\Private\Profiler_View.cpp" />
+    <ClCompile Include="..\Private\Property_Command.cpp" />
     <ClCompile Include="..\Private\Reflection_Inspector.cpp" />
     <ClCompile Include="..\Private\Scene_View.cpp" />
     <ClCompile Include="..\Private\SimpleMath.cpp" />

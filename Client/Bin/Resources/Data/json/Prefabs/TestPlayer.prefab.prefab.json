@@ -51,6 +51,6 @@
     ],
     "guid": "3d366abd-914e-404b-b94e-a4e62248a08c",
     "object_type": "OBJECT_TYPE_PLAYER",
-    "prefab_name": "MyPlayer",
+    "prefab_name": "TestPlayer.prefab",
     "static_class": "MyPlayer"
 }

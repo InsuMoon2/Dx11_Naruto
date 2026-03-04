@@ -14,7 +14,10 @@ public:
     void    Draw_Inspector(shared_ptr<Engine::Component> component) override;
     uint32  Get_ComponentType() const override { return Protocol::COMPONENT_TYPE_COMBAT_STAT; }
 
-
+private:
+    Vec3 _capturedPos;
+    Vec3 _capturedRot;
+    Vec3 _capturedScale;
 };
 
 NS_END

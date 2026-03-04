@@ -28,6 +28,13 @@ void Level_Serializer::Save_Level(const wstring& fileName, uint32 levelIndex, co
         {
             if (obj && !obj->Is_Destroy())
             {
+                // 카메라, 플레이어는 로드 제외
+                auto objType = obj->Get_ObjectType();
+                if (objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
+                    objType == Protocol::OBJECT_TYPE_CAMERA_TARGET ||
+                    objType == Protocol::OBJECT_TYPE_PLAYER)
+                    continue;
+
                 objectsArray.emplace_back(GameObjectToJson(obj, layerTag));
             }
         }

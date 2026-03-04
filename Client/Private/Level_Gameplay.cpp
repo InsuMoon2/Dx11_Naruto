@@ -23,36 +23,17 @@ HRESULT Level_Gameplay::Initialize()
 {
     CHECK_FAILED(Ready_Lights(), E_FAIL);
 
+    if (FAILED(Load_LevelFromJson(L"[20260304]MonsterCopy2")))
+    {
+        // 풀백
+        LOG_WARN("Level JSON load failed, using hardcoded setup");
+        CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
+        CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")), E_FAIL);
+    }
+
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
-    CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
-    CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")), E_FAIL);
-    CHECK_FAILED(Ready_Layer_TempLayer(TEXT("Layer_TempLayer")), E_FAIL);
 
-#pragma region Builder 적용 전
-    //json overrides;
-    //overrides["scale"] = { 5.f, 5.f, 5.f };
-    //auto player = GAME->Instantiate_Prefab("TestPlayer", overrides);
-    //if (player)
-    //{
-    //    GAME->Add_GameObject(ETOI(ELevelType::GamePlay), TEXT("Layer_GameObject"), player);
-    //}
-#pragma endregion
-
-    //auto player = Spawn_Helper::Prefab("TestPlayer")
-    //    .AtLevel(ETOI(ELevelType::GamePlay))
-    //    .InLayer(TEXT("Layer_Builder"))
-    //    .Position({ 0.f, 0.f, -5.f })
-    //    .Scale({ 1.f, 1.f, 1.f })
-    //    .Spawn();
-
-    auto monster = Spawn_Helper::Prefab("Monster1")
-        .AtLevel(ETOI(ELevelType::GamePlay))
-        .InLayer(TEXT("Layer_Builder"))
-        .Position({ 1.f, 1.f, -5.f })
-        .Scale({ 1.5f, 1.5f, 1.5f })
-        .Spawn();
-
-    // 서버 연결 없으면 플레이어 스폰
+    // 서버 연결 없으면 로컬 플레이어 스폰
     if (!NetworkManager::GetInstance()->IsConnected())
     {
         Spawn_LocalPlayer();
@@ -150,20 +131,19 @@ HRESULT Level_Gameplay::Ready_Layer_PlayerStart(const wstring& layerTag)
 
         CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_PLAYER_START, layerTag, &desc), E_FAIL);
     }
-
 }
 
 HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
 {
-    //CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_PLAYER, layerTag), E_FAIL);
-    CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_TERRAIN, layerTag), E_FAIL);
+    CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_TERRAIN, L"Layer_Terrain"), E_FAIL);
 
-    return S_OK;
-}
 
-HRESULT Level_Gameplay::Ready_Layer_TempLayer(const wstring& layerTag)
-{
-    //CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_MONSTER, layerTag), E_FAIL);
+    auto monster = Spawn_Helper::Prefab("Monster1")
+        .AtLevel(ETOI(ELevelType::GamePlay))
+        .InLayer(TEXT("Layer_Builder"))
+        .Position({ 1.f, 1.f, -5.f })
+        .Scale({ 1.5f, 1.5f, 1.5f })
+        .Spawn();
 
     return S_OK;
 }

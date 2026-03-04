@@ -160,7 +160,11 @@ void Content_Browser::Refresh_CurrentFolder()
     {
         if (!entry.is_directory() && entry.path().extension() != L".meta")
         {
-            _currentFolder->files.emplace_back(entry.path());
+            FFileEntry fe;
+            fe.filePath = entry.path().wstring();
+            fe.guid = GAME->Find_AssetGUID(fe.filePath);
+
+            _currentFolder->files.emplace_back(fe);
         }
     }
 }
@@ -181,7 +185,14 @@ void Content_Browser::Scan_Folder(const wstring& path, FFolderNode& node)
         else
         {
             if (entry.path().extension() != L".meta")
-                node.files.emplace_back(entry.path());
+            {
+                FFileEntry fe;
+                fe.filePath = entry.path().wstring();
+                fe.guid = GAME->Find_AssetGUID(fe.filePath);
+
+                node.files.emplace_back(fe);
+            }
+                
         }
     }
 
@@ -250,15 +261,15 @@ void Content_Browser::Draw_AssetView()
 
     ImGui::Columns(columnCount, 0, false);
 
-    // TODO : 매 프레임 찾기말고, 캐싱 해놓기 or 새로고침 버튼 하나 만들기?
-    auto name = GAME->Get_RegisteredGameObjects();
-
     // 파일 목록 표시
     if (_currentFolder)
     {
-        for (const auto& filePath : _currentFolder->files)
+        for (const auto& fileEntry : _currentFolder->files)
         {
+            const wstring& filePath = fileEntry.filePath;
+            const string& guid = fileEntry.guid;
             fs::path path(filePath);
+
             string fileName = path.filename().string();
             string extension = path.extension().string();
 
@@ -274,8 +285,6 @@ void Content_Browser::Draw_AssetView()
             // 아이콘
             ImGui::PushID(fileName.c_str());
 
-            string guid = GAME->Find_AssetGUID(filePath);
-
             if (!guid.empty()
                 && !_thumbnailCache.contains(guid)
                 && !_noThumbnailGuids.contains(guid))
@@ -287,20 +296,53 @@ void Content_Browser::Draw_AssetView()
 
             if (it != _thumbnailCache.end() && it->second)
             {
-                ImGui::ImageButton(fileName.c_str(),
-                    (ImTextureID)it->second.Get(),
-                    ImVec2(_thumbnailSize, _thumbnailSize));
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+                {
+                    ImGui::ImageButton(fileName.c_str(),
+                        (ImTextureID)it->second.Get(),
+                        ImVec2(_thumbnailSize, _thumbnailSize));
+                }
+                ImGui::PopStyleVar();
+
             }
             else
             {
-                ImGui::Button(pureName.c_str(),
-                    ImVec2(_thumbnailSize, _thumbnailSize));
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+                {
+                    ImGui::Button(pureName.c_str(),
+                        ImVec2(_thumbnailSize, _thumbnailSize));
+                }
+                ImGui::PopStyleVar();
+            }
+
+            bool isSelected = (_selectedFilePath == filePath);
+            // 선택된 아이템 테두리 그리기
+            if (isSelected)
+            {
+                ImVec2 itemMin = ImGui::GetItemRectMin();
+                ImVec2 itemMax = ImGui::GetItemRectMax();
+                ImGui::GetWindowDrawList()->AddRect(
+                    itemMin, itemMax,
+                    IM_COL32(70, 130, 210, 255), 
+                    0.f,                         
+                    0,                           
+                    2.f                          
+                );
+            }
+
+            if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+            {
+                _selectedFilePath = filePath;
+            }
+
+            if (isSelected && !_isRenaming && ImGui::IsKeyPressed(ImGuiKey_F2))
+            {
+                Enter_RenameMode(filePath);
             }
 
             // Prefab 드래그
             if (isValidPrefab && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
-                string guid = GAME->Find_AssetGUID(filePath);
                 if (!guid.empty())
                 {
                     ImGui::SetDragDropPayload("CONTENT_PREFAB", guid.c_str(), guid.size() + 1);
@@ -308,11 +350,9 @@ void Content_Browser::Draw_AssetView()
                 }
                 ImGui::EndDragDropSource();
             }
-
             // BehaviorTree 드래그
             else if (isBehaviorTree && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
-                string guid = GAME->Find_AssetGUID(filePath);
                 if (!guid.empty())
                 {
                     ImGui::SetDragDropPayload("CONTENT_BEHAVIORTREE", guid.c_str(), guid.size() + 1);
@@ -323,7 +363,6 @@ void Content_Browser::Draw_AssetView()
             // Static Mesh 드래그
             else if (isMeshFile && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
-                string guid = GAME->Find_AssetGUID(filePath);
                 if (!guid.empty())
                 {
                     ImGui::SetDragDropPayload("CONTENT_MESH", guid.c_str(), guid.size() + 1);
@@ -331,7 +370,6 @@ void Content_Browser::Draw_AssetView()
                 }
                 ImGui::EndDragDropSource();
             }
-
             // 더블클릭 -> Prefab View 열기
             if (isValidPrefab && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
             {

@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "PlayerSession_Manager.h"
+#include "Layer.h"
+#include "GameObject.h"
 
 PlayerSession_Manager::~PlayerSession_Manager()
 {
@@ -187,6 +189,160 @@ void PlayerSession_Manager::Calculate_WindowLayout(int32 playerIndex, int32 tota
         outX = col * (screenWidth / cols) + 10;
         outY = row * (screenHeight / rows) + 30;
     }
+}
+
+void PlayerSession_Manager::Save_SceneSnapshot()
+{
+    uint32 levelIndex = GAME->Current_Level();
+    const auto& layers = GAME->Get_Layers(levelIndex);
+
+    _sceneSnapshot = json::object();
+    _sceneSnapshot["levelIndex"] = levelIndex;
+
+    json objectsArray = json::array();
+
+    for (auto& [layerTag, layer] : layers)
+    {
+        for (auto& obj : layer->Get_GameObjects())
+        {
+            if (!obj || obj->Is_Destroy()) continue;
+
+            auto objType = obj->Get_ObjectType();
+
+            if (objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
+                objType == Protocol::OBJECT_TYPE_CAMERA_TARGET ||
+                objType == Protocol::OBJECT_TYPE_PLAYER)
+                continue;
+
+            json j = obj->To_Json();
+            j["layerTag"] = Utils::ToString(layerTag);
+
+            objectsArray.push_back(j);
+        }
+    }
+
+    _sceneSnapshot["gameObjects"] = objectsArray;
+    _hasSnapShot = true;
+}
+
+void PlayerSession_Manager::Restore_SceneSnapshot()
+{
+    if (!_hasSnapShot) return;
+
+    uint32 levelIndex = _sceneSnapshot.value("levelIndex", GAME->Current_Level());
+
+    // 카메라, 플레이어 임시 보관
+    auto allObjects = GAME->Get_GameObjects(levelIndex);
+
+    vector<pair<shared_ptr<GameObject>, wstring>> preserved;  // 보존할 오브젝트 + 레이어태그
+    const auto& layers = GAME->Get_Layers(levelIndex);
+
+    for (auto& [layerTag, layer] : layers)
+    {
+        for (auto& obj : layer->Get_GameObjects())
+        {
+            if (!obj) continue;
+            auto objType = obj->Get_ObjectType();
+            if (objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
+                objType == Protocol::OBJECT_TYPE_CAMERA_TARGET ||
+                objType == Protocol::OBJECT_TYPE_PLAYER)
+            {
+                preserved.push_back({ obj, layerTag });
+            }
+        }
+    }
+
+    GAME->Clear_Layers(levelIndex);
+
+    for (auto& [obj, layerTag] : preserved)
+    {
+        GAME->Add_GameObject(levelIndex, layerTag, obj);
+    }
+
+    for (auto& objJson : _sceneSnapshot["gameObjects"])
+    {
+        if (!objJson.contains("object_type")) continue;
+        Protocol::OBJECT_TYPE objType = Protocol::OBJECT_TYPE_NONE;
+
+        if (objJson["object_type"].is_string())
+        {
+            auto result = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
+                objJson["object_type"].get<string>());
+            if (!result.has_value()) continue;
+            objType = result.value();
+        }
+        else
+            objType = static_cast<Protocol::OBJECT_TYPE>(objJson["object_type"].get<uint32>());
+
+        if (objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
+            objType == Protocol::OBJECT_TYPE_CAMERA_TARGET ||
+            objType == Protocol::OBJECT_TYPE_PLAYER)
+            continue;
+
+        auto gameObject = GAME->Clone_GameObject(levelIndex, objType, nullptr);
+        if (!gameObject)
+            gameObject = GAME->Clone_GameObject(0, objType, nullptr);
+
+        if (!gameObject) continue;
+        gameObject->From_Json(objJson);
+
+        if (objJson.contains("components"))
+        {
+            for (const auto& compData : objJson["components"])
+            {
+                if (compData.is_null()) continue;
+                if (!compData.contains("type")) continue;
+
+                uint32 typeId = 0;
+
+                if (compData["type"].is_string())
+                {
+                    auto result = magic_enum::enum_cast<Protocol::ComponentID>(
+                        compData["type"].get<string>());
+
+                    if (!result.has_value()) continue;
+                    typeId = static_cast<uint32>(result.value());
+                }
+                else
+                    typeId = compData["type"].get<uint32>();
+
+                auto comp = gameObject->Get_Component(typeId);
+                if (comp) comp->From_Json(compData);
+            }
+        }
+        wstring layerTag = L"Layer_Default";
+
+        if (objJson.contains("layerTag"))
+            layerTag = Utils::ToWString(objJson["layerTag"].get<string>());
+
+        GAME->Add_GameObject(levelIndex, layerTag, gameObject);
+    }
+
+    auto restoredObjects = GAME->Get_GameObjects(levelIndex);
+    Vec3 spawnPos = Vec3(0.f, 5.f, 0.f);
+    Quat spawnRot = Quat::Identity;
+
+    for (auto& obj : restoredObjects)
+    {
+        if (obj && obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER_START)
+        {
+            auto transform = obj->Get_Component<Transform>();
+            spawnPos = transform->Get_WorldPosition();
+            spawnRot = transform->Get_WorldRotation();
+            break;
+        }
+    }
+    for (auto& obj : restoredObjects)
+    {
+        if (obj && obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER)
+        {
+            auto transform = obj->Get_Component<Transform>();
+            transform->Set_LocalPosition(spawnPos);
+            transform->Set_LocalRotation(spawnRot);
+            break;
+        }
+    }
+    _hasSnapShot = false;
 }
 
 unique_ptr<PlayerSession_Manager> PlayerSession_Manager::Create()

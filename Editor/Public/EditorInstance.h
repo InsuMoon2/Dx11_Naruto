@@ -4,11 +4,16 @@
 #include "Engine_Struct.h"
 #include "GameInstance.h"
 
+NS_BEGIN(Engine)
+class ICommand;
+NS_END
+
 NS_BEGIN(Editor)
 class ImGui_Manager;
 class Editor_Manager;
 class PlayerSession_Manager;
 class Notification_Manager;
+class CommandHistory;
 
 class EditorWindow;
 
@@ -47,11 +52,23 @@ public: /* PlayerSession Manager */
 public: /* Notification Manager */
     Notification_Manager* Get_Notification() { return _notificationManager.get(); }
 
+public: /* Command History */
+    void    ExecuteCommand(shared_ptr<ICommand> cmd);
+    void    Undo();
+    void    Redo();
+    void    Clear_CommandHistory();
+
+private:
+    void    Save_SceneSnapshot();
+    void    Restore_SceneSnapshot();
+
 private: /* Manager */
-    unique_ptr<ImGui_Manager>           _imguiManager;
-    unique_ptr<Editor_Manager>          _editorManager;
-    unique_ptr<PlayerSession_Manager>   _playerSessionManager;
-    unique_ptr<Notification_Manager>    _notificationManager;
+    Unique<ImGui_Manager>           _imguiManager;
+    Unique<Editor_Manager>          _editorManager;
+    Unique<PlayerSession_Manager>   _playerSessionManager;
+    Unique<Notification_Manager>    _notificationManager;
+
+    Unique<CommandHistory>          _commandHistory;
 
 private:
     EDITOR_DESC _desc = {};

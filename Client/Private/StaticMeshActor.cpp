@@ -90,10 +90,10 @@ HRESULT StaticMeshActor::Bind_ShaderResources()
     const FLightDesc* lightDesc = GAME->Get_LightDesc(0);
     if (lightDesc)
     {
-        _shaderCom->Bind_RawValue("g_vLightDir", &lightDesc->direction, sizeof(Vec4));
-        _shaderCom->Bind_RawValue("g_vLightDiffuse", &lightDesc->diffuse, sizeof(Color));
-        _shaderCom->Bind_RawValue("g_vLightAmbient", &lightDesc->ambient, sizeof(Color));
-        _shaderCom->Bind_RawValue("g_vLightSpecular", &lightDesc->specular, sizeof(Color));
+        _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
+        _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Color));
+        _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Color));
+        _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Color));
     }
 
     return S_OK;

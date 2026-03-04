@@ -254,27 +254,20 @@ bool Asset_Manager::Save_Meta(const wstring& metaPath, const FAssetMeta& meta)
 string Asset_Manager::Detect_AssetType(const wstring& filePath) const
 {
     fs::path path(filePath);
+
+    string filename = path.filename().string();
+    
+    if (filename.ends_with(".bt.json"))    return "behavior_tree";
+    if (filename.ends_with(".level.json")) return "level";
+    if (filename.ends_with(".prefab"))     return "prefab";
+
     string extension = path.extension().string();
-
-#pragma region Legacy
-
-    //if (extension == ".json")
-    //{
-    //    string pathStr = Utils::ToString(filePath);
-    //    if (pathStr.find("Prefabs") != string::npos)         return "prefab";
-    //    if (pathStr.find("BehaviorTrees") != string::npos)   return "behavior_tree";
-    //    if (pathStr.find("Levels") != string::npos)          return "level";
-    //
-    //    return "json";
-    //}
-#pragma endregion
 
     if (extension == ".json") return "json";          // 순수 데이터 테이블 등
     if (extension == ".prefab") return "prefab";      // 프리팹
     if (extension == ".bt") return "behavior_tree";   // 비헤이비어 트리
     if (extension == ".level") return "level";        // 씬/레벨 데이터
-   
-
+    
     if (extension == ".png" || extension == ".jpg" || extension == ".dds" || extension == ".tga")
         return "texture";
 

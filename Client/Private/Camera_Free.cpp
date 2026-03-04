@@ -54,6 +54,12 @@ void Camera_Free::Priority_Update(float timeDelta)
 {
     Camera::Priority_Update(timeDelta);
 
+    if (!_inputEnabled)  
+    {
+        Update_TransformMatrices();
+        return;
+    }
+
     if (INPUT->KeyPress(KEY_TYPE::RBUTTON))
     {
         // 이동

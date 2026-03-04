@@ -23,7 +23,7 @@ HRESULT Component::Initialize(void* arg)
 
 json Component::Reflect_ToJson() const
 {
-    json root;
+    json root = json::object();
     auto& info = const_cast<Component*>(this)->Get_ReflectionInfo();
     const char* basePtr = reinterpret_cast<const char*>(this);
 

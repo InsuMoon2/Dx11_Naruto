@@ -20,6 +20,9 @@ public:
     void Update(float timeDelta) override;
     void OnGui() override;
 
+    bool CanSave() const override;
+    void Save() override;
+
 public:
     void Open_Prefab(const string& prefabName, const string& prefabPath);
     void Close_Prefab();
@@ -31,8 +34,6 @@ private:
     void Draw_Header();
     void Draw_ComponentList();
     void Draw_Buttons();
-
-    void Add_NewComponent();
 
     void Update_ImGuizmo();
     void Handle_Guizmo_Shotcut();

@@ -99,30 +99,71 @@ void Editor_Manager::Add_Window(const wstring& key, shared_ptr<EditorWindow> win
 
 void Editor_Manager::Handle_Shortcuts()
 {
-    bool ctrlPressed  = ImGui::GetIO().KeyCtrl;
+    bool ctrlPressed = ImGui::GetIO().KeyCtrl;
     bool shiftPressed = ImGui::GetIO().KeyShift;
 
     if (ctrlPressed && ImGui::IsKeyPressed(ImGuiKey_S, false)) // false -> 반복 입력 방지
     {
-        // Ctrl + Shift + S : 다른 이름으로 저장
-        if (shiftPressed)
+        bool handled = false;
+        for (auto& [key, window] : _windows)
         {
-            _showSaveLevelDialog = true;
-            ::memset(_levelNameBuffer, 0, sizeof(_levelNameBuffer));
-        }
-        // Ctrl + S : 덮어쓰기
-        else
-        {
-            if (!_lastLevelPath.empty())
+            if (!window || !window->IsActive()) continue;
+            if (window->IsFocused() && window->CanSave() && window->IsDirty())
             {
-                On_SaveLevel(_lastLevelPath);
-            }
-            else
-            {
-                _showSaveLevelDialog = true;
-                ::memset(_levelNameBuffer, 0, sizeof(_levelNameBuffer));
+                window->Save();
+
+                handled = true;
+
+                break;
             }
         }
+
+        // 포커스된 저장 가능 창이 없으면, 레벨 저장 로직 실행
+        if (!handled)
+        {
+            auto sceneView = Get_Window(TEXT("Scene"));
+            if (sceneView && sceneView->IsFocused())
+            {
+                // Ctrl + Shift + S : 다른 이름으로 저장
+                if (shiftPressed)
+                {
+                    _showSaveLevelDialog = true;
+                    ::memset(_levelNameBuffer, 0, sizeof(_levelNameBuffer));
+                }
+                // Ctrl + S : 덮어쓰기
+                else
+                {
+                    if (!_lastLevelPath.empty())
+                        On_SaveLevel(_lastLevelPath);
+                    else
+                    {
+                        _showSaveLevelDialog = true;
+                        ::memset(_levelNameBuffer, 0, sizeof(_levelNameBuffer));
+                    }
+                }
+            }
+        }
+    }
+
+    // Ctrl + Z : Undo
+    if (ctrlPressed && ImGui::IsKeyPressed(ImGuiKey_Z, false))
+        EDITOR->Undo();
+
+    // Ctrl + Y : Redo
+    if (ctrlPressed && ImGui::IsKeyPressed(ImGuiKey_Y, false))
+        EDITOR->Redo();
+
+    // Ctrl + Space : Console / Content Browser 토글
+    if (ctrlPressed && ImGui::IsKeyPressed(ImGuiKey_Space, false))
+    {
+        auto console = Get_Window(TEXT("Console"));
+        auto content = Get_Window(TEXT("Content Browser"));
+
+        if (console)
+            console->Set_Active(!console->IsActive());
+
+        if (content)
+            content->Set_Active(!content->IsActive());
     }
 }
 
@@ -177,7 +218,7 @@ void Editor_Manager::Begin_DockSpace()
 
                 EDITOR->Play();
             }
-            
+
             ImGui::PopStyleColor();
         }
         else
@@ -190,7 +231,7 @@ void Editor_Manager::Begin_DockSpace()
 
                 EDITOR->Stop();
             }
-                
+
 
             ImGui::PopStyleColor();
         }
@@ -260,7 +301,7 @@ void Editor_Manager::Begin_DockSpace()
                 profiler->Set_Active(!profiler->IsActive());
         }
         ImGui::PopStyleVar();
-     
+
         ImGui::SetCursorPosY(toolbarHeight);
     }
     ImGui::DockSpace(ImGui::GetID("MainDockSpace"), ImVec2(0, 0), ImGuiDockNodeFlags_PassthruCentralNode);
@@ -277,7 +318,7 @@ void Editor_Manager::Show_MenuBar()
         // File
         if (ImGui::BeginMenu("File"))
         {
-            if(ImGui::MenuItem("Save Level", "Ctrl+S"))
+            if (ImGui::MenuItem("Save Level", "Ctrl+S"))
             {
                 _showSaveLevelDialog = true;
                 ::memset(_levelNameBuffer, 0, sizeof(_levelNameBuffer));
@@ -388,7 +429,7 @@ void Editor_Manager::Show_SaveLevelDialog()
             wstring nameW(nameStr.begin(), nameStr.end());
             wstring fileName = L"[" + wstring(dateStr) + L"]" + nameW + L".level.json";
 
-            On_SaveLevel(fileName);  
+            On_SaveLevel(fileName);
 
             _showSaveLevelDialog = false;
         }
@@ -579,7 +620,7 @@ void Editor_Manager::On_SaveLevel(const wstring& fileName)
     _lastLevelPath = fileName; // 경로 갱신
 
     LOG_WARN("Level Saved: {}", pureName);
-    
+
     //NOTIFY("Level Saved"); 만들긴했는데 로그가 있으면 굳이 필요없는거 같기도 하고
 }
 

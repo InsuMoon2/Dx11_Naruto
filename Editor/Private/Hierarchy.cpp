@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "Hierarchy.h"
+
+#include "Action_Command.h"
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "Inspector.h"
@@ -352,12 +354,32 @@ void Hierarchy::Handle_Shotcuts()
 {
     if (ImGui::IsKeyPressed(ImGuiKey_Delete))
     {
-        for (auto& obj : _selectedObjects)
-        {
-            //obj->Set_Destroy();
+        vector<Shared<GameObject>> objsToDelete = _selectedObjects;
+        uint32 level = GAME->Current_Level();
+        wstring layer = L"Layer_GameObject";
 
-            EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));
-        }
+        auto cmd = Action_Command::Create(
+            [=]() // Undo 되살리기
+            {
+                for (auto& obj : objsToDelete)
+                {
+                    obj->Set_Destroy(false);
+                    EVENT->Publish(FEvent_Object::Create(EEventType::Create_Object, obj));
+
+                }
+            },
+            [=]() // Redo 다시 죽이기
+            {
+                for (auto& obj : objsToDelete)
+                {
+                    EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));
+                }
+            },
+            "Delete Object"
+        );
+
+        cmd->Redo();
+        EDITOR->ExecuteCommand(cmd);
 
         _selectedObjects.clear();
     }
@@ -371,10 +393,56 @@ void Hierarchy::Handle_Shotcuts()
 
         if (ImGui::IsKeyPressed(ImGuiKey_V))
         {
+            vector<Shared<GameObject>> clones;
+
             for (auto& copy : _copiedObjects)
             {
-                EVENT->Publish(FEvent_Object::Create(EEventType::Create_Object, copy));
+                auto clone = copy->Clone(nullptr);
+                // Transform 복사
+                auto srcT = copy->Get_Component<Transform>();
+                auto dstT = clone->Get_Component<Transform>();
+
+                if (srcT && dstT)
+                {
+                    dstT->Set_LocalPosition(srcT->Get_LocalPosition());
+                    dstT->Set_LocalRotation(srcT->Get_LocalRotation());
+                    dstT->Set_LocalScale(srcT->Get_LocalScale());
+                }
+
+                clone->Set_Name(copy->Get_Name() + L"_Copy");
+                clones.push_back(clone);
             }
+
+            uint32 level = GAME->Current_Level();
+            wstring layer = L"Layer_GameObject";
+
+            for (auto& obj : clones)
+                GAME->Add_GameObject(level, layer, obj);
+
+            _selectedObjects.clear();
+            for (int i = 0; i < (int)clones.size(); ++i)
+            {
+                bool isMulti = (i > 0);
+                Select_Object(clones[i], isMulti);
+            }
+
+            auto cmd = Action_Command::Create(
+                [=]()// Undo -> 클론들 제거
+                {  
+                    for (auto& obj : clones)
+                        EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));
+                },
+                [=]()// Redo -> 클론들 다시 추가
+                {  
+                    for (auto& obj : clones)
+                    {
+                        obj->Set_Destroy(false);
+                        EVENT->Publish(FEvent_Object::Create(EEventType::Create_Object, obj));
+                    }
+                },
+                "Paste Object"
+            );
+            EDITOR->ExecuteCommand(cmd);
         }
     }
 }

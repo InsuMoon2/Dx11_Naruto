@@ -19,6 +19,9 @@ public:
     virtual void    Late_Update(float timeDelta);
     virtual HRESULT Render();
 
+public:
+    virtual HRESULT Load_LevelFromJson(const wstring& fileName);
+
 protected:
     ComPtr<Device>              _device;
     ComPtr<DeviceContext>       _context;

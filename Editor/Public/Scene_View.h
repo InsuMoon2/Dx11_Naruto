@@ -67,7 +67,6 @@ private:
 
     Vec2    _viewportSize = {};
 
-    bool    _isFocused = false;
     bool    _isHovered = false;
 
     // 전체화면
@@ -85,13 +84,14 @@ private: /* Camera*/
 
 private: /* ImGuizmo */
     ImGuizmo::OPERATION _gizmoOperation = ImGuizmo::TRANSLATE;
+    ImGuizmo::MODE      _gizmoMode = ImGuizmo::LOCAL; // 좌표계 모드
 
-    // 좌표계 모드
-    // - LOCAL: 오브젝트 기준 (오브젝트가 회전하면 축도 같이 회전)
-    // - WORLD: 월드 기준 (항상 XYZ 축 고정)
-    ImGuizmo::MODE _gizmoMode = ImGuizmo::LOCAL;
+    bool                _altDragDuplicated = false;
 
-
+    Vec3                _gizmoStartPos;
+    Quat                _gizmoStartRot;
+    Vec3                _gizmoStartScale;
+    bool                _gizmoWasUsing = false;
 
 public:
     static shared_ptr<Scene_View> Create();

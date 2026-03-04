@@ -23,6 +23,9 @@ public:
     void Update(float timeDelta) override;
     void OnGui() override;
 
+    bool CanSave() const override;
+    void Save() override;
+
 public:
     void Load_BehaviorTree(const string& path);
     void Save_BehaviorTree(const string& path);
@@ -73,7 +76,6 @@ private:
     int         _nextId = 1;        // 노드 ID
 
     string      _currentFilePath;
-    bool        _isDirty = false;
     ed::NodeId  _selectedNodeId = 0;
 
     ImVec2      _popupPosition;

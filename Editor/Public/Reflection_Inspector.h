@@ -15,6 +15,13 @@ public:
 private:
     void Draw_Property(void* basePtr, const Engine::FPropertyInfo& prop);
 
+private:
+    float   _capturedFloat      = 0.f;
+    int     _capturedInt        = 0;
+    bool    _capturedBool       = false;
+    float   _capturedVec3[3]    = {};
+    float   _capturedColor[4]   = {};
+
 };
 
 NS_END

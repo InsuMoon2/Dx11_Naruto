@@ -33,15 +33,21 @@ public:
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
 
+public:
+    void Set_InputEnabled(bool enabled) { _inputEnabled = enabled; }
+    bool Is_InputEnabled() const { return _inputEnabled; }
+
 protected:
     // View + Proj 행렬을 PipeLine에 세팅
     void    Update_TransformMatrices();
 
 protected:
-    float _fovY     = {};
-    float _nearZ    = {};
-    float _farZ     = {};
-    float _aspect   = {};
+    float   _fovY     = {};
+    float   _nearZ    = {};
+    float   _farZ     = {};
+    float   _aspect   = {};
+
+    bool    _inputEnabled = true;
 
 public:
     virtual Shared<GameObject> Clone(void* arg) = 0;

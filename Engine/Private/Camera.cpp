@@ -35,7 +35,7 @@ HRESULT Camera::Initialize(void* arg)
     _transformCom->LookAt(desc->at);
 
     // 뷰포트 화면비 세팅
-    uint32 numViewports = 1; // TODO : 지금은 1이지만, 멀티플레이 시 변경해야함
+    uint32 numViewports = 1;
     D3D11_VIEWPORT viewport = {};
 
     _context->RSGetViewports(&numViewports, &viewport);

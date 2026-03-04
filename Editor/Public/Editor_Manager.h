@@ -22,7 +22,8 @@ public:
     // 단축키 세팅
     void    Handle_Shortcuts();
 
-    shared_ptr<EditorWindow> Get_Window(const wstring& key);
+    Shared<EditorWindow> Get_Window(const wstring& key);
+    const auto& Get_Windows() const { return _windows; }
 
 private:
     void    Begin_DockSpace();

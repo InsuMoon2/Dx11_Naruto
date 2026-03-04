@@ -1,15 +1,17 @@
 ﻿#include "pch.h"
 #include "Scene_View.h"
 
-#include <Camera.h>
-#include <GameObject.h>
-
+#include "Action_Command.h"
+#include "Camera.h"
+#include "GameObject.h"
+#include "Event_Manager.h"
 #include "RenderTarget.h"
 #include "GameInstance.h"
 #include "EditorInstance.h"
 #include "Input_Manager.h"
 #include "Hierarchy.h"
 #include "Asset_Manager.h"
+#include "Camera_Free.h"
 #include "Spawn_Helper.h"
 #include "StaticMeshActor.h"
 
@@ -272,6 +274,14 @@ void Scene_View::Update_WindowState()
 
     _isFocused = ImGui::IsWindowFocused();
     _isHovered = ImGui::IsWindowHovered();
+
+    auto freeCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_FREE);
+    if (freeCam)
+    {
+        auto camFree = dynamic_pointer_cast<Camera_Free>(freeCam);
+        if (camFree)
+            camFree->Set_InputEnabled(_isHovered);
+    }
 }
 
 void Scene_View::ToggleFullScreen()
@@ -361,6 +371,20 @@ void Scene_View::Update_ImGuizmo()
 
     if (ImGuizmo::IsUsing())
     {
+        if (!_gizmoWasUsing)
+        {
+            _gizmoStartPos   = transform->Get_LocalPosition();
+            _gizmoStartRot   = transform->Get_LocalRotation();
+            _gizmoStartScale = transform->Get_LocalScale();
+            _gizmoWasUsing = true;
+        }
+
+        if (ImGui::GetIO().KeyAlt && !_altDragDuplicated)
+        {
+            EVENT->Publish(FEvent_Object::Create(EEventType::Create_Object, targetObject));
+            _altDragDuplicated = true;
+        }
+
         Vec3 scale, translation;
         Quat rotation;
 
@@ -385,6 +409,38 @@ void Scene_View::Update_ImGuizmo()
             transform->Set_LocalScale(scale);
         }
     }
+    else
+    {
+        _altDragDuplicated = false;
+
+        // 기즈모 조작 끝
+        if (_gizmoWasUsing)
+        {
+            Vec3 newPos = transform->Get_LocalPosition();
+            Quat newRot = transform->Get_LocalRotation();
+            Vec3 newScale = transform->Get_LocalScale();
+
+            auto cmd = Action_Command::Create(
+                [=]()
+                { // Undo
+                    transform->Set_LocalPosition(_gizmoStartPos);
+                    transform->Set_LocalRotation(_gizmoStartRot);
+                    transform->Set_LocalScale(_gizmoStartScale);
+                },
+                [=]()// Redo
+                {
+                    transform->Set_LocalPosition(newPos);
+                    transform->Set_LocalRotation(newRot);
+                    transform->Set_LocalScale(newScale);
+                },
+                "Transform Gizmo Edit");
+
+            EDITOR->ExecuteCommand(cmd);
+
+            _gizmoWasUsing = false;
+        }
+
+    }
 
 }
 
@@ -406,7 +462,6 @@ void Scene_View::Handle_Guizmo_Shotcut()
 
         if (ImGui::IsKeyPressed(ImGuiKey_R))
             _gizmoOperation = ImGuizmo::SCALE;
-
     }
     
 }

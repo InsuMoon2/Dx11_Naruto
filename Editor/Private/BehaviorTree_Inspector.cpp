@@ -50,7 +50,6 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
         {
             string name = fs::path(meta->fullPath).stem().string();
             // 현재 세팅된 거 하이라이트
-
             bool isSelected = (meta->fullPath == Utils::ToWString(fullPath));
 
             if (isSelected)

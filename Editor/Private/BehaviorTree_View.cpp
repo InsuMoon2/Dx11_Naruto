@@ -5,6 +5,7 @@
 #include "Blackboard.h"
 #include "BehaviorTree.h"
 #include "BTNode.h"
+#include "Notification_Manager.h"
 
 BehaviorTree_View::BehaviorTree_View()
     : EditorWindow(TEXT("BehaviorTree"))
@@ -56,6 +57,11 @@ void BehaviorTree_View::OnGui()
 
     string str = Utils::ToString(Get_Name());
 
+    if (_isDirty)
+        str += " *";
+
+    str += "###" + Utils::ToString(Get_Name());
+
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
     if (!ImGui::Begin(str.c_str(), &_isActive, ImGuiWindowFlags_NoDocking))
     {
@@ -63,6 +69,8 @@ void BehaviorTree_View::OnGui()
         ImGui::PopStyleVar();
         return;
     }
+
+    _isFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 
     Draw_ToolBar();
     ImGui::Separator();
@@ -152,6 +160,23 @@ void BehaviorTree_View::OnGui()
 
     ImGui::End();
     ImGui::PopStyleVar();
+}
+
+bool BehaviorTree_View::CanSave() const
+{
+    return !_currentFilePath.empty();
+}
+
+void BehaviorTree_View::Save()
+{
+    Save_BehaviorTree(_currentFilePath);
+    ClearDirty();
+
+    string name = fs::path(_currentFilePath).stem().string();
+    if (name.ends_with(".bt.json"))
+        name = name.substr(0, name.size() - 8);
+
+    EDITOR->Get_Notification()->Add_Notification("Behavior Tree Saved : {}", name);
 }
 
 void BehaviorTree_View::Load_BehaviorTree(const string& path)
@@ -244,7 +269,7 @@ void BehaviorTree_View::Draw_ToolBar()
     if (_isDirty)
     {
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), " * Unsaved Changes");
+        ImGui::TextColored(ImVec4(1, 0.5f, 0, 1),  " " ICON_FA_TRIANGLE_EXCLAMATION " Unsaved Changes");
     }
 
     if (_isDebugMode)

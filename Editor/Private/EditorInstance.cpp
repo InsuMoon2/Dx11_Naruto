@@ -1,12 +1,12 @@
 ﻿#include "pch.h"
 #include "EditorInstance.h"
-
 #include "BehaviorTree_View.h"
 #include "ImGui_Manager.h"    
 #include "Editor_Manager.h"
 #include "Notification_Manager.h"
 #include "PlayerSession_Manager.h"
 #include "Camera_Target.h"
+#include "CommandHistory.h"
 
 IMPLEMENT_SINGLETON(EditorInstance)
 
@@ -35,6 +35,11 @@ HRESULT EditorInstance::Initialize_Editor(const EDITOR_DESC& desc, ComPtr<Device
     _notificationManager = Notification_Manager::Create();
     CHECK_NULL(_notificationManager, E_FAIL);
 
+    _commandHistory = CommandHistory::Create();
+    CHECK_NULL(_commandHistory, E_FAIL);
+
+    ImGui::SetWindowFocus("Game");
+
     return S_OK;
 }
 
@@ -42,13 +47,13 @@ void EditorInstance::Update_Editor(float timeDelta)
 {
     _imguiManager->Update(timeDelta);
     _editorManager->Update(timeDelta);
-    //_notificationManager->Update(timeDelta);
+    _notificationManager->Update(timeDelta);
 }
 
 void EditorInstance::Render_Editor()
 {
     _editorManager->Render();
-    //_notificationManager->Render();
+    _notificationManager->Render();
 
     {
         _imguiManager->Render();
@@ -58,7 +63,7 @@ void EditorInstance::Render_Editor()
 void EditorInstance::Release()
 {
     _playerSessionManager.reset();
-    //_notificationManager.reset();
+    _notificationManager.reset();
 
     // ImGui
     _editorManager.reset();
@@ -67,7 +72,10 @@ void EditorInstance::Release()
 
 void EditorInstance::Play()
 {
+    Save_SceneSnapshot();
+
     GAME->Set_GameState(EGameState::Play);
+    ImGui::SetWindowFocus("Game");
 
     auto targetCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_TARGET);
 
@@ -86,7 +94,12 @@ void EditorInstance::Pause()
 
 void EditorInstance::Stop()
 {
+    Restore_SceneSnapshot();
+    Clear_CommandHistory();  // 커맨드도 초기화
+
     GAME->Set_GameState(EGameState::Edit);
+
+    ImGui::SetWindowFocus("Scene");
 
     auto freeCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_FREE);
     if (freeCam)
@@ -103,7 +116,6 @@ void EditorInstance::Stop()
         GAME->Set_ActiveCamera(freeCam);
         INPUT->UnlockMouse();
     }
-        
 
     auto btView = dynamic_pointer_cast<BehaviorTree_View>(Get_Window(TEXT("BehaviorTree")));
     if (btView && btView->Is_DebugMode())
@@ -125,4 +137,43 @@ void EditorInstance::Start_SinglePlayer()
 void EditorInstance::Start_MultiPlayer(int32 playerCount)
 {
     return _playerSessionManager->Start_MultiPlayer(playerCount);
+}
+
+void EditorInstance::ExecuteCommand(shared_ptr<ICommand> cmd)
+{
+    _commandHistory->Execute(cmd);
+
+    for (auto& [key, window] : _editorManager->Get_Windows())
+    {
+        if (window && window->IsFocused())
+        {
+            window->MarkDirty();
+            break;
+        }
+    }
+}
+
+void EditorInstance::Undo()
+{
+    return _commandHistory->Undo();
+}
+
+void EditorInstance::Redo()
+{
+    return _commandHistory->Redo();
+}
+
+void EditorInstance::Clear_CommandHistory()
+{
+    return _commandHistory->Clear();
+}
+
+void EditorInstance::Save_SceneSnapshot()
+{
+    return _playerSessionManager->Save_SceneSnapshot();
+}
+
+void EditorInstance::Restore_SceneSnapshot()
+{
+    return _playerSessionManager->Restore_SceneSnapshot();
 }

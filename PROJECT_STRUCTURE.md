@@ -1,7 +1,7 @@
 # Dx11_Naruto 프로젝트 구조
 
 > **AI 어시스턴트는 매 대화 시작 시 이 파일을 반드시 읽을 것!**
-> 마지막 갱신: 2026-03-03
+> 마지막 갱신: 2026-03-04
 
 ---
 
@@ -197,6 +197,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Camera_Free` | 자유 카메라 |
 | `Camera_Target` | 타겟 추적 카메라 (오프셋 + 스무딩 팔로우) |
 | `Background` | UI 배경 |
+| `StaticMeshActor` | 정적 메쉬 오브젝트 (GUID 기반 Model + Shader, 프리팹/레벨에서 사용) |
 
 ### 클라이언트 정의 헤더
 
@@ -458,11 +459,17 @@ Client/Bin/Resources/
 │   ├── Player/      → 플레이어 텍스처
 │   ├── Explosion/   → 이펙트
 │   ├── SkyBox/      → 스카이박스
-│   └── Snow/
-├── Models/          → 3D 모델 (Fiona, ForkLift, Rock, Tong, map 등)
+│   ├── Snow/
+│   ├── UI/          → UI 텍스처
+│   ├── Default0/1.dds/.jpg → 기본 텍스처
+│   └── Clip_Icon, Folder_Icon 등 → 에디터 아이콘
+├── Models/          → 3D 모델 (Fiona, ForkLift, Gaara, NarutoTest, Rock, Test, Tong, map)
 ├── Fonts/           → FontAwesome 등
 └── Data/            → 위 참조
 ```
+
+> [!NOTE]
+> 각 에셋에는 `.meta` 파일이 자동 생성됨 (Asset_Manager의 GUID 시스템). 예: `Default0.dds.meta`.
 
 > [!NOTE]
 > 셰이더 파일(.hlsl/.fx)은 별도 폴더가 아닌 ShaderTable.json에 경로가 기록되어 ResourceLoader가 로드.

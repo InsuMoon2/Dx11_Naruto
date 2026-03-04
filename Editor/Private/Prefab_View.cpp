@@ -5,6 +5,7 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "Inspector.h"
+#include "Notification_Manager.h"
 #include "RenderTarget.h"
 
 Prefab_View::Prefab_View()
@@ -50,10 +51,23 @@ void Prefab_View::OnGui()
 
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
 
-    string title = "Prefab View - " + _prefabName + "###PrefabView";
+    string title = "Prefab View - " + _prefabName;
+    if (_isDirty)
+        title += " *";
+
+    title += "###PrefabView";
+
     if (ImGui::Begin(title.c_str(), &_isOpen, flags))
     {
-        //Draw_Header();
+        _isFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
+
+        Draw_Buttons();
+        ImGui::SameLine();
+        if (_isDirty)
+        {
+            ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), ICON_FA_TRIANGLE_EXCLAMATION " Unsaved Changes");
+        }
+        ImGui::NewLine();
         ImGui::Separator();
 
         if (ImGui::BeginTable("PrefabLayout", 2, ImGuiTableFlags_Resizable| ImGuiTableFlags_BordersInnerV))
@@ -109,7 +123,6 @@ void Prefab_View::OnGui()
 
                 float remainingSpace = ImGui::GetContentRegionAvail().y - 30.f;
                 ImGui::Dummy(ImVec2(0, remainingSpace));  
-                Draw_Buttons();
             }
 
             // [우측] 컴포넌트 리스트
@@ -135,6 +148,18 @@ void Prefab_View::OnGui()
     //ImGui::DragFloat("Pitch", &_previewPitch, 0.01f);
     //ImGui::End();
 
+}
+
+bool Prefab_View::CanSave() const
+{
+    return _targetObject != nullptr && !_prefabPath.empty();
+}
+
+void Prefab_View::Save()
+{
+    GAME->Save_Prefab(_prefabPath, _targetObject);
+    ClearDirty();
+    EDITOR->Get_Notification()->Add_Notification("Prefab Saved: {}", _prefabName);
 }
 
 void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath)
@@ -268,8 +293,11 @@ void Prefab_View::Draw_ComponentList()
     }
 
     if (deleteTargetID != 0)
+    {
         _targetObject->Remove_Component(deleteTargetID);
-
+        MarkDirty();
+    }
+        
     ImGui::Separator();
     ImGui::Spacing();
 
@@ -295,6 +323,7 @@ void Prefab_View::Draw_ComponentList()
                 if (newComp)
                 {
                     _targetObject->Add_Component(typeId, newComp);
+                    MarkDirty();
                 }
             }
         }
@@ -304,7 +333,7 @@ void Prefab_View::Draw_ComponentList()
 
 void Prefab_View::Draw_Buttons()
 {
-    if (ImGui::Button("Save", ImVec2(100.f, 0)))
+    if (ImGui::Button(ICON_FA_FLOPPY_DISK "  Save", ImVec2(100.f, 0)))
     {
         if (_targetObject)
         {
@@ -313,12 +342,14 @@ void Prefab_View::Draw_Buttons()
             LOG_INFO("Saving to: '{}'", filePath);
 
             GAME->Save_Prefab(_prefabPath, _targetObject);
+            ClearDirty();
+            EDITOR->Get_Notification()->Add_Notification("Prefab Saved: {}", _prefabName);
         }
     }
 
     ImGui::SameLine();
 
-    if (ImGui::Button("Close", ImVec2(100, 0)))
+    if (ImGui::Button(ICON_FA_XMARK " Close", ImVec2(100, 0)))
     {
         _isOpen = false;
         _targetObject = nullptr;
@@ -326,7 +357,7 @@ void Prefab_View::Draw_Buttons()
 
     ImGui::SameLine();
 
-    if (ImGui::Button("Capture Thumbnail", ImVec2(150.f, 0)))
+    if (ImGui::Button(ICON_FA_CAMERA " Capture Thumbnail", ImVec2(150.f, 0)))
     {
         if (_prevRT)
         {
@@ -351,11 +382,6 @@ void Prefab_View::Draw_Buttons()
             }
         }
     }
-}
-
-void Prefab_View::Add_NewComponent()
-{
-
 }
 
 void Prefab_View::Update_ImGuizmo()

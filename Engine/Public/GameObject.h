@@ -35,7 +35,7 @@ public:
     virtual HRESULT     Bind_ShaderResources();
 
 public: /* PendingKill */
-    void Set_Destroy() { _isDestroyed = true; }
+    void Set_Destroy(bool flag) { _isDestroyed = flag; }
     bool Is_Destroy() const { return _isDestroyed; }
 
     Protocol::OBJECT_TYPE Get_ObjectType() const { return _objectType; }

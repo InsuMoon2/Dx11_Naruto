@@ -244,6 +244,16 @@ void Object_Manager::OnCreateEvent(shared_ptr<FEvent> event)
 
         auto newObj = targetObj->Clone(nullptr);
 
+        auto srcT = targetObj->Get_Component<Transform>();
+        auto dstT = newObj->Get_Component<Transform>();
+
+        if (srcT && dstT)
+        {
+            dstT->Set_LocalPosition(srcT->Get_LocalPosition());
+            dstT->Set_LocalRotation(srcT->Get_LocalRotation());
+            dstT->Set_LocalScale(srcT->Get_LocalScale());
+        }
+
         if (targetLayer)
         {
             targetLayer->Add_GameObject(newObj);

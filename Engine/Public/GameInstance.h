@@ -128,6 +128,8 @@ public: /* Object Manager */
     vector<Shared<GameObject>>         Get_GameObjects(uint32 levelIndex);
     const umap<wstring, Shared<Layer>> Get_Layers(uint32 levelIndex);
 
+    void                    Clear_Layers(uint32 levelIndex);
+
 public: /* Renderer */
     void                    Add_RenderGroup(ERenderGroup renderType, Shared<GameObject> gameObject);
     int32                   Get_DrawCallCount();
@@ -136,6 +138,7 @@ public: /* Prefeb */
     Shared<GameObject>      Instantiate_Prefab(const string& prefabName, const json& overrides = {});
     HRESULT                 Save_Prefab(const string& prefabPath, Shared<GameObject> gameObject);
     HRESULT                 Load_Prefab(const string& prefabPath);
+
 
 public: /* PipeLine */
     const Matrix*           Get_Transform(ETransformState state) const;
@@ -218,7 +221,7 @@ private: /* Delegate Hub */
     DelegateHub                     _delegateHub;
 
 private:
-    EGameState                      _gameState = EGameState::Edit;
+    EGameState                      _gameState = EGameState::Play;
 
 public:
 	void Free() override;

@@ -28,6 +28,9 @@
     <Filter Include="05. Inspector_Factory">
       <UniqueIdentifier>{7369c1ef-0d01-46a2-933b-12ece269fede}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Command">
+      <UniqueIdentifier>{4892880c-12aa-44e9-8bae-079629ee88f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -138,6 +141,13 @@
     <ClInclude Include="..\Public\Reflection_Inspector.h">
       <Filter>04. Component_Inspector</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CommandHistory.h">
+      <Filter>06. Command</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Action_Command.h">
+      <Filter>06. Command</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Property_Command.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -235,6 +245,13 @@
     <ClCompile Include="..\Private\Reflection_Inspector.cpp">
       <Filter>04. Component_Inspector</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CommandHistory.cpp">
+      <Filter>06. Command</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Action_Command.cpp">
+      <Filter>06. Command</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Property_Command.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">
