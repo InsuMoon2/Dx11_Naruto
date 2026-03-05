@@ -50,8 +50,8 @@ private:
 
 public:
     static Shared<UIObject>   Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
-    Shared<GameObject>          Clone(void* arg) override;
-    virtual void                Free() override;
+    Shared<GameObject>        Clone(void* arg) override;
+    virtual void              Free() override;
     
 };
 

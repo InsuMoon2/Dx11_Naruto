@@ -82,13 +82,11 @@ void EditorInstance::Play()
     if (targetCam)
         GAME->Set_ActiveCamera(targetCam);
 
-    //INPUT->LockMouse();
 }
 
 void EditorInstance::Pause()
 {
     GAME->Set_GameState(EGameState::Pause);
-
 
 }
 

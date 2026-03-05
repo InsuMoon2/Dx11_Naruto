@@ -2,8 +2,6 @@
 #include "GameObject_Factory.h"
 #include "GameObject.h"
 
-IMPLEMENT_SINGLETON(GameObject_Factory)
-
 void GameObject_Factory::Initialize()
 {
     //_creators.clear();

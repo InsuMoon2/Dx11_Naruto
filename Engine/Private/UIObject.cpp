@@ -43,6 +43,7 @@ HRESULT UIObject::Initialize(void* arg)
     _sizeX = desc->sizeX;
     _sizeY = desc->sizeY;
     _zOrder = desc->zOrder;
+    _uiType = desc->uiType;
 
     _viewportWidth = GAME->Get_ViewportWidth();
     _viewportHeight = GAME->Get_ViewportHeight();

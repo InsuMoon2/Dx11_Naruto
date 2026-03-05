@@ -114,8 +114,6 @@ HRESULT Level::Load_LevelFromJson(const wstring& fileName)
         // 오브젝트 데이터
         gameObject->From_Json(objJson);
 
-
-
         // 컴포넌트 데이터
         if (objJson.contains("components"))
         {

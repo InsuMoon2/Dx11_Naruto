@@ -271,7 +271,7 @@ string Asset_Manager::Detect_AssetType(const wstring& filePath) const
     if (extension == ".png" || extension == ".jpg" || extension == ".dds" || extension == ".tga")
         return "texture";
 
-    if (extension == ".fbx" || extension == ".obj" || extension == ".psk")
+    if (extension == ".fbx" || extension == ".obj" || extension == ".psk" || extension == ".gltf")
         return "model";
 
     if (extension == ".hlsl" || extension == ".fx")
@@ -306,8 +306,8 @@ void Asset_Manager::Load_Cache()
             FAssetMeta meta;
             meta.guid = guid;
             meta.type = data.value("type", "");
-            meta.fullPath = Utils::ToWString(data.value("fullPath", ""));
             meta.relativePath = Utils::ToWString(data.value("relativePath", ""));
+            meta.fullPath = (fs::path(_resourceRoot) / meta.relativePath).wstring();
             _guidToMeta[meta.guid] = meta;
             _pathToGuid[meta.fullPath] = meta.guid;
         }

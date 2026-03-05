@@ -8,6 +8,7 @@
 #include "VIBuffer_Rect.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Event_Manager.h"
 
 MainApp::MainApp()
 {
@@ -146,5 +147,8 @@ void MainApp::Free()
 	}
 
     GameInstance::DestroyInstance();
+
+    Input_Manager::DestroyInstance();
+    Event_Manager::DestroyInstance();
 
 }

@@ -9,6 +9,8 @@ NS_END
 
 NS_BEGIN(Editor)
 
+class Editor_Camera_Free;
+
 class Prefab_View : public EditorWindow
 {
 public:
@@ -42,26 +44,21 @@ public:
     static shared_ptr<Prefab_View> Create();
 
 private:
-    bool _isOpen = false;
+    bool    _isOpen = false;
 
-    string _prefabName;
-    string _prefabPath;
+    string  _prefabName;
+    string  _prefabPath;
 
-    Shared<GameObject> _targetObject;
+    Shared<GameObject>          _previewObject;
+    Shared<Editor_Camera_Free>  _previewCamera;
 
 private: /* preview */
     Shared<RenderTarget>    _prevRT;
     Matrix                  _previewView;
     Matrix                  _previewProj;
-    Vec3                    _previewCamPos;
-    float                   _previewYaw = 0;
-    float                   _previewPitch = 1.614;
-    float                   _previewDistnace = 5.f;
 
     ImVec2                  _previewScreenPos;   
     ImVec2                  _previewImGuiSize;
-
-    Vec3                    _previewCenter = { 6.3f, 0.5f, 4.8f };
 
 private: /* ImGuizmo */
     ImGuizmo::OPERATION _gizmoOperation = ImGuizmo::TRANSLATE;

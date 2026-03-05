@@ -63,6 +63,9 @@ public:
     void Publish(shared_ptr<FEvent> event);                  // 발행
     void ProcessEvents();                                    // 실행
 
+public:
+    void Free() override;
+
 private:
     queue<shared_ptr<FEvent>> _eventQueue;
     umap<EEventType, vector<EventCallback>> _subscribers;

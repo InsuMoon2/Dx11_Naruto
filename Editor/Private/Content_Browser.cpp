@@ -10,6 +10,7 @@
 #include "Prefab_View.h"
 #include "BehaviorTree_View.h"
 #include "Asset_Manager.h"
+#include "Notification_Manager.h"
 
 Content_Browser::Content_Browser()
     : EditorWindow(TEXT("Content Browser"))
@@ -32,9 +33,6 @@ void Content_Browser::Initialize()
         GAME->Get_Context(),
         TEXT("../../Client/Bin/Resources/Textures/Folder_Icon.png"), 1
     );
-
-    // TODO : 디폴트 프리팹 만들기 -> 추후 삭제 예정. 굳이 필요 없을듯
-    Generate_Default_Prefabs();
 
     // 초기 리소스 스캔 Resources 폴더 기준
     Refresh_Resources();
@@ -67,11 +65,30 @@ void Content_Browser::OnGui()
         ImGui::BeginChild("FolderTree", ImVec2(_leftPanelWidth, 0), true);
         {
             // 검색바
-            ImGui::InputTextWithHint("##Search", "검색...", _searchBuffer, IM_ARRAYSIZE(_searchBuffer));
+            if (ImGui::InputTextWithHint("##Search", "검색...", _searchBuffer, IM_ARRAYSIZE(_searchBuffer)))
+            {
+                if (strlen(_searchBuffer) > 0)
+                {
+                    string searchLower = _searchBuffer;
+                    transform(searchLower.begin(), searchLower.end(), searchLower.begin(), ::tolower);
+
+                    FFolderNode* firstMatch = Get_FirstMatchingFolder(_rootFolder, searchLower);
+                    if (firstMatch && _currentFolder != firstMatch)
+                    {
+                        _thumbnailCache.clear();
+                        _currentFolder = firstMatch;
+
+                        Expand_PathTo(firstMatch->fullPath);
+                    }
+                }
+            }
+
             ImGui::Separator();
 
-            // 트리 그리기
+            ImGui::BeginChild("FolderTreeScroll", ImVec2(0, 0), false);
             Draw_FolderTree(_rootFolder);
+            ImGui::EndChild();
+
         }
         ImGui::EndChild();
 
@@ -108,13 +125,18 @@ void Content_Browser::OnGui()
                 {
                     Refresh_Resources();
                     GAME->Scan_Assets(TEXT("../../Client/Bin/Resources")); // Asset_Manager도 동기화
+                    NOTIFY("새로고침");
                 }
                 if (ImGui::IsItemHovered())
+                {
                     ImGui::SetTooltip("새로고침 [F5]");
-
+                }
 
                 ImGui::Separator();
+
+                ImGui::BeginChild("AssetViewScroll", ImVec2(0, 0), false);
                 Draw_AssetView();
+                ImGui::EndChild();
             }
         }
         ImGui::EndChild();
@@ -209,7 +231,7 @@ void Content_Browser::Draw_FolderTree(FFolderNode& node)
             return;
 
         // 검색어가 포함된 폴더 경로라면 보기 편하게 트리를 강제로 펼쳐둠
-        ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+        ImGui::SetNextItemOpen(true, ImGuiCond_Always);
     }
 
 
@@ -293,7 +315,8 @@ void Content_Browser::Draw_AssetView()
 
             bool isValidPrefab = pathStr.ends_with(".prefab.json");
             bool isBehaviorTree = pathStr.ends_with(".bt.json");
-            bool isMeshFile = (extension == ".fbx" || extension == ".FBX");
+            bool isMeshFile = (extension == ".fbx" || extension == ".FBX" ||
+                                extension == ".gltf" || extension == ".GLTF");
 
 
             // 아이콘
@@ -487,44 +510,6 @@ void Content_Browser::Draw_AssetView()
 
 }
 
-void Content_Browser::Generate_Default_Prefabs()
-{
-    //vector<wstring> names = GameObject_Factory::GetInstance()->Get_RegisteredNames();
-    auto names = GAME->Get_RegisteredGameObjects();
-
-    fs::path prefabDir = TEXT("../../Client/Bin/Resources/Data/json/Prefabs");
-    if (!fs::exists(prefabDir))
-        fs::create_directory(prefabDir);
-
-    int createCount = 0;
-
-    for (const auto& [objectID, nameW] : names)
-    {
-        string typeName = Utils::ToString(nameW);
-        string fileName = typeName + ".json";
-        fs::path filePath = prefabDir / fileName;
-
-        if (fs::exists(filePath))
-            continue;
-
-        auto tempObj = GameObject_Factory::GetInstance()->Create(nameW, GAME->Get_Device(), GAME->Get_Context());
-        if (tempObj)
-        {
-            GAME->Save_Prefab(filePath.string(), tempObj);
-            
-
-            createCount++;
-        }
-    }
-
-    if (createCount > 0)
-    {
-        LOG_WARN("Auto-generated {} Default Prefabs.", createCount);
-
-        Refresh_Resources();
-    }
-}
-
 void Content_Browser::Finish_Rename(const wstring& oldPath, const char* newName)
 {
     fs::path oldFilePath(oldPath);
@@ -711,6 +696,26 @@ bool Content_Browser::IsFolderMatchingSearch(const Content_Browser::FFolderNode&
             return true;
     }
     return false;
+}
+
+Content_Browser::FFolderNode* Content_Browser::Get_FirstMatchingFolder(FFolderNode& node, const string& searchStr)
+{
+    string nameLower = Utils::ToString(node.name);
+    transform(nameLower.begin(), nameLower.end(), nameLower.begin(), ::tolower);
+
+    if (nameLower.find(searchStr) != string::npos)
+        return &node;
+
+    for (auto& child : node.subFolders)
+    {
+        FFolderNode* found = Get_FirstMatchingFolder(child, searchStr);
+        if (found)
+        {
+            return found;
+        }
+    }
+
+    return nullptr;
 }
 
 void Content_Browser::Load_Thumbnail(const string& guid)

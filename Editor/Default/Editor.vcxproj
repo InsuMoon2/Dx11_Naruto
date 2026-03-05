@@ -217,6 +217,7 @@
     <ClInclude Include="..\Public\BehaviorTree_Inspector.h" />
     <ClInclude Include="..\Public\BehaviorTree_View.h" />
     <ClInclude Include="..\Public\CommandHistory.h" />
+    <ClInclude Include="..\Public\Editor_Camera_Free.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
     <ClInclude Include="..\Public\Editor_MainApp.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
@@ -258,6 +259,7 @@
     <ClCompile Include="..\Private\BehaviorTree_Inspector.cpp" />
     <ClCompile Include="..\Private\BehaviorTree_View.cpp" />
     <ClCompile Include="..\Private\CommandHistory.cpp" />
+    <ClCompile Include="..\Private\Editor_Camera_Free.cpp" />
     <ClCompile Include="..\Private\Editor_MainApp.cpp" />
     <ClCompile Include="..\Private\Action_Command.cpp" />
     <ClCompile Include="..\Private\Level_Editor.cpp" />

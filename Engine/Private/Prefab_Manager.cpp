@@ -205,6 +205,8 @@ shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc&
         }
     }
 
+    gameObject->Set_Name(Utils::ToWString(desc.prefab_name));
+
     return gameObject;
 }
 

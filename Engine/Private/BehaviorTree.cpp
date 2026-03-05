@@ -69,7 +69,7 @@ json BehaviorTree::To_Json() const
 {
     json j = Component::To_Json();
 
-    j["bt_filepath"] = _btFilePath;
+    j["bt_guid"] = _btGuid;
 
     return j;
 }
@@ -78,13 +78,31 @@ void BehaviorTree::From_Json(const json& data)
 {
     Component::From_Json(data);
 
-    _btFilePath = data.value("bt_filepath", string("(None)"));
+    //_btFilePath = data.value("bt_filepath", string("(None)"));
+    string guid = data.value("bt_guid", string(""));
 
-    if (_btFilePath != "(None)" && _btFilePath != "")
+    if (!guid.empty())
     {
-        wstring pathW = Utils::ToWString(_btFilePath);
-
-        Load_FromJson(pathW);
+        // GUID -> 절대경로 변환 후 로드
+        wstring resolvedPath = GAME->Resolve_AssetPath(guid);
+        if (!resolvedPath.empty())
+        {
+            _btGuid = guid;
+            Load_FromJson(resolvedPath);
+        }
+        else
+        {
+            LOG_WARN("BT GUID could not be resolved: {}", guid);
+        }
+    }
+    else
+    {
+        // 구버전 호환용. 추후 삭제예정
+        string filePath = data.value("bt_filepath", string("(None)"));
+        if (filePath != "(None)" && !filePath.empty())
+        {
+            Load_FromJson(Utils::ToWString(filePath));
+        }
     }
 }
 

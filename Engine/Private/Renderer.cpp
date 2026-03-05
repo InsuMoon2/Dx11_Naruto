@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "GameInstance.h"
 #include "GameObject.h"
+#include "UIObject.h"
 
 Renderer::Renderer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -81,6 +82,21 @@ void Renderer::Render_Blend()
 
 void Renderer::Render_UI()
 {
+    _renderObjects[ETOI(ERenderGroup::UI)].sort([](const Shared<GameObject>& src, const Shared<GameObject>& dst)
+        {
+            auto uiSrc = dynamic_pointer_cast<UIObject>(src);
+            auto uiDst = dynamic_pointer_cast<UIObject>(dst);
+
+            if (uiSrc->Get_UILayer() != uiDst->Get_UILayer())
+            {
+                return uiSrc->Get_UILayer() < uiDst->Get_UILayer();
+            }
+
+        // 같은 레이어면, ZOrder 기준
+            return uiSrc->Get_ZOrder() < uiDst->Get_ZOrder();
+
+        });
+
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::UI)])
     {
         if (renderObject)

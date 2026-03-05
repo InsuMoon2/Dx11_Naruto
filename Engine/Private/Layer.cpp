@@ -60,4 +60,6 @@ shared_ptr<Layer> Layer::Create()
 void Layer::Free()
 {
     Base::Free();
+
+    _gameObjects.clear();
 }

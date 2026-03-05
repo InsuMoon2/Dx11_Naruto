@@ -9,6 +9,7 @@
 #include "ResourceLoader.h"
 #include "VIBuffer_Rect.h"
 #include "Shader.h"
+#include "Event_Manager.h"
 
 Editor_MainApp::Editor_MainApp()
 {
@@ -167,4 +168,10 @@ void Editor_MainApp::Free()
 
     EditorInstance::DestroyInstance();
     GameInstance::DestroyInstance();
+
+    Input_Manager::DestroyInstance();
+    Event_Manager::DestroyInstance();
+
+    Inspector_Factory::DestroyInstance();
+    
 }

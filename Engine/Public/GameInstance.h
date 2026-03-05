@@ -18,6 +18,7 @@ class Prefab_Manager;
 class Camera_Manager;
 class Light_Manager;
 class Asset_Manager;
+class UI_Manager;
 
 class Renderer;
 class PipeLine;
@@ -31,6 +32,7 @@ class Layer;
 class Shader;
 
 class Camera;
+class UIObject;
 
 /* Component */
 class Transform;
@@ -199,6 +201,18 @@ public: /* Asset */
     void                            Update_AssetPath(const string& guid, const wstring& newFilePath);
     void                            Refresh_Cache();
 
+public: /* UI */
+    HRESULT                         Add_UI(EUILayer layer, Shared<UIObject> uiObject);
+    Shared<UIObject>                Find_UI(const wstring& name);
+    void                            Show_UI(const wstring& name);
+    void                            Hide_UI(const wstring& name);
+    void                            Toggle_UI(const wstring& name);
+    void                            Hide_All_Layer(EUILayer layer);
+    void                            Hide_All_UI();
+    bool                            Is_UIInputBlocked() const;
+    void                            Clear_UI();
+
+
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};
 	Unique<Timer_Manager>	        _timerManager   {};
@@ -209,6 +223,7 @@ private: /* Manager */
     Unique<Camera_Manager>          _cameraManager  {};
     Unique<Light_Manager>           _lightManager   {};
     Unique<Asset_Manager>           _assetManager   {};
+    Unique<UI_Manager>              _uiManager      {};
 
     Unique<Renderer>                _renderer {};
     Unique<PipeLine>                _pipeLine {};

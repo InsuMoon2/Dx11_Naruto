@@ -20,6 +20,7 @@
 
 Editor_Manager::~Editor_Manager()
 {
+    _windows.clear();
 }
 
 void Editor_Manager::Initialize()
@@ -628,7 +629,7 @@ void Editor_Manager::On_SaveLevel(const wstring& fileName)
 
     LOG_WARN("Level Saved: {}", pureName);
 
-    //NOTIFY("Level Saved"); 만들긴했는데 로그가 있으면 굳이 필요없는거 같기도 하고
+    NOTIFY("Level Saved"); 
 }
 
 void Editor_Manager::On_LoadLevel(const wstring& fileName)

@@ -1,7 +1,7 @@
 # Dx11_Naruto 프로젝트 구조
 
 > **AI 어시스턴트는 매 대화 시작 시 이 파일을 반드시 읽을 것!**
-> 마지막 갱신: 2026-03-04
+> 마지막 갱신: 2026-03-05
 
 ---
 
@@ -170,6 +170,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Utils` | wstring ↔ string 변환 |
 | `Delegate.h` | 이벤트 델리게이트 시스템 |
 | `AnimNotify_Factory` | 애니메이션 노티파이 팩토리 |
+| `ICommand` | Undo/Redo 커맨드 인터페이스 (Execute/Undo/Redo 순수 가상) |
 | `Vertex_Struct.h` | 정점 구조체 정의 (`VTXTEX`, `VTXNORTEX`, `VTXMESH`) + InputLayout |
 | `Property_Types.h` | 프로퍼티 타입 정의 (리플렉션 시스템용) |
 | `Reflection_Macro.h` | 리플렉션 매크로 (컴포넌트 프로퍼티 자동 노출) |
@@ -297,6 +298,14 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `BehaviorTree_Inspector` | BT 인스펙터 |
 | `Texture_Inspector` | 텍스처 인스펙터 |
 | `Reflection_Inspector` | 리플렉션 기반 자동 인스펙터 |
+
+### Undo/Redo 시스템
+
+| 클래스 | 설명 |
+|---|---|
+| `CommandHistory` | Undo/Redo 스택 관리 (ICommand 기반, 최대 100개 이력) |
+| `Action_Command` | 범용 람다 기반 Undo/Redo 커맨드 (ICommand 상속) |
+| `Property_Command` | 프로퍼티 값 변경 Undo/Redo (EPropertyType 기반 역직렬화) |
 
 ### 기타
 

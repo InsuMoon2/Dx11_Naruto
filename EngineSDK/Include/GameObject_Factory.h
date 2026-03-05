@@ -8,8 +8,6 @@ class GameObject;
 
 class ENGINE_DLL GameObject_Factory : public Base
 {
-    DECLARE_SINGLETON(GameObject_Factory)
-
     using Creator = function<shared_ptr<GameObject>(ComPtr<Device>, ComPtr<DeviceContext>)>;
 
 public:

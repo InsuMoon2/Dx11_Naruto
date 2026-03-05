@@ -2,6 +2,7 @@
 #include "Prefab_View.h"
 
 #include "Content_Browser.h"
+#include "Editor_Camera_Free.h"
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "Inspector.h"
@@ -49,7 +50,7 @@ void Prefab_View::OnGui()
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(windowSize, ImGuiCond_Appearing);
 
-    ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 
     string title = "Prefab View - " + _prefabName;
     if (_isDirty)
@@ -76,88 +77,63 @@ void Prefab_View::OnGui()
             ImGui::TableSetupColumn("Inspector", ImGuiTableColumnFlags_WidthStretch);
 
             ImGui::TableNextRow();
+
             // [좌측] 모델 프리뷰
             ImGui::TableSetColumnIndex(0);
             {
                 ImGui::Text("모델 프리뷰");
                 _previewImGuiSize = ImVec2(ImGui::GetContentRegionAvail().x, 450);
 
-                if (_prevRT)
+                ImGui::BeginChild("ModelPreviewChild", _previewImGuiSize, false,
+                    ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
                 {
-                    _previewScreenPos = ImGui::GetCursorScreenPos();
-
-                    ImGui::Image(_prevRT->GetSRV(), _previewImGuiSize);
-
-                    if (ImGui::IsItemHovered())
+                    if (_prevRT)
                     {
-                        if (ImGui::IsMouseDragging(ImGuiMouseButton_Right))
-                        {
-                            _previewYaw += ImGui::GetIO().MouseDelta.x * 0.01f;
-                        }
+                        _previewScreenPos = ImGui::GetCursorScreenPos();
 
-                        // 스크롤로 줌
-                        float wheel = ImGui::GetIO().MouseWheel;
-                        if (wheel != 0.f)
-                        {
-                            _previewDistnace -= wheel * 0.5f;
-                            _previewDistnace = max(1.f, min(_previewDistnace, 30.f));
-                        }
+                        ImVec2 childSize = ImGui::GetContentRegionAvail();
+                        ImGui::Image(_prevRT->GetSRV(), childSize);
+
+                        if (ImGui::IsWindowHovered())
+                            _previewCamera->Priority_Update(ImGui::GetIO().DeltaTime);
+
+                        Update_ImGuizmo();
+                    }
+                    else
+                    {
+                        ImGui::Button("##ModelPreview", _previewImGuiSize);
                     }
                 }
-                else
-                {
-                    ImGui::Button("##ModelPreview", _previewImGuiSize);
-                }
-
-
-                ImGui::Separator();
-                static int currentState = 0;
-                const char* states[] = { "Idle", "Run", "Attack", "Hit", "Dead" };
-
-                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::Combo("##StateCombo", &currentState, states, IM_ARRAYSIZE(states));
-
-                ImGui::Spacing();
-                ImGui::Spacing();
-                ImGui::Spacing();
-
-                float remainingSpace = ImGui::GetContentRegionAvail().y - 30.f;
-                ImGui::Dummy(ImVec2(0, remainingSpace));  
+                ImGui::EndChild();
             }
 
             // [우측] 컴포넌트 리스트
             ImGui::TableSetColumnIndex(1);
             {
-                Draw_ComponentList();
+                ImVec2 listSize = ImVec2(0.f, 0.f); 
+                ImGui::BeginChild("ComponentListChild", listSize, false); 
+                {
+                    Draw_ComponentList();
+                }
+                ImGui::EndChild();
             }
             ImGui::EndTable();
         }
         ImGui::Separator();
-        //Draw_Buttons();
 
-        Update_ImGuizmo();
     }
     ImGui::End();
-
-
-    //ImGui::Begin("Test");
-    //ImGui::DragFloat("OffsetX", &_previewCenter.x, 0.1f, 1.f, 30.f);
-    //ImGui::DragFloat("OffsetY", &_previewCenter.y, 0.1f, 1.f, 30.f);
-    //ImGui::DragFloat("OffsetZ", &_previewCenter.z, 0.1f, 1.f, 30.f);
-    //ImGui::DragFloat("Yaw", &_previewYaw, 0.01f);
-    //ImGui::DragFloat("Pitch", &_previewPitch, 0.01f);
-    //ImGui::End();
 
 }
 
 bool Prefab_View::CanSave() const
 {
-    return _targetObject != nullptr && !_prefabPath.empty();
+    return _previewObject != nullptr && !_prefabPath.empty();
 }
 
 void Prefab_View::Save()
 {
-    GAME->Save_Prefab(_prefabPath, _targetObject);
+    GAME->Save_Prefab(_prefabPath, _previewObject);
     ClearDirty();
     EDITOR->Get_Notification()->Add_Notification("Prefab Saved: {}", _prefabName);
 }
@@ -167,12 +143,12 @@ void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath
     _prefabName = prefabName;
     _prefabPath = prefabPath;
 
-    _targetObject = nullptr;
+    _previewObject = nullptr;
 
     // 인스턴스화
-    _targetObject = GAME->Instantiate_Prefab(prefabName, {});
+    _previewObject = GAME->Instantiate_Prefab(prefabName, {});
 
-    if (_targetObject)
+    if (_previewObject)
     {
         _isOpen = true;
 
@@ -182,45 +158,53 @@ void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath
             _prevRT = RenderTarget::Create(device, 600.f, 300.f);
         }
 
-        // 프리뷰 카메라 초기값
-        _previewYaw = -2.21f;
-        _previewDistnace = 16.5f;
+        if (!_previewCamera)
+        {
+            _previewCamera = Editor_Camera_Free::Create(GAME->Get_Device(), GAME->Get_Context());
+
+            Editor_Camera_Free::FEditorCameraDesc desc;
+
+            desc.speedPerSec = 10.f;   
+            desc.rotationPerSec = 90.f;
+
+            desc.eye = Vec3(-7.f, 3.f, -10.f);
+            desc.at = Vec3(6.f, 0.f, 0.f);
+            desc.fovY = XM_PIDIV4;
+            desc.nearZ = 0.1f;
+            desc.farZ = 1000.f;
+
+            desc.mouseSensor = 0.15f;
+
+            _previewCamera->Initialize(&desc);
+        }
     }
-        
 
 }
 
 void Prefab_View::Close_Prefab()
 {
     _isOpen = false;
-    _targetObject = nullptr;
+
+    _previewCamera.reset();
+    _previewObject.reset();
+    _prevRT.reset();
 }
 
 void Prefab_View::Pre_Render()
 {
     EditorWindow::Pre_Render();
 
-    if (!_isOpen || !_targetObject || !_prevRT)
+    if (!_isOpen || !_previewObject || !_prevRT)
         return;
 
     // 기존 View/Proj 백업
     Matrix savedView = *GAME->Get_Transform(ETransformState::View);
     Matrix savedProj = *GAME->Get_Transform(ETransformState::Proj);
 
-    _previewDistnace = max(_previewDistnace, 0.5f);
+    if (!_previewCamera)
+        return;
 
-    Vec3 target = Vec3(0.f, 0.f, 0.f);
-
-    float camX = _previewDistnace * sinf(_previewPitch) * sinf(_previewYaw);
-    float camY = _previewDistnace * cosf(_previewPitch);
-    float camZ = _previewDistnace * sinf(_previewPitch) * cosf(_previewYaw);
-
-    Vec3 center = _targetObject->Get_Component<Transform>()->Get_WorldPosition();
-    center += _previewCenter;
-
-    _previewCamPos = center + Vec3(camX, camY + 3.f, camZ);
-
-    _previewView = XMMatrixLookAtLH(_previewCamPos, center, Vec3::Up);;
+    _previewView = _previewCamera->Get_ViewMatrix();
 
     float aspect = static_cast<float>(_prevRT->GetWidth()) / _prevRT->GetHeight();
     _previewProj = XMMatrixPerspectiveFovLH(XM_PIDIV4, aspect, 0.1f, 100.f);
@@ -231,7 +215,7 @@ void Prefab_View::Pre_Render()
     _prevRT->Clear(Color(0.15f, 0.15f, 0.15f, 1.f));
     _prevRT->BindAsTarget();
 
-    _targetObject->Render();
+    _previewObject->Render();
 
     GAME->BindBackBuffer();
 
@@ -248,7 +232,7 @@ void Prefab_View::Draw_Header()
 
 void Prefab_View::Draw_ComponentList()
 {
-    if (!_targetObject)
+    if (!_previewObject)
         return;
 
 #pragma region Legacy : Inspector 방식으로 보여주기
@@ -258,7 +242,7 @@ void Prefab_View::Draw_ComponentList()
     ImGui::Text("Components Inspector");
     ImGui::Separator();
 
-    auto& components = _targetObject->Get_Components();
+    auto& components = _previewObject->Get_Components();
     uint32 deleteTargetID = 0; // 삭제할 컴포넌트 ID
 
     for (auto& pair : components)
@@ -295,7 +279,7 @@ void Prefab_View::Draw_ComponentList()
 
     if (deleteTargetID != 0)
     {
-        _targetObject->Remove_Component(deleteTargetID);
+        _previewObject->Remove_Component(deleteTargetID);
         MarkDirty();
     }
         
@@ -323,7 +307,7 @@ void Prefab_View::Draw_ComponentList()
 
                 if (newComp)
                 {
-                    _targetObject->Add_Component(typeId, newComp);
+                    _previewObject->Add_Component(typeId, newComp);
                     MarkDirty();
                 }
             }
@@ -336,13 +320,13 @@ void Prefab_View::Draw_Buttons()
 {
     if (ImGui::Button(ICON_FA_FLOPPY_DISK "  Save", ImVec2(100.f, 0)))
     {
-        if (_targetObject)
+        if (_previewObject)
         {
             string filePath = fs::path(_prefabPath).stem().string();
 
             LOG_INFO("Saving to: '{}'", filePath);
 
-            GAME->Save_Prefab(_prefabPath, _targetObject);
+            GAME->Save_Prefab(_prefabPath, _previewObject);
             ClearDirty();
             EDITOR->Get_Notification()->Add_Notification("Prefab Saved: {}", _prefabName);
         }
@@ -353,7 +337,7 @@ void Prefab_View::Draw_Buttons()
     if (ImGui::Button(ICON_FA_XMARK " Close", ImVec2(100, 0)))
     {
         _isOpen = false;
-        _targetObject = nullptr;
+        _previewObject = nullptr;
     }
 
     ImGui::SameLine();
@@ -389,10 +373,10 @@ void Prefab_View::Draw_Buttons()
 
 void Prefab_View::Update_ImGuizmo()
 {
-    if (!_targetObject)
+    if (!_previewObject)
         return;
 
-    auto transform = _targetObject->Get_Component<Transform>();
+    auto transform = _previewObject->Get_Component<Transform>();
     if (transform && _gizmoOperation != (ImGuizmo::OPERATION)0)
     {
         ImGuizmo::SetOrthographic(false);

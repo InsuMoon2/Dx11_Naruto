@@ -30,3 +30,13 @@ void Event_Manager::ProcessEvents()
         }
     }
 }
+
+void Event_Manager::Free()
+{
+    _subscribers.clear();
+
+    queue<shared_ptr<FEvent>> emptyQueue;
+    _eventQueue.swap(emptyQueue);
+
+    Base::Free();
+}

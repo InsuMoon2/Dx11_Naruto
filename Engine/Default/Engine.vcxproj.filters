@@ -180,9 +180,14 @@
     <ClInclude Include="..\Public\Property_Types.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Reflection_Macro.h" />
     <ClInclude Include="..\Public\ICommand.h">
       <Filter>01. Utility\98. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Reflection_Macro.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Manager.h">
+      <Filter>95. Manager\08. UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -341,6 +346,9 @@
     </Filter>
     <Filter Include="01. Utility\03. GameObject\04. StaticMesh">
       <UniqueIdentifier>{c8ff0aec-fb57-40b8-952a-dc98ee15ff39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Manager\08. UI">
+      <UniqueIdentifier>{4bd73bac-99e7-465e-8f7d-92f741d2b15a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -501,6 +509,9 @@
     <ClCompile Include="..\Private\Model.cpp" />
     <ClCompile Include="..\Private\ICommand.cpp">
       <Filter>01. Utility\98. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Manager.cpp">
+      <Filter>95. Manager\08. UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

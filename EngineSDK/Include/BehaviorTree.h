@@ -45,6 +45,7 @@ private:
     Shared<Blackboard> _blackboard;
 
     string _btFilePath = "(None)";
+    string _btGuid;
 
     bool _pendingInitialize = false;
     map<int, EBTNodeResult> _cachedNodeResults;

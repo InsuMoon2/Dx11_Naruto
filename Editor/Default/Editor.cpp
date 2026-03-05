@@ -5,6 +5,8 @@
 #include <locale.h>
 #include <tchar.h>
 
+#include "Protocol.pb.h"
+
 #include "Editor_MainApp.h"
 
 #define MAX_LOADSTRING 100
@@ -31,6 +33,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                         _In_ LPWSTR    lpCmdLine,
                         _In_ int       nCmdShow)
 {
+#ifdef _DEBUG
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF);
+
+    Protocol::S_TEST::descriptor();
+
+#endif
+
     UNREFERENCED_PARAMETER(hPrevInstance);
 
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -64,40 +73,42 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
             if (WM_QUIT == msg.message)
+            {
                 break;
+            }
 
             if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
             {
                 TranslateMessage(&msg);
-
                 DispatchMessage(&msg);
             }
         }
-
-        timeAcc += GAME->Compute_TimeDelta(L"Timer_Default");
-
-        if (timeAcc >= 1.f / 60.f)
+        else
         {
-            float dt = GAME->Compute_TimeDelta(L"Timer_60FPS");
+            timeAcc += GAME->Compute_TimeDelta(L"Timer_Default");
 
-            mainApp->Priority_Update(dt);
-            mainApp->Update(dt);
-            mainApp->Late_Update(dt);
-            mainApp->Render();
-            timeAcc = 0.f;
+            if (timeAcc >= 1.f / 60.f)
+            {
+                float dt = GAME->Compute_TimeDelta(L"Timer_60FPS");
+
+                mainApp->Priority_Update(dt);
+                mainApp->Update(dt);
+                mainApp->Late_Update(dt);
+                mainApp->Render();
+                timeAcc = 0.f;
+            }
         }
     }
 
     mainApp->Free();
     mainApp.reset();
+
+    google::protobuf::ShutdownProtobufLibrary();
+    spdlog::shutdown();
+
     return (int)msg.wParam;
 }
 
-//
-//  함수: MyRegisterClass()
-//
-//  용도: 창 클래스를 등록합니다.
-//
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wcex;

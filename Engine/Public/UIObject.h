@@ -19,6 +19,7 @@ public:
         float sizeX = {};
         float sizeY = {};
         float zOrder = 0.5f;
+        EUILayer uiType = EUILayer::HUD;
     };
 
 public:
@@ -34,6 +35,14 @@ public:
     virtual void    Update(float timeDelta) override;
     virtual void    Late_Update(float timeDelta) override;
     virtual HRESULT Render() override;
+
+public:
+    void                Set_Active(bool bActive) { _isActive = bActive; }
+    bool                Is_Active() const { return _isActive; }
+
+    float               Get_ZOrder() const { return _zOrder; }
+    EUILayer            Get_UILayer() const { return _uiType; }
+
 
 protected:
     // SRT로 월드 행렬 갱신, 직교 투영 행렬 세팅
@@ -52,6 +61,10 @@ protected:
     // UI 전용 변환 행렬
     Matrix _worldMatrix = Matrix::Identity;
     Matrix _transformMatrices[ETOI(ETransformState::END)];
+
+protected:
+    bool        _isActive = true; // 화면 표시
+    EUILayer    _uiType = EUILayer::HUD;
 
 public:
     virtual Shared<GameObject> Clone(void* arg) abstract;

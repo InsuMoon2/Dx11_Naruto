@@ -14,13 +14,22 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
 
     ImGui::Spacing();
 
-    string fullPath = data.value("bt_filepath", string("(None)"));
-    string fileName = fs::path(fullPath).filename().stem().string();
+    //string fullPath = data.value("bt_filepath", string("(None)"));
+    //string fileName = fs::path(fullPath).filename().stem().string();
+    //
+    //
+    //ImGui::Text("Asset : ");
+    //ImGui::SameLine();
 
-    ImGui::Text("Asset : ");
-    ImGui::SameLine();
+    string btGuid = data.value("bt_guid", string(""));
+    string displayName = "(None)";
 
-    string displayName = (fileName.empty() || fullPath == "(None)") ? "(None)" : fileName;
+    if (!btGuid.empty())
+    {
+        wstring resolved = GAME->Resolve_AssetPath(btGuid);
+        if (!resolved.empty())
+            displayName = fs::path(resolved).stem().string();
+    }
 
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.25f, 0.25f, 0.25f, 1.0f));
@@ -50,15 +59,14 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
         {
             string name = fs::path(meta->fullPath).stem().string();
             // 현재 세팅된 거 하이라이트
-            bool isSelected = (meta->fullPath == Utils::ToWString(fullPath));
+            bool isSelected = (meta->guid == btGuid);
 
             if (isSelected)
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
 
             if (ImGui::Selectable(name.c_str(), isSelected, ImGuiSelectableFlags_None, ImVec2(200.f, 0)))
             {
-                // 선택 -> 즉시 세팅
-                data["bt_filepath"] = Utils::ToString(meta->fullPath);
+                data["bt_guid"] = meta->guid;
                 behavior->From_Json(data);
 
                 LOG_INFO("BehaviorTree Assigned : {}", name);
@@ -75,7 +83,7 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
 
         if (ImGui::Selectable("(None) - 해제", false))
         {
-            data["bt_filepath"] = "(None)";
+            data["bt_guid"] = "(None)";
             behavior->From_Json(data);
             ImGui::CloseCurrentPopup();
         }
@@ -103,7 +111,7 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
             string pureName = fs::path(droppedPath).filename().stem().string();
 
             // 받아온 경로로 Json 갱신
-            data["bt_filepath"] = droppedPath;
+            data["bt_guid"] = guid;
 
             behavior->From_Json(data);
 
@@ -117,7 +125,7 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
 
     if (ImGui::Button("Clear", ImVec2(60, 30)))
     {
-        data["bt_filepath"] = "(None)";
+        data["bt_guid"] = "";
         behavior->From_Json(data);
     }
 
@@ -138,9 +146,11 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
 
             if (btView)
             {
-                if (!fullPath.empty() && fullPath != "(None)")
+                if (!btGuid.empty())
                 {
-                    btView->Load_BehaviorTree(fullPath);
+                    wstring resolved = GAME->Resolve_AssetPath(btGuid);
+                    if (!resolved.empty())
+                        btView->Load_BehaviorTree(Utils::ToString(resolved));
                 }
 
                 btView->Set_DebugTarget(behavior);

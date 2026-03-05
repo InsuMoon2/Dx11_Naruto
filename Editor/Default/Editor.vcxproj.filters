@@ -147,7 +147,10 @@
     <ClInclude Include="..\Public\Action_Command.h">
       <Filter>06. Command</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Property_Command.h" />
+    <ClInclude Include="..\Public\Property_Command.h">
+      <Filter>06. Command</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Editor_Camera_Free.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -251,7 +254,10 @@
     <ClCompile Include="..\Private\Action_Command.cpp">
       <Filter>06. Command</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Property_Command.cpp" />
+    <ClCompile Include="..\Private\Property_Command.cpp">
+      <Filter>06. Command</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Editor_Camera_Free.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

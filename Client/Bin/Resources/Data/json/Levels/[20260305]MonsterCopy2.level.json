@@ -1,0 +1,284 @@
+{
+    "gameObjects": [
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_RECT"
+                },
+                {
+                    "current_index": 0,
+                    "num_srvs": 1,
+                    "texture_path": "../../Client/Bin/Resources/Textures/Terrain/Tile%d.dds",
+                    "type": "COMPONENT_TYPE_TEXTURE"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                }
+            ],
+            "guid": "d89c7596-5cbf-400d-8818-18e021362945",
+            "layerTag": "Layer_Terrain",
+            "object_type": "OBJECT_TYPE_TERRAIN",
+            "static_class": "Terrain"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        5.501145362854004,
+                        5.0,
+                        -5.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        70.15310668945313,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "bt_guid": "",
+                    "type": "COMPONENT_TYPE_AI"
+                },
+                {
+                    "type": "COMPONENT_TYPE_MODEL"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "Attack": 10.0,
+                    "Defense": 5.0,
+                    "HP": 100.0,
+                    "MP": 100.0,
+                    "Max HP": 100.0,
+                    "Max MP": 100.0,
+                    "Speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_AI_CONTROLLER"
+                },
+                {
+                    "Acceleration": 20.0,
+                    "Deceleration": 24.0,
+                    "Gravity": -20.0,
+                    "Ground Y": 5.0,
+                    "Jump Velocity": 8.0,
+                    "Max Sprint Speed": 4.0,
+                    "Max Walk Speed": 2.0,
+                    "Yaw Speed": 0.20000000298023224,
+                    "type": "COMPONENT_TYPE_MOVEMENT"
+                }
+            ],
+            "guid": "a0f1611d-b849-4301-b260-370edf302301",
+            "layerTag": "Layer_GameObject",
+            "object_type": "OBJECT_TYPE_MONSTER",
+            "static_class": "Monster"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        5.0,
+                        -5.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "bt_guid": "",
+                    "type": "COMPONENT_TYPE_AI"
+                },
+                {
+                    "type": "COMPONENT_TYPE_MODEL"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "Attack": 10.0,
+                    "Defense": 5.0,
+                    "HP": 100.0,
+                    "MP": 100.0,
+                    "Max HP": 100.0,
+                    "Max MP": 100.0,
+                    "Speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_AI_CONTROLLER"
+                },
+                {
+                    "Acceleration": 20.0,
+                    "Deceleration": 24.0,
+                    "Gravity": -20.0,
+                    "Ground Y": 5.0,
+                    "Jump Velocity": 8.0,
+                    "Max Sprint Speed": 4.0,
+                    "Max Walk Speed": 2.0,
+                    "Yaw Speed": 0.20000000298023224,
+                    "type": "COMPONENT_TYPE_MOVEMENT"
+                }
+            ],
+            "guid": "cea6b84a-8e62-44ee-8fbf-e436e92b9a74",
+            "layerTag": "Layer_GameObject",
+            "object_type": "OBJECT_TYPE_MONSTER",
+            "static_class": "Monster"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        9.034461975097656,
+                        5.0,
+                        3.5911521911621094
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "bt_guid": "ba360ec8-2caa-415f-89d8-0ddcbc10797c",
+                    "type": "COMPONENT_TYPE_AI"
+                },
+                {
+                    "type": "COMPONENT_TYPE_MODEL"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "Attack": 10.0,
+                    "Defense": 5.0,
+                    "HP": 100.0,
+                    "MP": 100.0,
+                    "Max HP": 100.0,
+                    "Max MP": 100.0,
+                    "Speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_AI_CONTROLLER"
+                },
+                {
+                    "Acceleration": 20.0,
+                    "Deceleration": 24.0,
+                    "Gravity": -20.0,
+                    "Ground Y": 5.0,
+                    "Jump Velocity": 8.0,
+                    "Max Sprint Speed": 4.0,
+                    "Max Walk Speed": 2.0,
+                    "Yaw Speed": 0.20000000298023224,
+                    "type": "COMPONENT_TYPE_MOVEMENT"
+                }
+            ],
+            "guid": "3eeb9f3a-3724-435c-937f-be91d996e730",
+            "layerTag": "Layer_GameObject",
+            "object_type": "OBJECT_TYPE_MONSTER",
+            "static_class": "Monster1"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        21.349929809570313,
+                        5.0,
+                        -10.19277286529541
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "bt_guid": "",
+                    "type": "COMPONENT_TYPE_AI"
+                },
+                {
+                    "type": "COMPONENT_TYPE_MODEL"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "Attack": 10.0,
+                    "Defense": 5.0,
+                    "HP": 100.0,
+                    "MP": 100.0,
+                    "Max HP": 100.0,
+                    "Max MP": 100.0,
+                    "Speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_AI_CONTROLLER"
+                },
+                {
+                    "Acceleration": 20.0,
+                    "Deceleration": 24.0,
+                    "Gravity": -20.0,
+                    "Ground Y": 5.0,
+                    "Jump Velocity": 8.0,
+                    "Max Sprint Speed": 4.0,
+                    "Max Walk Speed": 2.0,
+                    "Yaw Speed": 0.20000000298023224,
+                    "type": "COMPONENT_TYPE_MOVEMENT"
+                }
+            ],
+            "guid": "f9ab6c17-a2a7-4b9f-be4c-3407782dbc97",
+            "layerTag": "Layer_GameObject",
+            "object_type": "OBJECT_TYPE_MONSTER",
+            "static_class": "Monster3334"
+        }
+    ],
+    "levelIndex": 3,
+    "levelName": "[20260305]MonsterCopy2"
+}

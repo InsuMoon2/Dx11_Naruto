@@ -24,6 +24,7 @@
 #include "Camera.h"
 #include "Component_Factory.h"
 #include "Light_Manager.h"
+#include "UI_Manager.h"
 
 IMPLEMENT_SINGLETON(GameInstance)
 
@@ -85,6 +86,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     _assetManager = Asset_Manager::Create(TEXT("../../Client/Bin/Resources"));
     CHECK_NULL(_assetManager, E_FAIL);
 
+    _uiManager = UI_Manager::Create();
+    CHECK_NULL(_uiManager, E_FAIL);
+
     return S_OK;
 }
 
@@ -94,6 +98,8 @@ void GameInstance::Priority_Update_Engine(float timeDelta)
     _cameraManager->Update(timeDelta);
 
     _pipeLine->Update();
+
+    _uiManager->Priority_Update(timeDelta);
 }
 
 void GameInstance::Update_Engine(float timeDelta)
@@ -101,13 +107,14 @@ void GameInstance::Update_Engine(float timeDelta)
     //INPUT->Update(timeDelta);
     _levelManager->Update(timeDelta);
     _objectManager->Update(timeDelta);
-
+    _uiManager->Update(timeDelta);
 }
 
 void GameInstance::Late_Update_Engine(float timeDelta)
 {
     _levelManager->Late_Update(timeDelta);
     _objectManager->Late_Update(timeDelta);
+    _uiManager->Late_Update(timeDelta);
 
     EVENT->ProcessEvents();
 }
@@ -135,6 +142,7 @@ void GameInstance::Clear_Resources(uint32 levelIndex)
 {
     _objectManager->Clear_Layers(levelIndex);
     _protoManager->Clear_Prototype(levelIndex);
+    //_uiManager->Clear_UI();
 }
 
 ComPtr<Device> GameInstance::Get_Device()
@@ -462,6 +470,51 @@ void GameInstance::Update_AssetPath(const string& guid, const wstring& newFilePa
 void GameInstance::Refresh_Cache()
 {
     return _assetManager->Refresh_Cache();
+}
+
+HRESULT GameInstance::Add_UI(EUILayer layer, Shared<UIObject> uiObject)
+{
+    return _uiManager->Add_UI(layer, uiObject);
+}
+
+Shared<UIObject> GameInstance::Find_UI(const wstring& name)
+{
+    return _uiManager->Find_UI(name);
+}
+
+void GameInstance::Show_UI(const wstring& name)
+{
+    return _uiManager->Show_UI(name);
+}
+
+void GameInstance::Hide_UI(const wstring& name)
+{
+    return _uiManager->Hide_UI(name);
+}
+
+void GameInstance::Toggle_UI(const wstring& name)
+{
+    return _uiManager->Toggle_UI(name);
+}
+
+void GameInstance::Hide_All_Layer(EUILayer layer)
+{
+    return _uiManager->Hide_All_Layer(layer);
+}
+
+void GameInstance::Hide_All_UI()
+{
+    return _uiManager->Hide_All_UI();
+}
+
+bool GameInstance::Is_UIInputBlocked() const
+{
+    return _uiManager->Is_InputBlocked();
+}
+
+void GameInstance::Clear_UI()
+{
+    return _uiManager->Clear_UI();
 }
 
 Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)

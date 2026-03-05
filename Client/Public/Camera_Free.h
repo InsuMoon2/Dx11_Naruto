@@ -29,7 +29,7 @@ public:
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
 
-private:
+protected:
     float _mouseSensor = {};
 
 public:

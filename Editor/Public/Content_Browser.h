@@ -46,7 +46,6 @@ private:
     void Draw_FolderTree(FFolderNode& node);
     void Draw_AssetView();
 
-    void Generate_Default_Prefabs();
     void Finish_Rename(const wstring& oldPath, const char* newName);
     void Create_NewPrefab(uint32 objectID, const wstring& typeName);
 
@@ -61,12 +60,14 @@ private:
 
     static bool IsFolderMatchingSearch(const Content_Browser::FFolderNode& node, const string& searchStr);
 
+    FFolderNode* Get_FirstMatchingFolder(FFolderNode& node, const string& searchStr);
+
 private:
     FFolderNode _rootFolder;
     FFolderNode* _currentFolder = { nullptr };
 
     // 폴더 뷰
-    float _leftPanelWidth = 200.f;
+    float _leftPanelWidth = 300.f;
     float _thumbnailSize = 64.f;
     char _searchBuffer[128] = "";
 
