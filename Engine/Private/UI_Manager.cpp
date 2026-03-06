@@ -60,8 +60,21 @@ HRESULT UI_Manager::Add_UI(EUILayer layer, Shared<UIObject> uiObject)
     if (_uiMap.find(uiName) != _uiMap.end())
         return E_FAIL; // 이름 중복
 
+    uiObject->Set_UILayer(layer);
+
     _uiLayers[ETOI(layer)].push_back(uiObject);
     _uiMap.emplace(uiName, uiObject);
+
+    return S_OK;
+}
+
+HRESULT UI_Manager::Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject)
+{
+    CHECK_NULL(uiObject, E_FAIL);
+
+    uiObject->Set_UILayer(layer);
+
+    _uiLayers[ETOI(layer)].push_back(uiObject);
 
     return S_OK;
 }
@@ -121,7 +134,7 @@ void UI_Manager::Hide_All_UI()
     }
 }
 
-void UI_Manager::Clear_UI()
+void UI_Manager::Clear_All_UI()
 {
     for (uint32 i = 0; i < ETOI(EUILayer::END); ++i)
     {
@@ -131,9 +144,29 @@ void UI_Manager::Clear_UI()
     _uiMap.clear();
 }
 
+void UI_Manager::Clear_UI_ByLevel(uint32 levelIndex)
+{
+    auto iter = _uiMap.begin();
+    while (iter != _uiMap.end())
+    {
+        if (iter->second->Get_LevelIndex() == levelIndex)
+        {
+            EUILayer layer = iter->second->Get_UILayer();
+            _uiLayers[ETOI(layer)].remove(iter->second);
+
+            iter = _uiMap.erase(iter);
+        }
+        else
+        {
+            ++iter;
+        }
+    }
+
+}
+
 void UI_Manager::Notify_Viewport_Resize(float widht, float height)
 {
-
+    // TODO : 뷰포트 사이즈 변경 알림
 }
 
 bool UI_Manager::Is_InputBlocked() const
@@ -163,5 +196,5 @@ void UI_Manager::Free()
 {
     Base::Free();
 
-    Clear_UI();
+    Clear_All_UI();
 }

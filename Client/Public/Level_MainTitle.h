@@ -30,8 +30,7 @@ public:
     virtual HRESULT Render() override;
 
 private:
-    HRESULT         Ready_Layer_Background(const wstring& layerTag);
-
+    HRESULT         Ready_Layer_Background();
 
 public:
     static shared_ptr<Level_MainTitle> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

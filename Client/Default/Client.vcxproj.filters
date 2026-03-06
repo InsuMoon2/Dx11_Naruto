@@ -79,9 +79,6 @@
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02. GameObject\01. Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Background.h">
-      <Filter>02. GameObject\02. UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Client_PacketHandler.h">
       <Filter>96. Network</Filter>
     </ClInclude>
@@ -97,10 +94,40 @@
     <ClInclude Include="..\Public\RemotePlayer.h">
       <Filter>02. GameObject\00. Player\00. Network</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Camera_Target.h" />
     <ClInclude Include="..\Public\StaticMeshActor.h">
       <Filter>02. GameObject\06. StaticMesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerStateMachine.h">
+      <Filter>03. Component\03. PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IPlayerState.h">
+      <Filter>95. Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Idle.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Target.h">
+      <Filter>02. GameObject\04. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Run.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Jump.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Background.h">
+      <Filter>02. GameObject\02. UI\00. Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_PlayerStatus.h">
+      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_PlayerSkill.h">
+      <Filter>02. GameObject\02. UI\01. Player\01. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI_PlayerHP.h">
+      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_PlayerHUD.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -169,9 +196,6 @@
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02. GameObject\01. Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Background.cpp">
-      <Filter>02. GameObject\02. UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Client_PacketHandler.cpp">
       <Filter>96. Network</Filter>
     </ClCompile>
@@ -187,10 +211,40 @@
     <ClCompile Include="..\Private\RemotePlayer.cpp">
       <Filter>02. GameObject\00. Player\00. Network</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Camera_Target.cpp" />
     <ClCompile Include="..\Private\StaticMeshActor.cpp">
       <Filter>02. GameObject\06. StaticMesh</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\PlayerStateMachine.cpp">
+      <Filter>03. Component\03. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IPlayerState.cpp">
+      <Filter>95. Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Idle.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Target.cpp">
+      <Filter>02. GameObject\04. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Run.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Jump.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Background.cpp">
+      <Filter>02. GameObject\02. UI\00. Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PlayerStatus.cpp">
+      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PlayerSkill.cpp">
+      <Filter>02. GameObject\02. UI\01. Player\01. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PlayerHP.cpp">
+      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PlayerHUD.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -273,6 +327,24 @@
     </Filter>
     <Filter Include="02. GameObject\06. StaticMesh">
       <UniqueIdentifier>{fcff067d-2d76-4f0d-bcbd-a228bef07322}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component\03. PlayerState">
+      <UniqueIdentifier>{b55d44f7-fdc9-4f8f-a8ba-48d53b2c843f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component\03. PlayerState\00. PlayerState">
+      <UniqueIdentifier>{f17cf578-6ddb-4864-a9c6-f12a70491cd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. UI\00. Common">
+      <UniqueIdentifier>{4c41cf79-c1f0-43ae-ae84-ccbe2edd0d78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. UI\01. Player">
+      <UniqueIdentifier>{cd0eeb55-b3b1-4ecc-b66e-93cee51df2ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. UI\01. Player\00. PlayerStat">
+      <UniqueIdentifier>{d1731cf2-103e-415a-871b-cf1268b7e135}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. UI\01. Player\01. Skill">
+      <UniqueIdentifier>{cb9de10c-0449-4421-bca4-611dd20d3372}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

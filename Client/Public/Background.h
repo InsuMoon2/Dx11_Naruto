@@ -17,7 +17,6 @@ class Background final : public UIObject
 public:
     struct FBackgroundDesc final : public UIObject::FUIDesc
     {
-        uint32 levelIndex = 0;
         uint32 textureIndex = 0;
         uint32 textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;
     };
@@ -35,8 +34,8 @@ public:
     void        Late_Update(float timeDelta) override;
     HRESULT     Render() override;
 
-private:
-    HRESULT     Ready_Components();
+protected:
+    HRESULT     Ready_Components() override;
 
 private:
     Shared<Texture>         _textureCom;
@@ -44,7 +43,6 @@ private:
     Shared<VIBuffer_Rect>   _bufferCom;
 
 private:
-    uint32                  _levelIndex = 0;
     uint32                  _textureIndex = 0;
     uint32                  _textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;
 

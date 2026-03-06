@@ -23,7 +23,7 @@ public:
 
         float jumpVelocity = 8.f;
         float gravity = -20.f;
-        float groundY = 5.f;        // Temp값. 일단 0으로 조절
+        float groundY = 5.f;        // Temp값. 일단 5로 조절
     };
 
     struct FMoveCommand
@@ -48,6 +48,8 @@ public:
     void Apply_Command(const FMoveCommand& cmd);
     void Update(float timeDelta);
 
+    bool Is_OnGround() { return _onGround == true; }
+
 private:
     void Update_Rotation(float timeDelta, Shared<Transform> transform);
     void Update_Velocity(float timeDelta, Shared<Transform> transform);
@@ -57,7 +59,7 @@ private:
     FMovementDesc _moveDesc;
     FMoveCommand _commandDesc;
 
-    Vec3 _velocity = Vec3::Zero;
+    Vec3    _velocity = Vec3::Zero;
 
     bool    _onGround = true;
     float   _verticalVelocity = 0.f;

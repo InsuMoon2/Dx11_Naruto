@@ -7,6 +7,7 @@
 #include "MovementComponent.h"
 //#include "ServerSession.h"
 #include "Camera_Target.h"
+#include "PlayerStateMachine.h"
 
 PlayerController::PlayerController(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Controller(device, context)
@@ -42,63 +43,39 @@ void PlayerController::BeginPlay()
 
     auto pawn = Get_Pawn();
 
-    _input = pawn->Get_Component<InputComponent>();
-    _movement = pawn->Get_Component<MovementComponent>();
+    _input          = pawn->Get_Component<InputComponent>();
+    _movement       = pawn->Get_Component<MovementComponent>();
+    _stateMachine   = pawn->Get_Component<PlayerStateMachine>();
 }
 
 void PlayerController::Update(float timeDelta)
 {
     Controller::Update(timeDelta);
 
-    Update_Input(timeDelta);
-}
-
-void PlayerController::Update_Input(float timeDelta)
-{
     _input->Update_Input(timeDelta);
-    MovementComponent::FMoveCommand command;
 
     auto activeCamera = GAME->Get_ActiveCamera();
-    if (!activeCamera || activeCamera->Get_ObjectType() != Protocol::OBJECT_TYPE_CAMERA_TARGET)
+    if (activeCamera && activeCamera->Get_ObjectType() == Protocol::OBJECT_TYPE_CAMERA_TARGET)
     {
-        command.moveAxis = Vec2::Zero;
-        command.lookDelta = Vec2::Zero;
-        command.sprint = false;
-        command.jump = false;
+        auto camera = dynamic_pointer_cast<Camera_Target>(
+            GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_TARGET));
 
-        _movement->Apply_Command(command);
-        _movement->Update(timeDelta);
-        return; 
+        if (camera && camera->Get_UseControlYaw())
+        {
+            // 카메라 Yaw 값을 플레이어한테 적용
+            float cameraYaw = camera->Get_Yaw();
+            auto transform = Get_Pawn()->Get_Component<Transform>();
+
+            transform->Set_WorldRotation(
+                0.f,
+                (cameraYaw + 180.f),
+                0.f);
+        }
     }
 
-    auto& frame = _input->Get_Frame();
-    command.moveAxis = Vec2(frame.moveX, frame.moveY);
-    command.sprint = frame.sprintPress;
-    command.jump = frame.jumpDown;
+    if (_stateMachine)
+        _stateMachine->Update(timeDelta);
 
-    auto camera = dynamic_pointer_cast<Camera_Target>(
-        GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_TARGET));
-
-    if (camera && camera->Get_UseControlYaw())
-    {
-        // 카메라 Yaw 값을 플레이어한테 적용
-        float cameraYaw = camera->Get_Yaw();
-        auto transform = Get_Pawn()->Get_Component<Transform>();
-
-        transform->Set_WorldRotation(
-            0.f,
-            (cameraYaw + 180.f),
-            0.f);
-
-        command.lookDelta = Vec2::Zero; // Movement 자체 회전 비활성화
-    }
-    else
-    {
-        command.lookDelta = Vec2(frame.lookYaw, frame.lookPitch);
-    }
-
-    _movement->Apply_Command(command);
-    _movement->Update(timeDelta);
 }
 
 void PlayerController::Send_MovePacket()

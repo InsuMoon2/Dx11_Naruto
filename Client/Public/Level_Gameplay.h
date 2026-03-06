@@ -29,6 +29,8 @@ private:
     HRESULT         Ready_Layer_PlayerStart(const wstring& layerTag);
     HRESULT         Ready_Layer_GameObject(const wstring& layerTag);
 
+    HRESULT         Ready_UI();
+
 private:
     void            Spawn_LocalPlayer();
 

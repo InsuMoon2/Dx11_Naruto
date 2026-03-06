@@ -25,6 +25,7 @@
 #include "Component_Factory.h"
 #include "Light_Manager.h"
 #include "UI_Manager.h"
+#include "UIObject.h"
 
 IMPLEMENT_SINGLETON(GameInstance)
 
@@ -142,7 +143,7 @@ void GameInstance::Clear_Resources(uint32 levelIndex)
 {
     _objectManager->Clear_Layers(levelIndex);
     _protoManager->Clear_Prototype(levelIndex);
-    //_uiManager->Clear_UI();
+    _uiManager->Clear_UI_ByLevel(levelIndex);
 }
 
 ComPtr<Device> GameInstance::Get_Device()
@@ -396,7 +397,7 @@ const umap<string, BTNode_Factory::NodeInfo>& GameInstance::Get_RegisteredBTNode
 {
     return _btNodeFactory->Get_RegisteredNodes();
 }
-
+ 
 void GameInstance::Set_ActiveCamera(Shared<Camera> camera)
 {
     _cameraManager->Set_ActiveCamera(camera);
@@ -472,9 +473,17 @@ void GameInstance::Refresh_Cache()
     return _assetManager->Refresh_Cache();
 }
 
-HRESULT GameInstance::Add_UI(EUILayer layer, Shared<UIObject> uiObject)
+Shared<UIObject> GameInstance::Add_UI(uint32 levelIndex, uint32 objID, EUILayer layer, void* arg)
 {
-    return _uiManager->Add_UI(layer, uiObject);
+    Shared<GameObject> obj = _protoManager->Clone_GameObject(levelIndex, objID, arg);
+    if (!obj) return nullptr;
+
+    Shared<UIObject> ui = static_pointer_cast<UIObject>(obj);
+
+    if (FAILED(_uiManager->Add_UI(layer, ui)))
+        return nullptr;
+
+    return ui;
 }
 
 Shared<UIObject> GameInstance::Find_UI(const wstring& name)
@@ -514,7 +523,22 @@ bool GameInstance::Is_UIInputBlocked() const
 
 void GameInstance::Clear_UI()
 {
-    return _uiManager->Clear_UI();
+    return _uiManager->Clear_All_UI();
+}
+
+void GameInstance::Clear_UI_ByLevel(uint32 levelIndex)
+{
+    return _uiManager->Clear_UI_ByLevel(levelIndex);
+}
+
+const list<Shared<UIObject>>& GameInstance::Get_UILayers(EUILayer layer) const
+{
+    return _uiManager->Get_UILayer(layer);
+}
+
+HRESULT GameInstance::Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject)
+{
+    return _uiManager->Add_UI_ToLayer(layer, uiObject);
 }
 
 Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "MyPlayer.h"
 
 #include "CombatStat.h"
@@ -6,6 +6,7 @@
 #include "MovementComponent.h"
 #include "NetworkManager.h"
 #include "PlayerController.h"
+#include "PlayerStateMachine.h"
 #include "Client_PacketHandler.h"
 
 MyPlayer::MyPlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -46,6 +47,7 @@ HRESULT MyPlayer::Initialize(void* arg)
     }
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PLAYER_CONTROLLER, _playerController), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PLAYER_STATE, _stateMachine), E_FAIL);
 
     return S_OK;
 }

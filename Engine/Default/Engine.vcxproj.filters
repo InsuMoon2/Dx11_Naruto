@@ -189,6 +189,7 @@
     <ClInclude Include="..\Public\UI_Manager.h">
       <Filter>95. Manager\08. UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\HUD.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -513,6 +514,7 @@
     <ClCompile Include="..\Private\UI_Manager.cpp">
       <Filter>95. Manager\08. UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\HUD.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

@@ -142,7 +142,7 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
     // TODO : Temp 바닥 충돌처리, 나중에는 충돌체 기준으로
     Vec3 currentPos = transform->Get_WorldPosition();
 
-    if (currentPos.y <= _moveDesc.groundY)
+    if (currentPos.y <= _moveDesc.groundY && _verticalVelocity <= 0.f)
     {
         currentPos.y = _moveDesc.groundY;
         transform->Set_LocalPosition(currentPos);

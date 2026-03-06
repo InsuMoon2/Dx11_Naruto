@@ -265,6 +265,7 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\GameObject.h" />
     <ClInclude Include="..\Public\GameObject_Factory.h" />
     <ClInclude Include="..\Public\Graphic_Device.h" />
+    <ClInclude Include="..\Public\HUD.h" />
     <ClInclude Include="..\Public\ICommand.h" />
     <ClInclude Include="..\Public\Input_Manager.h" />
     <ClInclude Include="..\Public\Layer.h" />
@@ -331,6 +332,7 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\GameObject.cpp" />
     <ClCompile Include="..\Private\GameObject_Factory.cpp" />
     <ClCompile Include="..\Private\Graphic_Device.cpp" />
+    <ClCompile Include="..\Private\HUD.cpp" />
     <ClCompile Include="..\Private\ICommand.cpp" />
     <ClCompile Include="..\Private\Input_Manager.cpp" />
     <ClCompile Include="..\Private\Layer.cpp" />

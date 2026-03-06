@@ -47,6 +47,24 @@
             "level": "Static",
             "path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadingScreen_%03d_BC.png",
             "count": 2
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_SKILL_ICON",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Texture/UI/PlayerStats/T_UI_Skill_Gauge_Base%d_BC.png",
+            "count": 2
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_SKILL_ICON",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Texture/UI/Skill_Icon/Skill_Icon%d.png",
+            "count": 2
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_PLAYER_STATUS",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Texture/UI/PlayerStats/T_UI_SP_Gauge_Base_BC.png",
+            "count": 1
         }
     ]
 }

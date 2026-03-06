@@ -10,6 +10,8 @@
 #include "Event_Manager.h"
 #include "Layer.h"
 #include "Scene_View.h"
+#include "UIObject.h"
+#include <magic_enum/magic_enum.hpp>
 
 Hierarchy::Hierarchy()
     : EditorWindow(TEXT("Hierarchy"))
@@ -102,75 +104,6 @@ void Hierarchy::Draw_SearchBar()
 
 void Hierarchy::Draw_ObjectList()
 {
-#pragma region Legacy : 정렬 후 출력
-   /* sort(_levelObjects.begin(), _levelObjects.end(),
-        [](shared_ptr<GameObject>& first, shared_ptr<GameObject>& second)
-        {
-            if (!first || !second)
-                return false;
-
-            return first->Get_Name() < second->Get_Name();
-        });*/
-
-    //for (int i = 0; i < _levelObjects.size(); i++)
-    //{
-    //    auto& obj = _levelObjects[i];
-    //    if (!obj) continue;
-
-    //    // 검색 필터링
-    //    wstring nameW = obj->Get_Name();
-    //    string nameStr = string(nameW.begin(), nameW.end());
-
-    //    if (!_currentSearchFilter.empty() && nameStr.find(_currentSearchFilter) == string::npos)
-    //        continue;
-
-    //    // 선택 상태
-    //    bool isSelected = Is_Selected(obj);
-
-    //    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanAvailWidth;
-    //    if (isSelected)
-    //        flags |= ImGuiTreeNodeFlags_Selected;
-
-    //    // 트리 노드 표시
-    //    ImGui::TreeNodeEx((void*)(intptr_t)i, flags, nameStr.c_str());
-
-    //    // 클릭 시 선택
-    //    if (ImGui::IsItemClicked())
-    //    {
-    //        bool isMultiSelect = ImGui::GetIO().KeyCtrl;
-    //        Select_Object(obj, isMultiSelect);
-    //    }
-
-    //    if (ImGui::BeginPopupContextItem())
-    //    {
-    //        if (!Is_Selected(obj))
-    //        {
-    //            Select_Object(obj, false);
-    //        }
-
-    //        if (ImGui::MenuItem("복사"))
-    //        {
-    //            for (auto& obj : _selectedObjects)
-    //            {
-    //                EVENT->Publish(FEvent_Object::Create(EEventType::Create_Object, obj));
-    //            }
-    //        }
-
-    //        if (ImGui::MenuItem("삭제"))
-    //        {
-    //            for (auto& obj : _selectedObjects)
-    //            {
-    //                EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));
-
-    //                _selectedObjects.clear();
-    //            }
-    //        }
-    //        ImGui::EndPopup();
-    //    }
-    //}
-
-#pragma endregion
-
 #pragma region Layer별로 출력
 
     // 검색어 있을 때는 기존처럼.
@@ -197,6 +130,28 @@ void Hierarchy::Draw_ObjectList()
                     Draw_ObjectNode(obj, index);
                 }
 
+                index++;
+            }
+        }
+
+        for (uint32 i = 0; i < ETOI(EUILayer::END); ++i)
+        {
+            EUILayer uiLayerEnum = static_cast<EUILayer>(i);
+            const auto& uiObjects = GAME->Get_UILayers(uiLayerEnum);
+
+            int index = 0;
+
+            for (auto& uiObj : uiObjects)
+            {
+                if (!uiObj) continue;
+
+                wstring nameW = uiObj->Get_Name();
+                string nameStr = Utils::ToString(nameW);
+
+                if (nameStr.find(_currentSearchFilter) != string::npos)
+                {
+                    Draw_ObjectNode(uiObj, index);
+                }
                 index++;
             }
         }
@@ -232,6 +187,37 @@ void Hierarchy::Draw_ObjectList()
             }
             ImGui::TreePop(); 
         }
+    }
+
+    // UI 출력
+    for (uint32 i = 0; i < ETOI(EUILayer::END); i++)
+    {
+        EUILayer uiLayerEnum = static_cast<EUILayer>(i);
+
+        const auto& uiObjects = GAME->Get_UILayers(uiLayerEnum);
+
+        if (uiObjects.empty())
+            continue;
+
+        string layerName = "[UI] Layer_" + string(magic_enum::enum_name(uiLayerEnum));
+
+        bool isOpen = ImGui::TreeNodeEx(layerName.c_str(),
+            ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth);
+
+        if (isOpen)
+        {
+            int index = 0;
+
+            for (auto& uiObj : uiObjects)
+            {
+                if (!uiObj)
+                    continue;
+
+                Draw_ObjectNode(uiObj, index++);
+            }
+            ImGui::TreePop();
+        }
+
     }
 
 #pragma endregion

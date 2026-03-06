@@ -5,6 +5,7 @@
 NS_BEGIN(Client)
 class InputComponent;
 class MovementComponent;
+class PlayerStateMachine;
 
 class PlayerController : public Controller
 {
@@ -23,7 +24,6 @@ public:
     void    Update(float timeDelta) override;
 
 public:
-    void    Update_Input(float timeDelta);
     void    Send_MovePacket();
 
 protected:
@@ -33,6 +33,7 @@ protected:
 private:
     Shared<InputComponent>      _input;
     Shared<MovementComponent>   _movement;
+    Shared<PlayerStateMachine>  _stateMachine;
 
 public:
     static Shared<PlayerController> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

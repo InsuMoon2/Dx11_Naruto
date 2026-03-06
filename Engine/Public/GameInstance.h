@@ -4,9 +4,11 @@
 #include "Component_Factory.h"
 #include "BTNode_Factory.h"
 #include "DelegateHub.h"
+#include "Prototype_Manager.h"
+#include "UI_Manager.h"
 
 NS_BEGIN(Engine)
-/* Device */
+    /* Device */
 class Graphic_Device;
 
 /* Manager */
@@ -202,7 +204,7 @@ public: /* Asset */
     void                            Refresh_Cache();
 
 public: /* UI */
-    HRESULT                         Add_UI(EUILayer layer, Shared<UIObject> uiObject);
+    Shared<UIObject>                Add_UI(uint32 levelIndex, uint32 objID, EUILayer layer, void* arg = nullptr);
     Shared<UIObject>                Find_UI(const wstring& name);
     void                            Show_UI(const wstring& name);
     void                            Hide_UI(const wstring& name);
@@ -211,7 +213,11 @@ public: /* UI */
     void                            Hide_All_UI();
     bool                            Is_UIInputBlocked() const;
     void                            Clear_UI();
+    void                            Clear_UI_ByLevel(uint32 levelIndex);
 
+    const list<Shared<UIObject>>&   Get_UILayers(EUILayer layer) const;
+
+    HRESULT                         Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject);
 
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};

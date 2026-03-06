@@ -16,6 +16,7 @@
 #include "MovementComponent.h"
 #include "InputComponent.h"
 #include "PlayerController.h"
+#include "PlayerStateMachine.h"
 
 #include "Camera_Free.h"
 #include "Camera_Target.h"
@@ -122,6 +123,7 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<BehaviorTree>(staticLevel);
     GAME->Register_ComponentFactory<PlayerController>(staticLevel);
     GAME->Register_ComponentFactory<AIController>(staticLevel);
+    GAME->Register_ComponentFactory<PlayerStateMachine>(staticLevel);
     //GAME->Register_ComponentFactory<Model>(staticLevel);
 
     /* GameObject */
@@ -198,26 +200,6 @@ HRESULT Loader::Loading_For_GamePlay()
     //Initialize_BT_Nodes();
 
     lstrcpy(_loadingText, TEXT("게임플레이 리소스 로딩 중"));
-
-    if (FAILED(_resourceLoader->Load_ShaderTable(
-        TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"))))
-        return E_FAIL;
-
-    if (FAILED(_resourceLoader->Load_TerrainTable(
-        TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"))))
-        return E_FAIL;
-
-    if (FAILED(_resourceLoader->Load_TextureTable(
-        TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"))))
-        return E_FAIL;
-
-    lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
-    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_PLAYER,
-        Player::Create(_device, _context))))
-    {
-        MSG_BOX("Failed to Add Prototype : Prototype_Player");
-        return E_FAIL;
-    }
 
     if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_TERRAIN,
         Terrain::Create(_device, _context))))

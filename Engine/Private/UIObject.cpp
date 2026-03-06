@@ -43,12 +43,12 @@ HRESULT UIObject::Initialize(void* arg)
     _sizeX = desc->sizeX;
     _sizeY = desc->sizeY;
     _zOrder = desc->zOrder;
-    _uiType = desc->uiType;
+    _levelIndex = desc->levelIndex;
 
     _viewportWidth = GAME->Get_ViewportWidth();
     _viewportHeight = GAME->Get_ViewportHeight();
 
-    _transformCom->Set_LocalPosition(_posX, _posY, 0.f);
+    _transformCom->Set_LocalPosition(_posX, _posY, _zOrder);
     _transformCom->Set_LocalScale(_sizeX, _sizeY, 1.f);
 
     _transformMatrices[ETOI(ETransformState::View)] = Matrix::Identity;
@@ -70,10 +70,22 @@ void UIObject::Update(float timeDelta)
 {
     GameObject::Update(timeDelta);
 
-    _posX = _transformCom->Get_LocalPosition().x;
-    _posY = _transformCom->Get_LocalPosition().y;
+    _posX = _transformCom->Get_WorldPosition().x;
+    _posY = _transformCom->Get_WorldPosition().y;
+
     _sizeX = _transformCom->Get_LocalScale().x;
     _sizeY = _transformCom->Get_LocalScale().y;
+
+    // 부모를 껐을 때, 자기 자신도 꺼지게
+    if (_transformCom->Has_Parent())
+    {
+        auto parentUI = static_pointer_cast<UIObject>(_transformCom->Get_Parent()->Get_Owner());
+
+        if (parentUI && !parentUI->Is_Active())
+        {
+            Set_Active(false);
+        }
+    }
 }
 
 void UIObject::Late_Update(float timeDelta)

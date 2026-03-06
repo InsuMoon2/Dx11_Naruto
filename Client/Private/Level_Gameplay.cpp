@@ -10,6 +10,9 @@
 #include "Spawn_Helper.h"
 #include "PlayerStart.h"
 
+#include "UIOjbect.h"
+#include "UI_PlayerHUD.h"
+
 Level_Gameplay::Level_Gameplay(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
 {
@@ -146,6 +149,20 @@ HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
         .Spawn();
 
     return S_OK;
+}
+
+HRESULT Level_Gameplay::Ready_UI()
+{
+    Engine::UIObject::FUIDesc desc;
+    desc.posX = 0.f;
+    desc.posY = 0.f;
+    desc.sizeX = 1.f;
+    desc.sizeY = 1.f;
+    desc.zOrder = 0.5f;
+    desc.levelIndex = ETOI(ELevelType::Static);
+
+    auto playerHUD = UI_PlayerHUD::Create(_device, _context, &desc);
+    GAME->Add_UI_ToLayer(EUILayer::HUD, playerHUD);
 }
 
 void Level_Gameplay::Spawn_LocalPlayer()

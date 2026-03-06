@@ -17,7 +17,7 @@ Level_MainTitle::~Level_MainTitle()
 
 HRESULT Level_MainTitle::Initialize()
 {
-    if (FAILED(Ready_Layer_Background(TEXT("Layer_Background"))))
+    if (FAILED(Ready_Layer_Background()))
         return E_FAIL;
 
     
@@ -53,7 +53,7 @@ HRESULT Level_MainTitle::Render()
     return S_OK;
 }
 
-HRESULT Level_MainTitle::Ready_Layer_Background(const wstring& layerTag)
+HRESULT Level_MainTitle::Ready_Layer_Background()
 {
     Vec2 viewport = { GAME->Get_WindowWidth(), GAME->Get_WindowHeight() };
 
@@ -71,9 +71,9 @@ HRESULT Level_MainTitle::Ready_Layer_Background(const wstring& layerTag)
         desc.textureIndex = ETOI(EMainTitle::BG_0);
 
         desc.zOrder = 0.5f;
-
-        CHECK_FAILED(GAME->Add_GameObject(
-            desc.levelIndex, Protocol::OBJECT_TYPE_BACKGROUND, layerTag, &desc), E_FAIL);
+        
+        auto mainTitle = static_pointer_cast<Background>(GAME->Add_UI(
+            desc.levelIndex, Protocol::OBJECT_TYPE_BACKGROUND, EUILayer::Overlay, &desc));
     }
     // Logo
     {
@@ -90,8 +90,8 @@ HRESULT Level_MainTitle::Ready_Layer_Background(const wstring& layerTag)
 
         desc.zOrder = 0.4f;
 
-        CHECK_FAILED(GAME->Add_GameObject(
-            desc.levelIndex, Protocol::OBJECT_TYPE_BACKGROUND, layerTag, &desc), E_FAIL);
+        auto logo = static_pointer_cast<Background>(GAME->Add_UI(
+            desc.levelIndex, Protocol::OBJECT_TYPE_BACKGROUND, EUILayer::Overlay, &desc));
     }
     // Text
     {
@@ -108,11 +108,9 @@ HRESULT Level_MainTitle::Ready_Layer_Background(const wstring& layerTag)
 
         desc.zOrder = 0.4f;
 
-        CHECK_FAILED(GAME->Add_GameObject(
-            desc.levelIndex, Protocol::OBJECT_TYPE_BACKGROUND, layerTag, &desc), E_FAIL);
+        auto text = static_pointer_cast<Background>(GAME->Add_UI(
+            desc.levelIndex, Protocol::OBJECT_TYPE_BACKGROUND, EUILayer::Overlay, &desc));
     }
-    
-
 
     return S_OK;
 }

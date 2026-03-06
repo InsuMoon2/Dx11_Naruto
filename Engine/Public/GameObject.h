@@ -101,6 +101,8 @@ public:
 
     Shared<Component> Find_Component_ByStaticType(uint32 componentID);
 
+    Shared<Transform> Get_Transform() const { return _transformCom; }
+
 protected:
     template<typename T = GameObject>
     shared_ptr<T> GetSharedPtr()

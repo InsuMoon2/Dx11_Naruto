@@ -31,11 +31,11 @@ HRESULT Background::Initialize(void* arg)
     FBackgroundDesc* desc = static_cast<FBackgroundDesc*>(arg);
     CHECK_NULL(desc, E_FAIL);
 
-    _levelIndex = desc->levelIndex;
     _textureIndex = desc->textureIndex;
     _textureType = desc->textureType;
 
     CHECK_FAILED(UIObject::Initialize(desc), E_FAIL);
+
     CHECK_FAILED(Ready_Components(), E_FAIL);
 
     return S_OK;
@@ -71,7 +71,6 @@ HRESULT Background::Render()
     __super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", ETransformState::View);
     __super::Bind_ShaderResource(_shaderCom, "g_ProjMatrix", ETransformState::Proj);
 
-    // 텍스처 바인딩 (첫번째 텍스처 사용)
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureIndex), E_FAIL);
 
     CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);

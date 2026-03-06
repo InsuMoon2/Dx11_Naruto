@@ -233,6 +233,7 @@
     <!-- <ClInclude Include="..\Public\Client_PacketHandler.h" /> -->
     <ClInclude Include="..\Public\IconsFontAwesome6.h" />
     <ClInclude Include="..\Public\InputComponent.h" />
+    <ClInclude Include="..\Public\IPlayerState.h" />
     <ClInclude Include="..\Public\IReplicable.h" />
     <ClInclude Include="..\Public\Level_Gameplay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
@@ -244,6 +245,10 @@
     <ClInclude Include="..\Public\MyPlayer.h" />
     <ClInclude Include="..\Public\NetworkManager.h" />
     <ClInclude Include="..\Public\PlayerController.h" />
+    <ClInclude Include="..\Public\PlayerStateMachine.h" />
+    <ClInclude Include="..\Public\PlayerState_Idle.h" />
+    <ClInclude Include="..\Public\PlayerState_Jump.h" />
+    <ClInclude Include="..\Public\PlayerState_Run.h" />
     <ClInclude Include="..\Public\RemotePlayer.h" />
     <!-- <ClInclude Include="..\Public\MainApp.h" /> -->
     <ClInclude Include="..\Public\Replicator.h" />
@@ -257,6 +262,10 @@
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\StaticMeshActor.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\public\UI_PlayerHP.h" />
+    <ClInclude Include="..\Public\UI_PlayerHUD.h" />
+    <ClInclude Include="..\Public\UI_PlayerSkill.h" />
+    <ClInclude Include="..\Public\UI_PlayerStatus.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -293,6 +302,7 @@
     <ClCompile Include="..\Private\Camera_Target.cpp" />
     <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
     <ClCompile Include="..\Private\InputComponent.cpp" />
+    <ClCompile Include="..\Private\IPlayerState.cpp" />
     <!-- <ClCompile Include="..\Private\Client_PacketHandler.cpp" /> -->
     <ClCompile Include="..\Private\Level_Gameplay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
@@ -303,6 +313,10 @@
     <ClCompile Include="..\Private\MyPlayer.cpp" />
     <ClCompile Include="..\Private\NetworkManager.cpp" />
     <ClCompile Include="..\Private\PlayerController.cpp" />
+    <ClCompile Include="..\Private\PlayerStateMachine.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Idle.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Jump.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Run.cpp" />
     <ClCompile Include="..\Private\RemotePlayer.cpp" />
     <!-- <ClCompile Include="..\Private\MainApp.cpp" /> -->
     <ClCompile Include="..\Private\Replicator.cpp" />
@@ -316,6 +330,10 @@
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\StaticMeshActor.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\UI_PlayerHP.cpp" />
+    <ClCompile Include="..\Private\UI_PlayerHUD.cpp" />
+    <ClCompile Include="..\Private\UI_PlayerSkill.cpp" />
+    <ClCompile Include="..\Private\UI_PlayerStatus.cpp" />
     <!-- <ClCompile Include="Client.cpp" /> -->
     <ClCompile Include="IReplicable.cpp" />
     <ClCompile Include="pch.cpp">

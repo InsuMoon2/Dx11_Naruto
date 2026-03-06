@@ -5,6 +5,7 @@
 NS_BEGIN(Client)
 
 class CombatStat;
+class PlayerStateMachine;
 class PlayerController;
 class InputComponent;
 class MovementComponent;
@@ -36,6 +37,7 @@ private:
     Shared<InputComponent>      _input;
     Shared<MovementComponent>   _movement;
     Shared<PlayerController>    _playerController;
+    Shared<PlayerStateMachine>  _stateMachine;
 
 private:
     float _syncTimer = 0.f;

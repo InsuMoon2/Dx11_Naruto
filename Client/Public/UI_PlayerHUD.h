@@ -1,0 +1,35 @@
+﻿#pragma once
+
+#include "HUD.h"
+
+NS_BEGIN(Client)
+
+class Player;
+class UI_PlayerStatus;
+
+class UI_PlayerHUD : public HUD
+{
+    GENERATED_BODY(UI_PlayerHUD)
+
+public:
+    explicit UI_PlayerHUD(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    explicit UI_PlayerHUD(const UI_PlayerHUD& rhs);
+    virtual ~UI_PlayerHUD() = default;
+
+public:
+    HRESULT     Initialize_Prototype() override;
+    HRESULT     Initialize(void* arg) override;
+    void        Update(float timeDelta) override;
+
+    void        Bind_Player(Shared<Player> player);
+
+private:
+    Shared<UI_PlayerStatus> _status;
+
+public:
+    static Shared<UI_PlayerHUD> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg = nullptr);
+    virtual void Free() override;
+
+};
+
+NS_END

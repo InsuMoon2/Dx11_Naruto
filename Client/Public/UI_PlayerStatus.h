@@ -1,0 +1,51 @@
+﻿#pragma once
+
+#include "UIObject.h"
+
+NS_BEGIN(Engine)
+class Shader;
+class Texture;
+class VIBuffer_Rect;
+NS_END
+
+NS_BEGIN(Client)
+
+class Player;
+class UI_PlayerHP;
+
+class UI_PlayerStatus : public UIObject
+{
+public:
+    explicit UI_PlayerStatus(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    explicit UI_PlayerStatus(const UI_PlayerStatus& rhs);
+    virtual ~UI_PlayerStatus() = default;
+
+public:
+    HRESULT     Initialize_Prototype() override;
+    HRESULT     Initialize(void* arg) override;
+    void        Priority_Update(float timeDelta) override;
+    void        Update(float timeDelta) override;
+    void        Late_Update(float timeDelta) override;
+    HRESULT     Render() override;
+
+public:
+    void Bind_Player(Shared<Player> player) { _player = player; }
+
+protected:
+    HRESULT Ready_Components();
+
+private:
+    Weak<Player> _player;
+    Shared<UI_PlayerHP> _hpBar;
+
+private:
+    Shared<Shader>        _shaderCom;
+    Shared<Texture>       _textureCom;
+    Shared<VIBuffer_Rect> _bufferCom;
+
+public:
+    static Shared<UI_PlayerStatus> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg);
+
+};
+
+NS_END

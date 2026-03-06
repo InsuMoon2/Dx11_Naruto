@@ -7,3 +7,6 @@ Texture,COMPONENT_TYPE_TEXTURE_MAIN_TITLE,../../Client/Bin/Resources/Textures/UI
 Texture,COMPONENT_TYPE_TEXTURE_PLAYER,../../Client/Bin/Resources/Textures/Clip_Icon%d.png,2,Static,
 Texture,COMPONENT_TYPE_TEXTURE_MONSTER,../../Client/Bin/Resources/Textures/Clip_Icon%d.png,2,Static,
 Texture,COMPONENT_TYPE_TEXTURE_LOADING,../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadingScreen_%03d_BC.png,2,Static,
+Texture,COMPONENT_TYPE_TEXTURE_SKILL_ICON,../../Client/Bin/Resources/Texture/UI/PlayerStats/T_UI_Skill_Gauge_Base%d_BC.png,2,Static,
+Texture,COMPONENT_TYPE_TEXTURE_SKILL_ICON,../../Client/Bin/Resources/Texture/UI/Skill_Icon/Skill_Icon%d.png,2,Static,
+Texture,COMPONENT_TYPE_TEXTURE_PLAYER_STATUS,../../Client/Bin/Resources/Texture/UI/PlayerStats/T_UI_SP_Gauge_Base_BC.png,1,Static,
