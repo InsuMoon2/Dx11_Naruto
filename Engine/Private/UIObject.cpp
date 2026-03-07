@@ -75,17 +75,6 @@ void UIObject::Update(float timeDelta)
 
     _sizeX = _transformCom->Get_LocalScale().x;
     _sizeY = _transformCom->Get_LocalScale().y;
-
-    // 부모를 껐을 때, 자기 자신도 꺼지게
-    if (_transformCom->Has_Parent())
-    {
-        auto parentUI = static_pointer_cast<UIObject>(_transformCom->Get_Parent()->Get_Owner());
-
-        if (parentUI && !parentUI->Is_Active())
-        {
-            Set_Active(false);
-        }
-    }
 }
 
 void UIObject::Late_Update(float timeDelta)

@@ -72,8 +72,9 @@ HRESULT Level_MainTitle::Ready_Layer_Background()
 
         desc.zOrder = 0.5f;
         
-        auto mainTitle = static_pointer_cast<Background>(GAME->Add_UI(
-            desc.levelIndex, Protocol::OBJECT_TYPE_BACKGROUND, EUILayer::Overlay, &desc));
+        auto mainTitle = Background::Create(_device, _context, &desc);
+        if (!mainTitle) return E_FAIL;
+        GAME->Add_UI_ToLayer(EUILayer::Overlay, mainTitle);
     }
     // Logo
     {
@@ -90,8 +91,9 @@ HRESULT Level_MainTitle::Ready_Layer_Background()
 
         desc.zOrder = 0.4f;
 
-        auto logo = static_pointer_cast<Background>(GAME->Add_UI(
-            desc.levelIndex, Protocol::OBJECT_TYPE_BACKGROUND, EUILayer::Overlay, &desc));
+        auto logo = Background::Create(_device, _context, &desc);
+        if (!logo) return E_FAIL;
+        GAME->Add_UI_ToLayer(EUILayer::Overlay, logo);
     }
     // Text
     {
@@ -108,8 +110,9 @@ HRESULT Level_MainTitle::Ready_Layer_Background()
 
         desc.zOrder = 0.4f;
 
-        auto text = static_pointer_cast<Background>(GAME->Add_UI(
-            desc.levelIndex, Protocol::OBJECT_TYPE_BACKGROUND, EUILayer::Overlay, &desc));
+        auto text = Background::Create(_device, _context, &desc);
+        if (!text) return E_FAIL;
+        GAME->Add_UI_ToLayer(EUILayer::Overlay, text);
     }
 
     return S_OK;

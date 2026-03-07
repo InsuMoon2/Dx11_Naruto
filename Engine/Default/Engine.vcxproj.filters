@@ -189,7 +189,12 @@
     <ClInclude Include="..\Public\UI_Manager.h">
       <Filter>95. Manager\08. UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\HUD.h" />
+    <ClInclude Include="..\Public\HUD.h">
+      <Filter>01. Utility\03. GameObject\02. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Panel.h">
+      <Filter>01. Utility\03. GameObject\02. UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -514,7 +519,12 @@
     <ClCompile Include="..\Private\UI_Manager.cpp">
       <Filter>95. Manager\08. UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\HUD.cpp" />
+    <ClCompile Include="..\Private\HUD.cpp">
+      <Filter>01. Utility\03. GameObject\02. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Panel.cpp">
+      <Filter>01. Utility\03. GameObject\02. UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

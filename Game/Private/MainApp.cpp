@@ -101,12 +101,6 @@ HRESULT MainApp::Ready_StaticLevel()
         return E_FAIL;
     }
 
-    if (FAILED(GAME->Add_GameObject_Prototype(ETOI(ELevelType::Static),
-        Protocol::OBJECT_TYPE_BACKGROUND, Background::Create(_device, _context))))
-    {
-        return E_FAIL;
-    }
-
     return S_OK;
 }
 

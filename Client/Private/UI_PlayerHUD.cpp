@@ -31,6 +31,8 @@ HRESULT UI_PlayerHUD::Initialize(void* arg)
     statDesc.levelIndex = _levelIndex;
 
     _status = Create_Child<UI_PlayerStatus>(EUILayer::HUD, &statDesc);
+    CHECK_NULL(_status, E_FAIL);
+
     _status->Get_Transform()->Set_LocalPosition(150.f, 100.f, _zOrder);
 
     return S_OK;

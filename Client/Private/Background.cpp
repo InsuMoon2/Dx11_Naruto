@@ -20,12 +20,6 @@ Background::~Background()
 {
 }
 
-HRESULT Background::Initialize_Prototype()
-{
-
-    return S_OK;
-}
-
 HRESULT Background::Initialize(void* arg)
 {
     FBackgroundDesc* desc = static_cast<FBackgroundDesc*>(arg);
@@ -59,7 +53,6 @@ void Background::Late_Update(float timeDelta)
 {
     UIObject::Late_Update(timeDelta);
 
-    GAME->Add_RenderGroup(ERenderGroup::UI, this->GetSharedPtr());
 }
 
 HRESULT Background::Render()
@@ -90,23 +83,9 @@ HRESULT Background::Ready_Components()
     return S_OK;
 }
 
-Shared<UIObject> Background::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+Shared<UIObject> Background::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
 {
     auto instance = make_shared<Background>(device, context);
-
-    if (FAILED(instance->Initialize_Prototype()))
-    {
-        MSG_BOX("Failed to Created : Background");
-
-        return nullptr;
-    }
-
-    return instance;
-}
-
-Shared<GameObject> Background::Clone(void* arg)
-{
-    auto instance = make_shared<Background>(*this);
 
     if (FAILED(instance->Initialize(arg)))
     {

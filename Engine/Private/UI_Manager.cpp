@@ -17,7 +17,7 @@ void UI_Manager::Priority_Update(float timeDelta)
     {
         for (auto& ui : _uiLayers[i])
         {
-            if (ui->Is_Active())
+            if (ui->Is_Visibility())
                 ui->Priority_Update(timeDelta);
         }
     }
@@ -29,7 +29,7 @@ void UI_Manager::Update(float timeDelta)
     {
         for (auto& ui : _uiLayers[i])
         {
-            if (ui->Is_Active())
+            if (ui->Is_Visibility())
                 ui->Update(timeDelta);
         }
     }
@@ -41,7 +41,7 @@ void UI_Manager::Late_Update(float timeDelta)
     {
         for (auto& ui : _uiLayers[i])
         {
-            if (ui->Is_Active())
+            if (ui->Is_Visibility())
             {
                 ui->Late_Update(timeDelta);
 
@@ -73,7 +73,7 @@ HRESULT UI_Manager::Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject)
     CHECK_NULL(uiObject, E_FAIL);
 
     uiObject->Set_UILayer(layer);
-
+    
     _uiLayers[ETOI(layer)].push_back(uiObject);
 
     return S_OK;
@@ -81,7 +81,7 @@ HRESULT UI_Manager::Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject)
 
 Shared<UIObject> UI_Manager::Find_UI(const wstring& name)
 {
-    auto iter = _uiMap.end();
+    auto iter = _uiMap.find(name);
     if (iter == _uiMap.end())
         return nullptr;
 
@@ -92,7 +92,7 @@ void UI_Manager::Show_UI(const wstring& name)
 {
     if (auto ui = Find_UI(name))
     {
-        ui->Set_Active(true);
+        ui->Set_Visibility(true);
     }
 }
 
@@ -100,7 +100,7 @@ void UI_Manager::Hide_UI(const wstring& name)
 {
     if (auto ui = Find_UI(name))
     {
-        ui->Set_Active(false);
+        ui->Set_Visibility(false);
     }
 }
 
@@ -108,7 +108,7 @@ void UI_Manager::Toggle_UI(const wstring& name)
 {
     if (auto ui = Find_UI(name))
     {
-        ui->Set_Active(!ui->Is_Active());
+        ui->Set_Visibility(!ui->Is_Visibility());
     }
 }
 
@@ -118,7 +118,7 @@ void UI_Manager::Hide_All_Layer(EUILayer layer)
     {
         if (ui)
         {
-            ui->Set_Active(false);
+            ui->Set_Visibility(false);
         }
     }
 }
@@ -129,7 +129,7 @@ void UI_Manager::Hide_All_UI()
     {
         for (auto& ui : _uiLayers[i])
         {
-            if (ui) ui->Set_Active(false);
+            if (ui) ui->Set_Visibility(false);
         }
     }
 }
@@ -162,6 +162,14 @@ void UI_Manager::Clear_UI_ByLevel(uint32 levelIndex)
         }
     }
 
+    for (uint32 i = 0; i < ETOI(EUILayer::END); ++i)
+    {
+        _uiLayers[i].remove_if([levelIndex](const Shared<UIObject>& ui)
+            {
+                return ui && ui->Get_LevelIndex() == levelIndex;
+            });
+    }
+
 }
 
 void UI_Manager::Notify_Viewport_Resize(float widht, float height)
@@ -174,7 +182,7 @@ bool UI_Manager::Is_InputBlocked() const
     // Popup 창(인벤, 상점 등)이 하나라도 열려있으면 마우스/키보드 게임 내 이동 막기
     for (auto& ui : _uiLayers[ETOI(EUILayer::Popup)])
     {
-        if (ui->Is_Active()) return true;
+        if (ui->Is_Visibility()) return true;
     }
     return false;
 }

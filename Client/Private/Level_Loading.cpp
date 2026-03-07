@@ -32,7 +32,7 @@ HRESULT Level_Loading::Initialize(ELevelType nextLevelID)
 
 void Level_Loading::Update(float timeDelta)
 {
-    if (_loader->IsFinished())// && GetKeyState(VK_RETURN))
+    if (_loader->IsFinished())
     {
         shared_ptr<Level> nextLevel = { nullptr };
 
@@ -89,19 +89,15 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
         desc.sizeX = viewport.x;
         desc.sizeY = viewport.y;
 
-        desc.levelIndex = ETOI(ELevelType::Static);
+        desc.levelIndex = ETOI(ELevelType::Loading);
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_LOADING;
         desc.textureIndex = ETOI(ELoadingTexture::MainLoading);
 
         desc.zOrder = 0.5f;
 
-        CHECK_FAILED(GAME->Add_GameObject(
-            ETOI(ELevelType::Static),            // <-- 1. 여기서 견본(Prototype)을 찾아와!
-            Protocol::OBJECT_TYPE_BACKGROUND,    // <-- 2. Background 모형을!
-            ETOI(ELevelType::Loading),           // <-- 3. 지금 현재 띄울 여기 화면(Loading)에 복제해라!
-            uiTag,                               // <-- 4. 레이어 이름
-            &desc),                              // <-- 5. 설정값
-            E_FAIL);
+        auto bg = Background::Create(_device, _context, &desc);
+        if (!bg) return E_FAIL;
+        GAME->Add_UI_ToLayer(EUILayer::Overlay, bg);
     }
 
     return S_OK;

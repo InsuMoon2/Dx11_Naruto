@@ -40,8 +40,29 @@ HRESULT HUD::Render()
     return UIObject::Render();
 }
 
+void HUD::Set_Visibility(bool active)
+{
+    UIObject::Set_Visibility(active);
+
+    for (auto& child : _children)
+    {
+        if (child)
+            child->Set_Visibility(active);
+    }
+}
+
+void HUD::Register_Child(Shared<UIObject> child)
+{
+    if (!child)
+        return;
+
+    _children.push_back(child);
+}
+
 void HUD::Free()
 {
+    _children.clear();
+
     UIObject::Free();
 }
 

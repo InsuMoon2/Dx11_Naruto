@@ -473,18 +473,18 @@ void GameInstance::Refresh_Cache()
     return _assetManager->Refresh_Cache();
 }
 
-Shared<UIObject> GameInstance::Add_UI(uint32 levelIndex, uint32 objID, EUILayer layer, void* arg)
-{
-    Shared<GameObject> obj = _protoManager->Clone_GameObject(levelIndex, objID, arg);
-    if (!obj) return nullptr;
-
-    Shared<UIObject> ui = static_pointer_cast<UIObject>(obj);
-
-    if (FAILED(_uiManager->Add_UI(layer, ui)))
-        return nullptr;
-
-    return ui;
-}
+//Shared<UIObject> GameInstance::Add_UI(uint32 levelIndex, uint32 objID, EUILayer layer, void* arg)
+//{
+//    Shared<GameObject> obj = _protoManager->Clone_GameObject(levelIndex, objID, arg);
+//    if (!obj) return nullptr;
+//
+//    Shared<UIObject> ui = static_pointer_cast<UIObject>(obj);
+//
+//    if (FAILED(_uiManager->Add_UI(layer, ui)))
+//        return nullptr;
+//
+//    return ui;
+//}
 
 Shared<UIObject> GameInstance::Find_UI(const wstring& name)
 {
@@ -564,4 +564,7 @@ void GameInstance::Free()
 
     _renderer.reset();
     _pipeLine.reset();
+
+    _uiManager.reset();
+    _assetManager.reset();
 }

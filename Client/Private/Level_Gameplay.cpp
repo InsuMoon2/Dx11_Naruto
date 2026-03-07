@@ -10,7 +10,6 @@
 #include "Spawn_Helper.h"
 #include "PlayerStart.h"
 
-#include "UIOjbect.h"
 #include "UI_PlayerHUD.h"
 
 Level_Gameplay::Level_Gameplay(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -162,7 +161,13 @@ HRESULT Level_Gameplay::Ready_UI()
     desc.levelIndex = ETOI(ELevelType::Static);
 
     auto playerHUD = UI_PlayerHUD::Create(_device, _context, &desc);
-    GAME->Add_UI_ToLayer(EUILayer::HUD, playerHUD);
+
+    if (!playerHUD)
+        return E_FAIL;
+
+    CHECK_FAILED(GAME->Add_UI_ToLayer(EUILayer::HUD, playerHUD), E_FAIL);
+
+    return S_OK;
 }
 
 void Level_Gameplay::Spawn_LocalPlayer()

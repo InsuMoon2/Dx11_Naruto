@@ -175,14 +175,6 @@ HRESULT Loader::Loading_For_Maintitle()
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
 
-    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_BACKGROUND,
-        Background::Create(_device, _context))))
-    {
-        LOG_ERROR("Failed to Add Prototype : Background");
-        return E_FAIL;
-    }
-
-
     lstrcpy(_loadingText, TEXT("Logo 로딩 완료"));
 
     //Sleep(3000);

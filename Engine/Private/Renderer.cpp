@@ -92,7 +92,7 @@ void Renderer::Render_UI()
                 return uiSrc->Get_UILayer() < uiDst->Get_UILayer();
             }
 
-        // 같은 레이어면, ZOrder 기준
+            // 같은 레이어면, ZOrder 기준
             return uiSrc->Get_ZOrder() < uiDst->Get_ZOrder();
 
         });

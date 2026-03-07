@@ -276,6 +276,7 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\Mesh.h" />
     <ClInclude Include="..\Public\Model.h" />
     <ClInclude Include="..\Public\Object_Manager.h" />
+    <ClInclude Include="..\Public\Panel.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\PlayerStart.h" />
     <ClInclude Include="..\Public\Prefab_Manager.h" />
@@ -343,6 +344,7 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\Mesh.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
     <ClCompile Include="..\Private\Object_Manager.cpp" />
+    <ClCompile Include="..\Private\Panel.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\PlayerStart.cpp" />
     <ClCompile Include="..\Private\Prefab_Manager.cpp" />

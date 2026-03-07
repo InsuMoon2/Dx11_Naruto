@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "UIObject.h"
+#include "Panel.h"
 
 NS_BEGIN(Engine)
 class Shader;
@@ -13,8 +13,10 @@ NS_BEGIN(Client)
 class Player;
 class UI_PlayerHP;
 
-class UI_PlayerStatus : public UIObject
+class UI_PlayerStatus : public Panel
 {
+    GENERATED_BODY(UI_PlayerStatus)
+
 public:
     explicit UI_PlayerStatus(ComPtr<Device> device, ComPtr<DeviceContext> context);
     explicit UI_PlayerStatus(const UI_PlayerStatus& rhs);
@@ -29,23 +31,23 @@ public:
     HRESULT     Render() override;
 
 public:
-    void Bind_Player(Shared<Player> player) { _player = player; }
+    void        Bind_Player(Shared<Player> player) { _player = player; }
 
 protected:
-    HRESULT Ready_Components();
+    HRESULT     Ready_Components();
 
 private:
-    Weak<Player> _player;
-    Shared<UI_PlayerHP> _hpBar;
+    Weak<Player>            _player;
+    Shared<UI_PlayerHP>     _hpBar;
 
 private:
-    Shared<Shader>        _shaderCom;
-    Shared<Texture>       _textureCom;
-    Shared<VIBuffer_Rect> _bufferCom;
+    Shared<Shader>          _shaderCom;
+    Shared<Texture>         _textureCom;
+    Shared<VIBuffer_Rect>   _bufferCom;
 
 public:
     static Shared<UI_PlayerStatus> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg);
-
+    void Free() override;
 };
 
 NS_END

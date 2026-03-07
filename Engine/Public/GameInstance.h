@@ -204,7 +204,7 @@ public: /* Asset */
     void                            Refresh_Cache();
 
 public: /* UI */
-    Shared<UIObject>                Add_UI(uint32 levelIndex, uint32 objID, EUILayer layer, void* arg = nullptr);
+    //Shared<UIObject>                Add_UI(uint32 levelIndex, uint32 objID, EUILayer layer, void* arg = nullptr);
     Shared<UIObject>                Find_UI(const wstring& name);
     void                            Show_UI(const wstring& name);
     void                            Hide_UI(const wstring& name);

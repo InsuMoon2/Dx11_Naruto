@@ -52,7 +52,7 @@ void UI_PlayerHP::Late_Update(float timeDelta)
 
 HRESULT UI_PlayerHP::Render()
 {
-    if (!_isActive) return S_OK;
+    if (!_isVisible) return S_OK;
 
     _shaderCom->Bind_Matrix("g_WorldMatrix", &_worldMatrix);
     __super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", ETransformState::View);
