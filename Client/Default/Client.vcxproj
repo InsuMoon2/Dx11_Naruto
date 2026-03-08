@@ -176,6 +176,9 @@
       <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>python "$(SolutionDir)Client\Bin\Resources\Data\ConvertResource.py"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">
     <ClCompile>
@@ -230,6 +233,7 @@
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\Public\Client_PacketHandler.h" />
+    <ClInclude Include="..\Public\Client_Struct.h" />
     <!-- <ClInclude Include="..\Public\Client_PacketHandler.h" /> -->
     <ClInclude Include="..\Public\IconsFontAwesome6.h" />
     <ClInclude Include="..\Public\InputComponent.h" />
@@ -348,6 +352,10 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Shaders\Shader_UI.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_VtxMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">Effect</ShaderType>

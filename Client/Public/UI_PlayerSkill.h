@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-#include "UIObject.h"
+#include "Panel.h"
 
 NS_BEGIN(Client)
 
-class UI_PlayerSkill : public UIObject
+class UI_PlayerSkill : public Panel
 {
 
 };

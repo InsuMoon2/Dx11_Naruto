@@ -127,7 +127,12 @@
     <ClInclude Include="..\public\UI_PlayerHP.h">
       <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UI_PlayerHUD.h" />
+    <ClInclude Include="..\Public\UI_PlayerHUD.h">
+      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Struct.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -244,7 +249,9 @@
     <ClCompile Include="..\Private\UI_PlayerHP.cpp">
       <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UI_PlayerHUD.cpp" />
+    <ClCompile Include="..\Private\UI_PlayerHUD.cpp">
+      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -365,6 +372,9 @@
       <Filter>94. Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_VtxMesh.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_UI.hlsl">
       <Filter>94. Shaders</Filter>
     </FxCompile>
   </ItemGroup>

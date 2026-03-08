@@ -1,0 +1,2 @@
+SkillID,SkillName,IconPath,Cooldown
+Texture,COMPONENT_TYPE_TEXTURE_DEFAULT,../../Client/Bin/Resources/Textures/Default%d.jpg,10

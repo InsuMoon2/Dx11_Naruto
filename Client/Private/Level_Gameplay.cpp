@@ -41,6 +41,8 @@ HRESULT Level_Gameplay::Initialize()
         Spawn_LocalPlayer();
     }
 
+    CHECK_FAILED(Ready_UI(), E_FAIL);
+
     return S_OK;
 }
 
@@ -152,20 +154,22 @@ HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
 
 HRESULT Level_Gameplay::Ready_UI()
 {
-    Engine::UIObject::FUIDesc desc;
-    desc.posX = 0.f;
-    desc.posY = 0.f;
-    desc.sizeX = 1.f;
-    desc.sizeY = 1.f;
-    desc.zOrder = 0.5f;
-    desc.levelIndex = ETOI(ELevelType::Static);
+    {
+        UIObject::FUIDesc desc;
+        desc.posX = 0.f;
+        desc.posY = 0.f;
+        desc.sizeX = 1.f;
+        desc.sizeY = 1.f;
+        desc.zOrder = 0.5f;
+        desc.levelIndex = ETOI(ELevelType::Static);
 
-    auto playerHUD = UI_PlayerHUD::Create(_device, _context, &desc);
+        auto playerHUD = UI_PlayerHUD::Create(_device, _context, &desc);
 
-    if (!playerHUD)
-        return E_FAIL;
+        if (!playerHUD)
+            return E_FAIL;
 
-    CHECK_FAILED(GAME->Add_UI_ToLayer(EUILayer::HUD, playerHUD), E_FAIL);
+        CHECK_FAILED(GAME->Add_UI_ToLayer(EUILayer::HUD, playerHUD), E_FAIL);
+    }
 
     return S_OK;
 }

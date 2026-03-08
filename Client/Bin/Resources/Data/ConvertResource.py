@@ -36,6 +36,19 @@ def convert_all_csv_to_json():
     for csv_file in csv_files:
         try:
             filename = os.path.basename(csv_file)
+            
+            # JSON 파일명 생성 (csv 확장자 -> json)
+            json_filename = os.path.splitext(filename)[0] + '.json'
+            output_json_path = os.path.join(JSON_DIR, json_filename)
+            
+            # 변경점 확인 (수정 시간 비교)
+            if os.path.exists(output_json_path):
+                csv_mtime = os.path.getmtime(csv_file)
+                json_mtime = os.path.getmtime(output_json_path)
+                if csv_mtime <= json_mtime:
+                    print(f"Skipping: {filename} (Up to date)")
+                    continue
+
             print(f"Processing: {filename}...")
             
             # 파일별 데이터 저장소 (Type -> List of items)

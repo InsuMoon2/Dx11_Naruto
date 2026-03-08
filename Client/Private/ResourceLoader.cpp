@@ -106,6 +106,28 @@ HRESULT ResourceLoader::Load_ModelTable(const wstring& tablePath)
     return S_OK;
 }
 
+HRESULT ResourceLoader::Load_SkillTable(const wstring& tablePath)
+{
+    ifstream file(tablePath);
+
+    if (!file.is_open())
+    {
+        LOG_ERROR("Failed to open: {}", Utils::ToString(tablePath));
+        return E_FAIL;
+    }
+
+    json root;
+    file >> root;
+    file.close();
+
+    if (root.contains("Skill"))
+        CHECK_FAILED(Load_Skills(root["Skill"]), E_FAIL);
+
+    LOG_INFO("Loaded: {}", Utils::ToString(tablePath));
+
+    return S_OK;
+}
+
 HRESULT ResourceLoader::Load_Model(const json& data)
 {
     for (const auto& item : data)
@@ -278,6 +300,29 @@ HRESULT ResourceLoader::Load_Textures(const json& data)
     }
 
     return S_OK;
+}
+
+HRESULT ResourceLoader::Load_Skills(const json& data)
+{
+    for (const auto& item : data)
+    {
+        FSkillData skill;
+        skill.skillID = item["SkillID"];
+        skill.skillName = Utils::ToWString(item.value("SkillName", string{}));
+        skill.IconTexturePath = Utils::ToWString(item.value("IconPath", string{}));
+        skill.coolDown = item.value("Cooldown", 0.f);
+
+
+    }
+
+    return S_OK;
+}
+
+const FSkillData* ResourceLoader::Get_SkillData(int skillID) const
+{
+    
+
+    return nullptr;
 }
 
 uint32 ResourceLoader::Get_ComponentID_From_String(const string& idStr)

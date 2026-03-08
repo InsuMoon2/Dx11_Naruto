@@ -280,7 +280,8 @@ void Scene_View::Update_WindowState()
     {
         auto camFree = dynamic_pointer_cast<Camera_Free>(freeCam);
         if (camFree)
-            camFree->Set_InputEnabled(_isHovered);
+            camFree->Set_InputEnabled(true);
+
     }
 }
 

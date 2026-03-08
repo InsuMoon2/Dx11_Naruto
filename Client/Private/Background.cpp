@@ -66,6 +66,9 @@ HRESULT Background::Render()
 
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureIndex), E_FAIL);
 
+    float fAlpha = 1.f;
+    _shaderCom->Bind_RawValue("g_Alpha", &fAlpha, sizeof(float));
+
     CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
     CHECK_FAILED(_bufferCom->Render(), E_FAIL);
@@ -77,7 +80,7 @@ HRESULT Background::Ready_Components()
 {
     CHECK_FAILED(Add_Component(_textureType, _textureCom), E_FAIL);
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXTEX, _shaderCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_UI, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
 
     return S_OK;

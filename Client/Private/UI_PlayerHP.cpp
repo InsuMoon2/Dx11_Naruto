@@ -58,7 +58,7 @@ HRESULT UI_PlayerHP::Render()
     __super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", ETransformState::View);
     __super::Bind_ShaderResource(_shaderCom, "g_ProjMatrix", ETransformState::Proj);
 
-    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 0), E_FAIL);
+    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 1), E_FAIL);
 
     // CHECK_FAILED(_shaderCom->Bind_RawValue("g_Ratio", &_hpRatio, sizeof(float)), E_FAIL);
 
@@ -71,9 +71,8 @@ HRESULT UI_PlayerHP::Render()
 
 HRESULT UI_PlayerHP::Ready_Components()
 {
-    // TODO : 아직 안함 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TEXTURE_PLAYER_STATUS, _textureCom), E_FAIL);
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXTEX, _shaderCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_UI, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
 
     return S_OK;

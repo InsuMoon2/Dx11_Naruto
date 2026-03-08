@@ -1,7 +1,7 @@
 # Dx11_Naruto 프로젝트 구조
 
 > **AI 어시스턴트는 매 대화 시작 시 이 파일을 반드시 읽을 것!**
-> 마지막 갱신: 2026-03-05
+> 마지막 갱신: 2026-03-09
 
 ---
 
@@ -114,6 +114,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `BTNode_Factory` | BT 노드 팩토리 |
 | `Camera_Manager` | 카메라 관리 (등록, 활성 카메라 전환, Toggle) |
 | `Light_Manager` | 라이트 관리 (Add/Get/Clear) |
+| `UI_Manager` | UI 레이어 관리 (EUILayer별 UI 등록, Show/Hide/Toggle, 뷰포트 리사이즈 알림, 입력 차단 판정) |
 | `Debug_Manager` | 디버그 관리 (현재 빈 껍데기) |
 | `DelegateHub` | 전역 델리게이트 허브 (OnPlayerSpawned 등 이벤트 모음) |
 
@@ -148,7 +149,9 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Camera` | 카메라 (뷰/프로젝션 행렬 → PipeLine 설정) |
 | `Character` | 캐릭터 기반 (Engine 레이어) |
 | `Controller` | 컨트롤러 기반 |
-| `UIObject` | UI 오브젝트 (직교 투영) |
+| `UIObject` | UI 오브젝트 기반 (직교 투영, FUIDesc, Visibility, EUILayer, zOrder) |
+| `HUD` | UIObject 상속 컨테이너. 자식 UI 생성/등록(`Create_Child`), 포커스 불가 |
+| `Panel` | HUD 상속. 포커스 가능한 UI 패널 |
 | `PlayerStart` | 스폰 포인트 (멀티 스폰 인덱스 지원) |
 | `Light` | 라이트 오브젝트 (Directional/Point, FLightDesc 보유) |
 
@@ -200,12 +203,31 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Background` | UI 배경 |
 | `StaticMeshActor` | 정적 메쉬 오브젝트 (GUID 기반 Model + Shader, 프리팹/레벨에서 사용) |
 
+### UI 시스템 (Client)
+
+| 클래스 | 부모 | 설명 |
+|---|---|---|
+| `UI_PlayerHUD` | `HUD` | 플레이어 전체 HUD 루트. `UI_PlayerStatus` 자식 보유, `Bind_Player()` |
+| `UI_PlayerStatus` | `Panel` | 플레이어 상태 패널 (HP바 + 배경). 자식으로 `UI_PlayerHP` 보유 |
+| `UI_PlayerHP` | `UIObject` | HP 비율 바 (Shader + Texture + VIBuffer_Rect, `Set_Ratio()`) |
+| `UI_PlayerSkill` | `Panel` | **스킬 패널 (현재 빈 껍데기, 구현 예정)** |
+
+### 플레이어 상태 머신 (FSM)
+
+| 클래스 | 설명 |
+|---|---|
+| `IPlayerState` | 플레이어 상태 인터페이스 (Enter/Update/Exit 순수 가상) |
+| `PlayerStateMachine` | FSM 컴포넌트 (`COMPONENT_TYPE_PLAYER_STATE`). 상태 등록/전환, InputComponent + MovementComponent 참조 |
+| `PlayerState_Idle` | Idle 상태 구현 |
+| `PlayerState_Run` | Run 상태 구현 |
+| `PlayerState_Jump` | Jump 상태 구현 |
+
 ### 클라이언트 정의 헤더
 
 | 파일 | 설명 |
 |---|---|
 | `Client_Defines.h` | Client 네임스페이스 공통 정의 |
-| `Client_Enum.h` | Client 전용 열거형 |
+| `Client_Enum.h` | Client 전용 열거형 (`EPlayerState`: Idle, Run, Jump) |
 | `Client_Macro.h` | Client 전용 매크로 |
 | `Protocol_Wrapper.h` | Protobuf 헤더 래퍼 (pch 격리용) |
 
@@ -269,6 +291,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Editor_Manager` | 에디터 전체 관리 (윈도우, 선택 객체, 메뉴바) |
 | `EditorInstance` | 에디터 싱글톤 |
 | `ImGui_Manager` | ImGui 초기화/렌더 |
+| `Editor_Camera_Free` | 에디터 전용 자유 카메라 (Camera_Free 상속, 에디터 씬 뷰 전용) |
 | `Level_Editor` | 에디터 전용 빈 레벨 |
 | `Level_Serializer` | JSON 레벨 저장/로드 |
 
@@ -469,7 +492,12 @@ Client/Bin/Resources/
 │   ├── Explosion/   → 이펙트
 │   ├── SkyBox/      → 스카이박스
 │   ├── Snow/
-│   ├── UI/          → UI 텍스처
+│   ├── UI/
+│   │   ├── Dialog/Textures/     → 다이얼로그/구매/보상 UI 텍스처 (78개+)
+│   │   ├── Loading_Screen/      → 로딩 스크린 UI
+│   │   ├── MainTitle/           → 메인 타이틀 UI
+│   │   ├── PlayerStats/         → 플레이어 스탯 UI (HP바, 상태바 등)
+│   │   └── Skill_Icon/          → 스킬 아이콘 텍스처
 │   ├── Default0/1.dds/.jpg → 기본 텍스처
 │   └── Clip_Icon, Folder_Icon 등 → 에디터 아이콘
 ├── Models/          → 3D 모델 (Fiona, ForkLift, Gaara, NarutoTest, Rock, Test, Tong, map)
@@ -505,6 +533,17 @@ enum class ERenderGroup { Priority, NonBlend, Blend, UI, END };
 - **NonBlend**: 불투명 (Terrain, 캐릭터 등)
 - **Blend**: 반투명
 - **UI**: 2D UI (직교 투영)
+
+## UI 레이어 (EUILayer)
+
+```cpp
+enum class EUILayer { HUD, Navigation, Popup, System, Overlay, END };
+```
+- **HUD**: 항상 표시 (체력바, 스킬)
+- **Navigation**: 퀘스트 화살표, 정보 전달용
+- **Popup**: 인벤토리, 상점, 일시정지
+- **System**: 알림
+- **Overlay**: 페이드 인/아웃, 로딩
 
 ---
 
@@ -581,6 +620,7 @@ enum PacketID {
 - [ ] `Handle_S_AddObject` / `Handle_S_RemoveObject` 클라이언트 구현
 - [ ] 이동 동기화 패킷 throttle (매 프레임 전송 → 주기적 전송)
 - [ ] `Model` 컴포넌트 GENERATED_COMPONENT 매크로 정식 적용 (현재 주석 처리됨)
+- [ ] `UI_PlayerSkill` 구현 (현재 빈 껍데기, Panel 상속만 있음) — 데이터 테이블 기반 스킬 아이콘 자동 매핑 검토 중
 
 ---
 

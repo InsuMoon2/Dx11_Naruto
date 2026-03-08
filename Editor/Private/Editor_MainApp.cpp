@@ -108,6 +108,14 @@ HRESULT Editor_MainApp::Render()
 HRESULT Editor_MainApp::Ready_StaticLevel()
 {
     if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
+        Protocol::COMPONENT_TYPE_SHADER_UI,
+        Shader::Create(_device, _context, TEXT("../../Client/Bin/Shaders/Shader_UI.hlsl"),
+            VTXTEX::Elements, VTXTEX::numElements))))
+    {
+        return E_FAIL;
+    }
+
+    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
         Protocol::COMPONENT_TYPE_SHADER_VTXTEX,
         Shader::Create(_device, _context, TEXT("../../Client/Bin/Shaders/Shader_Vtxtex.hlsl"),
             VTXTEX::Elements, VTXTEX::numElements))))

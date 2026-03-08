@@ -78,6 +78,12 @@ HRESULT UI_PlayerStatus::Render()
     Panel::Bind_ShaderResource(_shaderCom, "g_ProjMatrix", ETransformState::Proj);
 
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 0), E_FAIL);
+
+#pragma region Alpha값 테스트
+    float fAlpha = 0.5f;
+    _shaderCom->Bind_RawValue("g_Alpha", &fAlpha, sizeof(float));
+#pragma endregion
+
     CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
     CHECK_FAILED(_bufferCom->Render(), E_FAIL);
@@ -88,7 +94,7 @@ HRESULT UI_PlayerStatus::Render()
 HRESULT UI_PlayerStatus::Ready_Components()
 {
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TEXTURE_PLAYER_STATUS, _textureCom), E_FAIL);
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXTEX, _shaderCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_UI, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
 
     return S_OK;

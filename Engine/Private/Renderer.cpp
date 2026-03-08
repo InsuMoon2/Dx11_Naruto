@@ -106,6 +106,7 @@ void Renderer::Render_UI()
     }
 
     _renderObjects[ETOI(ERenderGroup::UI)].clear();
+
 }
 
 unique_ptr<Renderer> Renderer::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

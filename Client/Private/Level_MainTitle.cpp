@@ -70,7 +70,7 @@ HRESULT Level_MainTitle::Ready_Layer_Background()
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MAIN_TITLE;
         desc.textureIndex = ETOI(EMainTitle::BG_0);
 
-        desc.zOrder = 0.5f;
+        desc.zOrder = 0.1f;
         
         auto mainTitle = Background::Create(_device, _context, &desc);
         if (!mainTitle) return E_FAIL;

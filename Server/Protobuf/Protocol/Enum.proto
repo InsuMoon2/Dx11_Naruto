@@ -40,6 +40,7 @@ enum ComponentID
     COMPONENT_TYPE_SHADER_VTXTEX        = 401;
     COMPONENT_TYPE_SHADER_VTXNORTEX     = 402;
     COMPONENT_TYPE_SHADER_VTXMESH       = 403;
+    COMPONENT_TYPE_SHADER_UI            = 404;
 
 
     // Client ComponentID
