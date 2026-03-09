@@ -3,6 +3,7 @@
 #include "BehaviorTree.h"
 #include "BehaviorTree_View.h"
 #include "Asset_Manager.h"
+#include "BTTask_Wait.h"
 
 void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
 {
@@ -48,7 +49,7 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
         ImGui::Separator();
         ImGui::Spacing();
 
-        auto assets = GAME->Get_AssetsByType("behavior_tree");
+        auto assets = GAME->Get_AssetByType("behavior_tree");
 
         if (assets.empty())
         {
@@ -162,4 +163,17 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
 
         ImGui::PopStyleColor(2);
     }
+}
+
+void BehaviorTree_Inspector::Draw_WaitMode(Shared<BTTask_Wait> node)
+{
+    float waitTime = node->Get_WaitTime();
+
+    if (ImGui::InputFloat("Wait Time ", &waitTime, 0.1f, 1.f, "%.2f"))
+    {
+        node->Set_WaitTime(waitTime);
+    }
+
+    ImGui::Text("Elapsed: %.2f", node->Get_Elapsed());
+
 }

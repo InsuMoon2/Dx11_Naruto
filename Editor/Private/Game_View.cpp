@@ -66,7 +66,7 @@ void Game_View::Render_Viewport()
     {
         _renderTarget->Resize(static_cast<uint32>(panelSize.x), static_cast<uint32>(panelSize.y));
 
-        ImGui::Image(_renderTarget->GetSRV(), panelSize);
+        ImGui::Image((ImTextureID)_renderTarget->Get_SRV(), panelSize);
     }
 
     if (GAME->Get_GameState() != EGameState::Play)

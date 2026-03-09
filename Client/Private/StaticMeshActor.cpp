@@ -72,8 +72,16 @@ HRESULT StaticMeshActor::Render()
     GameObject::Render();
 
     CHECK_FAILED(Bind_ShaderResources(), E_FAIL);
-    CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
-    CHECK_FAILED(_modelCom->Render(), E_FAIL);
+
+    size_t numMeshes = _modelCom->Get_NumMeshes();
+
+    for (size_t i = 0; i < numMeshes; ++i)
+    {
+        _modelCom->Bind_Material(_shaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
+
+        CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
+        CHECK_FAILED(_modelCom->Render(i), E_FAIL);
+    }
 
     return S_OK;
 }
@@ -119,7 +127,12 @@ HRESULT StaticMeshActor::Ready_Components()
 {
     uint32 modelKey = static_cast<uint32>(hash<string>{}(_modelGuid));
 
-    auto proto = Model::Create(_device, _context, _resolvedPath);
+    Matrix scaleMatrix = Matrix::CreateScale(0.01f);
+    Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
+
+    Matrix preTransform = scaleMatrix * rotationMatrix;
+
+    auto proto = Model::Create(_device, _context, EModelType::StaticMesh, _resolvedPath, preTransform);
     CHECK_NULL(proto, E_FAIL);
 
     GAME->Add_Component_Prototype(ETOI(ELevelType::Static), modelKey, proto);

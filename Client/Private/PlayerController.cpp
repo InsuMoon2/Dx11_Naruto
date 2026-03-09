@@ -68,7 +68,7 @@ void PlayerController::Update(float timeDelta)
 
             transform->Set_WorldRotation(
                 0.f,
-                (cameraYaw + 180.f),
+                (cameraYaw),
                 0.f);
         }
     }

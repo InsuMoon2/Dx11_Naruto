@@ -1,3 +1,3 @@
-Type,Id,Path,Count,Level,Extra
-Model,COMPONENT_TYPE_MODEL_PLAYER,../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara.fbx,1,Static,
-Model,COMPONENT_TYPE_MODEL_MONSTER,../../Client/Bin/Resources/Models/ForkLift/ForkLift.fbx,1,Static,
+Type,Id,Path,Count,ModelType,Level,Extra
+Model,COMPONENT_TYPE_MODEL_PLAYER,../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara.fbx,1,SkeletalMesh,Static,
+Model,COMPONENT_TYPE_MODEL_MONSTER,../../Client/Bin/Resources/Models/Boruto/Boruto.fbx,1,SkeletalMesh,Static,

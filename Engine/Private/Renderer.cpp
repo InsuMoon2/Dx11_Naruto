@@ -17,6 +17,18 @@ Renderer::~Renderer()
 
 HRESULT Renderer::Initialize()
 {
+    D3D11_BLEND_DESC blendDesc = {};
+    blendDesc.RenderTarget[0].BlendEnable = TRUE;
+    blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+    blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+    if (FAILED(_device->CreateBlendState(&blendDesc, _blendState.GetAddressOf())))
+        return E_FAIL;
 
     return S_OK;
 }
@@ -69,6 +81,8 @@ void Renderer::Render_NonBlend()
 
 void Renderer::Render_Blend()
 {
+    //_context->OMSetBlendState(_blendState.Get(), nullptr, 0xffffffff);
+
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::Blend)])
     {
         if (renderObject)
@@ -78,10 +92,14 @@ void Renderer::Render_Blend()
     }
 
     _renderObjects[ETOI(ERenderGroup::Blend)].clear();
+
+    //_context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 }
 
 void Renderer::Render_UI()
 {
+    //_context->OMSetBlendState(_blendState.Get(), nullptr, 0xffffffff);
+
     _renderObjects[ETOI(ERenderGroup::UI)].sort([](const Shared<GameObject>& src, const Shared<GameObject>& dst)
         {
             auto uiSrc = dynamic_pointer_cast<UIObject>(src);
@@ -107,6 +125,7 @@ void Renderer::Render_UI()
 
     _renderObjects[ETOI(ERenderGroup::UI)].clear();
 
+    //_context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 }
 
 unique_ptr<Renderer> Renderer::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

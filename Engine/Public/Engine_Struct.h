@@ -51,5 +51,8 @@ namespace Engine
 
         wstring relativePath;
         wstring fullPath;
+
+        // StaticMesh or SkeletalMesh
+        string  modelType;
     };
 }

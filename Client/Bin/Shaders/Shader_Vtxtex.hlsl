@@ -69,18 +69,11 @@ RasterizerState CullNone
     CullMode = None;
 };
 
-DepthStencilState DS_Default
-{
-    DepthEnable = true;
-    DepthWriteMask = All;
-};
-
 technique11 DefaultTechnique
 {
     pass DefaultPass
     {
         SetRasterizerState(CullNone);
-        SetDepthStencilState(DS_Default, 0);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();

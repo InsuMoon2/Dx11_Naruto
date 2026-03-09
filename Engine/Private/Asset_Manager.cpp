@@ -68,6 +68,12 @@ string Asset_Manager::Register_Asset(const wstring& filePath, const string& type
     FAssetMeta meta;
     meta.guid = Utils::Generate_GUID();
     meta.type = type.empty() ? Detect_AssetType(filePath) : type;
+
+    if (meta.type == "model" && meta.modelType.empty())
+    {
+        meta.modelType = "StaticMesh";
+    }
+
     meta.fullPath = absPath;
 
     // 상대 경로
@@ -216,6 +222,7 @@ bool Asset_Manager::Load_Meta(const wstring& metaPath)
         FAssetMeta meta;
         meta.guid = root["guid"].get<string>();
         meta.type = root.value("type", "");
+        meta.modelType = root.value("modelType", "");
         meta.fullPath = absPath;
 
         fs::path relative = fs::relative(absPath, _resourceRoot);
@@ -240,6 +247,9 @@ bool Asset_Manager::Save_Meta(const wstring& metaPath, const FAssetMeta& meta)
     root["guid"] = meta.guid;
     root["type"] = meta.type;
 
+    if (!meta.modelType.empty())
+        root["modelType"] = meta.modelType;
+
     ofstream file(metaPath);
 
     if (!file.is_open())
@@ -257,16 +267,23 @@ string Asset_Manager::Detect_AssetType(const wstring& filePath) const
 
     string filename = path.filename().string();
     
-    if (filename.ends_with(".bt.json"))    return "behavior_tree";
-    if (filename.ends_with(".level.json")) return "level";
-    if (filename.ends_with(".prefab"))     return "prefab";
+    if (filename.ends_with(".prefab.json"))     return "prefab";
+    if (filename.ends_with(".bt.json"))         return "behavior_tree";
+    if (filename.ends_with(".level.json"))      return "level";
 
     string extension = path.extension().string();
 
-    if (extension == ".json") return "json";          // 순수 데이터 테이블 등
-    if (extension == ".prefab") return "prefab";      // 프리팹
-    if (extension == ".bt") return "behavior_tree";   // 비헤이비어 트리
-    if (extension == ".level") return "level";        // 씬/레벨 데이터
+    transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+#pragma region Legacy 지원
+
+    if (extension == ".json") return "json";
+    if (extension == ".prefab") return "prefab";
+    if (extension == ".bt") return "behavior_tree";
+    if (extension == ".level") return "level";
+
+#pragma endregion
+ 
     
     if (extension == ".png" || extension == ".jpg" || extension == ".dds" || extension == ".tga")
         return "texture";
@@ -306,8 +323,10 @@ void Asset_Manager::Load_Cache()
             FAssetMeta meta;
             meta.guid = guid;
             meta.type = data.value("type", "");
+            meta.modelType = data.value("modelType", "");
             meta.relativePath = Utils::ToWString(data.value("relativePath", ""));
             meta.fullPath = (fs::path(_resourceRoot) / meta.relativePath).wstring();
+
             _guidToMeta[meta.guid] = meta;
             _pathToGuid[meta.fullPath] = meta.guid;
         }
@@ -328,6 +347,10 @@ void Asset_Manager::Save_Cache()
     for (const auto& [guid, meta] : _guidToMeta)
     {
         root[guid]["type"] = meta.type;
+
+        if (!meta.modelType.empty())
+            root[guid]["modelType"] = meta.modelType;
+
         root[guid]["fullPath"] = Utils::ToString(meta.fullPath);
         root[guid]["relativePath"] = Utils::ToString(meta.relativePath);
     }

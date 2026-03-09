@@ -15,8 +15,9 @@ Mesh::~Mesh()
 {
 }
 
-HRESULT Mesh::Initialize_Prototype(const aiMesh* aiMesh)
+HRESULT Mesh::Initialize_Prototype(const aiMesh* aiMesh , const Matrix& preTransformMatrix)
 {
+    _materialIndex = aiMesh->mMaterialIndex;
     _numVertexBuffers = 1;
     _numVertices = aiMesh->mNumVertices;
     _vertexStride = sizeof(VTXMESH);
@@ -38,9 +39,17 @@ HRESULT Mesh::Initialize_Prototype(const aiMesh* aiMesh)
     for (size_t i = 0; i < _numVertices; i++)
     {
         memcpy(&vertices[i].position, &aiMesh->mVertices[i], sizeof(Vec3));
-        memcpy(&vertices[i].normal,   &aiMesh->mNormals[i], sizeof(Vec3));
-        memcpy(&vertices[i].tangent,  &aiMesh->mTangents[i], sizeof(Vec3));
+        memcpy(&vertices[i].normal, &aiMesh->mNormals[i], sizeof(Vec3));
+        memcpy(&vertices[i].tangent, &aiMesh->mTangents[i], sizeof(Vec3));
         memcpy(&vertices[i].texcoord, &aiMesh->mTextureCoords[0][i], sizeof(Vec2));
+
+        Vec3 pos = vertices[i].position;
+        Vec3 nor = vertices[i].normal;
+        Vec3 tan = vertices[i].tangent;
+
+        vertices[i].position    = Vec3::Transform(pos, preTransformMatrix);
+        vertices[i].normal      = Vec3::TransformNormal(nor, preTransformMatrix);
+        vertices[i].tangent     = Vec3::TransformNormal(tan, preTransformMatrix);
     }
 
     D3D11_SUBRESOURCE_DATA vertexInitialData{};
@@ -86,11 +95,11 @@ HRESULT Mesh::Initialize(void* arg)
     return VIBuffer::Initialize(arg);
 }
 
-Shared<Mesh> Mesh::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const aiMesh* aiMesh)
+Shared<Mesh> Mesh::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const aiMesh* aiMesh, const Matrix& preTransformMatrix)
 {
     auto instance = make_shared<Mesh>(device, context);
 
-    if (FAILED(instance->Initialize_Prototype(aiMesh)))
+    if (FAILED(instance->Initialize_Prototype(aiMesh, preTransformMatrix)))
     {
         MSG_BOX("Failed to Create : Mesh");
         instance->Free();

@@ -1,8 +1,6 @@
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D g_Texture;
 
-float g_Alpha = 1.f;
-
 sampler DefaultSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_LINEAR;    
@@ -59,12 +57,11 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
     
-    // Out.vColor = float4(In.vTexcoord.y, In.vTexcoord.y, In.vTexcoord.y, 1.f);
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    //Out.vColor.gb = Out.vColor.r;
 
-    Out.vColor.a *= g_Alpha;
-    
+    if (Out.vColor.a < 0.1f)   
+        discard;
+
     return Out;
 }
 
@@ -73,18 +70,22 @@ RasterizerState CullNone
     CullMode = None;
 };
 
+//DepthStencilState DisableDepth
+//{
+//    DepthEnable = FALSE;
+//    DepthWriteMask = ZERO;
+//};
+//
 BlendState AlphaBlend
 {
-    BlendEnable[0] = true;
-    SrcBlend = SRC_ALPHA;
-    DestBlend = INV_SRC_ALPHA;
-    BlendOp = ADD;
-};
-
-DepthStencilState ZBufferDisable
-{
-    DepthEnable = false;
-    DepthWriteMask = Zero; // 깊이 쓰기 비활성화
+    BlendEnable[0] = false;
+//    SrcBlend = SRC_ALPHA;
+//    DestBlend = INV_SRC_ALPHA;
+//    BlendOp = ADD;
+//    SrcBlendAlpha = ONE;
+//    DestBlendAlpha = ZERO;
+//    BlendOpAlpha = ADD;
+//    RenderTargetWriteMask[0] = 0x0F;
 };
 
 technique11 DefaultTechnique
@@ -92,8 +93,8 @@ technique11 DefaultTechnique
     pass DefaultPass
     {
         SetRasterizerState(CullNone);
-        SetBlendState(AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        SetDepthStencilState(ZBufferDisable, 0);
+        //SetDepthStencilState(DisableDepth, 0);
+        SetBlendState(AlphaBlend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF); 
 
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();

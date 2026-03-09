@@ -239,6 +239,7 @@
     <ClInclude Include="..\Public\ImGui_Manager.h" />
     <ClInclude Include="..\Public\Inspector.h" />
     <ClInclude Include="..\Public\Inspector_Factory.h" />
+    <ClInclude Include="..\Public\Model_Inspector.h" />
     <ClInclude Include="..\Public\Notification_Manager.h" />
     <ClInclude Include="..\Public\PlayerSession_Manager.h" />
     <ClInclude Include="..\Public\Prefab_View.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="..\Private\ImGui_Manager.cpp" />
     <ClCompile Include="..\Private\Inspector.cpp" />
     <ClCompile Include="..\Private\Inspector_Factory.cpp" />
+    <ClCompile Include="..\Private\Model_Inspector.cpp" />
     <ClCompile Include="..\Private\Notification_Manager.cpp" />
     <ClCompile Include="..\Private\PlayerSession_Manager.cpp" />
     <ClCompile Include="..\Private\Prefab_View.cpp" />

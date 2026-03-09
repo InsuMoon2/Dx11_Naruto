@@ -1,0 +1,61 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                -5.0
+            ],
+            "rotation": [
+                -0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "bt_guid": "",
+            "type": "COMPONENT_TYPE_AI"
+        },
+        {
+            "model_type": "StaticMesh",
+            "type": "COMPONENT_TYPE_MODEL"
+        },
+        {
+            "type": "COMPONENT_TYPE_SHADER"
+        },
+        {
+            "Attack": 10.0,
+            "Defense": 5.0,
+            "HP": 100.0,
+            "MP": 100.0,
+            "Max HP": 104.0999984741211,
+            "Max MP": 100.0,
+            "Speed": 5.0,
+            "type": "COMPONENT_TYPE_COMBAT_STAT"
+        },
+        {
+            "type": "COMPONENT_TYPE_AI_CONTROLLER"
+        },
+        {
+            "Acceleration": 20.0,
+            "Deceleration": 24.0,
+            "Gravity": -20.0,
+            "Ground Y": 5.0,
+            "Jump Velocity": 8.0,
+            "Max Sprint Speed": 4.0,
+            "Max Walk Speed": 2.0,
+            "Yaw Speed": 0.20000000298023224,
+            "type": "COMPONENT_TYPE_MOVEMENT"
+        }
+    ],
+    "guid": "8b6e50b6-4c93-4bd3-94d3-0904b37a1f89",
+    "object_type": "OBJECT_TYPE_MONSTER",
+    "prefab_name": "Monster",
+    "static_class": "Monster"
+}

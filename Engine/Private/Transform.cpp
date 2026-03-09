@@ -258,7 +258,7 @@ Vec3 Transform::Get_WorldScale() const
 
 Vec3 Transform::Get_WorldForward() const
 {
-    return Get_WorldMatrix().Forward();
+    return -Get_WorldMatrix().Forward();
 }
 
 Vec3 Transform::Get_WorldRight() const
@@ -273,7 +273,7 @@ Vec3 Transform::Get_WorldUp() const
 
 Vec3 Transform::Get_LocalForward() const
 {
-    return Vec3::Transform(Vec3::Forward, _localRotation);
+    return Vec3::Transform(Vec3(0.f, 0.f, 1.f), _localRotation);
 }
 
 Vec3 Transform::Get_LocalRight() const

@@ -196,10 +196,11 @@ public: /* Light */
 
 public: /* Asset */
     string                          Find_AssetGUID(const wstring& filePath);
+    const FAssetMeta*               Find_AssetByGUID(const string& guid);
     wstring                         Resolve_AssetPath(const string& guid);
     string                          Register_Asset(const wstring& filePath, const string& type = "");
     void                            Scan_Assets(const wstring& directory);
-    vector<const FAssetMeta*>       Get_AssetsByType(const string& type);
+    vector<const FAssetMeta*>       Get_AssetByType(const string& type);
     void                            Update_AssetPath(const string& guid, const wstring& newFilePath);
     void                            Refresh_Cache();
 

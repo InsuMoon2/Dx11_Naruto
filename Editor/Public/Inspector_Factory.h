@@ -5,6 +5,7 @@
 NS_BEGIN(Editor)
 
 class Texture_Inspector;
+class Model_Inspector;
 
 class Inspector_Factory
 {
@@ -26,6 +27,7 @@ private:
     map<uint32, Shared<Component_Inspector>> _inspectors;
 
     Shared<Texture_Inspector> _textureInspector;
+    Shared<Model_Inspector> _modelInspector;
 };
 
 NS_END

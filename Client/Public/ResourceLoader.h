@@ -31,7 +31,6 @@ private:
     uint32  Get_ComponentID_From_String(const string& idStr);
     uint32  Get_LevelIndex_From_String(const string& levelName);
 
-
 private:
     ComPtr<Device> _device;
     ComPtr<DeviceContext> _context;

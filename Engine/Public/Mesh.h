@@ -14,11 +14,16 @@ public:
     virtual ~Mesh();
 
 public:
-    HRESULT Initialize_Prototype(const aiMesh* aiMesh);
+    HRESULT Initialize_Prototype(const aiMesh* aiMesh,  const Matrix& preTransformMatrix);
     HRESULT Initialize(void* arg) override;
 
+    const uint32  Get_MaterialIndex() const { return _materialIndex; }
+
+private:
+    uint32 _materialIndex = 0;
+
 public:
-    static Shared<Mesh> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const aiMesh* aiMesh);
+    static Shared<Mesh> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const aiMesh* aiMesh, const Matrix& preTransformMatrix);
     Shared<Component> Clone(void* arg) override;
     void Free() override;
 };

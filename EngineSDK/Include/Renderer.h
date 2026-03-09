@@ -31,9 +31,10 @@ private:
     ComPtr<Device>          _device;
     ComPtr<DeviceContext>   _context;
 
-    list<shared_ptr<GameObject>> _renderObjects[ETOI(ERenderGroup::END)];
+    uint32                  _drawCallCount = 0;
 
-    int32 _drawCallCount = 0;
+    ComPtr<ID3D11BlendState> _blendState;
+    list<shared_ptr<GameObject>> _renderObjects[ETOI(ERenderGroup::END)];
 
 public:
     static unique_ptr<Renderer> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

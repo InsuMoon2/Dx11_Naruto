@@ -44,7 +44,7 @@ void BTTask_Wait::OnDraw_Inspector()
 {
     BTTask::OnDraw_Inspector();
 
-    ImGui::InputFloat("Wait Time##WaitTimeUnique", &_waitTime, 0.1f, 1.f, "%.2f");
+    //ImGui::InputFloat("Wait Time##WaitTimeUnique", &_waitTime, 0.1f, 1.f, "%.2f");
 }
 
 json BTTask_Wait::Serialize_ToJson()

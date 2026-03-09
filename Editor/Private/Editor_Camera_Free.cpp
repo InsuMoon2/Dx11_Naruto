@@ -39,10 +39,10 @@ void Editor_Camera_Free::Priority_Update(float timeDelta)
             _transformCom->Rotate_Axis(_transformCom->Get_WorldRight(), delta.y * _mouseSensor);
 
         if (ImGui::IsKeyDown(ImGuiKey_W))
-            _transformCom->Move_Backward(timeDelta);
+            _transformCom->Move_Forward(timeDelta);
 
         if (ImGui::IsKeyDown(ImGuiKey_S))
-            _transformCom->Move_Forward(timeDelta);
+            _transformCom->Move_Backward(timeDelta);
 
         if (ImGui::IsKeyDown(ImGuiKey_A))
             _transformCom->Move_Left(timeDelta);
@@ -54,7 +54,7 @@ void Editor_Camera_Free::Priority_Update(float timeDelta)
     float wheel = ImGui::GetIO().MouseWheel;
 
     if (wheel != 0.f)
-        _transformCom->Move_Backward(wheel * 0.1f);
+        _transformCom->Move_Forward(wheel * 0.1f);
 }
 
 Matrix Editor_Camera_Free::Get_ViewMatrix() const

@@ -8,6 +8,7 @@
 #include "Inspector.h"
 #include "Notification_Manager.h"
 #include "RenderTarget.h"
+#include "Reflection_Inspector.h"
 
 Prefab_View::Prefab_View()
     : EditorWindow(TEXT("Prefab"))
@@ -68,18 +69,30 @@ void Prefab_View::OnGui()
         {
             ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), ICON_FA_TRIANGLE_EXCLAMATION " Unsaved Changes");
         }
-        ImGui::NewLine();
+        ImGui::Dummy(ImVec2(0, 0));
         ImGui::Separator();
 
-        if (ImGui::BeginTable("PrefabLayout", 2, ImGuiTableFlags_Resizable| ImGuiTableFlags_BordersInnerV))
+        if (ImGui::BeginTable("PrefabLayout", 3, ImGuiTableFlags_Resizable| ImGuiTableFlags_BordersInnerV))
         {
-            ImGui::TableSetupColumn("ModelPreview", ImGuiTableColumnFlags_WidthStretch);
-            ImGui::TableSetupColumn("Inspector", ImGuiTableColumnFlags_WidthStretch);
+            ImGui::TableSetupColumn("Component List", ImGuiTableColumnFlags_WidthStretch, 1.f);
+            ImGui::TableSetupColumn("ModelPreview", ImGuiTableColumnFlags_WidthStretch, 2.5f);
+            ImGui::TableSetupColumn("Inspector", ImGuiTableColumnFlags_WidthStretch, 1.5f);
 
             ImGui::TableNextRow();
 
-            // [좌측] 모델 프리뷰
+            // [좌측] 컴포넌트 리스트
             ImGui::TableSetColumnIndex(0);
+            {
+                ImVec2 listSize = ImVec2(0.f, 0.f);
+                ImGui::BeginChild("ComponentListChild", listSize, false);
+                {
+                    Draw_ComponentList();
+                }
+                ImGui::EndChild();
+            }
+
+            // [중간] 모델 프리뷰
+            ImGui::TableSetColumnIndex(1);
             {
                 ImGui::Text("모델 프리뷰");
                 _previewImGuiSize = ImVec2(ImGui::GetContentRegionAvail().x, 450);
@@ -92,7 +105,7 @@ void Prefab_View::OnGui()
                         _previewScreenPos = ImGui::GetCursorScreenPos();
 
                         ImVec2 childSize = ImGui::GetContentRegionAvail();
-                        ImGui::Image(_prevRT->GetSRV(), childSize);
+                        ImGui::Image((ImTextureID)_prevRT->Get_SRV(), childSize);
 
                         if (ImGui::IsWindowHovered())
                             _previewCamera->Priority_Update(ImGui::GetIO().DeltaTime);
@@ -106,15 +119,12 @@ void Prefab_View::OnGui()
                 }
                 ImGui::EndChild();
             }
-
-            // [우측] 컴포넌트 리스트
-            ImGui::TableSetColumnIndex(1);
+            
+            // [우측] 컴포넌트 인스팩터
+            ImGui::TableSetColumnIndex(2);
             {
-                ImVec2 listSize = ImVec2(0.f, 0.f); 
-                ImGui::BeginChild("ComponentListChild", listSize, false); 
-                {
-                    Draw_ComponentList();
-                }
+                ImGui::BeginChild("InspectorChild", ImVec2(0, 0), false);
+                Draw_ComponentInspector();
                 ImGui::EndChild();
             }
             ImGui::EndTable();
@@ -164,7 +174,7 @@ void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath
 
             Editor_Camera_Free::FEditorCameraDesc desc;
 
-            desc.speedPerSec = 10.f;   
+            desc.speedPerSec = 20.f;   
             desc.rotationPerSec = 90.f;
 
             desc.eye = Vec3(-7.f, 3.f, -10.f);
@@ -232,88 +242,112 @@ void Prefab_View::Draw_Header()
 
 void Prefab_View::Draw_ComponentList()
 {
-    if (!_previewObject)
-        return;
-
-#pragma region Legacy : Inspector 방식으로 보여주기
-    //Inspector::Draw_Components(_targetObject);
-#pragma endregion
-
-    ImGui::Text("Components Inspector");
-    ImGui::Separator();
+    if (!_previewObject) return;
 
     auto& components = _previewObject->Get_Components();
-    uint32 deleteTargetID = 0; // 삭제할 컴포넌트 ID
-
-    for (auto& pair : components)
-    {
-        uint32 id = pair.first;
-        auto& component = pair.second;
-
-        if (!component)
-            continue;
-
-        ImGui::PushID(id);
-
-        ImGui::BeginGroup();
-
-        Inspector::Draw_Component(id, component);
-
-        ImGui::EndGroup();
-
-        if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Right))
-        {
-            ImGui::OpenPopup("ComponentContextMenu");
-        }
-        // 4. 팝업 메뉴 열기
-        if (ImGui::BeginPopup("ComponentContextMenu"))
-        {
-            if (ImGui::MenuItem("Remove Component"))
-            {
-                deleteTargetID = id;
-            }
-            ImGui::EndPopup();
-        }
-        ImGui::PopID();
-    }
-
-    if (deleteTargetID != 0)
-    {
-        _previewObject->Remove_Component(deleteTargetID);
-        MarkDirty();
-    }
-        
+    ImGui::Text(ICON_FA_LIST " Components");
     ImGui::Separator();
     ImGui::Spacing();
 
-    // 컴포넌트 추가 버튼
-    if (ImGui::Button("Add Component", ImVec2(ImGui::GetContentRegionAvail().x, 30)))
+    ImGui::BeginChild("##CompSelectArea", ImVec2(0, -40.f), false);
+    for (auto& [id, comp] : components)
     {
-        ImGui::OpenPopup("AddComponentPopup");
+        if (!comp) continue;
+
+        bool hasInspector = false;
+
+        if (Inspector_Factory::GetInstance()->Get_Inspector(id) ||
+            Inspector_Factory::GetInstance()->Get_Inspector_ByType(comp))
+        {
+            hasInspector = true;
+        }
+        else if (!comp->Get_ReflectionInfo().properties.empty())
+        {
+            hasInspector = true;
+        }
+
+        if (!hasInspector)
+            continue;
+
+        string name = Utils::ToString(comp->Get_Name());
+        bool isSelected = (_selectedComponentId == id);
+
+        if (ImGui::Selectable(name.c_str(), isSelected))
+        {
+            _selectedComponentId = id; 
+            MarkDirty();
+
+        }
+        if (ImGui::BeginPopupContextItem())
+        {
+            if (ImGui::MenuItem("Remove"))
+            {
+                _previewObject->Remove_Component(id);
+
+                if (_selectedComponentId == id)
+                    _selectedComponentId = 0;
+                MarkDirty();
+            }
+            ImGui::EndPopup();
+        }
     }
+    ImGui::EndChild();
+
+    if (ImGui::Button(ICON_FA_PLUS " Add", ImVec2(-1, 30)))
+        ImGui::OpenPopup("AddComponentPopup");
 
     if (ImGui::BeginPopup("AddComponentPopup"))
     {
-        auto registeredComponents = GAME->Get_RegisteredComponents();
-
-        for (const auto& pair : registeredComponents)
+        for (const auto& [typeId, name] : GAME->Get_RegisteredComponents())
         {
-            uint32 typeId = pair.first;
-            string name = Utils::ToString(pair.second);
-
-            if (ImGui::MenuItem(name.c_str()))
+            if (ImGui::MenuItem(Utils::ToString(name).c_str()))
             {
                 auto newComp = GAME->Instantiate_FromFactory(typeId);
-
                 if (newComp)
                 {
                     _previewObject->Add_Component(typeId, newComp);
+                    _selectedComponentId = typeId; 
                     MarkDirty();
                 }
             }
         }
         ImGui::EndPopup();
     }
+}
+
+void Prefab_View::Draw_ComponentInspector()
+{
+    if (!_previewObject)
+        return;
+
+    auto& refInfo = _previewObject->Get_ReflectionInfo();
+
+    if (!refInfo.properties.empty())
+    {
+        string objName = Utils::ToString(_previewObject->Get_Name());
+        ImGui::TextColored(ImVec4(1.f, 0.8f, 0.3f, 1.f), "[ %s ] Properties", objName.c_str());
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        static Reflection_Inspector autoInspector;
+
+        autoInspector.Draw_FromReflection(_previewObject.get(), refInfo);
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
+    }
+
+    if (_selectedComponentId == 0)
+    {
+        return;
+    }
+
+    auto& components = _previewObject->Get_Components();
+    auto it = components.find(_selectedComponentId);
+    if (it == components.end() || !it->second)
+        return;
+
+    Inspector::Draw_Component(it->first, it->second);
 }
 
 void Prefab_View::Draw_Buttons()

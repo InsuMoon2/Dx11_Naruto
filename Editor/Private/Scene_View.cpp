@@ -218,7 +218,9 @@ void Scene_View::Render_Viewport()
         _renderTarget->Resize(static_cast<uint32>(panelSize.x),
             static_cast<uint32>(panelSize.y));
 
-        ImGui::Image(_renderTarget->GetSRV(), panelSize);
+        auto srv = _renderTarget->Get_SRV();
+
+        ImGui::Image((ImTextureID)srv, panelSize);
 
         // 드래그 드롭 타겟
         if (ImGui::BeginDragDropTarget())

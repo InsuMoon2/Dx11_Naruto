@@ -1,0 +1,44 @@
+{
+    "gameObjects": [
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_RECT"
+                },
+                {
+                    "current_index": 0,
+                    "num_srvs": 1,
+                    "texture_path": "../../Client/Bin/Resources/Textures/Terrain/Tile%d.dds",
+                    "type": "COMPONENT_TYPE_TEXTURE"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                }
+            ],
+            "guid": "d89c7596-5cbf-400d-8818-18e021362945",
+            "layerTag": "Layer_Terrain",
+            "object_type": "OBJECT_TYPE_TERRAIN",
+            "static_class": "Terrain"
+        }
+    ],
+    "levelIndex": 3,
+    "levelName": "[20260309]MonsterCopy"
+}

@@ -9,6 +9,18 @@
 #include "VIBuffer_Rect.h"
 #include "Model.h"
 
+IMPLEMENT_REFLECTION(Monster);
+
+bool Monster::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "Monster";
+
+    PROPERTY_FLOAT("Test Value : ", _test, 1.f, 9999.f);
+
+    return true;
+}
+
 Monster::Monster(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
 {
@@ -62,8 +74,15 @@ HRESULT Monster::Render()
 {
     Character::Render();
 
-    CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
-    CHECK_FAILED(_model->Render(), E_FAIL);
+    size_t numMeshes = _model->Get_NumMeshes();
+
+    for (size_t i = 0; i < numMeshes; i++)
+    {
+        _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
+
+        _shaderCom->Begin_Pass(0);
+        _model->Render(i);
+    }
 
     return S_OK;
 }
@@ -123,8 +142,6 @@ HRESULT Monster::Ready_Components()
     // AI
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_AI_CONTROLLER, _aiController), E_FAIL);;
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_AI, _behavior), E_FAIL);
-
-    _transformCom->Set_LocalPosition(0.f, 0.f, -5.f);
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXMESH, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_MONSTER, _model), E_FAIL);

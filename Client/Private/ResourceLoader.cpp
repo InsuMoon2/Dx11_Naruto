@@ -133,8 +133,18 @@ HRESULT ResourceLoader::Load_Model(const json& data)
     for (const auto& item : data)
     {
         string idStr = item["id"];
-        string pathStr = item["path"];
+
+        string guidStr = item.value("guid", "");
+        string pathStr;
+
+        if(!guidStr.empty())
+            pathStr = Utils::ToString(GAME->Resolve_AssetPath(guidStr));
+        else
+            pathStr = item["path"];
+
         string levelStr = item.value("level", "Static");
+        string modelTypeStr = item.value("modelType", "Static");
+        EModelType modelType = (modelTypeStr == "SkeletalMesh") ? EModelType::SkeletalMesh : EModelType::StaticMesh;
 
         uint32 typeId = Get_ComponentID_From_String(idStr);
         uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
@@ -146,9 +156,16 @@ HRESULT ResourceLoader::Load_Model(const json& data)
         }
 
         GAME->Register_ComponentFactory(
-            typeId, [pathStr](ComPtr<Device> device, ComPtr<DeviceContext> context)
+            typeId, [pathStr, modelType](ComPtr<Device> device, ComPtr<DeviceContext> context)
             {
-                return Model::Create(device, context, pathStr);
+                Matrix preTransform = Matrix::CreateScale(0.01f);
+                if (modelType == EModelType::SkeletalMesh)
+                {
+                    preTransform = preTransform
+                        * Matrix::CreateRotationX(XMConvertToRadians(90.f))
+                        * Matrix::CreateRotationY(XMConvertToRadians(180.f));
+                }
+                return Model::Create(device, context, modelType, pathStr, preTransform);
             },
             Utils::ToWString(idStr));
 

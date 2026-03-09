@@ -75,7 +75,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
 
-    vector mtrlDiffuse = 1.;
+    vector mtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
 
     vector shade = saturate(max(dot(normalize(g_LightDir) * -1.f, In.vNormal), 0.f) + (g_LightAmbient * g_MtrlAmbiment));
 
@@ -90,10 +90,16 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+BlendState OpaqueBlend
+{
+    BlendEnable[0] = False;
+};
+
 technique11 DefaultTechnique
 {
     pass DefaultPass
     {
+        SetBlendState(OpaqueBlend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
     }

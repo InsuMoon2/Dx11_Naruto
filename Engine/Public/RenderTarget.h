@@ -19,7 +19,7 @@ public:
     void    UnbindAll();
 
 public:
-    ImTextureID GetSRV() const { return (ImTextureID)_shaderResourceView.Get(); }
+    ID3D11ShaderResourceView* Get_SRV() const { return _shaderResourceView.Get(); }
 
     uint32 GetWidth() const { return _width; }
     uint32 GetHeight() const { return _height; }

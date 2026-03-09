@@ -80,6 +80,11 @@ def convert_all_csv_to_json():
                     count_str = row.get('Count', '1').strip()
                     item['count'] = int(count_str) if count_str else 1
 
+                    # ModelType 처리 (Skeletal / Static)
+                    model_type = row.get('ModelType', '').strip()
+                    if model_type:
+                        item['modelType'] = model_type
+
                     # Extra 필드 처리 (Model 타입 등)
                     extra = row.get('Extra', '').strip()
                     if extra:

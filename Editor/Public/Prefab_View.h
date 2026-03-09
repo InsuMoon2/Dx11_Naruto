@@ -32,9 +32,10 @@ public:
     bool Is_Open() const { return _isOpen; }
     void Pre_Render() override;
 
-private:
+private: 
     void Draw_Header();
     void Draw_ComponentList();
+    void Draw_ComponentInspector();
     void Draw_Buttons();
 
     void Update_ImGuizmo();
@@ -51,6 +52,8 @@ private:
 
     Shared<GameObject>          _previewObject;
     Shared<Editor_Camera_Free>  _previewCamera;
+
+    uint32 _selectedComponentId = 0;
 
 private: /* preview */
     Shared<RenderTarget>    _prevRT;

@@ -27,6 +27,11 @@
 #include "UI_Manager.h"
 #include "UIObject.h"
 
+#pragma push_macro("new")
+#undef new
+#include "imgui.h"
+#pragma pop_macro("new")
+
 IMPLEMENT_SINGLETON(GameInstance)
 
 GameInstance::GameInstance()
@@ -443,6 +448,11 @@ string GameInstance::Find_AssetGUID(const wstring& filePath)
     return _assetManager->Find_GUID(filePath);
 }
 
+const FAssetMeta* GameInstance::Find_AssetByGUID(const string& guid)
+{
+    return _assetManager->Find_ByGUID(guid);
+}
+
 wstring GameInstance::Resolve_AssetPath(const string& guid)
 {
     return _assetManager->Resolve_Path(guid);
@@ -458,7 +468,7 @@ void GameInstance::Scan_Assets(const wstring& directory)
     return _assetManager->Scan_And_Register(directory);
 }
 
-vector<const FAssetMeta*> GameInstance::Get_AssetsByType(const string& type)
+vector<const FAssetMeta*> GameInstance::Get_AssetByType(const string& type)
 {
     return _assetManager->Get_AssetByType(type);
 }

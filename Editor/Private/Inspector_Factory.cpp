@@ -4,18 +4,22 @@
 #include "Transform_Inspector.h"
 #include "Texture_Inspector.h"
 #include "BehaviorTree_Inspector.h"
+#include "Model_Inspector.h"
 #include "Texture.h"
+#include "Model.h"
 
 IMPLEMENT_SINGLETON(Inspector_Factory)
 
 void Inspector_Factory::Initialize()
 {
     _textureInspector = make_shared<Texture_Inspector>();
+    _modelInspector = make_shared<Model_Inspector>();
 
     Register_Inspector(Protocol::COMPONENT_TYPE_TRANSFORM, make_shared<Transform_Inspector>());
     //Register_Inspector(Protocol::COMPONENT_TYPE_COMBAT_STAT, make_shared<CombatStat_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, make_shared<Texture_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_AI, make_shared<BehaviorTree_Inspector>());
+    Register_Inspector(Protocol::COMPONENT_TYPE_MODEL, make_shared<Model_Inspector>());
 
 }
 
@@ -47,6 +51,9 @@ Shared<Component_Inspector> Inspector_Factory::Get_Inspector_ByType(Shared<Compo
 {
     if (dynamic_pointer_cast<Texture>(component))
         return _textureInspector;
+
+    if (dynamic_pointer_cast<Model>(component))   
+        return _modelInspector;
 
     return nullptr;
 }

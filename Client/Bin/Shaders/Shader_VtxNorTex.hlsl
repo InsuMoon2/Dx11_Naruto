@@ -89,10 +89,16 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+BlendState OpaqueBlend
+{
+    BlendEnable[0] = False;
+};
+
 technique11 DefaultTechnique
 {
     pass DefaultPass
     {
+        SetBlendState(OpaqueBlend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
     }

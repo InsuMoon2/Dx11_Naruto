@@ -20,6 +20,12 @@ public:
     void Deserialize_FromJson(const json& data) override;
 
 public:
+    float   Get_WaitTime() const { return _waitTime; }
+    void    Set_WaitTime(float time) { _waitTime = time; }
+
+    float   Get_Elapsed() const { return _elapsed; }
+
+private:
     float _waitTime = 1.f;
     float _elapsed = 0.f;
 

@@ -29,5 +29,7 @@ namespace Engine
         Overlay,    /* 페이드 인/아웃, 로딩 */
         END
     };
+
+    enum class EModelType { StaticMesh, SkeletalMesh, END };
 }
 

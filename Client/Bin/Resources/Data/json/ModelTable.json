@@ -4,13 +4,15 @@
             "id": "COMPONENT_TYPE_MODEL_PLAYER",
             "level": "Static",
             "path": "../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara.fbx",
-            "count": 1
+            "count": 1,
+            "modelType": "SkeletalMesh"
         },
         {
             "id": "COMPONENT_TYPE_MODEL_MONSTER",
             "level": "Static",
-            "path": "../../Client/Bin/Resources/Models/ForkLift/ForkLift.fbx",
-            "count": 1
+            "path": "../../Client/Bin/Resources/Models/Boruto/Boruto.fbx",
+            "count": 1,
+            "modelType": "SkeletalMesh"
         }
     ]
 }

@@ -1,4 +1,4 @@
-# Dx11_Naruto 프로젝트 구조
+﻿# Dx11_Naruto 프로젝트 구조
 
 > **AI 어시스턴트는 매 대화 시작 시 이 파일을 반드시 읽을 것!**
 > 마지막 갱신: 2026-03-09
@@ -138,7 +138,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `VIBuffer_Rect` | 사각형 (UI용) |
 | `VIBuffer_Terrain` | 하이트맵 기반 지형 메쉬 |
 | `Mesh` | Assimp aiMesh 기반 메쉬 (VIBuffer 상속, VTXMESH 정점 사용) |
-| `Model` | Assimp 모델 로드 컴포넌트 (다수 Mesh 소유, 렌더) |
+| `Model` | Assimp 모델 로드 컴포넌트 (다수 Mesh 소유, 렌더). ※ Material 시스템(ModelMaterial) 도입 예정 |
 | `Transform` | 위치/회전/스케일, 로컬/월드, 부모-자식 계층 |
 | `RenderTarget` | 렌더 타겟 텍스처 |
 
@@ -250,7 +250,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Level_Loading` | 로딩 레벨 (비동기 로드 관리) |
 | `Level_Gameplay` | 게임플레이 레벨 |
 | `Loader` | 비동기 리소스/프로토타입 로딩 (별도 쓰레드) |
-| `ResourceLoader` | JSON 테이블 파싱 → 셰이더/텍스처/지형 등록 |
+| `ResourceLoader` | JSON 테이블 파싱 → 셰이더/텍스처/지형/모델 등록 |
 
 ### 네트워크
 
@@ -474,10 +474,12 @@ Client/Bin/Resources/Data/
 │   ├── TextureTable.csv      → 텍스처 경로 + 타입
 │   ├── TerrainTable.csv      → 지형 설정
 │   └── StaticLevelComTable.csv → Static 레벨 컴포넌트 테이블
-├── json/                     → CSV에서 변환된 JSON
+├── json/                     → CSV에서 변환된 JSON (+ 수동 JSON)
 │   ├── ShaderTable.json
 │   ├── TextureTable.json
 │   ├── TerrainTable.json
+│   ├── ModelTable.json       → 모델 경로 + 타입(StaticMesh/SkeletalMesh)
+│   ├── SkillDataTable.json
 │   └── StaticLevelComTable.json
 └── ConvertResource.py        → CSV → JSON 변환 스크립트
 ```
@@ -620,6 +622,8 @@ enum PacketID {
 - [ ] `Handle_S_AddObject` / `Handle_S_RemoveObject` 클라이언트 구현
 - [ ] 이동 동기화 패킷 throttle (매 프레임 전송 → 주기적 전송)
 - [ ] `Model` 컴포넌트 GENERATED_COMPONENT 매크로 정식 적용 (현재 주석 처리됨)
+- [ ] `ModelMaterial` 클래스 도입 + `EModelType` enum 추가 (15일차 수업 내용)
+- [ ] `Shader_VtxMesh.hlsl` PS_MAIN에서 `g_DiffuseTexture` 텍스처 샘플링 적용
 - [ ] `UI_PlayerSkill` 구현 (현재 빈 껍데기, Panel 상속만 있음) — 데이터 테이블 기반 스킬 아이콘 자동 매핑 검토 중
 
 ---
@@ -627,3 +631,4 @@ enum PacketID {
 ## UpdateLib.bat
 
 Engine 빌드 후 `EngineSDK/Include`와 `EngineSDK/Lib`로 헤더/라이브러리를 복사하는 배치 파일.
+

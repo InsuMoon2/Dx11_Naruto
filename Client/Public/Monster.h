@@ -49,6 +49,7 @@ private:
     Shared<AIController>        _aiController{};
     Shared<BehaviorTree>        _behavior{};
 
+    float _test = 10.f;
 
 public:
     static Shared<Monster> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

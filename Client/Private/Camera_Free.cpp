@@ -63,8 +63,8 @@ void Camera_Free::Priority_Update(float timeDelta)
     if (INPUT->KeyPress(KEY_TYPE::RBUTTON))
     {
         // 이동
-        if (INPUT->KeyPress(KEY_TYPE::W)) _transformCom->Move_Backward(timeDelta);
-        if (INPUT->KeyPress(KEY_TYPE::S)) _transformCom->Move_Forward(timeDelta);
+        if (INPUT->KeyPress(KEY_TYPE::W)) _transformCom->Move_Forward(timeDelta);
+        if (INPUT->KeyPress(KEY_TYPE::S)) _transformCom->Move_Backward(timeDelta);
         if (INPUT->KeyPress(KEY_TYPE::A)) _transformCom->Move_Left(timeDelta);
         if (INPUT->KeyPress(KEY_TYPE::D)) _transformCom->Move_Right(timeDelta);
 

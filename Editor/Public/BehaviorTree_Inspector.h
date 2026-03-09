@@ -2,6 +2,10 @@
 
 #include "Component_Inspector.h"
 
+NS_BEGIN(Engine)
+class BTTask_Wait;
+NS_END
+
 NS_BEGIN(Editor)
 
 class BehaviorTree_Inspector : public Component_Inspector
@@ -13,6 +17,9 @@ public:
 public:
     void    Draw_Inspector(shared_ptr<Component> component) override;
     uint32  Get_ComponentType() const override { return Protocol::COMPONENT_TYPE_AI; }
+
+private:
+    void    Draw_WaitMode(Shared<BTTask_Wait> node);
 
 };
 

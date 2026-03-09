@@ -87,16 +87,11 @@ struct magic_enum::customize::enum_range<Protocol::ComponentID>
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
-#include <crtdbg.h>D
+#include <crtdbg.h>
 
 // Json
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
-
-// ImGui
-#include "imgui.h"
-#include "imgui_impl_dx11.h"
-#include "imgui_impl_win32.h"
 
 #include "Utils.h"
 
