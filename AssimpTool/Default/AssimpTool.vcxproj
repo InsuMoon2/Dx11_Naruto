@@ -210,8 +210,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Converter.cpp" />
-    <ClCompile Include="..\Private\SimpleMath.cpp" />
+    <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp" />
     <ClCompile Include="AssimpTool.cpp" />
+    <ClCompile Include="BinaryWriter.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">Create</PrecompiledHeader>
@@ -221,7 +222,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Assimp_Macro.h" />
+    <ClInclude Include="..\Public\BinaryWriter.h" />
     <ClInclude Include="..\Public\Converter.h" />
+    <ClInclude Include="..\Public\ConverterTypes.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

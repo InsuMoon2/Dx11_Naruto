@@ -12,7 +12,7 @@ enum ComponentID
     COMPONENT_TYPE_SHADER               = 5;
     COMPONENT_TYPE_TERRAIN              = 6;
     COMPONENT_TYPE_MODEL                = 7;
-
+  
     COMPONENT_TYPE_AI                   = 100;
     COMPONENT_TYPE_CONTROLLER           = 101;
 
@@ -26,7 +26,7 @@ enum ComponentID
     COMPONENT_TYPE_TEXTURE_LOADING      = 206;
     COMPONENT_TYPE_TEXTURE_SKILL_ICON   = 207;
     COMPONENT_TYPE_TEXTURE_PLAYER_STATUS = 208;
-
+   
     // Mesh
     COMPONENT_TYPE_MESH                 = 299;
 
@@ -52,6 +52,7 @@ enum ComponentID
     COMPONENT_TYPE_MOVEMENT             = 1005;
     COMPONENT_TYPE_INPUT                = 1006;
     COMPONENT_TYPE_PLAYER_STATE         = 1007;
+    COMPONENT_TYPE_SKILL                = 1008;
 }
 
 enum OBJECT_TYPE

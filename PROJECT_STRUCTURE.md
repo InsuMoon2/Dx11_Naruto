@@ -1,7 +1,7 @@
 ﻿# Dx11_Naruto 프로젝트 구조
 
 > **AI 어시스턴트는 매 대화 시작 시 이 파일을 반드시 읽을 것!**
-> 마지막 갱신: 2026-03-09
+> 마지막 갱신: 2026-03-10
 
 ---
 
@@ -138,7 +138,8 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `VIBuffer_Rect` | 사각형 (UI용) |
 | `VIBuffer_Terrain` | 하이트맵 기반 지형 메쉬 |
 | `Mesh` | Assimp aiMesh 기반 메쉬 (VIBuffer 상속, VTXMESH 정점 사용) |
-| `Model` | Assimp 모델 로드 컴포넌트 (다수 Mesh 소유, 렌더). ※ Material 시스템(ModelMaterial) 도입 예정 |
+| `Model` | Assimp 모델 로드 컴포넌트 (다수 Mesh + ModelMaterial 소유, GUID 기반 직렬화, `GENERATED_COMPONENT` 적용) |
+| `ModelMaterial` | Assimp aiMaterial 기반 머티리얼 (텍스처 타입별 SRV 배열, `Bind_Material()` 제공) |
 | `Transform` | 위치/회전/스케일, 로컬/월드, 부모-자식 계층 |
 | `RenderTarget` | 렌더 타겟 텍스처 |
 
@@ -178,7 +179,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Property_Types.h` | 프로퍼티 타입 정의 (리플렉션 시스템용) |
 | `Reflection_Macro.h` | 리플렉션 매크로 (컴포넌트 프로퍼티 자동 노출) |
 | `Engine_Define.h` | 엔진 공통 정의 |
-| `Engine_Enum.h` | 엔진 열거형 |
+| `Engine_Enum.h` | 엔진 열거형 (`ERenderGroup`, `EUILayer`, `EModelType`, `EGameState`, `ELightType` 등) |
 | `Engine_Function.h` | 엔진 유틸 함수 |
 | `Engine_Macro.h` | 엔진 매크로 모음 |
 | `Engine_Struct.h` | 엔진 구조체 (`FLightDesc` 등) |
@@ -229,6 +230,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Client_Defines.h` | Client 네임스페이스 공통 정의 |
 | `Client_Enum.h` | Client 전용 열거형 (`EPlayerState`: Idle, Run, Jump) |
 | `Client_Macro.h` | Client 전용 매크로 |
+| `Client_Struct.h` | Client 전용 구조체 (`FSkillData`: skillID, skillName, IconTexturePath, coolDown) |
 | `Protocol_Wrapper.h` | Protobuf 헤더 래퍼 (pch 격리용) |
 
 ### 컴포넌트
@@ -250,7 +252,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Level_Loading` | 로딩 레벨 (비동기 로드 관리) |
 | `Level_Gameplay` | 게임플레이 레벨 |
 | `Loader` | 비동기 리소스/프로토타입 로딩 (별도 쓰레드) |
-| `ResourceLoader` | JSON 테이블 파싱 → 셰이더/텍스처/지형/모델 등록 |
+| `ResourceLoader` | JSON 테이블 파싱 → 셰이더/텍스처/지형/모델/스킬 등록 (`Load_ShaderTable`, `Load_TextureTable`, `Load_TerrainTable`, `Load_ModelTable`, `Load_SkillTable`) |
 
 ### 네트워크
 
@@ -307,7 +309,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `Content_Browser` | 리소스 탐색기 |
 | `Console_View` | 로그 콘솔 |
 | `BehaviorTree_View` | BT 노드 에디터 |
-| `Prefab_View` | 프리팹 관리 |
+| `Prefab_View` | 프리팹 관리 (3패널 레이아웃: 컴포넌트 목록, 모델 프리뷰, 컴포넌트 인스펙터) |
 | `Profiler_View` | 성능 프로파일러 |
 
 ### 인스펙터
@@ -320,6 +322,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `CombatStat_Inspector` | CombatStat 인스펙터 |
 | `BehaviorTree_Inspector` | BT 인스펙터 |
 | `Texture_Inspector` | 텍스처 인스펙터 |
+| `Model_Inspector` | Model 컴포넌트 인스펙터 |
 | `Reflection_Inspector` | 리플렉션 기반 자동 인스펙터 |
 
 ### Undo/Redo 시스템
@@ -408,14 +411,14 @@ Ready_StartLevel(MainTitle)
             ├─ Initialize_BT_Nodes()
             ├─ ResourceLoader::Load_ShaderTable()
             ├─ ResourceLoader::Load_TerrainTable()
-            └─ ResourceLoader::Load_TextureTable()
+            ├─ ResourceLoader::Load_TextureTable()
+            └─ ResourceLoader::Load_ModelTable()
   └─ Level_MainTitle 생성
 
 [Space 입력]
   └─ Level_Loading 생성
        └─ Loader::Loading_For_GamePlay() [비동기 쓰레드]
-            ├─ ShaderTable / TerrainTable / TextureTable 재로드
-            ├─ Player, Terrain, Camera_Free 프로토타입 등록
+            ├─ Terrain, Camera_Free, Camera_Target, PlayerStart 프로토타입 등록
   └─ Level_Gameplay 생성
 ```
 
@@ -443,7 +446,10 @@ GENERATED_COMPONENT(ClassName, Protocol::COMPONENT_TYPE_XXX)
 
 ### 현재 등록된 컴포넌트 (Static 레벨)
 CombatStat, Replicator, VIBuffer_Rect, MovementComponent,
-InputComponent, BehaviorTree, PlayerController, AIController
+InputComponent, BehaviorTree, PlayerController, AIController, PlayerStateMachine
+
+> [!NOTE]
+> `Model` 컴포넌트는 팩토리 등록이 주석 처리되어 있음 (프로토타입/셰이더 초기화 인자 필요)
 
 ---
 
@@ -478,8 +484,8 @@ Client/Bin/Resources/Data/
 │   ├── ShaderTable.json
 │   ├── TextureTable.json
 │   ├── TerrainTable.json
-│   ├── ModelTable.json       → 모델 경로 + 타입(StaticMesh/SkeletalMesh)
-│   ├── SkillDataTable.json
+│   ├── ModelTable.json       → 모델 경로 + 타입(StaticMesh/SkeletalMesh) + GUID
+│   ├── SkillDataTable.json   → 스킬 데이터 (ID, 이름, 아이콘 경로, 쿨다운)
 │   └── StaticLevelComTable.json
 └── ConvertResource.py        → CSV → JSON 변환 스크립트
 ```
@@ -618,13 +624,16 @@ enum PacketID {
 ## 미해결 이슈
 
 - [x] `Client_PacketHandler` → Client 프로젝트로 이동 완료
+- [x] `Model` 컴포넌트 `GENERATED_COMPONENT` 매크로 적용 완료 (`COMPONENT_TYPE_MODEL`)
+- [x] `ModelMaterial` 클래스 구현 완료 (aiMaterial 기반 텍스처 SRV 관리)
+- [x] `EModelType` enum 추가 완료 (`StaticMesh`, `SkeletalMesh`)
+- [x] `Model_Inspector` 에디터 인스펙터 추가 완료
 - [ ] `Handle_S_Move`에서 ObjectManager 연동 (다른 플레이어 위치 갱신)
 - [ ] `Handle_S_AddObject` / `Handle_S_RemoveObject` 클라이언트 구현
 - [ ] 이동 동기화 패킷 throttle (매 프레임 전송 → 주기적 전송)
-- [ ] `Model` 컴포넌트 GENERATED_COMPONENT 매크로 정식 적용 (현재 주석 처리됨)
-- [ ] `ModelMaterial` 클래스 도입 + `EModelType` enum 추가 (15일차 수업 내용)
+- [ ] `Model` 컴포넌트 팩토리 등록 활성화 (현재 주석 처리, 초기화 인자 설계 필요)
 - [ ] `Shader_VtxMesh.hlsl` PS_MAIN에서 `g_DiffuseTexture` 텍스처 샘플링 적용
-- [ ] `UI_PlayerSkill` 구현 (현재 빈 껍데기, Panel 상속만 있음) — 데이터 테이블 기반 스킬 아이콘 자동 매핑 검토 중
+- [ ] `UI_PlayerSkill` 구현 (현재 빈 껍데기, Panel 상속만 있음) — `FSkillData` + `Load_SkillTable` 기반 스킬 아이콘 자동 매핑 검토 중
 
 ---
 

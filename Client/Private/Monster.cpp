@@ -78,7 +78,7 @@ HRESULT Monster::Render()
 
     for (size_t i = 0; i < numMeshes; i++)
     {
-        _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
+        _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
 
         _shaderCom->Begin_Pass(0);
         _model->Render(i);

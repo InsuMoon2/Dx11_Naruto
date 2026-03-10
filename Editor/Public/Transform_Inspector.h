@@ -14,6 +14,11 @@ public:
     void    Draw_Inspector(shared_ptr<Engine::Component> component) override;
     uint32  Get_ComponentType() const override { return Protocol::COMPONENT_TYPE_COMBAT_STAT; }
 
+    static bool XYZ_DragFloat(const char* label, ImVec4 color, float& value,
+        float speed, const char* uniqueId, float fieldWidth);
+
+    static bool Draw_XYZRow(const char* id, Vec3& v, float speed);
+
 private:
     Vec3 _capturedPos;
     Vec3 _capturedRot;

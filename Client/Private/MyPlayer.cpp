@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "MyPlayer.h"
 
 #include "CombatStat.h"
@@ -8,6 +8,7 @@
 #include "PlayerController.h"
 #include "PlayerStateMachine.h"
 #include "Client_PacketHandler.h"
+#include "SkillComponent.h"
 
 MyPlayer::MyPlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Player(device, context)
@@ -36,6 +37,13 @@ HRESULT MyPlayer::Initialize(void* arg)
         statDesc.attack = 100.f;
 
         CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COMBAT_STAT, _combatStat, &statDesc), E_FAIL);
+    }
+    {
+        SkillComponent::FSkillDesc skillDesc;
+        skillDesc.slotSkill_Id[0] = 1001; // 나선환
+        skillDesc.slotSkill_Id[1] = 1002; // 치도리
+
+        CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SKILL, _combatStat, &skillDesc), E_FAIL);
     }
     {
         MovementComponent::FMovementDesc moveDesc;

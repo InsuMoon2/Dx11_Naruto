@@ -237,9 +237,6 @@
     <ClCompile Include="..\Private\BehaviorTree_View.cpp">
       <Filter>03. Viewer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\SimpleMath.cpp">
-      <Filter>98. Default</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Texture_Inspector.cpp">
       <Filter>04. Component_Inspector</Filter>
     </ClCompile>
@@ -260,6 +257,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Editor_Camera_Free.cpp" />
     <ClCompile Include="..\Private\Model_Inspector.cpp" />
+    <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

@@ -257,6 +257,7 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\Component_Factory.h" />
     <ClInclude Include="..\Public\Controller.h" />
+    <ClInclude Include="..\Public\DebugDraw.h" />
     <ClInclude Include="..\Public\Debug_Manager.h" />
     <ClInclude Include="..\Public\Delegate.h" />
     <ClInclude Include="..\Public\Event_Manager.h" />
@@ -276,6 +277,7 @@ call GenProto.bat</Command>
     <ClInclude Include="..\Public\ModelMaterial.h" />
     <ClInclude Include="..\Public\Mesh.h" />
     <ClInclude Include="..\Public\Model.h" />
+    <ClInclude Include="..\Public\Model_BinaryLoader.h" />
     <ClInclude Include="..\Public\Object_Manager.h" />
     <ClInclude Include="..\Public\Panel.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
@@ -326,6 +328,7 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\Component_Factory.cpp" />
     <ClCompile Include="..\Private\Controller.cpp" />
+    <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\Private\Debug_Manager.cpp" />
     <ClCompile Include="..\Private\Delegate.cpp" />
     <ClCompile Include="..\Private\Event_Manager.cpp" />
@@ -345,6 +348,7 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\ModelMaterial.cpp" />
     <ClCompile Include="..\Private\Mesh.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
+    <ClCompile Include="..\Private\Model_BinaryLoader.cpp" />
     <ClCompile Include="..\Private\Object_Manager.cpp" />
     <ClCompile Include="..\Private\Panel.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
@@ -353,7 +357,9 @@ call GenProto.bat</Command>
     <ClCompile Include="..\Private\Prototype_Manager.cpp" />
     <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
-    <ClCompile Include="..\Private\SimpleMath.cpp" />
+    <ClCompile Include="..\Private\SimpleMath.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />
     <ClCompile Include="..\Private\Timer_Manager.cpp" />

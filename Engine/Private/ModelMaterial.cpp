@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "ModelMaterial.h"
-
+#include "GameInstance.h"
 #include "Shader.h"
 
 ModelMaterial::ModelMaterial(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -9,82 +9,261 @@ ModelMaterial::ModelMaterial(ComPtr<Device> device, ComPtr<DeviceContext> contex
 
 }
 
-HRESULT ModelMaterial::Initialize(const aiMaterial* aiMaterial, const string& modelFilePath)
+HRESULT ModelMaterial::Initialize_FromJson(const json& data, const string& materialFilePath)
 {
-    for (uint32 typeIndex = 0; typeIndex < AI_TEXTURE_TYPE_MAX; ++typeIndex)
+    _materialName = data.value("material_name", data.value("name", string("Material")));
+
+    if (!data.contains("textures") || !data["textures"].is_array())
+        return S_OK;
+
+    for (const auto& textureItem : data["textures"])
     {
-        aiTextureType type = static_cast<aiTextureType>(typeIndex);
-        uint32 numTextures = aiMaterial->GetTextureCount(type);
+        if (!textureItem.is_object())
+            continue;
 
-        for (uint32 i = 0; i < numTextures; ++i)
-        {
-            aiString texturePath;
-            if (aiMaterial->GetTexture(type, i, &texturePath) != AI_SUCCESS)
-                continue;
+        string slotStr = textureItem.value("slot", "");
+        uint32 index = textureItem.value("index", 0u);
+        string path = textureItem.value("path", "");
 
-            string fullPath = texturePath.C_Str();
+        if (path.empty())
+            continue;
 
-            // 상대경로인 경로 모델 디렉토리 기준으로 조합
-            fs::path texPath = fullPath;
-            if (texPath.is_relative())
-            {
-                fs::path modelDir = fs::path(modelFilePath).parent_path();
-                fullPath = (modelDir / texPath).string();
-            }
+        EMaterialTextureSlot slot = SlotString_To_Enum(slotStr);
+        if (slot == EMaterialTextureSlot::END)
+            continue;
 
-            // SRV
-            wstring wPath = Utils::ToWString(fullPath);
-            ComPtr<ShaderResourceView> srv;
-
-            wstring ext = fs::path(wPath).extension().wstring();
-            transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-
-            HRESULT hr;
-
-            if (ext == L".dds")
-                hr = DirectX::CreateDDSTextureFromFile(
-                    _device.Get(), wPath.c_str(), nullptr, srv.GetAddressOf());
-
-            else
-                hr = DirectX::CreateWICTextureFromFile(
-                    _device.Get(), wPath.c_str(), nullptr, srv.GetAddressOf());
-
-            if (FAILED(hr))
-            {
-                LOG_WARN("ModelMaterial: Failed to load texture - {}", fullPath);
-                continue;
-            }
-
-            _textures[typeIndex].push_back(srv);
-        }
-
+        CHECK_FAILED(Load_Texture_File(slot, index, path, materialFilePath), E_FAIL);
     }
 
     return S_OK;
 }
 
-HRESULT ModelMaterial::Bind_Material(Shared<Shader> shader, const char* constantName, aiTextureType type, uint32 textureIndex)
+HRESULT ModelMaterial::Bind_Material(Shared<Shader> shader, const char* constantName, EMaterialTextureSlot slot, uint32 textureIndex)
 {
-    uint32 typeIndex = static_cast<uint32>(type);
+    return Bind_Texture_Internal(shader, constantName, slot, textureIndex);
+}
 
-    if (typeIndex >= AI_TEXTURE_TYPE_MAX)
+uint32 ModelMaterial::Get_TextureCount(EMaterialTextureSlot slot) const
+{
+    const uint32 idx = static_cast<uint32>(slot);
+
+    if (idx >= MATERIAL_TEXTURE_SLOT_COUNT)
+        return 0;
+
+    return static_cast<uint32>(_textures[idx].size());
+}
+
+string ModelMaterial::Get_TextureGuid(EMaterialTextureSlot slot, uint32 index) const
+{
+    const uint32 idx = static_cast<uint32>(slot);
+
+    if (idx >= MATERIAL_TEXTURE_SLOT_COUNT || index >= _textureGuids[idx].size())
+        return "";
+
+    return _textureGuids[idx][index];
+}
+
+HRESULT ModelMaterial::Override_Texture(EMaterialTextureSlot slot, uint32 index, const string& guid)
+{
+    const uint32 idx = static_cast<uint32>(slot);
+    if (idx >= MATERIAL_TEXTURE_SLOT_COUNT)
         return E_FAIL;
 
-    if (textureIndex >= _textures[typeIndex].size())
+    wstring path = GAME->Resolve_AssetPath(guid);
+    if (path.empty())
         return E_FAIL;
 
-    return shader->Bind_SRV(constantName, _textures[typeIndex][textureIndex]);
+    ComPtr<ShaderResourceView> srv;
+    wstring ext = fs::path(path).extension().wstring();
+    transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+    HRESULT hr;
+    if (ext == L".dds")
+        hr = DirectX::CreateDDSTextureFromFile(_device.Get(), path.c_str(), nullptr, srv.GetAddressOf());
+    else
+        hr = DirectX::CreateWICTextureFromFile(_device.Get(), path.c_str(), nullptr, srv.GetAddressOf());
+
+    if (FAILED(hr))
+        return hr;
+
+    if (_textures[idx].size() <= index)
+        _textures[idx].resize(index + 1);
+
+    if (_textureGuids[idx].size() <= index)
+        _textureGuids[idx].resize(index + 1);
+
+    _textures[idx][index] = srv;
+    _textureGuids[idx][index] = guid;
+
+    return S_OK;
+}
+
+EMaterialTextureSlot ModelMaterial::SlotString_To_Enum(const string& slot)
+{
+    if (slot == "base_color")         return EMaterialTextureSlot::BaseColor;
+    if (slot == "normal")             return EMaterialTextureSlot::Normal;
+    if (slot == "specular")           return EMaterialTextureSlot::Specular;
+    if (slot == "emissive")           return EMaterialTextureSlot::Emissive;
+    if (slot == "ambient_occlusion")  return EMaterialTextureSlot::AmbientOcclusion;
+    if (slot == "metalness")          return EMaterialTextureSlot::Metalness;
+    if (slot == "roughness")          return EMaterialTextureSlot::Roughness;
+
+    return EMaterialTextureSlot::END;
+}
+
+string ModelMaterial::SlotEnum_To_String(EMaterialTextureSlot slot)
+{
+    switch (slot)
+    {
+    case EMaterialTextureSlot::BaseColor:         return "base_color";
+    case EMaterialTextureSlot::Normal:            return "normal";
+    case EMaterialTextureSlot::Specular:          return "specular";
+    case EMaterialTextureSlot::Emissive:          return "emissive";
+    case EMaterialTextureSlot::AmbientOcclusion:  return "ambient_occlusion";
+    case EMaterialTextureSlot::Metalness:         return "metalness";
+    case EMaterialTextureSlot::Roughness:         return "roughness";
+    default:                                      return "";
+    }
+}
+
+HRESULT ModelMaterial::Load_Texture_File(EMaterialTextureSlot slot, uint32 index, const string& texturePath,
+    const string& baseFilePath)
+{
+    if (texturePath.empty())
+        return S_OK;
+
+    const uint32 slotIndex = static_cast<uint32>(slot);
+    if (slotIndex >= MATERIAL_TEXTURE_SLOT_COUNT)
+        return E_FAIL;
+
+    fs::path finalPath(texturePath);
+    if (finalPath.is_relative())
+    {
+        fs::path baseDir = fs::path(baseFilePath).parent_path();
+        finalPath = baseDir / finalPath;
+    }
+
+    wstring wPath = fs::absolute(finalPath).wstring();
+    wstring ext = fs::path(wPath).extension().wstring();
+    transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+    ComPtr<ShaderResourceView> srv;
+    HRESULT hr = E_FAIL;
+
+    if (ext == L".dds")
+        hr = DirectX::CreateDDSTextureFromFile(_device.Get(), wPath.c_str(), nullptr, srv.GetAddressOf());
+    else
+        hr = DirectX::CreateWICTextureFromFile(_device.Get(), wPath.c_str(), nullptr, srv.GetAddressOf());
+
+    if (FAILED(hr))
+        return S_OK;
+
+    if (_textures[slotIndex].size() <= index)
+        _textures[slotIndex].resize(index + 1);
+
+    if (_textureGuids[slotIndex].size() <= index)
+        _textureGuids[slotIndex].resize(index + 1);
+
+    _textures[slotIndex][index] = srv;
+    _textureGuids[slotIndex][index] = GAME->Find_AssetGUID(wPath);
+
+    return S_OK;
+}
+
+json ModelMaterial::To_Json() const
+{
+    json j;
+    j["material_name"] = _materialName;
+
+    json texOverrides = json::object();
+
+    for (uint32 slotIndex = 0; slotIndex < MATERIAL_TEXTURE_SLOT_COUNT; ++slotIndex)
+    {
+        EMaterialTextureSlot slot = static_cast<EMaterialTextureSlot>(slotIndex);
+        string slotName = SlotEnum_To_String(slot);
+
+        if (slotName.empty())
+            continue;
+
+        for (uint32 texIndex = 0; texIndex < _textureGuids[slotIndex].size(); ++texIndex)
+        {
+            if (_textureGuids[slotIndex][texIndex].empty())
+                continue;
+
+            // CHANGED: 예전 "typeIndex_texIndex" 대신 "slot_index" 키 사용
+            string key = slotName + "_" + to_string(texIndex);
+            texOverrides[key] = _textureGuids[slotIndex][texIndex];
+        }
+    }
+
+    if (!texOverrides.empty())
+        j["texture_overrides"] = texOverrides;
+
+    return j;
+}
+
+void ModelMaterial::From_Json(const json& data)
+{
+    if (!data.contains("texture_overrides"))
+        return;
+
+    auto& overrides = data["texture_overrides"];
+
+    for (auto& [key, val] : overrides.items())
+    {
+        size_t sep = key.rfind('_');
+        if (sep == string::npos)
+            continue;
+
+        string slotName = key.substr(0, sep);
+        uint32 texIndex = stoi(key.substr(sep + 1));
+        string guid = val.get<string>();
+
+        if (guid.empty())
+            continue;
+
+        EMaterialTextureSlot slot = SlotString_To_Enum(slotName);
+        if (slot == EMaterialTextureSlot::END)
+            continue;
+
+        const uint32 slotIndex = static_cast<uint32>(slot);
+
+        // 이미 같은 GUID면 스킵
+        if (texIndex < _textureGuids[slotIndex].size() &&
+            _textureGuids[slotIndex][texIndex] == guid)
+        {
+            continue;
+        }
+
+        Override_Texture(slot, texIndex, guid);
+    }
+}
+
+HRESULT ModelMaterial::Bind_Texture_Internal(Shared<Shader> shader, const char* constantName, EMaterialTextureSlot slot,
+    uint32 textureIndex)
+{
+    const uint32 slotIndex = static_cast<uint32>(slot);
+
+    if (slotIndex >= MATERIAL_TEXTURE_SLOT_COUNT)
+        return E_FAIL;
+
+    if (textureIndex >= _textures[slotIndex].size())
+        return E_FAIL;
+
+    if (_textures[slotIndex][textureIndex] == nullptr)
+        return E_FAIL;
+
+    return shader->Bind_SRV(constantName, _textures[slotIndex][textureIndex]);
 }
 
 Shared<ModelMaterial> ModelMaterial::Create(ComPtr<Device> device, ComPtr<DeviceContext> context,
-    const aiMaterial* aiMaterial, const string& modelFilePath)
+    const json& data, const string& materialFilePath)
 {
     auto instance = make_shared<ModelMaterial>(device, context);
 
-    if (FAILED(instance->Initialize(aiMaterial, modelFilePath)))
+    if (FAILED(instance->Initialize_FromJson(data, materialFilePath)))
     {
         MSG_BOX("Failed to Create : ModelMaterial");
-
         return nullptr;
     }
 

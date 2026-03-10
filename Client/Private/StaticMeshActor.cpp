@@ -77,7 +77,7 @@ HRESULT StaticMeshActor::Render()
 
     for (size_t i = 0; i < numMeshes; ++i)
     {
-        _modelCom->Bind_Material(_shaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
+        _modelCom->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
 
         CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
         CHECK_FAILED(_modelCom->Render(i), E_FAIL);

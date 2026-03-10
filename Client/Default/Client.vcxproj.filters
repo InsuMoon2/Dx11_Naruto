@@ -133,6 +133,11 @@
     <ClInclude Include="..\Public\Client_Struct.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SkillDataManager.h">
+      <Filter>00. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillComponent.h" />
+    <ClInclude Include="..\Public\UI_SkillSlot.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -155,9 +160,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\ResourceLoader.cpp">
       <Filter>01. Levels\00. Loading\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\SimpleMath.cpp">
-      <Filter>98. Default</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CombatStat.cpp">
       <Filter>03. Component\00. CombatStat</Filter>
@@ -252,6 +254,14 @@
     <ClCompile Include="..\Private\UI_PlayerHUD.cpp">
       <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\SkillDataManager.cpp">
+      <Filter>00. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp">
+      <Filter>99. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillComponent.cpp" />
+    <ClCompile Include="..\Private\UI_SkillSlot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

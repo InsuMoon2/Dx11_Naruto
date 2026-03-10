@@ -22,16 +22,34 @@ public:
     virtual HRESULT Initialize(void* arg) override;
     HRESULT         Render(uint32 meshIndex);
 
-    HRESULT Bind_Material(Shared<Shader> shader, const char* constantName,
-                            uint32 meshIndex, aiTextureType materialType,
-                            uint32 textureIndex);
+    HRESULT         Bind_Material(Shared<Shader> shader, const char* constantName,
+                                    uint32 meshIndex, EMaterialTextureSlot slot,
+                                    uint32 textureIndex);
 
-    size_t  Get_NumMeshes() const { return _meshes.size(); }
+    size_t          Get_NumMeshes() const { return _meshes.size(); }
+
+public:
+    json To_Json() const override;
+    void From_Json(const json& data) override;
+
+    size_t  Get_NumMaterials() const { return _materials.size(); }
+    Shared<ModelMaterial> Get_Material(uint32 index) const;
+
+    uint32  Get_MeshMaterialIndex(uint32 index) const;
+    string  Get_MeshName(uint32 index);
 
 private:
-    const aiScene*                  _aiScene = { nullptr };
-    Assimp::Importer                _importer = { };
+    // .meshbin 확장자일 때 들어오는 초기화 경로
+    HRESULT Initialize_FromMeshBin(const string& modelFilePath);
 
+    // Binary loader가 읽은 raw 데이터를 VTXMESH / Mesh로 바꾸는 단계.
+    HRESULT Ready_Meshes_FromBinary(const string& modelFilePath);
+    HRESULT Ready_Materials_FromJson(const string& materialFilePath);
+
+    void    Apply_MaterialOverrides(const json& data);
+    string  Build_MaterialJsonPath(const string& modelFilePath) const;
+
+private:
     EModelType                      _modelType = { EModelType::END };
     Matrix                          _preLocalTransformMatrix = {};
 
@@ -42,15 +60,7 @@ private:
     uint32                          _numMaterials = {};
     vector<Shared<ModelMaterial>>   _materials;
 
-    string _modelGuid = "";
-
-private:
-    HRESULT Ready_Meshes();
-    HRESULT Ready_Materials(const string& modelFilePath);
-
-public:
-    json To_Json() const override;
-    void From_Json(const json& data) override;
+    string                          _modelGuid = "";
 
 public:
     static Shared<Model> Create(ComPtr<Device> device, ComPtr<DeviceContext> context,

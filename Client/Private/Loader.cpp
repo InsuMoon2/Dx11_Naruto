@@ -17,6 +17,7 @@
 #include "InputComponent.h"
 #include "PlayerController.h"
 #include "PlayerStateMachine.h"
+#include "SkillComponent.h"
 
 #include "Camera_Free.h"
 #include "Camera_Target.h"
@@ -124,6 +125,7 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<PlayerController>(staticLevel);
     GAME->Register_ComponentFactory<AIController>(staticLevel);
     GAME->Register_ComponentFactory<PlayerStateMachine>(staticLevel);
+    GAME->Register_ComponentFactory<SkillComponent>(staticLevel);
     //GAME->Register_ComponentFactory<Model>(staticLevel);
 
     /* GameObject */
@@ -171,6 +173,10 @@ HRESULT Loader::Loading_For_Maintitle()
 
     if (FAILED(_resourceLoader->Load_ModelTable(
         TEXT("../../Client/Bin/Resources/Data/json/ModelTable.json"))))
+        return E_FAIL;
+
+    if (FAILED(_resourceLoader->Load_SkillTable(
+        TEXT("../../Client/Bin/Resources/Data/json/SkillDataTable.json"))))
         return E_FAIL;
 
     lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));

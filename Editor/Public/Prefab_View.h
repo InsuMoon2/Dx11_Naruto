@@ -63,6 +63,10 @@ private: /* preview */
     ImVec2                  _previewScreenPos;   
     ImVec2                  _previewImGuiSize;
 
+    //Unique<PrimitiveBatch<DirectX::VertexPositionColor>> _gridBatch = nullptr;
+    //Unique<BasicEffect> _gridEffect = nullptr;
+    //ComPtr<ID3D11InputLayout>                        _gridInputLayout;
+
 private: /* ImGuizmo */
     ImGuizmo::OPERATION _gizmoOperation = ImGuizmo::TRANSLATE;
 

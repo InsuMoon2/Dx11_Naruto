@@ -1,2 +1,3 @@
-SkillID,SkillName,IconPath,Cooldown
-Texture,COMPONENT_TYPE_TEXTURE_DEFAULT,../../Client/Bin/Resources/Textures/Default%d.jpg,10
+SkillID,SkillName,SrvIndex,Cooldown,MansCost
+1001,Rasengan,2,8,30
+1002,Chidori,3,7,30

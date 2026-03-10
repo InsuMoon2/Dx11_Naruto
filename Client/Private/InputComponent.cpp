@@ -53,6 +53,12 @@ void InputComponent::Update_Input(float timeDelta)
     _frame.sprintDown   = INPUT->KeyDown(KEY_TYPE::SHIFT);
     _frame.jumpDown     = INPUT->KeyDown(KEY_TYPE::SPACE);
 
+    _frame.useSkillDown[0] = INPUT->KeyDown(KEY_TYPE::KEY_1);
+    _frame.useSkillDown[1] = INPUT->KeyDown(KEY_TYPE::KEY_2);
+
+    // TODO : Ctrl : 슈퍼점프, Left : 약공, Right : 강공, 우클릭 -> 벽타기 입체기동
+    // TODO : 2단점프까지 가능하도록
+
     Vec2 mouseDelta = INPUT->GetMouseDelta();
     _frame.lookYaw = mouseDelta.x;
     _frame.lookPitch = mouseDelta.y;
@@ -63,6 +69,9 @@ void InputComponent::Reset_FrameInput()
 {
     _frame.jumpDown = false;
     _frame.sprintDown = false;
+
+    _frame.useSkillDown[0] = false;
+    _frame.useSkillDown[1] = false;
 }
 
 json InputComponent::To_Json() const

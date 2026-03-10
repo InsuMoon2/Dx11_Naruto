@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_Boruto",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_Boruto_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_Boruto_EyeL",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_Boruto_Eye_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_Boruto_EyeR",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_Boruto_Eye_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_Boruto_Metal",
+      "textures": [
+      ]
+    }
+  ]
+}

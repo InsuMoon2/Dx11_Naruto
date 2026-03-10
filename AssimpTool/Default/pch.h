@@ -20,6 +20,8 @@ using Vec3 = Vector3;
 using Vec4 = Vector4;
 
 #include "Assimp_Macro.h"
+#include "ConverterTypes.h"
+#include "BinaryWriter.h"
 
 // Assimp
 #include <Assimp/Importer.hpp>

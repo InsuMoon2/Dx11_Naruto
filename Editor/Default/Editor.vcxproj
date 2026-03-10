@@ -285,10 +285,12 @@
     <ClCompile Include="..\Private\Property_Command.cpp" />
     <ClCompile Include="..\Private\Reflection_Inspector.cpp" />
     <ClCompile Include="..\Private\Scene_View.cpp" />
-    <ClCompile Include="..\Private\SimpleMath.cpp" />
     <ClCompile Include="..\Private\Texture_Inspector.cpp" />
     <ClCompile Include="..\Private\Transform_Inspector.cpp" />
     <ClCompile Include="..\Private\Level_Serializer.cpp" />
+    <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

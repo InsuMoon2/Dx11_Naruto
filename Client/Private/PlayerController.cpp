@@ -8,6 +8,7 @@
 //#include "ServerSession.h"
 #include "Camera_Target.h"
 #include "PlayerStateMachine.h"
+#include "SkillComponent.h"
 
 PlayerController::PlayerController(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Controller(device, context)
@@ -46,6 +47,7 @@ void PlayerController::BeginPlay()
     _input          = pawn->Get_Component<InputComponent>();
     _movement       = pawn->Get_Component<MovementComponent>();
     _stateMachine   = pawn->Get_Component<PlayerStateMachine>();
+    _skill          = pawn->Get_Component<SkillComponent>();
 }
 
 void PlayerController::Update(float timeDelta)
@@ -54,24 +56,14 @@ void PlayerController::Update(float timeDelta)
 
     _input->Update_Input(timeDelta);
 
-    auto activeCamera = GAME->Get_ActiveCamera();
-    if (activeCamera && activeCamera->Get_ObjectType() == Protocol::OBJECT_TYPE_CAMERA_TARGET)
+    const auto& frame = _input->Get_Frame();
+    if (_skill)
     {
-        auto camera = dynamic_pointer_cast<Camera_Target>(
-            GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_TARGET));
-
-        if (camera && camera->Get_UseControlYaw())
-        {
-            // 카메라 Yaw 값을 플레이어한테 적용
-            float cameraYaw = camera->Get_Yaw();
-            auto transform = Get_Pawn()->Get_Component<Transform>();
-
-            transform->Set_WorldRotation(
-                0.f,
-                (cameraYaw),
-                0.f);
-        }
+        if (frame.useSkillDown[0]) _skill->Try_Activate(0);
+        if (frame.useSkillDown[1]) _skill->Try_Activate(1);
     }
+
+    Update_Camera();
 
     if (_stateMachine)
         _stateMachine->Update(timeDelta);
@@ -93,6 +85,28 @@ json PlayerController::To_Json() const
 void PlayerController::From_Json(const json& data)
 {
     Controller::From_Json(data);
+}
+
+void PlayerController::Update_Camera()
+{
+    auto activeCamera = GAME->Get_ActiveCamera();
+    if (activeCamera && activeCamera->Get_ObjectType() == Protocol::OBJECT_TYPE_CAMERA_TARGET)
+    {
+        auto camera = dynamic_pointer_cast<Camera_Target>(
+            GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_TARGET));
+
+        if (camera && camera->Get_UseControlYaw())
+        {
+            // 카메라 Yaw 값을 플레이어한테 적용
+            float cameraYaw = camera->Get_Yaw();
+            auto transform = Get_Pawn()->Get_Component<Transform>();
+
+            transform->Set_WorldRotation(
+                0.f,
+                (cameraYaw),
+                0.f);
+        }
+    }
 }
 
 Shared<PlayerController> PlayerController::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

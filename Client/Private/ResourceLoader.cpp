@@ -10,6 +10,8 @@
 #include "Shader.h"
 #include "Model.h"
 
+#include "SkillDataManager.h"
+
 ResourceLoader::ResourceLoader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
 {
@@ -321,25 +323,22 @@ HRESULT ResourceLoader::Load_Textures(const json& data)
 
 HRESULT ResourceLoader::Load_Skills(const json& data)
 {
+    auto mgr = GET_SINGLE(SkillDataManager);
+
+    mgr->Clear();
+
     for (const auto& item : data)
     {
         FSkillData skill;
-        skill.skillID = item["SkillID"];
+        skill.skill_Id = item["SkillID"];
         skill.skillName = Utils::ToWString(item.value("SkillName", string{}));
-        skill.IconTexturePath = Utils::ToWString(item.value("IconPath", string{}));
+        skill.srvIndex = item.value("SrvIndex", 0);
         skill.coolDown = item.value("Cooldown", 0.f);
+        skill.manaCost = item.value("ManaCost", 0);
 
-
+        mgr->Register_Skill(skill);
     }
-
     return S_OK;
-}
-
-const FSkillData* ResourceLoader::Get_SkillData(int skillID) const
-{
-    
-
-    return nullptr;
 }
 
 uint32 ResourceLoader::Get_ComponentID_From_String(const string& idStr)

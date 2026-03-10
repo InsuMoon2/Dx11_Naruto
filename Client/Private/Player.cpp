@@ -72,7 +72,7 @@ HRESULT Player::Render()
     size_t numMeshes = _model->Get_NumMeshes();
     for (size_t i = 0; i < numMeshes; i++)
     {
-        _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
+        _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
 
         CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
         CHECK_FAILED(_model->Render(i), E_FAIL);

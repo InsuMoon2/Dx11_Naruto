@@ -2,9 +2,9 @@
     "components": [
         {
             "position": [
-                10.0,
-                10.0,
-                10.0
+                0.0,
+                0.0,
+                0.0
             ],
             "rotation": [
                 -0.0,
@@ -19,7 +19,21 @@
             "type": "COMPONENT_TYPE_TRANSFORM"
         },
         {
-            "model_type": "StaticMesh",
+            "materials": [
+                {
+                    "material_name": "MI_CHR_Gaara"
+                },
+                {
+                    "material_name": "MI_CHR_GaaraEyeL"
+                },
+                {
+                    "material_name": "MI_CHR_GaaraEyeR"
+                },
+                {
+                    "material_name": "M_Line"
+                }
+            ],
+            "model_type": "SkeletalMesh",
             "type": "COMPONENT_TYPE_MODEL"
         },
         {
@@ -57,7 +71,7 @@
             "type": "COMPONENT_TYPE_PLAYER_STATE"
         }
     ],
-    "guid": "f47be25b-6889-4e55-a229-fa50f98711cb",
+    "guid": "fcd528db-f298-40db-82b7-1a13119160b8",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer",
     "static_class": "TestPlayer"

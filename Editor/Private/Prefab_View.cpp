@@ -9,6 +9,7 @@
 #include "Notification_Manager.h"
 #include "RenderTarget.h"
 #include "Reflection_Inspector.h"
+#include "DebugDraw.h"
 
 Prefab_View::Prefab_View()
     : EditorWindow(TEXT("Prefab"))
@@ -23,7 +24,8 @@ Prefab_View::~Prefab_View()
 void Prefab_View::Initialize()
 {
     EditorWindow::Initialize();
-    
+
+   
 }
 
 void Prefab_View::Update(float timeDelta)

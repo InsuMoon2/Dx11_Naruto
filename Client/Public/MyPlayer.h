@@ -9,6 +9,7 @@ class PlayerStateMachine;
 class PlayerController;
 class InputComponent;
 class MovementComponent;
+class SkillComponent;
 
 class MyPlayer final : public Player
 {
@@ -38,6 +39,7 @@ private:
     Shared<MovementComponent>   _movement;
     Shared<PlayerController>    _playerController;
     Shared<PlayerStateMachine>  _stateMachine;
+    Shared<SkillComponent>      _skill;
 
 private:
     float _syncTimer = 0.f;

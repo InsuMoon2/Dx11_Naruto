@@ -8,6 +8,8 @@ Mesh::Mesh(ComPtr<Device> device, ComPtr<DeviceContext> context)
 
 Mesh::Mesh(const Mesh& rhs)
     : VIBuffer(rhs)
+    , _materialIndex(rhs._materialIndex)
+    , _meshName(rhs._meshName)
 {
 }
 
@@ -15,79 +17,13 @@ Mesh::~Mesh()
 {
 }
 
-HRESULT Mesh::Initialize_Prototype(const aiMesh* aiMesh , const Matrix& preTransformMatrix)
+HRESULT Mesh::Initialize_Prototype(const string& meshName, uint32 materialIndex, const vector<VTXMESH>& vertices,
+    const vector<uint32>& indices)
 {
-    _materialIndex = aiMesh->mMaterialIndex;
-    _numVertexBuffers = 1;
-    _numVertices = aiMesh->mNumVertices;
-    _vertexStride = sizeof(VTXMESH);
-    _numIndices = aiMesh->mNumFaces * 3;
-    _indexStride = 4;
-    _primitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    _meshName = meshName;
+    _materialIndex = materialIndex;
 
-    // Vertex Buffer
-    D3D11_BUFFER_DESC vertexBufferDesc{};
-    vertexBufferDesc.ByteWidth = _vertexStride * _numVertices;
-    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vertexBufferDesc.StructureByteStride = _vertexStride;
-    vertexBufferDesc.CPUAccessFlags = 0;
-    vertexBufferDesc.MiscFlags = 0;
-
-    VTXMESH* vertices = new VTXMESH[_numVertices];
-
-    for (size_t i = 0; i < _numVertices; i++)
-    {
-        memcpy(&vertices[i].position, &aiMesh->mVertices[i], sizeof(Vec3));
-        memcpy(&vertices[i].normal, &aiMesh->mNormals[i], sizeof(Vec3));
-        memcpy(&vertices[i].tangent, &aiMesh->mTangents[i], sizeof(Vec3));
-        memcpy(&vertices[i].texcoord, &aiMesh->mTextureCoords[0][i], sizeof(Vec2));
-
-        Vec3 pos = vertices[i].position;
-        Vec3 nor = vertices[i].normal;
-        Vec3 tan = vertices[i].tangent;
-
-        vertices[i].position    = Vec3::Transform(pos, preTransformMatrix);
-        vertices[i].normal      = Vec3::TransformNormal(nor, preTransformMatrix);
-        vertices[i].tangent     = Vec3::TransformNormal(tan, preTransformMatrix);
-    }
-
-    D3D11_SUBRESOURCE_DATA vertexInitialData{};
-    vertexInitialData.pSysMem = vertices;
-
-    CHECK_FAILED(_device->CreateBuffer(
-        &vertexBufferDesc, &vertexInitialData, _vertexBuffer.GetAddressOf()), E_FAIL);
-
-    // Index Buffer
-    D3D11_BUFFER_DESC indexBufferDesc{};
-    indexBufferDesc.ByteWidth = _indexStride * _numIndices;
-    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    indexBufferDesc.StructureByteStride = _indexStride;
-    indexBufferDesc.CPUAccessFlags = 0;
-    indexBufferDesc.MiscFlags = 0;
-
-    uint32 indexCount = {};
-    uint32* indices = new uint32[_numIndices];
-
-    for (size_t i = 0; i < aiMesh->mNumFaces; i++)
-    {
-        aiFace face = aiMesh->mFaces[i];
-        indices[indexCount++] = face.mIndices[0];
-        indices[indexCount++] = face.mIndices[1];
-        indices[indexCount++] = face.mIndices[2];
-    }
-
-    D3D11_SUBRESOURCE_DATA indexInitialData{};
-    indexInitialData.pSysMem = indices;
-
-    CHECK_FAILED(_device->CreateBuffer(
-        &indexBufferDesc, &indexInitialData, _indexBuffer.GetAddressOf()), E_FAIL);
-
-    Safe_Delete_Array(vertices);
-    Safe_Delete_Array(indices);
-
-    return S_OK;
+    return Create_Buffers(vertices, indices);
 }
 
 HRESULT Mesh::Initialize(void* arg)
@@ -95,15 +31,51 @@ HRESULT Mesh::Initialize(void* arg)
     return VIBuffer::Initialize(arg);
 }
 
-Shared<Mesh> Mesh::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const aiMesh* aiMesh, const Matrix& preTransformMatrix)
+HRESULT Mesh::Create_Buffers(const vector<VTXMESH>& vertices, const vector<uint32>& indices)
+{
+    _numVertexBuffers = 1;
+    _numVertices = static_cast<uint32>(vertices.size());
+    _vertexStride = sizeof(VTXMESH);
+    _numIndices = static_cast<uint32>(indices.size());
+    _indexStride = sizeof(uint32);
+    _primitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+    D3D11_BUFFER_DESC vertexBufferDesc{};
+    vertexBufferDesc.ByteWidth = _vertexStride * _numVertices;
+    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vertexBufferDesc.StructureByteStride = _vertexStride;
+
+    D3D11_SUBRESOURCE_DATA vertexInitialData{};
+    vertexInitialData.pSysMem = vertices.data();
+
+    CHECK_FAILED(_device->CreateBuffer(
+        &vertexBufferDesc, &vertexInitialData, _vertexBuffer.GetAddressOf()), E_FAIL);
+
+    D3D11_BUFFER_DESC indexBufferDesc{};
+    indexBufferDesc.ByteWidth = _indexStride * _numIndices;
+    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    indexBufferDesc.StructureByteStride = _indexStride;
+
+    D3D11_SUBRESOURCE_DATA indexInitialData{};
+    indexInitialData.pSysMem = indices.data();
+
+    CHECK_FAILED(_device->CreateBuffer(
+        &indexBufferDesc, &indexInitialData, _indexBuffer.GetAddressOf()), E_FAIL);
+
+    return S_OK;
+}
+
+Shared<Mesh> Mesh::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const string& meshName,
+    uint32 materialIndex, const vector<VTXMESH>& vertices, const vector<uint32>& indices)
 {
     auto instance = make_shared<Mesh>(device, context);
 
-    if (FAILED(instance->Initialize_Prototype(aiMesh, preTransformMatrix)))
+    if (FAILED(instance->Initialize_Prototype(meshName, materialIndex, vertices, indices)))
     {
         MSG_BOX("Failed to Create : Mesh");
         instance->Free();
-
         return nullptr;
     }
 

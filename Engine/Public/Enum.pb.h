@@ -92,6 +92,7 @@ enum ComponentID : int {
   COMPONENT_TYPE_MOVEMENT = 1005,
   COMPONENT_TYPE_INPUT = 1006,
   COMPONENT_TYPE_PLAYER_STATE = 1007,
+  COMPONENT_TYPE_SKILL = 1008,
   ComponentID_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   ComponentID_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -101,8 +102,8 @@ enum ComponentID : int {
 bool ComponentID_IsValid(int value);
 extern const uint32_t ComponentID_internal_data_[];
 constexpr ComponentID ComponentID_MIN = static_cast<ComponentID>(0);
-constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1007);
-constexpr int ComponentID_ARRAYSIZE = 1007 + 1;
+constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1008);
+constexpr int ComponentID_ARRAYSIZE = 1008 + 1;
 const ::google::protobuf::EnumDescriptor*
 ComponentID_descriptor();
 template <typename T>

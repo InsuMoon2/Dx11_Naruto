@@ -23,6 +23,20 @@
             "type": "COMPONENT_TYPE_AI"
         },
         {
+            "materials": [
+                {
+                    "material_name": "MI_CHR_Boruto"
+                },
+                {
+                    "material_name": "MI_CHR_Boruto_EyeL"
+                },
+                {
+                    "material_name": "MI_CHR_Boruto_EyeR"
+                },
+                {
+                    "material_name": "MI_CHR_Boruto_Metal"
+                }
+            ],
             "model_type": "StaticMesh",
             "type": "COMPONENT_TYPE_MODEL"
         },
@@ -54,7 +68,7 @@
             "type": "COMPONENT_TYPE_MOVEMENT"
         }
     ],
-    "guid": "8b6e50b6-4c93-4bd3-94d3-0904b37a1f89",
+    "guid": "1c117a1b-e20c-405f-a81b-44941cdcb569",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster",
     "static_class": "Monster"

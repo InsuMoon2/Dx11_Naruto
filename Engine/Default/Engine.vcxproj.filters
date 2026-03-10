@@ -198,6 +198,10 @@
     <ClInclude Include="..\Public\ModelMaterial.h">
       <Filter>01. Utility\09. Material</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Model_BinaryLoader.h" />
+    <ClInclude Include="..\Public\DebugDraw.h">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -533,6 +537,10 @@
     </ClCompile>
     <ClCompile Include="..\Private\ModelMaterial.cpp">
       <Filter>01. Utility\09. Material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model_BinaryLoader.cpp" />
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>01. Utility\98. Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_Gaara",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_Gaara_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_GaaraEyeL",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_GaaraEye_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_GaaraEyeR",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_GaaraEye_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "M_Line",
+      "textures": [
+      ]
+    }
+  ]
+}

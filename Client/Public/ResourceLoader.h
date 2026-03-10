@@ -19,8 +19,6 @@ public:
     HRESULT Load_ModelTable(const wstring& tablePath);
     HRESULT Load_SkillTable(const wstring& tablePath);
 
-    const FSkillData* Get_SkillData(int skillID) const;
-
 private:
     HRESULT Load_Textures(const json& data);
     HRESULT Load_Shaders(const json& data);

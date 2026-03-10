@@ -7,7 +7,22 @@ int main()
 
     auto converter = Converter::Create();
 
-    //converter->ReadAssetFile(L"TestModel.fbx");
+    const bool gaaraCheck = converter->Convert(
+        L"../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara.fbx",
+        L"../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara",
+        Assimp::EConvertModelType::SkeletalMesh);
 
-    cout << "=== Done ===" << endl;
+    const bool borutoCheck = converter->Convert(
+        L"../../Client/Bin/Resources/Models/Boruto/Boruto.fbx",
+        L"../../Client/Bin/Resources/Models/Boruto/Boruto",
+        Assimp::EConvertModelType::SkeletalMesh);
+
+    if (!gaaraCheck || !borutoCheck)
+    {
+        cout << "Convert Failed" << endl;
+        return 1;
+    }
+
+    cout << "=== Finish ===" << endl;
+    return 0;
 }

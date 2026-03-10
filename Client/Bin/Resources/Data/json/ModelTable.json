@@ -3,14 +3,14 @@
         {
             "id": "COMPONENT_TYPE_MODEL_PLAYER",
             "level": "Static",
-            "path": "../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara.fbx",
+            "path": "../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara.meshbin",
             "count": 1,
             "modelType": "SkeletalMesh"
         },
         {
             "id": "COMPONENT_TYPE_MODEL_MONSTER",
             "level": "Static",
-            "path": "../../Client/Bin/Resources/Models/Boruto/Boruto.fbx",
+            "path": "../../Client/Bin/Resources/Models/Boruto/Boruto.meshbin",
             "count": 1,
             "modelType": "SkeletalMesh"
         }

@@ -19,6 +19,8 @@ public:
         bool sprintPress = false;
         bool sprintDown = false;
         bool jumpDown = false;
+
+        bool useSkillDown[2] = { false, false };
     };
 
 public:

@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Engine_Typedef.h"
+
 namespace Engine
 {
 	enum class EWinMode { Full, Win };
@@ -29,6 +31,22 @@ namespace Engine
         Overlay,    /* 페이드 인/아웃, 로딩 */
         END
     };
+
+    enum class EMaterialTextureSlot : uint32
+    {
+        BaseColor = 0,
+        Normal,
+        Specular,
+        Emissive,
+        AmbientOcclusion,
+        Metalness,
+        Roughness,
+
+        END
+    };
+
+    static constexpr uint32 MATERIAL_TEXTURE_SLOT_COUNT =
+        static_cast<uint32>(EMaterialTextureSlot::END);
 
     enum class EModelType { StaticMesh, SkeletalMesh, END };
 }

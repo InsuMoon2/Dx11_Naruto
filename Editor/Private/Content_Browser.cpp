@@ -318,6 +318,8 @@ void Content_Browser::Draw_AssetView()
             bool isMeshFile = (extension == ".fbx" || extension == ".FBX" ||
                                 extension == ".gltf" || extension == ".GLTF");
 
+            bool isTextureFile = (extension == ".png" || extension == ".jpg" ||
+                extension == ".jpeg" || extension == ".dds");
 
             // 아이콘
             ImGui::PushID(fileName.c_str());
@@ -407,6 +409,17 @@ void Content_Browser::Draw_AssetView()
                 }
                 ImGui::EndDragDropSource();
             }
+            else if (isTextureFile && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            {
+                if (!guid.empty())
+                {
+                    ImGui::SetDragDropPayload("CONTENT_TEXTURE", guid.c_str(), guid.size() + 1);
+                    ImGui::SetTooltip(ICON_FA_IMAGE " %s", pureName.c_str());
+                }
+                ImGui::EndDragDropSource();
+            }
+
+
             // 더블클릭 -> Prefab View 열기
             if (isValidPrefab && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
             {

@@ -4,12 +4,11 @@ namespace Client
 {
     struct FSkillData
     {
-        uint32  skillID = 0;
+        uint32  skill_Id = 0;
         wstring skillName = L"";
-        wstring IconTexturePath = L"";
-        float   coolDown = 0.f;
-
-        // TODO : 데미지 등 추가 예정
+        uint32   srvIndex = 0;  
+        float    coolDown = 0.f;
+        int      manaCost = 0;
     };
 
 }

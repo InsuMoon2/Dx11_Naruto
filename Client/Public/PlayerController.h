@@ -6,6 +6,7 @@ NS_BEGIN(Client)
 class InputComponent;
 class MovementComponent;
 class PlayerStateMachine;
+class SkillComponent;
 
 class PlayerController : public Controller
 {
@@ -31,9 +32,13 @@ protected:
     void    From_Json(const json& data) override;
 
 private:
+    void    Update_Camera();
+
+private:
     Shared<InputComponent>      _input;
     Shared<MovementComponent>   _movement;
     Shared<PlayerStateMachine>  _stateMachine;
+    Shared<SkillComponent>      _skill;
 
 public:
     static Shared<PlayerController> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

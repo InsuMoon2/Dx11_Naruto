@@ -27,8 +27,8 @@
     <ClCompile Include="..\Private\Converter.cpp">
       <Filter>01. Converter</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\SimpleMath.cpp">
-      <Filter>98. Default\SimpleMath</Filter>
+    <ClCompile Include="BinaryWriter.cpp">
+      <Filter>99. Defines</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +39,12 @@
       <Filter>01. Converter</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Assimp_Macro.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BinaryWriter.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ConverterTypes.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
   </ItemGroup>
