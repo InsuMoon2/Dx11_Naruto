@@ -1,0 +1,50 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPlain_Red",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodWallSet",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_StoneTrim_Ground",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodWallSet_Red",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Signboard_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoof_Green",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Eaves_B",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Lighter",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_8",
+      "textures": [
+      ]
+    }
+  ]
+}

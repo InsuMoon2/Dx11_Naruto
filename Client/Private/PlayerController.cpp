@@ -59,8 +59,11 @@ void PlayerController::Update(float timeDelta)
     const auto& frame = _input->Get_Frame();
     if (_skill)
     {
-        if (frame.useSkillDown[0]) _skill->Try_Activate(0);
-        if (frame.useSkillDown[1]) _skill->Try_Activate(1);
+        if (frame.useSkillDown[0])
+            _skill->Try_Activate(0);
+
+        if (frame.useSkillDown[1])
+            _skill->Try_Activate(1);
     }
 
     Update_Camera();

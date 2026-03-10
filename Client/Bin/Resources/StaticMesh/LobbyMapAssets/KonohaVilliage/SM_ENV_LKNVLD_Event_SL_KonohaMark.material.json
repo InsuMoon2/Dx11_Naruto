@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Neon_A1",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ConcreteSlabs_ThinRed",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Road_Simple",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_4",
+      "textures": [
+      ]
+    }
+  ]
+}

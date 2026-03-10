@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Curtain_B",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoofDark",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_2",
+      "textures": [
+      ]
+    }
+  ]
+}

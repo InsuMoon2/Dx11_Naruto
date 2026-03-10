@@ -1,0 +1,90 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Yellowed",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Windows_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoofDark",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoof_DarkBlue",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster_Dark",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Curtain_C",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ClanSignboard_D",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Aircon_B",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Eaves_C",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ClanSignboard_E",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Aircon_C",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Pipe_C",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoof",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_BuildingInside_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_16",
+      "textures": [
+      ]
+    }
+  ]
+}

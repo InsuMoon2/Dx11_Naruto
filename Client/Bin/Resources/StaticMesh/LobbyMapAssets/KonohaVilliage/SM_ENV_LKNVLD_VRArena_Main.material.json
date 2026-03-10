@@ -1,0 +1,105 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Windows_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodWallSet",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Signboard_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPlain_Red",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster_Dark",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Signboard_C",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoofDark",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoof_Orange",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Eaves_B",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster_Dark",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Curtain_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Metal_C",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Aircon_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster_Dark",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Lantern_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Pipe_B",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_19",
+      "textures": [
+      ]
+    }
+  ]
+}

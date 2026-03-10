@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Neputa_Kurama",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Neputa_Kurama_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Neputa_Kurama_Eye",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Nbuta_RopeMetal",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Metal_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_5",
+      "textures": [
+      ]
+    }
+  ]
+}

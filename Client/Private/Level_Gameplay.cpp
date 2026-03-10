@@ -10,6 +10,7 @@
 #include "Spawn_Helper.h"
 #include "PlayerStart.h"
 
+#include "Player.h"
 #include "UI_PlayerHUD.h"
 
 Level_Gameplay::Level_Gameplay(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -25,7 +26,7 @@ HRESULT Level_Gameplay::Initialize()
 {
     CHECK_FAILED(Ready_Lights(), E_FAIL);
 
-    if (FAILED(Load_LevelFromJson(L"[20260304]MonsterCopy2")))
+    if (FAILED(Load_LevelFromJson(L"LM_KonohaVillage_BORUTO_Environments_BackdropBuildings")))
     {
         // 풀백
         LOG_WARN("Level JSON load failed, using hardcoded setup");
@@ -42,7 +43,7 @@ HRESULT Level_Gameplay::Initialize()
     }
 
     CHECK_FAILED(Ready_UI(), E_FAIL);
-
+  
     return S_OK;
 }
 
@@ -141,13 +142,19 @@ HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
 {
     CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_TERRAIN, L"Layer_Terrain"), E_FAIL);
 
-
     auto monster = Spawn_Helper::Prefab("Monster1")
         .AtLevel(ETOI(ELevelType::GamePlay))
         .InLayer(TEXT("Layer_Builder"))
         .Position({ 1.f, 1.f, -5.f })
         .Scale({ 1.5f, 1.5f, 1.5f })
         .Spawn();
+
+    CHECK_FAILED(
+        GAME->Add_GameObject(
+            ETOI(ELevelType::GamePlay),
+            Protocol::OBJECT_TYPE_TERRAIN,
+            layerTag),
+        E_FAIL);
 
     return S_OK;
 }
@@ -163,12 +170,10 @@ HRESULT Level_Gameplay::Ready_UI()
         desc.zOrder = 0.5f;
         desc.levelIndex = ETOI(ELevelType::Static);
 
-        auto playerHUD = UI_PlayerHUD::Create(_device, _context, &desc);
+        _playerHUD = UI_PlayerHUD::Create(_device, _context, &desc);
 
-        if (!playerHUD)
-            return E_FAIL;
-
-        CHECK_FAILED(GAME->Add_UI_ToLayer(EUILayer::HUD, playerHUD), E_FAIL);
+        CHECK_NULL(_playerHUD, E_FAIL);
+        CHECK_FAILED(GAME->Add_UI_ToLayer(EUILayer::HUD, _playerHUD), E_FAIL);
     }
 
     return S_OK;
@@ -199,6 +204,13 @@ void Level_Gameplay::Spawn_LocalPlayer()
 
     // Camera Target 세팅
     GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(player->Get_Component<Transform>());
+
+    // 플레이어인지 한번 체크 후 바인딩
+    auto playerObj = dynamic_pointer_cast<Player>(player);
+    if (_playerHUD && playerObj)
+    {
+        _playerHUD->Bind_Player(playerObj);
+    }
 
 }
 

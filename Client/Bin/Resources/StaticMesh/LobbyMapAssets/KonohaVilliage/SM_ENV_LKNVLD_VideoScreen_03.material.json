@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_AnimatedScreen_01",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_1",
+      "textures": [
+      ]
+    }
+  ]
+}

@@ -47,8 +47,8 @@ HRESULT MyPlayer::Initialize(void* arg)
     }
     {
         MovementComponent::FMovementDesc moveDesc;
-        moveDesc.maxWalkSpeed = 4.f;
-        moveDesc.maxSprintSpeed = 7.f;
+        moveDesc.maxWalkSpeed = 40.f;
+        moveDesc.maxSprintSpeed = 70.f;
 
         CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MOVEMENT, _movement, &moveDesc), E_FAIL);
         CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_INPUT, _input), E_FAIL);

@@ -1,0 +1,148 @@
+{
+  "asset" : {
+    "generator" : "UE Viewer (umodel) build 1544 based",
+    "version" : "2.0"
+  },
+  "scene" : 0,
+  "scenes" : [
+    {
+      "nodes" : [ 0 ]
+    }
+  ],
+  "nodes" : [
+    {
+      "name" : "SM_ENV_LKNVLD_Ground_Right_RoadToGarden_02_Lod1",
+      "mesh" : 0
+    }
+  ],
+  "materials" : [
+    {
+      "name" : "MI_ENV_LKNVLD_SandyFloorTiles",
+      "pbrMetallicRoughness" : {
+        "baseColorFactor" : [ 0.3, 0.3, 0.3, 1.0 ],
+        "metallicFactor" : 0.1,
+        "roughnessFactor" : 0.5
+      }
+    }
+  ],
+  "meshes" : [
+    {
+      "primitives" : [
+        {
+          "attributes" : {
+            "POSITION" : 1,
+            "NORMAL" : 2,
+            "TANGENT" : 3,
+            "TEXCOORD_0" : 4,
+            "TEXCOORD_1" : 5,
+            "TEXCOORD_2" : 6,
+            "TEXCOORD_3" : 7
+          },
+          "indices" : 0,
+          "material" : 0
+        }
+      ],
+      "name" : "SM_ENV_LKNVLD_Ground_Right_RoadToGarden_02_Lod1"
+    }
+  ],
+  "buffers" : [
+    {
+      "uri" : "SM_ENV_LKNVLD_Ground_Right_RoadToGarden_02_Lod1.bin",
+      "byteLength" : 13436
+    }
+  ],
+  "bufferViews" : [
+    {
+      "buffer" : 0,
+      "byteOffset" : 0,
+      "byteLength" : 1412
+    },
+    {
+      "buffer" : 0,
+      "byteOffset" : 1412,
+      "byteLength" : 2004
+    },
+    {
+      "buffer" : 0,
+      "byteOffset" : 3416,
+      "byteLength" : 2004
+    },
+    {
+      "buffer" : 0,
+      "byteOffset" : 5420,
+      "byteLength" : 2672
+    },
+    {
+      "buffer" : 0,
+      "byteOffset" : 8092,
+      "byteLength" : 1336
+    },
+    {
+      "buffer" : 0,
+      "byteOffset" : 9428,
+      "byteLength" : 1336
+    },
+    {
+      "buffer" : 0,
+      "byteOffset" : 10764,
+      "byteLength" : 1336
+    },
+    {
+      "buffer" : 0,
+      "byteOffset" : 12100,
+      "byteLength" : 1336
+    }
+  ],
+  "accessors" : [
+    {
+      "bufferView" : 0,
+      "componentType" : 5123,
+      "count" : 705,
+      "type" : "SCALAR"
+    },
+    {
+      "bufferView" : 1,
+      "min" : [ 47.3692, -0.326599, -57.015 ],
+      "max" : [ 52.5787, -0.216522, -44.9055 ],
+      "componentType" : 5126,
+      "count" : 167,
+      "type" : "VEC3"
+    },
+    {
+      "bufferView" : 2,
+      "componentType" : 5126,
+      "count" : 167,
+      "type" : "VEC3"
+    },
+    {
+      "bufferView" : 3,
+      "componentType" : 5126,
+      "count" : 167,
+      "type" : "VEC4"
+    },
+    {
+      "bufferView" : 4,
+      "componentType" : 5126,
+      "count" : 167,
+      "type" : "VEC2"
+    },
+    {
+      "bufferView" : 5,
+      "componentType" : 5126,
+      "count" : 167,
+      "type" : "VEC2"
+    },
+    {
+      "bufferView" : 6,
+      "componentType" : 5126,
+      "count" : 167,
+      "type" : "VEC2"
+    },
+    {
+      "bufferView" : 7,
+      "componentType" : 5126,
+      "count" : 167,
+      "type" : "VEC2"
+    }
+  ]
+}

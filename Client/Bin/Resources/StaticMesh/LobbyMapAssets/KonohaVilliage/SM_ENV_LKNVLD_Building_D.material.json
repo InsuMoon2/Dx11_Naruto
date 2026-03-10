@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_ConcreteSlabs_01_Gray",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_RoofTiles_Yellow",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_RoughTiles",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ConcreteWall_F",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneStairs",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPlain_Brown",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_7",
+      "textures": [
+      ]
+    }
+  ]
+}

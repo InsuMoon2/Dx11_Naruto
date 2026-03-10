@@ -1,6 +1,8 @@
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D g_Texture;
 
+float g_Alpha = 1.0f;
+
 sampler DefaultSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_LINEAR;    
@@ -58,6 +60,7 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out;
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor.a *= g_Alpha;
 
     if (Out.vColor.a < 0.1f)   
         discard;

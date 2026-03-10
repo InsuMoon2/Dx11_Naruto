@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Eaves_F",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodTorii_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_StoneTrim_Ground",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_RoughTiles",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Rope_A_Animated",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ClanSignboard_J",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_6",
+      "textures": [
+      ]
+    }
+  ]
+}

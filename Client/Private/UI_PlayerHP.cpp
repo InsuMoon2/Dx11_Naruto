@@ -27,7 +27,7 @@ HRESULT UI_PlayerHP::Initialize(void* arg)
 
     CHECK_FAILED(Ready_Components(), E_FAIL);
 
-    _transformCom->Set_LocalScale(200.f, 20.f, 1.f);
+    _transformCom->Set_LocalScale(255.f, 20.f, 1.f);
 
     return S_OK;
 }

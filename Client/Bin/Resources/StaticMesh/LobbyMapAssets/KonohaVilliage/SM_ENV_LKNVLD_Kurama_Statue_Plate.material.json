@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Fence_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Kurama_Statue_Plate",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_RoughTiles",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_3",
+      "textures": [
+      ]
+    }
+  ]
+}

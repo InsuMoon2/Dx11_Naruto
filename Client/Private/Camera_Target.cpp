@@ -102,7 +102,8 @@ void Camera_Target::Priority_Update(float timeDelta)
     Vec3 currentPos = _transformCom->Get_LocalPosition();
     Vec3 newPos = Vec3::Lerp(currentPos, desiredPos, _followSpeed * timeDelta);
 
-    _transformCom->Set_LocalPosition(newPos);
+    //_transformCom->Set_LocalPosition(newPos);
+    _transformCom->Set_LocalPosition(desiredPos);
     _transformCom->LookAt(targetPos);
 
     Update_TransformMatrices();

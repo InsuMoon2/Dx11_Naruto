@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Stall_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Roof_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Pipe_A_Trans",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_4",
+      "textures": [
+      ]
+    }
+  ]
+}

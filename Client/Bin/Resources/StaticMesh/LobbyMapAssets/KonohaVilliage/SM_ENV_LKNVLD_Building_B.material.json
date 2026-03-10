@@ -1,0 +1,55 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_LKNVLD_Plaster_Backdrop_Gold",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_LKNVLD_Plaster_Backdrop_Dark2",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Red",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Pipe_F",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Lighter",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_LKNVLD_Plaster_Backdrop_Beige",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_LKNVLD_Plaster_Backdrop_Dark",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Aircon_I",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Windows_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_9",
+      "textures": [
+      ]
+    }
+  ]
+}

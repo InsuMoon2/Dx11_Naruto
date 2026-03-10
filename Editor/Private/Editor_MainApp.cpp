@@ -10,6 +10,7 @@
 #include "VIBuffer_Rect.h"
 #include "Shader.h"
 #include "Event_Manager.h"
+#include "StaticMeshActor.h"
 
 Editor_MainApp::Editor_MainApp()
 {
@@ -123,6 +124,14 @@ HRESULT Editor_MainApp::Ready_StaticLevel()
         return E_FAIL;
     }
 
+    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
+        Protocol::COMPONENT_TYPE_SHADER_VTXMESH,
+        Shader::Create(_device, _context, TEXT("../../Client/Bin/Shaders/Shader_VtxMesh.hlsl"),
+            FVertexMesh::Elements, FVertexMesh::numElements))))
+    {
+        return E_FAIL;
+    }
+
     shared_ptr<Texture> loadingTex = Texture::Create(_device, _context, TEXT("../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadingScreen_%03d_BC.png"), 2);
     if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
         Protocol::COMPONENT_TYPE_TEXTURE_LOADING, loadingTex)))
@@ -132,6 +141,13 @@ HRESULT Editor_MainApp::Ready_StaticLevel()
 
     if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
         Protocol::COMPONENT_TYPE_RECT, VIBuffer_Rect::Create(_device, _context))))
+    {
+        return E_FAIL;
+    }
+
+    if (FAILED(GAME->Add_GameObject_Prototype(ETOI(ELevelType::Static),
+        Protocol::OBJECT_TYPE_STATIC_MESH,
+        StaticMeshActor::Create(_device, _context))))
     {
         return E_FAIL;
     }

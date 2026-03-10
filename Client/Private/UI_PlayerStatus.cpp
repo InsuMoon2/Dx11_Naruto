@@ -30,7 +30,7 @@ HRESULT UI_PlayerStatus::Initialize(void* arg)
     UI_PlayerHP::FPlayerHPDesc hpDesc;
     hpDesc.posX = 0.f;
     hpDesc.posY = 0.f;
-    hpDesc.sizeX = 200.f;
+    hpDesc.sizeX = 255.f;
     hpDesc.sizeY = 20.f;
     hpDesc.zOrder = _zOrder;
     hpDesc.levelIndex = _levelIndex;

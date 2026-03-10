@@ -137,7 +137,9 @@
       <Filter>00. Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SkillComponent.h" />
-    <ClInclude Include="..\Public\UI_SkillSlot.h" />
+    <ClInclude Include="..\Public\UI_SkillSlot.h">
+      <Filter>02. GameObject\02. UI\01. Player\01. Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -261,7 +263,9 @@
       <Filter>99. Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SkillComponent.cpp" />
-    <ClCompile Include="..\Private\UI_SkillSlot.cpp" />
+    <ClCompile Include="..\Private\UI_SkillSlot.cpp">
+      <Filter>02. GameObject\02. UI\01. Player\01. Skill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

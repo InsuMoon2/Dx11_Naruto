@@ -58,8 +58,8 @@
             "Gravity": -20.0,
             "Ground Y": 5.0,
             "Jump Velocity": 8.0,
-            "Max Sprint Speed": 7.0,
-            "Max Walk Speed": 4.0,
+            "Max Sprint Speed": 70.0,
+            "Max Walk Speed": 40.0,
             "Yaw Speed": 0.20000000298023224,
             "type": "COMPONENT_TYPE_MOVEMENT"
         },
@@ -69,9 +69,16 @@
         {
             "Current State": 3,
             "type": "COMPONENT_TYPE_PLAYER_STATE"
+        },
+        {
+            "slotSkillID": [
+                1001,
+                1002
+            ],
+            "type": "COMPONENT_TYPE_SKILL"
         }
     ],
-    "guid": "fcd528db-f298-40db-82b7-1a13119160b8",
+    "guid": "24ba6629-f9dc-4505-96b7-0c230778ef4b",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer",
     "static_class": "TestPlayer"

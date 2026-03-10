@@ -42,6 +42,10 @@ public:
     const string& Get_ModelGuid() const { return _modelGuid; }
 
 private:
+    HRESULT Apply_ModelGuid(const string& modelGuid);
+    HRESULT Resolve_ModelAsset();
+    HRESULT Ensure_ModelReady();
+
     HRESULT Ready_Components();
 
 private:

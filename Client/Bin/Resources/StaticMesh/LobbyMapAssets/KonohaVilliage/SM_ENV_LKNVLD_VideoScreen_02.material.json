@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_Dark",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Pipe_B",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_AnimatedScreen_01",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_3",
+      "textures": [
+      ]
+    }
+  ]
+}

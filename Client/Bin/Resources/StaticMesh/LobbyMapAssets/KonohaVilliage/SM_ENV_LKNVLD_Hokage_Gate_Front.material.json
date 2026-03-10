@@ -1,0 +1,60 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPlain_Red",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Door_D",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Yellowed",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster_Beige",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_RoofTiles_Grey",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPlain_Brown",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster_Dark",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoofDark",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_RoofTiles_Yellow",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_10",
+      "textures": [
+      ]
+    }
+  ]
+}

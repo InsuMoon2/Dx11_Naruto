@@ -160,12 +160,14 @@ HRESULT ResourceLoader::Load_Model(const json& data)
         GAME->Register_ComponentFactory(
             typeId, [pathStr, modelType](ComPtr<Device> device, ComPtr<DeviceContext> context)
             {
-                Matrix preTransform = Matrix::CreateScale(0.01f);
+                Matrix preTransform = Matrix::Identity;
+
                 if (modelType == EModelType::SkeletalMesh)
                 {
-                    preTransform = preTransform
-                        * Matrix::CreateRotationX(XMConvertToRadians(90.f))
-                        * Matrix::CreateRotationY(XMConvertToRadians(180.f));
+                    preTransform =
+                        Matrix::CreateScale(0.01f) *
+                        Matrix::CreateRotationX(XMConvertToRadians(90.f)) *
+                        Matrix::CreateRotationY(XMConvertToRadians(180.f));
                 }
                 return Model::Create(device, context, modelType, pathStr, preTransform);
             },

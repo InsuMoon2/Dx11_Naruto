@@ -283,12 +283,11 @@ string Asset_Manager::Detect_AssetType(const wstring& filePath) const
     if (extension == ".level") return "level";
 
 #pragma endregion
- 
-    
     if (extension == ".png" || extension == ".jpg" || extension == ".dds" || extension == ".tga")
         return "texture";
 
-    if (extension == ".fbx" || extension == ".obj" || extension == ".psk" || extension == ".gltf")
+    if (extension == ".fbx" || extension == ".obj" || extension == ".psk"
+        || extension == ".gltf" || extension == ".meshbin")
         return "model";
 
     if (extension == ".hlsl" || extension == ".fx")

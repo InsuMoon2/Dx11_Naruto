@@ -9,6 +9,7 @@ NS_END
 NS_BEGIN(Client)
 
 class Loader;
+class UI_PlayerHUD;
 
 class Level_Gameplay final : public Level
 {
@@ -33,6 +34,9 @@ private:
 
 private:
     void            Spawn_LocalPlayer();
+
+private:
+    Shared<UI_PlayerHUD> _playerHUD;
 
 public:
     static shared_ptr<Level_Gameplay> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

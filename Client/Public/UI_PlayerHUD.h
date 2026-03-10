@@ -6,6 +6,7 @@ NS_BEGIN(Client)
 
 class Player;
 class UI_PlayerStatus;
+class UI_PlayerSkill;
 
 class UI_PlayerHUD : public HUD
 {
@@ -25,6 +26,7 @@ public:
 
 private:
     Shared<UI_PlayerStatus> _status;
+    Shared<UI_PlayerSkill>  _skillPanel;
 
 public:
     static Shared<UI_PlayerHUD> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg = nullptr);

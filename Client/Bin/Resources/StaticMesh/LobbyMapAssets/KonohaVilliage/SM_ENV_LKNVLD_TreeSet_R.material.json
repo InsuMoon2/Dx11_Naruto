@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_LeafMasked_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Leaf_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_2",
+      "textures": [
+      ]
+    }
+  ]
+}

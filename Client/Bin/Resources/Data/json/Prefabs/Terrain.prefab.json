@@ -1,0 +1,38 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "type": "COMPONENT_TYPE_RECT"
+        },
+        {
+            "current_index": 0,
+            "num_srvs": 1,
+            "texture_path": "../../Client/Bin/Resources/Textures/Terrain/Tile%d.dds",
+            "type": "COMPONENT_TYPE_TEXTURE"
+        },
+        {
+            "type": "COMPONENT_TYPE_SHADER"
+        }
+    ],
+    "guid": "35beadf4-38e4-44c1-b601-639baf1273e2",
+    "object_type": "OBJECT_TYPE_TERRAIN",
+    "prefab_name": "Terrain",
+    "static_class": "Terrain"
+}

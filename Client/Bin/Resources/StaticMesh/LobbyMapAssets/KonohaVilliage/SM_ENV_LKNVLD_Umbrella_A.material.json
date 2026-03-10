@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_LKNVLD_Umbrella_A",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_1",
+      "textures": [
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Neon_A1",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_1",
+      "textures": [
+      ]
+    }
+  ]
+}

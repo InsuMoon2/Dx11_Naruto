@@ -70,7 +70,7 @@ bool SkillComponent::Try_Activate(int slot)
     if (id == 0)
         return false;
 
-    if (_slotSkill_Id[slot] > 0.f)
+    if (_cooldownRemain[slot] > 0.f)
         return false;
 
     auto skillDataPtr = GET_SINGLE(SkillDataManager)->Get_SkillData(id);

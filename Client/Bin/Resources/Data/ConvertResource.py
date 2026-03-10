@@ -63,10 +63,14 @@ def convert_all_csv_to_json():
                     continue
 
                 for row in reader:
-                    # Type이 없으면 스킵
+                    # Type이 없더라도 파일명이 SkillData관련이면 'Skill'로 취급
                     res_type = row.get('Type', '').strip()
-                    if not res_type: continue 
-
+                    if not res_type:
+                        if 'SkillID' in row or 'SkillName' in row:
+                            res_type = 'Skill'
+                        else:
+                            continue 
+                            
                     item = {
                         'id': row.get('Id', '').strip(),
                         'level': row.get('Level', '').strip()
@@ -89,6 +93,30 @@ def convert_all_csv_to_json():
                     extra = row.get('Extra', '').strip()
                     if extra:
                         item['type'] = extra
+                        
+                    # -------------------------------------
+                    # 스킬 (Skill) 전용 필드 처리
+                    # -------------------------------------
+                    if res_type == 'Skill':
+                        # CSV의 "Id"를 SkillID로 넣기 (ResourceLoader의 기대값)
+                        # 또는 별도의 SkillID 헤더가 있다면 그것을 사용. 
+                        # 여기선 범용 Id를 SkillID로 넣는 방식을 취하거나, 있는 컬럼 그대로 가져옴.
+                        if 'SkillID' in row and row['SkillID'].strip():
+                            item['SkillID'] = int(row['SkillID'].strip())
+                        elif 'Id' in row and row['Id'].strip():
+                            item['SkillID'] = int(row['Id'].strip())
+
+                        if 'SkillName' in row and row['SkillName'].strip():
+                            item['SkillName'] = row['SkillName'].strip()
+                            
+                        if 'SrvIndex' in row and row['SrvIndex'].strip():
+                            item['SrvIndex'] = int(row['SrvIndex'].strip())
+                            
+                        if 'Cooldown' in row and row['Cooldown'].strip():
+                            item['Cooldown'] = float(row['Cooldown'].strip())
+                            
+                        if 'ManaCost' in row and row['ManaCost'].strip():
+                            item['ManaCost'] = int(row['ManaCost'].strip())
 
                     file_data[res_type].append(item)
             

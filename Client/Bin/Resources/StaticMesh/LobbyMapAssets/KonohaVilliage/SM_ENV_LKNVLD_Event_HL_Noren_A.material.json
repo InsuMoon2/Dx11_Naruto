@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Event_HL_WoodenStage_Emissive_A_Trans",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Event_HL_Noren_A_Trans",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Material_2",
+      "textures": [
+      ]
+    }
+  ]
+}

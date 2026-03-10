@@ -26,6 +26,7 @@
 #include "ResourceLoader.h"
 #include "Terrain.h"
 #include "Model.h"
+#include "StaticMeshActor.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -140,6 +141,7 @@ void Loader::Register_Components()
 
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_TERRAIN,
         Terrain::Create(_device, _context));
+
 }
 
 void Loader::Initialize_BT_Nodes()
@@ -224,6 +226,14 @@ HRESULT Loader::Loading_For_GamePlay()
         PlayerStart::Create(_device, _context))))
     {
         MSG_BOX("Failed to Add Prototype : PlayerStart");
+        return E_FAIL;
+    }
+
+    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex,
+        Protocol::OBJECT_TYPE_STATIC_MESH,
+        StaticMeshActor::Create(_device, _context))))
+    {
+        MSG_BOX("Failed to Add Prototype : StaticMeshActor");
         return E_FAIL;
     }
 
