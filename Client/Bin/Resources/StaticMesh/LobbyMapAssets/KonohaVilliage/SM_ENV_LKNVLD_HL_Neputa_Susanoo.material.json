@@ -1,24 +1,20 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Nbuta_RopeMetal",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "ce88ebb4-dac9-4297-acc3-a0e992eb0dd4"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Metal_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "de543b2a-375e-4c73-b238-6c53ced4abf1"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Neputa_Susanoo",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "bc21e8c4-aa3a-436b-8938-5a9a4d36544c"
     },
     {
       "material_name": "Material_3",
-      "profile": "unresolved",
       "textures": []
     }
   ]

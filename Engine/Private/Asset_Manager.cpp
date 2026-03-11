@@ -115,8 +115,10 @@ void Asset_Manager::Scan_And_Register(const wstring& directory)
         for (auto& folder : _ignoreFolders)
         {
             if (pathStr.find(folder) != string::npos)
+            {
                 skip = true;
                 break;
+            }
         }
 
         if (skip)
@@ -390,6 +392,12 @@ bool Asset_Manager::Should_RegisterAsset(const fs::path& path) const
         return false;
 
     if (filename == ".asset_cache.json")
+        return false;
+
+    if (ext == ".py")
+        return false;
+
+    if (ext == ".bat")
         return false;
 
     // 에디터/런타임이 직접 참조하는 JSON만 등록

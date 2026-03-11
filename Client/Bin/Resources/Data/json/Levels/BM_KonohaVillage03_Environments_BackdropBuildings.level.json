@@ -1,0 +1,1437 @@
+{
+    "levelName": "BM_KonohaVillage03_Environments_BackdropBuildings",
+    "levelIndex": 3,
+    "gameObjects": [
+        {
+            "static_class": "SM_ENV_KNVLLG03_ground_distant2_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "ae00b649-f379-4af5-a454-59773c16774b",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "2467aace-bb45-4c08-acb2-537e864b2c43",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -0.0027327633,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_House_Distance_A_11",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "317dec7e-0fea-442d-b6c2-998f3213ae19",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6723c8d3-ed80-4e94-9847-973b0c7de44d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.009768367,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_House_Distance_B_14",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "551232cc-0674-4be7-bb91-0371e0f25f4c",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "afcb6898-3fa9-488b-83fd-6d9a92f0ec07",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.009768367,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_House_Distance_C_17",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7e367d8a-d811-46a9-92cd-7b55bc03f15a",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "3ced9bed-7976-4b1f-bc23-c775d93d04e5",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.009768367,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_House_Distance_D_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "8bb723d8-ab10-4092-b58d-2222bad6714a",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "03b95638-e7de-4467-b277-c30a66f33d11",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.009768367,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_RockWall_All_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "0fe9f310-dd11-4a35-a403-10b2e53d329f",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "e8fee232-62a1-4fa9-97a4-6243a4943c6f",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.009768367,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Tree_A",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "811d15c9-6a35-4749-8a5d-fb80fe415082",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "f19d5999-a831-4b72-8b54-18fe9b822a78",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        70.701177,
+                        -0.7138460000000001,
+                        -69.249116
+                    ],
+                    "rotation": [
+                        8.474536,
+                        102.00562,
+                        2.5895952e-06
+                    ],
+                    "scale": [
+                        0.8038332,
+                        0.8038332,
+                        0.8038332
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Tree_A1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "c4812de4-b149-46a4-8c22-e0319869496b",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "f19d5999-a831-4b72-8b54-18fe9b822a78",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        59.800854,
+                        5.3417633,
+                        -81.63132300000001
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.6344015,
+                        0.6344015,
+                        0.6344015
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Tree_A_0",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "d91592a7-7500-495b-b9bc-000685781776",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "f19d5999-a831-4b72-8b54-18fe9b822a78",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        7.4700934,
+                        11.778829,
+                        -87.8158
+                    ],
+                    "rotation": [
+                        0.0,
+                        54.15442,
+                        0.0
+                    ],
+                    "scale": [
+                        0.67287385,
+                        0.67287385,
+                        0.67287385
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Tree_A_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e3e6ce22-60e7-4988-a7fb-d06c9a876edb",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "f19d5999-a831-4b72-8b54-18fe9b822a78",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -16.04645,
+                        9.571367,
+                        -90.2915
+                    ],
+                    "rotation": [
+                        0.0,
+                        113.91103,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Tree_A_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "59497a41-4d31-420a-8191-0cde85e36763",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "f19d5999-a831-4b72-8b54-18fe9b822a78",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -63.889709999999994,
+                        5.126556000000001,
+                        -81.63132300000001
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.634402,
+                        0.634402,
+                        0.634402
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Tree_B",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "663aa43f-5d4a-4102-870c-6ffbd01fd169",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "590733b7-e594-49ca-9519-0e27459d40dd",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -76.66384000000001,
+                        -0.51903442,
+                        -81.44429699999999
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.2968469,
+                        1.2968469,
+                        1.2968469
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Tree_D",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "3456d588-4829-4d6b-b201-2bbeabb0fcb1",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "fad4c03a-4c06-4c04-b506-aaafbd9a15c8",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -33.12748,
+                        2.8556805000000005,
+                        53.529434
+                    ],
+                    "rotation": [
+                        0.0,
+                        -27.90738,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Tree_Distance_A_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5613dc8a-4695-44b1-aac7-791c88c73c27",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "c7cc8ad7-7416-4623-8741-14e30c9bd713",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.009768367,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Tree_Distance_B_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "eaf9e3e1-0642-43cf-9495-bb309cd77e81",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "3cb04abe-3fc2-4643-8b17-5fb19d014d84",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Tree_Distance_C_8",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "ca118417-f910-4fa8-8365-d770aee22148",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "630db9dc-05af-4f9e-9ae2-12e442fb5eeb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.009768367,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Tree_Distance_D_3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "48c9a608-2dfd-4a7b-91f1-bf6ae5c6e30b",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "fbfa9ff2-77db-47f3-92fa-c46d38db8679",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.009768367,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_TreeSet_L",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f3e09a67-2101-4000-a877-912be13b7d41",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "56f8f63f-1c76-454d-9068-3aa436ef7a6b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        79.8178,
+                        -1.3544775000000002,
+                        23.625042
+                    ],
+                    "rotation": [
+                        0.0,
+                        -58.1391,
+                        0.0
+                    ],
+                    "scale": [
+                        1.2033436,
+                        1.2033436,
+                        1.2033436
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_TreeSet_P",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "9004ca8d-5bc9-4237-a5a4-9573fe94b54e",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "40cf69d4-edaf-4a9c-b801-d82eb3a85c02",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -18.956458,
+                        -0.11272583,
+                        -64.353984
+                    ],
+                    "rotation": [
+                        0.0,
+                        -67.47687,
+                        0.0
+                    ],
+                    "scale": [
+                        0.90898055,
+                        0.90898055,
+                        0.90898055
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_A2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7a9760a0-669f-43f6-9132-ad50bdfa835d",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "2b4970ed-db25-44fd-94bb-6f137be6fb89",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -88.63067,
+                        -0.30412598,
+                        -3.8031520000000003
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_A3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e8e67cec-4f75-45b1-a1ca-96f45264f3a9",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "2b4970ed-db25-44fd-94bb-6f137be6fb89",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        30.32141,
+                        -0.30410645,
+                        122.46834000000001
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_A4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "8526c841-c5d8-45b1-853d-2b4c77490396",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "2b4970ed-db25-44fd-94bb-6f137be6fb89",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        116.0002,
+                        -16.252983,
+                        85.49138
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_A_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "0ee48d93-fef3-4899-9ba7-22a71492a7f4",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "2b4970ed-db25-44fd-94bb-6f137be6fb89",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -97.00637,
+                        -0.62404785,
+                        -62.02001500000001
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_A_Tall2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "bbbaef46-266a-4b78-9286-07c214bb5b41",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "87176071-d0f7-4437-96c3-084704d45b9f",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -37.941455000000005,
+                        -0.44394287,
+                        158.89592000000002
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_A_Tall3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b04a1e3e-9da9-4127-a142-22e7525cd03f",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "87176071-d0f7-4437-96c3-084704d45b9f",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        37.977935,
+                        -0.44391357,
+                        158.89592000000002
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_A_Tall_10",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "110d1017-4308-4f39-9072-db993c33e205",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "87176071-d0f7-4437-96c3-084704d45b9f",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -105.35681000000001,
+                        -34.378328,
+                        -88.83708
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_B2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "3909dd0c-7266-4392-921d-5ab7d4ca7c4c",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "36667def-aa8e-4f3f-9de6-e6818e654622",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -109.78668,
+                        -0.49202393,
+                        -30.799473
+                    ],
+                    "rotation": [
+                        0.0,
+                        90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.768548,
+                        0.768548,
+                        0.768548
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_B3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "4dcdd50e-d65a-4c67-a7c2-9aa7b2a62b09",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "36667def-aa8e-4f3f-9de6-e6818e654622",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -146.62473,
+                        5.422814,
+                        -4.9064923
+                    ],
+                    "rotation": [
+                        0.0,
+                        -92.75586,
+                        0.0
+                    ],
+                    "scale": [
+                        0.7466231,
+                        0.7466231,
+                        0.7466231
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_B4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "1d64f6ff-8a9d-42f2-a3ed-5c1ea020a0ce",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "36667def-aa8e-4f3f-9de6-e6818e654622",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        41.49222700000001,
+                        -0.34280457,
+                        86.485
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.89172816,
+                        0.89172816,
+                        0.89172816
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_B5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "a4e7bf04-776b-4226-9a32-8a2a206b5175",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "36667def-aa8e-4f3f-9de6-e6818e654622",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        86.87779,
+                        -0.3426825,
+                        -26.679414
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_B6",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "d19f9b7f-cbbe-4d52-acbf-17130a38fe25",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "36667def-aa8e-4f3f-9de6-e6818e654622",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        94.62218999999999,
+                        -0.41920837,
+                        -61.01129
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.929305,
+                        0.929305,
+                        0.929305
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_B7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b07cb2db-bd0b-4631-8f4c-f6e3db9e4b46",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "36667def-aa8e-4f3f-9de6-e6818e654622",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -22.425614999999997,
+                        -0.34280457,
+                        130.00104
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8315102,
+                        0.8315102,
+                        0.8315102
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_B8",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "af733170-fc57-4c49-bf12-e343f6ee02e5",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "36667def-aa8e-4f3f-9de6-e6818e654622",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -30.023777,
+                        -0.34332214,
+                        191.74674
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_B_17",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "47d66bd7-b331-4c11-8f45-54213ef9f0ca",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "36667def-aa8e-4f3f-9de6-e6818e654622",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -97.05981,
+                        -8.275488000000001,
+                        -112.63593000000002
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.7685478,
+                        0.7685478,
+                        0.7685478
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_C2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "28b7f94d-b7a6-454c-a622-6bf79f10d28f",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "b778234f-785e-4f81-97fe-6c0d8d914ada",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -116.90562,
+                        5.994956,
+                        33.790703
+                    ],
+                    "rotation": [
+                        0.0,
+                        44.962227,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_C3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "a1f39949-92e5-4693-95c6-7e6dbb0fee71",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "b778234f-785e-4f81-97fe-6c0d8d914ada",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -166.06206999999998,
+                        -10.776284,
+                        -87.72355
+                    ],
+                    "rotation": [
+                        0.0,
+                        -70.72055,
+                        0.0
+                    ],
+                    "scale": [
+                        0.7199056,
+                        0.7199056,
+                        0.7199056
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_C4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "39ae4f8f-64c7-49f4-8c89-f4ffbbaa0568",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "b778234f-785e-4f81-97fe-6c0d8d914ada",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        78.46174,
+                        -8.4099365,
+                        84.03803
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_C5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "0d3c2818-67c1-44ed-ac9c-5ce651831361",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "b778234f-785e-4f81-97fe-6c0d8d914ada",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        98.12753000000001,
+                        -8.410132,
+                        20.230691
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_C6",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "77701155-2e84-4baf-8539-c394748fad09",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "b778234f-785e-4f81-97fe-6c0d8d914ada",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        33.029038,
+                        -0.1903711,
+                        190.30959
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_C_26",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "490a7a31-fd63-4ae9-b91b-8745c2c0d002",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "b778234f-785e-4f81-97fe-6c0d8d914ada",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -137.60215,
+                        -0.29999512,
+                        -68.850854
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_D2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "434c2997-e880-492a-9e12-efc9371edf01",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "80970af8-f1cc-4e5b-a5ad-d512963dc3cb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        146.94615,
+                        -17.633931,
+                        -12.918514
+                    ],
+                    "rotation": [
+                        0.0,
+                        -174.71123,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_D3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b3f1fb4f-4ef6-43c7-9464-8625f0ff3a67",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "80970af8-f1cc-4e5b-a5ad-d512963dc3cb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        60.236997,
+                        -27.215410000000002,
+                        119.21289000000002
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_D4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e7f3d84e-0951-405b-916f-e845531e4f45",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "80970af8-f1cc-4e5b-a5ad-d512963dc3cb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -76.285703,
+                        -14.578013,
+                        118.11723
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_D5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "edd044a4-b06c-46f5-bef5-0e23858f0d79",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "80970af8-f1cc-4e5b-a5ad-d512963dc3cb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -23.77516,
+                        -0.4588867,
+                        225.96168000000003
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_D_35",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e7a8402a-0d3e-4026-bf90-07a7cf247cd5",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "80970af8-f1cc-4e5b-a5ad-d512963dc3cb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        96.77569,
+                        -27.215396000000002,
+                        -100.247295
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_F2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "0a057022-da8b-4a87-9f0b-852116ffb324",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "72c1af6b-9b53-4490-a7c2-47fd955957f3",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        126.5817,
+                        -18.169741,
+                        -88.28836
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_F3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "972f7cb6-89a6-4575-9177-0d8c68cf72ae",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "72c1af6b-9b53-4490-a7c2-47fd955957f3",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        101.67262000000001,
+                        -11.693140000000001,
+                        52.945356000000004
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_F4_58",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "adcd3638-b80b-486f-8f0a-23070186f4a7",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "72c1af6b-9b53-4490-a7c2-47fd955957f3",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -96.1583,
+                        5.499839,
+                        79.69936
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_F5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "562aba4c-dd7f-449e-bf22-53ef55f43266",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "72c1af6b-9b53-4490-a7c2-47fd955957f3",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -81.369814,
+                        -0.47010863999999997,
+                        30.054514
+                    ],
+                    "rotation": [
+                        0.0,
+                        -115.525375,
+                        0.0
+                    ],
+                    "scale": [
+                        0.93020904,
+                        0.93020904,
+                        0.93020904
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_F6_62",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "df14238d-d9f6-468a-be75-df0964904ea3",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "72c1af6b-9b53-4490-a7c2-47fd955957f3",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        72.16787000000001,
+                        -0.52903442,
+                        41.299775000000004
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_F_41",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "4ef6bffc-a372-4212-855b-99682aaa9172",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "72c1af6b-9b53-4490-a7c2-47fd955957f3",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        131.86066,
+                        -0.29968262,
+                        -48.293477
+                    ],
+                    "rotation": [
+                        0.0,
+                        44.283554,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_TowerB2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "bf3bad26-131b-4e5e-8837-d172f37232d7",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "97448447-679e-4d3e-b385-7fa9097d6c1c",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        133.95563,
+                        -0.28413086,
+                        -112.16667
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_CommonBuilding_TowerB_49",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "6ed8f242-13f9-4052-8bd4-0158a2b3e637",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "97448447-679e-4d3e-b385-7fa9097d6c1c",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -84.52529000000001,
+                        -0.28408203,
+                        -34.940535000000004
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        }
+    ]
+}

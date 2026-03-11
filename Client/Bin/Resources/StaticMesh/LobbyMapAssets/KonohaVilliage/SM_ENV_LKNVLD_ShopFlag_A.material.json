@@ -1,19 +1,16 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Curtain_B",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "7c41f744-d776-4009-90d6-6320bf061599"
     },
     {
       "material_name": "MI_ENV_LKNVLD_MetalRoofDark",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "a66186c3-b2cb-4b03-a0fe-65fd99ed5629"
     },
     {
       "material_name": "Material_2",
-      "profile": "unresolved",
       "textures": []
     }
   ]

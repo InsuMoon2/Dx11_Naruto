@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Fence_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "8a3f559a-f5e5-4b06-8403-31ebfc329f77"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]

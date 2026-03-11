@@ -1,54 +1,44 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_LKNVLD_Plaster_Backdrop_Gold",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "9b3cd77c-770a-4ace-a07e-6d8388f66bb6"
     },
     {
       "material_name": "MI_LKNVLD_Plaster_Backdrop_Dark2",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "e3465fd0-3b71-4a65-a140-1ac332297c9d"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_Red",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "cdde3ed4-bdef-4e9c-b0ae-295bc1943fe5"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Pipe_F",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "e1cf9fd9-9d28-47e9-872d-d56829ed2694"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Lighter",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "dd1d585e-6ffa-43a5-a5ca-d1fc673385a2"
     },
     {
       "material_name": "MI_LKNVLD_Plaster_Backdrop_Beige",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "2c9bd74b-c6ac-48f5-b76c-eda3bb0df277"
     },
     {
       "material_name": "MI_LKNVLD_Plaster_Backdrop_Dark",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "6dc3ba04-89d0-4efd-83e4-050f9c43053c"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Aircon_I",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "cbd02192-fd79-435d-9930-eb1328ac6343"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Windows_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "b51f48c0-ac94-4867-bd5e-ae63f672cb23"
     },
     {
       "material_name": "Material_9",
-      "profile": "unresolved",
       "textures": []
     }
   ]

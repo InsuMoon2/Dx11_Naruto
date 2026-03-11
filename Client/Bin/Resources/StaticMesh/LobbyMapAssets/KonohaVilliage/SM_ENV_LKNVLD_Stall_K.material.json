@@ -1,54 +1,44 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Stall_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "4c4e4925-5106-4c71-8bc3-a3caca33a164"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Stall_K",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "f7ff6463-3b4a-4e3e-ab97-46bea9df0c9f"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Pipe_A_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "066680f5-c2f6-4574-af1c-54af437735cb"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Bench_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "da70f74e-cee5-41ac-8f2e-bd25d2db06fc"
     },
     {
       "material_name": "MI_LKNVLD_Water_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "540e8e40-bbc4-4bfb-ac9b-bb8a9bfa68a0"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "01b04bba-a5bf-4079-a056-0301feda73c5"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Stall_02a",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "69156310-fd10-42d3-a6ab-beda8ea23dce"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Sticker_02",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "70228282-35ee-47ac-aec2-9374f59fca9c"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Roof_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "b6db2372-748f-47db-bce0-c5c5fedb30ea"
     },
     {
       "material_name": "Material_9",
-      "profile": "unresolved",
       "textures": []
     }
   ]

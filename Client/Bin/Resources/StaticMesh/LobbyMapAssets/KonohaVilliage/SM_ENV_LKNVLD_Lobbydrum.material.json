@@ -1,29 +1,24 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Event_HL_WoodBlack_A_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "b1861d67-4c29-48ba-a8ef-a381cc8c7189"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Event_HL_WoodenStage_Emissive_A_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "eb149fe1-e65f-4438-a2f2-45afadf89885"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Event_HL_Metal_B_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "1ef97939-749d-45db-ae92-7943516938a5"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodPillar_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "4526eb17-1e1c-41f8-a885-77dcb4f08f1e"
     },
     {
       "material_name": "Material_4",
-      "profile": "unresolved",
       "textures": []
     }
   ]

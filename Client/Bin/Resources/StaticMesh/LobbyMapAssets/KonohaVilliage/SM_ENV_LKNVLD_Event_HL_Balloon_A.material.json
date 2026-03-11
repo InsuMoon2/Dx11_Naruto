@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Event_HL_Balloon_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "f1fc8c56-70dc-48df-b2b2-1648361fa5cc"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]

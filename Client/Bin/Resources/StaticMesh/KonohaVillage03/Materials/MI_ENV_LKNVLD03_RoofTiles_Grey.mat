@@ -1,0 +1,11 @@
+Diffuse=T_ENV_LKNVLD_RoofTiles_BC
+Normal=T_ENV_LKNVLD_Plaster_Crack_Hatching_N
+Other[0]=T_ENV_LKNVLD_RoofTiles_N
+Other[1]=T_ENV_LKNVLD_Noize_01_UC
+Other[2]=BC
+Other[3]=Nml
+Other[4]=Hat1
+Other[5]=UC
+Other[6]=DefaultTexture
+Other[7]=T_EFF_Noise_01_M
+Other[8]=T_ENV_RainPattern_Mask

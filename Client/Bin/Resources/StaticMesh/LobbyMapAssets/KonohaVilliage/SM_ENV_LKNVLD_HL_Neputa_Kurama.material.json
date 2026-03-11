@@ -1,34 +1,28 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Neputa_Kurama",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "c1854f41-cd0a-4469-b684-7b65120e4c9e"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Neputa_Kurama_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "a9abfbee-784b-45a0-88ff-01940ad316b8"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Neputa_Kurama_Eye",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "d0c82d5c-50ff-48c3-a065-818be0428da0"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Nbuta_RopeMetal",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "ce88ebb4-dac9-4297-acc3-a0e992eb0dd4"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Metal_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "de543b2a-375e-4c73-b238-6c53ced4abf1"
     },
     {
       "material_name": "Material_5",
-      "profile": "unresolved",
       "textures": []
     }
   ]

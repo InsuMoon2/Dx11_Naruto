@@ -1,0 +1,258 @@
+Parent = MaterialInstanceConstant'/Game/Environments/MI_BaseMaterials/MI_BC+UC+Nml+BldNml+Hat1+Hat2+VtxBld.MI_BC+UC+Nml+BldNml+Hat1+Hat2+VtxBld'
+ScalarParameterValues[17] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1.5
+        ParameterName = AA_NormalMapBoost
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0.5
+        ParameterName = AB_BlendNormalMapBoost
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 3
+        ParameterName = AC_HatchingBoost
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 3
+        ParameterName = AD_HatchingScale
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 2
+        ParameterName = AE_Hatching_two_Boost
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1
+        ParameterName = AF_Hatching_two_Scale
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1.3
+        ParameterName = AA_MaskScale
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 2
+        ParameterName = AC_Mask_Threshold
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 2
+        ParameterName = AA_UnevenColorScale
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0.5
+        ParameterName = AA_OutlineParam
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1
+        ParameterName = AB_Blend_UV_Scale
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1
+        ParameterName = AA_Haching_Far_UVScale
+    }
+    ScalarParameterValues[12] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 6000
+        ParameterName = AB_Haching_Far_Distance
+    }
+    ScalarParameterValues[13] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = AC_Hatching_Far_Boost
+    }
+    ScalarParameterValues[14] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0.25
+        ParameterName = AD_UC_Far_UVScale
+    }
+    ScalarParameterValues[15] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 5000
+        ParameterName = AE_Haching_Far_UC_Distance
+    }
+    ScalarParameterValues[16] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = RefractionDepthBias
+    }
+}
+TextureParameterValues[9] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_Ground_03_BC.T_ENV_LKNVLD_Ground_03_BC'
+        ParameterName = AA_BaseColorMap
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_Ground_03_BC.T_ENV_LKNVLD_Ground_03_BC'
+        ParameterName = AA_Override_BaseColorMap
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_Ground_02_BC.T_ENV_LKNVLD_Ground_02_BC'
+        ParameterName = AB_BlendBaseColorMap
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_Ground_03_N.T_ENV_LKNVLD_Ground_03_N'
+        ParameterName = BA_NomalMap
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_Ground_02_N.T_ENV_LKNVLD_Ground_02_N'
+        ParameterName = BB_BlendNormalMap
+    }
+    TextureParameterValues[5] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_CopicMask_02_N.T_ENV_LKNVLD_CopicMask_02_N'
+        ParameterName = BC_HatchingNormalMap
+    }
+    TextureParameterValues[6] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_Ground_01_N.T_ENV_LKNVLD_Ground_01_N'
+        ParameterName = BD_Hatching_two_NormalMap
+    }
+    TextureParameterValues[7] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_Noize_01_UC.T_ENV_LKNVLD_Noize_01_UC'
+        ParameterName = DA_UnevenColorMap
+    }
+    TextureParameterValues[8] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_Mask_01_M.T_ENV_LKNVLD_Mask_01_M'
+        ParameterName = EA_MaskMap
+    }
+}
+VectorParameterValues[5] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=0.55, G=0.55, B=0.55, A=0 }
+        ParameterName = AA_BaseMixColor
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=1, G=1, B=1, A=0 }
+        ParameterName = AA_BlendMixColor
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=1, G=1, B=1, A=0 }
+        ParameterName = AA_Override_ShadowColor
+    }
+    VectorParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=0.4, G=0.65, B=0.75, A=0 }
+        ParameterName = AA_ShadowColor
+    }
+    VectorParameterValues[4] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=0.4, G=0.65, B=0.75, A=0 }
+        ParameterName = AB_BlendShadowColor
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[6] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 3
+        UVChannelIndex = 2
+        TextureName = T_ENV_LKNVLD_Ground_01_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 1
+        TextureName = T_ENV_LKNVLD_Ground_02_BC
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 1
+        TextureName = T_ENV_LKNVLD_Ground_02_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ENV_LKNVLD_Ground_03_BC
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ENV_LKNVLD_Ground_03_N
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 1.29688
+        UVChannelIndex = 0
+        TextureName = T_ENV_LKNVLD_Mask_01_M
+    }
+}

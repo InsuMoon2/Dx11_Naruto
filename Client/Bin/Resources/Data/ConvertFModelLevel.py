@@ -18,6 +18,15 @@ DEFAULT_FMODEL_PATH = Path(
 DEFAULT_GUID_MAP_PATH = RESOURCE_JSON_DIR / "KonohaVilliage_mesh_guid_map.json"
 DEFAULT_OUT_PATH = RESOURCE_LEVELS_DIR / "LM_KonohaVillage_BORUTO_Environments_BackdropBuildings.level.json"
 DEFAULT_LEVEL_NAME = "LM_KonohaVillage_BORUTO_Environments_BackdropBuildings"
+PREFERRED_MAP_PATTERNS = (
+    "*_Environments_BackdropBuildings.json",
+    "*_Environments_Props.json",
+    "*_Environments_Terrain.json",
+    "*_Props.json",
+    "*_Terrain.json",
+    "*_Floor.json",
+    "*_p.json",
+)
 
 
 def load_json(path: Path):
@@ -227,14 +236,89 @@ def print_entries(title, entries):
         print(f"... {len(entries) - 20} more")
 
 
+def collect_default_map_jsons(map_root: Path):
+    selected = []
+    seen = set()
+
+    for pattern in PREFERRED_MAP_PATTERNS:
+        for path in sorted(map_root.glob(pattern)):
+            key = str(path).lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            selected.append(path)
+
+    return selected
+
+
+def infer_layer_tag(fmodel_path: Path, default_layer_tag: str):
+    name = fmodel_path.stem.lower()
+
+    if "backdrop" in name:
+        return "Layer_Backdrop"
+    if "terrain" in name or "floor" in name:
+        return "Layer_Terrain"
+    if "props" in name:
+        return "Layer_Props"
+
+    return default_layer_tag
+
+
+def build_out_path(out_dir: Path, fmodel_path: Path):
+    return out_dir / f"{fmodel_path.stem}.level.json"
+
+
+def process_fmodel_file(fmodel_path: Path, guid_map: dict, args):
+    if not fmodel_path.exists():
+        print(f"ERROR: FModel JSON not found: {fmodel_path}")
+        return 2
+
+    fmodel_entries = load_json(fmodel_path)
+    level_name = fmodel_path.stem if args.level_name_auto else args.level_name
+    layer_tag = infer_layer_tag(fmodel_path, args.layer_tag)
+    out_path = build_out_path(args.out_dir, fmodel_path) if args.out_auto else args.out
+
+    level_json, skipped, warnings = convert_level(
+        entries=fmodel_entries,
+        guid_map=guid_map,
+        level_name=level_name,
+        level_index=args.level_index,
+        layer_tag=layer_tag,
+        unit_scale=args.unit_scale,
+        swap_yz=args.swap_yz,
+        negate_yaw=args.negate_yaw,
+    )
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with out_path.open("w", encoding="utf-8") as file:
+        json.dump(level_json, file, indent=4, ensure_ascii=False)
+
+    print(f"\n[LEVEL] {fmodel_path.name}")
+    print(f"Saved : {out_path}")
+    print(f"Spawn : {len(level_json['gameObjects'])}")
+    print(f"Skip  : {len(skipped)}")
+    print(f"Warn  : {len(warnings)}")
+
+    print_entries("Warnings Top 20", warnings)
+    print_entries("Skipped Top 20", skipped)
+
+    return 0 if not skipped else 1
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Convert FModel StaticMeshActor JSON into engine .level.json."
     )
-    parser.add_argument("--fmodel", type=Path, default=DEFAULT_FMODEL_PATH, help="Path to FModel JSON.")
+    parser.add_argument("--fmodel", type=Path, default=DEFAULT_FMODEL_PATH, help="Path to a single FModel JSON.")
+    parser.add_argument("--map-root", type=Path, help="Folder containing multiple FModel JSON files to convert.")
     parser.add_argument("--guid-map", type=Path, default=DEFAULT_GUID_MAP_PATH, help="Path to mesh basename -> guid JSON.")
-    parser.add_argument("--out", type=Path, default=DEFAULT_OUT_PATH, help="Output .level.json path.")
+    parser.add_argument("--out", type=Path, default=DEFAULT_OUT_PATH, help="Output .level.json path for single-file mode.")
+    parser.add_argument("--out-dir", type=Path, default=RESOURCE_LEVELS_DIR, help="Output folder for map-root mode.")
     parser.add_argument("--level-name", default=DEFAULT_LEVEL_NAME, help="Output levelName.")
+    parser.add_argument("--level-name-auto", action="store_true", default=True, help="Use FModel filename stem as levelName. Default: on")
+    parser.add_argument("--no-level-name-auto", dest="level_name_auto", action="store_false", help="Use --level-name literally.")
+    parser.add_argument("--out-auto", action="store_true", default=True, help="Use <out-dir>/<fmodel stem>.level.json. Default: on")
+    parser.add_argument("--no-out-auto", dest="out_auto", action="store_false", help="Use --out literally.")
     parser.add_argument("--level-index", type=int, default=3, help="Output levelIndex. Default: 3")
     parser.add_argument("--layer-tag", default="Layer_Backdrop", help="Output layerTag. Default: Layer_Backdrop")
     parser.add_argument("--unit-scale", type=float, default=0.01, help="Position unit scale. Default: 0.01")
@@ -255,48 +339,35 @@ def parse_args():
 def main():
     args = parse_args()
 
-    if not args.fmodel.exists():
-        print(f"ERROR: FModel JSON not found: {args.fmodel}")
-        return 2
-
     if not args.guid_map.exists():
         print(f"ERROR: GUID map JSON not found: {args.guid_map}")
         return 2
 
-    fmodel_entries = load_json(args.fmodel)
     guid_map = load_json(args.guid_map)
+    if args.map_root:
+        if not args.map_root.exists():
+            print(f"ERROR: map root not found: {args.map_root}")
+            return 2
 
-    level_json, skipped, warnings = convert_level(
-        entries=fmodel_entries,
-        guid_map=guid_map,
-        level_name=args.level_name,
-        level_index=args.level_index,
-        layer_tag=args.layer_tag,
-        unit_scale=args.unit_scale,
-        swap_yz=args.swap_yz,
-        negate_yaw=args.negate_yaw,
-    )
+        fmodel_paths = collect_default_map_jsons(args.map_root)
+        if not fmodel_paths:
+            print(f"ERROR: no supported FModel JSON files found under: {args.map_root}")
+            return 2
 
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    with args.out.open("w", encoding="utf-8") as file:
-        json.dump(level_json, file, indent=4, ensure_ascii=False)
+        print(f"[ConvertFModelLevel] map-root mode")
+        print(f"  map_root  : {args.map_root}")
+        print(f"  guid_map  : {args.guid_map}")
+        print(f"  out_dir   : {args.out_dir}")
+        print(f"  files     : {len(fmodel_paths)}")
 
-    print(f"Saved : {args.out}")
-    print(f"Spawn : {len(level_json['gameObjects'])}")
-    print(f"Skip  : {len(skipped)}")
-    print(f"Warn  : {len(warnings)}")
+        worst_code = 0
+        for fmodel_path in fmodel_paths:
+            result = process_fmodel_file(fmodel_path, guid_map, args)
+            worst_code = max(worst_code, result)
 
-    sample = next(
-        (obj for obj in level_json["gameObjects"] if obj["static_class"] == "SM_ENV_LKNVLD_CommonBuilding_A4"),
-        None,
-    )
-    if sample:
-        print(f"Sample[{sample['static_class']}] position={sample['components'][0]['position']}")
+        return worst_code
 
-    print_entries("Warnings Top 20", warnings)
-    print_entries("Skipped Top 20", skipped)
-
-    return 0 if not skipped else 1
+    return process_fmodel_file(args.fmodel, guid_map, args)
 
 
 if __name__ == "__main__":

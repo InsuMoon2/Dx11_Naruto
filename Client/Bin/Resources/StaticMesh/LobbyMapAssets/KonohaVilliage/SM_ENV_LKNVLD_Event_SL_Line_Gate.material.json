@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Neon_A2",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "81c08d0d-8d2b-4bb4-b661-4758d24a4986"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]

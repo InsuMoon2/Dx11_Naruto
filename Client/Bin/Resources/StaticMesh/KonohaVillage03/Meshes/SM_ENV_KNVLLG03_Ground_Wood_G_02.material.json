@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "950eb077-d5a1-4804-ac5e-7547399396cf"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

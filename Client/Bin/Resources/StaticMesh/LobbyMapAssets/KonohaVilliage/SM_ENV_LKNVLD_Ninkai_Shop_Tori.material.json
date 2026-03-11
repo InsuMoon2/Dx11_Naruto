@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Ninkai_ClanSignboa",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "a6cd49bf-6c3f-4b1a-98f7-9bc1ffcbe152"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]

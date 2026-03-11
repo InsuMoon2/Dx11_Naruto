@@ -1,0 +1,21 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_RoughTiles",
+      "material_instance_guid": "50d399d6-343d-4fdf-aaf7-9328a094012b"
+    },
+    {
+      "material_name": "MI_ENV_SNPRCT_WireMesh_A",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD03_GroundSoil_A",
+      "material_instance_guid": "8e9347fc-b577-4552-b2b8-1f0cae86d4ab"
+    },
+    {
+      "material_name": "Material_3",
+      "textures": []
+    }
+  ]
+}

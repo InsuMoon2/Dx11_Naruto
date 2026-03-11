@@ -1,0 +1,11 @@
+Diffuse=T_ENV_LKNVLD_Noize_02_UC
+Normal=T_ENV_LKNVLD_Metal_03_N
+Emissive=T_ENV_LKNVLD_Event_HL_WoodenStage_M
+Other[0]=T_ENV_LKNVLD_CopicMask_04_N
+Other[1]=T_ENV_LKNVLD_Noize_01_UC
+Other[2]=BC
+Other[3]=Hat1
+Other[4]=UC
+Other[5]=DefaultTexture
+Other[6]=T_EFF_Noise_01_M
+Other[7]=T_ENV_RainPattern_Mask

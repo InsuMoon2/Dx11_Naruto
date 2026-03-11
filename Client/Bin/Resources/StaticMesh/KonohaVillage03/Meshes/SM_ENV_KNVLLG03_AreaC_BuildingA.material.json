@@ -1,0 +1,77 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPillar_A",
+      "material_instance_guid": "ccbbb9b4-7f2e-49f2-9429-b7618d283b62"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ConcreteFloor_C",
+      "material_instance_guid": "d68b7ff1-3019-4868-96ae-bcff99734fa0"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodWindows_E",
+      "material_instance_guid": "56226357-a026-4632-88bf-dd58820f0ddd"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD03_RoofTiles",
+      "material_instance_guid": "0ad9fb29-3e5f-4524-a1e2-a022ed5692bc"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Roof_C",
+      "material_instance_guid": "41797599-2650-4ea1-92fe-262bda35d4c2"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Lantern_B",
+      "material_instance_guid": "0b90c281-fb63-4c1b-b42d-89776f6d1095"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD03_WoodPillar_D",
+      "material_instance_guid": "d4d7e02c-1905-4013-af2d-c33f456be940"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Pipe_D",
+      "material_instance_guid": "e7b9618a-00e7-40f3-80fb-1953aaf1491c"
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
+      "material_instance_guid": "610a733b-1903-4239-b4ba-6017d13f1bcb"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_RoughTiles",
+      "material_instance_guid": "50d399d6-343d-4fdf-aaf7-9328a094012b"
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneStairs",
+      "material_instance_guid": "52d17ec9-4459-4b1a-9cb0-79809f6eea1d"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Woodwall_A",
+      "material_instance_guid": "fc93f0f9-b6bc-4af0-a125-0868f627c559"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ConcreteWall_K",
+      "material_instance_guid": "fb093aa2-22bd-49ea-8ac9-9d54bd787767"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ClanSignboard_K",
+      "material_instance_guid": "43e01741-3e11-43d9-9b69-ce615308b2aa"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPillar_B",
+      "material_instance_guid": "8689137b-650a-4ec5-948d-e0cb384ef922"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Door_C",
+      "material_instance_guid": "c035a5ed-4854-4a2c-b971-4c160168093f"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodWindows_F",
+      "material_instance_guid": "7a93bc6f-d2f2-40c4-80e8-e80a31ad4f6f"
+    },
+    {
+      "material_name": "Material_17",
+      "textures": []
+    }
+  ]
+}

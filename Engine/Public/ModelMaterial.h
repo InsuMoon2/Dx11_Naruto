@@ -51,6 +51,7 @@ private:
     vector<string>                     _textureGuids[MATERIAL_TEXTURE_SLOT_COUNT];
 
     string                             _materialName;
+    string                             _materialInstanceGuid;
 
 private:
     // Mateiral Instnace

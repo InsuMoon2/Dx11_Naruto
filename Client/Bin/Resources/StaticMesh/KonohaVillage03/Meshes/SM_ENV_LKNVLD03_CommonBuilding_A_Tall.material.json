@@ -1,0 +1,17 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_CommonBuilding_A",
+      "material_instance_guid": "90cb85c2-1cf9-401b-ae14-f6bd88b3e15b"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Windows_A",
+      "material_instance_guid": "a1aeae2e-431a-4f06-aa4c-1daece35df1f"
+    },
+    {
+      "material_name": "Material_2",
+      "textures": []
+    }
+  ]
+}

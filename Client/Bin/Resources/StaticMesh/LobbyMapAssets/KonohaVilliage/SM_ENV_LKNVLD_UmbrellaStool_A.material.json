@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_UmbrellaStool_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "82cdaa48-1530-4753-ad34-0c21626c7734"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]

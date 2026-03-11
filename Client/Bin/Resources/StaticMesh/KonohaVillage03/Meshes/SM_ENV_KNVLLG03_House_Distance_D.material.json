@@ -1,0 +1,17 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_House_Distance_A",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_House_Distance_C",
+      "textures": []
+    },
+    {
+      "material_name": "Material_2",
+      "textures": []
+    }
+  ]
+}

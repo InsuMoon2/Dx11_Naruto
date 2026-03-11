@@ -25,15 +25,15 @@ sampler DefaultSampler = sampler_state
 struct VS_IN
 {
     float3 vPosition : POSITION;
-    float3 vNormal : NORMAL;
-    float3 vTangent : TANGENT;
+    float3 vNormal   : NORMAL;
+    float3 vTangent  : TANGENT;
     float2 vTexcoord : TEXCOORD0;
 };
 
 struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
-    float4 vNormal : NORMAL;
+    float4 vNormal   : NORMAL;
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
 };
@@ -62,7 +62,7 @@ VS_OUT VS_MAIN(VS_IN In)
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
-    float4 vNormal : NORMAL;
+    float4 vNormal   : NORMAL;
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
 };

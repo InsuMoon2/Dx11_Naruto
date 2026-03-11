@@ -28,10 +28,10 @@ static fs::path FindExistingPathFromAncestors(const fs::path& start, const fs::p
     return {};
 }
 
-static fs::path ResolveDefaultKonohaDir(const wchar_t* executablePath)
+static fs::path ResolveDefaultMeshDir(const wchar_t* executablePath)
 {
     static constexpr wchar_t kDefaultRelativePath[] =
-        LR"(Client\Bin\Resources\StaticMesh\LobbyMapAssets\KonohaVilliage)";
+        LR"(Client\Bin\Resources\StaticMesh\KonohaVillage03\Meshes)";
 
     if (fs::path fromWorkingDir = FindExistingPathFromAncestors(fs::current_path(), kDefaultRelativePath);
         !fromWorkingDir.empty())
@@ -84,10 +84,10 @@ int wmain(int argc, wchar_t** argv)
     }
     else
     {
-        srcDir = ResolveDefaultKonohaDir(argc > 0 ? argv[0] : nullptr);
+        srcDir = ResolveDefaultMeshDir(argc > 0 ? argv[0] : nullptr);
         dstDir = srcDir;
 
-        wcout << L"[AssimpTool] No arguments provided. Using default Konoha path." << endl;
+        wcout << L"[AssimpTool] No arguments provided. Using default mesh path." << endl;
         wcout << L"  src: " << srcDir << endl;
         wcout << L"  dst: " << dstDir << endl;
     }

@@ -51,8 +51,8 @@ private:
 private:
     string                  _modelGuid;       // Asset GUID
     string                  _resolvedPath;    // resolve한 실제 경로
-    Shared<Shader>  _shaderCom;
-    Shared<Model>   _modelCom;
+    Shared<Shader>          _shaderCom;
+    Shared<Model>           _modelCom;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

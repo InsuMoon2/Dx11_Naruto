@@ -1,24 +1,20 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_PaperLantern_B",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "2d1bd4f0-8fe3-42bd-b59c-d90af4211c20"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Aircon_C",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "3a8b690e-67dd-4563-ab4b-fd10bc45ac0c"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Event_HL_WoodenStage_Emissive_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "5e0b1104-fb30-4721-af40-2407851c6e88"
     },
     {
       "material_name": "Material_3",
-      "profile": "unresolved",
       "textures": []
     }
   ]

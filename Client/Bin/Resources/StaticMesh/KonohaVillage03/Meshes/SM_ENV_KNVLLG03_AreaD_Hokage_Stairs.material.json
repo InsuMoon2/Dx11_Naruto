@@ -1,0 +1,33 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_RoughTiles",
+      "material_instance_guid": "50d399d6-343d-4fdf-aaf7-9328a094012b"
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
+      "material_instance_guid": "610a733b-1903-4239-b4ba-6017d13f1bcb"
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneStairs",
+      "material_instance_guid": "52d17ec9-4459-4b1a-9cb0-79809f6eea1d"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Signboard_A",
+      "material_instance_guid": "5411b19e-956f-472b-9506-b0b4dd9f86b2"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodWallSet",
+      "material_instance_guid": "7d37287a-ebb3-4d8a-88aa-823c2534d339"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD03_WoodPlain_Red",
+      "material_instance_guid": "649a3145-328c-4251-995b-ee3165b8b264"
+    },
+    {
+      "material_name": "Material_6",
+      "textures": []
+    }
+  ]
+}

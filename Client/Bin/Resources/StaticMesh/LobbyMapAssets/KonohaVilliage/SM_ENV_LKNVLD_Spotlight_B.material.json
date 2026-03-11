@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Spotlight_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "c4131dab-9e52-49ec-9ebf-39f4ec27748f"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]

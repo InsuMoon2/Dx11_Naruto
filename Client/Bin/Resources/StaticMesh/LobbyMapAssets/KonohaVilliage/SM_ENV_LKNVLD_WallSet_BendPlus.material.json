@@ -1,34 +1,28 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_WoodPlain_Red",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "540b8a90-777f-4cb1-b8a3-1bb7c0065989"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Eaves_B",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "aeb4f80c-9504-410c-aa62-faf158445e54"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Signboard_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "56e16930-bd7a-485f-8236-f1ab7059800d"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodWallSet",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "69f79707-3fa0-40b9-bdf6-919fc42792eb"
     },
     {
       "material_name": "MI_ENV_LKNVLD_StoneTrim_Ground",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "6440a03d-7bef-40ef-bcf0-3a998c3257e4"
     },
     {
       "material_name": "Material_5",
-      "profile": "unresolved",
       "textures": []
     }
   ]

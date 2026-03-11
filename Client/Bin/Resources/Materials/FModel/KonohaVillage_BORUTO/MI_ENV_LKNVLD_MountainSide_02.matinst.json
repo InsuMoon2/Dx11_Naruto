@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "name": "MI_ENV_LKNVLD_MountainSide_02",
+  "profile": "flat_color_normal",
+  "parent": "M_ENV_FlatColorNormal",
+  "base_color_factor": [
+    0.77,
+    0.68,
+    0.58,
+    1.0
+  ],
+  "shadow_color": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "normal_strength": 5.0,
+  "blend_mode": 0,
+  "textures": [
+    {
+      "slot": "normal",
+      "index": 0,
+      "path": "../../../Textures/FModel/KonohaVillage_BORUTO/T_ENV_LKNVLD_CopicMask_02_N.png"
+    }
+  ],
+  "source": {
+    "fmodel_mi_json": "MI_ENV_LKNVLD_MountainSide_02.json"
+  }
+}

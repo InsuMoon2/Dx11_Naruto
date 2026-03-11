@@ -1,64 +1,52 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Event_HL_Metal_A_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "8789876d-c558-4212-a510-ab9660b6c92e"
     },
     {
       "material_name": "MI_ENV_LKNVLD_PaperLantern_A_3_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "9331ede7-2688-4bdf-b8bf-701e3be2897e"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Event_HL_WoodenStage_Emissive_A_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "eb149fe1-e65f-4438-a2f2-45afadf89885"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Yellowed",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "232a7a4d-e585-4739-af83-bd29998985bc"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Event_HL_WoodPlain_A_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "e5967bec-7908-4eb7-b638-854cf8eba55e"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Aircon_C",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "3a8b690e-67dd-4563-ab4b-fd10bc45ac0c"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Pipe_E_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "e5ed6ca0-efd8-47aa-96af-73b7e54ed440"
     },
     {
       "material_name": "MI_ENV_LKNVLD_BigPipe_B_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "925ec511-fa20-4c3c-8ba3-c3e6e31c0b48"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Pipe_A_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "066680f5-c2f6-4574-af1c-54af437735cb"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Sticker_02",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "70228282-35ee-47ac-aec2-9374f59fca9c"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Lighter",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "dd1d585e-6ffa-43a5-a5ca-d1fc673385a2"
     },
     {
       "material_name": "Material_11",
-      "profile": "unresolved",
       "textures": []
     }
   ]

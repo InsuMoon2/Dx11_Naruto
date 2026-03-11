@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "name": "MI_ENV_LKNVLD_PaperLantern_A_2_Trans",
+  "profile": "generic_pbr",
+  "parent": "M_GenericPBR",
+  "base_color_factor": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "normal_strength": 0.75,
+  "blend_mode": 0,
+  "textures": [
+    {
+      "slot": "base_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/KonohaVillage_BORUTO/T_ENV_LKNVLD_PaperLantern_01_BC_2.png"
+    },
+    {
+      "slot": "normal",
+      "index": 0,
+      "path": "../../../Textures/FModel/KonohaVillage_BORUTO/T_ENV_LKNVLD_PaperLantern_01_N.png"
+    }
+  ],
+  "source": {
+    "fmodel_mi_json": "MI_ENV_LKNVLD_PaperLantern_A_2_Trans.json"
+  }
+}

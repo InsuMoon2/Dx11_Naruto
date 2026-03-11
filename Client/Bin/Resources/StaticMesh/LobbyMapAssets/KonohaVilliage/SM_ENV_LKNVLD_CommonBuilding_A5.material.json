@@ -1,19 +1,16 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_CommonBuilding_B",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "0b744d00-ae10-4de2-9d44-45dee92cb580"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Yellowed_LOD",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "1f7de343-7aac-442d-8a55-c72fc77fe003"
     },
     {
       "material_name": "Material_2",
-      "profile": "unresolved",
       "textures": []
     }
   ]

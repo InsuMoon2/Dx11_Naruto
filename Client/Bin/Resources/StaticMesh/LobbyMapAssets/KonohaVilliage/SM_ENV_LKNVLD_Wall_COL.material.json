@@ -1,19 +1,16 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_Rock",
-      "profile": "unresolved",
       "textures": []
     },
     {
       "material_name": "MI_Wood",
-      "profile": "unresolved",
       "textures": []
     },
     {
       "material_name": "Material_2",
-      "profile": "unresolved",
       "textures": []
     }
   ]

@@ -1,0 +1,96 @@
+Parent = MaterialInstanceConstant'/Game/Environments/MI_BaseMaterials/MI_BC+UC+Nml+Hat1.MI_BC+UC+Nml+Hat1'
+ScalarParameterValues[1] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = RefractionDepthBias
+    }
+}
+TextureParameterValues[4] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_WoodBoard_BC.T_ENV_LKNVLD_WoodBoard_BC'
+        ParameterName = AA_BaseColorMap
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_WoodBoard_N.T_ENV_LKNVLD_WoodBoard_N'
+        ParameterName = BA_NomalMap
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_WoodBoard_Hatching_N.T_ENV_LKNVLD_WoodBoard_Hatching_N'
+        ParameterName = BC_HatchingNormalMap
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_Noize_02_UC.T_ENV_LKNVLD_Noize_02_UC'
+        ParameterName = DA_UnevenColorMap
+    }
+}
+VectorParameterValues[2] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=0.68, G=0.48545, B=0.309155, A=0 }
+        ParameterName = AA_BaseMixColor
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=1, G=1, B=2, A=0 }
+        ParameterName = AA_ShadowColor
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ENV_LKNVLD_WoodBoard_BC
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.5
+        UVChannelIndex = 2
+        TextureName = T_ENV_LKNVLD_WoodBoard_Hatching_N
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ENV_LKNVLD_WoodBoard_N
+    }
+}

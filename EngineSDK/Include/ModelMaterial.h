@@ -16,6 +16,7 @@ public:
 
 public:
     HRESULT Initialize_FromJson(const json& data, const string& materialFilePath);
+    HRESULT Initialize_FromMaterialInstance(const string& matInstanceFilePath);
     HRESULT Bind_Material(Shared<Shader> shader, const char* constantName, EMaterialTextureSlot slot, uint32 textureIndex);
 
     string  Get_MaterialName() const { return _materialName; }
@@ -50,6 +51,7 @@ private:
     vector<string>                     _textureGuids[MATERIAL_TEXTURE_SLOT_COUNT];
 
     string                             _materialName;
+    string                             _materialInstanceGuid;
 
 private:
     // Mateiral Instnace

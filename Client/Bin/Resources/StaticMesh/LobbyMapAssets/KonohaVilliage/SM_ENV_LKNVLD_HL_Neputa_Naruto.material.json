@@ -1,39 +1,32 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_WoodPlain_Red",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "540b8a90-777f-4cb1-b8a3-1bb7c0065989"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Lighter",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "dd1d585e-6ffa-43a5-a5ca-d1fc673385a2"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Neputa_Sasuke",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "434449eb-8036-43b1-95fb-f4061f0fe6de"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Neputa_Sasuke_EFX",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "06ef31c2-ef20-4ea4-b5f7-0409ab86464d"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Neputa_Naruto",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "a7b75b30-2a6f-41bf-b1f3-1bacbd862e9b"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Neputa_Naruto_EFX",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "cbcd5bc8-7c64-41be-843c-c31f87e5355e"
     },
     {
       "material_name": "Material_6",
-      "profile": "unresolved",
       "textures": []
     }
   ]

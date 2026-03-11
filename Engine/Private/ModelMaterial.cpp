@@ -210,6 +210,11 @@ json ModelMaterial::To_Json() const
     json j;
     j["material_name"] = _materialName;
 
+    if (!_materialInstanceGuid.empty())
+    {
+        j["material_instance_guid"] = _materialInstanceGuid;
+    }
+
     json texOverrides = json::object();
 
     for (uint32 slotIndex = 0; slotIndex < MATERIAL_TEXTURE_SLOT_COUNT; ++slotIndex)
@@ -225,7 +230,6 @@ json ModelMaterial::To_Json() const
             if (_textureGuids[slotIndex][texIndex].empty())
                 continue;
 
-            // CHANGED: 예전 "typeIndex_texIndex" 대신 "slot_index" 키 사용
             string key = slotName + "_" + to_string(texIndex);
             texOverrides[key] = _textureGuids[slotIndex][texIndex];
         }
@@ -239,6 +243,8 @@ json ModelMaterial::To_Json() const
 
 void ModelMaterial::From_Json(const json& data)
 {
+    _materialInstanceGuid = data.value("material_instance_guid", "");
+
     if (!data.contains("texture_overrides"))
         return;
 

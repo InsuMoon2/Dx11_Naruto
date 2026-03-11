@@ -1,0 +1,81 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Eaves_E",
+      "material_instance_guid": "f9489620-e91f-4b3e-9fbc-61fbddfe6baa"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_RoofTiles_Green",
+      "material_instance_guid": "325e1259-4d85-455d-90ea-0df3ac32d75f"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Aircon_E",
+      "material_instance_guid": "34af1819-eed9-427f-b7c0-322b4b9499dc"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodWindows_D",
+      "material_instance_guid": "22363c51-140d-4afc-bebb-5bc82529cf9d"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPlain_Beige",
+      "material_instance_guid": "306b29ee-85f5-43bb-b2d7-68fccfe176b5"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_BambooWall",
+      "material_instance_guid": "fd7142bc-fb71-4f1a-bd02-692c9681641e"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Aircon_H",
+      "material_instance_guid": "616d6402-4ee3-4dc1-a348-8964e9e3d246"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoof_Green",
+      "material_instance_guid": "711b7d88-9ec8-4f52-a107-7218134b7e9c"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Curtain_F",
+      "material_instance_guid": "5a854a75-2318-4e78-9b3a-e24c4f445bfc"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPlain_Brown",
+      "material_instance_guid": "1e4f11f3-d615-4b42-a910-d1266fb17d20"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ClanSignboard_I",
+      "material_instance_guid": "6d9dbc62-ced2-41c7-bf7f-9696b161b8ad"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster_White",
+      "material_instance_guid": "a138eb35-f686-4e3b-85d3-a9db81aaf215"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodWindows_C",
+      "material_instance_guid": "b343f4df-2ec4-4fdb-9ace-23103f7314a0"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoofDark",
+      "material_instance_guid": "73cb84b6-3c65-4227-a63a-35795f5366e2"
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneStairs",
+      "material_instance_guid": "52d17ec9-4459-4b1a-9cb0-79809f6eea1d"
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
+      "material_instance_guid": "610a733b-1903-4239-b4ba-6017d13f1bcb"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ClanSignboard_H",
+      "material_instance_guid": "bf8a495e-aa53-4ca0-acd9-fddd9e10b58d"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Pipe_A",
+      "material_instance_guid": "2483d4df-b1ef-4525-af40-3f5b4546f85f"
+    },
+    {
+      "material_name": "Material_18",
+      "textures": []
+    }
+  ]
+}

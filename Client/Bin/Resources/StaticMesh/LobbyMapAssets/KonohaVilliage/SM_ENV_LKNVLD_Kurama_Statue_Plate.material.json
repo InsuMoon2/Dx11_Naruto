@@ -1,24 +1,20 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Fence_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "8a3f559a-f5e5-4b06-8403-31ebfc329f77"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Kurama_Statue_Plate",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "c0f58956-3547-4a27-a57d-1208f2ff09c6"
     },
     {
       "material_name": "MI_ENV_LKNVLD_RoughTiles",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "1599865b-a969-4e17-9c5e-3a5d3340f5c0"
     },
     {
       "material_name": "Material_3",
-      "profile": "unresolved",
       "textures": []
     }
   ]

@@ -1,24 +1,20 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Event_TorusBalloon01_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "10ea3c71-843f-43ef-9d09-8ce41693893c"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Event_Balloon_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "d75c5b4f-6d3f-44e5-9186-da4dfc79a739"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Event_TorusBalloon_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "74b73788-c7c8-4a41-80ce-62cb9b64f704"
     },
     {
       "material_name": "Material_3",
-      "profile": "unresolved",
       "textures": []
     }
   ]

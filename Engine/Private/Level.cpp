@@ -70,7 +70,7 @@ HRESULT Level::Load_LevelFromJson(const wstring& fileName)
 
     uint32 levelIndex = levelJson.value("levelIndex", GAME->Current_Level());
 
-    GAME->Clear_Layers(levelIndex);
+    //GAME->Clear_Layers(levelIndex);
 
     int loadedCount = 0;
 

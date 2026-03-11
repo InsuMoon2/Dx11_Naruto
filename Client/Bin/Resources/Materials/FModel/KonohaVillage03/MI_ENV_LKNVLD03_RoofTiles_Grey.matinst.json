@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "name": "MI_ENV_LKNVLD03_RoofTiles_Grey",
+  "profile": "generic_pbr",
+  "parent": "M_GenericPBR",
+  "base_color_factor": [
+    0.41,
+    0.398159,
+    0.32796,
+    0.0
+  ],
+  "normal_strength": 1.5,
+  "blend_mode": 0,
+  "textures": [
+    {
+      "slot": "base_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/KonohaVillage03/T_ENV_LKNVLD_RoofTiles_BC.png"
+    },
+    {
+      "slot": "normal",
+      "index": 0,
+      "path": "../../../Textures/FModel/KonohaVillage03/T_ENV_LKNVLD_RoofTiles_N.png"
+    }
+  ],
+  "source": {
+    "fmodel_mi_json": "MI_ENV_LKNVLD03_RoofTiles_Grey.props.txt"
+  }
+}

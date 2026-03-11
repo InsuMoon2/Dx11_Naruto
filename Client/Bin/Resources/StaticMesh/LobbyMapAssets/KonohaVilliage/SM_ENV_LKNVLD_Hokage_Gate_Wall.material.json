@@ -1,49 +1,40 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Yellowed",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "232a7a4d-e585-4739-af83-bd29998985bc"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodPlain_Brown",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "a17b31f8-5f7f-4d24-a733-8366a5727372"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Plaster_Beige",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "f07ba226-3cfc-4252-896e-758b7610dc84"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Plaster_Pink",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "dd9291cb-7e29-4bb1-bb6c-0322aaacf48f"
     },
     {
       "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "c64e28eb-3244-496d-9b7f-29b3b8e5ed2c"
     },
     {
       "material_name": "MI_ENV_LKNVLD_RoofTiles_Yellow",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "3a61dc06-760a-4ea4-8594-04f3d956ff86"
     },
     {
       "material_name": "MI_ENV_LKNVLD_RoofTiles_Grey",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "88236d6d-6f89-46dc-8103-b0b67631d60e"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Pipe_G",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "e3c9b969-803e-422d-b908-af690fbd9535"
     },
     {
       "material_name": "Material_8",
-      "profile": "unresolved",
       "textures": []
     }
   ]

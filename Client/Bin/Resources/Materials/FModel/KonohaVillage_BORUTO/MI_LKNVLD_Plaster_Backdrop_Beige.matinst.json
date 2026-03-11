@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "name": "MI_LKNVLD_Plaster_Backdrop_Beige",
+  "profile": "flat_color_normal",
+  "parent": "M_ENV_FlatColorNormal",
+  "base_color_factor": [
+    0.77,
+    0.5904324400000001,
+    0.35669999999999996,
+    1.0
+  ],
+  "shadow_color": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "normal_strength": 1.0,
+  "blend_mode": 0,
+  "textures": [],
+  "source": {
+    "fmodel_mi_json": "MI_LKNVLD_Plaster_Backdrop_Beige.json"
+  }
+}

@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Ninkai_Makimono",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "1c4f77b9-813c-4534-8cd5-5fbb7a5a17d8"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]

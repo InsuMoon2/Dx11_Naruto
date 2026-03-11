@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "name": "MI_ENV_LKNVLD_Plaster_Purple",
+  "profile": "generic_pbr",
+  "parent": "M_GenericPBR",
+  "base_color_factor": [
+    0.312551,
+    0.29585,
+    0.485,
+    0.0
+  ],
+  "normal_strength": 1.0,
+  "blend_mode": 0,
+  "textures": [
+    {
+      "slot": "base_color",
+      "index": 0,
+      "path": "../../../Textures/Konoha/T_ENV_LKNVLD_Plaster_BC.png"
+    },
+    {
+      "slot": "normal",
+      "index": 0,
+      "path": "../../../Textures/Konoha/T_ENV_LKNVLD_Plaster_Hatching_N.png"
+    }
+  ],
+  "source": {
+    "fmodel_mi_json": "MI_ENV_LKNVLD_Plaster_Purple.json"
+  }
+}

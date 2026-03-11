@@ -1,0 +1,69 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster_Dark",
+      "material_instance_guid": "175de9b2-767f-4488-ada9-bc36a36b4f03"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "d0062e3b-3e5b-4274-aba4-2b480a5b18d4"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural",
+      "material_instance_guid": "23c6599f-8320-4d71-b470-88166903927b"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Windows_A",
+      "material_instance_guid": "a1aeae2e-431a-4f06-aa4c-1daece35df1f"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster",
+      "material_instance_guid": "cfd21e9b-6e8d-44ac-b70a-cff2b57e123a"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoofDark",
+      "material_instance_guid": "73cb84b6-3c65-4227-a63a-35795f5366e2"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoof_DarkBlue",
+      "material_instance_guid": "bf7e33b1-a2bc-41bc-911b-f9f3852440f2"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Curtain_C",
+      "material_instance_guid": "d018c65e-42fb-4291-bea4-b9223e132305"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ClanSignboard_D",
+      "material_instance_guid": "b167d532-360a-441b-913e-6ef7cf0af93e"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Aircon_B",
+      "material_instance_guid": "661a3bd1-a6bc-4640-a1fe-9f26c2a9d695"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Eaves_C",
+      "material_instance_guid": "171f4ea9-f829-4679-bd83-744d6ef3cefb"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ClanSignboard_E",
+      "material_instance_guid": "9e134c5d-e57a-4eb2-9171-b52013ad1936"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Aircon_C",
+      "material_instance_guid": "5df0e93e-5a14-4661-a4f8-ba275f6294fd"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD03_Pipe_C",
+      "material_instance_guid": "fa3c4c57-1581-4ace-b610-2d434d5130ae"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoof",
+      "material_instance_guid": "f66f337b-f657-4e63-8529-4c74c7217086"
+    },
+    {
+      "material_name": "Material_15",
+      "textures": []
+    }
+  ]
+}

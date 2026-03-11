@@ -1,0 +1,150 @@
+Parent = MaterialInstanceConstant'/Game/Environments/MI_BaseMaterials/MI_BC+UC+Nml+Hat1.MI_BC+UC+Nml+Hat1'
+ScalarParameterValues[11] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1.5
+        ParameterName = AA_NormalMapBoost
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0.8
+        ParameterName = AC_HatchingBoost
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1.2
+        ParameterName = AD_HatchingScale
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1
+        ParameterName = AA_UnevenColorScale
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0.2
+        ParameterName = AA_OutlineParam
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0.5
+        ParameterName = AA_Haching_Far_UVScale
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 6000
+        ParameterName = AB_Haching_Far_Distance
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = AC_Hatching_Far_Boost
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0.25
+        ParameterName = AD_UC_Far_UVScale
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 5000
+        ParameterName = AE_Haching_Far_UC_Distance
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = RefractionDepthBias
+    }
+}
+TextureParameterValues[4] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_RoofTiles_BC.T_ENV_LKNVLD_RoofTiles_BC'
+        ParameterName = AA_BaseColorMap
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_RoofTiles_N.T_ENV_LKNVLD_RoofTiles_N'
+        ParameterName = BA_NomalMap
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_Plaster_Crack_Hatching_N.T_ENV_LKNVLD_Plaster_Crack_Hatching_N'
+        ParameterName = BC_HatchingNormalMap
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Environments/LobbyMapAssets/LM_KonohaVillage_BORUTO/Textures/T_ENV_LKNVLD_Noize_01_UC.T_ENV_LKNVLD_Noize_01_UC'
+        ParameterName = DA_UnevenColorMap
+    }
+}
+VectorParameterValues[1] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=0.41, G=0.398159, B=0.32796, A=0 }
+        ParameterName = AA_BaseMixColor
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.59375
+        UVChannelIndex = 2
+        TextureName = T_ENV_LKNVLD_Plaster_Crack_Hatching_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ENV_LKNVLD_RoofTiles_BC
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ENV_LKNVLD_RoofTiles_N
+    }
+}

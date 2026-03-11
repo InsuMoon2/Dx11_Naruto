@@ -141,13 +141,41 @@ HRESULT Model::Ready_Materials_FromJson(const string& materialFilePath)
 
     for (const auto& item : root["materials"])
     {
-        Shared<ModelMaterial> material = ModelMaterial::Create(
-            _device, _context, item, materialFilePath);
+        Shared<ModelMaterial> material = nullptr;
+
+        string matInstGuid = item.value("material_instance_guid", "");
+
+        if (!matInstGuid.empty())
+        {
+            wstring matInstPath = GAME->Resolve_AssetPath(matInstGuid);
+            if (!matInstPath.empty())
+            {
+                material = make_shared<ModelMaterial>(_device, _context);
+
+                CHECK_FAILED(material->Initialize_FromMaterialInstance(
+                    Utils::ToString(matInstPath)),E_FAIL);
+
+                material->From_Json(item);
+            }
+
+            else
+            {
+                material = ModelMaterial::Create(_device, _context, item, materialFilePath);
+            }
+        }
+
+        if (material == nullptr)
+        {
+            material = ModelMaterial::Create(
+                _device, _context, item, materialFilePath);
+        }
+
         CHECK_NULL(material, E_FAIL);
         _materials.push_back(material);
     }
 
     _numMaterials = static_cast<uint32>(_materials.size());
+
     return S_OK;
 }
 

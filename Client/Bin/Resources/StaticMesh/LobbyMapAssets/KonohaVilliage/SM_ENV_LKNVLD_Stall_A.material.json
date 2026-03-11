@@ -1,29 +1,24 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Stall_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "4c4e4925-5106-4c71-8bc3-a3caca33a164"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Roof_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "b6db2372-748f-47db-bce0-c5c5fedb30ea"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Pipe_A_Trans",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "066680f5-c2f6-4574-af1c-54af437735cb"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "01b04bba-a5bf-4079-a056-0301feda73c5"
     },
     {
       "material_name": "Material_4",
-      "profile": "unresolved",
       "textures": []
     }
   ]

@@ -1,0 +1,49 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPillar_A",
+      "material_instance_guid": "ccbbb9b4-7f2e-49f2-9429-b7618d283b62"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster_Dark",
+      "material_instance_guid": "175de9b2-767f-4488-ada9-bc36a36b4f03"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster",
+      "material_instance_guid": "cfd21e9b-6e8d-44ac-b70a-cff2b57e123a"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural",
+      "material_instance_guid": "23c6599f-8320-4d71-b470-88166903927b"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoof_DarkBlue",
+      "material_instance_guid": "bf7e33b1-a2bc-41bc-911b-f9f3852440f2"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Signboard_A",
+      "material_instance_guid": "5411b19e-956f-472b-9506-b0b4dd9f86b2"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Windows_A",
+      "material_instance_guid": "a1aeae2e-431a-4f06-aa4c-1daece35df1f"
+    },
+    {
+      "material_name": "MI_LKNVLD_Plaster_Backdrop_Gold",
+      "material_instance_guid": "91e963ce-20d2-453e-b587-d16c9ad6a67a"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_CommonBuilding_A",
+      "material_instance_guid": "90cb85c2-1cf9-401b-ae14-f6bd88b3e15b"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodWindows_E",
+      "material_instance_guid": "56226357-a026-4632-88bf-dd58820f0ddd"
+    },
+    {
+      "material_name": "Material_10",
+      "textures": []
+    }
+  ]
+}

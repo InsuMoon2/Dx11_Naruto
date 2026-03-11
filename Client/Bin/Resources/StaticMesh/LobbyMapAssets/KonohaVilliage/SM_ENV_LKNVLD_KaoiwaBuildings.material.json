@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_KaoiwaBuildings_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "555a3b08-97c9-4444-b123-99b6bce8d923"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]

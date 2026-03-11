@@ -1,99 +1,80 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Eaves_E",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "f4e93f16-a635-486a-a424-7a416fbd99f3"
     },
     {
       "material_name": "MI_ENV_LKNVLD_RoofTiles_Green",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "bfe2c708-e097-4449-80aa-4b8efc334019"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Aircon_E",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "ae7b596f-7b36-4e69-8269-49abfbd1a873"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodWindows_D",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "a1708351-3b66-4700-a5b7-ed21abb6b021"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodPlain_Beige",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "e5f597a7-d404-413d-9e75-3bc7221096f7"
     },
     {
       "material_name": "MI_ENV_LKNVLD_BambooWall",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "0e207b00-ae0e-4f5e-b92d-7edb2d277c9e"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Aircon_H",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "ff37fcb7-1918-4cd6-8890-9b294f7e5949"
     },
     {
       "material_name": "MI_ENV_LKNVLD_MetalRoof_Green",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "c05cdd63-ecf5-40d9-80d0-d11020831097"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Curtain_F",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "3d6fffdc-6112-4baa-a5a4-3d582f4d5a13"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodPlain_Brown",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "a17b31f8-5f7f-4d24-a733-8366a5727372"
     },
     {
       "material_name": "MI_ENV_LKNVLD_ClanSignboard_I",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "3858fb15-3d47-49f6-a47c-b8f3f9c61404"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Plaster_White",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "31e5ae97-0ca6-4004-9d38-de7d0469b20a"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodWindows_C",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "3d3a3091-3930-4300-a37e-91e71fb3669a"
     },
     {
       "material_name": "MI_ENV_LKNVLD_MetalRoofDark",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "a66186c3-b2cb-4b03-a0fe-65fd99ed5629"
     },
     {
       "material_name": "MI_T_ENV_LKNVLD_StoneStairs",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "d58dbd7b-ddd0-40d1-ac4a-80c7e1cc7296"
     },
     {
       "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "c64e28eb-3244-496d-9b7f-29b3b8e5ed2c"
     },
     {
       "material_name": "MI_ENV_LKNVLD_ClanSignboard_H",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "f1f1d93e-670d-412a-b79d-d6ef00b6f5cb"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Pipe_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "6fcc6b35-0259-4f43-bd93-00fae1b6d980"
     },
     {
       "material_name": "Material_18",
-      "profile": "unresolved",
       "textures": []
     }
   ]

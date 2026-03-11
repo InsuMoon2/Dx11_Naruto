@@ -1,19 +1,16 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Bench_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "da70f74e-cee5-41ac-8f2e-bd25d2db06fc"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Sticker_01",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "7c1082f3-1c1d-4dab-8fd1-ee167b0f1ae6"
     },
     {
       "material_name": "Material_2",
-      "profile": "unresolved",
       "textures": []
     }
   ]

@@ -1,34 +1,28 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_Concrete",
-      "profile": "unresolved",
       "textures": []
     },
     {
       "material_name": "MI_Rock",
-      "profile": "unresolved",
       "textures": []
     },
     {
       "material_name": "MI_Grass",
-      "profile": "unresolved",
       "textures": []
     },
     {
       "material_name": "MI_Dirt",
-      "profile": "unresolved",
       "textures": []
     },
     {
       "material_name": "MI_Wood",
-      "profile": "unresolved",
       "textures": []
     },
     {
       "material_name": "Material_5",
-      "profile": "unresolved",
       "textures": []
     }
   ]

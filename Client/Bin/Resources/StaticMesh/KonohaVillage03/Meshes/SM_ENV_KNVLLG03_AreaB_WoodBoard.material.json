@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPlain_Brown",
+      "material_instance_guid": "1e4f11f3-d615-4b42-a910-d1266fb17d20"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

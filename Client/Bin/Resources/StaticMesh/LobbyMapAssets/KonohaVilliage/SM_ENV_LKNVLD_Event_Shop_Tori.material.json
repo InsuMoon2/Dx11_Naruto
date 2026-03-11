@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Event_ClanSignboa",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "205e57e0-a9dc-4661-94eb-897f1746f8d2"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]

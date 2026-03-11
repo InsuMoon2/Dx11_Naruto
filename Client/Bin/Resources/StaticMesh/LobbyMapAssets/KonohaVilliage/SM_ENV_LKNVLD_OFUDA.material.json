@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Sticker_02",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "70228282-35ee-47ac-aec2-9374f59fca9c"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "name": "MI_ENV_LKNVLD_Aircon_G",
+  "profile": "generic_pbr",
+  "parent": "M_GenericPBR",
+  "base_color_factor": [
+    1.0,
+    1.0,
+    1.0,
+    0.0
+  ],
+  "normal_strength": 0.5,
+  "blend_mode": 0,
+  "textures": [
+    {
+      "slot": "base_color",
+      "index": 0,
+      "path": "../../../Textures/Konoha/T_ENV_LKNVLD_Aircon_06_BC.png"
+    },
+    {
+      "slot": "normal",
+      "index": 0,
+      "path": "../../../Textures/Konoha/T_ENV_LKNVLD_Aircon_06_N.png"
+    }
+  ],
+  "source": {
+    "fmodel_mi_json": "MI_ENV_LKNVLD_Aircon_G.json"
+  }
+}

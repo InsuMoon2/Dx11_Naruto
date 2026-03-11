@@ -1,19 +1,16 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_LuckyCatSignboard_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "2e154057-703a-41ce-b395-54df0e1f5a5a"
     },
     {
       "material_name": "MI_ENV_LKNVLD_LuckyCat_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "5de7731b-5c29-4b90-aa03-7b451f4c2166"
     },
     {
       "material_name": "Material_2",
-      "profile": "unresolved",
       "textures": []
     }
   ]

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "name": "MI_LKNVLD_Plaster_Backdrop_Gold",
+  "profile": "flat_color_normal",
+  "parent": "M_ENV_FlatColorNormal",
+  "base_color_factor": [
+    0.77,
+    0.62037284,
+    0.19720000000000001,
+    1.0
+  ],
+  "shadow_color": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "normal_strength": 1.0,
+  "blend_mode": 0,
+  "textures": [],
+  "source": {
+    "fmodel_mi_json": "MI_LKNVLD_Plaster_Backdrop_Gold.json"
+  }
+}

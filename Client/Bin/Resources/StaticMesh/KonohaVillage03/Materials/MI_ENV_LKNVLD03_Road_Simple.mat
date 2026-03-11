@@ -1,0 +1,13 @@
+Diffuse=T_ENV_LKNVLD_FloorTiles_BC
+Normal=T_ENV_LKNVLD_FloorTiles_N
+Other[0]=T_ENV_LKNVLD_Ground_03_N
+Other[1]=T_ENV_LKNVLD_SandyFloorTiles_N
+Other[2]=T_ENV_KNVLLG_Noize_06_UC
+Other[3]=BC
+Other[4]=Nml
+Other[5]=Hat1
+Other[6]=Hat2
+Other[7]=UC
+Other[8]=DefaultTexture
+Other[9]=T_EFF_Noise_01_M
+Other[10]=T_ENV_RainPattern_Mask

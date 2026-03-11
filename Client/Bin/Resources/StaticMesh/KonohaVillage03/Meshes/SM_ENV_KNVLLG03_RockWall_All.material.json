@@ -1,0 +1,21 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Wall_A_BG",
+      "material_instance_guid": "c606ce04-4141-4569-b10e-03a17449d066"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_FarMountains_AGGREGATION_01",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_RockWall_AGGREGATION_01",
+      "textures": []
+    },
+    {
+      "material_name": "Material_3",
+      "textures": []
+    }
+  ]
+}

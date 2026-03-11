@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "name": "MI_T_ENV_LKNVLD_StoneStairs",
+  "profile": "generic_pbr",
+  "parent": "M_GenericPBR",
+  "base_color_factor": [
+    1.3,
+    1.3,
+    1.3,
+    0.0
+  ],
+  "normal_strength": 2.0,
+  "blend_mode": 0,
+  "textures": [
+    {
+      "slot": "base_color",
+      "index": 0,
+      "path": "../../../Textures/Konoha/T_ENV_LKNVLD_StoneStairs_BC.png"
+    },
+    {
+      "slot": "normal",
+      "index": 0,
+      "path": "../../../Textures/Konoha/T_ENV_LKNVLD_StoneStairs_N.png"
+    }
+  ],
+  "source": {
+    "fmodel_mi_json": "MI_T_ENV_LKNVLD_StoneStairs.json"
+  }
+}

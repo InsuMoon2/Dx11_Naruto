@@ -1,0 +1,21 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_TCHEXA_Tree_A_Masked_CameraTrans",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_LeafMasked_A",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_Leaf_A_01",
+      "textures": []
+    },
+    {
+      "material_name": "Material_3",
+      "textures": []
+    }
+  ]
+}

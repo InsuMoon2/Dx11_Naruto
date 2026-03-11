@@ -1,59 +1,48 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_Pink",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "e70d860d-16cf-4570-9bd2-b70130adc7c2"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Eaves_D",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "104a25a9-dabc-4d1a-afb7-540d743d9de3"
     },
     {
       "material_name": "MI_ENV_LKNVLD_ClanSignboard_F",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "610329e1-2c0d-4e97-b0f8-c909edc1acc6"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Curtain_D",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "2bf1142a-cd39-4cc4-a9e1-c148a9df8587"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_Red",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "cdde3ed4-bdef-4e9c-b0ae-295bc1943fe5"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Plaster_Beige",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "f07ba226-3cfc-4252-896e-758b7610dc84"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Plaster_Pink",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "dd9291cb-7e29-4bb1-bb6c-0322aaacf48f"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodWallSet",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "69f79707-3fa0-40b9-bdf6-919fc42792eb"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Windows_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "b51f48c0-ac94-4867-bd5e-ae63f672cb23"
     },
     {
       "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "c64e28eb-3244-496d-9b7f-29b3b8e5ed2c"
     },
     {
       "material_name": "Material_10",
-      "profile": "unresolved",
       "textures": []
     }
   ]

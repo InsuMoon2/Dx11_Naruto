@@ -1,0 +1,33 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_Windows_A",
+      "material_instance_guid": "a1aeae2e-431a-4f06-aa4c-1daece35df1f"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster",
+      "material_instance_guid": "cfd21e9b-6e8d-44ac-b70a-cff2b57e123a"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ConcreteSlabs",
+      "material_instance_guid": "b5c0990f-dd1a-4aeb-9bd0-84266783f897"
+    },
+    {
+      "material_name": "MI_LKNVLD_Plaster_Backdrop_Dark2",
+      "material_instance_guid": "5e4a5019-4dce-4dff-a417-500fc1fd749a"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Event_HL_Metal_B_Trans",
+      "material_instance_guid": "0407c0ed-bd0d-44d9-81a0-d73edd2cf698"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoof_Orange",
+      "material_instance_guid": "41227d49-3ba1-4a42-a5d0-d4e0f8b7861c"
+    },
+    {
+      "material_name": "Material_6",
+      "textures": []
+    }
+  ]
+}

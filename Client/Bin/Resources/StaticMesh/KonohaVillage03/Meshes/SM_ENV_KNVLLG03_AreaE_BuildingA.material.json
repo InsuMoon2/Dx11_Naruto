@@ -1,0 +1,37 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_ConcreteSlabs_01_Gray",
+      "material_instance_guid": "655d2fdb-4e4e-4db6-bd68-a15378844e55"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_RoofTiles_Yellow",
+      "material_instance_guid": "27031cce-b093-4785-bdf7-9b40596f8976"
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
+      "material_instance_guid": "610a733b-1903-4239-b4ba-6017d13f1bcb"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_RoughTiles",
+      "material_instance_guid": "50d399d6-343d-4fdf-aaf7-9328a094012b"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_ConcreteWall_F",
+      "material_instance_guid": "fdf40d4a-63c2-4bde-b968-a57984f2d0d1"
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneStairs",
+      "material_instance_guid": "52d17ec9-4459-4b1a-9cb0-79809f6eea1d"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD03_WoodPlain_Brown",
+      "material_instance_guid": "0b1b1c79-1899-42f3-b565-1170ee5bfec5"
+    },
+    {
+      "material_name": "Material_7",
+      "textures": []
+    }
+  ]
+}

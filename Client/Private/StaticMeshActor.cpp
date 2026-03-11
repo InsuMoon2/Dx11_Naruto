@@ -75,7 +75,8 @@ HRESULT StaticMeshActor::Render()
 
     for (size_t i = 0; i < numMeshes; ++i)
     {
-        auto material = _modelCom->Get_Material(static_cast<uint32>(i));
+        uint32 matIdx = _modelCom->Get_MeshMaterialIndex(static_cast<uint32>(i));
+        auto material = _modelCom->Get_Material(matIdx);
 
         Vec4 baseColorFactor = Vec4(1.f, 1.f, 1.f, 1.f);
         int hasDiffuseTexture = 0;

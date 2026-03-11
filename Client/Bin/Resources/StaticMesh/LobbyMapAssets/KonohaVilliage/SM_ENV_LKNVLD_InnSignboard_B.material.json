@@ -1,24 +1,20 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_WoodPlain_Brown",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "a17b31f8-5f7f-4d24-a733-8366a5727372"
     },
     {
       "material_name": "MI_ENV_LKNVLD_InnSignboard_C",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "aea34076-6f88-4c3c-96b9-0913b621a60d"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Roof_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "b6db2372-748f-47db-bce0-c5c5fedb30ea"
     },
     {
       "material_name": "Material_3",
-      "profile": "unresolved",
       "textures": []
     }
   ]

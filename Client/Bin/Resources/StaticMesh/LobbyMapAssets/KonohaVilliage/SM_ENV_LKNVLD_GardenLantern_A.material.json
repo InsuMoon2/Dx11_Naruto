@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_GardenLantern_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "265c3069-df7e-4aaa-b57a-f7495cc8ca73"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]

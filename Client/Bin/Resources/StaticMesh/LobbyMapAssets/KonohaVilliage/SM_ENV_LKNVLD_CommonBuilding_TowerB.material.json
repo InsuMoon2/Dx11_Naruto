@@ -1,19 +1,16 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Windows_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "b51f48c0-ac94-4867-bd5e-ae63f672cb23"
     },
     {
       "material_name": "MI_ENV_LKNVLD_CommonBuilding_D",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "5ed5cb4b-c5cf-4412-9fd8-8edc005ec5d8"
     },
     {
       "material_name": "Material_2",
-      "profile": "unresolved",
       "textures": []
     }
   ]

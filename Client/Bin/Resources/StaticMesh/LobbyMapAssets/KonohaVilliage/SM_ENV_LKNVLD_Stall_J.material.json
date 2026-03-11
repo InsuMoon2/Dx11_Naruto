@@ -1,19 +1,16 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Stall_J",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "adc462bf-bcad-445a-8cd5-0644e5932d81"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Roof_Aa",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "01976c45-7c27-4033-80bd-993134379009"
     },
     {
       "material_name": "Material_2",
-      "profile": "unresolved",
       "textures": []
     }
   ]

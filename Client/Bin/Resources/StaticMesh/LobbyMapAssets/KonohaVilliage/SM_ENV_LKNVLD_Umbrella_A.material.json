@@ -1,14 +1,12 @@
 {
-  "version": 3,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_LKNVLD_Umbrella_A",
-      "profile": "unresolved",
-      "textures": []
+      "material_instance_guid": "9b2f0161-a5ec-4399-bd56-95c48afafc8d"
     },
     {
       "material_name": "Material_1",
-      "profile": "unresolved",
       "textures": []
     }
   ]
