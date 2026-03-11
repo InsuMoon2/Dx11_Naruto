@@ -1,25 +1,25 @@
 {
-  "version": 2,
+  "version": 3,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG_Pipe_Dark",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_Pipe_B",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_KNVLLG_AnimatedScreen_01",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "Material_3",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     }
   ]
 }

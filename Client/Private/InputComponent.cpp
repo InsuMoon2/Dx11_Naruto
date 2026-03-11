@@ -58,17 +58,33 @@ void InputComponent::Update_Input(float timeDelta)
 
     // TODO : Ctrl : 슈퍼점프, Left : 약공, Right : 강공, 우클릭 -> 벽타기 입체기동
     // TODO : 2단점프까지 가능하도록
+    bool ctrlPress  = INPUT->KeyPress(KEY_TYPE::LCTRL);
+    bool ctrlUp     = INPUT->KeyUp(KEY_TYPE::LCTRL);
+
+    if (ctrlPress)
+    {
+        _superJumpCharge = ::clamp(_superJumpCharge + timeDelta, 0.f, MAX_JUMP_CHARGE);
+    }
+    else if (!ctrlUp)
+    {
+        _superJumpCharge = 0.f;
+    }
 
     Vec2 mouseDelta = INPUT->GetMouseDelta();
     _frame.lookYaw = mouseDelta.x;
     _frame.lookPitch = mouseDelta.y;
 
+    _frame.superJumpCharge = _superJumpCharge;
+    _frame.superJumpPress = ctrlPress;
+    _frame.superJumpUp = ctrlUp;
 }
 
 void InputComponent::Reset_FrameInput()
 {
     _frame.jumpDown = false;
     _frame.sprintDown = false;
+
+    _frame.superJumpUp = false;
 
     _frame.useSkillDown[0] = false;
     _frame.useSkillDown[1] = false;

@@ -1,70 +1,70 @@
 {
-  "version": 2,
+  "version": 3,
   "materials": [
     {
       "material_name": "MI_LKNVLD_Plaster_Backdrop_Red",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_MetalRoof_RedYellow",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_Door_E",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Lighter",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural_Yellowed",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_Windows_A",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_ConcreteSlabs",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_Pipe_G",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_ClanSignboard_L",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_ClanSignboard_M",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodPlain_Red",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_ConcreteSlabs_Dark",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "Material_12",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     }
   ]
 }

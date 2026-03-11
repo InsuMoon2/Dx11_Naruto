@@ -1,70 +1,70 @@
 {
-  "version": 2,
+  "version": 3,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Roof_J",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_Roof_F",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_ConcreteWall_N",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodWindows_G",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_Metal_A",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_ConcreteFloor_C",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_ConcreteWall_F",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_ConcreteWall_C",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodPillar_A",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_ConcreteFloor_F",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_Roof_C",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_Pipe_E",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "Material_12",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     }
   ]
 }

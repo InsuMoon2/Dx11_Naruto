@@ -27,6 +27,13 @@
             "path": "../../Client/Bin/Shaders/Shader_UI.hlsl",
             "count": 1,
             "type": "VtxTex"
+        },
+        {
+            "id": "COMPONENT_TYPE_SHADER_STATIC_MESH",
+            "level": "Static",
+            "path": "../../Client/Bin/Shaders/Shader_VtxStaticMesh.hlsl",
+            "count": 1,
+            "type": "VtxMesh"
         }
     ]
 }

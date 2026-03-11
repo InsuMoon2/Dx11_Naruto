@@ -15,7 +15,7 @@ public:
 
 public: /* GUID 조회 */
     // GUID로 에셋 메타 정보 가져오기
-    const FAssetMeta* Find_ByGUID(const string& guid) const;
+    const FAssetMeta*   Find_ByGUID(const string& guid) const;
 
     // 파일 경로 -> GUID
     string              Find_GUID(const wstring& filePath) const;
@@ -36,6 +36,8 @@ public: /* .meta 관리 */
     void                Update_AssetPath(const string& guid, const wstring& newFilePath);
     void                Refresh_Cache();
 
+    uint32              Clear_DisallowedMeta(const wstring& directory);
+
 private:
     bool                Load_Meta(const wstring& metaPath);
     bool                Save_Meta(const wstring& metaPath, const FAssetMeta& meta);
@@ -44,7 +46,11 @@ private:
     void                Load_Cache();
     void                Save_Cache();
 
-    
+    bool                Should_RegisterAsset(const fs::path& path) const;
+    static string       ToLowerCopy(string value);
+    static bool         EndsWith(const string& value, const string& suffix);
+
+    void                Unregister_AssetPath(const wstring& assetPath);
 
 private:
     wstring                     _resourceRoot;

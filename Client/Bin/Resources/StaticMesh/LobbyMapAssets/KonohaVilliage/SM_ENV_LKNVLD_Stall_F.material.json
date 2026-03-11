@@ -1,30 +1,30 @@
 {
-  "version": 2,
+  "version": 3,
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Roof_Aa",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_Stall_03",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_Stall_I",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "MI_ENV_LKNVLD_Stall_Emissive_03",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     },
     {
       "material_name": "Material_4",
-      "textures": [
-      ]
+      "profile": "unresolved",
+      "textures": []
     }
   ]
 }

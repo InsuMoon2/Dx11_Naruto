@@ -1,7 +1,7 @@
-﻿# Dx11_Naruto 프로젝트 구조
+# Dx11_Naruto 프로젝트 구조
 
 > **AI 어시스턴트는 매 대화 시작 시 이 파일을 반드시 읽을 것!**
-> 마지막 갱신: 2026-03-10
+> 마지막 갱신: 2026-03-11
 
 ---
 
@@ -139,9 +139,11 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `VIBuffer_Terrain` | 하이트맵 기반 지형 메쉬 |
 | `Mesh` | Assimp aiMesh 기반 메쉬 (VIBuffer 상속, VTXMESH 정점 사용) |
 | `Model` | Assimp 모델 로드 컴포넌트 (다수 Mesh + ModelMaterial 소유, GUID 기반 직렬화, `GENERATED_COMPONENT` 적용) |
+| `Model_BinaryLoader` | 커스텀 바이너리 모델 파일 로더 (`FMeshFileHeader` + `FMeshBinaryData` 기반, Assimp 변환 후 바이너리 캐시 로드) |
 | `ModelMaterial` | Assimp aiMaterial 기반 머티리얼 (텍스처 타입별 SRV 배열, `Bind_Material()` 제공) |
 | `Transform` | 위치/회전/스케일, 로컬/월드, 부모-자식 계층 |
 | `RenderTarget` | 렌더 타겟 텍스처 |
+| `DebugDraw` | DirectXTK PrimitiveBatch 기반 디버그 도형 렌더링 (BoundingSphere, BoundingBox, Grid, Ray 등) |
 
 ### 게임플레이
 
@@ -211,7 +213,8 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `UI_PlayerHUD` | `HUD` | 플레이어 전체 HUD 루트. `UI_PlayerStatus` 자식 보유, `Bind_Player()` |
 | `UI_PlayerStatus` | `Panel` | 플레이어 상태 패널 (HP바 + 배경). 자식으로 `UI_PlayerHP` 보유 |
 | `UI_PlayerHP` | `UIObject` | HP 비율 바 (Shader + Texture + VIBuffer_Rect, `Set_Ratio()`) |
-| `UI_PlayerSkill` | `Panel` | **스킬 패널 (현재 빈 껍데기, 구현 예정)** |
+| `UI_PlayerSkill` | `Panel` | 스킬 패널 (`UI_SkillSlot` 자식 보유, `SkillComponent` 연동) |
+| `UI_SkillSlot` | `UIObject` | 스킬 슬롯 UI (아이콘 SRV 인덱스 + 쿨다운 비율 표시, `FSkillSlotDesc`) |
 
 ### 플레이어 상태 머신 (FSM)
 
@@ -240,6 +243,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `CombatStat` | 전투 스탯 (HP, ATK 등) |
 | `MovementComponent` | 이동 처리 |
 | `InputComponent` | 입력 처리 |
+| `SkillComponent` | 스킬 컴포넌트 (`COMPONENT_TYPE_SKILL`). 2슬롯 스킬 장착/활성화/쿨다운 관리, `CombatStat` 참조 |
 | `PlayerController` | 플레이어 입력 → 이동 연결 |
 | `AIController` | AI 제어 (BT 실행) |
 | `Replicator` | 네트워크 복제 |
@@ -268,6 +272,7 @@ GameServer (EXE) ── ServerCore + Protobuf
 |---|---|
 | `Spawn_Helper` | 빌더 패턴 스폰 헬퍼 |
 | `IReplicable` | 복제 인터페이스 |
+| `SkillDataManager` | 스킬 데이터 싱글톤 매니저 (`FSkillData` 등록/조회, `Load_SkillTable` 연동) |
 
 ---
 
@@ -360,9 +365,11 @@ Assimp 헤더는 `Engine/Public/Assimp/`에서, 라이브러리는 `Engine/Third
 
 | 파일 | 설명 |
 |---|---|
-| `pch.h` | Assimp 헤더, SimpleMath, spdlog, Engine_Macro.h 포함 |
+| `pch.h` | Assimp 헤더, SimpleMath, spdlog, ConverterTypes, BinaryWriter 포함 |
 | `Assimp_Macro.h` | Engine_Macro.h 참조 (LOG_INFO 등 공유) |
-| `Converter.h/cpp` | FBX → 커스텀 변환 핵심 (`ReadAssetFile`) |
+| `ConverterTypes.h` | 바이너리 포맷 정의 — `MESHBIN_MAGIC`/`MESHBIN_VERSION`, `EConvertModelType`, `FMeshFileHeader`, `FMeshVertexBin`, `FExportMeshData`, `FExportTextureRef`, `FExportMaterialData` |
+| `BinaryWriter.h/cpp` | 바이너리 파일 쓰기 유틸 (`Write<T>`, `WriteBytes`, `WriteString`) |
+| `Converter.h/cpp` | FBX/OBJ → 커스텀 바이너리 변환 핵심 (`Convert`, `Read_AssetFile`, `Build_MeshData`, `Build_MaterialData`, `Write_MeshBin`, `Write_MaterialJson`) |
 | `AssimpTool.cpp` | 진입점 (main) |
 
 ### 빌드 설정
@@ -446,7 +453,7 @@ GENERATED_COMPONENT(ClassName, Protocol::COMPONENT_TYPE_XXX)
 
 ### 현재 등록된 컴포넌트 (Static 레벨)
 CombatStat, Replicator, VIBuffer_Rect, MovementComponent,
-InputComponent, BehaviorTree, PlayerController, AIController, PlayerStateMachine
+InputComponent, BehaviorTree, PlayerController, AIController, PlayerStateMachine, SkillComponent
 
 > [!NOTE]
 > `Model` 컴포넌트는 팩토리 등록이 주석 처리되어 있음 (프로토타입/셰이더 초기화 인자 필요)
@@ -633,7 +640,7 @@ enum PacketID {
 - [ ] 이동 동기화 패킷 throttle (매 프레임 전송 → 주기적 전송)
 - [ ] `Model` 컴포넌트 팩토리 등록 활성화 (현재 주석 처리, 초기화 인자 설계 필요)
 - [ ] `Shader_VtxMesh.hlsl` PS_MAIN에서 `g_DiffuseTexture` 텍스처 샘플링 적용
-- [ ] `UI_PlayerSkill` 구현 (현재 빈 껍데기, Panel 상속만 있음) — `FSkillData` + `Load_SkillTable` 기반 스킬 아이콘 자동 매핑 검토 중
+- [x] `UI_PlayerSkill` / `UI_SkillSlot` / `SkillComponent` / `SkillDataManager` 스킬 시스템 기본 구현 완료 (2슬롯 쿨다운 UI + 데이터 매니저)
 
 ---
 

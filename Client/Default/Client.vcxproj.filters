@@ -140,6 +140,12 @@
     <ClInclude Include="..\Public\UI_SkillSlot.h">
       <Filter>02. GameObject\02. UI\01. Player\01. Skill</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_DoubleJump.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_SuperJump.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -266,6 +272,12 @@
     <ClCompile Include="..\Private\UI_SkillSlot.cpp">
       <Filter>02. GameObject\02. UI\01. Player\01. Skill</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_DoubleJump.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_SuperJump.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -389,6 +401,9 @@
       <Filter>94. Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_UI.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_VtxStaticMesh.hlsl">
       <Filter>94. Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -2,6 +2,7 @@
 #include "ModelMaterial.h"
 #include "GameInstance.h"
 #include "Shader.h"
+#include <fstream>
 
 ModelMaterial::ModelMaterial(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -11,6 +12,14 @@ ModelMaterial::ModelMaterial(ComPtr<Device> device, ComPtr<DeviceContext> contex
 
 HRESULT ModelMaterial::Initialize_FromJson(const json& data, const string& materialFilePath)
 {
+    {
+        _baseColorFactor = Read_Vec4_Array(data, "base_color_factor", Vec4(1.f, 1.f, 1.f, 1.f));
+        _shadowColor = Read_Vec4_Array(data, "shadow_color", Vec4(1.f, 1.f, 1.f, 1.f));
+        _normalStrength = data.value("normal_strength", 1.f);
+        _materialProfile = data.value("profile", string(""));
+        _blendMode = data.value("blend_mode", 0);
+    }
+
     _materialName = data.value("material_name", data.value("name", string("Material")));
 
     if (!data.contains("textures") || !data["textures"].is_array())
@@ -36,6 +45,19 @@ HRESULT ModelMaterial::Initialize_FromJson(const json& data, const string& mater
     }
 
     return S_OK;
+}
+
+HRESULT ModelMaterial::Initialize_FromMaterialInstance(const string& matInstanceFilePath)
+{
+    ifstream file(matInstanceFilePath);
+    if (!file.is_open())
+        return E_FAIL;
+
+    json root;
+    file >> root;
+    file.close();
+
+    return Initialize_FromJson(root, matInstanceFilePath);
 }
 
 HRESULT ModelMaterial::Bind_Material(Shared<Shader> shader, const char* constantName, EMaterialTextureSlot slot, uint32 textureIndex)
@@ -168,6 +190,19 @@ HRESULT ModelMaterial::Load_Texture_File(EMaterialTextureSlot slot, uint32 index
     _textureGuids[slotIndex][index] = GAME->Find_AssetGUID(wPath);
 
     return S_OK;
+}
+
+Vec4 ModelMaterial::Read_Vec4_Array(const json& data, const char* key, const Vec4& defaultValue)
+{
+    if (!data.contains(key) || !data[key].is_array() || data[key].size() < 4)
+        return defaultValue;
+
+    return Vec4(
+        data[key][0].get<float>(),
+        data[key][1].get<float>(),
+        data[key][2].get<float>(),
+        data[key][3].get<float>()
+    );
 }
 
 json ModelMaterial::To_Json() const

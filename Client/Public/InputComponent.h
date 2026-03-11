@@ -18,7 +18,11 @@ public:
 
         bool sprintPress = false;
         bool sprintDown = false;
+
         bool jumpDown = false;
+        bool superJumpPress = false;
+        bool superJumpUp = false;
+        float superJumpCharge = 0.f;
 
         bool useSkillDown[2] = { false, false };
     };
@@ -45,7 +49,11 @@ protected:
     void From_Json(const json& data) override;
 
 private:
+    static constexpr float MAX_JUMP_CHARGE = 3.f;
+
     FInputFrame _frame;
+
+    float   _superJumpCharge = 0.f;
 
 public:
     static Shared<InputComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

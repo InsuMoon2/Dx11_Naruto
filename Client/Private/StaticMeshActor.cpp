@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Shader.h"
 #include "Model.h"
+#include "ModelMaterial.h"
 
 StaticMeshActor::StaticMeshActor(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
@@ -74,10 +75,30 @@ HRESULT StaticMeshActor::Render()
 
     for (size_t i = 0; i < numMeshes; ++i)
     {
-        _modelCom->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
+        auto material = _modelCom->Get_Material(static_cast<uint32>(i));
+
+        Vec4 baseColorFactor = Vec4(1.f, 1.f, 1.f, 1.f);
+        int hasDiffuseTexture = 0;
+
+        if (material)
+        {
+            baseColorFactor = material->Get_BaseColorFactor();
+            hasDiffuseTexture =
+                (material->Get_TextureCount(EMaterialTextureSlot::BaseColor) > 0) ? 1 : 0;
+        }
+
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColorFactor", &baseColorFactor, sizeof(Vec4)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasDiffuseTexture", &hasDiffuseTexture, sizeof(int)), E_FAIL);
+
+        if (hasDiffuseTexture != 0)
+        {
+            CHECK_FAILED(
+                _modelCom->Bind_Material(_shaderCom, "g_DiffuseTexture", static_cast<uint32>(i),
+                    EMaterialTextureSlot::BaseColor,0), E_FAIL);
+        }
 
         CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
-        CHECK_FAILED(_modelCom->Render(i), E_FAIL);
+        CHECK_FAILED(_modelCom->Render(static_cast<uint32>(i)), E_FAIL);
     }
 
     return S_OK;
@@ -219,7 +240,7 @@ HRESULT StaticMeshActor::Ready_Components()
 
     GAME->Add_Component_Prototype(ETOI(ELevelType::Static), modelKey, proto);
     CHECK_FAILED(Add_Component(ETOI(ELevelType::Static), modelKey, _modelCom), E_FAIL);
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXMESH, _shaderCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_STATIC_MESH, _shaderCom), E_FAIL);
 
     return S_OK;
 }

@@ -23,6 +23,12 @@ void PlayerState_Run::Update(PlayerStateMachine* state, float timeDelta)
     auto movement = state->Get_Movement();
     const auto& frame = input->Get_Frame();
 
+    if (frame.superJumpUp && frame.superJumpCharge > 0.f)
+    {
+        state->Change_State(EPlayerState::SuperJump);
+        return;
+    }
+
     if (frame.jumpDown)
     {
         state->Change_State(EPlayerState::Jump);

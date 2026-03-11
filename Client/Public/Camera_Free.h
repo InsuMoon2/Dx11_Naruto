@@ -31,6 +31,7 @@ public:
 
 protected:
     float _mouseSensor = {};
+    float _cameraSpeed = 10.f;
 
 public:
     static Shared<Camera_Free> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

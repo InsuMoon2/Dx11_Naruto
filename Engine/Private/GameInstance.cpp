@@ -483,6 +483,11 @@ void GameInstance::Refresh_Cache()
     return _assetManager->Refresh_Cache();
 }
 
+uint32 GameInstance::Clear_DisallowedMeta(const wstring& directory)
+{
+    return _assetManager->Clear_DisallowedMeta(directory);
+}
+
 //Shared<UIObject> GameInstance::Add_UI(uint32 levelIndex, uint32 objID, EUILayer layer, void* arg)
 //{
 //    Shared<GameObject> obj = _protoManager->Clone_GameObject(levelIndex, objID, arg);

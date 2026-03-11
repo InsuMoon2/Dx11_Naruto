@@ -16,6 +16,7 @@ public:
 
 public:
     HRESULT Initialize_FromJson(const json& data, const string& materialFilePath);
+    HRESULT Initialize_FromMaterialInstance(const string& matInstanceFilePath);
     HRESULT Bind_Material(Shared<Shader> shader, const char* constantName, EMaterialTextureSlot slot, uint32 textureIndex);
 
     string  Get_MaterialName() const { return _materialName; }
@@ -23,6 +24,13 @@ public:
     string  Get_TextureGuid(EMaterialTextureSlot slot, uint32 index) const;
 
     HRESULT Override_Texture(EMaterialTextureSlot slot, uint32 index, const string& guid);
+
+public:
+    const Vec4&     Get_BaseColorFactor() const { return _baseColorFactor; }
+    float           Get_NormalStrength() const { return _normalStrength; }
+    const string&   Get_MaterialProfile() const { return _materialProfile; }
+
+    static Vec4 Read_Vec4_Array(const json& data, const char* key, const Vec4& defaultValue);
 
 public:
     json    To_Json() const;
@@ -44,6 +52,13 @@ private:
 
     string                             _materialName;
 
+private:
+    // Mateiral Instnace
+    Vec4    _baseColorFactor = Vec4(1.f, 1.f, 1.f, 1.f);
+    Vec4    _shadowColor = Vec4(1.f, 1.f, 1.f, 1.f);
+    float   _normalStrength = 1.f;
+    string  _materialProfile;
+    int32   _blendMode = 0;
 
 public:
     static Shared<ModelMaterial> Create(ComPtr<Device> device, ComPtr<DeviceContext> context,

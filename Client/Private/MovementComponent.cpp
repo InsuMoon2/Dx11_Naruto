@@ -120,10 +120,25 @@ void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> trans
     _velocity.x = ::lerp(_velocity.x, targetVelocity.x, alpha);
     _velocity.z = ::lerp(_velocity.z, targetVelocity.z, alpha);
 
-    if (_onGround && _commandDesc.jump)
+    // 컨트롤 처음 눌렀을 때
+    if (_onGround && _commandDesc.superJumpVelocity > 0.f)
+    {
+        _verticalVelocity = _commandDesc.superJumpVelocity;
+        _onGround = false;
+        _canDoubleJump = false; // 슈퍼점프하고는 2단점프 하게 할지?
+    }
+    // 일반 점프
+    else if (_onGround && _commandDesc.jump)
     {
         _verticalVelocity = _moveDesc.jumpVelocity;
         _onGround = false;
+        _canDoubleJump = true;
+    }
+    // 2단 점프
+    else if (!_onGround && _commandDesc.doublejump && _canDoubleJump)
+    {
+        _verticalVelocity = _moveDesc.doubleJumpVelocity;
+        _canDoubleJump = false;
     }
 
     if (!_onGround)
@@ -149,6 +164,7 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
 
         _verticalVelocity = 0.f; // 떨어지는 속도 초기화
         _onGround = true;
+        _canDoubleJump = false;
     }
     else
     {

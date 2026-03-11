@@ -3,6 +3,54 @@
 
 namespace fs = std::filesystem;
 
+static fs::path FindExistingPathFromAncestors(const fs::path& start, const fs::path& relativePath)
+{
+    if (start.empty())
+        return {};
+
+    fs::path current = fs::absolute(start);
+    if (!fs::is_directory(current))
+        current = current.parent_path();
+
+    while (!current.empty())
+    {
+        const fs::path candidate = current / relativePath;
+        if (fs::exists(candidate))
+            return fs::absolute(candidate);
+
+        const fs::path parent = current.parent_path();
+        if (parent == current)
+            break;
+
+        current = parent;
+    }
+
+    return {};
+}
+
+static fs::path ResolveDefaultKonohaDir(const wchar_t* executablePath)
+{
+    static constexpr wchar_t kDefaultRelativePath[] =
+        LR"(Client\Bin\Resources\StaticMesh\LobbyMapAssets\KonohaVilliage)";
+
+    if (fs::path fromWorkingDir = FindExistingPathFromAncestors(fs::current_path(), kDefaultRelativePath);
+        !fromWorkingDir.empty())
+    {
+        return fromWorkingDir;
+    }
+
+    if (executablePath != nullptr)
+    {
+        if (fs::path fromExecutableDir = FindExistingPathFromAncestors(fs::path(executablePath).parent_path(), kDefaultRelativePath);
+            !fromExecutableDir.empty())
+        {
+            return fromExecutableDir;
+        }
+    }
+
+    return fs::absolute(fs::path(kDefaultRelativePath));
+}
+
 static bool IsTargetMesh(const fs::path& path)
 {
     if (!path.has_extension())
@@ -36,8 +84,7 @@ int wmain(int argc, wchar_t** argv)
     }
     else
     {
-        srcDir = fs::absolute(
-            LR"(C:\Users\moon\Desktop\Jusin\GitDesktop\Dx11_Naruto\Client\Bin\Resources\StaticMesh\LobbyMapAssets\KonohaVilliage)");
+        srcDir = ResolveDefaultKonohaDir(argc > 0 ? argv[0] : nullptr);
         dstDir = srcDir;
 
         wcout << L"[AssimpTool] No arguments provided. Using default Konoha path." << endl;

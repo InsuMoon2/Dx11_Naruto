@@ -7,6 +7,8 @@ namespace Client
         Idle,
         Run,
         Jump,
+        DoubleJump,
+        SuperJump,
 
         //Attack,
         //Hit,

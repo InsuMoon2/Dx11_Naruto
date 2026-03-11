@@ -250,9 +250,11 @@
     <ClInclude Include="..\Public\NetworkManager.h" />
     <ClInclude Include="..\Public\PlayerController.h" />
     <ClInclude Include="..\Public\PlayerStateMachine.h" />
+    <ClInclude Include="..\Public\PlayerState_DoubleJump.h" />
     <ClInclude Include="..\Public\PlayerState_Idle.h" />
     <ClInclude Include="..\Public\PlayerState_Jump.h" />
     <ClInclude Include="..\Public\PlayerState_Run.h" />
+    <ClInclude Include="..\Public\PlayerState_SuperJump.h" />
     <ClInclude Include="..\Public\RemotePlayer.h" />
     <!-- <ClInclude Include="..\Public\MainApp.h" /> -->
     <ClInclude Include="..\Public\Replicator.h" />
@@ -321,9 +323,11 @@
     <ClCompile Include="..\Private\NetworkManager.cpp" />
     <ClCompile Include="..\Private\PlayerController.cpp" />
     <ClCompile Include="..\Private\PlayerStateMachine.cpp" />
+    <ClCompile Include="..\Private\PlayerState_DoubleJump.cpp" />
     <ClCompile Include="..\Private\PlayerState_Idle.cpp" />
     <ClCompile Include="..\Private\PlayerState_Jump.cpp" />
     <ClCompile Include="..\Private\PlayerState_Run.cpp" />
+    <ClCompile Include="..\Private\PlayerState_SuperJump.cpp" />
     <ClCompile Include="..\Private\RemotePlayer.cpp" />
     <!-- <ClCompile Include="..\Private\MainApp.cpp" /> -->
     <ClCompile Include="..\Private\Replicator.cpp" />
@@ -361,24 +365,38 @@
     <FxCompile Include="..\Bin\Shaders\Shader_UI.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_VtxMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_VtxNorTex.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_VtxStaticMesh.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_Vtxtex.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -9,6 +9,7 @@ bool Camera_Free::Register_Properties()
     info.className = "Camera_Free";
 
     PROPERTY_FLOAT("Mouse Sensor : ", _mouseSensor, 0.1f, 5.f);
+    PROPERTY_FLOAT("Camera Speed : ", _cameraSpeed, 1.f, 100.f);
 
     return true;
 }
@@ -37,6 +38,7 @@ HRESULT Camera_Free::Initialize(void* arg)
 
     FCameraFreeDesc* desc = static_cast<FCameraFreeDesc*>(arg);
     _mouseSensor = desc->mouseSensor;
+    _cameraSpeed = desc->speedPerSec;
 
     CHECK_FAILED(Camera::Initialize(desc), E_FAIL);
 
@@ -60,13 +62,26 @@ void Camera_Free::Priority_Update(float timeDelta)
         return;
     }
 
+    float wheel = INPUT->GetMouseWheel();
+    if (INPUT->KeyPress(KEY_TYPE::LCTRL) && wheel != 0)
+    {
+        _cameraSpeed = ::clamp(_cameraSpeed + wheel * 2.f, 1.f, 100.f);
+    }
+
     if (INPUT->KeyPress(KEY_TYPE::RBUTTON))
     {
         // 이동
-        if (INPUT->KeyPress(KEY_TYPE::W)) _transformCom->Move_Forward(timeDelta);
-        if (INPUT->KeyPress(KEY_TYPE::S)) _transformCom->Move_Backward(timeDelta);
-        if (INPUT->KeyPress(KEY_TYPE::A)) _transformCom->Move_Left(timeDelta);
-        if (INPUT->KeyPress(KEY_TYPE::D)) _transformCom->Move_Right(timeDelta);
+        if (INPUT->KeyPress(KEY_TYPE::W))
+            _transformCom->Add_WorldOffset(_transformCom->Get_WorldForward() * _cameraSpeed * timeDelta);
+
+        if (INPUT->KeyPress(KEY_TYPE::S))
+            _transformCom->Add_WorldOffset(-_transformCom->Get_WorldForward() * _cameraSpeed * timeDelta);
+
+        if (INPUT->KeyPress(KEY_TYPE::A))
+            _transformCom->Add_WorldOffset(-_transformCom->Get_WorldRight() * _cameraSpeed * timeDelta);
+
+        if (INPUT->KeyPress(KEY_TYPE::D))
+            _transformCom->Add_WorldOffset(_transformCom->Get_WorldRight() * _cameraSpeed * timeDelta);
 
         // 회전
         {
@@ -87,6 +102,8 @@ void Camera_Free::Priority_Update(float timeDelta)
         }
 
     }
+
+
 
     // 마지막에 Update 반드시 호출
     Update_TransformMatrices();

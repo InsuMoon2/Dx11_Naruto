@@ -14,6 +14,9 @@ HRESULT Asset_Manager::Initialize(const wstring& resourceRoot)
     if (fs::exists(_cachePath))
     {
         Load_Cache();
+        Refresh_Cache();
+        Scan_And_Register(_resourceRoot);
+        Save_Cache();
     }
     else
     {
@@ -57,6 +60,9 @@ wstring Asset_Manager::Resolve_Path(const string& guid) const
 
 string Asset_Manager::Register_Asset(const wstring& filePath, const string& type)
 {
+    if (!Should_RegisterAsset(fs::path(filePath)))
+        return "";
+
     wstring absPath = fs::absolute(filePath).wstring();
 
     // 이미 등록돼있으면 기존 GUID 반환
@@ -101,41 +107,31 @@ void Asset_Manager::Scan_And_Register(const wstring& directory)
         if (entry.is_directory())
             continue;
 
-        wstring filePath = entry.path().wstring();
+        const fs::path filePath = entry.path();
 
-        // .meta는 스킵
-        if (entry.path().extension() == L".meta")
-            continue;
-
-        // 캐시 파일 스킵
-        if (entry.path().filename() == L".asset_cache.json")
-            continue;
-
-        string pathStr = Utils::ToString(filePath);
+        string pathStr = Utils::ToString(filePath.wstring());
         bool skip = false;
 
         for (auto& folder : _ignoreFolders)
         {
             if (pathStr.find(folder) != string::npos)
-            {
                 skip = true;
                 break;
-            }
         }
 
         if (skip)
             continue;
 
-        wstring metaPath = filePath + L".meta";
-        if (fs::exists(metaPath))
-        {
-            Load_Meta(metaPath);
-        }
-        else
-        {
-            Register_Asset(filePath);
-        }
+        if (!Should_RegisterAsset(filePath))
+            continue;
 
+        const wstring assetPath = filePath.wstring();
+        const wstring metaPath = assetPath + L".meta";
+
+        if (fs::exists(metaPath))
+            Load_Meta(metaPath);
+        else
+            Register_Asset(assetPath);
     }
 
 }
@@ -199,6 +195,38 @@ void Asset_Manager::Refresh_Cache()
         LOG_INFO("{} 개의 유실된 에셋을 레지스트리에서 정리", invalidGuids.size());
     }
 
+}
+
+uint32 Asset_Manager::Clear_DisallowedMeta(const wstring& directory)
+{
+    if (!fs::exists(directory))
+        return 0;
+
+    uint32 removedCount = 0;
+
+    for (const auto& entry : fs::recursive_directory_iterator(directory))
+    {
+        if (entry.is_directory())
+            continue;
+
+        const fs::path path = entry.path();
+        if (ToLowerCopy(path.extension().string()) != ".meta")
+            continue;
+
+        const fs::path assetPath = path.parent_path() / path.stem();
+        const bool assetExists = fs::exists(assetPath);
+        const bool shouldKeepMeta = assetExists && Should_RegisterAsset(assetPath);
+
+        if (shouldKeepMeta)
+            continue;
+
+        Unregister_AssetPath(assetPath.wstring());
+        fs::remove(path);
+        ++removedCount;
+    }
+
+    Save_Cache();
+    return removedCount;
 }
 
 bool Asset_Manager::Load_Meta(const wstring& metaPath)
@@ -265,29 +293,19 @@ string Asset_Manager::Detect_AssetType(const wstring& filePath) const
 {
     fs::path path(filePath);
 
-    string filename = path.filename().string();
-    
-    if (filename.ends_with(".prefab.json"))     return "prefab";
-    if (filename.ends_with(".bt.json"))         return "behavior_tree";
-    if (filename.ends_with(".level.json"))      return "level";
+    string filename = ToLowerCopy(path.filename().string());
 
-    string extension = path.extension().string();
+    if (EndsWith(filename, ".prefab.json"))     return "prefab";
+    if (EndsWith(filename, ".bt.json"))         return "behavior_tree";
+    if (EndsWith(filename, ".level.json"))      return "level";
+    if (EndsWith(filename, ".matinst.json"))    return "material_instance";
 
-    transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+    string extension = ToLowerCopy(path.extension().string());
 
-#pragma region Legacy 지원
-
-    if (extension == ".json") return "json";
-    if (extension == ".prefab") return "prefab";
-    if (extension == ".bt") return "behavior_tree";
-    if (extension == ".level") return "level";
-
-#pragma endregion
     if (extension == ".png" || extension == ".jpg" || extension == ".dds" || extension == ".tga")
         return "texture";
 
-    if (extension == ".fbx" || extension == ".obj" || extension == ".psk"
-        || extension == ".gltf" || extension == ".meshbin")
+    if (extension == ".meshbin")
         return "model";
 
     if (extension == ".hlsl" || extension == ".fx")
@@ -358,6 +376,103 @@ void Asset_Manager::Save_Cache()
 
     if (file.is_open())
         file << root.dump(2);
+}
+
+bool Asset_Manager::Should_RegisterAsset(const fs::path& path) const
+{
+    if (path.empty())
+        return false;
+
+    const string filename = ToLowerCopy(path.filename().string());
+    const string ext = ToLowerCopy(path.extension().string());
+
+    if (ext == ".meta")
+        return false;
+
+    if (filename == ".asset_cache.json")
+        return false;
+
+    // 에디터/런타임이 직접 참조하는 JSON만 등록
+    if (EndsWith(filename, ".prefab.json"))
+        return true;
+
+    if (EndsWith(filename, ".bt.json"))
+        return true;
+
+    if (EndsWith(filename, ".level.json"))
+        return true;
+
+    if (EndsWith(filename, ".matinst.json"))
+        return true;
+
+    // 중간 산출물/소스 파일 제외
+    if (EndsWith(filename, ".material.json"))
+        return false;
+
+    if (ext == ".bin")
+        return false;
+    if (ext == ".gltf")
+        return false;
+    if (ext == ".fbx")
+        return false;
+    if (ext == ".obj")
+        return false;
+    if (ext == ".psk")
+        return false;
+
+    // 런타임에서 직접 쓰는 모델만 등록
+    if (ext == ".meshbin")
+        return true;
+
+    // 텍스처
+    if (ext == ".png" || ext == ".jpg" || ext == ".dds" || ext == ".tga")
+        return true;
+
+    // 셰이더
+    if (ext == ".hlsl" || ext == ".fx")
+        return true;
+
+    // 애니메이션
+    if (ext == ".clip" || ext == ".psa")
+        return true;
+
+    // 오디오
+    if (ext == ".wav" || ext == ".mp3" || ext == ".ogg")
+        return true;
+
+    // 폰트
+    if (ext == ".ttf" || ext == ".otf")
+        return true;
+
+    return false;
+}
+
+string Asset_Manager::ToLowerCopy(string value)
+{
+    ::transform(value.begin(), value.end(), value.begin(), ::tolower);
+
+    return value;
+}
+
+bool Asset_Manager::EndsWith(const string& value, const string& suffix)
+{
+    if (value.size() < suffix.size())
+        return false;
+
+    return value.compare(value.size() - suffix.size(), suffix.size(), suffix) == 0;
+}
+
+void Asset_Manager::Unregister_AssetPath(const wstring& assetPath)
+{
+    const wstring absPath = fs::absolute(assetPath).wstring();
+
+    auto pathIter = _pathToGuid.find(absPath);
+    if (pathIter == _pathToGuid.end())
+        return;
+
+    const string guid = pathIter->second;
+    _pathToGuid.erase(pathIter);
+    _guidToMeta.erase(guid);
 }
 
 Unique<Asset_Manager> Asset_Manager::Create(const wstring& resourceRoot)

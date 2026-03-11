@@ -22,6 +22,11 @@ public:
         float yawSpeed = 0.2f;      // Mouse delta -> Yaw factor
 
         float jumpVelocity = 8.f;
+        float doubleJumpVelocity = 6.f;
+
+        float superJumpMinVelocity = 10.f;
+        float superJumpMaxVelocity = 30.f;
+
         float gravity = -20.f;
         float groundY = 5.f;        // Temp값. 일단 5로 조절
     };
@@ -32,6 +37,8 @@ public:
         Vec2 lookDelta = Vec2::Zero;
         bool sprint = false;
         bool jump = false;
+        bool doublejump = false;
+        float superJumpVelocity = 0.f;
     };
 
 public:
@@ -49,6 +56,9 @@ public:
     void Update(float timeDelta);
 
     bool Is_OnGround() { return _onGround == true; }
+    bool Can_DoubleJump() { return _canDoubleJump == true; }
+
+    const FMovementDesc& Get_MoveDesc() const { return _moveDesc; }
 
 private:
     void Update_Rotation(float timeDelta, Shared<Transform> transform);
@@ -62,6 +72,8 @@ private:
     Vec3    _velocity = Vec3::Zero;
 
     bool    _onGround = true;
+    bool    _canDoubleJump = false;
+
     float   _verticalVelocity = 0.f;
 
     Shared<Transform> _transform;

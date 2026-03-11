@@ -203,6 +203,7 @@ public: /* Asset */
     vector<const FAssetMeta*>       Get_AssetByType(const string& type);
     void                            Update_AssetPath(const string& guid, const wstring& newFilePath);
     void                            Refresh_Cache();
+    uint32                          Clear_DisallowedMeta(const wstring& directory);
 
 public: /* UI */
     //Shared<UIObject>                Add_UI(uint32 levelIndex, uint32 objID, EUILayer layer, void* arg = nullptr);

@@ -118,10 +118,13 @@ void Content_Browser::OnGui()
             {
                 ImGui::Text("Path %s", Utils::ToString(_currentFolder->fullPath).c_str());
 
-                float width = 100.f;
-                ImGui::SameLine(ImGui::GetContentRegionAvail().x - width);
+                float buttonWidth = 100.f;
+                float clearWidth = 80.f;
+                float right = ImGui::GetContentRegionAvail().x;
 
-                if (ImGui::Button(ICON_FA_ROTATE_RIGHT " 새로고침", ImVec2(width, 24)))
+                ImGui::SameLine(right - (buttonWidth + 8.f + clearWidth));
+
+                if (ImGui::Button(ICON_FA_ROTATE_RIGHT " 새로고침", ImVec2(buttonWidth, 24)))
                 {
                     Refresh_Resources();
                     GAME->Scan_Assets(TEXT("../../Client/Bin/Resources")); // Asset_Manager도 동기화
@@ -130,6 +133,15 @@ void Content_Browser::OnGui()
                 if (ImGui::IsItemHovered())
                 {
                     ImGui::SetTooltip("새로고침 [F5]");
+                }
+
+                ImGui::SameLine();
+
+                if (ImGui::Button("Clear", ImVec2(clearWidth, 24)))
+                {
+                    const uint32 removed = GAME->Clear_DisallowedMeta(_currentFolder->fullPath);
+                    Refresh_Resources();
+                    NOTIFY(std::format("{}개의 불필요한 .meta 삭제", removed).c_str());
                 }
 
                 ImGui::Separator();

@@ -3,10 +3,12 @@
 #include "GameObject.h"
 #include "InputComponent.h"
 #include "MovementComponent.h"
+#include "PlayerState_DoubleJump.h"
 
 #include "PlayerState_Idle.h"
 #include "PlayerState_Run.h"
 #include "PlayerState_Jump.h"
+#include "PlayerState_SuperJump.h"
 
 IMPLEMENT_REFLECTION(PlayerStateMachine)
 
@@ -43,7 +45,10 @@ HRESULT PlayerStateMachine::Initialize_Prototype()
 
     Register_State(EPlayerState::Idle, PlayerState_Idle::Create());
     Register_State(EPlayerState::Run, PlayerState_Run::Create());
+
     Register_State(EPlayerState::Jump, PlayerState_Jump::Create());
+    Register_State(EPlayerState::DoubleJump, PlayerState_DoubleJump::Create());
+    Register_State(EPlayerState::SuperJump, PlayerState_SuperJump::Create());
 
     return S_OK;
 }

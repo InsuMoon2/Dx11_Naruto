@@ -14,7 +14,7 @@ PlayerState_Idle::~PlayerState_Idle()
 
 void PlayerState_Idle::Enter(PlayerStateMachine* state)
 {
-    // TODO : PlayerAnimation : Idle
+    // TODO : PlayAnimation : Idle
 }
 
 void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
@@ -22,6 +22,12 @@ void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
     auto input = state->Get_Input();
     auto movement = state->Get_Movement();
     const auto& frame = input->Get_Frame();
+
+    if (frame.superJumpUp && frame.superJumpCharge > 0.f)
+    {
+        state->Change_State(EPlayerState::SuperJump);
+        return;
+    }
 
     if (frame.jumpDown)
     {
@@ -39,6 +45,7 @@ void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
     auto cmd = state->Init_MoveCommand();
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
+
 }
 
 void PlayerState_Idle::Exit(PlayerStateMachine* state)

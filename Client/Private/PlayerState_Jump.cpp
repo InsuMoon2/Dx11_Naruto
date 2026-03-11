@@ -24,7 +24,7 @@ void PlayerState_Jump::Enter(PlayerStateMachine* state)
     movement->Apply_Command(cmd);
     movement->Update(0.f);  // Jump Velocity 설정
 
-    // TODO : PlayerAnimation : Jump
+    // TODO : PlayAnimation : Jump
 
 }
 
@@ -36,6 +36,12 @@ void PlayerState_Jump::Update(PlayerStateMachine* state, float timeDelta)
 
     auto cmd = state->Init_MoveCommand();
     cmd.jump = false;   // 재점프 방지
+
+    if (frame.jumpDown && movement->Can_DoubleJump())
+    {
+        cmd.doublejump = true;
+        state->Change_State(EPlayerState::DoubleJump);
+    }
 
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
