@@ -1,0 +1,17 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG03_WoodPlain_Black",
+      "material_instance_guid": "103dfb98-628d-4a11-ad8a-cd108db8b9a6"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG03_WoodBoard_Natural_Lighter",
+      "textures": []
+    },
+    {
+      "material_name": "Material_2",
+      "textures": []
+    }
+  ]
+}

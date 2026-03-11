@@ -102,7 +102,7 @@ int wmain(int argc, wchar_t** argv)
     int successCount = 0;
     int failCount = 0;
 
-    for (const auto& entry : fs::directory_iterator(srcDir))
+    for (const auto& entry : fs::recursive_directory_iterator(srcDir))
     {
         if (!entry.is_regular_file())
             continue;
@@ -111,7 +111,10 @@ int wmain(int argc, wchar_t** argv)
         if (!IsTargetMesh(srcPath))
             continue;
 
-        const fs::path dstBase = dstDir / srcPath.stem();
+        const fs::path relStem = fs::relative(srcPath, srcDir).replace_extension("");
+        const fs::path dstBase = dstDir / relStem;
+
+        fs::create_directories(dstBase.parent_path());
 
         const bool ok = converter->Convert(
             srcPath.wstring(),

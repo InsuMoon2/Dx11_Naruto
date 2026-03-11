@@ -9,24 +9,24 @@ from pathlib import Path
 
 
 DEFAULT_MESH_ROOT = Path(
-    r"D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\StaticMesh\LobbyMapAssets\KonohaVilliage"
+    r"..\StaticMesh\LobbyMapAssets\KonohaVilliage"
 )
 
 DEFAULT_MI_ROOT = Path(
-    r"C:\Users\Moon In Su\Desktop\FModel\Output\Exports\NARUTO\Content\Environments\LobbyMapAssets\LM_KonohaVillage_BORUTO\Materials"
+    r"..\Materials\FModel\KonohaVillage_BORUTO"
 )
 
 DEFAULT_TEXTURE_ROOT = Path(
-    r"C:\Users\Moon In Su\Desktop\FModel\Output\Exports\NARUTO\Content\Environments\LobbyMapAssets\LM_KonohaVillage_BORUTO\Textures"
+    r"..\Textures\FModel\KonohaVillage_BORUTO"
 )
 
 DEFAULT_COPY_TEXTURE_ROOT = Path(
-    r"D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\Textures\FModel\KonohaVillage_BORUTO"
+    r"..\Textures\FModel\KonohaVillage_BORUTO"
 )
 
 # 새 MaterialInstance 에셋 출력 위치
 DEFAULT_MATINST_ROOT = Path(
-    r"D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\Materials\FModel\KonohaVillage_BORUTO"
+    r"..\Materials\FModel\KonohaVillage_BORUTO"
 )
 
 DEFAULT_PROFILE_CONFIG = {
@@ -522,6 +522,54 @@ def make_texture_path(src_path, owner_json_path: Path, copy_root, dry_run: bool)
     return copy_texture_and_make_relative(src_path, owner_json_path, copy_root, dry_run)
 
 
+def normalize_generated_matinst_paths(matinst_root: Path, preferred_texture_root: Path, dry_run: bool):
+    normalized = 0
+    updated_files = 0
+
+    if not matinst_root.exists() or not preferred_texture_root.exists():
+        return normalized, updated_files
+
+    for matinst_path in matinst_root.rglob("*.matinst.json"):
+        root = load_json(matinst_path)
+        textures = root.get("textures", [])
+
+        if not isinstance(textures, list):
+            continue
+
+        changed = False
+
+        for texture in textures:
+            if not isinstance(texture, dict):
+                continue
+
+            raw_path = texture.get("path", "")
+            if not raw_path:
+                continue
+
+            current_path = Path(raw_path)
+            if current_path.is_absolute():
+                continue
+
+            preferred_path = preferred_texture_root / current_path.name
+            if not preferred_path.exists():
+                continue
+
+            rel = Path(__import__("os").path.relpath(str(preferred_path), str(matinst_path.parent))).as_posix()
+            if raw_path == rel:
+                continue
+
+            texture["path"] = rel
+            normalized += 1
+            changed = True
+
+        if changed:
+            updated_files += 1
+            if not dry_run:
+                save_json(matinst_path, root)
+
+    return normalized, updated_files
+
+
 def resolve_generic_pbr(material_name: str, mi_data: dict, texture_index: dict, owner_json_path: Path,
                         copy_root, dry_run: bool):
     textures = get_textures(mi_data)
@@ -837,10 +885,11 @@ def main():
 
     if not mesh_root.exists():
         raise FileNotFoundError(f"mesh root not found: {mesh_root}")
-    if not mi_root.exists():
-        raise FileNotFoundError(f"mi root not found: {mi_root}")
-    if not texture_root.exists():
-        raise FileNotFoundError(f"texture root not found: {texture_root}")
+    if args.mode != "bind_mesh":
+        if not mi_root.exists():
+            raise FileNotFoundError(f"mi root not found: {mi_root}")
+        if not texture_root.exists():
+            raise FileNotFoundError(f"texture root not found: {texture_root}")
 
     if args.mode == "emit_matinst":
         mi_index = build_mi_index(mi_root)
@@ -859,7 +908,23 @@ def main():
             dry_run=args.dry_run,
         )
 
+        normalized, updated_files = normalize_generated_matinst_paths(
+            matinst_root=matinst_root,
+            preferred_texture_root=copy_root if copy_root is not None else Path(),
+            dry_run=args.dry_run,
+        )
+        if updated_files:
+            print(f"[Resolver] MatInst paths normalized: {normalized} entries in {updated_files} files")
+
     elif args.mode == "bind_mesh":
+        normalized, updated_files = normalize_generated_matinst_paths(
+            matinst_root=matinst_root,
+            preferred_texture_root=copy_root if copy_root is not None else Path(),
+            dry_run=args.dry_run,
+        )
+        if updated_files:
+            print(f"[Resolver] MatInst paths normalized: {normalized} entries in {updated_files} files")
+
         bind_mesh_materials(
             mesh_root=mesh_root,
             matinst_root=matinst_root,
@@ -882,6 +947,14 @@ def main():
             copy_root=copy_root,
             dry_run=args.dry_run,
         )
+
+        normalized, updated_files = normalize_generated_matinst_paths(
+            matinst_root=matinst_root,
+            preferred_texture_root=copy_root if copy_root is not None else Path(),
+            dry_run=args.dry_run,
+        )
+        if updated_files:
+            print(f"[Resolver] MatInst paths normalized: {normalized} entries in {updated_files} files")
 
         bind_mesh_materials(
             mesh_root=mesh_root,

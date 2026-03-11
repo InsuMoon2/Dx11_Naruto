@@ -104,15 +104,15 @@ void Renderer::Render_UI()
         {
             auto uiSrc = dynamic_pointer_cast<UIObject>(src);
             auto uiDst = dynamic_pointer_cast<UIObject>(dst);
-
+    
             if (uiSrc->Get_UILayer() != uiDst->Get_UILayer())
             {
                 return uiSrc->Get_UILayer() < uiDst->Get_UILayer();
             }
-
+    
             // 같은 레이어면, ZOrder 기준
             return uiSrc->Get_ZOrder() < uiDst->Get_ZOrder();
-
+    
         });
 
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::UI)])

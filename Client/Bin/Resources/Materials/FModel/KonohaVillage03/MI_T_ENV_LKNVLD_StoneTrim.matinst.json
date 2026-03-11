@@ -1,29 +1,29 @@
-{
-  "version": 1,
-  "name": "MI_T_ENV_LKNVLD_StoneTrim",
-  "profile": "generic_pbr",
-  "parent": "M_GenericPBR",
-  "base_color_factor": [
-    1.2,
-    1.2,
-    1.2,
-    0.0
-  ],
-  "normal_strength": 2.7,
-  "blend_mode": 0,
-  "textures": [
-    {
-      "slot": "base_color",
-      "index": 0,
-      "path": "../../../Textures/Konoha/T_ENV_LKNVLD_StoneTrim_Bc.png"
-    },
-    {
-      "slot": "normal",
-      "index": 0,
-      "path": "../../../Textures/Konoha/T_ENV_LKNVLD_StoneTrim_N.png"
-    }
-  ],
-  "source": {
-    "fmodel_mi_json": "MI_T_ENV_LKNVLD_StoneTrim.json"
-  }
+﻿{
+    "version":  1,
+    "name":  "MI_T_ENV_LKNVLD_StoneTrim",
+    "profile":  "generic_pbr",
+    "parent":  "M_GenericPBR",
+    "base_color_factor":  [
+                              1.2,
+                              1.2,
+                              1.2,
+                              0.0
+                          ],
+    "normal_strength":  2.7,
+    "blend_mode":  0,
+    "textures":  [
+                     {
+                         "slot":  "base_color",
+                         "index":  0,
+                         "path":  "../../../Textures/FModel/KonohaVillage03/T_ENV_LKNVLD_StoneTrim_Bc.png"
+                     },
+                     {
+                         "slot":  "normal",
+                         "index":  0,
+                         "path":  "../../../Textures/FModel/KonohaVillage03/T_ENV_LKNVLD_StoneTrim_N.png"
+                     }
+                 ],
+    "source":  {
+                   "fmodel_mi_json":  "MI_T_ENV_LKNVLD_StoneTrim.json"
+               }
 }

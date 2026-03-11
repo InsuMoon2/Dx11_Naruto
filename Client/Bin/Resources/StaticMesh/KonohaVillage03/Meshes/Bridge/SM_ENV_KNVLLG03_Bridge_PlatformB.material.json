@@ -1,0 +1,93 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPlain_Red",
+      "material_instance_guid": "711870fe-262c-4de2-a8ec-5cc72d3a1ed9"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodWallSet",
+      "material_instance_guid": "7d37287a-ebb3-4d8a-88aa-823c2534d339"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Signboard_A",
+      "material_instance_guid": "5411b19e-956f-472b-9506-b0b4dd9f86b2"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Eaves_B",
+      "material_instance_guid": "135f2c12-e91a-4ab7-a6b3-8f3256c6331f"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodPlain_Red",
+      "material_instance_guid": "711870fe-262c-4de2-a8ec-5cc72d3a1ed9"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Purple",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Eaves_A",
+      "material_instance_guid": "58a96bf9-ef8d-495b-b6ff-bf52382fdb5e"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster_Purple",
+      "material_instance_guid": "592b1467-7202-43a0-bf38-dd104ef61a71"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Signboard_B",
+      "textures": []
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneTrim",
+      "material_instance_guid": "610a733b-1903-4239-b4ba-6017d13f1bcb"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodWallSet_Red",
+      "material_instance_guid": "7fdcb200-3c81-4c82-a6f2-a42a81b247e3"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoofDark",
+      "material_instance_guid": "73cb84b6-3c65-4227-a63a-35795f5366e2"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Lantern_A",
+      "material_instance_guid": "4866fbb3-8050-40a8-ac12-1531289b31cc"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster",
+      "material_instance_guid": "cfd21e9b-6e8d-44ac-b70a-cff2b57e123a"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Plaster_Dark",
+      "material_instance_guid": "175de9b2-767f-4488-ada9-bc36a36b4f03"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_WoodBoard_Natural",
+      "material_instance_guid": "23c6599f-8320-4d71-b470-88166903927b"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_MetalRoof_Orange",
+      "material_instance_guid": "41227d49-3ba1-4a42-a5d0-d4e0f8b7861c"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Metal_C",
+      "material_instance_guid": "3c3116d6-802c-464a-a3ec-14925bbed88a"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Aircon_A",
+      "material_instance_guid": "da89e2bb-17c0-47b4-a052-f215848df7eb"
+    },
+    {
+      "material_name": "MI_T_ENV_LKNVLD_StoneStairs",
+      "material_instance_guid": "52d17ec9-4459-4b1a-9cb0-79809f6eea1d"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Door_A",
+      "material_instance_guid": "ece39add-9166-4008-9ffa-1114ce53f4d5"
+    },
+    {
+      "material_name": "Material_21",
+      "textures": []
+    }
+  ]
+}
