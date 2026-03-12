@@ -152,6 +152,16 @@ void Loader::Initialize_BT_Nodes()
     // Patrol, Attack, Skill 이런거
 }
 
+float Loader::Get_ProgressRatio() const
+{
+    if (_totalSteps <= 0)
+    {
+        return _isFinished ? 1.f : 0.f;
+    }
+
+    return static_cast<float>(_currentStep) / _totalSteps;
+}
+
 HRESULT Loader::Loading_For_Maintitle()
 {
     uint32 levelIndex = ETOI(ELevelType::MainTitle);
@@ -159,33 +169,41 @@ HRESULT Loader::Loading_For_Maintitle()
     Register_Components();
     Initialize_BT_Nodes();
 
-    lstrcpy(_loadingText, TEXT("로고 리소스 로딩 중"));
+    constexpr int totalSteps = 5;
+    int step = 0;
 
+    lstrcpy(_loadingText, TEXT("로고 리소스 로딩 중"));
+    Set_LoadProgress(++step, totalSteps);
     if (FAILED(_resourceLoader->Load_ShaderTable(
         TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"))))
         return E_FAIL;
 
+    lstrcpy(_loadingText, TEXT("지형 리소스 로딩 중"));
+    Set_LoadProgress(++step, totalSteps);
     if (FAILED(_resourceLoader->Load_TerrainTable(
         TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"))))
         return E_FAIL;
 
+    lstrcpy(_loadingText, TEXT("텍스처 로딩 중"));
+    Set_LoadProgress(++step, totalSteps);
     if (FAILED(_resourceLoader->Load_TextureTable(
         TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"))))
         return E_FAIL;
 
+    lstrcpy(_loadingText, TEXT("모델 로딩 중"));
+    Set_LoadProgress(++step, totalSteps);
     if (FAILED(_resourceLoader->Load_ModelTable(
         TEXT("../../Client/Bin/Resources/Data/json/ModelTable.json"))))
         return E_FAIL;
 
+    lstrcpy(_loadingText, TEXT("스킬 데이터 로딩 중"));
+    Set_LoadProgress(++step, totalSteps);
     if (FAILED(_resourceLoader->Load_SkillTable(
         TEXT("../../Client/Bin/Resources/Data/json/SkillDataTable.json"))))
         return E_FAIL;
 
-    lstrcpy(_loadingText, TEXT("객체 원형 로딩 중"));
-
     lstrcpy(_loadingText, TEXT("Logo 로딩 완료"));
-
-    //Sleep(3000);
+    Set_LoadProgress(totalSteps, totalSteps);
 
     _isFinished = true;
 
@@ -199,7 +217,11 @@ HRESULT Loader::Loading_For_GamePlay()
     //Register_Components();
     //Initialize_BT_Nodes();
 
+    constexpr int totalSteps = 4;
+    int step = 0;
+
     lstrcpy(_loadingText, TEXT("게임플레이 리소스 로딩 중"));
+    Set_LoadProgress(++step, totalSteps);
 
     if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_TERRAIN,
         Terrain::Create(_device, _context))))
@@ -207,6 +229,9 @@ HRESULT Loader::Loading_For_GamePlay()
         MSG_BOX("Failed to Add Prototype : Prototype_Terrain");
         return E_FAIL;
     }
+
+    lstrcpy(_loadingText, TEXT("카메라 원형 로딩 중"));
+    Set_LoadProgress(++step, totalSteps);
 
     if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_CAMERA_FREE,
         Camera_Free::Create(_device, _context))))
@@ -221,6 +246,9 @@ HRESULT Loader::Loading_For_GamePlay()
         MSG_BOX("Failed to Add Prototype : Camera_Target");
         return E_FAIL;
     }
+
+    lstrcpy(_loadingText, TEXT("스폰/정적 메시 원형 로딩 중"));
+    Set_LoadProgress(++step, totalSteps);
 
     if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_PLAYER_START,
         PlayerStart::Create(_device, _context))))
@@ -237,12 +265,18 @@ HRESULT Loader::Loading_For_GamePlay()
         return E_FAIL;
     }
 
-
     lstrcpy(_loadingText, TEXT("GamePlay 로딩 완료"));
+    Set_LoadProgress(totalSteps, totalSteps);
 
     _isFinished = true;
 
     return S_OK;
+}
+
+void Loader::Set_LoadProgress(int currentStep, int totalSteps)
+{
+    _currentStep = currentStep;
+    _totalSteps = totalSteps;
 }
 
 shared_ptr<Loader> Loader::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID)

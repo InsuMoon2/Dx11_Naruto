@@ -70,8 +70,20 @@ void UIObject::Update(float timeDelta)
 {
     GameObject::Update(timeDelta);
 
-    _posX = _transformCom->Get_WorldPosition().x;
-    _posY = _transformCom->Get_WorldPosition().y;
+    Vec3 localPos = _transformCom->Get_LocalPosition();
+
+    if (_transformCom->Has_Parent())
+    {
+        Vec3 parentLocalPos = _transformCom->Get_Parent()->Get_LocalPosition();
+        _posX = parentLocalPos.x + localPos.x;
+        _posY = parentLocalPos.y + localPos.y;
+    }
+
+    else
+    {
+        _posX = localPos.x;
+        _posY = localPos.y;
+    }
 
     _sizeX = _transformCom->Get_LocalScale().x;
     _sizeY = _transformCom->Get_LocalScale().y;
@@ -116,7 +128,7 @@ void UIObject::Update_Transform()
     float ndcX = finalPosX - (currentViewX * 0.5f);
     float ndcY = -finalPosY + (currentViewY * 0.5f);
 
-    Matrix transMatrix = XMMatrixTranslation(ndcX, ndcY, _zOrder);
+    Matrix transMatrix = XMMatrixTranslation(ndcX, ndcY, 0.f);
 
     _worldMatrix = scaleMatrix * transMatrix;
 }

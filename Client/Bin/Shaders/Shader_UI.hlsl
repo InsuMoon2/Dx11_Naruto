@@ -3,9 +3,25 @@ Texture2D g_Texture;
 
 float g_Alpha = 1.0f;
 
+// 쿨타임
+float g_CooldownRatio = 0.f;
+float g_CooldownOverlayAlpha = 0.55f;
+
+// 체력바 Fill
+float g_FillRatio   = 1.0f;
+float g_FillStartU = 0.0f;
+float g_FillEndU = 1.0f;
+
+// 기본 하얀색
+float4 g_BaseColor = float4(1.f, 1.f, 1.f, 1.f);
+
+float g_RotationAngle = 0.0f;
+
 sampler DefaultSampler = sampler_state
 {
-    Filter = MIN_MAG_MIP_LINEAR;    
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = wrap;
+    AddressV = wrap;
 };
 
 struct VS_IN
@@ -24,11 +40,8 @@ VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out;
     
-    /* 정점의 위치 * 월드 * 뷰 * 투영 */
     float4x4 matWV, matWVP;
     
-    /* mul : 행렬끼리의 곱하기연산을 수행한다. */ 
-    /* XMVector3TransformCoord : 벡터와 행렬의 곱하기연산을 수행하고 w나눈다.*/
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
@@ -38,9 +51,32 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
-/* w나누기연산을 수행한다.-> 이 연산으로 이어질수 있는 이유 -> VS_OUT구조체의 위치 -> SV_ */
-/* 뷰포트(윈도우좌표)로 변환한다. */
-/* 래스터라이즈 -> 정점 세개로 감싸진 영역의 픽셀 정보를 생성한다 */
+float2 Rotate2D(float2 pos, float angle)
+{
+    float s = sin(angle);
+    float c = cos(angle);
+
+    return float2(
+            pos.x * c - pos.y * s,
+            pos.x * s + pos.y * c );
+}
+
+VS_OUT VS_ROTATE_UI(VS_IN In)
+{
+    VS_OUT Out;
+
+    float2 rotatedXY = Rotate2D(In.vPosition.xy, g_RotationAngle);
+    float4 localPos = float4(rotatedXY, In.vPosition.z, 1.f);
+
+    float4x4 matWV, matWVP;
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(localPos, matWVP);
+    Out.vTexcoord = In.vTexcoord;
+
+    return Out;
+}
 
 struct PS_IN
 {
@@ -52,8 +88,6 @@ struct PS_OUT
 {
     vector vColor : SV_TARGET0;
 };
-
-/* Pixel Shader -> 픽셀의 색을 결정한다. */
 
 PS_OUT PS_MAIN(PS_IN In)
 {
@@ -68,38 +102,116 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_COLOR(PS_IN In)
+{
+    PS_OUT Out;
+
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor.rgb *= g_BaseColor.rgb; // 컬러 적용
+    Out.vColor.a *= g_Alpha;
+
+    if (Out.vColor.a < 0.1f)
+        discard;
+
+    return Out;
+}
+
+PS_OUT PS_HORIZONTAL_FILL_COLOR(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 sampled = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    if (sampled.a < 0.1f)
+        discard;
+
+    float fillWidth = g_FillEndU - g_FillStartU;
+    float mappedRatioU = g_FillStartU + (fillWidth * g_FillRatio);
+
+    if (In.vTexcoord.x > mappedRatioU)
+        discard;
+
+    Out.vColor = sampled * g_BaseColor;
+    Out.vColor.a *= g_Alpha;
+
+    return Out;
+}
+
+PS_OUT PS_COOLDOWN_OVERLAY(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 sampled = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+
+    // 아이콘 투명 영역은 그대로 버림
+    if (sampled.a < 0.1f)
+        discard;
+
+    float ratio = saturate(g_CooldownRatio);
+    if (ratio <= 0.001f)
+        discard;
+
+    float cutoffY = 1.f - ratio;
+
+    // 경계 부드러움 범위
+    float edgeSoftness = 0.06f;
+
+    // 아래쪽은 1에 가깝고, 경계에서 부드럽게 0으로 감쇠
+    float mask = smoothstep(cutoffY - edgeSoftness, cutoffY + edgeSoftness, In.vTexcoord.y);
+
+    float finalAlpha = sampled.a * g_CooldownOverlayAlpha * mask;
+
+    if (finalAlpha < 0.01f)
+        discard;
+
+    Out.vColor = float4(0.f, 0.f, 0.f, finalAlpha);
+    return Out;
+}
+
 RasterizerState CullNone
 {
     CullMode = None;
 };
 
-//DepthStencilState DisableDepth
-//{
-//    DepthEnable = FALSE;
-//    DepthWriteMask = ZERO;
-//};
-//
-BlendState AlphaBlend
-{
-    BlendEnable[0] = false;
-//    SrcBlend = SRC_ALPHA;
-//    DestBlend = INV_SRC_ALPHA;
-//    BlendOp = ADD;
-//    SrcBlendAlpha = ONE;
-//    DestBlendAlpha = ZERO;
-//    BlendOpAlpha = ADD;
-//    RenderTargetWriteMask[0] = 0x0F;
-};
 
 technique11 DefaultTechnique
 {
     pass DefaultPass
     {
         SetRasterizerState(CullNone);
-        //SetDepthStencilState(DisableDepth, 0);
-        SetBlendState(AlphaBlend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF); 
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass ColorPass
+    {
+        SetRasterizerState(CullNone);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_COLOR();
+    }
+
+    pass CoolDownOverlayPass
+    {
+        SetRasterizerState(CullNone);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_COOLDOWN_OVERLAY();
+    }
+
+    pass HorizontalFillColorPass
+    {
+        SetRasterizerState(CullNone);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_HORIZONTAL_FILL_COLOR();
+    }
+
+    pass RotationDefaultPass
+    {
+        SetRasterizerState(CullNone);
+
+        VertexShader = compile vs_5_0 VS_ROTATE_UI();
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 }

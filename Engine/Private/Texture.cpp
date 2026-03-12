@@ -11,7 +11,9 @@ Texture::Texture(ComPtr<Device> device, ComPtr<DeviceContext> context)
 Texture::Texture(const Texture& rhs)
     : Component(rhs)
     , _numSRVs(rhs._numSRVs)
+    , _currentIndex(rhs._currentIndex)
     , _SRVs(rhs._SRVs)
+    , _sourcePaths(rhs._sourcePaths)
     , _texturePath(rhs._texturePath)
 {
     
@@ -25,6 +27,9 @@ HRESULT Texture::Initialize_Prototype(const wstring& texturePath, uint32 numSRVs
 {
     _texturePath = texturePath;
     _numSRVs = numSRVs;
+
+    _SRVs.clear();
+    _sourcePaths.clear();
 
     for (uint32 i = 0; i < numSRVs; i++)
     {
@@ -49,11 +54,25 @@ HRESULT Texture::Initialize_Prototype(const wstring& texturePath, uint32 numSRVs
             return E_FAIL;
 
         else
-            hr = CreateWICTextureFromFile(_device.Get(), fullPath, nullptr, srv.GetAddressOf());
+        {
+            hr = CreateWICTextureFromFileEx(
+                _device.Get(),
+                fullPath,
+                0, 
+                D3D11_USAGE_DEFAULT,
+                D3D11_BIND_SHADER_RESOURCE,
+                0, 
+                0, 
+                DirectX::WIC_LOADER_IGNORE_SRGB,
+                nullptr,
+                srv.GetAddressOf()
+            );
+        }
 
         CHECK_FAILED(hr, E_FAIL);
 
         _SRVs.emplace_back(srv);
+        _sourcePaths.emplace_back(fullPath);
     }
 
     return S_OK;
@@ -158,14 +177,36 @@ HRESULT Texture::Add_SRV(const wstring& filePath)
         return E_FAIL;
 
     else
-        hr = CreateWICTextureFromFile(_device.Get(), filePath.c_str(), nullptr, srv.GetAddressOf());
+    {
+        hr = CreateWICTextureFromFileEx(
+            _device.Get(),
+            filePath.c_str(),
+            0,
+            D3D11_USAGE_DEFAULT,
+            D3D11_BIND_SHADER_RESOURCE,
+            0,
+            0,
+            DirectX::WIC_LOADER_IGNORE_SRGB,
+            nullptr,
+            srv.GetAddressOf()
+        );
+    }
 
     CHECK_FAILED(hr, E_FAIL);
 
     _SRVs.emplace_back(srv);
+    _sourcePaths.emplace_back(filePath);
     _numSRVs = static_cast<uint32>(_SRVs.size());
 
     return S_OK;
+}
+
+wstring Texture::Get_SourcePath(uint32 index) const
+{
+    if (index >= _sourcePaths.size())
+        return L"";
+
+    return _sourcePaths[index];
 }
 
 shared_ptr<Texture> Texture::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const wstring& texturePath, uint32 numSRVs)

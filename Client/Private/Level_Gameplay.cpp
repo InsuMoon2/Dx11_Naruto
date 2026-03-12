@@ -37,24 +37,15 @@ HRESULT Level_Gameplay::Initialize()
         CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")), E_FAIL);
     }
 
-    //if (FAILED(Load_LevelFromJson(L"BM_KonohaVillage03_Environments_BackdropBuildings")) ||
-    //    FAILED(Load_LevelFromJson(L"BM_KonohaVillage03_Environments_Props")) ||
-    //    FAILED(Load_LevelFromJson(L"BM_KonohaVillage03_Environments_Terrain")))
-    //{
-    //    LOG_WARN("Level JSON load failed, using hardcoded setup");
-    //    CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
-    //    CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")), E_FAIL);
-    //}
-
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
+
+    CHECK_FAILED(Ready_UI(), E_FAIL);
 
     // 서버 연결 없으면 로컬 플레이어 스폰
     if (!NetworkManager::GetInstance()->IsConnected())
     {
         Spawn_LocalPlayer();
     }
-
-    CHECK_FAILED(Ready_UI(), E_FAIL);
   
     return S_OK;
 }
@@ -188,6 +179,9 @@ HRESULT Level_Gameplay::Ready_UI()
         CHECK_FAILED(GAME->Add_UI_ToLayer(EUILayer::HUD, _playerHUD), E_FAIL);
     }
 
+    _playerObjectSpawnedHandle = GAME->Get_DelegateHub().OnPlayerObjectSpawned.Add(
+        this, &Level_Gameplay::On_PlayerObjectSpawned);
+
     return S_OK;
 }
 
@@ -216,14 +210,21 @@ void Level_Gameplay::Spawn_LocalPlayer()
 
     // Camera Target 세팅
     GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(player->Get_Component<Transform>());
+    // 플레이어
+    GAME->Get_DelegateHub().OnPlayerObjectSpawned.Broadcast(player);
 
-    // 플레이어인지 한번 체크 후 바인딩
-    auto playerObj = dynamic_pointer_cast<Player>(player);
-    if (_playerHUD && playerObj)
-    {
-        _playerHUD->Bind_Player(playerObj);
-    }
+}
 
+void Level_Gameplay::On_PlayerObjectSpawned(Shared<GameObject> obj)
+{
+    if (!_playerHUD || !obj)
+        return;
+
+    auto player = dynamic_pointer_cast<Player>(obj);
+    if (!player)
+        return;
+
+    _playerHUD->Bind_Player(player);
 }
 
 shared_ptr<Level_Gameplay> Level_Gameplay::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -242,6 +243,12 @@ shared_ptr<Level_Gameplay> Level_Gameplay::Create(ComPtr<Device> device, ComPtr<
 
 void Level_Gameplay::Free()
 {
+    if (_playerObjectSpawnedHandle.IsValid())
+    {
+        GAME->Get_DelegateHub().OnPlayerObjectSpawned.Remove(_playerObjectSpawnedHandle);
+        _playerObjectSpawnedHandle.Reset();
+    }
+
     Level::Free();
 
 }

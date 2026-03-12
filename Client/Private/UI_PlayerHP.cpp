@@ -13,6 +13,9 @@ UI_PlayerHP::UI_PlayerHP(ComPtr<Device> device, ComPtr<DeviceContext> context)
 UI_PlayerHP::UI_PlayerHP(const UI_PlayerHP& rhs)
     : UIObject(rhs)
     , _hpRatio(rhs._hpRatio)
+    , _fillStartU(rhs._fillStartU)
+    , _fillEndU(rhs._fillEndU)
+    , _fillRangeInitialized(rhs._fillRangeInitialized)
 {
 }
 
@@ -27,7 +30,7 @@ HRESULT UI_PlayerHP::Initialize(void* arg)
 
     CHECK_FAILED(Ready_Components(), E_FAIL);
 
-    _transformCom->Set_LocalScale(255.f, 20.f, 1.f);
+    _transformCom->Set_LocalScale(500.f, 75.f, 0.f);
 
     return S_OK;
 }
@@ -54,17 +57,35 @@ HRESULT UI_PlayerHP::Render()
 {
     if (!_isVisible) return S_OK;
 
-    _shaderCom->Bind_Matrix("g_WorldMatrix", &_worldMatrix);
-    __super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", ETransformState::View);
-    __super::Bind_ShaderResource(_shaderCom, "g_ProjMatrix", ETransformState::Proj);
+    CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_worldMatrix), E_FAIL);
+    CHECK_FAILED(__super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", ETransformState::View), E_FAIL);
+    CHECK_FAILED(__super::Bind_ShaderResource(_shaderCom, "g_ProjMatrix", ETransformState::Proj), E_FAIL);
 
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 1), E_FAIL);
 
-    // CHECK_FAILED(_shaderCom->Bind_RawValue("g_Ratio", &_hpRatio, sizeof(float)), E_FAIL);
+    // HP Body
+    {
+        CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 2), E_FAIL);
+        CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
+        CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
+        CHECK_FAILED(_bufferCom->Render(), E_FAIL);
+    }
 
-    CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
-    CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
-    CHECK_FAILED(_bufferCom->Render(), E_FAIL);
+    // HP Bar
+    {
+        CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 1), E_FAIL);
+
+        Vec4 hpColor = { 0.f, 1.f, 0.f, 1.f };
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColor", &hpColor, sizeof(Vec4)), E_FAIL);
+        _shaderCom->Bind_RawValue("g_FillRatio", &_hpRatio, sizeof(float));
+        _shaderCom->Bind_RawValue("g_FillStartU", &_fillStartU, sizeof(float));
+        _shaderCom->Bind_RawValue("g_FillEndU", &_fillEndU, sizeof(float));
+
+        CHECK_FAILED(_shaderCom->Begin_Pass(3), E_FAIL);
+
+        CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
+        CHECK_FAILED(_bufferCom->Render(), E_FAIL);
+    }
 
     return S_OK;
 }

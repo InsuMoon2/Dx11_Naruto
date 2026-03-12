@@ -8,6 +8,8 @@ class Player;
 class UI_PlayerStatus;
 class UI_PlayerSkill;
 
+DECLARE_DELEGATE(FOnHUDPlayerBound, Shared<Player>);
+
 class UI_PlayerHUD : public HUD
 {
     GENERATED_BODY(UI_PlayerHUD)
@@ -23,6 +25,12 @@ public:
     void        Update(float timeDelta) override;
 
     void        Bind_Player(Shared<Player> player);
+
+private:
+    HRESULT     Ready_UI(void* arg);
+
+public:
+    FOnHUDPlayerBound OnHUDPlayerBound;
 
 private:
     Shared<UI_PlayerStatus> _status;

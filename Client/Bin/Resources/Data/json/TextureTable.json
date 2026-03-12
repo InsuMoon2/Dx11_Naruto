@@ -71,6 +71,24 @@
             "level": "Static",
             "path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/life_gauge_masc.png",
             "count": 1
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_PLAYER_STATUS",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/life_gauge_masc_Body.png",
+            "count": 1
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_LOADING",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_Load_Icon_BC_BC.png",
+            "count": 1
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_LOADING",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadIndicator_Base_BC.png",
+            "count": 1
         }
     ]
 }

@@ -43,6 +43,12 @@ void InputComponent::Update_Input(float timeDelta)
 {
     _frame = {};
 
+    if (!GAME->Is_GameInputEnabled())
+    {
+        _superJumpCharge = 0.f;
+        return;
+    }
+
     if (INPUT->KeyPress(KEY_TYPE::W)) _frame.moveY += 1.f;
     if (INPUT->KeyPress(KEY_TYPE::S)) _frame.moveY -= 1.f;
 

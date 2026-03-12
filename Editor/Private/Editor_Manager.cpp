@@ -60,6 +60,18 @@ void Editor_Manager::Update(float timeDelta)
             window->OnGui();
         }
     }
+
+    if (GAME->Get_GameState() == EGameState::Play)
+    {
+        auto gameView = dynamic_pointer_cast<Game_View>(Get_Window(TEXT("Game")));
+        const bool enableGameInput = (gameView && gameView->IsActive() && gameView->Is_Focused());
+        GAME->Set_GameInputEnabled(enableGameInput);
+    }
+    else
+    {
+        GAME->Set_GameInputEnabled(true);
+    }
+
 }
 
 void Editor_Manager::Render()
@@ -89,7 +101,7 @@ void Editor_Manager::Render()
     if (targetRT)
     {
         targetRT->BindAsTarget();
-        targetRT->Clear(Color(0.1f, 0.1f, 0.1f, 1.f));
+        targetRT->Clear(Color(0.53f, 0.81f, 0.92f, 1.f));
         GAME->Draw(); // 실제 게임 렌더링
         targetRT->UnbindAll();
     }

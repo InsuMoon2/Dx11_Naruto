@@ -31,11 +31,16 @@ public:
     uint32 Get_CurrentIndex() const { return _currentIndex; }
     void   Set_CurrentIndex(uint32 idx) { _currentIndex = min(idx, _numSRVs - 1); }
 
+    const vector<wstring>& Get_SourcePaths() const { return _sourcePaths; }
+
+    wstring Get_SourcePath(uint32 index) const;
+
 private:
     uint32 _numSRVs = 0;
     uint32 _currentIndex = 0; // 현재 사용중인 Index
 
     vector<ComPtr<ShaderResourceView>> _SRVs;
+    vector<wstring> _sourcePaths;
 
     wstring _texturePath;
 

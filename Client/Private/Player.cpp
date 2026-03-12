@@ -35,7 +35,7 @@ HRESULT Player::Initialize(void* arg)
     CHECK_FAILED(Character::Initialize(arg), E_FAIL);
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXMESH, _shaderCom), E_FAIL);
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_PLAYER, _model), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_SASKE, _model), E_FAIL);
 
     return S_OK;
 }

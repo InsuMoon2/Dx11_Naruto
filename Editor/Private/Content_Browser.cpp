@@ -12,6 +12,16 @@
 #include "Asset_Manager.h"
 #include "Notification_Manager.h"
 
+#include <shellapi.h>
+#include "Action_Command.h"
+
+static const unordered_map<string, EIconType> g_ExtensionToIconMap =
+{
+    { ".csv", EIconType::Csv }, { ".CSV", EIconType::Csv },
+    { ".json", EIconType::Json }, { ".JSON", EIconType::Json },
+    { ".py", EIconType::Python }, { ".PY", EIconType::Python }
+};
+
 Content_Browser::Content_Browser()
     : EditorWindow(TEXT("Content Browser"))
 {
@@ -27,12 +37,27 @@ void Content_Browser::Initialize()
 {
     EditorWindow::Initialize();
 
-    // Temp
-    _iconFolder = Texture::Create(
+    _iconFiles.resize(ETOI(EIconType::END));
+
+    _iconFiles[ETOI(EIconType::Folder)] = Texture::Create(
         GAME->Get_Device(),
         GAME->Get_Context(),
-        TEXT("../../Client/Bin/Resources/Textures/Folder_Icon.png"), 1
-    );
+        TEXT("../../Client/Bin/Resources/Textures/Folder_Icon.png"), 1);
+
+    _iconFiles[ETOI(EIconType::Csv)] = Texture::Create(
+        GAME->Get_Device(),
+        GAME->Get_Context(),
+        TEXT("../../Client/Bin/Resources/Textures/DataTable.png"), 1);
+
+    _iconFiles[ETOI(EIconType::Json)] = Texture::Create(
+        GAME->Get_Device(),
+        GAME->Get_Context(),
+        TEXT("../../Client/Bin/Resources/Textures/JSON.png"), 1);
+
+    _iconFiles[ETOI(EIconType::Python)] = Texture::Create(
+        GAME->Get_Device(),
+        GAME->Get_Context(),
+        TEXT("../../Client/Bin/Resources/Textures/Python.png"), 1);
 
     // 초기 리소스 스캔 Resources 폴더 기준
     Refresh_Resources();
@@ -61,6 +86,8 @@ void Content_Browser::OnGui()
 
     ImGui::Begin(str.c_str(), nullptr, flags);
     {
+        Handle_SideButtonEvnet();
+
         // 좌측 폴더 트리
         ImGui::BeginChild("FolderTree", ImVec2(_leftPanelWidth, 0), true);
         {
@@ -116,7 +143,34 @@ void Content_Browser::OnGui()
         {
             if (_currentFolder)
             {
-                ImGui::Text("Path %s", Utils::ToString(_currentFolder->fullPath).c_str());
+                ImGui::BeginDisabled(!Can_GoBack());
+                if (ImGui::ArrowButton("##BackFolder", ImGuiDir_Left))
+                {
+                    Go_BackFolder();
+                }
+                ImGui::EndDisabled();
+
+                ImGui::SameLine();
+
+                ImGui::BeginDisabled(!Can_GoForward());
+                if (ImGui::ArrowButton("##ForwardFolder", ImGuiDir_Right))
+                {
+                    Go_ForwardFolder();
+                }
+                ImGui::EndDisabled();
+
+                ImGui::SameLine();
+
+                string pathStr = Utils::ToString(_currentFolder->fullPath);
+                char pathBuffer[512] = {};
+                strncpy_s(pathBuffer, pathStr.c_str(), _TRUNCATE);
+
+                float pathWidth = min(500.f, ImGui::GetContentRegionAvail().x - 220.f);
+                if (pathWidth < 150.f)
+                    pathWidth = 150.f;
+
+                ImGui::SetNextItemWidth(pathWidth);
+                ImGui::InputText("##CurrentPath", pathBuffer, IM_ARRAYSIZE(pathBuffer), ImGuiInputTextFlags_ReadOnly);
 
                 float buttonWidth = 100.f;
                 float clearWidth = 80.f;
@@ -179,6 +233,11 @@ void Content_Browser::Refresh_Resources()
         {
             _currentFolder = &_rootFolder;
         }
+    }
+
+    if (_currentFolder && _folderHistory.empty())
+    {
+        Record_FolderHistory(_currentFolder->fullPath);
     }
     
 }
@@ -266,13 +325,15 @@ void Content_Browser::Draw_FolderTree(FFolderNode& node)
     string id = "##" + Utils::ToString(node.fullPath);
     bool isOpen = ImGui::TreeNodeEx(id.c_str(), flags);
 
+    Draw_FolderContextMenu(node, "FolderTileContext");
+
     bool isClicked = ImGui::IsItemClicked();
 
     ImGui::SameLine();
 
-    if (_iconFolder && !_iconFolder->Get_SRVs().empty())
+    if (_iconFiles[ETOI(EIconType::Folder)] && !_iconFiles[ETOI(EIconType::Folder)]->Get_SRVs().empty())
     {
-        ImGui::Image((ImTextureID)_iconFolder->Get_SRVs()[0].Get(), ImVec2(16.f, 16.f));
+        ImGui::Image((ImTextureID)_iconFiles[ETOI(EIconType::Folder)]->Get_SRVs()[0].Get(), ImVec2(16.f, 16.f));
         ImGui::SameLine();
     }
 
@@ -282,12 +343,9 @@ void Content_Browser::Draw_FolderTree(FFolderNode& node)
 
     if (isClicked)
     {
-        // 다른 폴더 클릭 시 기존 썸네일 캐시 비우기
-        if (_currentFolder != &node)
-            _thumbnailCache.clear();
-
-        _currentFolder = &node;
+        Open_Folder(&node);
     }
+
     if (isOpen)
     {
         for (auto& child : node.subFolders)
@@ -311,6 +369,11 @@ void Content_Browser::Draw_AssetView()
     // 파일 목록 표시
     if (_currentFolder)
     {
+        for (auto& childFolder : _currentFolder->subFolders)
+        {
+            Draw_FolderTile(childFolder);
+        }
+
         for (const auto& fileEntry : _currentFolder->files)
         {
             const wstring& filePath = fileEntry.filePath;
@@ -332,6 +395,8 @@ void Content_Browser::Draw_AssetView()
 
             bool isTextureFile = (extension == ".png" || extension == ".jpg" ||
                 extension == ".jpeg" || extension == ".dds");
+
+            bool isCSVFile = (extension == ".csv" || extension == ".CSV");
 
             // 아이콘
             ImGui::PushID(fileName.c_str());
@@ -358,27 +423,86 @@ void Content_Browser::Draw_AssetView()
             }
             else
             {
-                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+                auto iconIt = g_ExtensionToIconMap.find(extension);
+
+                if (iconIt != g_ExtensionToIconMap.end())
                 {
-                    ImGui::Button(pureName.c_str(),
-                        ImVec2(_thumbnailSize, _thumbnailSize));
+                    EIconType targetIcon = iconIt->second;
+                    auto& iconTexture = _iconFiles[ETOI(targetIcon)];
+
+                    if (iconTexture && !iconTexture->Get_SRVs().empty())
+                    {
+                        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+                        ImGui::ImageButton(fileName.c_str(),
+                            (ImTextureID)iconTexture->Get_SRVs()[0].Get(),
+                            ImVec2(_thumbnailSize, _thumbnailSize));
+                        ImGui::PopStyleVar();
+                    }
                 }
-                ImGui::PopStyleVar();
+                else
+                {
+                    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+                    {
+                        ImGui::Button(pureName.c_str(),
+                            ImVec2(_thumbnailSize, _thumbnailSize));
+                    }
+                    ImGui::PopStyleVar();
+                }
             }
 
+            Draw_FileContextMenu(filePath, "FileItemContext");
+
+            const bool isFocused = ImGui::IsItemFocused();
             bool isSelected = (_selectedFilePath == filePath);
-            // 선택된 아이템 테두리 그리기
+
             if (isSelected)
             {
                 ImVec2 itemMin = ImGui::GetItemRectMin();
                 ImVec2 itemMax = ImGui::GetItemRectMax();
                 ImGui::GetWindowDrawList()->AddRect(
                     itemMin, itemMax,
-                    IM_COL32(70, 130, 210, 255), 
-                    0.f,                         
-                    0,                           
-                    2.f                          
-                );
+                    IM_COL32(70, 130, 210, 255),
+                    0.f,
+                    0,
+                    2.f);
+            }
+
+            if (isFocused && !isSelected)
+            {
+                _selectedFilePath = filePath;
+            }
+
+            if (isFocused && ImGui::IsKeyPressed(ImGuiKey_Enter))
+            {
+                if (!isSelected)
+                {
+                    _selectedFilePath = filePath;
+                }
+                else
+                {
+                    if (isValidPrefab)
+                    {
+                        auto prefabView = dynamic_pointer_cast<Prefab_View>(EDITOR->Get_Window(TEXT("Prefab")));
+                        if (prefabView)
+                        {
+                            string fullPath = Utils::ToString(filePath);
+                            prefabView->Open_Prefab(pureName, fullPath);
+                        }
+                    }
+                    else if (isBehaviorTree)
+                    {
+                        auto behaviorView = dynamic_pointer_cast<BehaviorTree_View>(EDITOR->Get_Window(TEXT("BehaviorTree")));
+                        if (behaviorView)
+                        {
+                            string fullPath = Utils::ToString(filePath);
+                            behaviorView->Load_BehaviorTree(fullPath);
+                        }
+                    }
+                    else
+                    {
+                        ShellExecute(nullptr, L"open", filePath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+                    }
+                }
             }
 
             if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
@@ -458,6 +582,12 @@ void Content_Browser::Draw_AssetView()
                 }
             }
 
+            // 일반 파일(csv 등) 더블클릭 -> 연결된 외부 프로그램(엑셀 등)으로 열기
+            if (!isValidPrefab && !isBehaviorTree && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+            {
+                ShellExecute(NULL, L"open", filePath.c_str(), NULL, NULL, SW_SHOWNORMAL);
+            }
+
             if (_isRenaming && fs::absolute(_renamingFilePath) == fs::absolute(filePath))
             {
                 if (_focusRenameInput)
@@ -533,6 +663,140 @@ void Content_Browser::Draw_AssetView()
         ImGui::EndPopup();
     }
 
+}
+
+void Content_Browser::Draw_FolderTile(FFolderNode& folder)
+{
+    ImGui::PushID(Utils::ToString(folder.fullPath).c_str());
+
+    if (_iconFiles[ETOI(EIconType::Folder)] && !_iconFiles[ETOI(EIconType::Folder)]->Get_SRVs().empty())
+    {
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+        ImGui::ImageButton(
+            "##FolderTile",
+            (ImTextureID)_iconFiles[ETOI(EIconType::Folder)]->Get_SRVs()[0].Get(),
+            ImVec2(_thumbnailSize, _thumbnailSize));
+        ImGui::PopStyleVar();
+    }
+    else
+    {
+        ImGui::Button("Folder", ImVec2(_thumbnailSize, _thumbnailSize));
+    }
+
+    const bool isFocused = ImGui::IsItemFocused();
+    const bool isSelected = (_selectedFilePath == folder.fullPath);
+
+    if (isSelected)
+    {
+        ImVec2 itemMin = ImGui::GetItemRectMin();
+        ImVec2 itemMax = ImGui::GetItemRectMax();
+        ImGui::GetWindowDrawList()->AddRect(
+            itemMin, itemMax,
+            IM_COL32(70, 130, 210, 255),
+            0.f,
+            0,
+            2.f);
+    }
+
+    if (isFocused && !isSelected)
+    {
+        _selectedFilePath = folder.fullPath;
+    }
+
+    if (isFocused && ImGui::IsKeyPressed(ImGuiKey_Enter))
+    {
+        if (!isSelected)
+        {
+            _selectedFilePath = folder.fullPath;
+        }
+        else
+        {
+            Open_Folder(&folder);
+        }
+    }
+
+    if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+    {
+        Open_Folder(&folder);
+    }
+
+    // 우클릭 메뉴
+    Draw_FolderContextMenu(folder, "FolderTileContext");
+
+    string folderName = Utils::ToString(folder.name);
+    float textWidth = ImGui::CalcTextSize(folderName.c_str()).x;
+    float columnWidth = _thumbnailSize;
+    float offset = (columnWidth - textWidth) * 0.5f;
+
+    if (offset > 0)
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
+
+    ImGui::TextWrapped("%s", folderName.c_str());
+
+    ImGui::PopID();
+    ImGui::NextColumn();
+}
+
+void Content_Browser::Open_Folder(FFolderNode* folder)
+{
+    if (!folder)
+        return;
+
+    if (_currentFolder != folder)
+        _thumbnailCache.clear();
+
+    _currentFolder = folder;
+    _selectedFilePath.clear();
+
+    Expand_PathTo(folder->fullPath);
+
+    if (!_suppressHistoryRecord)
+    {
+        Record_FolderHistory(folder->fullPath);
+    }
+}
+
+void Content_Browser::Draw_FolderContextMenu(FFolderNode& folder, const string& popupId)
+{
+    if (!ImGui::BeginPopupContextItem(popupId.c_str()))
+        return;
+
+    if (ImGui::MenuItem("탐색기에서 열기"))
+    {
+        wstring absPath = fs::absolute(folder.fullPath).wstring();
+
+        ShellExecute(
+            nullptr,
+            L"open",
+            absPath.c_str(),
+            nullptr,
+            nullptr,
+            SW_SHOWNORMAL);
+    }
+
+    ImGui::EndPopup();
+}
+
+void Content_Browser::Draw_FileContextMenu(const wstring& filePath, const string& popupId)
+{
+    if (!ImGui::BeginPopupContextItem(popupId.c_str()))
+        return;
+
+    if (ImGui::MenuItem("탐색기에서 열기"))
+    {
+        wstring absPath = fs::absolute(filePath).wstring();
+        wstring args = L"/select,\"" + absPath + L"\"";
+
+        ShellExecute(
+            nullptr,
+            L"open",
+            L"explorer.exe",
+            args.c_str(),
+            nullptr,
+            SW_SHOWNORMAL);
+    }
+
+    ImGui::EndPopup();
 }
 
 void Content_Browser::Finish_Rename(const wstring& oldPath, const char* newName)
@@ -741,6 +1005,87 @@ Content_Browser::FFolderNode* Content_Browser::Get_FirstMatchingFolder(FFolderNo
     }
 
     return nullptr;
+}
+
+void Content_Browser::Record_FolderHistory(const wstring& path)
+{
+    if (_folderHistoryIndex >= 0 && _folderHistoryIndex < static_cast<int>(_folderHistory.size()))
+    {
+        if (_folderHistory[_folderHistoryIndex] == path)
+            return;
+    }
+
+    // 현재 위치 뒤의 foward 히스토리는 잘라내기
+    if (_folderHistoryIndex + 1 < static_cast<int>(_folderHistory.size()))
+    {
+        _folderHistory.erase(_folderHistory.begin() + _folderHistoryIndex + 1, _folderHistory.end());
+    }
+
+    _folderHistory.push_back(path);
+    _folderHistoryIndex = static_cast<int>(_folderHistory.size()) - 1;
+}
+
+bool Content_Browser::Can_GoBack() const
+{
+    return _folderHistoryIndex > 0;
+}
+
+bool Content_Browser::Can_GoForward() const
+{
+    return _folderHistoryIndex >= 0
+        && _folderHistoryIndex + 1 < static_cast<int>(_folderHistory.size());
+}
+
+void Content_Browser::Go_BackFolder()
+{
+    if (!Can_GoBack())
+        return;
+
+    --_folderHistoryIndex;
+
+    FFolderNode* target = Find_FolderNode(_rootFolder, _folderHistory[_folderHistoryIndex]);
+    if (!target)
+        return;
+
+    _suppressHistoryRecord = true;
+    Open_Folder(target);
+    _suppressHistoryRecord = false;
+}
+
+void Content_Browser::Go_ForwardFolder()
+{
+    if (!Can_GoForward())
+        return;
+
+    ++_folderHistoryIndex;
+
+    FFolderNode* target = Find_FolderNode(_rootFolder, _folderHistory[_folderHistoryIndex]);
+    if (!target)
+        return;
+
+    _suppressHistoryRecord = true;
+    Open_Folder(target);
+    _suppressHistoryRecord = false;
+}
+
+void Content_Browser::Handle_SideButtonEvnet()
+{
+    const bool isBrowserFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+    const bool isBrowserHovered = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
+
+    if (isBrowserFocused || isBrowserHovered)
+    {
+        if (ImGui::IsMouseClicked(3))
+        {
+            Go_BackFolder();
+        }
+
+        if (ImGui::IsMouseClicked(4))
+        {
+            Go_ForwardFolder();
+        }
+    }
+
 }
 
 void Content_Browser::Load_Thumbnail(const string& guid)

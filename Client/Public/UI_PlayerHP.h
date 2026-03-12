@@ -33,18 +33,25 @@ public:
     HRESULT     Render() override;
 
 public:
-    void Set_Ratio(float ratio) { _hpRatio = ratio; }
+    void        Set_Ratio(float ratio) { _hpRatio = ::clamp(ratio, 0.f, 1.f); }
+    void        Set_FillRange(float startU, float endU) { _fillStartU = startU; _fillEndU = endU; }
 
 protected:
     virtual HRESULT Ready_Components() override;
 
 private:
-    float _hpRatio = 1.f;
-
     Shared<Shader>        _shaderCom;
     Shared<Texture>       _textureCom;
     Shared<VIBuffer_Rect> _bufferCom;
 
+private:
+    float _hpRatio = 1.f;
+
+    float _fillStartU = 0.f;
+    float _fillEndU = 1.f;
+    bool  _fillRangeInitialized = false;
+
+    
 public:
     static Shared<UI_PlayerHP> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg = nullptr);
     virtual void Free() override;

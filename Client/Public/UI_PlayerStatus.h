@@ -12,6 +12,7 @@ NS_BEGIN(Client)
 
 class Player;
 class UI_PlayerHP;
+class CombatStat;
 
 class UI_PlayerStatus : public Panel
 {
@@ -31,13 +32,15 @@ public:
     HRESULT     Render() override;
 
 public:
-    void        Bind_Player(Shared<Player> player) { _player = player; }
+    void        Bind_Player(Shared<Player> player);
 
 protected:
     HRESULT     Ready_Components();
 
 private:
     Weak<Player>            _player;
+    Weak<CombatStat>        _combat;
+
     Shared<UI_PlayerHP>     _hpBar;
 
 private:

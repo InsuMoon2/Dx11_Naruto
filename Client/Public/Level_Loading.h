@@ -12,7 +12,11 @@ class Loader;
 
 enum class ELoadingTexture
 {
-    MainLoading,
+    MainLoading = 0, // 2장
+    SpinnerLogo = 2,
+    ProgressBar = 3,
+
+    END
 };
 
 class Level_Loading final : public Level
@@ -28,14 +32,19 @@ public:
      virtual HRESULT    Render() override;
 
 private:
-    shared_ptr<Loader>      _loader;
+    Shared<Loader>      _loader;
     ELevelType              _nextLevelID = { ELevelType::END };
 
 private:
     HRESULT  Ready_Layer_UI(const wstring& uiTag);
 
+private:
+    Shared<UIObject> _loadingBackground;
+    Shared<UIObject> _loadingSpinner;
+    Shared<UIObject> _loadingProgressBar;
+
 public:
-    static shared_ptr<Level_Loading> Create(
+    static Shared<Level_Loading> Create(
         ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID);
 
     virtual void Free() override;

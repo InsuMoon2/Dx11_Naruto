@@ -27,9 +27,14 @@ public:
     void    Register_Components();
     void    Initialize_BT_Nodes();
 
+    float   Get_ProgressRatio() const;
+
 private: /* Loading Level */
     HRESULT Loading_For_Maintitle();
     HRESULT Loading_For_GamePlay();
+
+private:
+    void    Set_LoadProgress(int currentStep, int totalSteps);
 
 private:
     ComPtr<Device>          _device;
@@ -42,6 +47,10 @@ private:
     tchar                   _loadingText[MAX_PATH] = {};
 
     Shared<ResourceLoader>  _resourceLoader;
+
+private:
+    int     _currentStep    = 0;
+    int     _totalSteps     = 0;
 
 public:
     static shared_ptr<Loader> Create(

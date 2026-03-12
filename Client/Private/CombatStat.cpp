@@ -8,7 +8,7 @@ bool CombatStat::Register_Properties()
     auto& info = GetStaticReflectionInfo();
     info.className = "CombatStat";
 
-    PROPERTY_READONLY("HP", _hp);
+    PROPERTY_FLOAT("HP", _hp, 1.f, 9999.f);
     PROPERTY_FLOAT("Max HP", _maxHp, 1.f, 9999.f);
     PROPERTY_READONLY("MP", _mp);
     PROPERTY_FLOAT("Max MP", _maxMp, 0.f, 9999.f);
@@ -66,19 +66,19 @@ HRESULT CombatStat::Initialize(void* arg)
 
 void CombatStat::Set_Hp(float hp)
 {
-    _hp = ::clamp(_hp, 0.f, _maxHp);
+    _hp = ::clamp(hp, 0.f, _maxHp);
 }
 
 void CombatStat::Set_Mp(float mp)
 {
-    _mp = ::clamp(_mp, 0.f, _maxMp);
+    _mp = ::clamp(mp, 0.f, _maxMp);
 }
 
 void CombatStat::Take_Damage(float damage)
 {
     float actualDamage = max(0.f, damage - _defense);
 
-    Set_Hp(actualDamage);
+    Set_Hp(_hp - actualDamage);
 }
 
 void CombatStat::Heal(float amount)

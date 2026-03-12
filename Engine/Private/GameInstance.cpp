@@ -488,19 +488,6 @@ uint32 GameInstance::Clear_DisallowedMeta(const wstring& directory)
     return _assetManager->Clear_DisallowedMeta(directory);
 }
 
-//Shared<UIObject> GameInstance::Add_UI(uint32 levelIndex, uint32 objID, EUILayer layer, void* arg)
-//{
-//    Shared<GameObject> obj = _protoManager->Clone_GameObject(levelIndex, objID, arg);
-//    if (!obj) return nullptr;
-//
-//    Shared<UIObject> ui = static_pointer_cast<UIObject>(obj);
-//
-//    if (FAILED(_uiManager->Add_UI(layer, ui)))
-//        return nullptr;
-//
-//    return ui;
-//}
-
 Shared<UIObject> GameInstance::Find_UI(const wstring& name)
 {
     return _uiManager->Find_UI(name);

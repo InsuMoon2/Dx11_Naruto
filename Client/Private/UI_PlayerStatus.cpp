@@ -6,6 +6,7 @@
 
 #include "Player.h"
 #include "UI_PlayerHP.h"
+#include "CombatStat.h"
 
 UI_PlayerStatus::UI_PlayerStatus(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Panel(device, context)
@@ -32,7 +33,7 @@ HRESULT UI_PlayerStatus::Initialize(void* arg)
     hpDesc.posY = 0.f;
     hpDesc.sizeX = 255.f;
     hpDesc.sizeY = 20.f;
-    hpDesc.zOrder = _zOrder;
+    hpDesc.zOrder = _zOrder + 0.01f;
     hpDesc.levelIndex = _levelIndex;
     hpDesc.textureIndex = 0;
     hpDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;
@@ -40,8 +41,8 @@ HRESULT UI_PlayerStatus::Initialize(void* arg)
     _hpBar = Create_Child<UI_PlayerHP>(EUILayer::HUD, &hpDesc);
     if (!_hpBar) return E_FAIL;
 
-    _hpBar->Get_Transform()->Set_LocalPosition(50.f, 0.f, _zOrder);
-
+    _hpBar->Set_FillRange(98.f / 512.f, 413.f / 512.f);
+    _hpBar->Get_Transform()->Set_LocalPosition(53.5f, 30.f, 0.f);
 
     return S_OK;
 }
@@ -57,10 +58,11 @@ void UI_PlayerStatus::Update(float timeDelta)
 
     __super::Update_Transform();
 
-    /*if (auto pPlayer = _player.lock())
-    {
-        _hpBar->Set_Ratio(pPlayer->Get_CurrentHP() / pPlayer->Get_MaxHP());
-    }*/
+    auto combat = _combat.lock();
+    if (!combat || !_hpBar)
+        return;
+
+    _hpBar->Set_Ratio(combat->Get_HpRatio());
 }
 
 void UI_PlayerStatus::Late_Update(float timeDelta)
@@ -80,7 +82,7 @@ HRESULT UI_PlayerStatus::Render()
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 0), E_FAIL);
 
 #pragma region Alpha값 테스트
-    float fAlpha = 0.5f;
+    float fAlpha = 1.f;
     _shaderCom->Bind_RawValue("g_Alpha", &fAlpha, sizeof(float));
 #pragma endregion
 
@@ -89,6 +91,16 @@ HRESULT UI_PlayerStatus::Render()
     CHECK_FAILED(_bufferCom->Render(), E_FAIL);
 
     return S_OK;
+}
+
+void UI_PlayerStatus::Bind_Player(Shared<Player> player)
+{
+    _player = player;
+
+    if (player)
+        _combat = player->Get_Component<CombatStat>();
+    else
+        _combat.reset();
 }
 
 HRESULT UI_PlayerStatus::Ready_Components()

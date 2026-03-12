@@ -33,7 +33,7 @@ HRESULT MyPlayer::Initialize(void* arg)
     // MyPlayer만 입력/이동 컴포넌트 보유
     {
         CombatStat::FCombatStatDesc statDesc;
-        statDesc.maxHp = 200.f;
+        statDesc.maxHp = 100.f;
         statDesc.attack = 100.f;
 
         CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COMBAT_STAT, _combatStat, &statDesc), E_FAIL);
@@ -43,7 +43,7 @@ HRESULT MyPlayer::Initialize(void* arg)
         skillDesc.slotSkill_Id[0] = 1001; // 나선환
         skillDesc.slotSkill_Id[1] = 1002; // 치도리
 
-        CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SKILL, _combatStat, &skillDesc), E_FAIL);
+        CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SKILL, _skill, &skillDesc), E_FAIL);
     }
     {
         MovementComponent::FMovementDesc moveDesc;
@@ -65,6 +65,7 @@ void MyPlayer::Update(float timeDelta)
     Player::Update(timeDelta);
 
     _playerController->Update(timeDelta);
+    _skill->Update(timeDelta);
 }
 
 void MyPlayer::Late_Update(float timeDelta)

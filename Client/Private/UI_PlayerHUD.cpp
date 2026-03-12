@@ -22,13 +22,32 @@ HRESULT UI_PlayerHUD::Initialize_Prototype()
 HRESULT UI_PlayerHUD::Initialize(void* arg)
 {
     CHECK_FAILED(HUD::Initialize(arg), E_FAIL);
+    CHECK_FAILED(Ready_UI(arg), E_FAIL);
 
+    OnHUDPlayerBound.Add(_status.get(), &UI_PlayerStatus::Bind_Player);
+    OnHUDPlayerBound.Add(_skillPanel.get(), &UI_PlayerSkill::Bind_Player);
+
+    return S_OK;
+}
+
+void UI_PlayerHUD::Update(float timeDelta)
+{
+    HUD::Update(timeDelta);
+}
+
+void UI_PlayerHUD::Bind_Player(Shared<Player> player)
+{
+    OnHUDPlayerBound.Broadcast(player);
+}
+
+HRESULT UI_PlayerHUD::Ready_UI(void* arg)
+{
     UIObject::FUIDesc statDesc;
     statDesc.posX = 0.f;
     statDesc.posY = 0.f;
     statDesc.sizeX = 500.f;
     statDesc.sizeY = 160.f;
-    statDesc.zOrder = _zOrder;
+    statDesc.zOrder = _zOrder + 0.01f;
     statDesc.levelIndex = _levelIndex;
 
     _status = Create_Child<UI_PlayerStatus>(EUILayer::HUD, &statDesc);
@@ -41,7 +60,7 @@ HRESULT UI_PlayerHUD::Initialize(void* arg)
     skillDesc.posY = 0.f;
     skillDesc.sizeX = 1.f;
     skillDesc.sizeY = 1.f;
-    skillDesc.zOrder = _zOrder;
+    skillDesc.zOrder = _zOrder + 0.01f;
     skillDesc.levelIndex = _levelIndex;
 
     _skillPanel = Create_Child<UI_PlayerSkill>(EUILayer::HUD, &skillDesc);
@@ -53,20 +72,6 @@ HRESULT UI_PlayerHUD::Initialize(void* arg)
         _zOrder);
 
     return S_OK;
-}
-
-void UI_PlayerHUD::Update(float timeDelta)
-{
-    HUD::Update(timeDelta);
-}
-
-void UI_PlayerHUD::Bind_Player(Shared<Player> player)
-{
-    if (_status)
-        _status->Bind_Player(player);
-
-    if (_skillPanel)
-        _skillPanel->Bind_Player(player);
 }
 
 Shared<UI_PlayerHUD> UI_PlayerHUD::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)

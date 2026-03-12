@@ -2,8 +2,11 @@
 #include "Converter.h"
 
 #include <fstream>
+#include "objbase.h"
+#include <nlohmann/json.hpp>
 
 namespace fs = filesystem;
+using json = nlohmann::json;
 
 Converter::Converter()
 {
@@ -13,6 +16,14 @@ Converter::Converter()
 bool Converter::Convert(const wstring& srcPath, const wstring& dstBasePath, EConvertModelType modelType)
 {
     Clear();
+
+    const EConvertModelType resolvedType = Resolve_ModelType(srcPath, modelType);
+    if (resolvedType == EConvertModelType::END || resolvedType == EConvertModelType::Auto)
+    {
+        LOG_ERROR("Failed to resolve model type: {}", fs::path(srcPath).string());
+        return false;
+    }
+
 
     if (!Read_AssetFile(srcPath, modelType))
         return false;
@@ -32,7 +43,13 @@ bool Converter::Convert(const wstring& srcPath, const wstring& dstBasePath, ECon
     if (!Write_MaterialJson(materialPath))
         return false;
 
-    LOG_INFO("Convert success: {}", fs::path(srcPath).string());
+    if (!Write_ModelMeta(meshPath, resolvedType))
+        return false;
+
+    LOG_INFO("Convert success: {} | requested={} | resolved={}",
+        fs::path(srcPath).string(),
+        ToString(modelType),
+        ToString(resolvedType));
 
     return true;
 }
@@ -213,6 +230,141 @@ bool Converter::Write_MeshBin(const wstring& outputPath)
     }
 
     return true;
+}
+
+EConvertModelType Converter::Resolve_ModelType(const wstring& srcPath, EConvertModelType requestedType)
+{
+    if (requestedType != EConvertModelType::Auto)
+    {
+        LOG_INFO("Model type forced: {} -> {}", fs::path(srcPath).string(), ToString(requestedType));
+        return requestedType;
+    }
+
+    // Auto 판별은 PreTransformVertices 없이 먼저 읽기
+    if (!Read_AssetFile(srcPath, EConvertModelType::SkeletalMesh))
+        return EConvertModelType::END;
+
+    const bool hasAnimations = (_scene != nullptr) && _scene->HasAnimations();
+    const bool hasBones = Scene_HasBones();
+
+    const EConvertModelType detected = Detect_ModelType_FromScene();
+
+    LOG_INFO("Auto detect: {} | animations={} | bones={} | resolved={}",
+        fs::path(srcPath).string(),
+        hasAnimations,
+        hasBones,
+        ToString(detected));
+
+    return detected;
+}
+
+EConvertModelType Converter::Detect_ModelType_FromScene() const
+{
+    if (_scene == nullptr)
+        return EConvertModelType::END;
+
+    if (_scene->HasAnimations())
+        return EConvertModelType::SkeletalMesh;
+
+    if (Scene_HasBones())
+        return EConvertModelType::SkeletalMesh;
+
+    return EConvertModelType::StaticMesh;
+}
+
+bool Converter::Scene_HasBones() const
+{
+    if (_scene == nullptr)
+        return false;
+
+    for (uint32 meshIndex = 0; meshIndex < _scene->mNumMeshes; ++meshIndex)
+    {
+        const aiMesh* mesh = _scene->mMeshes[meshIndex];
+        if (mesh && mesh->HasBones())
+            return true;
+    }
+
+    return false;
+}
+
+bool Converter::Write_ModelMeta(const wstring& meshPath, EConvertModelType resolvedType)
+{
+    fs::path metaPath(meshPath);
+    metaPath += L".meta";
+
+    string guid;
+    if (!Try_ReadExistingGuid(metaPath.wstring(), guid))
+    {
+        guid = Generate_Guid_String();
+        if (guid.empty())
+        {
+            LOG_ERROR("Failed to generate guid for meta: {}", metaPath.string());
+            return false;
+        }
+    }
+
+    json root;
+    root["guid"] = guid;
+    root["type"] = "model";
+    root["modelType"] = ToString(resolvedType);
+
+    ofstream file(metaPath, ios_base::out | ios_base::trunc);
+    if (!file.is_open())
+    {
+        LOG_ERROR("Failed to write model meta: {}", metaPath.string());
+        return false;
+    }
+
+    file << root.dump(4);
+    return true;
+}
+
+bool Converter::Try_ReadExistingGuid(const wstring& metaPath, string& outGuid) const
+{
+    if (!fs::exists(metaPath))
+        return false;
+
+    ifstream file(metaPath);
+    if (!file.is_open())
+        return false;
+
+    try
+    {
+        json root;
+        file >> root;
+
+        if (!root.contains("guid"))
+            return false;
+
+        outGuid = root["guid"].get<string>();
+        return !outGuid.empty();
+    }
+    catch (...)
+    {
+        return false;
+    }
+}
+
+string Converter::Generate_Guid_String()
+{
+    GUID guid{};
+    if (FAILED(::CoCreateGuid(&guid)))
+        return "";
+
+    wchar_t buffer[64] = {};
+    const int len = ::StringFromGUID2(guid, buffer, static_cast<int>(std::size(buffer)));
+    if (len <= 0)
+        return "";
+
+    wstring value(buffer);
+
+    value.erase(remove(value.begin(), value.end(), L'{'), value.end());
+    value.erase(remove(value.begin(), value.end(), L'}'), value.end());
+
+    string result(value.begin(), value.end());
+    transform(result.begin(), result.end(), result.begin(), ::tolower);
+
+    return result;
 }
 
 bool Converter::Write_MaterialJson(const wstring& outputPath)

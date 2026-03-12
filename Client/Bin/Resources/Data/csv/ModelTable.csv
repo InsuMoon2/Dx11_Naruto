@@ -1,3 +1,4 @@
 Type,Id,Path,Count,ModelType,Level,Extra
 Model,COMPONENT_TYPE_MODEL_PLAYER,../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara.meshbin,1,SkeletalMesh,Static,
 Model,COMPONENT_TYPE_MODEL_MONSTER,../../Client/Bin/Resources/Models/Boruto/Boruto.meshbin,1,SkeletalMesh,Static,
+Model,COMPONENT_TYPE_MODEL_SASKE,../../Client/Bin/Resources/Models/Saske/Saske.meshbin,1,SkeletalMesh,Static,

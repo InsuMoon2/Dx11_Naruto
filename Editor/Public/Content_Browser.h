@@ -8,6 +8,11 @@ NS_END
 
 NS_BEGIN(Editor)
 
+enum class EIconType
+{
+    Folder, Csv, Json, Python, END
+};
+
 class Content_Browser : public EditorWindow
 {
 private:
@@ -46,6 +51,11 @@ private:
     void Draw_FolderTree(FFolderNode& node);
     void Draw_AssetView();
 
+    void Draw_FolderTile(FFolderNode& folder);
+    void Open_Folder(FFolderNode* folder);
+    void Draw_FolderContextMenu(FFolderNode& folder, const string& popupId);
+    void Draw_FileContextMenu(const wstring& filePath, const string& popupId);
+
     void Finish_Rename(const wstring& oldPath, const char* newName);
     void Create_NewPrefab(uint32 objectID, const wstring& typeName);
 
@@ -62,6 +72,15 @@ private:
 
     FFolderNode* Get_FirstMatchingFolder(FFolderNode& node, const string& searchStr);
 
+    // 사이드 버튼
+    void Record_FolderHistory(const wstring& path);
+    bool Can_GoBack() const;
+    bool Can_GoForward() const;
+    void Go_BackFolder();
+    void Go_ForwardFolder();
+
+    void Handle_SideButtonEvnet();
+
 private:
     FFolderNode _rootFolder;
     FFolderNode* _currentFolder = { nullptr };
@@ -71,8 +90,7 @@ private:
     float _thumbnailSize = 64.f;
     char _searchBuffer[128] = "";
 
-    shared_ptr<Texture> _iconFolder;
-    shared_ptr<Texture> _iconFile;
+    vector<Shared<Texture>> _iconFiles;
 
 private:
     bool    _isRenaming = false;
@@ -90,6 +108,12 @@ private:
 private: /* 썸네일 */
     map<string, ComPtr<ShaderResourceView>> _thumbnailCache;
     set<string> _noThumbnailGuids;
+
+    /* 사이드 버튼 */
+    vector<wstring> _folderHistory;
+    int _folderHistoryIndex = -1;
+    bool _suppressHistoryRecord = false;
+
 
 public:
     static shared_ptr<Content_Browser> Create();

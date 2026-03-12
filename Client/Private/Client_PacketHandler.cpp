@@ -96,8 +96,8 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
             }
         }
 
-        GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(
-            player->Get_Component<Transform>());
+        GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(player->Get_Component<Transform>());
+        GAME->Get_DelegateHub().OnPlayerObjectSpawned.Broadcast(player);
     }
 
 }

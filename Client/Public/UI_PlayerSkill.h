@@ -6,6 +6,7 @@ NS_BEGIN(Client)
 
 class Player;
 class UI_SkillSlot;
+class CombatStat;
 
 class UI_PlayerSkill final : public Panel
 {
@@ -23,10 +24,12 @@ public:
     void    Update(float timeDelta) override;
 
 public:
-    void Bind_Player(Shared<Player> player) { _player = player; }
+    void Bind_Player(Shared<Player> player);
 
 private:
     Weak<Player>         _player;
+    Weak<CombatStat>     _combat;
+
     Shared<UI_SkillSlot> _slots[2];
 
 public:

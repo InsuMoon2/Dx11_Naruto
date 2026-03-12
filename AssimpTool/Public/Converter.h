@@ -19,10 +19,24 @@ private:
 
     bool    Write_MeshBin(const wstring& outputPath);
 
+private:
+    // 변환 전에 실제 모델 타입을 확정
+    EConvertModelType   Resolve_ModelType(const wstring& srcPath, EConvertModelType requestedType);
+
+    // 현재 _scene을 보고 Skeletal/Static 판별
+    EConvertModelType   Detect_ModelType_FromScene() const;
+    bool                Scene_HasBones() const;
+
+    // meshbin.meta를 직접 써서 modelType을 명시적으로 남김
+    bool                Write_ModelMeta(const wstring& meshPath, EConvertModelType resolvedType);
+    bool                Try_ReadExistingGuid(const wstring& metaPath, string& outGuid) const;
+    static string       Generate_Guid_String();
+
+
     string  Resolve_TexturePath(const aiMaterial* material, aiTextureType textureType,
                     uint32 textureIndex, const wstring& modelFilePath);
 
-    string Resolve_ExportTextureSlot(const aiMaterial* material,
+    string  Resolve_ExportTextureSlot(const aiMaterial* material,
         aiTextureType assimpType, uint32 textureIndex) const;
 
     static string Normalize_TextureSlot(aiTextureType assimpType);

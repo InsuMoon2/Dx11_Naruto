@@ -11,8 +11,8 @@ NS_BEGIN(Editor)
 class Game_View final : public EditorWindow
 {
 public:
-    explicit Game_View();
-    virtual ~Game_View();
+    explicit             Game_View();
+    virtual             ~Game_View();
 
 public:
     void                Initialize() override;
@@ -20,7 +20,9 @@ public:
     void                OnGui() override;
 
 public:
-    shared_ptr<RenderTarget> Get_RenderTarget() { return _renderTarget; }
+    Shared<RenderTarget> Get_RenderTarget() { return _renderTarget; }
+
+    bool                 Is_Focused() const { return _isFocused; }
 
 private:
     ImGuiWindowFlags    Get_WindowFlags() const;
@@ -28,14 +30,14 @@ private:
     void                Update_WindowState();
 
 private:
-    shared_ptr<RenderTarget>    _renderTarget;
+    Shared<RenderTarget>        _renderTarget;
 
-    Vec2                _viewportSize = {};
-    bool                _isFocused = false;
-    bool                _isHovered = false;
+    Vec2                        _viewportSize = {};
+    bool                        _isFocused = false;
+    bool                        _isHovered = false;
 
 public:
-    static shared_ptr<Game_View> Create();
+    static Shared<Game_View> Create();
 
 };
 

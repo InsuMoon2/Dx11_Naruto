@@ -34,6 +34,7 @@ enum ComponentID
     COMPONENT_TYPE_MODEL_START          = 300;
     COMPONENT_TYPE_MODEL_PLAYER         = 301;
     COMPONENT_TYPE_MODEL_MONSTER        = 302;
+    COMPONENT_TYPE_MODEL_SASKE          = 303;
 
     // Shader : 400+
     COMPONENT_TYPE_SHADER_START         = 400;

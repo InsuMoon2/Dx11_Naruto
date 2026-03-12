@@ -93,7 +93,7 @@ void Editor_MainApp::Late_Update(float timeDelta)
 
 HRESULT Editor_MainApp::Render()
 {
-    Color clearColor = { 0.3f, 0.3f, 0.3f, 1.f };
+    Color clearColor = { 0.53f, 0.81f, 0.92f, 1.f };
 
     if (FAILED(GAME->Clear_Buffers(clearColor)))
         return E_FAIL;

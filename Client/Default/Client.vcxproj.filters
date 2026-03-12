@@ -146,6 +146,12 @@
     <ClInclude Include="..\Public\PlayerState_SuperJump.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_LoadingProgressBar.h">
+      <Filter>02. GameObject\02. UI\00. Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LoadingSpinner.h">
+      <Filter>02. GameObject\02. UI\00. Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -277,6 +283,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_SuperJump.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LoadingProgressBar.cpp">
+      <Filter>02. GameObject\02. UI\00. Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LoadingSpinner.cpp">
+      <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

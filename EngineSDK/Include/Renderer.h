@@ -23,6 +23,9 @@ private:
     void    Render_Blend();
     void    Render_UI();
 
+    void    Apply_Default3DState();
+    void    Apply_UIState();
+
 public:
     int32   Get_DrawCallCount() const { return _drawCallCount; }
     void    Reset_DrawCallCount() { _drawCallCount = 0; }
@@ -33,7 +36,10 @@ private:
 
     uint32                  _drawCallCount = 0;
 
-    ComPtr<ID3D11BlendState> _blendState;
+    ComPtr<ID3D11BlendState>        _uiBlendState;
+    ComPtr<ID3D11DepthStencilState> _defaultDepthState;
+    ComPtr<ID3D11DepthStencilState> _uiDepthDisabledState;
+
     list<shared_ptr<GameObject>> _renderObjects[ETOI(ERenderGroup::END)];
 
 public:

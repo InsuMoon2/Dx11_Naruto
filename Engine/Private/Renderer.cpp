@@ -27,7 +27,31 @@ HRESULT Renderer::Initialize()
     blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
     blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-    if (FAILED(_device->CreateBlendState(&blendDesc, _blendState.GetAddressOf())))
+    if (FAILED(_device->CreateBlendState(&blendDesc, _uiBlendState.GetAddressOf())))
+        return E_FAIL;
+
+    // --------------------------------------------------
+    // 기본 3D depth on state
+    // --------------------------------------------------
+    D3D11_DEPTH_STENCIL_DESC defaultDepthDesc = {};
+    defaultDepthDesc.DepthEnable = TRUE;
+    defaultDepthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    defaultDepthDesc.DepthFunc = D3D11_COMPARISON_LESS;
+    defaultDepthDesc.StencilEnable = FALSE;
+
+    if (FAILED(_device->CreateDepthStencilState(&defaultDepthDesc, _defaultDepthState.GetAddressOf())))
+        return E_FAIL;
+
+    // --------------------------------------------------
+    // UI depth off state
+    // --------------------------------------------------
+    D3D11_DEPTH_STENCIL_DESC uiDepthDesc = {};
+    uiDepthDesc.DepthEnable = FALSE;
+    uiDepthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    uiDepthDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+    uiDepthDesc.StencilEnable = FALSE;
+
+    if (FAILED(_device->CreateDepthStencilState(&uiDepthDesc, _uiDepthDisabledState.GetAddressOf())))
         return E_FAIL;
 
     return S_OK;
@@ -43,6 +67,8 @@ void Renderer::Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> g
 void Renderer::Draw()
 {
     _drawCallCount = 0;
+
+    Apply_Default3DState();
 
     Render_Priority();
 
@@ -81,7 +107,7 @@ void Renderer::Render_NonBlend()
 
 void Renderer::Render_Blend()
 {
-    //_context->OMSetBlendState(_blendState.Get(), nullptr, 0xffffffff);
+    //_context->OMSetBlendState(_uiBlendState.Get(), nullptr, 0xffffffff);
 
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::Blend)])
     {
@@ -98,7 +124,7 @@ void Renderer::Render_Blend()
 
 void Renderer::Render_UI()
 {
-    //_context->OMSetBlendState(_blendState.Get(), nullptr, 0xffffffff);
+    Apply_UIState();
 
     _renderObjects[ETOI(ERenderGroup::UI)].sort([](const Shared<GameObject>& src, const Shared<GameObject>& dst)
         {
@@ -125,7 +151,20 @@ void Renderer::Render_UI()
 
     _renderObjects[ETOI(ERenderGroup::UI)].clear();
 
-    //_context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+    Apply_Default3DState();
+}
+
+void Renderer::Apply_Default3DState()
+{
+    _context->OMSetDepthStencilState(_defaultDepthState.Get(), 0);
+    _context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+}
+
+void Renderer::Apply_UIState()
+{
+    _context->OMSetDepthStencilState(_uiDepthDisabledState.Get(), 0);
+    _context->OMSetBlendState(_uiBlendState.Get(), nullptr, 0xffffffff);
+
 }
 
 unique_ptr<Renderer> Renderer::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

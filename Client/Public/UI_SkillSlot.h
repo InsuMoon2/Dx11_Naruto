@@ -41,9 +41,11 @@ protected:
     HRESULT Ready_Components() override;
 
 private:
-    uint32 _baseSrvIndex = 0;
-    uint32 _iconSrvIndex = 2;
-    float  _cooldownRatio = 0.f;
+    uint32  _baseSrvIndex = 0;
+    uint32  _iconSrvIndex = 2;
+
+    float   _cooldownRatio = 0.f;
+    float   _cooldownOverlayAlpha = 0.55f;
 
 private:
     Shared<Shader>        _shaderCom;

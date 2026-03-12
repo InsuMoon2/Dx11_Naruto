@@ -46,6 +46,8 @@ HRESULT UI_PlayerSkill::Initialize(void* arg)
 
     CHECK_NULL(_slots[0], E_FAIL);
     CHECK_NULL(_slots[1], E_FAIL);
+
+    return S_OK;
 }
 
 void UI_PlayerSkill::BeginPlay()
@@ -81,6 +83,16 @@ void UI_PlayerSkill::Update(float timeDelta)
         _slots[i]->Set_SrvIndex(skillData->srvIndex);
         _slots[i]->Set_CooldownRatio(skillCom->Get_CooldownRatio(i));
     }
+}
+
+void UI_PlayerSkill::Bind_Player(Shared<Player> player)
+{
+    _player = player;
+
+    //if (player)
+    //    _combat = player->Get_Component<CombatStat>();
+    //else
+    //    _combat.reset();
 }
 
 Shared<UI_PlayerSkill> UI_PlayerSkill::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)

@@ -15,7 +15,7 @@ public:
     HRESULT Resize(uint32 width, uint32 height);
 
     void    BindAsTarget();
-    void    Clear(const Color& color = Color(0.2f, 0.2f, 0.2f, 1.f));
+    void    Clear(const Color& color = Color(0.53f, 0.81f, 0.92f, 1.f));
     void    UnbindAll();
 
 public:
@@ -47,6 +47,8 @@ private:
 
     /* Viewport */
     D3D11_VIEWPORT                  _viewport = {};
+
+    Color                           _clearColor = Color(0.53f, 0.81f, 0.92f, 1.f);
 
 public:
     static shared_ptr<RenderTarget> Create(ComPtr<Device> device, uint32 width, uint32 height);

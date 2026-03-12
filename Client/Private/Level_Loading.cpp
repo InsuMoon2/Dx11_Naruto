@@ -6,6 +6,8 @@
 #include "GameInstance.h"
 #include "Level_Gameplay.h"
 #include "Level_MainTitle.h"
+#include "UI_LoadingSpinner.h"
+#include "UI_LoadingProgressBar.h"
 
 Level_Loading::Level_Loading(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -26,6 +28,12 @@ HRESULT Level_Loading::Initialize(ELevelType nextLevelID)
     // 로더 생성
     _loader = Loader::Create(_device, _context, nextLevelID);
     CHECK_NULL(_loader, E_FAIL);
+
+    auto progressBar = dynamic_pointer_cast<UI_LoadingProgressBar>(_loadingProgressBar);
+    if (progressBar)
+    {
+        progressBar->Bind_Loader(_loader);
+    }
 
     return S_OK;
 }
@@ -95,9 +103,44 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
 
         desc.zOrder = 0.5f;
 
-        auto bg = Background::Create(_device, _context, &desc);
-        if (!bg) return E_FAIL;
-        GAME->Add_UI_ToLayer(EUILayer::Overlay, bg);
+        _loadingBackground = Background::Create(_device, _context, &desc);
+        CHECK_NULL(_loadingBackground, E_FAIL);
+        GAME->Add_UI_ToLayer(EUILayer::Overlay, _loadingBackground);
+    }
+
+    // 오른쪽 하단 회전
+    {
+        UI_LoadingSpinner::FLoadingSpinnerDesc desc{};
+        desc.posX = viewport.x - 100.f;
+        desc.posY = viewport.y - 100.f;
+        desc.sizeX = 72.f;
+        desc.sizeY = 72.f;
+        desc.levelIndex = ETOI(ELevelType::Loading);
+        desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_LOADING;
+        desc.textureIndex = ETOI(ELoadingTexture::SpinnerLogo);
+        desc.zOrder = 0.6f;
+        desc.rotationSpeed = XMConvertToRadians(180.f);
+
+        _loadingSpinner = UI_LoadingSpinner::Create(_device, _context, &desc);
+        CHECK_NULL(_loadingSpinner, E_FAIL);
+        GAME->Add_UI_ToLayer(EUILayer::Overlay, _loadingSpinner);
+    }
+
+    // 하단 중앙 로딩 바
+    {
+        UI_LoadingProgressBar::FLoadingProgressBarDesc desc{};
+        desc.posX = viewport.x * 0.5f;
+        desc.posY = viewport.y - 40.f;
+        desc.sizeX = 220.f;
+        desc.sizeY = 16.f;
+        desc.levelIndex = ETOI(ELevelType::Loading);
+        desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_LOADING;
+        desc.textureIndex = ETOI(ELoadingTexture::ProgressBar);
+        desc.zOrder = 0.6f;
+
+        _loadingProgressBar = UI_LoadingProgressBar::Create(_device, _context, &desc);
+        CHECK_NULL(_loadingProgressBar, E_FAIL);
+        GAME->Add_UI_ToLayer(EUILayer::Overlay, _loadingProgressBar);
     }
 
     return S_OK;

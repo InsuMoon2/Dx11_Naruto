@@ -2,6 +2,7 @@
 #include "Texture_Inspector.h"
 #include "Component.h"
 #include "Texture.h"
+#include <shellapi.h>
 
 void Texture_Inspector::Draw_Inspector(shared_ptr<Component> component)
 {
@@ -19,9 +20,9 @@ void Texture_Inspector::Draw_Inspector(shared_ptr<Component> component)
     if (pos != string::npos)
         fileName = fileName.substr(0, pos);
 
-    ImGui::Text("File");
-    ImGui::SameLine(80.f);
-    ImGui::TextWrapped("%s", fileName.c_str());
+    //ImGui::Text("File");
+    //ImGui::SameLine(80.f);
+    //ImGui::TextWrapped("%s", fileName.c_str());
 
     //int numSRVs = data.value("num_srvs", 1);
     //ImGui::Text("Count");
@@ -43,25 +44,81 @@ void Texture_Inspector::Draw_Inspector(shared_ptr<Component> component)
     auto& srvs = texture->Get_SRVs();
 
     // 텍스처 인덱스 변경 추후에는 Model인지, 단일 Texture인지 판단하고 분기를 해줘야할거같다.
-    int currentIndex = static_cast<int>(texture->Get_CurrentIndex());
-    int maxIndex = static_cast<int>(srvs.size()) - 1;
+    //int currentIndex = static_cast<int>(texture->Get_CurrentIndex());
+    //int maxIndex = static_cast<int>(srvs.size()) - 1;
 
-    if (ImGui::SliderInt("Frame", &currentIndex, 0, maxIndex))
-    {
-        texture->Set_CurrentIndex(static_cast<uint32>(currentIndex));
-    }
+    //ImGui::Text("Frame");
+    //ImGui::SameLine(80.f);
+    //ImGui::TextDisabled("%d / %d", currentIndex + 1, maxIndex + 1);
 
     if (!srvs.empty())
     {
         ImGui::Spacing();
-        ImGui::Text("Preview (%d / %d)", min(1, (int)srvs.size()), (int)srvs.size());
+        const int visibleCount = min(static_cast<int>(srvs.size()), 8);
+        ImGui::Text("Preview (%d / %d)", visibleCount, static_cast<int>(srvs.size()));
 
-        ImGui::Image((ImTextureID)srvs[0].Get(), ImVec2(64, 64));
+        const float thumbSize = 64.f;
+        const float spacing = ImGui::GetStyle().ItemSpacing.x;
 
-        for (uint32 i = 1; i < srvs.size() && i < 8; ++i)
+        for (int i = 0; i < visibleCount; ++i)
         {
-            ImGui::SameLine();
-            ImGui::Image((ImTextureID)srvs[i].Get(), ImVec2(64, 64));
+            ImGui::PushID(i);
+
+            ImGui::ImageButton(
+                "##TexturePreview",
+                (ImTextureID)srvs[i].Get(),
+                ImVec2(thumbSize, thumbSize));
+
+            wstring srcPath = texture->Get_SourcePath(static_cast<uint32>(i));
+
+            if (ImGui::IsItemHovered())
+            {
+                string displayName = srcPath.empty()
+                    ? "(unknown)"
+                    : fs::path(srcPath).filename().string();
+
+                string displayPath = srcPath.empty()
+                    ? "(no source path)"
+                    : Utils::ToString(srcPath);
+
+                ImGui::BeginTooltip();
+                ImGui::Text("%s", displayName.c_str());
+                ImGui::Separator();
+                ImGui::TextDisabled("%s", displayPath.c_str());
+                ImGui::EndTooltip();
+            }
+
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                if (!srcPath.empty())
+                {
+                    wstring absPath = fs::absolute(srcPath).wstring();
+                    wstring args = L"/select,\"" + absPath + L"\"";
+
+                    ShellExecute(
+                        nullptr,
+                        L"open",
+                        L"explorer.exe",
+                        args.c_str(),
+                        nullptr,
+                        SW_SHOWNORMAL);
+                }
+            }
+
+            ImGui::PopID();
+
+            // 다음 아이템이 현재 줄에 들어갈 수 있을 때만 SameLine
+            if (i + 1 < visibleCount)
+            {
+                float nextX = ImGui::GetItemRectMax().x + spacing + thumbSize;
+                float windowVisibleX2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+                if (nextX <= windowVisibleX2)
+                {
+                    ImGui::SameLine();
+                }
+            }
         }
     }
+
 }

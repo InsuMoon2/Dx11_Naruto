@@ -182,8 +182,7 @@
       <Command>call "$(SolutionDir)UpdateLib.bat"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>cd $(SolutionDir)Server\Protobuf\Protocol
-call GenProto.bat</Command>
+      <Command>call "$(SolutionDir)Server\Protobuf\Protocol\GenProto.bat"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">
@@ -210,8 +209,7 @@ call GenProto.bat</Command>
       <Command>call "$(SolutionDir)UpdateLib.bat"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>cd $(SolutionDir)Server\Protobuf\Protocol
-call GenProto.bat</Command>
+      <Command>call "$(SolutionDir)Server\Protobuf\Protocol\GenProto.bat"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

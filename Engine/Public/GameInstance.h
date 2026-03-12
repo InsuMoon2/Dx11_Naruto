@@ -71,6 +71,9 @@ public: /* Game State */
     EGameState              Get_GameState() const { return _gameState; }
     bool                    IsPlaying() const { return _gameState == EGameState::Play; }
 
+    void                    Set_GameInputEnabled(bool enabled) { _gameInputEnabled = enabled; }
+    bool                    Is_GameInputEnabled() const { return _gameInputEnabled; }
+
 public: /* Graphic Device */
     ComPtr<Device>          Get_Device();
     ComPtr<DeviceContext>   Get_Context();
@@ -206,7 +209,6 @@ public: /* Asset */
     uint32                          Clear_DisallowedMeta(const wstring& directory);
 
 public: /* UI */
-    //Shared<UIObject>                Add_UI(uint32 levelIndex, uint32 objID, EUILayer layer, void* arg = nullptr);
     Shared<UIObject>                Find_UI(const wstring& name);
     void                            Show_UI(const wstring& name);
     void                            Hide_UI(const wstring& name);
@@ -220,6 +222,7 @@ public: /* UI */
     const list<Shared<UIObject>>&   Get_UILayers(EUILayer layer) const;
 
     HRESULT                         Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject);
+
 
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};
@@ -245,6 +248,7 @@ private: /* Delegate Hub */
 
 private:
     EGameState                      _gameState = EGameState::Play;
+    bool                            _gameInputEnabled = false;
 
 public:
 	void Free() override;

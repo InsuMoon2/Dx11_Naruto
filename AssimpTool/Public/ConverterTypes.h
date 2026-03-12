@@ -7,11 +7,23 @@ constexpr uint32 MESHBIN_VERSION = 1;
 
 enum class EConvertModelType : uint32
 {
-    StaticMesh = 0,
-    SkeletalMesh = 1,
+    Auto            = 0,
+    StaticMesh      = 1,
+    SkeletalMesh    = 2,
 
     END
 };
+
+inline const char* ToString(EConvertModelType type)
+{
+    switch (type)
+    {
+    case EConvertModelType::Auto:         return "Auto";
+    case EConvertModelType::StaticMesh:   return "StaticMesh";
+    case EConvertModelType::SkeletalMesh: return "SkeletalMesh";
+    default:                              return "Unknown";
+    }
+}
 
 struct FMeshFileHeader
 {
@@ -24,19 +36,17 @@ struct FMeshFileHeader
 
 struct FMeshVertexBin
 {
-    float px = 0.f, py = 0.f, pz = 0.f;
-
-    float nx = 0.f ,ny = 1.f, nz = 0.f;
-
-    float tx = 1.f, ty = 0.f, tz = 0.f;
-
-    float u = 0.f, v = 0.f;
+    float px = 0.f,  py = 0.f, pz = 0.f;
+    float nx = 0.f,  ny = 1.f, nz = 0.f;
+    float tx = 1.f,  ty = 0.f, tz = 0.f;
+    float u = 0.f,   v = 0.f;
 };
 
 struct FExportMeshData
 {
     string                  name;
     uint32                  materialIndex = 0;
+
     vector<FMeshVertexBin>  vertices;
     vector<uint32>          indices;
 };

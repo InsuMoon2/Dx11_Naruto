@@ -35,8 +35,12 @@ private:
 private:
     void            Spawn_LocalPlayer();
 
+    void            On_PlayerObjectSpawned(Shared<GameObject> obj);
+
 private:
     Shared<UI_PlayerHUD> _playerHUD;
+
+    FDelegateHandle     _playerObjectSpawnedHandle = {};
 
 public:
     static shared_ptr<Level_Gameplay> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

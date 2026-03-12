@@ -66,7 +66,10 @@ void PlayerController::Update(float timeDelta)
             _skill->Try_Activate(1);
     }
 
-    Update_Camera();
+    if (GAME->Is_GameInputEnabled())
+    {
+        Update_Camera();
+    }
 
     if (_stateMachine)
         _stateMachine->Update(timeDelta);

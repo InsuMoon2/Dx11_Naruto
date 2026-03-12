@@ -3,6 +3,27 @@
 
 namespace fs = std::filesystem;
 
+static Assimp::EConvertModelType ParseConvertType(int argc, wchar_t** argv)
+{
+    if (argc < 4)
+        return Assimp::EConvertModelType::Auto;
+
+    string arg = fs::path(argv[3]).string();
+    std::transform(arg.begin(), arg.end(), arg.begin(), ::tolower);
+
+    if (arg == "auto")
+        return Assimp::EConvertModelType::Auto;
+
+    if (arg == "static")
+        return Assimp::EConvertModelType::StaticMesh;
+
+    if (arg == "skeletal")
+        return Assimp::EConvertModelType::SkeletalMesh;
+
+    wcout << L"[AssimpTool] Unknown type option. Fallback to Auto: " << argv[3] << endl;
+    return Assimp::EConvertModelType::Auto;
+}
+
 static fs::path FindExistingPathFromAncestors(const fs::path& start, const fs::path& relativePath)
 {
     if (start.empty())
@@ -31,7 +52,8 @@ static fs::path FindExistingPathFromAncestors(const fs::path& start, const fs::p
 static fs::path ResolveDefaultMeshDir(const wchar_t* executablePath)
 {
     static constexpr wchar_t kDefaultRelativePath[] =
-        LR"(Client\Bin\Resources\StaticMesh\KonohaVillage03\Meshes)";
+        //LR"(Client\Bin\Resources\StaticMesh\KonohaVillage03\Meshes)";
+        LR"(Client\Bin\Resources\Models\Saske)";
 
     if (fs::path fromWorkingDir = FindExistingPathFromAncestors(fs::current_path(), kDefaultRelativePath);
         !fromWorkingDir.empty())
@@ -76,20 +98,24 @@ int wmain(int argc, wchar_t** argv)
 {
     fs::path srcDir;
     fs::path dstDir;
+    Assimp::EConvertModelType requestedType = Assimp::EConvertModelType::Auto;
 
     if (argc >= 3)
     {
         srcDir = fs::absolute(argv[1]);
         dstDir = fs::absolute(argv[2]);
+        requestedType = ParseConvertType(argc, argv);
     }
     else
     {
         srcDir = ResolveDefaultMeshDir(argc > 0 ? argv[0] : nullptr);
         dstDir = srcDir;
+        requestedType = Assimp::EConvertModelType::Auto;
 
         wcout << L"[AssimpTool] No arguments provided. Using default mesh path." << endl;
         wcout << L"  src: " << srcDir << endl;
         wcout << L"  dst: " << dstDir << endl;
+        wcout << L"  type: Auto" << endl;
     }
 
     if (!fs::exists(srcDir))
@@ -119,7 +145,7 @@ int wmain(int argc, wchar_t** argv)
         const bool ok = converter->Convert(
             srcPath.wstring(),
             dstBase.wstring(),
-            Assimp::EConvertModelType::StaticMesh);
+            requestedType);
 
         if (ok)
             ++successCount;

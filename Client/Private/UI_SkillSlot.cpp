@@ -56,9 +56,19 @@ HRESULT UI_SkillSlot::Render()
     __super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", ETransformState::View);
     __super::Bind_ShaderResource(_shaderCom, "g_ProjMatrix", ETransformState::Proj);
 
+    {
+        float alpha = 1.f;
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &alpha, sizeof(float)), E_FAIL);
+        CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _baseSrvIndex), E_FAIL);
+        CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
+        CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
+        CHECK_FAILED(_bufferCom->Render(), E_FAIL);
+    }
+
     // 아이콘 투명 일단 임시
     {
-        float alpha = 0.35f + (1.f - _cooldownRatio) * 0.65f;
+        float alpha = 1.f;
+
         CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &alpha, sizeof(float)), E_FAIL);
         CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _iconSrvIndex), E_FAIL);
         CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
@@ -66,11 +76,14 @@ HRESULT UI_SkillSlot::Render()
         CHECK_FAILED(_bufferCom->Render(), E_FAIL);
     }
 
+    // 쿨타임 중이면 아이콘 위에 아래->위 방향 검은 오버레이
+    if (_cooldownRatio > 0.001f)
     {
-        float alpha = 1.f;
-        CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &alpha, sizeof(float)), E_FAIL);
-        CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _baseSrvIndex), E_FAIL);
-        CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_CooldownRatio", &_cooldownRatio, sizeof(float)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_CooldownOverlayAlpha", &_cooldownOverlayAlpha, sizeof(float)), E_FAIL);
+
+        CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _iconSrvIndex), E_FAIL);
+        CHECK_FAILED(_shaderCom->Begin_Pass(2), E_FAIL);
         CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
         CHECK_FAILED(_bufferCom->Render(), E_FAIL);
     }

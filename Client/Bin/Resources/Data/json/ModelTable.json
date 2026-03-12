@@ -13,6 +13,13 @@
             "path": "../../Client/Bin/Resources/Models/Boruto/Boruto.meshbin",
             "count": 1,
             "modelType": "SkeletalMesh"
+        },
+        {
+            "id": "COMPONENT_TYPE_MODEL_SASKE",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Models/Saske/Saske.meshbin",
+            "count": 1,
+            "modelType": "SkeletalMesh"
         }
     ]
 }

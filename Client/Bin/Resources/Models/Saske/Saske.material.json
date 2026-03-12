@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_Sasuke",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_Sasuke_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_SasukeEyeL",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_Sasuke_Eye_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_SasukeEyeR",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_Sasuke_Eye_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "M_Line",
+      "textures": [
+      ]
+    }
+  ]
+}

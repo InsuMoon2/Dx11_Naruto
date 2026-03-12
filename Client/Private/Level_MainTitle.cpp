@@ -89,7 +89,7 @@ HRESULT Level_MainTitle::Ready_Layer_Background()
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MAIN_TITLE;
         desc.textureIndex = ETOI(EMainTitle::Logo);
 
-        desc.zOrder = 0.4f;
+        desc.zOrder = 0.51f;
 
         auto logo = Background::Create(_device, _context, &desc);
         if (!logo) return E_FAIL;
@@ -108,7 +108,7 @@ HRESULT Level_MainTitle::Ready_Layer_Background()
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MAIN_TITLE;
         desc.textureIndex = ETOI(EMainTitle::Text0);
 
-        desc.zOrder = 0.4f;
+        desc.zOrder = 0.51f;
 
         auto text = Background::Create(_device, _context, &desc);
         if (!text) return E_FAIL;
