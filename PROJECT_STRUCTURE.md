@@ -1,7 +1,7 @@
 # Dx11_Naruto 프로젝트 구조
 
 > **AI 어시스턴트는 매 대화 시작 시 이 파일을 반드시 읽을 것!**
-> 마지막 갱신: 2026-03-11
+> 마지막 갱신: 2026-03-12
 
 ---
 
@@ -225,13 +225,15 @@ GameServer (EXE) ── ServerCore + Protobuf
 | `PlayerState_Idle` | Idle 상태 구현 |
 | `PlayerState_Run` | Run 상태 구현 |
 | `PlayerState_Jump` | Jump 상태 구현 |
+| `PlayerState_DoubleJump` | 더블 점프 상태 구현 |
+| `PlayerState_SuperJump` | 슈퍼 점프 상태 구현 |
 
 ### 클라이언트 정의 헤더
 
 | 파일 | 설명 |
 |---|---|
 | `Client_Defines.h` | Client 네임스페이스 공통 정의 |
-| `Client_Enum.h` | Client 전용 열거형 (`EPlayerState`: Idle, Run, Jump) |
+| `Client_Enum.h` | Client 전용 열거형 (`EPlayerState`: Idle, Run, Jump, DoubleJump, SuperJump) |
 | `Client_Macro.h` | Client 전용 매크로 |
 | `Client_Struct.h` | Client 전용 구조체 (`FSkillData`: skillID, skillName, IconTexturePath, coolDown) |
 | `Protocol_Wrapper.h` | Protobuf 헤더 래퍼 (pch 격리용) |
@@ -390,15 +392,26 @@ Assimp 헤더는 `Engine/Public/Assimp/`에서, 라이브러리는 `Engine/Third
 | 클래스 | 설명 |
 |---|---|
 | `GameSession` | 클라이언트 1개 연결 세션 |
-| `GameSessionManager` | 전체 세션 관리 (`GSessionManager` 전역) |
+| `GameRoom` | 게임 룸 (`GRoom` 전역). 플레이어/몬스터 관리, 입장/퇴장 처리, `Broadcast`, `Handle_C_Move`, 템플릿 Add/Remove/Find |
+| `GameObject` | 서버 측 게임 오브젝트 기반 (ObjectInfo, BroadcastMove, atomic ID 생성기) |
+| `Player` | 서버 측 플레이어 (GameObject 상속, GameSession 참조) |
+| `Monster` | 서버 측 몬스터 (GameObject 상속, GameSession 참조) |
 | `Server_PacketHandler` | 서버 패킷 핸들/생성 |
+
+### GameServer 정의 헤더
+
+| 파일 | 설명 |
+|---|---|
+| `Server_Macro.h` | 서버 매크로 (NS_BEGIN/NS_END, CHECK_NULL, LOCK_WP, DECLARE/IMPLEMENT_SINGLETON) |
+| `Server_Typedef.h` | 서버 타입 별칭 (uint8~uint64, Shared/Weak/Unique, umap/uset) |
 
 ### ServerCore (LIB)
 
 IOCP 기반 네트워크 코어:
 `IocpCore`, `IocpEvent`, `Session`, `Listener`, `Service`,
 `NetAddress`, `SocketUtils`, `ThreadManager`,
-`SendBuffer`, `RecvBuffer`, `BufferReader`, `BufferWriter`
+`SendBuffer`, `RecvBuffer`, `BufferReader`, `BufferWriter`,
+`Core_Global`, `Core_Macro`, `Core_Pch`, `Core_TLS`, `Core_Types`
 
 ---
 
@@ -647,4 +660,14 @@ enum PacketID {
 ## UpdateLib.bat
 
 Engine 빌드 후 `EngineSDK/Include`와 `EngineSDK/Lib`로 헤더/라이브러리를 복사하는 배치 파일.
+
+---
+
+## Docs 폴더
+
+| 파일 | 설명 |
+|---|---|
+| `assimp_converter_plan.md` | Assimp 컨버터 설계/구현 계획 문서 |
+| `fmodel_lobbymap_leveljson_guide.md` | FModel 로비맵 레벨 JSON 가이드 |
+| `skill_component_ui_2slot_plan.md` | 스킬 컴포넌트 + 2슬롯 UI 구현 계획 |
 
