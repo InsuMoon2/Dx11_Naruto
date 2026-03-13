@@ -6,18 +6,20 @@
 #include "Monster.h"
 #include <fstream>
 #include "PlayerStart.h"
-
+#include "SkillDataManager.h"
 #include "AIController.h"
 #include "Utils.h"
 #include "Replicator.h"
 #include "BehaviorTree.h"
 #include "CombatStat.h"
 #include "VIBuffer_Rect.h"
+#include "VIBuffer_Terrain.h"
 #include "MovementComponent.h"
 #include "InputComponent.h"
 #include "PlayerController.h"
 #include "PlayerStateMachine.h"
 #include "SkillComponent.h"
+#include "Level.h"
 
 #include "Camera_Free.h"
 #include "Camera_Target.h"
@@ -27,6 +29,8 @@
 #include "Terrain.h"
 #include "Model.h"
 #include "StaticMeshActor.h"
+
+#include "Shader.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -49,9 +53,10 @@ unsigned int APIENTRY ThreadMain(void* arg)
     return 0;
 }
 
-HRESULT Loader::Initialize(ELevelType nextLevelID)
+HRESULT Loader::Initialize(ELevelType nextLevelID, bool loadSharedResources)
 {
     _nextLevelID = nextLevelID;
+    _loadSharedResources = loadSharedResources;
 
     // 크리티컬 섹션 초기화
     InitializeCriticalSection(&_criticalSection);
@@ -73,18 +78,22 @@ HRESULT Loader::Loading()
 {
     // 크리티컬 섹션 진입
     EnterCriticalSection(&_criticalSection);
-
     CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
     _resourceLoader = ResourceLoader::Create(_device, _context);
     if (!_resourceLoader)
     {
         LOG_ERROR("Failed to Create ResourceLoader");
+        _prepareFailed = true;
+
+        CoUninitialize();
         LeaveCriticalSection(&_criticalSection);
         return E_FAIL;
     }
 
-    HRESULT hr = { };
+    vector<FLoadJob> jobs;
+
+    HRESULT hr = S_OK;
 
     switch (_nextLevelID)
     {
@@ -97,9 +106,11 @@ HRESULT Loader::Loading()
         break;
     }
 
-    CoUninitialize();
+    if (FAILED(hr))
+        _prepareFailed = true;
 
-    // 크리티컬 섹션 탈출
+
+    CoUninitialize();
     LeaveCriticalSection(&_criticalSection);
 
     return hr;
@@ -154,136 +165,330 @@ void Loader::Initialize_BT_Nodes()
 
 float Loader::Get_ProgressRatio() const
 {
-    if (_totalSteps <= 0)
+    const int32 totalJobs = _totalJobs.load();
+
+    if (totalJobs <= 0)
     {
-        return _isFinished ? 1.f : 0.f;
+        return _prepareFinished.load() ? 1.f : 0.f;
     }
 
-    return static_cast<float>(_currentStep) / _totalSteps;
+    const int32 completedJobs = _completedJobs.load();
+
+    return ::clamp(
+        static_cast<float>(completedJobs) / static_cast<float>(totalJobs),
+        0.f, 1.f);
+}
+
+bool Loader::Pop_NextJob(FLoadJob& outJob)
+{
+    scoped_lock lock(_jobMutex);
+
+    if (_pendingJobs.empty())
+        return false;
+
+    outJob = std::move(_pendingJobs.front());
+    _pendingJobs.pop();
+    return true;
+}
+
+HRESULT Loader::Execute_Job_OnMainThread(const FLoadJob& job)
+{
+    switch (job.type)
+    {
+    case ELoadJobType::Shader:
+        {
+        auto layout = ResourceLoader::Get_InputLayout(job.extraStr);
+        if (!layout.desc)
+        {
+            LOG_ERROR("Invalid shader layout: {}", job.extraStr);
+            return E_FAIL;
+        }
+
+        wstring wPath = Utils::ToWString(job.pathStr);
+        auto desc = layout.desc;
+        auto count = layout.count;
+        auto className = Utils::ToWString(job.idStr);
+
+        GAME->Register_ComponentFactory(
+            job.componentID,
+            [wPath, desc, count](ComPtr<Device> device, ComPtr<DeviceContext> context)
+            {
+                return Shader::Create(device, context, wPath, desc, count);
+            },
+            className);
+
+        GAME->Register_ComponentFactory_Prototype(job.componentID, job.levelIndex);
+        break;
+        }
+    case ELoadJobType::TextureCreate:
+        {
+        wstring wPath = Utils::ToWString(job.pathStr);
+
+        auto texture = Texture::Create(_device, _context, wPath.c_str(), job.count);
+        CHECK_NULL(texture, E_FAIL);
+
+        CHECK_FAILED(
+            GAME->Add_Component_Prototype(job.levelIndex, job.componentID, texture),
+            E_FAIL);
+            break;
+        }
+    case ELoadJobType::TextureAppend:
+    {
+        auto component = GAME->Find_Component_Prototype(job.levelIndex, job.componentID);
+        auto texture = dynamic_pointer_cast<Texture>(component);
+        CHECK_NULL(texture, E_FAIL);
+
+        wstring wPath = Utils::ToWString(job.pathStr);
+
+        if (job.pathStr.find("%d") != string::npos)
+        {
+            for (uint32 i = 0; i < job.count; ++i)
+            {
+                wchar_t fullPath[MAX_PATH] = {};
+                wsprintf(fullPath, wPath.c_str(), i);
+                CHECK_FAILED(texture->Add_SRV(fullPath), E_FAIL);
+            }
+        }
+        else
+        {
+            CHECK_FAILED(texture->Add_SRV(wPath), E_FAIL);
+        }
+        break;
+    }
+    case ELoadJobType::Terrain:
+        {
+        wstring wPath = Utils::ToWString(job.pathStr);
+        auto className = Utils::ToWString(job.idStr);
+
+        GAME->Register_ComponentFactory(
+            job.componentID,
+            [wPath](ComPtr<Device> device, ComPtr<DeviceContext> context)
+            {
+                return VIBuffer_Terrain::Create(device, context, wPath);
+            },
+            className);
+
+        GAME->Register_ComponentFactory_Prototype(job.componentID, job.levelIndex);
+        break;
+        }
+    case ELoadJobType::Model:
+        {
+        wstring wPath = Utils::ToWString(job.pathStr);
+        auto className = Utils::ToWString(job.idStr);
+        EModelType modelType = job.isSkeletal ? EModelType::SkeletalMesh : EModelType::StaticMesh;
+
+        string pathStr = Utils::ToString(wPath);
+
+        GAME->Register_ComponentFactory(
+            job.componentID,
+            [pathStr, modelType](ComPtr<Device> device, ComPtr<DeviceContext> context)
+            {
+                Matrix preTransform = Matrix::Identity;
+
+                if (modelType == EModelType::SkeletalMesh)
+                {
+                    preTransform =
+                        Matrix::CreateScale(0.01f) *
+                        Matrix::CreateRotationX(XMConvertToRadians(90.f)) *
+                        Matrix::CreateRotationY(XMConvertToRadians(180.f));
+                }
+
+                return Model::Create(device, context, modelType, pathStr, preTransform);
+            },
+            className);
+
+        GAME->Register_ComponentFactory_Prototype(job.componentID, job.levelIndex);
+        break;
+        }
+    case ELoadJobType::Skill:
+        {
+        auto mgr = GET_SINGLE(SkillDataManager);
+        mgr->Register_Skill(job.skillData);
+        break;
+        }
+
+    case ELoadJobType::GameObjectPrototype:
+        {
+        const auto objType = static_cast<Protocol::OBJECT_TYPE>(job.objectType);
+
+        switch (objType)
+        {
+        case Protocol::OBJECT_TYPE_TERRAIN:
+            CHECK_FAILED(GAME->Add_GameObject_Prototype(job.levelIndex, job.objectType,
+                Terrain::Create(_device, _context)), E_FAIL);
+            break;
+
+        case Protocol::OBJECT_TYPE_CAMERA_FREE:
+            CHECK_FAILED(GAME->Add_GameObject_Prototype(job.levelIndex, job.objectType,
+                Camera_Free::Create(_device, _context)), E_FAIL);
+            break;
+
+        case Protocol::OBJECT_TYPE_CAMERA_TARGET:
+            CHECK_FAILED(GAME->Add_GameObject_Prototype(job.levelIndex, job.objectType,
+                Camera_Target::Create(_device, _context)), E_FAIL);
+            break;
+
+        case Protocol::OBJECT_TYPE_PLAYER_START:
+            CHECK_FAILED(GAME->Add_GameObject_Prototype(job.levelIndex, job.objectType,
+                PlayerStart::Create(_device, _context)), E_FAIL);
+            break;
+
+        default:
+            return E_FAIL;
+        }
+        break;
+        }
+
+    case ELoadJobType::LevelChunk:
+        {
+        CHECK_FAILED(Level::Load_LevelChunkToLevel(
+            job.levelIndex,
+            job.prototypeLevelIndex,
+            Utils::ToWString(job.pathStr)), E_FAIL);
+        break;
+        }
+
+    default:
+        return E_FAIL;
+    }
+
+    ++_completedJobs;
+
+    if (_prepareFinished.load() && _completedJobs.load() >= _totalJobs.load())
+    {
+        _isFinished = true;
+    }
+
+    return S_OK;
 }
 
 HRESULT Loader::Loading_For_Maintitle()
 {
-    uint32 levelIndex = ETOI(ELevelType::MainTitle);
+    vector<FLoadJob> jobs;
+
+    //uint32 levelIndex = ETOI(ELevelType::MainTitle);
 
     Register_Components();
     Initialize_BT_Nodes();
 
-    constexpr int totalSteps = 5;
-    int step = 0;
+    lstrcpy(_loadingText, TEXT("셰이더 작업 준비 중"));
+    CHECK_FAILED(_resourceLoader->Build_ShaderJobs(
+        TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"), jobs), E_FAIL);
 
-    lstrcpy(_loadingText, TEXT("로고 리소스 로딩 중"));
-    Set_LoadProgress(++step, totalSteps);
-    if (FAILED(_resourceLoader->Load_ShaderTable(
-        TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"))))
-        return E_FAIL;
+    lstrcpy(_loadingText, TEXT("지형 작업 준비 중"));
+    CHECK_FAILED(_resourceLoader->Build_TerrainJobs(
+        TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"), jobs), E_FAIL);
 
-    lstrcpy(_loadingText, TEXT("지형 리소스 로딩 중"));
-    Set_LoadProgress(++step, totalSteps);
-    if (FAILED(_resourceLoader->Load_TerrainTable(
-        TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"))))
-        return E_FAIL;
+    lstrcpy(_loadingText, TEXT("텍스처 작업 준비 중"));
+    CHECK_FAILED(_resourceLoader->Build_TextureJobs(
+        TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"), jobs), E_FAIL);
 
-    lstrcpy(_loadingText, TEXT("텍스처 로딩 중"));
-    Set_LoadProgress(++step, totalSteps);
-    if (FAILED(_resourceLoader->Load_TextureTable(
-        TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"))))
-        return E_FAIL;
+    lstrcpy(_loadingText, TEXT("모델 작업 준비 중"));
+    CHECK_FAILED(_resourceLoader->Build_ModelJobs(
+        TEXT("../../Client/Bin/Resources/Data/json/ModelTable.json"), jobs), E_FAIL);
 
-    lstrcpy(_loadingText, TEXT("모델 로딩 중"));
-    Set_LoadProgress(++step, totalSteps);
-    if (FAILED(_resourceLoader->Load_ModelTable(
-        TEXT("../../Client/Bin/Resources/Data/json/ModelTable.json"))))
-        return E_FAIL;
+    lstrcpy(_loadingText, TEXT("스킬 작업 준비 중"));
+    CHECK_FAILED(_resourceLoader->Build_SkillJobs(
+        TEXT("../../Client/Bin/Resources/Data/json/SkillDataTable.json"), jobs), E_FAIL);
 
-    lstrcpy(_loadingText, TEXT("스킬 데이터 로딩 중"));
-    Set_LoadProgress(++step, totalSteps);
-    if (FAILED(_resourceLoader->Load_SkillTable(
-        TEXT("../../Client/Bin/Resources/Data/json/SkillDataTable.json"))))
-        return E_FAIL;
+    {
+        scoped_lock lock(_jobMutex);
 
-    lstrcpy(_loadingText, TEXT("Logo 로딩 완료"));
-    Set_LoadProgress(totalSteps, totalSteps);
+        for (auto& job : jobs)
+            _pendingJobs.push(std::move(job));
+    }
 
-    _isFinished = true;
+    _totalJobs = static_cast<uint32>(jobs.size());
+    _completedJobs = 0;
+    _prepareFinished = true;
+
+#ifdef _DEBUG
+    lstrcpy(_loadingText, TEXT("MainTitle loading jobs prepared"));
+#endif
 
     return S_OK;
 }
 
 HRESULT Loader::Loading_For_GamePlay()
 {
-    uint32 levelIndex = ETOI(ELevelType::GamePlay);
+    //::Sleep(20000); UI 값 변경 테스트용 Delay
 
-    //Register_Components();
-    //Initialize_BT_Nodes();
+    vector<FLoadJob> jobs;
 
-    constexpr int totalSteps = 4;
-    int step = 0;
-
-    lstrcpy(_loadingText, TEXT("게임플레이 리소스 로딩 중"));
-    Set_LoadProgress(++step, totalSteps);
-
-    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_TERRAIN,
-        Terrain::Create(_device, _context))))
+    // 클라 단독 실행
+    if (_loadSharedResources)
     {
-        MSG_BOX("Failed to Add Prototype : Prototype_Terrain");
-        return E_FAIL;
+        Register_Components();
+        Initialize_BT_Nodes();
+
+        lstrcpy(_loadingText, TEXT("공용 리소스 작업 준비 중"));
+
+        CHECK_FAILED(_resourceLoader->Build_ShaderJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"), jobs), E_FAIL);
+
+        CHECK_FAILED(_resourceLoader->Build_TerrainJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"), jobs), E_FAIL);
+
+        CHECK_FAILED(_resourceLoader->Build_TextureJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"), jobs), E_FAIL);
+
+        CHECK_FAILED(_resourceLoader->Build_ModelJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/ModelTable.json"), jobs), E_FAIL);
+
+        CHECK_FAILED(_resourceLoader->Build_SkillJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/SkillDataTable.json"), jobs), E_FAIL);
     }
 
-    lstrcpy(_loadingText, TEXT("카메라 원형 로딩 중"));
-    Set_LoadProgress(++step, totalSteps);
+    auto pushProto = [&](Protocol::OBJECT_TYPE type)
+        {
+            FLoadJob job{};
+            job.type = ELoadJobType::GameObjectPrototype;
+            job.levelIndex = ETOI(ELevelType::GamePlay);
+            job.objectType = static_cast<uint32>(type);
+            jobs.push_back(std::move(job));
+        };
 
-    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_CAMERA_FREE,
-        Camera_Free::Create(_device, _context))))
+    auto pushChunk = [&](const char* fileName)
+        {
+            FLoadJob job{};
+            job.type = ELoadJobType::LevelChunk;
+            job.levelIndex = ETOI(ELevelType::GamePlay);
+            job.prototypeLevelIndex = ETOI(ELevelType::GamePlay);
+            job.pathStr = fileName;
+            jobs.push_back(std::move(job));
+        };
+
+    // 게임오브젝트
+    pushProto(Protocol::OBJECT_TYPE_TERRAIN);
+    pushProto(Protocol::OBJECT_TYPE_CAMERA_FREE);
+    pushProto(Protocol::OBJECT_TYPE_CAMERA_TARGET);
+    pushProto(Protocol::OBJECT_TYPE_PLAYER_START);
+
+    // 맵 리소스 로드
+    pushChunk("BM_KonohaVillage03_Environments_BackdropBuildings");
+    pushChunk("BM_KonohaVillage03_Environments_Props");
+    pushChunk("BM_KonohaVillage03_Environments_Terrain");
+
     {
-        MSG_BOX("Failed to Add Prototype : Camera_Free");
-        return E_FAIL;
+        scoped_lock lock(_jobMutex);
+        for (auto& job : jobs)
+            _pendingJobs.push(std::move(job));
     }
 
-    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_CAMERA_TARGET,
-        Camera_Target::Create(_device, _context))))
-    {
-        MSG_BOX("Failed to Add Prototype : Camera_Target");
-        return E_FAIL;
-    }
+    _totalJobs = static_cast<int32>(jobs.size());
+    _completedJobs = 0;
+    _prepareFinished = true;
 
-    lstrcpy(_loadingText, TEXT("스폰/정적 메시 원형 로딩 중"));
-    Set_LoadProgress(++step, totalSteps);
-
-    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex, Protocol::OBJECT_TYPE_PLAYER_START,
-        PlayerStart::Create(_device, _context))))
-    {
-        MSG_BOX("Failed to Add Prototype : PlayerStart");
-        return E_FAIL;
-    }
-
-    if (FAILED(GAME->Add_GameObject_Prototype(levelIndex,
-        Protocol::OBJECT_TYPE_STATIC_MESH,
-        StaticMeshActor::Create(_device, _context))))
-    {
-        MSG_BOX("Failed to Add Prototype : StaticMeshActor");
-        return E_FAIL;
-    }
-
-    lstrcpy(_loadingText, TEXT("GamePlay 로딩 완료"));
-    Set_LoadProgress(totalSteps, totalSteps);
-
-    _isFinished = true;
+    _isFinished = (_totalJobs.load() == 0);
 
     return S_OK;
 }
 
-void Loader::Set_LoadProgress(int currentStep, int totalSteps)
-{
-    _currentStep = currentStep;
-    _totalSteps = totalSteps;
-}
-
-shared_ptr<Loader> Loader::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID)
+shared_ptr<Loader> Loader::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID, bool loadSharedResources)
 {
     auto instance = make_shared<Loader>(device, context);
 
-    if (FAILED(instance->Initialize(nextLevelID)))
+    if (FAILED(instance->Initialize(nextLevelID, loadSharedResources)))
     {
         MSG_BOX("Failed to Create : Loader");
         return nullptr;

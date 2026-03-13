@@ -125,6 +125,7 @@ void Renderer::Render_Blend()
 void Renderer::Render_UI()
 {
     Apply_UIState();
+    GAME->Begin_UIText();
 
     _renderObjects[ETOI(ERenderGroup::UI)].sort([](const Shared<GameObject>& src, const Shared<GameObject>& dst)
         {
@@ -151,6 +152,7 @@ void Renderer::Render_UI()
 
     _renderObjects[ETOI(ERenderGroup::UI)].clear();
 
+    GAME->End_UIText();
     Apply_Default3DState();
 }
 

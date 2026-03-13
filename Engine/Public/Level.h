@@ -22,6 +22,10 @@ public:
 public:
     virtual HRESULT Load_LevelFromJson(const wstring& fileName);
 
+    static HRESULT  Load_LevelChunkToLevel(uint32 targetLevelIndex,
+                                            uint32 prototypeLevelIndex,
+                                            const wstring& fileName);
+
 protected:
     ComPtr<Device>              _device;
     ComPtr<DeviceContext>       _context;

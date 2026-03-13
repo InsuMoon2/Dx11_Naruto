@@ -18,15 +18,16 @@ Level_Loading::~Level_Loading()
 {
 }
 
-HRESULT Level_Loading::Initialize(ELevelType nextLevelID)
+HRESULT Level_Loading::Initialize(ELevelType nextLevelID, bool loadSharedResources)
 {
     _nextLevelID = nextLevelID;
+    _loadSharedResources = loadSharedResources;
 
     if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
         return E_FAIL;
 
     // 로더 생성
-    _loader = Loader::Create(_device, _context, nextLevelID);
+    _loader = Loader::Create(_device, _context, nextLevelID, _loadSharedResources);
     CHECK_NULL(_loader, E_FAIL);
 
     auto progressBar = dynamic_pointer_cast<UI_LoadingProgressBar>(_loadingProgressBar);
@@ -40,6 +41,21 @@ HRESULT Level_Loading::Initialize(ELevelType nextLevelID)
 
 void Level_Loading::Update(float timeDelta)
 {
+    const int jobPerFrame = 1;
+
+    for (int i = 0; i < jobPerFrame; ++i)
+    {
+        FLoadJob job{};
+        if (!_loader->Pop_NextJob(job))
+            break;
+
+        if (FAILED(_loader->Execute_Job_OnMainThread(job)))
+        {
+            MSG_BOX("Failed to execute loading job");
+            return;
+        }
+    }
+
     if (_loader->IsFinished())
     {
         shared_ptr<Level> nextLevel = { nullptr };
@@ -89,6 +105,7 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
 {
     Vec2 viewport = Vec2(GAME->Get_WindowWidth(), GAME->Get_WindowHeight());
 
+    // 로딩 백그라운드
     {
         Background::FBackgroundDesc desc{};
         desc.name = TEXT("Loading Screen");
@@ -111,7 +128,7 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
     // 오른쪽 하단 회전
     {
         UI_LoadingSpinner::FLoadingSpinnerDesc desc{};
-        desc.posX = viewport.x - 100.f;
+        desc.posX = viewport.x - 180.f;
         desc.posY = viewport.y - 100.f;
         desc.sizeX = 72.f;
         desc.sizeY = 72.f;
@@ -130,9 +147,9 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
     {
         UI_LoadingProgressBar::FLoadingProgressBarDesc desc{};
         desc.posX = viewport.x * 0.5f;
-        desc.posY = viewport.y - 40.f;
-        desc.sizeX = 220.f;
-        desc.sizeY = 16.f;
+        desc.posY = viewport.y - 93.f;
+        desc.sizeX = 128.f * 8.f;
+        desc.sizeY = 8.f * 2.f;
         desc.levelIndex = ETOI(ELevelType::Loading);
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_LOADING;
         desc.textureIndex = ETOI(ELoadingTexture::ProgressBar);
@@ -146,11 +163,11 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
     return S_OK;
 }
 
-shared_ptr<Level_Loading> Level_Loading::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID)
+shared_ptr<Level_Loading> Level_Loading::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID, bool loadSharedResources)
 {
     auto instance = make_shared<Level_Loading>(device, context);
 
-    if (FAILED(instance->Initialize(nextLevelID)))
+    if (FAILED(instance->Initialize(nextLevelID, loadSharedResources)))
     {
         MSG_BOX("Faield to Created : Loading");
 

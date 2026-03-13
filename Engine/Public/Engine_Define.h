@@ -4,6 +4,9 @@
 #include <DirectXCollision.h>
 #include <DirectXMath.h>
 #include <d3d11.h>
+#include <d2d1_1.h>
+#include <dwrite.h>
+#include <dxgi1_2.h>
 #include <directxtk/SimpleMath.h>
 #include <wrl.h>
 
@@ -58,7 +61,7 @@ namespace fs = std::filesystem;
 #include "Property_Types.h"
 #include "Reflection_Macro.h"
 #include "Vertex_Struct.h"
-
+#include "Text_Types.h"
 
 // Win
 #include <Windows.h>

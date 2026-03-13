@@ -14,10 +14,10 @@ public:
     virtual ~Loader();
 
 public:
-    HRESULT Initialize(ELevelType nextLevelID);
+    HRESULT Initialize(ELevelType nextLevelID, bool loadSharedResources);
     HRESULT Loading();
 
-    bool    IsFinished()     const { return _isFinished; }
+    bool         IsFinished()     const { return _isFinished; }
     ELevelType   GetNextLevelID() const { return _nextLevelID; }
 
     #ifdef _DEBUG
@@ -29,12 +29,17 @@ public:
 
     float   Get_ProgressRatio() const;
 
+public: /* Thread */
+    bool    Pop_NextJob(FLoadJob& outJob);
+    HRESULT Execute_Job_OnMainThread(const FLoadJob& job);
+
+    bool    Is_PrepareFinished() const { return _prepareFinished.load(); }
+    bool    Has_PrepareFailed() const { return _prepareFailed.load(); }
+
 private: /* Loading Level */
     HRESULT Loading_For_Maintitle();
     HRESULT Loading_For_GamePlay();
 
-private:
-    void    Set_LoadProgress(int currentStep, int totalSteps);
 
 private:
     ComPtr<Device>          _device;
@@ -49,12 +54,21 @@ private:
     Shared<ResourceLoader>  _resourceLoader;
 
 private:
-    int     _currentStep    = 0;
-    int     _totalSteps     = 0;
+    mutex               _jobMutex;
+    queue<FLoadJob>     _pendingJobs;
+
+    atomic<int32>      _totalJobs = 0;
+    atomic<int32>      _completedJobs = 0;
+
+    atomic<bool>       _prepareFinished = false;
+    atomic<bool>       _prepareFailed = false;
+
+    bool               _loadSharedResources = false;
 
 public:
     static shared_ptr<Loader> Create(
-        ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID);
+        ComPtr<Device> device, ComPtr<DeviceContext> context,
+        ELevelType nextLevelID, bool loadSharedResources = false);
 
     virtual void Free() override;
 

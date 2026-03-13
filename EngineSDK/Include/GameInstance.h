@@ -108,8 +108,9 @@ public: /* Prototype Manager */
 
     HRESULT                 Add_Component_Prototype(uint32 levelIndex, uint32 componentID, Shared<Component> component);
     Shared<Component>       Clone_Component(uint32 levelIndex, uint32 componentID, void* arg = {});
-
     Shared<Component>       Clone_Component(uint32 componentID, void* arg = {});
+
+    Shared<Component>       Find_Component_Prototype(uint32 levelIndex, uint32 componentID);
 
     vector<pair<uint32, wstring>>  Get_RegisteredGameObjects();
 

@@ -48,13 +48,21 @@ HRESULT Level::Render()
 
 HRESULT Level::Load_LevelFromJson(const wstring& fileName)
 {
-    wstring fullPath = wstring(L"../../Client/Bin/Resources/Data/json/Levels/") + fileName + wstring(L".level.json");
+    return Load_LevelChunkToLevel(
+        GAME->Current_Level(),
+        GAME->Current_Level(),
+        fileName);
+}
+
+HRESULT Level::Load_LevelChunkToLevel(uint32 targetLevelIndex, uint32 prototypeLevelIndex, const wstring& fileName)
+{
+    wstring fullPath = wstring(L"../../Client/Bin/Resources/Data/json/Levels/") +
+        fileName + wstring(L".level.json");
 
     ifstream file(fullPath);
     if (!file.is_open())
     {
         LOG_ERROR("파일 열기 실패 : {}", Utils::ToString(fileName));
-
         return E_FAIL;
     }
 
@@ -68,10 +76,6 @@ HRESULT Level::Load_LevelFromJson(const wstring& fileName)
         return E_FAIL;
     }
 
-    uint32 levelIndex = levelJson.value("levelIndex", GAME->Current_Level());
-
-    //GAME->Clear_Layers(levelIndex);
-
     int loadedCount = 0;
 
     for (auto& objJson : levelJson["gameObjects"])
@@ -79,8 +83,8 @@ HRESULT Level::Load_LevelFromJson(const wstring& fileName)
         if (!objJson.contains("object_type"))
             continue;
 
-        // object_type 파싱
         Protocol::OBJECT_TYPE objType = Protocol::OBJECT_TYPE_NONE;
+
         if (objJson["object_type"].is_string())
         {
             auto result = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
@@ -93,28 +97,29 @@ HRESULT Level::Load_LevelFromJson(const wstring& fileName)
         }
         else
         {
-            objType = static_cast<Protocol::OBJECT_TYPE>(objJson["object_type"].get<uint32>());
+            objType = static_cast<Protocol::OBJECT_TYPE>(
+                objJson["object_type"].get<uint32>());
         }
 
-        // 카메라는 무시
         if (objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
             objType == Protocol::OBJECT_TYPE_CAMERA_TARGET ||
             objType == Protocol::OBJECT_TYPE_PLAYER)
+        {
             continue;
+        }
 
-        // Clone
-        auto gameObject = GAME->Clone_GameObject(levelIndex, objType, nullptr);
-        if (!gameObject)
+        auto gameObject = GAME->Clone_GameObject(prototypeLevelIndex, objType, nullptr);
+
+        if (!gameObject && prototypeLevelIndex != 0)
         {
             gameObject = GAME->Clone_GameObject(0, objType, nullptr);
         }
 
-        if (!gameObject) continue;
+        if (!gameObject)
+            continue;
 
-        // 오브젝트 데이터
         gameObject->From_Json(objJson);
 
-        // 컴포넌트 데이터
         if (objJson.contains("components"))
         {
             for (const auto& compData : objJson["components"])
@@ -123,6 +128,7 @@ HRESULT Level::Load_LevelFromJson(const wstring& fileName)
                 if (!compData.contains("type")) continue;
 
                 uint32 typeId = 0;
+
                 if (compData["type"].is_string())
                 {
                     auto result = magic_enum::enum_cast<Protocol::ComponentID>(
@@ -137,22 +143,20 @@ HRESULT Level::Load_LevelFromJson(const wstring& fileName)
                 }
 
                 auto comp = gameObject->Find_Component_ByStaticType(typeId);
-                if (comp) comp->From_Json(compData);
-
+                if (comp)
+                    comp->From_Json(compData);
             }
         }
 
-        // 레이어 배치
         wstring layerTag = L"Layer_Default";
         if (objJson.contains("layerTag"))
             layerTag = Utils::ToWString(objJson["layerTag"].get<string>());
 
-        GAME->Add_GameObject(levelIndex, layerTag, gameObject);
+        CHECK_FAILED(GAME->Add_GameObject(targetLevelIndex, layerTag, gameObject), E_FAIL);
         loadedCount++;
     }
 
     LOG_INFO("Level loaded: {} objects from '{}'", loadedCount, Utils::ToString(fileName));
-
     return S_OK;
 }
 

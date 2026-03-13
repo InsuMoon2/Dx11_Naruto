@@ -26,14 +26,10 @@ public:
     virtual ~Level_Loading();
 
 public:
-    virtual HRESULT     Initialize(ELevelType nextLevelID);
+    virtual HRESULT     Initialize(ELevelType nextLevelID, bool loadSharedResources);
     virtual void        Update(float timeDelta) override;
     virtual void        Late_Update(float timeDelta) override;
-     virtual HRESULT    Render() override;
-
-private:
-    Shared<Loader>      _loader;
-    ELevelType              _nextLevelID = { ELevelType::END };
+    virtual HRESULT    Render() override;
 
 private:
     HRESULT  Ready_Layer_UI(const wstring& uiTag);
@@ -43,9 +39,16 @@ private:
     Shared<UIObject> _loadingSpinner;
     Shared<UIObject> _loadingProgressBar;
 
+private:
+    Shared<Loader>      _loader;
+    ELevelType          _nextLevelID = { ELevelType::END };
+
+    bool                _loadSharedResources = false;
+
 public:
     static Shared<Level_Loading> Create(
-        ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID);
+        ComPtr<Device> device, ComPtr<DeviceContext> context,
+        ELevelType nextLevelID, bool loadSharedResources = false);
 
     virtual void Free() override;
 

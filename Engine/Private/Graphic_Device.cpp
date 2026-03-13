@@ -14,7 +14,7 @@ Graphic_Device::~Graphic_Device()
 HRESULT Graphic_Device::Initialize(HWND hWnd, EWinMode eWinMode, uint32 winSizeX, uint32 winSizeY,
                                     ComPtr<Device>& deviceOut, ComPtr<DeviceContext>& contextOut)
 {
-    uint32 flag = 0;
+    uint32 flag = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
     _width  = winSizeX;
     _height = winSizeY;

@@ -59,21 +59,39 @@ HRESULT UI_LoadingProgressBar::Render()
     CHECK_FAILED(__super::Bind_ShaderResource(_shaderCom, "g_ProjMatrix", ETransformState::Proj), E_FAIL);
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureIndex), E_FAIL);
 
-    Vec4 color = { 1.f, 1.f, 1.f, 1.f };
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColor", &color, sizeof(Vec4)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FillRatio", &_ratio, sizeof(float)), E_FAIL);
-
     float startU = 0.f;
     float endU = 1.f;
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FillStartU", &startU, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FillEndU", &endU, sizeof(float)), E_FAIL);
-
-    float alpha = 1.f;
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &alpha, sizeof(float)), E_FAIL);
-
-    CHECK_FAILED(_shaderCom->Begin_Pass(3), E_FAIL);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
-    CHECK_FAILED(_bufferCom->Render(), E_FAIL);
+
+    // Background
+    {
+        Vec4 color = { 0.f, 0.f, 0.f, 1.f };
+        float ratio = 1.f;
+        float alpha = 0.75f;
+
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColor", &color, sizeof(Vec4)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_FillRatio", &ratio, sizeof(float)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &alpha, sizeof(float)), E_FAIL);
+
+        CHECK_FAILED(_shaderCom->Begin_Pass(3), E_FAIL);
+        CHECK_FAILED(_bufferCom->Render(), E_FAIL);
+    }
+
+    // Fill
+    {
+        Vec4 color = { 1.f, 1.f, 1.f, 1.f };
+        float alpha = 1.f;
+
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &alpha, sizeof(float)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColor", &color, sizeof(Vec4)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_FillRatio", &_ratio, sizeof(float)), E_FAIL);
+
+        CHECK_FAILED(_shaderCom->Begin_Pass(3), E_FAIL);
+        CHECK_FAILED(_bufferCom->Render(), E_FAIL);
+    }
+   
 
     return S_OK;
 }
@@ -91,7 +109,7 @@ Shared<UIObject> UI_LoadingProgressBar::Create(ComPtr<Device> device, ComPtr<Dev
 {
     auto instance = make_shared<UI_LoadingProgressBar>(device, context);
 
-    if (FAILED(instance->Initialize_Prototype()))
+    if (FAILED(instance->Initialize(arg)))
     {
         MSG_BOX("Failed to Create : UI_LoadingProgressBar");
 

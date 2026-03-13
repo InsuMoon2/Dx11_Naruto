@@ -21,6 +21,7 @@ class Camera_Manager;
 class Light_Manager;
 class Asset_Manager;
 class UI_Manager;
+class Text_Renderer;
 
 class Renderer;
 class PipeLine;
@@ -108,8 +109,9 @@ public: /* Prototype Manager */
 
     HRESULT                 Add_Component_Prototype(uint32 levelIndex, uint32 componentID, Shared<Component> component);
     Shared<Component>       Clone_Component(uint32 levelIndex, uint32 componentID, void* arg = {});
-
     Shared<Component>       Clone_Component(uint32 componentID, void* arg = {});
+
+    Shared<Component>       Find_Component_Prototype(uint32 levelIndex, uint32 componentID);
 
     vector<pair<uint32, wstring>>  Get_RegisteredGameObjects();
 
@@ -223,6 +225,11 @@ public: /* UI */
 
     HRESULT                         Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject);
 
+public: /* Text Renderer */
+    HRESULT Begin_UIText();
+    HRESULT Draw_Text(const wstring& text, const RECT& rect, const FTextStyle& style);
+    HRESULT End_UIText();
+
 
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};
@@ -235,6 +242,7 @@ private: /* Manager */
     Unique<Light_Manager>           _lightManager   {};
     Unique<Asset_Manager>           _assetManager   {};
     Unique<UI_Manager>              _uiManager      {};
+    Unique<Text_Renderer>           _textRenderer   {};
 
     Unique<Renderer>                _renderer {};
     Unique<PipeLine>                _pipeLine {};

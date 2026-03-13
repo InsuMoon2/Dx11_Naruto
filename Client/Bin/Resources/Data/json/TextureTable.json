@@ -81,7 +81,7 @@
         {
             "id": "COMPONENT_TYPE_TEXTURE_LOADING",
             "level": "Static",
-            "path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_Load_Icon_BC_BC.png",
+            "path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_Load_Icon_BC.png",
             "count": 1
         },
         {

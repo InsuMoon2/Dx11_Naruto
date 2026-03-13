@@ -130,6 +130,234 @@ HRESULT ResourceLoader::Load_SkillTable(const wstring& tablePath)
     return S_OK;
 }
 
+HRESULT ResourceLoader:: Build_TextureJobs(const wstring& tablePath, vector<FLoadJob>& outJobs)
+{
+    ifstream file(tablePath);
+    if (!file.is_open())
+        return E_FAIL;
+
+    json root;
+    file >> root;
+
+    if (!root.contains("Texture"))
+        return S_OK;
+
+    umap<uint32, bool> firstTextureByType;
+
+    for (const auto& item : root["Texture"])
+    {
+        string idStr = item["id"];
+        string pathStr = item["path"];
+        string levelStr = item.value("level", "Static");
+        int32 count = item.value("count", 1);
+
+        uint32 typeId = Get_ComponentID_From_String(idStr);
+        uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+        if (typeId == 0)
+            continue;
+
+        FLoadJob job;
+        job.componentID = typeId;
+        job.levelIndex = levelIndex;
+        job.idStr = idStr;
+        job.pathStr = pathStr;
+        job.count = count;
+
+        if (!firstTextureByType[typeId])
+        {
+            job.type = ELoadJobType::TextureCreate;
+            firstTextureByType[typeId] = true;
+        }
+        else
+        {
+            job.type = ELoadJobType::TextureAppend;
+        }
+
+        outJobs.push_back(job);
+    }
+
+    return S_OK;
+}
+
+HRESULT ResourceLoader::Build_ShaderJobs(const wstring& tablePath, vector<FLoadJob>& outJobs)
+{
+    ifstream file(tablePath);
+    if (!file.is_open())
+    {
+        LOG_ERROR("Failed to open: {}", Utils::ToString(tablePath));
+        return E_FAIL;
+    }
+
+    json root;
+    file >> root;
+    file.close();
+
+    if (!root.contains("Shader"))
+        return S_OK;
+
+    for (const auto& item : root["Shader"])
+    {
+        string idStr = item["id"];
+        string pathStr = item["path"];
+        string layoutStr = item.value("type", "");
+        string levelStr = item.value("level", "Static");
+        int32 count = item.value("count", 1);
+
+        uint32 typeId = Get_ComponentID_From_String(idStr);
+        uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+        if (typeId == 0)
+        {
+            LOG_WARN("Unknown Shader ID : {}", idStr);
+            continue;
+        }
+
+        FLoadJob job{};
+        job.type = ELoadJobType::Shader;
+        job.componentID = typeId;
+        job.levelIndex = levelIndex;
+        job.idStr = idStr;
+        job.pathStr = pathStr;
+        job.extraStr = layoutStr;
+        job.count = count;
+
+        outJobs.push_back(job);
+    }
+
+    return S_OK;
+}
+
+HRESULT ResourceLoader::Build_TerrainJobs(const wstring& tablePath, vector<FLoadJob>& outJobs)
+{
+    ifstream file(tablePath);
+    if (!file.is_open())
+    {
+        LOG_ERROR("Failed to open: {}", Utils::ToString(tablePath));
+        return E_FAIL;
+    }
+
+    json root;
+    file >> root;
+    file.close();
+
+    if (!root.contains("Terrain"))
+        return S_OK;
+
+    for (const auto& item : root["Terrain"])
+    {
+        string idStr = item["id"];
+        string pathStr = item["path"];
+        string levelStr = item.value("level", "Static");
+
+        uint32 typeId = Get_ComponentID_From_String(idStr);
+        uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+        if (typeId == 0)
+        {
+            LOG_WARN("Unknown terrain ID: {}", idStr);
+            continue;
+        }
+
+        FLoadJob job{};
+        job.type = ELoadJobType::Terrain;
+        job.componentID = typeId;
+        job.levelIndex = levelIndex;
+        job.idStr = idStr;
+        job.pathStr = pathStr;
+
+        outJobs.push_back(job);
+    }
+
+    return S_OK;
+}
+
+HRESULT ResourceLoader::Build_ModelJobs(const wstring& tablePath, vector<FLoadJob>& outJobs)
+{
+    ifstream file(tablePath);
+    if (!file.is_open())
+    {
+        LOG_ERROR("Failed to open: {}", Utils::ToString(tablePath));
+        return E_FAIL;
+    }
+
+    json root;
+    file >> root;
+    file.close();
+
+    if (!root.contains("Model"))
+        return S_OK;
+
+    for (const auto& item : root["Model"])
+    {
+        string idStr = item["id"];
+        string guidStr = item.value("guid", "");
+        string pathStr;
+        string levelStr = item.value("level", "Static");
+        string modelTypeStr = item.value("modelType", "Static");
+
+        if (!guidStr.empty())
+            pathStr = Utils::ToString(GAME->Resolve_AssetPath(guidStr));
+        else
+            pathStr = item["path"];
+
+        uint32 typeId = Get_ComponentID_From_String(idStr);
+        uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+        if (typeId == 0)
+        {
+            LOG_WARN("Unknown Model ID: {}", idStr);
+            continue;
+        }
+
+        FLoadJob job{};
+        job.type = ELoadJobType::Model;
+        job.componentID = typeId;
+        job.levelIndex = levelIndex;
+        job.idStr = idStr;
+        job.pathStr = pathStr;
+        job.extraStr = modelTypeStr;
+        job.isSkeletal = (modelTypeStr == "SkeletalMesh");
+
+        outJobs.push_back(job);
+    }
+
+    return S_OK;
+}
+
+HRESULT ResourceLoader::Build_SkillJobs(const wstring& tablePath, vector<FLoadJob>& outJobs)
+{
+    ifstream file(tablePath);
+    if (!file.is_open())
+    {
+        LOG_ERROR("Failed to open: {}", Utils::ToString(tablePath));
+        return E_FAIL;
+    }
+
+    json root;
+    file >> root;
+    file.close();
+
+    if (!root.contains("Skill"))
+        return S_OK;
+
+    for (const auto& item : root["Skill"])
+    {
+        FLoadJob job{};
+        job.type = ELoadJobType::Skill;
+
+        job.skillData.skill_Id = item["SkillID"];
+        job.skillData.skillName = Utils::ToWString(item.value("SkillName", string{}));
+        job.skillData.srvIndex = item.value("SrvIndex", 0);
+        job.skillData.coolDown = item.value("Cooldown", 0.f);
+        job.skillData.manaCost = item.value("ManaCost", 0);
+
+        outJobs.push_back(job);
+    }
+
+    return S_OK;
+}
+
 HRESULT ResourceLoader::Load_Model(const json& data)
 {
     for (const auto& item : data)

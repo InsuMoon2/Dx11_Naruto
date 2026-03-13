@@ -32,9 +32,9 @@ public:
 
     vector<pair<uint32, wstring>> Get_RegisteredGameObjects();
 
+    shared_ptr<Component>       Find_Component_Prototype(uint32 levelIndex, uint32 componentID);
 private:
     shared_ptr<GameObject>      Find_GameObject_Prototype(uint32 levelIndex, uint32 objID);
-    shared_ptr<Component>       Find_Component_Prototype(uint32 levelIndex, uint32 componentID);
 
 private:
     // GameObject

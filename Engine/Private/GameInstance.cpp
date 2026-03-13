@@ -30,6 +30,7 @@
 #pragma push_macro("new")
 #undef new
 #include "imgui.h"
+#include "Text_Renderer.h"
 #pragma pop_macro("new")
 
 IMPLEMENT_SINGLETON(GameInstance)
@@ -94,6 +95,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _uiManager = UI_Manager::Create();
     CHECK_NULL(_uiManager, E_FAIL);
+
+    _textRenderer = Text_Renderer::Create(Get_Device(), _graphicDevice->Get_SwapChain());
+    CHECK_NULL(_textRenderer, E_FAIL);
 
     return S_OK;
 }
@@ -188,7 +192,15 @@ void GameInstance::BindBackBuffer()
 
 HRESULT GameInstance::Resize_BackBuffer(uint32 width, uint32 height)
 {
-    return _graphicDevice->Resize(width, height);
+    if (_textRenderer)
+        _textRenderer->On_BeforeResize();
+
+    CHECK_FAILED(_graphicDevice->Resize(width, height), E_FAIL);
+
+    if (_textRenderer)
+        CHECK_FAILED(_textRenderer->On_AfterResize(), E_FAIL);
+
+    return S_OK;
 }
 
 HRESULT GameInstance::Clear_Buffers(const Color& clearColor)
@@ -264,6 +276,11 @@ shared_ptr<Component> GameInstance::Clone_Component(uint32 levelIndex, uint32 co
 Shared<Component> GameInstance::Clone_Component(uint32 componentID, void* arg)
 {
     return _protoManager->Clone_Component(componentID, arg);
+}
+
+Shared<Component> GameInstance::Find_Component_Prototype(uint32 levelIndex, uint32 componentID)
+{
+    return _protoManager->Find_Component_Prototype(levelIndex, componentID);
 }
 
 vector<pair<uint32, wstring>> GameInstance::Get_RegisteredGameObjects()
@@ -543,6 +560,21 @@ HRESULT GameInstance::Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject)
     return _uiManager->Add_UI_ToLayer(layer, uiObject);
 }
 
+HRESULT GameInstance::Begin_UIText()
+{
+    return _textRenderer->Begin_UIText();
+}
+
+HRESULT GameInstance::Draw_Text(const wstring& text, const RECT& rect, const FTextStyle& style)
+{
+    return _textRenderer->Draw_Text(text, rect, style);
+}
+
+HRESULT GameInstance::End_UIText()
+{
+    return _textRenderer->End_UIText();
+}
+
 Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)
 {
     return _cameraManager->Find_Camera(type);
@@ -563,6 +595,7 @@ void GameInstance::Free()
     _protoManager.reset();  
     _timerManager.reset();  
     _graphicDevice.reset();
+    _textRenderer.reset();
 
     _renderer.reset();
     _pipeLine.reset();

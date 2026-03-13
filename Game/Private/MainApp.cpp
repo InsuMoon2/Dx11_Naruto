@@ -108,9 +108,11 @@ HRESULT MainApp::Ready_StartLevel(ELevelType startLevelID)
 {
     if (ELevelType::Loading == startLevelID)
         return E_FAIL;
-    
+
+    const bool loadSharedResources = (startLevelID == ELevelType::GamePlay);
+
     if (FAILED(GAME->Change_Level(ETOI(ELevelType::Loading),
-        Level_Loading::Create(_device, _context, startLevelID))))
+        Level_Loading::Create(_device, _context, startLevelID, loadSharedResources))))
         return E_FAIL;
 
     return S_OK;

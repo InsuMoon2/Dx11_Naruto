@@ -25,20 +25,7 @@ Level_Gameplay::~Level_Gameplay()
 HRESULT Level_Gameplay::Initialize()
 {
     CHECK_FAILED(Ready_Lights(), E_FAIL);
-
-    //if (FAILED(Load_LevelFromJson(L"LM_KonohaVillage_BORUTO_Environments_BackdropBuildings")))
-    if (FAILED(Load_LevelFromJson(L"BM_KonohaVillage03_Environments_BackdropBuildings")) ||
-        FAILED(Load_LevelFromJson(L"BM_KonohaVillage03_Environments_Props")) ||
-        FAILED(Load_LevelFromJson(L"BM_KonohaVillage03_Environments_Terrain")))
-    {
-        // 풀백
-        LOG_WARN("Level JSON load failed, using hardcoded setup");
-        CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
-        CHECK_FAILED(Ready_Layer_GameObject(TEXT("Layer_GameObject")), E_FAIL);
-    }
-
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
-
     CHECK_FAILED(Ready_UI(), E_FAIL);
 
     // 서버 연결 없으면 로컬 플레이어 스폰

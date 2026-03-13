@@ -160,7 +160,6 @@
     <ClInclude Include="..\Public\Delegate.h">
       <Filter>01. Utility\98. Utils\01. Delegate</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerStart.h" />
     <ClInclude Include="..\Public\Light.h">
       <Filter>01. Utility\08. Lights</Filter>
     </ClInclude>
@@ -198,10 +197,20 @@
     <ClInclude Include="..\Public\ModelMaterial.h">
       <Filter>01. Utility\09. Material</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Model_BinaryLoader.h" />
     <ClInclude Include="..\Public\DebugDraw.h">
       <Filter>01. Utility\98. Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Text_Types.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model_BinaryLoader.h">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerStart.h">
+      <Filter>01. Utility\03. GameObject\98. PlayerStart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Text_Renderer.h" />
+    <ClInclude Include="..\Public\UI_Text.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -509,7 +518,6 @@
     <ClCompile Include="..\Private\Delegate.cpp">
       <Filter>01. Utility\98. Utils\01. Delegate</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerStart.cpp" />
     <ClCompile Include="..\Private\Light.cpp">
       <Filter>01. Utility\08. Lights</Filter>
     </ClCompile>
@@ -538,10 +546,17 @@
     <ClCompile Include="..\Private\ModelMaterial.cpp">
       <Filter>01. Utility\09. Material</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Model_BinaryLoader.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp">
       <Filter>01. Utility\98. Utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Model_BinaryLoader.cpp">
+      <Filter>01. Utility\98. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerStart.cpp">
+      <Filter>01. Utility\03. GameObject\98. PlayerStart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Text_Renderer.cpp" />
+    <ClCompile Include="..\Private\UI_Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

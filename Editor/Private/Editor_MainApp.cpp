@@ -108,42 +108,22 @@ HRESULT Editor_MainApp::Render()
 
 HRESULT Editor_MainApp::Ready_StaticLevel()
 {
-    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
-        Protocol::COMPONENT_TYPE_SHADER_UI,
-        Shader::Create(_device, _context, TEXT("../../Client/Bin/Shaders/Shader_UI.hlsl"),
-            VTXTEX::Elements, VTXTEX::numElements))))
-    {
-        return E_FAIL;
-    }
+    auto resourceLoader = ResourceLoader::Create(_device, _context);
+    CHECK_NULL(resourceLoader, E_FAIL);
 
-    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
-        Protocol::COMPONENT_TYPE_SHADER_VTXTEX,
-        Shader::Create(_device, _context, TEXT("../../Client/Bin/Shaders/Shader_Vtxtex.hlsl"),
-            VTXTEX::Elements, VTXTEX::numElements))))
-    {
-        return E_FAIL;
-    }
+    CHECK_FAILED(resourceLoader->Load_ShaderTable(
+        TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json")), E_FAIL);
 
-    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
-        Protocol::COMPONENT_TYPE_SHADER_VTXMESH,
-        Shader::Create(_device, _context, TEXT("../../Client/Bin/Shaders/Shader_VtxMesh.hlsl"),
-            FVertexMesh::Elements, FVertexMesh::numElements))))
-    {
-        return E_FAIL;
-    }
+    CHECK_FAILED(resourceLoader->Load_TerrainTable(
+        TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json")), E_FAIL);
 
-    shared_ptr<Texture> loadingTex = Texture::Create(_device, _context, TEXT("../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadingScreen_%03d_BC.png"), 2);
-    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
-        Protocol::COMPONENT_TYPE_TEXTURE_LOADING, loadingTex)))
-    {
-        return E_FAIL;
-    }
+    CHECK_FAILED(resourceLoader->Load_TextureTable(
+        TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json")), E_FAIL);
 
-    if (FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static),
-        Protocol::COMPONENT_TYPE_RECT, VIBuffer_Rect::Create(_device, _context))))
-    {
-        return E_FAIL;
-    }
+    CHECK_FAILED(GAME->Add_Component_Prototype(
+        ETOI(ELevelType::Static),
+        Protocol::COMPONENT_TYPE_RECT,
+        VIBuffer_Rect::Create(_device, _context)), E_FAIL);
 
     if (FAILED(GAME->Add_GameObject_Prototype(ETOI(ELevelType::Static),
         Protocol::OBJECT_TYPE_STATIC_MESH,
@@ -160,8 +140,10 @@ HRESULT Editor_MainApp::Ready_StartLevel(ELevelType startLevelID)
     if (ELevelType::Loading == startLevelID)
         return E_FAIL;
 
+    const bool loadSharedResources = false;
+
     if (FAILED(GAME->Change_Level(ETOI(ELevelType::Loading),
-        Level_Loading::Create(_device, _context, startLevelID))))
+        Level_Loading::Create(_device, _context, startLevelID, loadSharedResources))))
         return E_FAIL;
 
     return S_OK;

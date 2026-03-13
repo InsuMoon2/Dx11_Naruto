@@ -119,16 +119,16 @@
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_PlayerStatus.h">
-      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+      <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_PlayerSkill.h">
-      <Filter>02. GameObject\02. UI\01. Player\01. Skill</Filter>
+      <Filter>02. GameObject\02. UI\02. Player\01. Skill</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UI_PlayerHP.h">
-      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+      <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_PlayerHUD.h">
-      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+      <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Struct.h">
       <Filter>99. Defines</Filter>
@@ -138,7 +138,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\SkillComponent.h" />
     <ClInclude Include="..\Public\UI_SkillSlot.h">
-      <Filter>02. GameObject\02. UI\01. Player\01. Skill</Filter>
+      <Filter>02. GameObject\02. UI\02. Player\01. Skill</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_DoubleJump.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
@@ -152,6 +152,7 @@
     <ClInclude Include="..\Public\UI_LoadingSpinner.h">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_MainTitleText.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -257,16 +258,16 @@
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_PlayerStatus.cpp">
-      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+      <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_PlayerSkill.cpp">
-      <Filter>02. GameObject\02. UI\01. Player\01. Skill</Filter>
+      <Filter>02. GameObject\02. UI\02. Player\01. Skill</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_PlayerHP.cpp">
-      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+      <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_PlayerHUD.cpp">
-      <Filter>02. GameObject\02. UI\01. Player\00. PlayerStat</Filter>
+      <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SkillDataManager.cpp">
       <Filter>00. Manager</Filter>
@@ -276,7 +277,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\SkillComponent.cpp" />
     <ClCompile Include="..\Private\UI_SkillSlot.cpp">
-      <Filter>02. GameObject\02. UI\01. Player\01. Skill</Filter>
+      <Filter>02. GameObject\02. UI\02. Player\01. Skill</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_DoubleJump.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
@@ -290,6 +291,7 @@
     <ClCompile Include="..\Private\UI_LoadingSpinner.cpp">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UI_MainTitleText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -382,13 +384,16 @@
     <Filter Include="02. GameObject\02. UI\00. Common">
       <UniqueIdentifier>{4c41cf79-c1f0-43ae-ae84-ccbe2edd0d78}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. UI\01. Player">
+    <Filter Include="02. GameObject\02. UI\01. Background">
+      <UniqueIdentifier>{90175025-e3ff-40d8-b622-ea0949e8dae0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. UI\02. Player">
       <UniqueIdentifier>{cd0eeb55-b3b1-4ecc-b66e-93cee51df2ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. UI\01. Player\00. PlayerStat">
+    <Filter Include="02. GameObject\02. UI\02. Player\00. PlayerStat">
       <UniqueIdentifier>{d1731cf2-103e-415a-871b-cf1268b7e135}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. UI\01. Player\01. Skill">
+    <Filter Include="02. GameObject\02. UI\02. Player\01. Skill">
       <UniqueIdentifier>{cb9de10c-0449-4421-bca4-611dd20d3372}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
