@@ -1,5 +1,11 @@
 ﻿#pragma once
 
+NS_BEGIN(Engine)
+class RenderTarget;
+class Shader;
+class VIBuffer_Rect;
+NS_END
+
 NS_BEGIN(Editor)
 
 class EditorWindow;
@@ -50,6 +56,15 @@ private:
     wstring         _lastLevelPath = L"";
     wstring         _deleteTargetFile = L"";
     bool            _showDeleteConfirm = false;
+
+private:
+    Shared<RenderTarget> _previewRT;
+    Shared<Shader> _previewShader;
+    Shared<VIBuffer_Rect> _previewRect;
+
+    Matrix _previewWorld = Matrix::Identity;
+    Matrix _previewView = Matrix::Identity;
+    Matrix _previewProj = Matrix::Identity;
 
 public:
     static unique_ptr<Editor_Manager> Create();

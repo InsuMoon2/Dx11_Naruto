@@ -13,6 +13,8 @@
 #include "UIObject.h"
 #include <magic_enum/magic_enum.hpp>
 
+#include "StaticMeshActor.h"
+
 Hierarchy::Hierarchy()
     : EditorWindow(TEXT("Hierarchy"))
 {
@@ -304,6 +306,8 @@ bool  Hierarchy::Is_Selected(shared_ptr<GameObject> obj)
 
 void Hierarchy::Select_Object(shared_ptr<GameObject> obj, bool isMultiSelect)
 {
+    vector<Shared<GameObject>> prevSelected = _selectedObjects;
+
     if (isMultiSelect)
     {
         auto iter = find(_selectedObjects.begin(), _selectedObjects.end(), obj);
@@ -324,6 +328,8 @@ void Hierarchy::Select_Object(shared_ptr<GameObject> obj, bool isMultiSelect)
         _selectedObjects.emplace_back(obj);
     }
 
+    Update_SelectOutline(prevSelected);
+
     auto inspector = dynamic_pointer_cast<Inspector>(EDITOR->Get_Window(TEXT("Inspector")));
 
     if (inspector)
@@ -334,6 +340,30 @@ void Hierarchy::Select_Object(shared_ptr<GameObject> obj, bool isMultiSelect)
         else
             inspector->Set_Target(nullptr);
     }
+}
+
+void Hierarchy::Update_SelectOutline(vector<Shared<GameObject>>& obj)
+{
+    auto applyOutline = [](const vector<Shared<GameObject>>& objects, bool enabled)
+        {
+            for (auto& obj : objects)
+            {
+                auto staticMesh = dynamic_pointer_cast<StaticMeshActor>(obj);
+                if (!staticMesh)
+                    continue;
+
+                staticMesh->Set_OutlineEnabled(enabled);
+
+                if (enabled)
+                {
+                    staticMesh->Set_OutlineColor(Vec4(0.1f, 1.f, 0.1f, 1.f));
+                    staticMesh->Set_OutlineThickness(0.03f);
+                }
+            }
+        };
+
+    applyOutline(obj, false);
+    applyOutline(_selectedObjects, true);
 }
 
 void Hierarchy::Handle_Shotcuts()

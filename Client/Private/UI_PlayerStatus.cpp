@@ -3,7 +3,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "VIBuffer_Rect.h"
-
+#include "UI_Text.h"
 #include "Player.h"
 #include "UI_PlayerHP.h"
 #include "CombatStat.h"
@@ -43,6 +43,7 @@ HRESULT UI_PlayerStatus::Initialize(void* arg)
 
     _hpBar->Set_FillRange(98.f / 512.f, 413.f / 512.f);
     _hpBar->Get_Transform()->Set_LocalPosition(53.5f, 30.f, 0.f);
+
 
     return S_OK;
 }

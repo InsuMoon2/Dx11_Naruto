@@ -55,4 +55,14 @@ namespace Engine
         // StaticMesh or SkeletalMesh
         string  modelType;
     };
+
+    struct FKeyFrame
+    {
+        Vec3    scale;
+        Vec4    rotation;       // 쿼터니온이여서 Vec4
+        Vec3    translation;
+
+        float   trackPosition;
+    };
+    
 }

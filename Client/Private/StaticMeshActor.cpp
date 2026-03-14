@@ -17,6 +17,9 @@ StaticMeshActor::StaticMeshActor(const StaticMeshActor& rhs)
     , _resolvedPath(rhs._resolvedPath)
     , _shaderCom(rhs._shaderCom)
     , _modelCom(rhs._modelCom)
+    , _isOutlineEnabled(rhs._isOutlineEnabled)
+    , _outlineColor(rhs._outlineColor)
+    , _outlineThickness(rhs._outlineThickness)
 {
 }
 
@@ -71,6 +74,11 @@ HRESULT StaticMeshActor::Render()
 
     CHECK_FAILED(Bind_ShaderResources(), E_FAIL);
 
+    int isOutlineEnabled = _isOutlineEnabled ? 1 : 0;
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_IsOutlineEnabled", &isOutlineEnabled, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_OutlineColor", &_outlineColor, sizeof(Vec4)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_OutlineThickness", &_outlineThickness, sizeof(float)), E_FAIL);
+
     size_t numMeshes = _modelCom->Get_NumMeshes();
 
     for (size_t i = 0; i < numMeshes; ++i)
@@ -100,6 +108,12 @@ HRESULT StaticMeshActor::Render()
 
         CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
         CHECK_FAILED(_modelCom->Render(static_cast<uint32>(i)), E_FAIL);
+
+        if (_isOutlineEnabled)
+        {
+            CHECK_FAILED(_shaderCom->Begin_Pass(1), E_FAIL);
+            CHECK_FAILED(_modelCom->Render(static_cast<uint32>(i)), E_FAIL);
+        }
     }
 
     return S_OK;
@@ -113,15 +127,23 @@ HRESULT StaticMeshActor::Bind_ShaderResources()
 
     GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
 
-    // 라이트 : Temp
     const FLightDesc* lightDesc = GAME->Get_LightDesc(0);
-    if (lightDesc)
+    FLightDesc defaultLight{};
+    if (!lightDesc)
     {
-        _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
-        _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Color));
-        _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Color));
-        _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Color));
+        defaultLight.direction = Vec4(0.f, -1.f, 1.f, 0.f);
+        defaultLight.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
+        defaultLight.ambient = Vec4(0.4f, 0.4f, 0.4f, 1.f);
+        defaultLight.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+        lightDesc = &defaultLight;
     }
+
+    CHECK_NULL(lightDesc, E_FAIL);
+
+    _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Color));
+    _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Color));
+    _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Color));
 
     return S_OK;
 }

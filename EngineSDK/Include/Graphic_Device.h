@@ -32,6 +32,8 @@ public:
     float Get_WindowWidth()     { return _originalWidth; }
     float Get_WindowHeight()    { return _originalHeight; }
 
+    ComPtr<SwapChain> Get_SwapChain() { return _swapChain; }
+
     HRESULT Resize(uint32 width, uint32 height);
 
 private:

@@ -3,7 +3,7 @@
 #include "Level.h"
 
 NS_BEGIN(Engine)
-
+class UI_Text;
 NS_END
 
 NS_BEGIN(Client)
@@ -30,7 +30,10 @@ public:
     virtual HRESULT Render() override;
 
 private:
-    HRESULT         Ready_Layer_Background();
+    HRESULT         Ready_Layer_UI();
+
+private:
+    Shared<UI_Text> _nameText;
 
 public:
     static shared_ptr<Level_MainTitle> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

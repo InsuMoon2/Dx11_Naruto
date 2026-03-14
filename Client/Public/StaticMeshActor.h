@@ -40,6 +40,14 @@ public:
 
 public:
     const string& Get_ModelGuid() const { return _modelGuid; }
+    void Set_OutlineEnabled(bool enabled) { _isOutlineEnabled = enabled; }
+    bool Is_OutlineEnabled() const { return _isOutlineEnabled; }
+
+    void Set_OutlineColor(const Vec4& color) { _outlineColor = color; }
+    const Vec4& Get_OutlineColor() const { return _outlineColor; }
+
+    void Set_OutlineThickness(float thickness) { _outlineThickness = thickness; }
+    float Get_OutlineThickness() const { return _outlineThickness; }
 
 private:
     HRESULT Apply_ModelGuid(const string& modelGuid);
@@ -53,6 +61,9 @@ private:
     string                  _resolvedPath;    // resolve한 실제 경로
     Shared<Shader>          _shaderCom;
     Shared<Model>           _modelCom;
+    bool                    _isOutlineEnabled = false;
+    Vec4                    _outlineColor = Vec4(0.1f, 1.f, 0.1f, 1.f);
+    float                   _outlineThickness = 0.015f;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

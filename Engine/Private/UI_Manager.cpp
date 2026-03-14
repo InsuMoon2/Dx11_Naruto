@@ -72,10 +72,17 @@ HRESULT UI_Manager::Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject)
 {
     CHECK_NULL(uiObject, E_FAIL);
 
-    uiObject->Set_UILayer(layer);
-    
-    _uiLayers[ETOI(layer)].push_back(uiObject);
+    const wstring uiName = uiObject->Get_Name();
+    if (!uiName.empty())
+    {
+        if (_uiMap.find(uiName) != _uiMap.end())
+            return E_FAIL;
 
+        _uiMap.emplace(uiName, uiObject);
+    }
+
+    uiObject->Set_UILayer(layer);
+    _uiLayers[ETOI(layer)].push_back(uiObject);
     return S_OK;
 }
 

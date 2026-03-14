@@ -66,7 +66,8 @@ HRESULT UI_PlayerHP::Render()
     // HP Body
     {
         CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 2), E_FAIL);
-        CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
+
+        CHECK_FAILED(_shaderCom->Begin_Pass(3), E_FAIL);
         CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
         CHECK_FAILED(_bufferCom->Render(), E_FAIL);
     }

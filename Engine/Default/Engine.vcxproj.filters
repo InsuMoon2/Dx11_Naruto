@@ -209,8 +209,18 @@
     <ClInclude Include="..\Public\PlayerStart.h">
       <Filter>01. Utility\03. GameObject\98. PlayerStart</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Text_Renderer.h" />
-    <ClInclude Include="..\Public\UI_Text.h" />
+    <ClInclude Include="..\Public\UI_AnimTypes.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Text_Renderer.h">
+      <Filter>01. Utility\03. GameObject\02. UI\00. Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Text.h">
+      <Filter>01. Utility\03. GameObject\02. UI\00. Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_AnimSerializer.h" />
+    <ClInclude Include="..\Public\UI_AnimUtility.h" />
+    <ClInclude Include="..\Public\UI_AnimPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -374,6 +384,9 @@
     </Filter>
     <Filter Include="01. Utility\09. Material">
       <UniqueIdentifier>{c624a938-8ad7-4ed0-bc5b-31b2fd09a29a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. GameObject\02. UI\00. Text">
+      <UniqueIdentifier>{ce9dc287-2d3d-47b8-9f8f-f0639bf0b413}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -555,8 +568,15 @@
     <ClCompile Include="..\Private\PlayerStart.cpp">
       <Filter>01. Utility\03. GameObject\98. PlayerStart</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Text_Renderer.cpp" />
-    <ClCompile Include="..\Private\UI_Text.cpp" />
+    <ClCompile Include="..\Private\Text_Renderer.cpp">
+      <Filter>01. Utility\03. GameObject\02. UI\00. Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Text.cpp">
+      <Filter>01. Utility\03. GameObject\02. UI\00. Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_AnimSerializer.cpp" />
+    <ClCompile Include="..\Private\UI_AnimUtility.cpp" />
+    <ClCompile Include="..\Private\UI_AnimPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

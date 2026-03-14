@@ -27,6 +27,8 @@ public:
 
     void Select_Object(Shared<GameObject> obj, bool isMultiSelect);
 
+    void Update_SelectOutline(vector<Shared<GameObject>>& obj);
+
 private:
     void Draw_SearchBar();
     void Draw_ObjectList();

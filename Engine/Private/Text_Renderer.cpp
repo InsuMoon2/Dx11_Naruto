@@ -19,6 +19,13 @@ HRESULT Text_Renderer::Begin_UIText()
     if (_frameBegun)
         return S_OK;
 
+    CHECK_NULL(_d2dContext, E_FAIL);
+
+    if (_targetBitmap == nullptr)
+    {
+        CHECK_FAILED(Create_TargetBitmap(), E_FAIL);
+    }
+
     _d2dContext->BeginDraw();
     _frameBegun = true;
 
@@ -30,6 +37,8 @@ HRESULT Text_Renderer::Draw_Text(const wstring& text, const RECT& rect, const FT
     if (!_frameBegun || text.empty())
         return S_OK;
 
+    CHECK_NULL(_d2dContext, E_FAIL);
+
     auto* format = Find_Or_CreateFormat(style);
     auto* brush  = Find_Or_CreateBrush(style.color);
 
@@ -38,6 +47,9 @@ HRESULT Text_Renderer::Draw_Text(const wstring& text, const RECT& rect, const FT
         static_cast<float>(rect.top),
         static_cast<float>(rect.right),
         static_cast<float>(rect.bottom));
+
+    CHECK_NULL(format, E_FAIL);
+    CHECK_NULL(brush, E_FAIL);
 
     _d2dContext->DrawTextW(
         text.c_str(),
@@ -54,9 +66,28 @@ HRESULT Text_Renderer::End_UIText()
     if (!_frameBegun)
         return S_OK;
 
+    if (_d2dContext == nullptr)
+    {
+        _frameBegun = false;
+        return E_FAIL;
+    }
+
     _frameBegun = false;
 
     HRESULT hr = _d2dContext->EndDraw();
+
+    if (FAILED(hr))
+    {
+        LOG_ERROR("Text_Renderer::End_UIText - EndDraw failed. hr={}", static_cast<unsigned int>(hr));
+    }
+
+    if (hr == D2DERR_RECREATE_TARGET)
+    {
+        _targetBitmap.Reset();
+        _d2dContext->SetTarget(nullptr);
+        return S_OK;
+    }
+
     CHECK_FAILED(hr, E_FAIL);
 
     return S_OK;
@@ -88,6 +119,59 @@ HRESULT Text_Renderer::On_AfterResize()
     return S_OK;
 }
 
+HRESULT Text_Renderer::Set_TargetTexture(ComPtr<Texture2D> texture)
+{
+    CHECK_NULL(_d2dContext, E_FAIL);
+    CHECK_NULL(texture, E_FAIL);
+
+    if (_frameBegun)
+        return E_FAIL;
+
+    _d2dContext->SetTarget(nullptr);
+    _targetBitmap.Reset();
+
+    return Create_TargetBitmap_FromTexture(texture);
+}
+
+HRESULT Text_Renderer::Reset_TargetToSwapChain()
+{
+    CHECK_NULL(_d2dContext, E_FAIL);
+    CHECK_NULL(_swapChain, E_FAIL);
+
+    if (_frameBegun)
+        return E_FAIL;
+
+    _d2dContext->SetTarget(nullptr);
+    _targetBitmap.Reset();
+
+    return Create_TargetBitmap();
+}
+
+HRESULT Text_Renderer::Create_TargetBitmap_FromTexture(ComPtr<Texture2D> texture)
+{
+    CHECK_NULL(_d2dContext, E_FAIL);
+    CHECK_NULL(texture, E_FAIL);
+
+    HRESULT hr = S_OK;
+
+    ComPtr<IDXGISurface> dxgiSurface;
+    hr = texture.As(&dxgiSurface);
+    CHECK_FAILED(hr, E_FAIL);
+
+    D2D1_BITMAP_PROPERTIES1 props = D2D1::BitmapProperties1(
+        D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+        D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED));
+
+    hr = _d2dContext->CreateBitmapFromDxgiSurface(
+        dxgiSurface.Get(),
+        &props,
+        _targetBitmap.GetAddressOf());
+    CHECK_FAILED(hr, E_FAIL);
+
+    _d2dContext->SetTarget(_targetBitmap.Get());
+    return S_OK;
+}
+
 HRESULT Text_Renderer::Create_DeviceResources()
 {
     HRESULT hr = S_OK;
@@ -108,6 +192,11 @@ HRESULT Text_Renderer::Create_DeviceResources()
     CHECK_FAILED(hr, E_FAIL);
 
     hr = _d2dFactory->CreateDevice(dxgiDevice.Get(), _d2dDevice.GetAddressOf());
+    CHECK_FAILED(hr, E_FAIL);
+
+    hr = _d2dDevice->CreateDeviceContext(
+        D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
+        _d2dContext.GetAddressOf());
     CHECK_FAILED(hr, E_FAIL);
 
     return S_OK;
@@ -133,6 +222,7 @@ HRESULT Text_Renderer::Create_TargetBitmap()
         dxgiSurface.Get(),
         &props,
         _targetBitmap.GetAddressOf());
+
     CHECK_FAILED(hr, E_FAIL);
 
     _d2dContext->SetTarget(_targetBitmap.Get());

@@ -1,11 +1,9 @@
 ﻿#pragma once
 
-namespace Editor
-{
-    enum class LogLevel { Info, Warning, Error, END };
+NS_BEGIN(Editor)
 
-    enum class ENotifyType { Info, Success, Warning, Error };
+enum class LogLevel { Info, Warning, Error, END };
 
-}
+enum class ENotifyType { Info, Success, Warning, Error };
 
-
+NS_END

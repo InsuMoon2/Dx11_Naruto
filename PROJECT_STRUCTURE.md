@@ -1,673 +1,479 @@
-# Dx11_Naruto 프로젝트 구조
+﻿# Dx11_Naruto 프로젝트 구조
 
-> **AI 어시스턴트는 매 대화 시작 시 이 파일을 반드시 읽을 것!**
-> 마지막 갱신: 2026-03-12
-
----
-
-## 솔루션 개요
-
-DirectX 11 기반 3D 게임 엔진 + 나루토 게임 프로젝트.
-멀티플레이어(IOCP 서버), ImGui 에디터, Protobuf 프로토콜, Behavior Tree AI 시스템 포함.
+> AI 어시스턴트는 매 대화 시작 시 이 파일을 먼저 읽고 현재 구조를 기준으로 판단할 것.
+> 마지막 갱신: 2026-03-14
 
 ---
 
-## 프로젝트 구성
+## 프로젝트 개요
 
-| 프로젝트 | 타입 | 역할 | 네임스페이스 |
+`Dx11_Naruto`는 DirectX 11 기반 게임 엔진 + 게임 클라이언트 + 에디터 + IOCP 서버 + Assimp 변환 도구로 구성된 멀티 프로젝트 솔루션이다.
+
+현재 솔루션은 다음 축으로 움직인다.
+
+- `Engine`: 렌더링, 오브젝트/컴포넌트, UI, BT, 에셋/프리팹 등 공용 엔진 DLL
+- `Client`: 실제 게임 로직, 플레이어/몬스터, 레벨, UI, 네트워크 DLL
+- `Game`: 게임 실행 EXE
+- `Editor`: ImGui 기반 에디터 EXE
+- `Server`: `ServerCore` + `GameServer`
+- `AssimpTool`: FBX/OBJ를 커스텀 바이너리로 바꾸는 변환 도구
+
+---
+
+## 솔루션 구성
+
+| 프로젝트 | 경로 | 출력 형태 | 역할 |
 |---|---|---|---|
-| `Engine` | DLL | 엔진 코어 (렌더링, 매니저, 컴포넌트 시스템) | `Engine` |
-| `Client` | DLL | 게임 로직, 레벨, 네트워크, 리소스 로딩 | `Client` |
-| `Game` | EXE | 게임 실행 진입점 (WinMain, 메인 루프) | — |
-| `Editor` | EXE | ImGui 기반 에디터 (Hierarchy, Inspector, Scene View 등) | `Editor` |
-| `AssimpTool` | EXE | Assimp 기반 모델 컨버터 (FBX → 커스텀 바이너리) | `Assimp` |
-| `Server/GameServer` | EXE | IOCP 게임 서버 | `Server` |
-| `Server/ServerCore` | LIB | IOCP 네트워크 코어 라이브러리 | — |
-| `Server/Protobuf` | — | .proto 파일 및 생성된 코드 | `Protocol` |
-| `EngineSDK` | — | Engine DLL 익스포트 헤더/라이브러리 모음 | — |
+| `Engine` | `Engine/Default/Engine.vcxproj` | DLL | 공용 엔진 코어 |
+| `Client` | `Client/Default/Client.vcxproj` | DLL | 게임플레이 / 네트워크 / 로딩 |
+| `Game` | `Game/Default/Game.vcxproj` | EXE | 런타임 실행 진입점 |
+| `Editor` | `Editor/Default/Editor.vcxproj` | EXE | ImGui 기반 편집기 |
+| `AssimpTool` | `AssimpTool/Default/AssimpTool.vcxproj` | EXE | Assimp 기반 모델 변환 툴 |
+| `ServerCore` | `Server/ServerCore/Default/ServerCore.vcxproj` | LIB | IOCP 네트워크 공용 코어 |
+| `GameServer` | `Server/GameServer/Default/GameServer.vcxproj` | EXE | 게임 서버 |
 
----
+### 솔루션 폴더
 
-## 의존성 구조
+- `00. Tools`: `Editor`, `AssimpTool`
+- `01. Client`: `Client`
+- `02. Engine`: `Engine`
+- `03. Game`: `Game`
+- `04. Server`: `ServerCore`, `GameServer`
 
+### 주요 의존성
+
+```text
+Engine (DLL)
+  └─ 독립 공용 엔진
+
+Client (DLL)
+  ├─ Engine
+  ├─ ServerCore
+  └─ Protobuf 코드
+
+Game (EXE)
+  ├─ Engine
+  └─ Client
+
+Editor (EXE)
+  ├─ Engine
+  └─ Client
+
+GameServer (EXE)
+  ├─ ServerCore
+  └─ Protobuf 코드
+
+AssimpTool (EXE)
+  ├─ Engine/Public 의 Assimp 헤더 참조
+  └─ Engine/ThirdPartyLib 의 assimp lib 사용
 ```
-Engine (DLL) ← 독립
-    ↑
-Client (DLL) ─── Engine + ServerCore + Protobuf
-    ↑
-Game   (EXE) ──── Engine.dll + Client.dll 동적 로드
-Editor (EXE) ──── Engine.dll + Client.dll 동적 로드
 
-AssimpTool (EXE) ── Assimp + Engine 헤더 참조 (DLL 비링크)
+### 빌드 구성
 
-ServerCore (LIB) ← 독립
-    ↑
-GameServer (EXE) ── ServerCore + Protobuf
+- 공통 구성: `Debug`, `Debug_Unity`, `Release`
+- Unity 빌드는 `x64/Debug_Unity` 산출물과 `unity_*.cpp` 생성 파일을 사용한다.
+
+---
+
+## 루트 디렉터리 구조
+
+```text
+Dx11_Naruto/
+├─ AssimpTool/
+├─ Client/
+├─ Docs/
+├─ Editor/
+├─ Engine/
+├─ EngineSDK/
+├─ Game/
+├─ Server/
+├─ vcpkg_installed/
+├─ DirectX11_Naruto.sln
+├─ Directory.Build.props
+├─ PROJECT_STRUCTURE.md
+├─ UpdateLib.bat
+└─ vcpkg.json
 ```
 
-> [!IMPORTANT]
-> - `Game`과 `Editor`는 `Client.dll`을 동적 로드 → **Game/Editor → Client 단방향**
-> - Client에서 Game/Editor 프로젝트 코드 참조 불가
-> - `EngineSDK/Include`에 Engine Public 헤더 복사, `EngineSDK/Lib`에 .lib 파일
-> - `AssimpTool`은 Assimp만 링크, Engine/Client와 독립 빌드
-> - Assimp 라이브러리는 `Engine/ThirdPartyLib/`에 수동 배치, 헤더는 `Engine/Public/Assimp/`에 배치
+### 루트 폴더별 의미
+
+| 경로 | 설명 |
+|---|---|
+| `AssimpTool/` | 모델/머티리얼 변환 도구 |
+| `Client/` | 게임 클라이언트 DLL + 런타임 리소스 |
+| `Docs/` | 작업 문서, 설계 메모, 수업 정리 |
+| `Editor/` | 에디터 실행 파일 및 소스 |
+| `Engine/` | 엔진 DLL 소스 |
+| `EngineSDK/` | 엔진 공개 헤더/라이브러리 복사본 |
+| `Game/` | 게임 실행 EXE |
+| `Server/` | 서버 관련 프로젝트, 프로토콜, protobuf 배포본 |
+| `vcpkg_installed/` | manifest mode 패키지 설치 결과 |
 
 ---
 
-## vcpkg 종속성 (Manifest Mode)
+## 공통 폴더 규칙
 
-| 패키지 | 용도 |
-|---|---|
-| `directxtk` | SimpleMath, DDSTextureLoader, WICTextureLoader |
-| `effects11` | D3DX11Effect (셰이더 Effect 프레임워크) |
-| `spdlog` | 로깅 (LOG_INFO/WARN/ERROR 매크로) |
-| `nlohmann-json` | JSON 직렬화 (레벨, 프리팹, 리소스 테이블) |
-| `magic-enum` | enum 리플렉션 |
-| `imgui` | ImGui (docking, dx11, win32 바인딩) |
-| `implot` | ImGui 그래프 |
-| `imguizmo` | 3D 기즈모 (트랜스폼 조작) |
-| `imgui-node-editor` | BehaviorTree 노드 에디터 |
-| `protobuf` | 네트워크 직렬화 + ComponentID 정의 |
-| `stduuid` | UUID 생성 (GameObject GUID) |
+대부분의 Visual Studio 프로젝트는 아래 3분할 구조를 따른다.
 
-## 수동 라이브러리 (ThirdPartyLib)
+- `Default/`: `.vcxproj`, `pch`, 리소스 파일, 진입점
+- `Public/`: 헤더 파일
+- `Private/`: 소스 파일
+- `Bin/`: 실행/빌드 산출물, 리소스 DLL, cso, 런타임 데이터
 
-| 라이브러리 | 위치 | 용도 |
-|---|---|---|
-| `assimp` | `Engine/ThirdPartyLib/` (lib), `Engine/Public/Assimp/` (헤더) | 3D 모델 임포트 (AssimpTool에서 사용) |
+예외:
 
-> [!NOTE]
-> Assimp는 vcpkg manifest 모드에 문제가 있어 직접 다운로드 후 수동 배치 방식으로 전환됨.
+- `Server/Protobuf`: protoc, 생성 코드, 원본 `.proto`
+- `Engine/ThirdPartyLib`: 수동 배치한 assimp 라이브러리
+- `EngineSDK/Include`, `EngineSDK/Lib`: 배포용 엔진 SDK
 
 ---
 
-## 디렉토리 구조
+## Engine 구조
 
-모든 프로젝트는 `Default/`, `Public/`, `Private/` 구조:
-- `Default/` — pch, .vcxproj, 진입점 코드
-- `Public/` — 헤더 파일 (.h)
-- `Private/` — 소스 파일 (.cpp)
-- `ThirdPartyLib/` — (Engine 전용) 수동 배치된 외부 라이브러리 (.lib)
+### Engine 핵심 역할
+
+`Engine`은 프로젝트 전반에서 공유하는 공용 엔진 DLL이다.
+현재 구조상 크게 아래 묶음으로 볼 수 있다.
+
+- 코어: `Base`, `GameInstance`, `Graphic_Device`, `PipeLine`
+- 월드/오브젝트: `Level`, `Layer`, `GameObject`, `Object_Manager`
+- 컴포넌트/프로토타입: `Component`, `Component_Factory`, `Prototype_Manager`, `Prefab_Manager`
+- 렌더링: `Shader`, `Texture`, `VIBuffer*`, `Mesh`, `Model`, `ModelMaterial`, `Model_BinaryLoader`
+- UI: `UIObject`, `HUD`, `Panel`, `UI_Manager`, `UI_Text`, `Text_Renderer`
+- AI: `BehaviorTree`, `Blackboard`, `BTNode*`, `BTTask_MoveTo`, `BTTask_Wait`
+- 유틸/기반 서비스: `Asset_Manager`, `DebugDraw`, `DelegateHub`, `Event_Manager`, `AnimNotify_Factory`
+
+### Engine/Public 주요 헤더 묶음
+
+| 묶음 | 파일 |
+|---|---|
+| 코어 | `Base.h`, `GameInstance.h`, `Graphic_Device.h`, `PipeLine.h`, `Timer.h`, `Timer_Manager.h` |
+| 오브젝트 시스템 | `GameObject.h`, `Component.h`, `Level.h`, `Layer.h`, `Object_Manager.h`, `Prototype_Manager.h`, `Prefab_Manager.h`, `GameObject_Factory.h`, `Component_Factory.h`, `Event_Manager.h` |
+| 렌더링 | `Shader.h`, `Texture.h`, `Renderer.h`, `RenderTarget.h`, `VIBuffer.h`, `VIBuffer_Rect.h`, `VIBuffer_Terrain.h`, `Mesh.h`, `Model.h`, `ModelMaterial.h`, `Model_BinaryLoader.h`, `Vertex_Struct.h` |
+| 씬/게임플레이 기반 | `Transform.h`, `Camera.h`, `Camera_Manager.h`, `Character.h`, `Controller.h`, `PlayerStart.h`, `Light.h`, `Light_Manager.h` |
+| UI/텍스트 | `UIObject.h`, `HUD.h`, `Panel.h`, `UI_Manager.h`, `UI_Text.h`, `Text_Renderer.h`, `Text_Types.h` |
+| BT | `BehaviorTree.h`, `Blackboard.h`, `BTNode.h`, `BTRoot.h`, `BTComposite.h`, `BTTask.h`, `BTTask_MoveTo.h`, `BTTask_Wait.h`, `BTNode_Factory.h` |
+| 공용 타입 | `Engine_Define.h`, `Engine_Enum.h`, `Engine_Function.h`, `Engine_Macro.h`, `Engine_Struct.h`, `Engine_Typedef.h`, `Property_Types.h`, `Reflection_Macro.h` |
+| 기타 | `DebugDraw.h`, `Debug_Manager.h`, `Delegate.h`, `DelegateHub.h`, `Utils.h`, `AnimNotify_Factory.h` |
+| protobuf 노출 | `Enum.pb.h`, `Struct.pb.h`, `Protocol.pb.h` |
+
+### Engine/Private 현재 주요 cpp
+
+실제 구현 파일 기준으로 다음 기능이 들어 있다.
+
+- 렌더/리소스: `Shader.cpp`, `Texture.cpp`, `Mesh.cpp`, `Model.cpp`, `ModelMaterial.cpp`, `Model_BinaryLoader.cpp`, `RenderTarget.cpp`
+- UI/텍스트: `UIObject.cpp`, `UI_Manager.cpp`, `HUD.cpp`, `Panel.cpp`, `UI_Text.cpp`, `Text_Renderer.cpp`
+- AI/BT: `BehaviorTree.cpp`, `Blackboard.cpp`, `BTComposite.cpp`, `BTRoot.cpp`, `BTTask*.cpp`
+- 팩토리/관리: `GameObject_Factory.cpp`, `Component_Factory.cpp`, `Prototype_Manager.cpp`, `Prefab_Manager.cpp`, `Asset_Manager.cpp`
+- 시스템: `Input_Manager.cpp`, `Event_Manager.cpp`, `DelegateHub.cpp`, `DebugDraw.cpp`
+
+### Engine 주의사항
+
+- `Input_Device`가 아니라 현재 엔진 입력 클래스는 `Input_Manager`다.
+- 머티리얼 클래스는 `Material`이 아니라 `ModelMaterial`로 정리되어 있다.
+- Assimp는 `Engine/Public/Assimp/` + `Engine/ThirdPartyLib/` 조합으로 유지된다.
+- `EngineSDK/Include`, `EngineSDK/Lib`는 `UpdateLib.bat`로 동기화한다.
 
 ---
 
-## Engine 주요 클래스
+## Client 구조
 
-### 코어 & 매니저
+### Client 핵심 역할
 
-| 클래스 | 설명 |
+`Client`는 게임플레이 DLL이다.
+현재 폴더 기준으로 아래 기능이 들어 있다.
+
+- 플레이어 / 몬스터 / 카메라 / 지형 / 정적 메쉬 액터
+- 플레이어 상태 머신(FSM)
+- 스킬 시스템 + HUD/UI
+- 로더 / 리소스 테이블 파서
+- 서버 세션 / 패킷 처리 / 네트워크 매니저
+
+### Client/Public 현재 헤더 목록 기준 묶음
+
+| 묶음 | 파일 |
 |---|---|
-| `GameInstance` | 엔진 싱글톤 (`GAME` 매크로). 모든 매니저 소유, 엔진 API 퍼사드 |
-| `Graphic_Device` | D3D11 디바이스, 스왑체인, 백버퍼, 뷰포트 관리 |
-| `Level_Manager` | 현재 레벨 관리, 레벨 전환 |
-| `Object_Manager` | 레벨별 GameObject/Layer 저장, 생명주기(Update/Render) |
-| `Prototype_Manager` | 프로토타입 등록/클론 (Component + GameObject) |
-| `Prefab_Manager` | JSON 기반 프리팹 저장/로드/인스턴스화 |
-| `Asset_Manager` | GUID 기반 에셋 메타(.meta) 관리, 경로↔GUID 변환, 타입별 목록 조회 |
-| `Renderer` | 렌더 그룹 관리 (Priority, NonBlend, Blend, UI) |
-| `PipeLine` | View/Proj 행렬, 카메라 위치 바인딩 |
-| `Timer_Manager` / `Timer` | 프레임 델타 타임 계산 |
-| `Input_Manager` | 키 입력 (`INPUT` 매크로) |
-| `Event_Manager` | 이벤트 큐 (Create/Delete Object) |
-| `Component_Factory` | 컴포넌트 팩토리 (타입ID → Creator 등록/생성) |
-| `GameObject_Factory` | GameObject 타입별 팩토리 (`REGISTER_GAMEOBJECT` 매크로, 이름/타입 기반 생성) |
-| `BTNode_Factory` | BT 노드 팩토리 |
-| `Camera_Manager` | 카메라 관리 (등록, 활성 카메라 전환, Toggle) |
-| `Light_Manager` | 라이트 관리 (Add/Get/Clear) |
-| `UI_Manager` | UI 레이어 관리 (EUILayer별 UI 등록, Show/Hide/Toggle, 뷰포트 리사이즈 알림, 입력 차단 판정) |
-| `Debug_Manager` | 디버그 관리 (현재 빈 껍데기) |
-| `DelegateHub` | 전역 델리게이트 허브 (OnPlayerSpawned 등 이벤트 모음) |
+| 게임 오브젝트 | `Player.h`, `MyPlayer.h`, `RemotePlayer.h`, `Monster.h`, `Terrain.h`, `StaticMeshActor.h`, `Background.h` |
+| 카메라 | `Camera_Free.h`, `Camera_Target.h` |
+| 컴포넌트 | `CombatStat.h`, `InputComponent.h`, `MovementComponent.h`, `PlayerController.h`, `AIController.h`, `Replicator.h`, `SkillComponent.h` |
+| FSM | `IPlayerState.h`, `PlayerStateMachine.h`, `PlayerState_Idle.h`, `PlayerState_Run.h`, `PlayerState_Jump.h`, `PlayerState_DoubleJump.h`, `PlayerState_SuperJump.h` |
+| 레벨/앱 | `MainApp.h`, `Loader.h`, `ResourceLoader.h`, `Level_MainTitle.h`, `Level_Loading.h`, `Level_Gameplay.h` |
+| UI | `UI_PlayerHUD.h`, `UI_PlayerStatus.h`, `UI_PlayerHP.h`, `UI_PlayerSkill.h`, `UI_SkillSlot.h`, `UI_LoadingProgressBar.h`, `UI_LoadingSpinner.h`, `UI_MainTitleText.h` |
+| 네트워크 | `NetworkManager.h`, `ServerSession.h`, `Client_PacketHandler.h`, `IReplicable.h`, `Protocol_Wrapper.h` |
+| 기타 | `Spawn_Helper.h`, `SkillDataManager.h`, `Client_Defines.h`, `Client_Enum.h`, `Client_Macro.h`, `Client_Struct.h` |
 
-### 기반 클래스
+### Client 현재 특징
 
-| 클래스 | 설명 |
-|---|---|
-| `Base` | 최상위 (레퍼런스 카운팅, `Free()`) |
-| `GameObject` | 게임 오브젝트 (컴포넌트 소유, Update/Render 가상함수) |
-| `Component` | 컴포넌트 기반 (`GENERATED_COMPONENT` 매크로로 ID 지정) |
-| `Level` | 레벨 기반 (Layer 관리) |
-| `Layer` | 같은 레이어의 GameObject 목록 |
+- 레벨 클래스는 `Level_Logo`가 아니라 `Level_MainTitle`, `Level_Loading`, `Level_Gameplay`다.
+- 로딩은 `Loader` + `ResourceLoader` 이원 구조다.
+- UI는 플레이어 HUD 외에도 로딩 스피너/진행바, 메인 타이틀 텍스트까지 실제 파일이 존재한다.
+- `SkillComponent`와 `SkillDataManager`가 현재 클라이언트 구조의 중요한 축이다.
 
-### 렌더링 컴포넌트
+### Client/Private 실제 구현 포인트
 
-| 클래스 | 설명 |
-|---|---|
-| `Shader` | HLSL Effect 파일 로드, 상수/텍스처 바인딩, Pass 실행 |
-| `Texture` | DDS/WIC 텍스처 로드, SRV 제공 |
-| `VIBuffer` | 정점/인덱스 버퍼 기반 |
-| `VIBuffer_Rect` | 사각형 (UI용) |
-| `VIBuffer_Terrain` | 하이트맵 기반 지형 메쉬 |
-| `Mesh` | Assimp aiMesh 기반 메쉬 (VIBuffer 상속, VTXMESH 정점 사용) |
-| `Model` | Assimp 모델 로드 컴포넌트 (다수 Mesh + ModelMaterial 소유, GUID 기반 직렬화, `GENERATED_COMPONENT` 적용) |
-| `Model_BinaryLoader` | 커스텀 바이너리 모델 파일 로더 (`FMeshFileHeader` + `FMeshBinaryData` 기반, Assimp 변환 후 바이너리 캐시 로드) |
-| `ModelMaterial` | Assimp aiMaterial 기반 머티리얼 (텍스처 타입별 SRV 배열, `Bind_Material()` 제공) |
-| `Transform` | 위치/회전/스케일, 로컬/월드, 부모-자식 계층 |
-| `RenderTarget` | 렌더 타겟 텍스처 |
-| `DebugDraw` | DirectXTK PrimitiveBatch 기반 디버그 도형 렌더링 (BoundingSphere, BoundingBox, Grid, Ray 등) |
-
-### 게임플레이
-
-| 클래스 | 설명 |
-|---|---|
-| `Camera` | 카메라 (뷰/프로젝션 행렬 → PipeLine 설정) |
-| `Character` | 캐릭터 기반 (Engine 레이어) |
-| `Controller` | 컨트롤러 기반 |
-| `UIObject` | UI 오브젝트 기반 (직교 투영, FUIDesc, Visibility, EUILayer, zOrder) |
-| `HUD` | UIObject 상속 컨테이너. 자식 UI 생성/등록(`Create_Child`), 포커스 불가 |
-| `Panel` | HUD 상속. 포커스 가능한 UI 패널 |
-| `PlayerStart` | 스폰 포인트 (멀티 스폰 인덱스 지원) |
-| `Light` | 라이트 오브젝트 (Directional/Point, FLightDesc 보유) |
-
-### BT (Behavior Tree)
-
-| 클래스 | 설명 |
-|---|---|
-| `BehaviorTree` | BT 컴포넌트 (Blackboard 소유) |
-| `Blackboard` | 키-값 데이터 저장 |
-| `BTNode` / `BTRoot` | 노드 기반/루트 |
-| `BTComposite` | Sequence, Selector |
-| `BTTask` | 태스크 기반 |
-| `BTTask_MoveTo` / `BTTask_Wait` | 이동/대기 태스크 |
-
-### 유틸리티
-
-| 클래스/파일 | 설명 |
-|---|---|
-| `Utils` | wstring ↔ string 변환 |
-| `Delegate.h` | 이벤트 델리게이트 시스템 |
-| `AnimNotify_Factory` | 애니메이션 노티파이 팩토리 |
-| `ICommand` | Undo/Redo 커맨드 인터페이스 (Execute/Undo/Redo 순수 가상) |
-| `Vertex_Struct.h` | 정점 구조체 정의 (`VTXTEX`, `VTXNORTEX`, `VTXMESH`) + InputLayout |
-| `Property_Types.h` | 프로퍼티 타입 정의 (리플렉션 시스템용) |
-| `Reflection_Macro.h` | 리플렉션 매크로 (컴포넌트 프로퍼티 자동 노출) |
-| `Engine_Define.h` | 엔진 공통 정의 |
-| `Engine_Enum.h` | 엔진 열거형 (`ERenderGroup`, `EUILayer`, `EModelType`, `EGameState`, `ELightType` 등) |
-| `Engine_Function.h` | 엔진 유틸 함수 |
-| `Engine_Macro.h` | 엔진 매크로 모음 |
-| `Engine_Struct.h` | 엔진 구조체 (`FLightDesc` 등) |
-| `Engine_Typedef.h` | 타입 별칭 |
-| `Enum.pb.h` / `Struct.pb.h` / `Protocol.pb.h` | Protobuf 코드젠 (ComponentID, ObjectType, 패킷 등) |
+- 플레이어: `Player.cpp`, `MyPlayer.cpp`, `RemotePlayer.cpp`
+- 몬스터/AI: `Monster.cpp`, `AIController.cpp`
+- FSM: `PlayerStateMachine.cpp`, `PlayerState_*.cpp`
+- 로딩: `Loader.cpp`, `ResourceLoader.cpp`
+- 네트워크: `NetworkManager.cpp`, `ServerSession.cpp`, `Client_PacketHandler.cpp`
+- UI: `UI_Player*.cpp`, `UI_SkillSlot.cpp`, `UI_Loading*.cpp`, `UI_MainTitleText.cpp`
 
 ---
 
-## Client 주요 클래스
+## Game 구조
 
-### 게임 오브젝트
+`Game`은 실행 진입점 EXE다.
+실제 소스는 작고, `Client::MainApp`에 위임하는 형태다.
 
-| 클래스 | 설명 |
-|---|---|
-| `Player` | 기본 플레이어 |
-| `MyPlayer` | 로컬 플레이어 (네트워크) |
-| `RemotePlayer` | 원격 플레이어 |
-| `Monster` | 몬스터 (AIController + BT) |
-| `Terrain` | 지형 (Shader + Texture + VIBuffer_Terrain) |
-| `Camera_Free` | 자유 카메라 |
-| `Camera_Target` | 타겟 추적 카메라 (오프셋 + 스무딩 팔로우) |
-| `Background` | UI 배경 |
-| `StaticMeshActor` | 정적 메쉬 오브젝트 (GUID 기반 Model + Shader, 프리팹/레벨에서 사용) |
+### 폴더 구조
 
-### UI 시스템 (Client)
+```text
+Game/
+├─ Default/
+├─ Public/
+└─ Private/
+```
 
-| 클래스 | 부모 | 설명 |
-|---|---|---|
-| `UI_PlayerHUD` | `HUD` | 플레이어 전체 HUD 루트. `UI_PlayerStatus` 자식 보유, `Bind_Player()` |
-| `UI_PlayerStatus` | `Panel` | 플레이어 상태 패널 (HP바 + 배경). 자식으로 `UI_PlayerHP` 보유 |
-| `UI_PlayerHP` | `UIObject` | HP 비율 바 (Shader + Texture + VIBuffer_Rect, `Set_Ratio()`) |
-| `UI_PlayerSkill` | `Panel` | 스킬 패널 (`UI_SkillSlot` 자식 보유, `SkillComponent` 연동) |
-| `UI_SkillSlot` | `UIObject` | 스킬 슬롯 UI (아이콘 SRV 인덱스 + 쿨다운 비율 표시, `FSkillSlotDesc`) |
-
-### 플레이어 상태 머신 (FSM)
-
-| 클래스 | 설명 |
-|---|---|
-| `IPlayerState` | 플레이어 상태 인터페이스 (Enter/Update/Exit 순수 가상) |
-| `PlayerStateMachine` | FSM 컴포넌트 (`COMPONENT_TYPE_PLAYER_STATE`). 상태 등록/전환, InputComponent + MovementComponent 참조 |
-| `PlayerState_Idle` | Idle 상태 구현 |
-| `PlayerState_Run` | Run 상태 구현 |
-| `PlayerState_Jump` | Jump 상태 구현 |
-| `PlayerState_DoubleJump` | 더블 점프 상태 구현 |
-| `PlayerState_SuperJump` | 슈퍼 점프 상태 구현 |
-
-### 클라이언트 정의 헤더
+### 주요 파일
 
 | 파일 | 설명 |
 |---|---|
-| `Client_Defines.h` | Client 네임스페이스 공통 정의 |
-| `Client_Enum.h` | Client 전용 열거형 (`EPlayerState`: Idle, Run, Jump, DoubleJump, SuperJump) |
-| `Client_Macro.h` | Client 전용 매크로 |
-| `Client_Struct.h` | Client 전용 구조체 (`FSkillData`: skillID, skillName, IconTexturePath, coolDown) |
-| `Protocol_Wrapper.h` | Protobuf 헤더 래퍼 (pch 격리용) |
-
-### 컴포넌트
-
-| 클래스 | 설명 |
-|---|---|
-| `CombatStat` | 전투 스탯 (HP, ATK 등) |
-| `MovementComponent` | 이동 처리 |
-| `InputComponent` | 입력 처리 |
-| `SkillComponent` | 스킬 컴포넌트 (`COMPONENT_TYPE_SKILL`). 2슬롯 스킬 장착/활성화/쿨다운 관리, `CombatStat` 참조 |
-| `PlayerController` | 플레이어 입력 → 이동 연결 |
-| `AIController` | AI 제어 (BT 실행) |
-| `Replicator` | 네트워크 복제 |
-
-### 레벨 & 로딩
-
-| 클래스 | 설명 |
-|---|---|
-| `Level_MainTitle` | 메인 타이틀 레벨 (기존 Level_Logo에서 변경) |
-| `Level_Loading` | 로딩 레벨 (비동기 로드 관리) |
-| `Level_Gameplay` | 게임플레이 레벨 |
-| `Loader` | 비동기 리소스/프로토타입 로딩 (별도 쓰레드) |
-| `ResourceLoader` | JSON 테이블 파싱 → 셰이더/텍스처/지형/모델/스킬 등록 (`Load_ShaderTable`, `Load_TextureTable`, `Load_TerrainTable`, `Load_ModelTable`, `Load_SkillTable`) |
-
-### 네트워크
-
-| 클래스 | 설명 |
-|---|---|
-| `NetworkManager` | 네트워크 싱글톤 (`namespace Client`) |
-| `ServerSession` | 서버 세션 |
-| `Client_PacketHandler` | 패킷 생성/처리 |
-
-### 기타
-
-| 클래스 | 설명 |
-|---|---|
-| `Spawn_Helper` | 빌더 패턴 스폰 헬퍼 |
-| `IReplicable` | 복제 인터페이스 |
-| `SkillDataManager` | 스킬 데이터 싱글톤 매니저 (`FSkillData` 등록/조회, `Load_SkillTable` 연동) |
+| `Game/Default/Game.cpp` | WinMain 진입점 |
+| `Game/Public/MainApp.h` | Game 프로젝트용 앱 래퍼 |
+| `Game/Private/MainApp.cpp` | 초기화/업데이트/렌더 루프 |
+| `Game/Public/Game_Defines.h` | 공통 정의 |
+| `Game/Public/Game_Enum.h` | 게임 전용 enum |
+| `Game/Public/Game_Macro.h` | 게임 전용 매크로 |
 
 ---
 
-## Game (EXE)
+## Editor 구조
 
-| 파일 | 설명 |
+### Editor 핵심 역할
+
+`Editor`는 ImGui 기반 편집 도구다.
+현재 실제 파일 기준으로 아래 구성이 존재한다.
+
+- 에디터 앱/싱글톤/매니저
+- Scene/Game/Hierarchy/Inspector/Content Browser/Console/BT/Prefab/Profiler 뷰
+- 인스펙터 확장 (`Transform`, `CombatStat`, `BehaviorTree`, `Texture`, `Model`, `Reflection`)
+- Undo/Redo 시스템 (`CommandHistory`, `Action_Command`, `Property_Command`)
+
+### Editor/Public 주요 헤더 묶음
+
+| 묶음 | 파일 |
 |---|---|
-| `Game.cpp` (Default/) | WinMain, 메인 루프, 메시지 처리 |
-| `MainApp.h/cpp` | Initialize/Update/Render 루프 (`Client::MainApp` 위임) |
-| `Game_Defines.h` | Game 프로젝트 공통 정의 |
-| `Game_Enum.h` | Game 전용 열거형 |
-| `Game_Macro.h` | Game 전용 매크로 |
+| 코어 | `Editor_MainApp.h`, `Editor_Manager.h`, `EditorInstance.h`, `ImGui_Manager.h`, `Editor_Logger.h`, `Notification_Manager.h` |
+| 윈도우 | `EditorWindow.h`, `Scene_View.h`, `Game_View.h`, `Hierarchy.h`, `Inspector.h`, `Content_Browser.h`, `Console_View.h`, `BehaviorTree_View.h`, `Prefab_View.h`, `Profiler_View.h` |
+| 인스펙터 | `Inspector_Factory.h`, `Component_Inspector.h`, `Transform_Inspector.h`, `CombatStat_Inspector.h`, `BehaviorTree_Inspector.h`, `Texture_Inspector.h`, `Model_Inspector.h`, `Reflection_Inspector.h` |
+| 레벨/기타 | `Level_Editor.h`, `Level_Serializer.h`, `Editor_Camera_Free.h`, `PlayerSession_Manager.h` |
+| Undo/Redo | `CommandHistory.h`, `Action_Command.h`, `Property_Command.h` |
+| 공용 | `Editor_Define.h`, `Editor_Enum.h`, `Editor_Macro.h`, `Editor_Struct.h`, `IconsFontAwesome6.h` |
+
+### Editor 런타임 출력물
+
+`Editor/Bin/`에는 현재 `Editor.exe`와 `EditorApp.exe` 산출물이 함께 보인다. 런타임 DLL로 `Engine.dll`, protobuf DLL, assimp DLL 등이 같이 배치된다.
 
 ---
 
-## Editor (EXE)
+## AssimpTool 구조
 
-### 에디터 코어
+### 목적
 
-| 클래스 | 설명 |
+`AssimpTool`은 FBX/OBJ를 읽어 커스텀 바이너리와 머티리얼 출력물로 변환하는 도구다.
+엔진 런타임과 분리되어 있으며, Assimp에 직접 의존한다.
+
+### 현재 파일 구조
+
+| 경로 | 파일 |
 |---|---|
-| `Editor_MainApp` | 에디터 메인 앱 |
-| `Editor_Manager` | 에디터 전체 관리 (윈도우, 선택 객체, 메뉴바) |
-| `EditorInstance` | 에디터 싱글톤 |
-| `ImGui_Manager` | ImGui 초기화/렌더 |
-| `Editor_Camera_Free` | 에디터 전용 자유 카메라 (Camera_Free 상속, 에디터 씬 뷰 전용) |
-| `Level_Editor` | 에디터 전용 빈 레벨 |
-| `Level_Serializer` | JSON 레벨 저장/로드 |
+| `AssimpTool/Public` | `Assimp_Macro.h`, `BinaryWriter.h`, `Converter.h`, `ConverterTypes.h` |
+| `AssimpTool/Private` | `Converter.cpp` |
+| `AssimpTool/Default` | `AssimpTool.cpp`, `BinaryWriter.cpp`, `pch.*`, `.vcxproj` |
 
-### 에디터 윈도우
+### 포인트
 
-| 클래스 | 설명 |
-|---|---|
-| `EditorWindow` | 에디터 윈도우 기반 클래스 |
-| `Scene_View` | 3D 씬 뷰 (ImGuizmo 연동) |
-| `Game_View` | 게임 뷰 |
-| `Hierarchy` | 오브젝트 계층구조 트리 |
-| `Inspector` | 컴포넌트 인스펙터 |
-| `Content_Browser` | 리소스 탐색기 |
-| `Console_View` | 로그 콘솔 |
-| `BehaviorTree_View` | BT 노드 에디터 |
-| `Prefab_View` | 프리팹 관리 (3패널 레이아웃: 컴포넌트 목록, 모델 프리뷰, 컴포넌트 인스펙터) |
-| `Profiler_View` | 성능 프로파일러 |
-
-### 인스펙터
-
-| 클래스 | 설명 |
-|---|---|
-| `Inspector_Factory` | 인스펙터 레지스트리 |
-| `Component_Inspector` | 인스펙터 인터페이스 |
-| `Transform_Inspector` | Transform 인스펙터 |
-| `CombatStat_Inspector` | CombatStat 인스펙터 |
-| `BehaviorTree_Inspector` | BT 인스펙터 |
-| `Texture_Inspector` | 텍스처 인스펙터 |
-| `Model_Inspector` | Model 컴포넌트 인스펙터 |
-| `Reflection_Inspector` | 리플렉션 기반 자동 인스펙터 |
-
-### Undo/Redo 시스템
-
-| 클래스 | 설명 |
-|---|---|
-| `CommandHistory` | Undo/Redo 스택 관리 (ICommand 기반, 최대 100개 이력) |
-| `Action_Command` | 범용 람다 기반 Undo/Redo 커맨드 (ICommand 상속) |
-| `Property_Command` | 프로퍼티 값 변경 Undo/Redo (EPropertyType 기반 역직렬화) |
-
-### 기타
-
-| 클래스 | 설명 |
-|---|---|
-| `Notification_Manager` | 토스트 알림 |
-| `Editor_Logger` | spdlog 에디터 통합 |
-| `PlayerSession_Manager` | 플레이어 세션 에디터 관리 |
-| `IconsFontAwesome6.h` | FontAwesome 6 아이콘 유니코드 상수 |
-
-### 에디터 정의 헤더
-
-| 파일 | 설명 |
-|---|---|
-| `Editor_Define.h` | 에디터 공통 정의 |
-| `Editor_Enum.h` | 에디터 열거형 |
-| `Editor_Macro.h` | 에디터 매크로 |
-| `Editor_Struct.h` | 에디터 구조체 |
+- `Converter.cpp`가 변환 핵심
+- `BinaryWriter`는 바이너리 출력 유틸
+- assimp DLL은 `AssimpTool/Bin/`에 같이 둔다
 
 ---
 
-## AssimpTool (EXE)
+## Server 구조
 
-모델 컨버터 — Assimp으로 FBX/OBJ 읽고 커스텀 바이너리로 변환.
-Assimp 헤더는 `Engine/Public/Assimp/`에서, 라이브러리는 `Engine/ThirdPartyLib/`에서 참조.
+## GameServer
 
-| 파일 | 설명 |
-|---|---|
-| `pch.h` | Assimp 헤더, SimpleMath, spdlog, ConverterTypes, BinaryWriter 포함 |
-| `Assimp_Macro.h` | Engine_Macro.h 참조 (LOG_INFO 등 공유) |
-| `ConverterTypes.h` | 바이너리 포맷 정의 — `MESHBIN_MAGIC`/`MESHBIN_VERSION`, `EConvertModelType`, `FMeshFileHeader`, `FMeshVertexBin`, `FExportMeshData`, `FExportTextureRef`, `FExportMaterialData` |
-| `BinaryWriter.h/cpp` | 바이너리 파일 쓰기 유틸 (`Write<T>`, `WriteBytes`, `WriteString`) |
-| `Converter.h/cpp` | FBX/OBJ → 커스텀 바이너리 변환 핵심 (`Convert`, `Read_AssetFile`, `Build_MeshData`, `Build_MaterialData`, `Write_MeshBin`, `Write_MaterialJson`) |
-| `AssimpTool.cpp` | 진입점 (main) |
+현재 `Server/GameServer`는 서버 게임 로직을 포함한다.
 
-### 빌드 설정
-- **추가 포함 디렉터리**: `../../Engine/Public/` (Assimp 헤더 접근용)
-- **추가 라이브러리 디렉터리**: `../../Engine/ThirdPartyLib/`
-- **추가 종속성**: `assimp-vc143-mtd.lib` (Debug) / `assimp-vc143-mt.lib` (Release)
-- **추가 옵션**: `/utf-8` (C/C++ 명령줄, Unicode 지원용)
+### Public
 
-> [!IMPORTANT]
-> `assimp-vc143-mt.dll`을 실행 폴더(`AssimpTool/Bin/`)에 수동 복사 필요.
+- `GameSession.h`
+- `GameRoom.h`
+- `GameObject.h`
+- `Player.h`
+- `Monster.h`
+- `Server_PacketHandler.h`
+- `Server_Macro.h`
+- `Server_Typedef.h`
 
----
+### Private
 
-## Server
+- `GameSession.cpp`
+- `GameRoom.cpp`
+- `GameObject.cpp`
+- `Player.cpp`
+- `Monster.cpp`
+- `Server_PacketHandler.cpp`
 
-### GameServer
+## ServerCore
 
-| 클래스 | 설명 |
-|---|---|
-| `GameSession` | 클라이언트 1개 연결 세션 |
-| `GameRoom` | 게임 룸 (`GRoom` 전역). 플레이어/몬스터 관리, 입장/퇴장 처리, `Broadcast`, `Handle_C_Move`, 템플릿 Add/Remove/Find |
-| `GameObject` | 서버 측 게임 오브젝트 기반 (ObjectInfo, BroadcastMove, atomic ID 생성기) |
-| `Player` | 서버 측 플레이어 (GameObject 상속, GameSession 참조) |
-| `Monster` | 서버 측 몬스터 (GameObject 상속, GameSession 참조) |
-| `Server_PacketHandler` | 서버 패킷 핸들/생성 |
+현재 `Server/ServerCore`는 IOCP 네트워크 공용 라이브러리다.
 
-### GameServer 정의 헤더
+### 핵심 파일
 
-| 파일 | 설명 |
-|---|---|
-| `Server_Macro.h` | 서버 매크로 (NS_BEGIN/NS_END, CHECK_NULL, LOCK_WP, DECLARE/IMPLEMENT_SINGLETON) |
-| `Server_Typedef.h` | 서버 타입 별칭 (uint8~uint64, Shared/Weak/Unique, umap/uset) |
+- 연결/이벤트: `IocpCore`, `IocpEvent`, `Listener`, `Session`, `Service`
+- 버퍼: `RecvBuffer`, `SendBuffer`, `BufferReader`, `BufferWriter`
+- 유틸: `NetAddress`, `SocketUtils`, `ThreadManager`
+- 공통: `Core_Global`, `Core_Macro`, `Core_Pch`, `Core_TLS`, `Core_Types`
 
-### ServerCore (LIB)
+## Protobuf
 
-IOCP 기반 네트워크 코어:
-`IocpCore`, `IocpEvent`, `Session`, `Listener`, `Service`,
-`NetAddress`, `SocketUtils`, `ThreadManager`,
-`SendBuffer`, `RecvBuffer`, `BufferReader`, `BufferWriter`,
-`Core_Global`, `Core_Macro`, `Core_Pch`, `Core_TLS`, `Core_Types`
+`Server/Protobuf`에는 다음이 함께 있다.
+
+- 원본 프로토콜: `Protocol/Enum.proto`, `Protocol/Struct.proto`, `Protocol.proto`, `GenProto.bat`
+- 생성 코드 배포본: `Bin/Enum.pb.*`, `Protocol.pb.*`, `Struct.pb.*`
+- protobuf 자체 include/lib/protoc 배포 파일
+
+주의:
+
+- `Server/Protobuf/include`는 상당히 크며, 대부분 protobuf 배포본이다.
+- 보통 실제 작업 포인트는 `Server/Protobuf/Protocol/*.proto`와 생성된 `Bin/*.pb.*`다.
 
 ---
 
-## 레벨 & 로딩 흐름
+## EngineSDK 구조
 
-### ELevelType 인덱스
-```
-Loading = 0, Static = 1, MainTitle = 2, GamePlay = 3
+```text
+EngineSDK/
+├─ Include/
+└─ Lib/
 ```
 
-### 로딩 흐름
-```
-Ready_StartLevel(MainTitle)
-  └─ Level_Loading 생성
-       └─ Loader::Loading_For_MainTitleLevel() [비동기 쓰레드]
-            ├─ Register_Components()     → Static 레벨에 컴포넌트/오브젝트 등록
-            ├─ Initialize_BT_Nodes()
-            ├─ ResourceLoader::Load_ShaderTable()
-            ├─ ResourceLoader::Load_TerrainTable()
-            ├─ ResourceLoader::Load_TextureTable()
-            └─ ResourceLoader::Load_ModelTable()
-  └─ Level_MainTitle 생성
+| 경로 | 설명 |
+|---|---|
+| `EngineSDK/Include` | Engine 공개 헤더 복사본 |
+| `EngineSDK/Lib` | Engine 라이브러리 복사본 |
 
-[Space 입력]
-  └─ Level_Loading 생성
-       └─ Loader::Loading_For_GamePlay() [비동기 쓰레드]
-            ├─ Terrain, Camera_Free, Camera_Target, PlayerStart 프로토타입 등록
-  └─ Level_Gameplay 생성
-```
-
-> [!WARNING]
-> `Ready_StartLevel(GamePlay)` 직접 호출 금지 — Logo 단계에서 Static 레벨 등록이 선행되어야 함
-
----
-
-## 컴포넌트 시스템
-
-### 등록 방식
-- `Component_Factory`에 `Register<T>(levelIndex)`: 자동으로 프로토타입 생성 + 등록
-- Shader/Texture 등 초기화 인자가 필요한 것은 람다 Creator 사용
-- ComponentID는 **Protobuf enum** (`Protocol::COMPONENT_TYPE_XXX`) 사용
-
-### 매크로
-```cpp
-GENERATED_COMPONENT(ClassName, Protocol::COMPONENT_TYPE_XXX)
-// → StaticTypeID(), Get_ComponentID() 자동 생성
-```
-
-### 등록 위치
-- `Register_Components()` in `Loader.cpp` — Static 레벨(1)에 등록
-- Static 레벨에 등록된 컴포넌트는 **모든 레벨에서 공유**
-
-### 현재 등록된 컴포넌트 (Static 레벨)
-CombatStat, Replicator, VIBuffer_Rect, MovementComponent,
-InputComponent, BehaviorTree, PlayerController, AIController, PlayerStateMachine, SkillComponent
-
-> [!NOTE]
-> `Model` 컴포넌트는 팩토리 등록이 주석 처리되어 있음 (프로토타입/셰이더 초기화 인자 필요)
-
----
-
-## 주요 구조체
-
-### FLightDesc (Engine_Struct.h)
-```cpp
-struct FLightDesc {
-    ELightType  type;       // Directional, Point
-    Vec4        direction;
-    Vec4        position;
-    float       range;
-    Color       diffuse;
-    Color       ambient;
-    Color       specular;
-};
-```
+`UpdateLib.bat`는 Engine 빌드 후 이 폴더를 갱신하는 용도다.
 
 ---
 
 ## 리소스 구조
 
-### 데이터 테이블 (CSV → JSON 변환)
-```
-Client/Bin/Resources/Data/
-├── csv/
-│   ├── ShaderTable.csv       → 셰이더 경로 + InputLayout 정의
-│   ├── TextureTable.csv      → 텍스처 경로 + 타입
-│   ├── TerrainTable.csv      → 지형 설정
-│   └── StaticLevelComTable.csv → Static 레벨 컴포넌트 테이블
-├── json/                     → CSV에서 변환된 JSON (+ 수동 JSON)
-│   ├── ShaderTable.json
-│   ├── TextureTable.json
-│   ├── TerrainTable.json
-│   ├── ModelTable.json       → 모델 경로 + 타입(StaticMesh/SkeletalMesh) + GUID
-│   ├── SkillDataTable.json   → 스킬 데이터 (ID, 이름, 아이콘 경로, 쿨다운)
-│   └── StaticLevelComTable.json
-└── ConvertResource.py        → CSV → JSON 변환 스크립트
-```
+실제 런타임 리소스는 대부분 `Client/Bin/Resources` 아래에 있다.
 
-### 리소스 디렉토리
-```
+### 핵심 구조
+
+```text
 Client/Bin/Resources/
-├── Textures/
-│   ├── Terrain/     → 지형 텍스처
-│   ├── Logo/        → 로고 이미지
-│   ├── Player/      → 플레이어 텍스처
-│   ├── Explosion/   → 이펙트
-│   ├── SkyBox/      → 스카이박스
-│   ├── Snow/
-│   ├── UI/
-│   │   ├── Dialog/Textures/     → 다이얼로그/구매/보상 UI 텍스처 (78개+)
-│   │   ├── Loading_Screen/      → 로딩 스크린 UI
-│   │   ├── MainTitle/           → 메인 타이틀 UI
-│   │   ├── PlayerStats/         → 플레이어 스탯 UI (HP바, 상태바 등)
-│   │   └── Skill_Icon/          → 스킬 아이콘 텍스처
-│   ├── Default0/1.dds/.jpg → 기본 텍스처
-│   └── Clip_Icon, Folder_Icon 등 → 에디터 아이콘
-├── Models/          → 3D 모델 (Fiona, ForkLift, Gaara, NarutoTest, Rock, Test, Tong, map)
-├── Fonts/           → FontAwesome 등
-└── Data/            → 위 참조
+├─ Data/
+│  ├─ csv/
+│  ├─ json/
+│  │  ├─ BehaviorTrees/
+│  │  ├─ EditorSettings/
+│  │  ├─ Levels/
+│  │  └─ Prefabs/
+│  └─ Temp/
+├─ Fonts/
+├─ Models/
+├─ Textures/
+├─ Thumbnails/
+└─ Shaders/
 ```
 
-> [!NOTE]
-> 각 에셋에는 `.meta` 파일이 자동 생성됨 (Asset_Manager의 GUID 시스템). 예: `Default0.dds.meta`.
+### Data 폴더
 
-> [!NOTE]
-> 셰이더 파일(.hlsl/.fx)은 별도 폴더가 아닌 ShaderTable.json에 경로가 기록되어 ResourceLoader가 로드.
-> Effects11 프레임워크 사용 (technique11 / pass).
-
----
-
-## 정점 구조체 (Vertex_Struct.h)
-
-| 이름 | 구성 | 용도 |
-|---|---|---|
-| `VTXTEX` | Position(Vec3) + TexCoord(Vec2) | UI, 단순 텍스처 |
-| `VTXNORTEX` | Position(Vec3) + Normal(Vec3) + TexCoord(Vec2) | 라이팅 지원 메쉬 (Terrain 등) |
-| `VTXMESH` | Position(Vec3) + Normal(Vec3) + Tangent(Vec3) + TexCoord(Vec2) | 3D 모델 메쉬 (Assimp 로드) |
-
----
-
-## 렌더 그룹
-
-```cpp
-enum class ERenderGroup { Priority, NonBlend, Blend, UI, END };
-```
-- **Priority**: 스카이박스 등 먼저 그릴 것
-- **NonBlend**: 불투명 (Terrain, 캐릭터 등)
-- **Blend**: 반투명
-- **UI**: 2D UI (직교 투영)
-
-## UI 레이어 (EUILayer)
-
-```cpp
-enum class EUILayer { HUD, Navigation, Popup, System, Overlay, END };
-```
-- **HUD**: 항상 표시 (체력바, 스킬)
-- **Navigation**: 퀘스트 화살표, 정보 전달용
-- **Popup**: 인벤토리, 상점, 일시정지
-- **System**: 알림
-- **Overlay**: 페이드 인/아웃, 로딩
-
----
-
-## 핵심 매크로
-
-| 매크로 | 용도 |
+| 경로 | 설명 |
 |---|---|
-| `GAME` | `GameInstance::GetInstance()` |
-| `INPUT` | `Input_Manager::GetInstance()` |
-| `EVENT` | `Event_Manager::GetInstance()` |
-| `ETOI(ENUM)` | enum → unsigned int 캐스트 |
-| `CHECK_NULL` | null 체크 + 로그 + return |
-| `CHECK_FAILED` | HRESULT 실패 체크 + 로그 + return |
-| `LOCK_WP` | weak_ptr lock + 실패 시 로그 + return |
-| `GENERATED_BODY(Name)` | `StaticClassName()` + 이름 자동 설정 |
-| `GENERATED_COMPONENT(Name, ID)` | `StaticTypeID()` + `Get_ComponentID()` 자동 생성 |
-| `NS_BEGIN` / `NS_END` | namespace 열기/닫기 |
-| `ENGINE_DLL` | DLL export/import |
+| `Data/csv` | 원본 테이블 (`ShaderTable`, `TextureTable`, `TerrainTable`, `ModelTable`, `SkillDataTable`, `StaticLevelComTable`) |
+| `Data/json` | 변환 결과 + 수동 JSON |
+| `Data/json/BehaviorTrees` | BT 에디터/런타임 JSON |
+| `Data/json/Levels` | 레벨 JSON |
+| `Data/json/Prefabs` | 프리팹 JSON |
+| `Data/json/EditorSettings` | 에디터 설정 |
+| `Data/Temp` | 리소스 변환용 임시 스크립트 |
+
+### 현재 눈에 띄는 리소스 포인트
+
+- 스킬 아이콘과 UI 텍스처가 매우 많다.
+- `.meta` 파일이 함께 존재하며 에셋 GUID 관리와 연결된다.
+- `Client/Bin/Shaders/`가 아니라 현재 셰이더 소스는 `Client/Bin/Shaders/`에 `.hlsl`, 컴파일 결과는 `Client/Bin/*.cso` 조합이다.
+- 현재 빌드 출력물에는 `Shader_UI.cso`, `Shader_VtxMesh.cso`, `Shader_VtxNorTex.cso`, `Shader_VtxStaticMesh.cso`, `Shader_Vtxtex.cso`가 보인다.
 
 ---
 
-## 타입 별칭
+## 문서 폴더 구조
 
-```cpp
-using Shared = std::shared_ptr<T>;
-using Weak   = std::weak_ptr<T>;
-using Unique = std::unique_ptr<T>;
-using umap   = std::unordered_map<K,V>;
-using uset   = std::unordered_set<T>;
-
-// SimpleMath
-using Vec2/Vec3/Vec4, Matrix, Quat, Color, Ray, Plane;
-using ComPtr = Microsoft::WRL::ComPtr<T>;
-
-// DX 타입 별칭
-using Device = ID3D11Device;
-using DeviceContext = ID3D11DeviceContext;
-using SwapChain = IDXGISwapChain;
-// ...기타
-```
-
----
-
-## 네트워크 흐름
-
-```
-Player::Late_Update()
-  → Client::NetworkManager::Send_Packet()
-  → Client_PacketHandler::Make_C_Move()
-  ─────────────────────────────→ GameSession::OnRecvPacket()
-                                  → Server_PacketHandler::HandlePacket()
-                                  → Handle_C_Move()
-                                  → GSessionManager::Broadcast(Make_S_Move())
-  ←─────────────────────────────── 모든 클라이언트
-  Client_PacketHandler::Handle_S_Move()
-  → 해당 objectId GameObject 위치 갱신
-```
-
-### 패킷 ID
-```cpp
-enum PacketID {
-    S_Test = 1, S_EnterGame = 2, S_MyPlayer = 3,
-    S_AddObject = 4, S_RemoveObject = 5, S_Move = 6,
-    C_Move = 50,
-};
-```
-
----
-
-## 미해결 이슈
-
-- [x] `Client_PacketHandler` → Client 프로젝트로 이동 완료
-- [x] `Model` 컴포넌트 `GENERATED_COMPONENT` 매크로 적용 완료 (`COMPONENT_TYPE_MODEL`)
-- [x] `ModelMaterial` 클래스 구현 완료 (aiMaterial 기반 텍스처 SRV 관리)
-- [x] `EModelType` enum 추가 완료 (`StaticMesh`, `SkeletalMesh`)
-- [x] `Model_Inspector` 에디터 인스펙터 추가 완료
-- [ ] `Handle_S_Move`에서 ObjectManager 연동 (다른 플레이어 위치 갱신)
-- [ ] `Handle_S_AddObject` / `Handle_S_RemoveObject` 클라이언트 구현
-- [ ] 이동 동기화 패킷 throttle (매 프레임 전송 → 주기적 전송)
-- [ ] `Model` 컴포넌트 팩토리 등록 활성화 (현재 주석 처리, 초기화 인자 설계 필요)
-- [ ] `Shader_VtxMesh.hlsl` PS_MAIN에서 `g_DiffuseTexture` 텍스처 샘플링 적용
-- [x] `UI_PlayerSkill` / `UI_SkillSlot` / `SkillComponent` / `SkillDataManager` 스킬 시스템 기본 구현 완료 (2슬롯 쿨다운 UI + 데이터 매니저)
-
----
-
-## UpdateLib.bat
-
-Engine 빌드 후 `EngineSDK/Include`와 `EngineSDK/Lib`로 헤더/라이브러리를 복사하는 배치 파일.
-
----
-
-## Docs 폴더
+현재 `Docs/`에는 다음 문서가 있다.
 
 | 파일 | 설명 |
 |---|---|
-| `assimp_converter_plan.md` | Assimp 컨버터 설계/구현 계획 문서 |
-| `fmodel_lobbymap_leveljson_guide.md` | FModel 로비맵 레벨 JSON 가이드 |
-| `skill_component_ui_2slot_plan.md` | 스킬 컴포넌트 + 2슬롯 UI 구현 계획 |
+| `assimp_converter_plan.md` | Assimp 변환 툴 관련 문서 |
+| `fmodel_lobbymap_leveljson_guide.md` | FModel 레벨 JSON 가이드 |
+| `skill_component_ui_2slot_plan.md` | 스킬 컴포넌트 + UI 계획 |
+| `bone_review_plan_9m_day1_day2.md` | 본/스키닝 수업 정리 |
+| `bone_review_plan_9m_day2_day3.md` | Animation/Channel 수업 정리 |
 
+---
+
+## 현재 구조 기준 작업 시 자주 보는 위치
+
+### 게임플레이 수정
+
+- `Client/Public`, `Client/Private`
+- `Client/Private/Loader.cpp`
+- `Client/Private/ResourceLoader.cpp`
+- `Client/Bin/Resources/Data/json`
+
+### 엔진 수정
+
+- `Engine/Public`, `Engine/Private`
+- `Engine/Public/Engine_*.h`
+- `Engine/Public/Vertex_Struct.h`
+- `Engine/Public/Model*.h`
+
+### 에디터 수정
+
+- `Editor/Public`, `Editor/Private`
+- `Editor/Private/Inspector*.cpp`
+- `Editor/Private/*_View.cpp`
+
+### 서버 수정
+
+- `Server/GameServer/Public`, `Private`
+- `Server/ServerCore/Public`, `Private`
+- `Server/Protobuf/Protocol/*.proto`
+
+---
+
+## 현재 구조 기준 메모
+
+- 최신 레벨 명칭은 `MainTitle`, `Loading`, `Gameplay` 축이다.
+- Client에는 `ResourceLoader`와 `Loader`가 함께 존재하므로 로딩 경로를 볼 때 둘 다 확인해야 한다.
+- Engine 쪽 모델 시스템은 `Mesh` + `Model` + `ModelMaterial` + `Model_BinaryLoader` 조합으로 보는 것이 현재 구조에 맞다.
+- Engine 입력 클래스명은 `Input_Manager`다.
+- UI 관련 코드는 Engine 공용 UI 기반과 Client 구체 UI가 분리되어 있다.
+- Server/Protobuf는 배포본이 커서, 구조 문서를 읽을 때는 `Protocol` 원본 폴더를 우선 기준으로 삼는 편이 좋다.
+
+---
+
+## AI 작업 규칙 메모
+
+이 프로젝트에서 구조를 판단할 때 우선순위는 아래와 같다.
+
+1. 실제 `.sln`과 `.vcxproj`
+2. 각 프로젝트의 `Public/`, `Private/`, `Default/`
+3. `Client/Bin/Resources/Data/json` 같은 런타임 데이터 폴더
+4. 이 문서 `PROJECT_STRUCTURE.md`
+
+문서와 실제 파일이 다르면 항상 실제 파일을 기준으로 다시 확인하고 이 문서를 갱신할 것.

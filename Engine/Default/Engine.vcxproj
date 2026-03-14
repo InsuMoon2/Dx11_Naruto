@@ -302,7 +302,11 @@
     <ClInclude Include="..\Public\Timer_Manager.h" />
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\Renderer.h" />
+    <ClInclude Include="..\Public\UI_AnimTypes.h" />
     <ClInclude Include="..\Public\UIObject.h" />
+    <ClInclude Include="..\Public\UI_AnimPlayer.h" />
+    <ClInclude Include="..\Public\UI_AnimSerializer.h" />
+    <ClInclude Include="..\Public\UI_AnimUtility.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
     <ClInclude Include="..\Public\UI_Text.h" />
     <ClInclude Include="..\Public\Utils.h" />
@@ -371,6 +375,9 @@
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\Renderer.cpp" />
     <ClCompile Include="..\Private\UIObject.cpp" />
+    <ClCompile Include="..\Private\UI_AnimPlayer.cpp" />
+    <ClCompile Include="..\Private\UI_AnimSerializer.cpp" />
+    <ClCompile Include="..\Private\UI_AnimUtility.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
     <ClCompile Include="..\Private\UI_Text.cpp" />
     <ClCompile Include="..\Private\Utils.cpp" />

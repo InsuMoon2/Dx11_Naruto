@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Level_Loading.h"
 
+#include <UI_Text.h>
+
 #include "Background.h"
 #include "Loader.h"
 #include "GameInstance.h"

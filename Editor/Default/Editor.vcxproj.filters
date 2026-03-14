@@ -31,6 +31,9 @@
     <Filter Include="06. Command">
       <UniqueIdentifier>{4892880c-12aa-44e9-8bae-079629ee88f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97. Utils">
+      <UniqueIdentifier>{e124fccb-31c6-477a-9136-841ad3ee5a3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -123,9 +126,6 @@
     <ClInclude Include="..\Public\Transform_Inspector.h">
       <Filter>04. Component_Inspector</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_Serializer.h">
-      <Filter>98. Default</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Editor_Struct.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
@@ -152,6 +152,10 @@
     </ClInclude>
     <ClInclude Include="..\Public\Editor_Camera_Free.h" />
     <ClInclude Include="..\Public\Model_Inspector.h" />
+    <ClInclude Include="..\Public\UI_Animation_View.h" />
+    <ClInclude Include="..\Public\Level_Serializer.h">
+      <Filter>97. Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -231,9 +235,6 @@
     <ClCompile Include="..\Private\Transform_Inspector.cpp">
       <Filter>04. Component_Inspector</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Level_Serializer.cpp">
-      <Filter>98. Default</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\BehaviorTree_View.cpp">
       <Filter>03. Viewer</Filter>
     </ClCompile>
@@ -257,7 +258,13 @@
     </ClCompile>
     <ClCompile Include="..\Private\Editor_Camera_Free.cpp" />
     <ClCompile Include="..\Private\Model_Inspector.cpp" />
-    <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp" />
+    <ClCompile Include="..\Private\UI_Animation_View.cpp" />
+    <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Serializer.cpp">
+      <Filter>97. Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

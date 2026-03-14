@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Level_MainTitle.h"
-
+#include "UI_Text.h"
 #include "Background.h"
 #include "Loader.h"
 #include "GameInstance.h"
@@ -17,7 +17,7 @@ Level_MainTitle::~Level_MainTitle()
 
 HRESULT Level_MainTitle::Initialize()
 {
-    if (FAILED(Ready_Layer_Background()))
+    if (FAILED(Ready_Layer_UI()))
         return E_FAIL;
 
     
@@ -53,7 +53,7 @@ HRESULT Level_MainTitle::Render()
     return S_OK;
 }
 
-HRESULT Level_MainTitle::Ready_Layer_Background()
+HRESULT Level_MainTitle::Ready_Layer_UI()
 {
     Vec2 viewport = { GAME->Get_WindowWidth(), GAME->Get_WindowHeight() };
 
@@ -113,6 +113,32 @@ HRESULT Level_MainTitle::Ready_Layer_Background()
         auto text = Background::Create(_device, _context, &desc);
         if (!text) return E_FAIL;
         GAME->Add_UI_ToLayer(EUILayer::Overlay, text);
+    }
+
+    // Temp : 텍스트 출력용
+    {
+
+        UI_Text::FUITextDesc desc{};
+        desc.name = TEXT("MainTitle_DebugText");
+        desc.posX = 300.f;
+        desc.posY = 120.f;
+        desc.sizeX = 500.f;
+        desc.sizeY = 80.f;
+        desc.zOrder = 0.8f;
+        desc.levelIndex = ETOI(ELevelType::MainTitle);
+
+        desc.text = L"MAIN TITLE DEBUG";
+        desc.style.fontFamily = L"Malgun Gothic";
+        desc.style.fontSize = 36.f;
+        desc.style.color = Color(1.f, 0.f, 0.f, 1.f);
+        desc.style.hAlign = ETextHAlign::Left;
+        desc.style.vAlign = ETextVAlign::Top;
+        desc.style.wordWrap = false;
+
+        auto debugText = UI_Text::Create(_device, _context, &desc);
+        CHECK_NULL(debugText, E_FAIL);
+
+        CHECK_FAILED(GAME->Add_UI_ToLayer(EUILayer::Overlay, debugText), E_FAIL);
     }
 
     return S_OK;

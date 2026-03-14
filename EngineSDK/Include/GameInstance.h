@@ -21,6 +21,7 @@ class Camera_Manager;
 class Light_Manager;
 class Asset_Manager;
 class UI_Manager;
+class Text_Renderer;
 
 class Renderer;
 class PipeLine;
@@ -89,6 +90,7 @@ public: /* Graphic Device */
 
 	HRESULT                 Clear_Buffers(const Color& clearColor);
 	HRESULT                 Present();
+
 
 public: /* ImGui */
     void                    Set_ImGuiContext(void* context);
@@ -224,6 +226,14 @@ public: /* UI */
 
     HRESULT                         Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject);
 
+public: /* Text Renderer */
+    HRESULT Begin_UIText();
+    HRESULT Draw_Text(const wstring& text, const RECT& rect, const FTextStyle& style);
+    HRESULT End_UIText();
+
+    HRESULT Set_TextTarget_Texture(ComPtr<Texture2D> texture);
+    HRESULT Reset_TextTarget_BackBuffer();
+
 
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};
@@ -236,6 +246,7 @@ private: /* Manager */
     Unique<Light_Manager>           _lightManager   {};
     Unique<Asset_Manager>           _assetManager   {};
     Unique<UI_Manager>              _uiManager      {};
+    Unique<Text_Renderer>           _textRenderer   {};
 
     Unique<Renderer>                _renderer {};
     Unique<PipeLine>                _pipeLine {};

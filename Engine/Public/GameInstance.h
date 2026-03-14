@@ -91,6 +91,7 @@ public: /* Graphic Device */
 	HRESULT                 Clear_Buffers(const Color& clearColor);
 	HRESULT                 Present();
 
+
 public: /* ImGui */
     void                    Set_ImGuiContext(void* context);
 
@@ -229,6 +230,9 @@ public: /* Text Renderer */
     HRESULT Begin_UIText();
     HRESULT Draw_Text(const wstring& text, const RECT& rect, const FTextStyle& style);
     HRESULT End_UIText();
+
+    HRESULT Set_TextTarget_Texture(ComPtr<Texture2D> texture);
+    HRESULT Reset_TextTarget_BackBuffer();
 
 
 private: /* Manager */

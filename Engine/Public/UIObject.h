@@ -48,6 +48,21 @@ public:
     uint32              Get_LevelIndex() const { return _levelIndex; }
     void                Set_LevelIndex(uint32 index) { _levelIndex = index; }
 
+public: /* UI Animation Track*/
+    void    Set_UIPosition(float x, float y);
+    void    Set_UIScale(float x, float y);
+    void    Set_UIRotationZ(float degree);
+    void    Set_UIOpacity(float alpha);
+    void    Set_UITint(const Color& color);
+
+    float   Get_UIPosX() const { return _posX; }
+    float   Get_UIPosY() const { return _posY; }
+    float   Get_UISizeX() const { return _sizeX; }
+    float   Get_UISizeY() const { return _sizeY; }
+    float   Get_UIRotationZ() const { return _rotationZ; }
+    float   Get_UIOpacity() const { return _opacity; }
+    const Color& Get_UITint() const { return _tintColor; }
+
 protected:
     // SRT로 월드 행렬 갱신, 직교 투영 행렬 세팅
     void    Update_Transform();
@@ -73,6 +88,11 @@ protected:
     EUILayer    _uiLayer    = EUILayer::HUD;
 
     uint32      _levelIndex = 0;
+
+protected:
+    float       _rotationZ = 0.f;
+    float       _opacity = 1.f;
+    Color       _tintColor = Color(1.f, 1.f, 1.f, 1.f);
 
 public:
     virtual Shared<GameObject> Clone(void* arg) { return nullptr; }

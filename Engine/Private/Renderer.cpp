@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "UIObject.h"
+#include "UI_Text.h"
 
 Renderer::Renderer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -22,8 +23,12 @@ HRESULT Renderer::Initialize()
     blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
     blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
     blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
     blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-    blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+    blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    
     blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
     blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
@@ -125,7 +130,6 @@ void Renderer::Render_Blend()
 void Renderer::Render_UI()
 {
     Apply_UIState();
-    GAME->Begin_UIText();
 
     _renderObjects[ETOI(ERenderGroup::UI)].sort([](const Shared<GameObject>& src, const Shared<GameObject>& dst)
         {
@@ -144,9 +148,30 @@ void Renderer::Render_UI()
 
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::UI)])
     {
-        if (renderObject)
-            renderObject->Render();
+        if (!renderObject)
+            continue;
 
+        // DWrite는 별도 패스에서 처리해 D3D UI와 같은 백버퍼에 섞어 그리지 않는다.
+        if (dynamic_pointer_cast<UI_Text>(renderObject))
+            continue;
+
+        renderObject->Render();
+
+        _drawCallCount++;
+    }
+
+    ID3D11RenderTargetView* nullRTV = nullptr;
+    _context->OMSetRenderTargets(1, &nullRTV, nullptr);
+
+    GAME->Begin_UIText();
+
+    for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::UI)])
+    {
+        auto uiText = dynamic_pointer_cast<UI_Text>(renderObject);
+        if (!uiText)
+            continue;
+
+        uiText->Render();
         _drawCallCount++;
     }
 

@@ -6,6 +6,8 @@ NS_BEGIN(Engine)
 class BTNode;
 NS_END
 
+NS_BEGIN(Editor)
+
 struct FBTEditorNode
 {
     ed::NodeId id;
@@ -28,3 +30,4 @@ struct FBTEditorLink
     ed::PinId endPinId;
 };
 
+NS_END

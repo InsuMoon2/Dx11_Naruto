@@ -345,6 +345,11 @@ void Scene_View::Update_ImGuizmo()
 
     // 선택된 오브젝트
     auto hierarchy = dynamic_pointer_cast<Hierarchy>(EDITOR->Get_Window(TEXT("Hierarchy")));
+    //if (hierarchy)
+    //{
+    //    bool isMultiSelect = ImGui::GetIO().KeyCtrl;
+    //    hierarchy->Select_Object(pickedObject, isMultiSelect);
+    //}
     CHECK_NULL(hierarchy);
 
     const auto& selectedObjects = hierarchy->Get_SelectedObject();

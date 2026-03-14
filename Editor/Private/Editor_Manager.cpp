@@ -101,9 +101,14 @@ void Editor_Manager::Render()
     if (targetRT)
     {
         targetRT->BindAsTarget();
-        targetRT->Clear(Color(0.53f, 0.81f, 0.92f, 1.f));
+        targetRT->Clear(Color(0.53f, 0.81f, 0.92f, 1.f)); // 하늘색
+
+        CHECK_FAILED(GAME->Set_TextTarget_Texture(targetRT->Get_Texture2D()), );
+
         GAME->Draw(); // 실제 게임 렌더링
         targetRT->UnbindAll();
+
+        CHECK_FAILED(GAME->Reset_TextTarget_BackBuffer(), );
     }
 
     GAME->BindBackBuffer();

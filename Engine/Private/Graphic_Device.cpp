@@ -24,7 +24,7 @@ HRESULT Graphic_Device::Initialize(HWND hWnd, EWinMode eWinMode, uint32 winSizeX
 
 #ifdef _DEBUG
     //flag = D3D11_CREATE_DEVICE_DEBUG;
-    flag = 0;
+    //flag = 0;
 #endif
 
     D3D_FEATURE_LEVEL FeatureLV;

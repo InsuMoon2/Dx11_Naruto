@@ -572,7 +572,22 @@ HRESULT GameInstance::Draw_Text(const wstring& text, const RECT& rect, const FTe
 
 HRESULT GameInstance::End_UIText()
 {
-    return _textRenderer->End_UIText();
+    CHECK_FAILED(_textRenderer->End_UIText(), E_FAIL);
+
+    // D2D가 target을 사용한 뒤 다음 D3D 렌더 경로를 위해 백버퍼 상태를 복원한다.
+    _graphicDevice->BindBackBuffer();
+
+    return S_OK;
+}
+
+HRESULT GameInstance::Set_TextTarget_Texture(ComPtr<Texture2D> texture)
+{
+    return _textRenderer->Set_TargetTexture(texture);
+}
+
+HRESULT GameInstance::Reset_TextTarget_BackBuffer()
+{
+    return _textRenderer->Reset_TargetToSwapChain();
 }
 
 Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)

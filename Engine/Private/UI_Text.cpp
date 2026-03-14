@@ -1,24 +1,24 @@
 ﻿#include "pch.h"
 #include "UI_Text.h"
 
-UIText::UIText(ComPtr<Device> device, ComPtr<DeviceContext> context)
+UI_Text::UI_Text(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
 {
 }
 
-UIText::UIText(const UIText& rhs)
+UI_Text::UI_Text(const UI_Text& rhs)
     : UIObject(rhs)
     , _text(rhs._text)
     , _style(rhs._style)
 {
 }
 
-HRESULT UIText::Initialize_Prototype()
+HRESULT UI_Text::Initialize_Prototype()
 {
     return UIObject::Initialize_Prototype();
 }
 
-HRESULT UIText::Initialize(void* arg)
+HRESULT UI_Text::Initialize(void* arg)
 {
     auto* desc = static_cast<FUITextDesc*>(arg);
     CHECK_NULL(desc, E_FAIL);
@@ -31,38 +31,44 @@ HRESULT UIText::Initialize(void* arg)
     return S_OK;
 }
 
-void UIText::Priority_Update(float timeDelta)
+void UI_Text::Priority_Update(float timeDelta)
 {
     UIObject::Priority_Update(timeDelta);
 }
 
-void UIText::Update(float timeDelta)
+void UI_Text::Update(float timeDelta)
 {
     UIObject::Update(timeDelta);
 
     Update_Transform();
 }
 
-void UIText::Late_Update(float timeDelta)
+void UI_Text::Late_Update(float timeDelta)
 {
     UIObject::Late_Update(timeDelta);
 }
 
-HRESULT UIText::Render()
+HRESULT UI_Text::Render()
 {
-    if (!_isVisible)
-        return S_OK;
-
-    if (_text.empty())
+    if (!_isVisible || _text.empty())
         return S_OK;
 
     RECT rect = Build_ScreenRect();
-    CHECK_FAILED(GAME->Draw_Text(_text, rect, _style), E_FAIL);
+
+    FTextStyle finalStyle = _style;
+    finalStyle.color.x *= _tintColor.x;
+    finalStyle.color.y *= _tintColor.y;
+    finalStyle.color.z *= _tintColor.z;
+    finalStyle.color.w *= _tintColor.w;
+    finalStyle.color.w *= _opacity;
+
+    HRESULT hr = GAME->Draw_Text(_text, rect, _style);
+    CHECK_FAILED(hr, E_FAIL);
 
     return S_OK;
 }
 
-RECT UIText::Build_ScreenRect() const
+RECT UI_Text::Build_ScreenRect() const
 {
     float designX = GAME->Get_WindowWidth();
     float designY = GAME->Get_WindowHeight();
@@ -73,10 +79,13 @@ RECT UIText::Build_ScreenRect() const
     float ratioX = currentViewX / designX;
     float ratioY = currentViewY / designY;
 
-    float left = _posX * ratioX;
-    float top = _posY * ratioY;
-    float right = (_posX + _sizeX) * ratioX;
-    float bottom = (_posY + _sizeY) * ratioY;
+    float halfW = _sizeX * 0.5f;
+    float halfH = _sizeY * 0.5f;
+
+    float left = (_posX - halfW) * ratioX;
+    float top = (_posY - halfH) * ratioY;
+    float right = (_posX + halfW) * ratioX;
+    float bottom = (_posY + halfH) * ratioY;
 
     RECT rc = {};
     rc.left = static_cast<LONG>(left);
@@ -87,33 +96,33 @@ RECT UIText::Build_ScreenRect() const
     return rc;
 }
 
-Shared<UIText> UIText::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
+Shared<UI_Text> UI_Text::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
 {
-    auto instance = make_shared<UIText>(device, context);
+    auto instance = make_shared<UI_Text>(device, context);
 
     if (FAILED(instance->Initialize(arg)))
     {
-        MSG_BOX("Failed to Create : UIText");
+        MSG_BOX("Failed to Create : UI_Text");
         return nullptr;
     }
 
     return instance;
 }
 
-Shared<GameObject> UIText::Clone(void* arg)
+Shared<GameObject> UI_Text::Clone(void* arg)
 {
-    auto instance = make_shared<UIText>(*this);
+    auto instance = make_shared<UI_Text>(*this);
 
     if (FAILED(instance->Initialize(arg)))
     {
-        MSG_BOX("Failed to Clone : UIText");
+        MSG_BOX("Failed to Clone : UI_Text");
         return nullptr;
     }
 
     return instance;
 }
 
-void UIText::Free()
+void UI_Text::Free()
 {
     UIObject::Free();
 }

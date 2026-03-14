@@ -6,6 +6,7 @@ NS_BEGIN(Engine)
 class Shader;
 class Texture;
 class VIBuffer_Rect;
+class UI_Text;
 NS_END
 
 NS_BEGIN(Client)
@@ -43,10 +44,12 @@ private:
 
     Shared<UI_PlayerHP>     _hpBar;
 
+
 private:
     Shared<Shader>          _shaderCom;
     Shared<Texture>         _textureCom;
     Shared<VIBuffer_Rect>   _bufferCom;
+
 
 public:
     static Shared<UI_PlayerStatus> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg);

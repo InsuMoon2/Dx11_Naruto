@@ -20,11 +20,14 @@ public:
 
 public:
     ID3D11ShaderResourceView* Get_SRV() const { return _shaderResourceView.Get(); }
+    ComPtr<ID3D11ShaderResourceView> Get_SRV_ComPtr() const { return _shaderResourceView; }
 
     uint32 GetWidth() const { return _width; }
     uint32 GetHeight() const { return _height; }
 
     HRESULT Save_To_File(const wstring& outputPath);
+
+    ComPtr<Texture2D> Get_Texture2D() const { return _texture; }
 
 private:
     void Release();

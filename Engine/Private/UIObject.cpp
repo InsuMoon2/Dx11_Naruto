@@ -101,6 +101,35 @@ HRESULT UIObject::Render()
     return S_OK;
 }
 
+void UIObject::Set_UIPosition(float x, float y)
+{
+    _posX = x;
+    _posY = y;
+    _transformCom->Set_LocalPosition(x, y, _zOrder);
+}
+
+void UIObject::Set_UIScale(float x, float y)
+{
+    _sizeX = x;
+    _sizeY = y;
+    _transformCom->Set_LocalScale(x, y, 1.f);
+}
+
+void UIObject::Set_UIRotationZ(float degree)
+{
+    _rotationZ = degree;
+}
+
+void UIObject::Set_UIOpacity(float alpha)
+{
+    _opacity = clamp(alpha, 0.f, 1.f);
+}
+
+void UIObject::Set_UITint(const Color& color)
+{
+    _tintColor = color;
+}
+
 void UIObject::Update_Transform()
 {
     float designX = GAME->Get_WindowWidth();
@@ -122,15 +151,16 @@ void UIObject::Update_Transform()
     float finalPosY = _posY * ratioY;
 
     // UI 크기 (픽셀 단위로)
-    Matrix scaleMatrix = XMMatrixScaling(finalSizeX, finalSizeY, 1.f);
 
     // Translatino : 화면 좌표 -> NDC 좌표 변환
     float ndcX = finalPosX - (currentViewX * 0.5f);
     float ndcY = -finalPosY + (currentViewY * 0.5f);
 
+    Matrix scaleMatrix = XMMatrixScaling(finalSizeX, finalSizeY, 1.f);
+    Matrix rotMatrix   = XMMatrixRotationZ(XMConvertToRadians(_rotationZ));
     Matrix transMatrix = XMMatrixTranslation(ndcX, ndcY, 0.f);
 
-    _worldMatrix = scaleMatrix * transMatrix;
+    _worldMatrix = scaleMatrix * rotMatrix * transMatrix;
 }
 
 HRESULT UIObject::Bind_ShaderResource(Shared<Shader> shader, const char* constantName, ETransformState transformState)
