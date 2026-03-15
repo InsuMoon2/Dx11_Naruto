@@ -33,7 +33,8 @@ private:
     Shared<UI_SkillSlot> _slots[2];
 
 public:
-    static Shared<UI_PlayerSkill> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg = nullptr);
+    static Shared<UI_PlayerSkill> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    Shared<GameObject> Clone(void* arg) override;
     void Free() override;
 };
 

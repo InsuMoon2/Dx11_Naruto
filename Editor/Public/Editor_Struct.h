@@ -3,10 +3,13 @@
 namespace ed = ax::NodeEditor;
 
 NS_BEGIN(Engine)
-class BTNode;
+    struct FUIAnimAsset;
+    class BTNode;
 NS_END
 
 NS_BEGIN(Editor)
+
+class UI_Animation_View;
 
 struct FBTEditorNode
 {
@@ -28,6 +31,24 @@ struct FBTEditorLink
     ed::LinkId id;
     ed::PinId startPinId;
     ed::PinId endPinId;
+};
+
+struct FSequencerUIState
+{
+    int     currentFrame = 0;
+    int     selectedEntry = -1;
+    int     firstFrame = 0;
+    bool    expanded = true;
+};
+
+struct FUIAnimSequencerContext
+{
+    UI_Animation_View*      view = nullptr;
+    Shared<FUIAnimAsset>*   asset = nullptr;
+
+    int* selectedTrackIndex = nullptr;
+    int* selectedKeyIndex = nullptr;
+
 };
 
 NS_END

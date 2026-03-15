@@ -8,6 +8,7 @@
 UI_PlayerSkill::UI_PlayerSkill(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Panel(device, context)
 {
+    Set_ObjectType(Protocol::OBJECT_TYPE_UI_PLAYER_SKILL);
 }
 
 UI_PlayerSkill::UI_PlayerSkill(const UI_PlayerSkill& rhs)
@@ -41,8 +42,8 @@ HRESULT UI_PlayerSkill::Initialize(void* arg)
     rightDesc.baseSrvIndex = 1;
     rightDesc.iconSrvIndex = 3;
 
-    _slots[0] = Create_Child<UI_SkillSlot>(EUILayer::HUD, &leftDesc);
-    _slots[1] = Create_Child<UI_SkillSlot>(EUILayer::HUD, &rightDesc);
+    _slots[0] = Create_Child<UI_SkillSlot>(Protocol::OBJECT_TYPE_UI_SKILL_SLOT, EUILayer::HUD, &leftDesc);
+    _slots[1] = Create_Child<UI_SkillSlot>(Protocol::OBJECT_TYPE_UI_SKILL_SLOT, EUILayer::HUD, &rightDesc);
 
     CHECK_NULL(_slots[0], E_FAIL);
     CHECK_NULL(_slots[1], E_FAIL);
@@ -95,17 +96,31 @@ void UI_PlayerSkill::Bind_Player(Shared<Player> player)
     //    _combat.reset();
 }
 
-Shared<UI_PlayerSkill> UI_PlayerSkill::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
+Shared<UI_PlayerSkill> UI_PlayerSkill::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<UI_PlayerSkill>(device, context);
 
-    if (FAILED(instance->Initialize(arg)))
+    if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Created : UI_PlayerSkill");
+        MSG_BOX("Failed to Create Prototype : UI_PlayerSkill");
         return nullptr;
     }
 
     return instance;
+}
+
+Shared<GameObject> UI_PlayerSkill::Clone(void* arg)
+{
+    auto clone = make_shared<UI_PlayerSkill>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
+    {
+        MSG_BOX("Failed to Cloned : UI_PlayerSkill");
+
+        return nullptr;
+    }
+
+    return clone;
 }
 
 void UI_PlayerSkill::Free()

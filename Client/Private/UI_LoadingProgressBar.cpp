@@ -8,6 +8,7 @@
 UI_LoadingProgressBar::UI_LoadingProgressBar(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
 {
+    Set_ObjectType(Protocol::OBJECT_TYPE_UI_LOADING_PROGRESS_BAR);
 }
 
 UI_LoadingProgressBar::UI_LoadingProgressBar(const UI_LoadingProgressBar& rhs)
@@ -34,6 +35,11 @@ HRESULT UI_LoadingProgressBar::Initialize(void* arg)
     CHECK_FAILED(Ready_Components(), E_FAIL);
 
     return S_OK;
+}
+
+HRESULT UI_LoadingProgressBar::Initialize_Prototype()
+{
+    return UIObject::Initialize_Prototype();
 }
 
 void UI_LoadingProgressBar::Update(float timeDelta)
@@ -105,18 +111,32 @@ HRESULT UI_LoadingProgressBar::Ready_Components()
     return S_OK;
 }
 
-Shared<UIObject> UI_LoadingProgressBar::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
+Shared<UIObject> UI_LoadingProgressBar::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<UI_LoadingProgressBar>(device, context);
 
-    if (FAILED(instance->Initialize(arg)))
+    if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Create : UI_LoadingProgressBar");
+        MSG_BOX("Failed to Create Prototype : UI_LoadingProgressBar");
 
         return nullptr;
     }
 
     return instance;
+}
+
+Shared<GameObject> UI_LoadingProgressBar::Clone(void* arg)
+{
+    auto clone = make_shared<UI_LoadingProgressBar>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
+    {
+        MSG_BOX("Failed to Cloned : UI_LoadingProgressBar");
+
+        return nullptr;
+    }
+
+    return clone;
 }
 
 void UI_LoadingProgressBar::Free()

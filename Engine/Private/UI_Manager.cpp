@@ -1,6 +1,9 @@
 ﻿#include "pch.h"
 #include "UI_Manager.h"
 #include "UIObject.h"
+#include "UI_AnimPlayer.h"
+#include "UI_AnimSerializer.h"
+#include "Utils.h"
 
 UI_Manager::UI_Manager()
 {
@@ -33,6 +36,8 @@ void UI_Manager::Update(float timeDelta)
                 ui->Update(timeDelta);
         }
     }
+
+    Update_UIAnimations(timeDelta);
 }
 
 void UI_Manager::Late_Update(float timeDelta)
@@ -51,24 +56,31 @@ void UI_Manager::Late_Update(float timeDelta)
     }
 }
 
-HRESULT UI_Manager::Add_UI(EUILayer layer, Shared<UIObject> uiObject)
+Shared<UIObject> UI_Manager::Add_UI(uint32 objID, EUILayer layer, void* arg)
 {
-    CHECK_NULL(uiObject, E_FAIL);
+    auto uiObject = Clone_UI(objID, arg);
+    CHECK_NULL(uiObject, nullptr);
 
-    wstring uiName = uiObject->Get_Name();
+    if (FAILED(Register_UI(layer, uiObject)))
+        return nullptr;
 
-    if (_uiMap.find(uiName) != _uiMap.end())
-        return E_FAIL; // 이름 중복
-
-    uiObject->Set_UILayer(layer);
-
-    _uiLayers[ETOI(layer)].push_back(uiObject);
-    _uiMap.emplace(uiName, uiObject);
-
-    return S_OK;
+    return uiObject;
 }
 
-HRESULT UI_Manager::Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject)
+Shared<UIObject> UI_Manager::Clone_UI(uint32 objID, void* arg)
+{
+    const uint32 protoLevelIndex = Get_UIPrototypeLevel();
+    assert(protoLevelIndex != static_cast<uint32>(-1));
+
+    auto uiObject = dynamic_pointer_cast<UIObject>(
+        GAME->Clone_GameObject(protoLevelIndex, objID, arg));
+
+    CHECK_NULL(uiObject, nullptr);
+
+    return uiObject;
+}
+
+HRESULT UI_Manager::Register_UI(EUILayer layer, Shared<UIObject> uiObject)
 {
     CHECK_NULL(uiObject, E_FAIL);
 
@@ -149,6 +161,8 @@ void UI_Manager::Clear_All_UI()
     }
 
     _uiMap.clear();
+
+    Clear_UIAnimations();
 }
 
 void UI_Manager::Clear_UI_ByLevel(uint32 levelIndex)
@@ -177,6 +191,7 @@ void UI_Manager::Clear_UI_ByLevel(uint32 levelIndex)
             });
     }
 
+    Clear_UIAnimations_ByLevel(levelIndex);
 }
 
 void UI_Manager::Notify_Viewport_Resize(float widht, float height)
@@ -192,6 +207,206 @@ bool UI_Manager::Is_InputBlocked() const
         if (ui->Is_Visibility()) return true;
     }
     return false;
+}
+
+bool UI_Manager::Play_UIAnimation(Shared<UIObject> target, const string& animationName)
+{
+    if (!target)
+        return false;
+
+    auto asset = Load_UIAnimationAsset(animationName);
+    if (!asset)
+        return false;
+
+    auto* entry = Find_UIAnimationEntry(target, animationName);
+
+    if (!entry)
+    {
+        FUIAnimPlaybackEntry newEntry;
+        newEntry.target = target;
+        newEntry.targetName = target->Get_Name();
+        newEntry.animationName = animationName;
+        newEntry.asset = asset;
+        newEntry.player = UI_AnimPlayer::Create();
+        newEntry.player->Set_Asset(asset);
+        newEntry.player->Bind_Target(target);
+
+        _uiAnimEntries.push_back(newEntry);
+        entry = &_uiAnimEntries.back();
+    }
+    else
+    {
+        entry->asset = asset;
+        entry->player->Set_Asset(asset);
+        entry->player->Bind_Target(target);
+    }
+
+    entry->player->Set_CurrentFrame(asset->startFrame);
+    entry->player->Play();
+
+    return true;
+}
+
+bool UI_Manager::Play_UIAnimation(const wstring& targetName, const string& animationName)
+{
+    auto target = Find_UI(targetName);
+    if (!target)
+        return false;
+
+    return Play_UIAnimation(target, animationName);
+}
+
+bool UI_Manager::Pause_UIAnimation(Shared<UIObject> target, const string& animationName)
+{
+    auto* entry = Find_UIAnimationEntry(target, animationName);
+    if (!entry)
+        return false;
+
+    entry->player->Pause();
+
+    return true;
+}
+
+bool UI_Manager::Pause_UIAnimation(const wstring& targetName, const string& animationName)
+{
+    auto target = Find_UI(targetName);
+    if (!target)
+        return false;
+
+    return Pause_UIAnimation(target, animationName);
+}
+
+bool UI_Manager::Stop_UIAnimation(Shared<UIObject> target, const string& animationName)
+{
+    auto* entry = Find_UIAnimationEntry(target, animationName);
+    if (!entry)
+        return false;
+
+    entry->player->Stop();
+    return true;
+}
+
+bool UI_Manager::Stop_UIAnimation(const wstring& targetName, const string& animationName)
+{
+    auto target = Find_UI(targetName);
+    if (!target)
+        return false;
+
+    return Stop_UIAnimation(target, animationName);
+}
+
+Shared<FUIAnimAsset> UI_Manager::Load_UIAnimationAsset(const string& animationName)
+{
+    auto it = _uiAnimAssetCache.find(animationName);
+    if (it != _uiAnimAssetCache.end())
+        return it->second;
+
+    wstring path = Resolve_UIAnimationPath(animationName);
+    if (path.empty())
+        return nullptr;
+
+    auto asset = UI_AnimSerializer::Load_FromFile(path);
+    if (!asset)
+        return nullptr;
+
+    _uiAnimAssetCache.emplace(animationName, asset);
+    return asset;
+}
+
+wstring UI_Manager::Resolve_UIAnimationPath(const string& animationName) const
+{
+    auto cacheIt = _uiAnimPathCache.find(animationName);
+    if (cacheIt != _uiAnimPathCache.end())
+        return cacheIt->second;
+
+    auto assets = GAME->Get_AssetByType("ui_animation");
+
+    for (const auto* meta : assets)
+    {
+        if (!meta)
+            continue;
+
+        if (Extract_UIAnimationName(meta->fullPath) == animationName)
+        {
+            _uiAnimPathCache.emplace(animationName, meta->fullPath);
+            return meta->fullPath;
+        }
+    }
+
+    return L"";
+}
+
+FUIAnimPlaybackEntry* UI_Manager::Find_UIAnimationEntry(const Shared<UIObject>& target, const string& animationName)
+{
+    if (!target)
+        return nullptr;
+
+    for (auto& entry : _uiAnimEntries)
+    {
+        auto locked = entry.target.lock();
+        if (!locked)
+            continue;
+
+        if (locked == target && entry.animationName == animationName)
+            return &entry;
+    }
+
+    return nullptr;
+}
+
+void UI_Manager::Update_UIAnimations(float timeDelta)
+{
+    Remove_ExpiredUIAnimations();
+
+    for (auto& entry : _uiAnimEntries)
+    {
+        auto target = entry.target.lock();
+        if (!target || !entry.player)
+            continue;
+
+        entry.player->Update(timeDelta);
+    }
+
+}
+
+void UI_Manager::Remove_ExpiredUIAnimations()
+{
+    _uiAnimEntries.erase(
+        remove_if(_uiAnimEntries.begin(), _uiAnimEntries.end(),
+            [](const FUIAnimPlaybackEntry& entry)
+            {
+                return entry.target.expired() || !entry.player;
+            }),
+        _uiAnimEntries.end());
+}
+
+void UI_Manager::Clear_UIAnimations()
+{
+    _uiAnimEntries.clear();
+    _uiAnimAssetCache.clear();
+    _uiAnimPathCache.clear();
+}
+
+void UI_Manager::Clear_UIAnimations_ByLevel(uint32 levelIndex)
+{
+    _uiAnimEntries.erase(
+        remove_if(_uiAnimEntries.begin(), _uiAnimEntries.end(),
+            [levelIndex](const FUIAnimPlaybackEntry& entry)
+            {
+                auto target = entry.target.lock();
+                return !target || target->Get_LevelIndex() == levelIndex;
+            }),
+        _uiAnimEntries.end());
+}
+
+string UI_Manager::Extract_UIAnimationName(const wstring& fullPath)
+{
+    string filename = fs::path(fullPath).filename().string();
+
+    if (Utils::EndsWidth(filename, ".uianim.json"))
+        return filename.substr(0, filename.size() - strlen(".uianim.json"));
+
+    return fs::path(filename).stem().string();
 }
 
 Unique<UI_Manager> UI_Manager::Create()

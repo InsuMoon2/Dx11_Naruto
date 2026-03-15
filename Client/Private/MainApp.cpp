@@ -28,6 +28,7 @@ HRESULT MainApp::Initialize()
 
         if (FAILED(GAME->Initialize_Engine(engineDesc, _device, _context)))
             return E_FAIL;
+
     }
 
     CHECK_FAILED(Ready_StaticLevel(), E_FAIL);

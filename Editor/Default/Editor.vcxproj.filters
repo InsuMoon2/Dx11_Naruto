@@ -156,6 +156,11 @@
     <ClInclude Include="..\Public\Level_Serializer.h">
       <Filter>97. Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Editor_Helper.h">
+      <Filter>97. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Editor_SequencerAdapterBase.h" />
+    <ClInclude Include="..\Public\UI_AnimSequencerAdapter.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -265,6 +270,11 @@
     <ClCompile Include="..\Private\Level_Serializer.cpp">
       <Filter>97. Utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Editor_Helper.cpp">
+      <Filter>97. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Editor_SequencerAdapterBase.cpp" />
+    <ClCompile Include="..\Private\UI_AnimSequencerAdapter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

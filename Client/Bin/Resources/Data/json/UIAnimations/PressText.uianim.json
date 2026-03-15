@@ -1,0 +1,33 @@
+{
+    "endFrame": 60,
+    "fps": 60,
+    "loop": false,
+    "name": "NewUIAnimation",
+    "startFrame": 0,
+    "targetName": "Press Text",
+    "tracks": [
+        {
+            "keys": [
+                {
+                    "frame": 0,
+                    "value": [
+                        800.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 36,
+                    "value": [
+                        1600.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "property": "PositionX"
+        }
+    ]
+}

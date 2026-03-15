@@ -37,7 +37,8 @@ private:
     Shared<UI_PlayerSkill>  _skillPanel;
 
 public:
-    static Shared<UI_PlayerHUD> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg = nullptr);
+    static Shared<UI_PlayerHUD> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    Shared<GameObject> Clone(void* arg) override;
     virtual void Free() override;
 
 };

@@ -7,6 +7,7 @@
 UI_SkillSlot::UI_SkillSlot(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
 {
+    Set_ObjectType(Protocol::OBJECT_TYPE_UI_SKILL_SLOT);
 }
 
 UI_SkillSlot::UI_SkillSlot(const UI_SkillSlot& rhs)
@@ -101,17 +102,31 @@ HRESULT UI_SkillSlot::Ready_Components()
     return S_OK;
 }
 
-Shared<UI_SkillSlot> UI_SkillSlot::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
+Shared<UI_SkillSlot> UI_SkillSlot::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<UI_SkillSlot>(device, context);
 
-    if (FAILED(instance->Initialize(arg)))
+    if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Created : UI_SkillSlot");
+        MSG_BOX("Failed to Create Prototype : UI_SkillSlot");
         return nullptr;
     }
 
     return instance;
+}
+
+Shared<GameObject> UI_SkillSlot::Clone(void* arg)
+{
+    auto clone = make_shared<UI_SkillSlot>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
+    {
+        MSG_BOX("Failed to Cloned : UI_SkillSlot");
+
+        return nullptr;
+    }
+
+    return clone;
 }
 
 void UI_SkillSlot::Free()

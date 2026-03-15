@@ -3,7 +3,7 @@
 #include <fstream>
 #include <magic_enum/magic_enum.hpp>
 
-string UIAnimSerializer::Property_ToString(EUIAnimProperty property)
+string UI_AnimSerializer::Property_ToString(EUIAnimProperty property)
 {
     if (property == EUIAnimProperty::END)
         return "";
@@ -11,7 +11,7 @@ string UIAnimSerializer::Property_ToString(EUIAnimProperty property)
     return string(magic_enum::enum_name(property));
 }
 
-bool UIAnimSerializer::String_ToProperty(const string& text, EUIAnimProperty& outProperty)
+bool UI_AnimSerializer::String_ToProperty(const string& text, EUIAnimProperty& outProperty)
 {
     auto result = magic_enum::enum_cast<EUIAnimProperty>(text);
 
@@ -26,7 +26,7 @@ bool UIAnimSerializer::String_ToProperty(const string& text, EUIAnimProperty& ou
     return true;
 }
 
-json UIAnimSerializer::Key_ToJson(const FUIAnimKey& key)
+json UI_AnimSerializer::Key_ToJson(const FUIAnimKey& key)
 {
     json j;
 
@@ -36,7 +36,7 @@ json UIAnimSerializer::Key_ToJson(const FUIAnimKey& key)
     return j;
 }
 
-bool UIAnimSerializer::Json_ToKey(const json& j, FUIAnimKey& outKey)
+bool UI_AnimSerializer::Json_ToKey(const json& j, FUIAnimKey& outKey)
 {
     if (!j.is_object()) return false;
     if (!j.contains("frame") || !j["frame"].is_number_integer()) return false;
@@ -52,7 +52,7 @@ bool UIAnimSerializer::Json_ToKey(const json& j, FUIAnimKey& outKey)
     return true;
 }
 
-json UIAnimSerializer::Track_ToJson(const FUIAnimTrack& track)
+json UI_AnimSerializer::Track_ToJson(const FUIAnimTrack& track)
 {
     json j;
 
@@ -65,7 +65,7 @@ json UIAnimSerializer::Track_ToJson(const FUIAnimTrack& track)
     return j;
 }
 
-bool UIAnimSerializer::Json_ToTrack(const json& j, FUIAnimTrack& outTrack)
+bool UI_AnimSerializer::Json_ToTrack(const json& j, FUIAnimTrack& outTrack)
 {
     if (!j.is_object()) return false;
     if (!j.contains("property") || !j["property"].is_string()) return false;
@@ -97,7 +97,7 @@ bool UIAnimSerializer::Json_ToTrack(const json& j, FUIAnimTrack& outTrack)
     return true;
 }
 
-void UIAnimSerializer::Normalize_Asset(FUIAnimAsset& asset)
+void UI_AnimSerializer::Normalize_Asset(FUIAnimAsset& asset)
 {
     if (asset.fps <= 0) asset.fps = 60;
     if (asset.startFrame < 0) asset.startFrame = 0;
@@ -126,7 +126,7 @@ void UIAnimSerializer::Normalize_Asset(FUIAnimAsset& asset)
     asset.tracks.swap(uniqueTracks);
 }
 
-void UIAnimSerializer::Normalize_Track(FUIAnimTrack& track)
+void UI_AnimSerializer::Normalize_Track(FUIAnimTrack& track)
 {
     sort(track.keys.begin(), track.keys.end(),
         [](const FUIAnimKey& a, const FUIAnimKey& b)
@@ -149,7 +149,7 @@ void UIAnimSerializer::Normalize_Track(FUIAnimTrack& track)
     track.keys.swap(uniqueKeys);
 }
 
-json UIAnimSerializer::To_Json(const FUIAnimAsset& asset)
+json UI_AnimSerializer::To_Json(const FUIAnimAsset& asset)
 {
     FUIAnimAsset normalized = asset;
     Normalize_Asset(normalized);
@@ -169,7 +169,7 @@ json UIAnimSerializer::To_Json(const FUIAnimAsset& asset)
     return root;
 }
 
-bool UIAnimSerializer::From_Json(const json& root, FUIAnimAsset& outAsset)
+bool UI_AnimSerializer::From_Json(const json& root, FUIAnimAsset& outAsset)
 {
     if (!root.is_object())
         return false;
@@ -196,7 +196,7 @@ bool UIAnimSerializer::From_Json(const json& root, FUIAnimAsset& outAsset)
     return true;
 }
 
-Shared<FUIAnimAsset> UIAnimSerializer::Load_FromFile(const wstring& fullPath)
+Shared<FUIAnimAsset> UI_AnimSerializer::Load_FromFile(const wstring& fullPath)
 {
     ifstream file(fullPath);
     if (!file.is_open())
@@ -213,7 +213,7 @@ Shared<FUIAnimAsset> UIAnimSerializer::Load_FromFile(const wstring& fullPath)
     return asset;
 }
 
-bool UIAnimSerializer::Save_ToFile(const wstring& fullPath, const FUIAnimAsset& asset)
+bool UI_AnimSerializer::Save_ToFile(const wstring& fullPath, const FUIAnimAsset& asset)
 {
     try
     {

@@ -160,10 +160,13 @@ HRESULT Level_Gameplay::Ready_UI()
         desc.zOrder = 0.5f;
         desc.levelIndex = ETOI(ELevelType::Static);
 
-        _playerHUD = UI_PlayerHUD::Create(_device, _context, &desc);
+        _playerHUD = static_pointer_cast<UI_PlayerHUD>(
+            GAME->Add_UI(
+                Protocol::OBJECT_TYPE_UI_PLAYER_HUD,
+                EUILayer::HUD,
+                &desc));
 
         CHECK_NULL(_playerHUD, E_FAIL);
-        CHECK_FAILED(GAME->Add_UI_ToLayer(EUILayer::HUD, _playerHUD), E_FAIL);
     }
 
     _playerObjectSpawnedHandle = GAME->Get_DelegateHub().OnPlayerObjectSpawned.Add(

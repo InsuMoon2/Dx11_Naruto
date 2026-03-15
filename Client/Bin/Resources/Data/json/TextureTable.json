@@ -89,6 +89,19 @@
             "level": "Static",
             "path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadIndicator_Base_BC.png",
             "count": 1
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/UI/MainTitle/T_UI_TitleMenu_Btn_BC.png",
+            "count": 1,
+            "type": "Extra Test"
+        },
+        {
+            "id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Textures/UI/MainTitle/T_UI_TitleMenu_Btn_Effect%d_BC.png",
+            "count": 2
         }
     ]
 }

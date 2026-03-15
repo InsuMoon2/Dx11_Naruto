@@ -8,6 +8,7 @@
 UI_LoadingSpinner::UI_LoadingSpinner(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
 {
+    Set_ObjectType(Protocol::OBJECT_TYPE_UI_LOADING_SPINNER);
 }
 
 UI_LoadingSpinner::UI_LoadingSpinner(const UI_LoadingSpinner& rhs)
@@ -32,6 +33,11 @@ HRESULT UI_LoadingSpinner::Initialize(void* arg)
     CHECK_FAILED(Ready_Components(), E_FAIL);
 
     return S_OK;
+}
+
+HRESULT UI_LoadingSpinner::Initialize_Prototype()
+{
+    return UIObject::Initialize_Prototype();
 }
 
 void UI_LoadingSpinner::Update(float timeDelta)
@@ -77,17 +83,31 @@ HRESULT UI_LoadingSpinner::Ready_Components()
     return S_OK;
 }
 
-Shared<UIObject> UI_LoadingSpinner::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
+Shared<UIObject> UI_LoadingSpinner::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<UI_LoadingSpinner>(device, context);
 
-    if (FAILED(instance->Initialize(arg)))
+    if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Created : UI_LoadingSpinner");
+        MSG_BOX("Failed to Create Prototype : UI_LoadingSpinner");
         return nullptr;
     }
 
     return instance;
+}
+
+Shared<GameObject> UI_LoadingSpinner::Clone(void* arg)
+{
+    auto clone = make_shared<UI_LoadingSpinner>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
+    {
+        MSG_BOX("Failed to Cloned : UI_LoadingSpinner");
+
+        return nullptr;
+    }
+
+    return clone;
 }
 
 void UI_LoadingSpinner::Free()

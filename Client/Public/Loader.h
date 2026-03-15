@@ -25,6 +25,7 @@ public:
     #endif
 
     void    Register_Components();
+
     void    Initialize_BT_Nodes();
 
     float   Get_ProgressRatio() const;

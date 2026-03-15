@@ -17,6 +17,7 @@
 #include "Prefab_View.h"
 #include "Scene_View.h"
 #include "RenderTarget.h"
+#include "UI_Animation_View.h"
 
 Editor_Manager::~Editor_Manager()
 {
@@ -37,6 +38,7 @@ void Editor_Manager::Initialize()
     Add_Window(TEXT("Prefab"), Prefab_View::Create());
 
     Add_Window(TEXT("BehaviorTree"), BehaviorTree_View::Create());
+    Add_Window(TEXT("UI Animation"), UI_Animation_View::Create());
 }
 
 void Editor_Manager::Update(float timeDelta)
@@ -124,21 +126,28 @@ void Editor_Manager::Add_Window(const wstring& key, shared_ptr<EditorWindow> win
 
 void Editor_Manager::Handle_Shortcuts()
 {
-    bool ctrlPressed = ImGui::GetIO().KeyCtrl;
-    bool shiftPressed = ImGui::GetIO().KeyShift;
+    ImGuiIO& io = ImGui::GetIO();
+
+    // 텍스트 입력 중에, ImGui 단축키 먹지 않게
+    if (io.WantTextInput)
+        return;
+
+    const bool ctrlPressed = io.KeyCtrl;
+    const bool shiftPressed = io.KeyShift;
 
     if (ctrlPressed && ImGui::IsKeyPressed(ImGuiKey_S, false)) // false -> 반복 입력 방지
     {
         bool handled = false;
+
         for (auto& [key, window] : _windows)
         {
-            if (!window || !window->IsActive()) continue;
+            if (!window || !window->IsActive())
+                continue;
+
             if (window->IsFocused() && window->CanSave() && window->IsDirty())
             {
                 window->Save();
-
                 handled = true;
-
                 break;
             }
         }

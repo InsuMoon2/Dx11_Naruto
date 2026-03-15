@@ -219,7 +219,9 @@
     <ClInclude Include="..\Public\CommandHistory.h" />
     <ClInclude Include="..\Public\Editor_Camera_Free.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
+    <ClInclude Include="..\Public\Editor_Helper.h" />
     <ClInclude Include="..\Public\Editor_MainApp.h" />
+    <ClInclude Include="..\Public\Editor_SequencerAdapterBase.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
     <ClInclude Include="..\Public\Action_Command.h" />
     <ClInclude Include="..\Public\Level_Editor.h" />
@@ -251,6 +253,7 @@
     <ClInclude Include="..\Public\Transform_Inspector.h" />
     <ClInclude Include="..\Public\Level_Serializer.h" />
     <ClInclude Include="..\Public\UI_Animation_View.h" />
+    <ClInclude Include="..\Public\UI_AnimSequencerAdapter.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -262,8 +265,10 @@
     <ClCompile Include="..\Private\BehaviorTree_View.cpp" />
     <ClCompile Include="..\Private\CommandHistory.cpp" />
     <ClCompile Include="..\Private\Editor_Camera_Free.cpp" />
+    <ClCompile Include="..\Private\Editor_Helper.cpp" />
     <ClCompile Include="..\Private\Editor_MainApp.cpp" />
     <ClCompile Include="..\Private\Action_Command.cpp" />
+    <ClCompile Include="..\Private\Editor_SequencerAdapterBase.cpp" />
     <ClCompile Include="..\Private\Level_Editor.cpp" />
     <ClCompile Include="..\Private\CombatStat_Inspector.cpp" />
     <ClCompile Include="..\Private\Component_Inspector.cpp" />
@@ -293,6 +298,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Animation_View.cpp" />
+    <ClCompile Include="..\Private\UI_AnimSequencerAdapter.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

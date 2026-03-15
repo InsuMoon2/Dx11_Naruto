@@ -7,6 +7,7 @@
 UI_PlayerHUD::UI_PlayerHUD(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : HUD(device, context)
 {
+    Set_ObjectType(Protocol::OBJECT_TYPE_UI_PLAYER_HUD);
 }
 
 UI_PlayerHUD::UI_PlayerHUD(const UI_PlayerHUD& rhs)
@@ -50,7 +51,7 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
     statDesc.zOrder = _zOrder + 0.01f;
     statDesc.levelIndex = _levelIndex;
 
-    _status = Create_Child<UI_PlayerStatus>(EUILayer::HUD, &statDesc);
+    _status = Create_Child<UI_PlayerStatus>(Protocol::OBJECT_TYPE_UI_PLAYER_STATUS, EUILayer::HUD, &statDesc);
     CHECK_NULL(_status, E_FAIL);
 
     _status->Get_Transform()->Set_LocalPosition(255.f, 750.f, _zOrder);
@@ -63,7 +64,7 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
     skillDesc.zOrder = _zOrder + 0.01f;
     skillDesc.levelIndex = _levelIndex;
 
-    _skillPanel = Create_Child<UI_PlayerSkill>(EUILayer::HUD, &skillDesc);
+    _skillPanel = Create_Child<UI_PlayerSkill>(Protocol::OBJECT_TYPE_UI_PLAYER_SKILL, EUILayer::HUD, &skillDesc);
     CHECK_NULL(_skillPanel, E_FAIL);
 
     _skillPanel->Get_Transform()->Set_LocalPosition(
@@ -74,17 +75,31 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
     return S_OK;
 }
 
-Shared<UI_PlayerHUD> UI_PlayerHUD::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
+Shared<UI_PlayerHUD> UI_PlayerHUD::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<UI_PlayerHUD>(device, context);
 
-    if (FAILED(instance->Initialize(arg)))
+    if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Created : PlayerHUD");
+        MSG_BOX("Failed to Create Prototype : PlayerHUD");
         return nullptr;
     }
 
     return instance;
+}
+
+Shared<GameObject> UI_PlayerHUD::Clone(void* arg)
+{
+    auto clone = make_shared<UI_PlayerHUD>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
+    {
+        MSG_BOX("Failed to Cloned : UI_PlayerHUD");
+
+        return nullptr;
+    }
+
+    return clone;
 }
 
 void UI_PlayerHUD::Free()

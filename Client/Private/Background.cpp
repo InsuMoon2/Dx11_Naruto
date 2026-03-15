@@ -9,6 +9,7 @@
 Background::Background(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject { device, context }
 {
+    Set_ObjectType(Protocol::OBJECT_TYPE_BACKGROUND);
 }
 
 Background::Background(const Background& rhs)
@@ -33,6 +34,11 @@ HRESULT Background::Initialize(void* arg)
     CHECK_FAILED(Ready_Components(), E_FAIL);
 
     return S_OK;
+}
+
+HRESULT Background::Initialize_Prototype()
+{
+    return UIObject::Initialize_Prototype();
 }
 
 void Background::Priority_Update(float timeDelta)
@@ -84,18 +90,32 @@ HRESULT Background::Ready_Components()
     return S_OK;
 }
 
-Shared<UIObject> Background::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
+Shared<UIObject> Background::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<Background>(device, context);
 
-    if (FAILED(instance->Initialize(arg)))
+    if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Created : Background");
+        MSG_BOX("Failed to Create Prototype : Background");
 
         return nullptr;
     }
 
     return instance;
+}
+
+Shared<GameObject> Background::Clone(void* arg)
+{
+    auto clone = make_shared<Background>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
+    {
+        MSG_BOX("Failed to Cloned : Background");
+
+        return nullptr;
+    }
+
+    return clone;
 }
 
 void Background::Free()

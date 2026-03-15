@@ -122,9 +122,12 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
 
         desc.zOrder = 0.5f;
 
-        _loadingBackground = Background::Create(_device, _context, &desc);
+        _loadingBackground = static_pointer_cast<Background>(
+            GAME->Add_UI(
+                Protocol::OBJECT_TYPE_BACKGROUND,
+                EUILayer::Overlay,
+                &desc));
         CHECK_NULL(_loadingBackground, E_FAIL);
-        GAME->Add_UI_ToLayer(EUILayer::Overlay, _loadingBackground);
     }
 
     // 오른쪽 하단 회전
@@ -140,9 +143,12 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
         desc.zOrder = 0.6f;
         desc.rotationSpeed = XMConvertToRadians(180.f);
 
-        _loadingSpinner = UI_LoadingSpinner::Create(_device, _context, &desc);
+        _loadingSpinner = static_pointer_cast<UI_LoadingSpinner>(
+            GAME->Add_UI(
+                Protocol::OBJECT_TYPE_UI_LOADING_SPINNER,
+                EUILayer::Overlay,
+                &desc));
         CHECK_NULL(_loadingSpinner, E_FAIL);
-        GAME->Add_UI_ToLayer(EUILayer::Overlay, _loadingSpinner);
     }
 
     // 하단 중앙 로딩 바
@@ -157,9 +163,12 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
         desc.textureIndex = ETOI(ELoadingTexture::ProgressBar);
         desc.zOrder = 0.6f;
 
-        _loadingProgressBar = UI_LoadingProgressBar::Create(_device, _context, &desc);
+        _loadingProgressBar = static_pointer_cast<UI_LoadingProgressBar>(
+            GAME->Add_UI(
+                Protocol::OBJECT_TYPE_UI_LOADING_PROGRESS_BAR,
+                EUILayer::Overlay,
+                &desc));
         CHECK_NULL(_loadingProgressBar, E_FAIL);
-        GAME->Add_UI_ToLayer(EUILayer::Overlay, _loadingProgressBar);
     }
 
     return S_OK;

@@ -555,9 +555,54 @@ const list<Shared<UIObject>>& GameInstance::Get_UILayers(EUILayer layer) const
     return _uiManager->Get_UILayer(layer);
 }
 
-HRESULT GameInstance::Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject)
+Shared<UIObject> GameInstance::Add_UI(uint32 objID, EUILayer layer, void* arg)
 {
-    return _uiManager->Add_UI_ToLayer(layer, uiObject);
+    return _uiManager->Add_UI(objID, layer, arg);
+}
+
+void GameInstance::Set_UIPrototypeLevel(uint32 levelIndex)
+{
+    _uiManager->Set_UIPrototypeLevel(levelIndex);
+}
+
+Shared<UIObject> GameInstance::Clone_UI(uint32 objID, void* arg)
+{
+    return _uiManager->Clone_UI(objID, arg);
+}
+
+HRESULT GameInstance::Register_UI(EUILayer layer, Shared<UIObject> uiObject)
+{
+    return _uiManager->Register_UI(layer, uiObject);
+}
+
+bool GameInstance::Play_UIAnimation(Shared<UIObject> target, const string& animationName)
+{
+    return _uiManager->Play_UIAnimation(target, animationName);
+}
+
+bool GameInstance::Play_UIAnimation(const wstring& targetName, const string& animationName)
+{
+    return _uiManager->Play_UIAnimation(targetName, animationName);
+}
+
+bool GameInstance::Pause_UIAnimation(Shared<UIObject> target, const string& animationName)
+{
+    return _uiManager->Pause_UIAnimation(target, animationName);
+}
+
+bool GameInstance::Pause_UIAnimation(const wstring& targetName, const string& animationName)
+{
+    return _uiManager->Pause_UIAnimation(targetName, animationName);
+}
+
+bool GameInstance::Stop_UIAnimation(Shared<UIObject> target, const string& animationName)
+{
+    return _uiManager->Stop_UIAnimation(target, animationName);
+}
+
+bool GameInstance::Stop_UIAnimation(const wstring& targetName, const string& animationName)
+{
+    return _uiManager->Stop_UIAnimation(targetName, animationName);
 }
 
 HRESULT GameInstance::Begin_UIText()

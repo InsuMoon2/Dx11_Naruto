@@ -47,7 +47,6 @@ private:
     void                Save_Cache();
 
     bool                Should_RegisterAsset(const fs::path& path) const;
-    static string       ToLowerCopy(string value);
     static bool         EndsWith(const string& value, const string& suffix);
 
     void                Unregister_AssetPath(const wstring& assetPath);

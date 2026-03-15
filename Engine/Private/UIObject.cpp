@@ -106,6 +106,7 @@ void UIObject::Set_UIPosition(float x, float y)
     _posX = x;
     _posY = y;
     _transformCom->Set_LocalPosition(x, y, _zOrder);
+    Update_Transform();
 }
 
 void UIObject::Set_UIScale(float x, float y)
@@ -113,11 +114,13 @@ void UIObject::Set_UIScale(float x, float y)
     _sizeX = x;
     _sizeY = y;
     _transformCom->Set_LocalScale(x, y, 1.f);
+    Update_Transform();
 }
 
 void UIObject::Set_UIRotationZ(float degree)
 {
     _rotationZ = degree;
+    Update_Transform();
 }
 
 void UIObject::Set_UIOpacity(float alpha)

@@ -52,7 +52,8 @@ private:
 
 
 public:
-    static Shared<UI_PlayerStatus> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg);
+    static Shared<UI_PlayerStatus> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    Shared<GameObject> Clone(void* arg) override;
     void Free() override;
 };
 

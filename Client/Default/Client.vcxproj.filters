@@ -115,9 +115,6 @@
     <ClInclude Include="..\Public\PlayerState_Jump.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Background.h">
-      <Filter>02. GameObject\02. UI\00. Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_PlayerStatus.h">
       <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClInclude>
@@ -153,6 +150,9 @@
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_MainTitleText.h" />
+    <ClInclude Include="..\Public\Background.h">
+      <Filter>02. GameObject\02. UI\01. Background</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -254,9 +254,6 @@
     <ClCompile Include="..\Private\PlayerState_Jump.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Background.cpp">
-      <Filter>02. GameObject\02. UI\00. Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UI_PlayerStatus.cpp">
       <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClCompile>
@@ -292,6 +289,9 @@
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_MainTitleText.cpp" />
+    <ClCompile Include="..\Private\Background.cpp">
+      <Filter>02. GameObject\02. UI\01. Background</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

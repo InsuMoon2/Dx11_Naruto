@@ -1,5 +1,8 @@
 ﻿#include "pch.h"
 #include "Editor_MainApp.h"
+
+#include "UI_Text.h"
+
 #include "Texture.h"
 #include "Background.h"
 #include "EditorInstance.h"
@@ -11,6 +14,13 @@
 #include "Shader.h"
 #include "Event_Manager.h"
 #include "StaticMeshActor.h"
+#include "UI_LoadingProgressBar.h"
+#include "UI_LoadingSpinner.h"
+#include "UI_PlayerHP.h"
+#include "UI_PlayerHUD.h"
+#include "UI_PlayerSkill.h"
+#include "UI_PlayerStatus.h"
+#include "UI_SkillSlot.h"
 
 Editor_MainApp::Editor_MainApp()
 {
@@ -35,6 +45,8 @@ HRESULT Editor_MainApp::Initialize()
 
         if (FAILED(GAME->Initialize_Engine(engineDesc, _device, _context)))
             return E_FAIL;
+
+        GAME->Set_UIPrototypeLevel(ETOI(ELevelType::Static));
     }
 
     // Editor Setting (항상 활성화)
@@ -131,6 +143,36 @@ HRESULT Editor_MainApp::Ready_StaticLevel()
     {
         return E_FAIL;
     }
+
+    // UI
+    const uint32 staticLevel = ETOI(ELevelType::Static);
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_BACKGROUND,
+        Background::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_TEXT,
+        UI_Text::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_LOADING_SPINNER,
+        UI_LoadingSpinner::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_LOADING_PROGRESS_BAR,
+        UI_LoadingProgressBar::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_PLAYER_HP,
+        UI_PlayerHP::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_SKILL_SLOT,
+        UI_SkillSlot::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_PLAYER_STATUS,
+        UI_PlayerStatus::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_PLAYER_SKILL,
+        UI_PlayerSkill::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_PLAYER_HUD,
+        UI_PlayerHUD::Create(_device, _context));
 
     return S_OK;
 }

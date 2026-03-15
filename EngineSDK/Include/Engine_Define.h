@@ -62,6 +62,7 @@ namespace fs = std::filesystem;
 #include "Reflection_Macro.h"
 #include "Vertex_Struct.h"
 #include "Text_Types.h"
+#include "UI_AnimTypes.h"
 
 // Win
 #include <Windows.h>

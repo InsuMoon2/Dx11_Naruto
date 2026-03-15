@@ -130,6 +130,15 @@ enum OBJECT_TYPE : int {
   OBJECT_TYPE_PLAYER_START = 7,
   OBJECT_TYPE_BACKGROUND = 10,
   OBJECT_TYPE_STATIC_MESH = 11,
+  OBJECT_TYPE_UI_TEXT = 100,
+  OBJECT_TYPE_UI_LOADING_SPINNER = 101,
+  OBJECT_TYPE_UI_LOADING_PROGRESS_BAR = 102,
+  OBJECT_TYPE_UI_MAIN_TITLE_TEXT = 103,
+  OBJECT_TYPE_UI_PLAYER_HP = 104,
+  OBJECT_TYPE_UI_SKILL_SLOT = 105,
+  OBJECT_TYPE_UI_PLAYER_STATUS = 106,
+  OBJECT_TYPE_UI_PLAYER_SKILL = 107,
+  OBJECT_TYPE_UI_PLAYER_HUD = 108,
   OBJECT_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   OBJECT_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -139,8 +148,8 @@ enum OBJECT_TYPE : int {
 bool OBJECT_TYPE_IsValid(int value);
 extern const uint32_t OBJECT_TYPE_internal_data_[];
 constexpr OBJECT_TYPE OBJECT_TYPE_MIN = static_cast<OBJECT_TYPE>(0);
-constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(11);
-constexpr int OBJECT_TYPE_ARRAYSIZE = 11 + 1;
+constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(108);
+constexpr int OBJECT_TYPE_ARRAYSIZE = 108 + 1;
 const ::google::protobuf::EnumDescriptor*
 OBJECT_TYPE_descriptor();
 template <typename T>
@@ -148,13 +157,7 @@ const std::string& OBJECT_TYPE_Name(T value) {
   static_assert(std::is_same<T, OBJECT_TYPE>::value ||
                     std::is_integral<T>::value,
                 "Incorrect type passed to OBJECT_TYPE_Name().");
-  return OBJECT_TYPE_Name(static_cast<OBJECT_TYPE>(value));
-}
-template <>
-inline const std::string& OBJECT_TYPE_Name(OBJECT_TYPE value) {
-  return ::google::protobuf::internal::NameOfDenseEnum<OBJECT_TYPE_descriptor,
-                                                 0, 11>(
-      static_cast<int>(value));
+  return ::google::protobuf::internal::NameOfEnum(OBJECT_TYPE_descriptor(), value);
 }
 inline bool OBJECT_TYPE_Parse(absl::string_view name, OBJECT_TYPE* value) {
   return ::google::protobuf::internal::ParseNamedEnum<OBJECT_TYPE>(

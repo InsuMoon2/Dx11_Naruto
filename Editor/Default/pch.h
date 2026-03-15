@@ -9,3 +9,4 @@
 namespace fs = std::filesystem;
 
 #include "IconsFontAwesome6.h"
+#include "ImSequencer.h"

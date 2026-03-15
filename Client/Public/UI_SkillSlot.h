@@ -53,7 +53,8 @@ private:
     Shared<VIBuffer_Rect> _bufferCom;
 
 public:
-    static Shared<UI_SkillSlot> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg = nullptr);
+    static Shared<UI_SkillSlot> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    Shared<GameObject> Clone(void* arg) override;
     void Free() override;
 
 };

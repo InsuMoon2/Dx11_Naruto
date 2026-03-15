@@ -38,12 +38,7 @@ void Scene_View::Update(float timeDelta)
 
     Update_CameraLerp(timeDelta);
 
-    if (INPUT->KeyDown(KEY_TYPE::F11))
-    {
-        ToggleFullScreen();
-    }
-
-    Handle_Guizmo_Shotcut();
+    //Handle_Guizmo_Shotcut();
 }
 
 void Scene_View::OnGui()
@@ -58,6 +53,8 @@ void Scene_View::OnGui()
     ImGui::Begin(str.c_str(), nullptr, flags);
     {
         Update_WindowState();
+
+        Handle_Guizmo_Shotcut();
 
         Render_Viewport();
 
@@ -274,8 +271,8 @@ void Scene_View::Update_WindowState()
     if (!_isFullScreen)
         _savedDockId = ImGui::GetWindowDockID();
 
-    _isFocused = ImGui::IsWindowFocused();
-    _isHovered = ImGui::IsWindowHovered();
+    _isFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+    _isHovered = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
 
     auto freeCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_FREE);
     if (freeCam)

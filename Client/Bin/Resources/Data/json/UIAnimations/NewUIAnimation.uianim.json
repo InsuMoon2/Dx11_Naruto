@@ -1,0 +1,37 @@
+{
+    "endFrame": 60,
+    "fps": 60,
+    "loop": true,
+    "name": "NewUIAnimation",
+    "startFrame": 0,
+    "targetName": "UI_PlayerHUD.UI_PlayerStatus_0",
+    "tracks": [
+        {
+            "keys": [
+                {
+                    "frame": 4,
+                    "value": [
+                        255.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 20,
+                    "value": [
+                        400.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "property": "PositionX"
+        },
+        {
+            "keys": [],
+            "property": "PositionY"
+        }
+    ]
+}

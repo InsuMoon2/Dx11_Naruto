@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Monster.h"
 #include <fstream>
+#include "UI_Text.h"
+
 #include "PlayerStart.h"
 #include "SkillDataManager.h"
 #include "AIController.h"
@@ -31,6 +33,14 @@
 #include "StaticMeshActor.h"
 
 #include "Shader.h"
+#include "UI_LoadingProgressBar.h"
+#include "UI_LoadingSpinner.h"
+#include "UI_MainTitleText.h"
+#include "UI_PlayerHP.h"
+#include "UI_PlayerHUD.h"
+#include "UI_PlayerSkill.h"
+#include "UI_PlayerStatus.h"
+#include "UI_SkillSlot.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -368,28 +378,31 @@ HRESULT Loader::Loading_For_Maintitle()
 
     //uint32 levelIndex = ETOI(ELevelType::MainTitle);
 
-    Register_Components();
-    Initialize_BT_Nodes();
+    if (_loadSharedResources)
+    {
+        Register_Components();
+        Initialize_BT_Nodes();
 
-    lstrcpy(_loadingText, TEXT("셰이더 작업 준비 중"));
-    CHECK_FAILED(_resourceLoader->Build_ShaderJobs(
-        TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"), jobs), E_FAIL);
+        lstrcpy(_loadingText, TEXT("셰이더 작업 준비 중"));
+        CHECK_FAILED(_resourceLoader->Build_ShaderJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"), jobs), E_FAIL);
 
-    lstrcpy(_loadingText, TEXT("지형 작업 준비 중"));
-    CHECK_FAILED(_resourceLoader->Build_TerrainJobs(
-        TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"), jobs), E_FAIL);
+        lstrcpy(_loadingText, TEXT("지형 작업 준비 중"));
+        CHECK_FAILED(_resourceLoader->Build_TerrainJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"), jobs), E_FAIL);
 
-    lstrcpy(_loadingText, TEXT("텍스처 작업 준비 중"));
-    CHECK_FAILED(_resourceLoader->Build_TextureJobs(
-        TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"), jobs), E_FAIL);
+        lstrcpy(_loadingText, TEXT("텍스처 작업 준비 중"));
+        CHECK_FAILED(_resourceLoader->Build_TextureJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"), jobs), E_FAIL);
 
-    lstrcpy(_loadingText, TEXT("모델 작업 준비 중"));
-    CHECK_FAILED(_resourceLoader->Build_ModelJobs(
-        TEXT("../../Client/Bin/Resources/Data/json/ModelTable.json"), jobs), E_FAIL);
+        lstrcpy(_loadingText, TEXT("모델 작업 준비 중"));
+        CHECK_FAILED(_resourceLoader->Build_ModelJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/ModelTable.json"), jobs), E_FAIL);
 
-    lstrcpy(_loadingText, TEXT("스킬 작업 준비 중"));
-    CHECK_FAILED(_resourceLoader->Build_SkillJobs(
-        TEXT("../../Client/Bin/Resources/Data/json/SkillDataTable.json"), jobs), E_FAIL);
+        lstrcpy(_loadingText, TEXT("스킬 작업 준비 중"));
+        CHECK_FAILED(_resourceLoader->Build_SkillJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/SkillDataTable.json"), jobs), E_FAIL);
+    }
 
     {
         scoped_lock lock(_jobMutex);
@@ -401,6 +414,8 @@ HRESULT Loader::Loading_For_Maintitle()
     _totalJobs = static_cast<uint32>(jobs.size());
     _completedJobs = 0;
     _prepareFinished = true;
+
+    _isFinished = (_totalJobs.load() == 0);
 
 #ifdef _DEBUG
     lstrcpy(_loadingText, TEXT("MainTitle loading jobs prepared"));

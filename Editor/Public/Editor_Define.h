@@ -47,6 +47,7 @@ namespace fs = std::filesystem;
 #include "Input_Manager.h"
 #include "Editor_Macro.h"
 #include "Editor_Enum.h"
+#include "Editor_Struct.h"
 
 // ============================================
 //        메모리 누수 감지

@@ -14,4 +14,5 @@ Texture,COMPONENT_TYPE_TEXTURE_PLAYER_STATUS,../../Client/Bin/Resources/Textures
 Texture,COMPONENT_TYPE_TEXTURE_PLAYER_STATUS,../../Client/Bin/Resources/Textures/UI/PlayerStats/life_gauge_masc_Body.png,1,Static,
 Texture,COMPONENT_TYPE_TEXTURE_LOADING,../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_Load_Icon_BC.png,1,Static,
 Texture,COMPONENT_TYPE_TEXTURE_LOADING,../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadIndicator_Base_BC.png,1,Static,
-,,,,,
+Texture,COMPONENT_TYPE_TEXTURE_MAIN_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitle/T_UI_TitleMenu_Btn_BC.png,1,Static,Extra Test
+Texture,COMPONENT_TYPE_TEXTURE_MAIN_TITLE,../../Client/Bin/Resources/Textures/UI/MainTitle/T_UI_TitleMenu_Btn_Effect%d_BC.png,2,Static,

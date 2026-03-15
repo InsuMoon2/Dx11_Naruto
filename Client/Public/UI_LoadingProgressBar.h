@@ -30,6 +30,7 @@ public:
 
 public:
     HRESULT Initialize(void* arg) override;
+    HRESULT Initialize_Prototype() override;
     void    Update(float timeDelta) override;
     HRESULT Render() override;
 
@@ -50,7 +51,8 @@ private:
     Shared<VIBuffer_Rect> _bufferCom;
 
 public:
-    static Shared<UIObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg);
+    static Shared<UIObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    Shared<GameObject> Clone(void* arg) override;
     virtual void Free() override;
 
 

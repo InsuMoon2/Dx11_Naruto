@@ -28,6 +28,7 @@ public:
 
 public:
     HRESULT     Initialize(void* arg) override;
+    HRESULT Initialize_Prototype() override;
     void        Priority_Update(float timeDelta) override;
     void        Update(float timeDelta) override;
     void        Late_Update(float timeDelta) override;
@@ -46,7 +47,8 @@ private:
     uint32                  _textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;
 
 public:
-    static Shared<UIObject>   Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg);
+    static Shared<UIObject>   Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    Shared<GameObject>        Clone(void* arg) override;
     virtual void              Free() override;
     
 };

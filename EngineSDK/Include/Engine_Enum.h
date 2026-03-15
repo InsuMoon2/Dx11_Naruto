@@ -49,5 +49,6 @@ namespace Engine
         static_cast<uint32>(EMaterialTextureSlot::END);
 
     enum class EModelType { StaticMesh, SkeletalMesh, END };
+
 }
 

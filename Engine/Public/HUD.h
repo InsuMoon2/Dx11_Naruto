@@ -23,7 +23,7 @@ public:
 
 public:
     template<typename T>
-    Shared<T> Create_Child(EUILayer uiLayer, void* arg);
+    Shared<T> Create_Child(Protocol::OBJECT_TYPE objType, EUILayer uiLayer, void* arg);
 
     void Register_Child(Shared<UIObject> child);
 
@@ -39,11 +39,13 @@ public:
 };
 
 template <typename T>
-Shared<T> HUD::Create_Child(EUILayer uiLayer, void* arg)
+Shared<T> HUD::Create_Child(Protocol::OBJECT_TYPE objType, EUILayer uiLayer, void* arg)
 {
+    Shared<T> childUI = static_pointer_cast<T>(
+        GAME->Clone_UI(objType, arg));
 
-    Shared<T> childUI = T::Create(_device, _context, arg);
-    if (!childUI) return nullptr;
+    if (!childUI)
+        return nullptr;
 
     childUI->Set_LevelIndex(this->_levelIndex);
     childUI->Set_UILayer(uiLayer);
@@ -51,7 +53,12 @@ Shared<T> HUD::Create_Child(EUILayer uiLayer, void* arg)
     // 트랜스폼 부모 연결
     childUI->Get_Transform()->Set_Parent(this->Get_Transform());
 
-    GAME->Add_UI_ToLayer(uiLayer, childUI);
+    childUI->Set_Name(
+        Get_Name() + L"." + childUI->Get_Name() + L"_" + to_wstring(_children.size()));
+
+    if (FAILED(GAME->Register_UI(uiLayer, childUI)))
+        return nullptr;
+
     Register_Child(childUI);
 
     return childUI;

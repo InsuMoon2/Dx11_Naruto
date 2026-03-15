@@ -4,6 +4,7 @@
 UI_Text::UI_Text(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
 {
+    Set_ObjectType(Protocol::OBJECT_TYPE_UI_TEXT);
 }
 
 UI_Text::UI_Text(const UI_Text& rhs)
@@ -96,13 +97,13 @@ RECT UI_Text::Build_ScreenRect() const
     return rc;
 }
 
-Shared<UI_Text> UI_Text::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
+Shared<UI_Text> UI_Text::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<UI_Text>(device, context);
 
-    if (FAILED(instance->Initialize(arg)))
+    if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Create : UI_Text");
+        MSG_BOX("Failed to Create Prototype : UI_Text");
         return nullptr;
     }
 

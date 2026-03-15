@@ -72,9 +72,12 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
 
         desc.zOrder = 0.5f;
         
-        auto mainTitle = Background::Create(_device, _context, &desc);
+        auto mainTitle = static_pointer_cast<Background>(
+            GAME->Add_UI(
+                Protocol::OBJECT_TYPE_BACKGROUND,
+                EUILayer::Overlay,
+                &desc));
         if (!mainTitle) return E_FAIL;
-        GAME->Add_UI_ToLayer(EUILayer::Overlay, mainTitle);
     }
     // Logo
     {
@@ -91,9 +94,12 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
 
         desc.zOrder = 0.51f;
 
-        auto logo = Background::Create(_device, _context, &desc);
+        auto logo = static_pointer_cast<Background>(
+            GAME->Add_UI(
+                Protocol::OBJECT_TYPE_BACKGROUND,
+                EUILayer::Overlay,
+                &desc));
         if (!logo) return E_FAIL;
-        GAME->Add_UI_ToLayer(EUILayer::Overlay, logo);
     }
     // Text
     {
@@ -110,14 +116,19 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
 
         desc.zOrder = 0.51f;
 
-        auto text = Background::Create(_device, _context, &desc);
+        auto text = static_pointer_cast<Background>(
+            GAME->Add_UI(
+                Protocol::OBJECT_TYPE_BACKGROUND,
+                EUILayer::Overlay,
+                &desc));
+
         if (!text) return E_FAIL;
-        GAME->Add_UI_ToLayer(EUILayer::Overlay, text);
+
+        GAME->Play_UIAnimation(text, "PressText");
     }
 
     // Temp : 텍스트 출력용
     {
-
         UI_Text::FUITextDesc desc{};
         desc.name = TEXT("MainTitle_DebugText");
         desc.posX = 300.f;
@@ -135,10 +146,12 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
         desc.style.vAlign = ETextVAlign::Top;
         desc.style.wordWrap = false;
 
-        auto debugText = UI_Text::Create(_device, _context, &desc);
+        auto debugText = static_pointer_cast<UI_Text>(
+            GAME->Add_UI(
+                Protocol::OBJECT_TYPE_UI_TEXT,
+                EUILayer::Overlay,
+                &desc));
         CHECK_NULL(debugText, E_FAIL);
-
-        CHECK_FAILED(GAME->Add_UI_ToLayer(EUILayer::Overlay, debugText), E_FAIL);
     }
 
     return S_OK;

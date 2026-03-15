@@ -23,3 +23,18 @@ string Utils::Generate_GUID()
 
     return uuids::to_string(id);
 }
+
+string Utils::ToLowerCopy(string value)
+{
+    transform(value.begin(), value.end(), value.begin(), ::tolower);
+
+    return value;
+}
+
+bool Utils::EndsWidth(const string& value, const string& suffix)
+{
+    if (value.size() < suffix.size())
+        return false;
+
+    return equal(suffix.rbegin(), suffix.rend(), value.rbegin());
+}

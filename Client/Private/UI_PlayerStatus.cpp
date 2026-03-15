@@ -11,11 +11,15 @@
 UI_PlayerStatus::UI_PlayerStatus(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Panel(device, context)
 {
+    Set_ObjectType(Protocol::OBJECT_TYPE_UI_PLAYER_STATUS);
 }
 
 UI_PlayerStatus::UI_PlayerStatus(const UI_PlayerStatus& rhs)
     : Panel(rhs)
 {
+    _player.reset();
+    _combat.reset();
+    _hpBar = nullptr;
 }
 
 HRESULT UI_PlayerStatus::Initialize_Prototype()
@@ -38,7 +42,7 @@ HRESULT UI_PlayerStatus::Initialize(void* arg)
     hpDesc.textureIndex = 0;
     hpDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;
 
-    _hpBar = Create_Child<UI_PlayerHP>(EUILayer::HUD, &hpDesc);
+    _hpBar = Create_Child<UI_PlayerHP>(Protocol::OBJECT_TYPE_UI_PLAYER_HP, EUILayer::HUD, &hpDesc);
     if (!_hpBar) return E_FAIL;
 
     _hpBar->Set_FillRange(98.f / 512.f, 413.f / 512.f);
@@ -113,19 +117,33 @@ HRESULT UI_PlayerStatus::Ready_Components()
     return S_OK;
 }
 
-Shared<UI_PlayerStatus> UI_PlayerStatus::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
+Shared<UI_PlayerStatus> UI_PlayerStatus::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<UI_PlayerStatus>(device, context);
 
-    if (FAILED(instance->Initialize(arg)))
+    if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Faield to Created : UI_PlayerStatus");
+        MSG_BOX("Failed to Create Prototype : UI_PlayerStatus");
         instance->Free();
 
         return nullptr;
     }
 
     return instance;
+}
+
+Shared<GameObject> UI_PlayerStatus::Clone(void* arg)
+{
+    auto clone = make_shared<UI_PlayerStatus>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
+    {
+        MSG_BOX("Failed to Cloned : UI_PlayerStatus");
+
+        return nullptr;
+    }
+
+    return clone;
 }
 
 void UI_PlayerStatus::Free()

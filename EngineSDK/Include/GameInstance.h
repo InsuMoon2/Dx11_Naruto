@@ -224,7 +224,20 @@ public: /* UI */
 
     const list<Shared<UIObject>>&   Get_UILayers(EUILayer layer) const;
 
-    HRESULT                         Add_UI_ToLayer(EUILayer layer, Shared<UIObject> uiObject);
+	Shared<UIObject>                Add_UI(uint32 objID, EUILayer layer, void* arg = {});
+    Shared<UIObject>                Clone_UI(uint32 objID, void* arg = {});
+    HRESULT                         Register_UI(EUILayer layer, Shared<UIObject> uiObject);
+    void                            Set_UIPrototypeLevel(uint32 levelIndex);
+
+public: /* UI Animation */
+    bool                            Play_UIAnimation(Shared<UIObject> target, const string& animationName);
+    bool                            Play_UIAnimation(const wstring& targetName, const string& animationName);
+
+    bool                            Pause_UIAnimation(Shared<UIObject> target, const string& animationName);
+    bool                            Pause_UIAnimation(const wstring& targetName, const string& animationName);
+
+    bool                            Stop_UIAnimation(Shared<UIObject> target, const string& animationName);
+    bool                            Stop_UIAnimation(const wstring& targetName, const string& animationName);
 
 public: /* Text Renderer */
     HRESULT Begin_UIText();
@@ -233,6 +246,7 @@ public: /* Text Renderer */
 
     HRESULT Set_TextTarget_Texture(ComPtr<Texture2D> texture);
     HRESULT Reset_TextTarget_BackBuffer();
+
 
 
 private: /* Manager */

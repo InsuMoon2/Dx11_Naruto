@@ -212,7 +212,7 @@ uint32 Asset_Manager::Clear_DisallowedMeta(const wstring& directory)
             continue;
 
         const fs::path path = entry.path();
-        if (ToLowerCopy(path.extension().string()) != ".meta")
+        if (Utils::ToLowerCopy(path.extension().string()) != ".meta")
             continue;
 
         const fs::path assetPath = path.parent_path() / path.stem();
@@ -295,14 +295,15 @@ string Asset_Manager::Detect_AssetType(const wstring& filePath) const
 {
     fs::path path(filePath);
 
-    string filename = ToLowerCopy(path.filename().string());
+    string filename = Utils::ToLowerCopy(path.filename().string());
 
     if (EndsWith(filename, ".prefab.json"))     return "prefab";
     if (EndsWith(filename, ".bt.json"))         return "behavior_tree";
+    if (EndsWith(filename, ".uianim.json"))     return "ui_animation";
     if (EndsWith(filename, ".level.json"))      return "level";
     if (EndsWith(filename, ".matinst.json"))    return "material_instance";
 
-    string extension = ToLowerCopy(path.extension().string());
+    string extension = Utils::ToLowerCopy(path.extension().string());
 
     if (extension == ".png" || extension == ".jpg" || extension == ".dds" || extension == ".tga")
         return "texture";
@@ -385,8 +386,8 @@ bool Asset_Manager::Should_RegisterAsset(const fs::path& path) const
     if (path.empty())
         return false;
 
-    const string filename = ToLowerCopy(path.filename().string());
-    const string ext = ToLowerCopy(path.extension().string());
+    const string filename = Utils::ToLowerCopy(path.filename().string());
+    const string ext = Utils::ToLowerCopy(path.extension().string());
 
     if (ext == ".meta")
         return false;
@@ -408,6 +409,9 @@ bool Asset_Manager::Should_RegisterAsset(const fs::path& path) const
         return true;
 
     if (EndsWith(filename, ".level.json"))
+        return true;
+
+    if (EndsWith(filename, ".uianim.json"))
         return true;
 
     if (EndsWith(filename, ".matinst.json"))
@@ -453,13 +457,6 @@ bool Asset_Manager::Should_RegisterAsset(const fs::path& path) const
         return true;
 
     return false;
-}
-
-string Asset_Manager::ToLowerCopy(string value)
-{
-    ::transform(value.begin(), value.end(), value.begin(), ::tolower);
-
-    return value;
 }
 
 bool Asset_Manager::EndsWith(const string& value, const string& suffix)

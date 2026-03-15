@@ -10,10 +10,11 @@ public:
 
     static string   EnumToString(uint32 id);
 
-    // GUID
-    static string   Generate_GUID();
+    static string   Generate_GUID(); // GUID 생성
 
-    static HRESULT  Save_To_File(const wstring& outputPath);
+    static string   ToLowerCopy(string value);
+
+    static bool     EndsWidth(const string& value, const string& suffix);
 
 };
 

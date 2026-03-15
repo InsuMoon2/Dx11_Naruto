@@ -13,7 +13,8 @@
 #include "Notification_Manager.h"
 
 #include <shellapi.h>
-#include "Action_Command.h"
+#include "UI_Animation_View.h"
+#include "Editor_Helper.h"
 
 static const unordered_map<string, EIconType> g_ExtensionToIconMap =
 {
@@ -72,10 +73,10 @@ void Content_Browser::Update(float timeDelta)
     EditorWindow::Update(timeDelta);
 
     // 새로고침 - 필요할지? 일단 구현
-    if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) && ImGui::IsKeyPressed(ImGuiKey_F5))
-    {
-        Refresh_Resources();
-    }
+    //if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) && ImGui::IsKeyPressed(ImGuiKey_F5))
+    //{
+    //    Refresh_Resources();
+    //}
 }
 
 void Content_Browser::OnGui()
@@ -86,6 +87,8 @@ void Content_Browser::OnGui()
 
     ImGui::Begin(str.c_str(), nullptr, flags);
     {
+        _isFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+
         Handle_SideButtonEvnet();
 
         // 좌측 폴더 트리
@@ -388,15 +391,7 @@ void Content_Browser::Draw_AssetView()
 
             string pathStr = Utils::ToString(filePath);
 
-            bool isValidPrefab = pathStr.ends_with(".prefab.json");
-            bool isBehaviorTree = pathStr.ends_with(".bt.json");
-            bool isMeshFile = (extension == ".fbx" || extension == ".FBX" ||
-                                extension == ".gltf" || extension == ".GLTF");
-
-            bool isTextureFile = (extension == ".png" || extension == ".jpg" ||
-                extension == ".jpeg" || extension == ".dds");
-
-            bool isCSVFile = (extension == ".csv" || extension == ".CSV");
+            EAssetOpenType assetType = Editor_Helper::ClassifyAsset(path);
 
             // 아이콘
             ImGui::PushID(fileName.c_str());
@@ -480,28 +475,7 @@ void Content_Browser::Draw_AssetView()
                 }
                 else
                 {
-                    if (isValidPrefab)
-                    {
-                        auto prefabView = dynamic_pointer_cast<Prefab_View>(EDITOR->Get_Window(TEXT("Prefab")));
-                        if (prefabView)
-                        {
-                            string fullPath = Utils::ToString(filePath);
-                            prefabView->Open_Prefab(pureName, fullPath);
-                        }
-                    }
-                    else if (isBehaviorTree)
-                    {
-                        auto behaviorView = dynamic_pointer_cast<BehaviorTree_View>(EDITOR->Get_Window(TEXT("BehaviorTree")));
-                        if (behaviorView)
-                        {
-                            string fullPath = Utils::ToString(filePath);
-                            behaviorView->Load_BehaviorTree(fullPath);
-                        }
-                    }
-                    else
-                    {
-                        ShellExecute(nullptr, L"open", filePath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
-                    }
+                    Editor_Helper::Open_Asset(assetType, filePath, pureName);
                 }
             }
 
@@ -516,7 +490,7 @@ void Content_Browser::Draw_AssetView()
             }
 
             // Prefab 드래그
-            if (isValidPrefab && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            if (assetType == EAssetOpenType::Prefab && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
                 if (!guid.empty())
                 {
@@ -526,7 +500,7 @@ void Content_Browser::Draw_AssetView()
                 ImGui::EndDragDropSource();
             }
             // BehaviorTree 드래그
-            else if (isBehaviorTree && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            else if (assetType == EAssetOpenType::BehaviorTree && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
                 if (!guid.empty())
                 {
@@ -536,7 +510,7 @@ void Content_Browser::Draw_AssetView()
                 ImGui::EndDragDropSource();
             }
             // Static Mesh 드래그
-            else if (isMeshFile && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            else if (assetType == EAssetOpenType::Mesh && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
                 if (!guid.empty())
                 {
@@ -545,7 +519,7 @@ void Content_Browser::Draw_AssetView()
                 }
                 ImGui::EndDragDropSource();
             }
-            else if (isTextureFile && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            else if (assetType == EAssetOpenType::Texture && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
                 if (!guid.empty())
                 {
@@ -555,37 +529,11 @@ void Content_Browser::Draw_AssetView()
                 ImGui::EndDragDropSource();
             }
 
-
-            // 더블클릭 -> Prefab View 열기
-            if (isValidPrefab && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
             {
-                auto prefabView = dynamic_pointer_cast<Prefab_View>(EDITOR->Get_Window(TEXT("Prefab")));
+                string fullPath = Utils::ToString(filePath);
 
-                if (prefabView)
-                {
-                    string fullPath = Utils::ToString(filePath);
-
-                    prefabView->Open_Prefab(pureName, fullPath);
-                }
-            }
-
-            // 더블클릭 -> BehaviorTree View열기
-            if (isBehaviorTree && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
-            {
-                auto behaviorView = dynamic_pointer_cast<BehaviorTree_View>(EDITOR->Get_Window(TEXT("BehaviorTree")));
-
-                if (behaviorView)
-                {
-                    string fullPath = Utils::ToString(filePath);
-
-                    behaviorView->Load_BehaviorTree(fullPath);
-                }
-            }
-
-            // 일반 파일(csv 등) 더블클릭 -> 연결된 외부 프로그램(엑셀 등)으로 열기
-            if (!isValidPrefab && !isBehaviorTree && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
-            {
-                ShellExecute(NULL, L"open", filePath.c_str(), NULL, NULL, SW_SHOWNORMAL);
+                Editor_Helper::Open_Asset(assetType, filePath, pureName);
             }
 
             if (_isRenaming && fs::absolute(_renamingFilePath) == fs::absolute(filePath))
@@ -623,7 +571,7 @@ void Content_Browser::Draw_AssetView()
                     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
 
                 // 있다면, 초록색으로 세팅, 없다면 레거시 파일 새로고침 필요
-                if (isValidPrefab || isBehaviorTree)
+                if (Editor_Helper::IsEditorManagedAsset(assetType))
                 {
                     ImGui::TextColored(ImVec4(0.5f, 1.f, 0.5f, 1.f), "%s", pureName.c_str());
                 }

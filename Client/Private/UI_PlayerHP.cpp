@@ -8,6 +8,7 @@
 UI_PlayerHP::UI_PlayerHP(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
 {
+    Set_ObjectType(Protocol::OBJECT_TYPE_UI_PLAYER_HP);
 }
 
 UI_PlayerHP::UI_PlayerHP(const UI_PlayerHP& rhs)
@@ -100,17 +101,31 @@ HRESULT UI_PlayerHP::Ready_Components()
     return S_OK;
 }
 
-Shared<UI_PlayerHP> UI_PlayerHP::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, void* arg)
+Shared<UI_PlayerHP> UI_PlayerHP::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<UI_PlayerHP>(device, context);
 
-    if (FAILED(instance->Initialize(arg)))
+    if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Created : UI_PlayerHP");
+        MSG_BOX("Failed to Create Prototype : UI_PlayerHP");
         return nullptr;
     }
 
     return instance;
+}
+
+Shared<GameObject> UI_PlayerHP::Clone(void* arg)
+{
+    auto clone = make_shared<UI_PlayerHP>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
+    {
+        MSG_BOX("Failed to Cloned : UI_PlayerHP");
+
+        return nullptr;
+    }
+
+    return clone;
 }
 
 void UI_PlayerHP::Free()

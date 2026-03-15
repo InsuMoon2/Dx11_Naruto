@@ -145,3 +145,8 @@ void UI_AnimPlayer::Apply_Frame(int32 frame)
     _target->Set_UIOpacity(alpha);
     _target->Set_UITint(Color(color.x, color.y, color.z, color.w));
 }
+
+Shared<UI_AnimPlayer> UI_AnimPlayer::Create()
+{
+    return make_shared<UI_AnimPlayer>();
+}
