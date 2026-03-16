@@ -285,7 +285,7 @@ HRESULT Loader::Execute_Job_OnMainThread(const FLoadJob& job)
         {
         wstring wPath = Utils::ToWString(job.pathStr);
         auto className = Utils::ToWString(job.idStr);
-        EModelType modelType = job.isSkeletal ? EModelType::SkeletalMesh : EModelType::StaticMesh;
+        EMeshVertexType modelType = job.isSkeletal ? EMeshVertexType::SkeletalMesh : EMeshVertexType::StaticMesh;
 
         string pathStr = Utils::ToString(wPath);
 
@@ -295,11 +295,10 @@ HRESULT Loader::Execute_Job_OnMainThread(const FLoadJob& job)
             {
                 Matrix preTransform = Matrix::Identity;
 
-                if (modelType == EModelType::SkeletalMesh)
+                if (modelType == EMeshVertexType::SkeletalMesh)
                 {
                     preTransform =
-                        Matrix::CreateScale(0.01f) *
-                        Matrix::CreateRotationX(XMConvertToRadians(90.f)) *
+                        Matrix::CreateScale(0.0001f) *
                         Matrix::CreateRotationY(XMConvertToRadians(180.f));
                 }
 

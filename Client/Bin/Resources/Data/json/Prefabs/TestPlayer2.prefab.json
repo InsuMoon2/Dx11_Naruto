@@ -1,0 +1,94 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                -5.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "materials": [
+                {
+                    "material_name": "MI_CHR_Sasuke",
+                    "texture_overrides": {
+                        "base_color_0": "32a6eb53-8e6a-443b-996a-866a5c319752"
+                    }
+                },
+                {
+                    "material_name": "MI_CHR_SasukeEyeL",
+                    "texture_overrides": {
+                        "base_color_0": "1d777270-e223-4dfc-b27e-73798dc7050a"
+                    }
+                },
+                {
+                    "material_name": "MI_CHR_SasukeEyeR",
+                    "texture_overrides": {
+                        "base_color_0": "1d777270-e223-4dfc-b27e-73798dc7050a"
+                    }
+                },
+                {
+                    "material_name": "M_Line"
+                }
+            ],
+            "model_type": "SkeletalMesh",
+            "type": "COMPONENT_TYPE_MODEL"
+        },
+        {
+            "type": "COMPONENT_TYPE_SHADER"
+        },
+        {
+            "Attack": 100.0,
+            "Defense": 5.0,
+            "HP": 100.0,
+            "MP": 100.0,
+            "Max HP": 100.0,
+            "Max MP": 100.0,
+            "Speed": 5.0,
+            "type": "COMPONENT_TYPE_COMBAT_STAT"
+        },
+        {
+            "type": "COMPONENT_TYPE_PLAYER_CONTROLLER"
+        },
+        {
+            "Acceleration": 20.0,
+            "Deceleration": 24.0,
+            "Gravity": -20.0,
+            "Ground Y": 5.0,
+            "Jump Velocity": 8.0,
+            "Max Sprint Speed": 70.0,
+            "Max Walk Speed": 40.0,
+            "Yaw Speed": 0.20000000298023224,
+            "type": "COMPONENT_TYPE_MOVEMENT"
+        },
+        {
+            "type": "COMPONENT_TYPE_INPUT"
+        },
+        {
+            "Current State": 5,
+            "type": "COMPONENT_TYPE_PLAYER_STATE"
+        },
+        {
+            "slotSkillID": [
+                1001,
+                1002
+            ],
+            "type": "COMPONENT_TYPE_SKILL"
+        }
+    ],
+    "guid": "d17480f1-6e61-4760-b7f0-841de110a91f",
+    "object_type": "OBJECT_TYPE_PLAYER",
+    "prefab_name": "TestPlayer2",
+    "static_class": "TestPlayer2"
+}

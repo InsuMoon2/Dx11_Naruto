@@ -63,6 +63,7 @@ namespace fs = std::filesystem;
 #include "Vertex_Struct.h"
 #include "Text_Types.h"
 #include "UI_AnimTypes.h"
+#include "ModelBin_Types.h"
 
 // Win
 #include <Windows.h>

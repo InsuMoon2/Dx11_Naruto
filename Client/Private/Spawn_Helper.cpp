@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Spawn_Helper.h"
 
+#include "GameObject.h"
+
 Spawn_Helper::Builder::Builder(const string& prefabName)
 {
     _spawnDesc.prefabName = prefabName;
@@ -75,6 +77,8 @@ Shared<GameObject> Spawn_Helper::Spawn_Implementation(const FSpawnDesc& desc)
     CHECK_NULL(gameObject, nullptr);
 
     CHECK_FAILED(GAME->Add_GameObject(desc.levelIndex, desc.layerTag, gameObject), nullptr);
+
+    //gameObject->BeginPlay();
 
     return gameObject;
 }

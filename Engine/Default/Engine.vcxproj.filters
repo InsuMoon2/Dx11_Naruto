@@ -221,6 +221,12 @@
     <ClInclude Include="..\Public\UI_AnimSerializer.h" />
     <ClInclude Include="..\Public\UI_AnimUtility.h" />
     <ClInclude Include="..\Public\UI_AnimPlayer.h" />
+    <ClInclude Include="..\Public\ModelBin_Types.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bone.h" />
+    <ClInclude Include="..\Public\Channel.h" />
+    <ClInclude Include="..\Public\Animation.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -577,6 +583,9 @@
     <ClCompile Include="..\Private\UI_AnimSerializer.cpp" />
     <ClCompile Include="..\Private\UI_AnimUtility.cpp" />
     <ClCompile Include="..\Private\UI_AnimPlayer.cpp" />
+    <ClCompile Include="..\Private\Bone.cpp" />
+    <ClCompile Include="..\Private\Channel.cpp" />
+    <ClCompile Include="..\Private\Animation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

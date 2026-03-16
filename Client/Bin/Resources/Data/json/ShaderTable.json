@@ -34,6 +34,13 @@
             "path": "../../Client/Bin/Shaders/Shader_VtxStaticMesh.hlsl",
             "count": 1,
             "type": "VtxMesh"
+        },
+        {
+            "id": "COMPONENT_TYPE_SHADER_VTXANIMMESH",
+            "level": "Static",
+            "path": "../../Client/Bin/Shaders/Shader_VtxAnimMesh.hlsl",
+            "count": 1,
+            "type": "VtxAnim"
         }
     ]
 }

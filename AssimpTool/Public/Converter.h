@@ -13,10 +13,14 @@ public:
 
 private:
     bool    Read_AssetFile(const wstring& filePath, EConvertModelType modelType);
-    bool    Build_MeshData();
+
+    bool    Build_StaticMeshData();
+    bool    Build_BoneHierarchy();
+    bool    Build_SkeletalMeshData();
+    bool    Build_AnimationData();
+
     bool    Build_MaterialData(const wstring& srcPath);
     bool    Write_MaterialJson(const wstring& outputPath);
-
     bool    Write_MeshBin(const wstring& outputPath);
 
 private:
@@ -33,21 +37,31 @@ private:
     static string       Generate_Guid_String();
 
 
-    string  Resolve_TexturePath(const aiMaterial* material, aiTextureType textureType,
-                    uint32 textureIndex, const wstring& modelFilePath);
+    string              Resolve_TexturePath(const aiMaterial* material, aiTextureType textureType,
+                                uint32 textureIndex, const wstring& modelFilePath);
 
-    string  Resolve_ExportTextureSlot(const aiMaterial* material,
-        aiTextureType assimpType, uint32 textureIndex) const;
+    string              Resolve_ExportTextureSlot(const aiMaterial* material,
+                                aiTextureType assimpType, uint32 textureIndex) const;
 
-    static string Normalize_TextureSlot(aiTextureType assimpType);
+    static string       Normalize_TextureSlot(aiTextureType assimpType);
 
     // aiMaterialProperty의 문자열 payload 읽기
-    static string Read_PropertyString(const aiMaterialProperty* prop);
+    static string       Read_PropertyString(const aiMaterialProperty* prop);
 
-    static string Infer_TextureSlot_FromString(const string& value, const string& fallbackSlot);
+    static string       Infer_TextureSlot_FromString(const string& value, const string& fallbackSlot);
 
-    string  Normalize_Path(const string& value) const;
-    void    Clear();
+    string              Normalize_Path(const string& value) const;
+    void                Clear();
+
+public:/* 애니메이션 */
+    void    Collect_Bones_DFS(aiNode* node, int32 parentIndex, uint32 depth);
+    int32   Find_BoneIndex_ByName(const string& name) const;
+
+    void    Add_BoneInfluence(FMeshVertexAnimBin& vertex, uint32 boneIndex, float weight);
+    void    Normalize_BoneWeights(FMeshVertexAnimBin& vertex);
+
+    Matrix  Convert_AssimpMatrix(const aiMatrix4x4& m) const;
+    FMatrixBin To_MatrixBin(const Matrix& mat) const;
 
 private:
     string         EscapeJson(const string& value);
@@ -57,8 +71,15 @@ private:
     shared_ptr<Assimp::Importer>    _importer;
     const aiScene*                  _scene = nullptr;
 
+    EConvertModelType               _resolvedModelType = EConvertModelType::END;
+
     vector<FExportMeshData>         _meshes;
     vector<FExportMaterialData>     _materials;
+
+    vector<FExportBoneData>         _bones;
+    vector<FExportAnimationClip>    _animations;
+
+    unordered_map<string, uint32>   _boneNameToIndex;
 
 public:
     static unique_ptr<Converter> Create();

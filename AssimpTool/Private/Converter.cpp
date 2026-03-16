@@ -11,25 +11,39 @@ using json = nlohmann::json;
 Converter::Converter()
 {
     _importer = make_shared<Assimp::Importer>();
+
 }
 
 bool Converter::Convert(const wstring& srcPath, const wstring& dstBasePath, EConvertModelType modelType)
 {
     Clear();
 
-    const EConvertModelType resolvedType = Resolve_ModelType(srcPath, modelType);
-    if (resolvedType == EConvertModelType::END || resolvedType == EConvertModelType::Auto)
+    _resolvedModelType = Resolve_ModelType(srcPath, modelType);
+    if (_resolvedModelType == EConvertModelType::END || _resolvedModelType == EConvertModelType::Auto)
     {
         LOG_ERROR("Failed to resolve model type: {}", fs::path(srcPath).string());
         return false;
     }
 
-
-    if (!Read_AssetFile(srcPath, modelType))
+    if (!Read_AssetFile(srcPath, _resolvedModelType))
         return false;
 
-    if (!Build_MeshData())
-        return false;
+    if (_resolvedModelType == EConvertModelType::StaticMesh)
+    {
+        if (!Build_StaticMeshData())
+            return false;
+    }
+    else // Skeletal Mesh
+    {
+        if (!Build_BoneHierarchy())
+            return false;
+
+        if (!Build_SkeletalMeshData())
+            return false;
+
+        if (!Build_AnimationData())
+            return false;
+    }
 
     if (!Build_MaterialData(srcPath))
         return false;
@@ -43,13 +57,8 @@ bool Converter::Convert(const wstring& srcPath, const wstring& dstBasePath, ECon
     if (!Write_MaterialJson(materialPath))
         return false;
 
-    if (!Write_ModelMeta(meshPath, resolvedType))
+    if (!Write_ModelMeta(meshPath, _resolvedModelType))
         return false;
-
-    LOG_INFO("Convert success: {} | requested={} | resolved={}",
-        fs::path(srcPath).string(),
-        ToString(modelType),
-        ToString(resolvedType));
 
     return true;
 }
@@ -59,9 +68,7 @@ bool Converter::Read_AssetFile(const wstring& filePath, EConvertModelType modelT
     uint32 flags = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 
     if (modelType == EConvertModelType::StaticMesh)
-    {
         flags |= aiProcess_PreTransformVertices;
-    }
 
     const string path = fs::path(filePath).string();
     _scene = _importer->ReadFile(path, flags);
@@ -75,7 +82,7 @@ bool Converter::Read_AssetFile(const wstring& filePath, EConvertModelType modelT
     return true;
 }
 
-bool Converter::Build_MeshData()
+bool Converter::Build_StaticMeshData()
 {
     if (_scene == nullptr)
         return false;
@@ -92,7 +99,7 @@ bool Converter::Build_MeshData()
         FExportMeshData meshData;
         meshData.name = srcMesh->mName.length > 0 ? srcMesh->mName.C_Str() : ("Mesh_" + to_string(meshIndex));
         meshData.materialIndex = srcMesh->mMaterialIndex;
-        meshData.vertices.reserve(srcMesh->mNumVertices);
+        meshData.staticVertices.reserve(srcMesh->mNumVertices);
         meshData.indices.reserve(srcMesh->mNumFaces * 3);
 
         for (uint32 v = 0; v < srcMesh->mNumVertices; ++v)
@@ -123,7 +130,7 @@ bool Converter::Build_MeshData()
                 vertex.v = srcMesh->mTextureCoords[0][v].y;
             }
 
-            meshData.vertices.push_back(vertex);
+            meshData.staticVertices.push_back(vertex);
         }
 
         for (uint32 f = 0; f < srcMesh->mNumFaces; ++f)
@@ -142,6 +149,239 @@ bool Converter::Build_MeshData()
 
     return !_meshes.empty();
 }
+
+bool Converter::Build_BoneHierarchy()
+{
+    _bones.clear();
+    _boneNameToIndex.clear();
+
+    if (_scene == nullptr || _scene->mRootNode == nullptr)
+        return false;
+
+    Collect_Bones_DFS(_scene->mRootNode, -1, 0);
+
+    // offsetMatrix를 mesh bone 정보에서 덮어쓰기
+    for (uint32 meshIndex = 0; meshIndex < _scene->mNumMeshes; ++meshIndex)
+    {
+        const aiMesh* mesh = _scene->mMeshes[meshIndex];
+        if (mesh == nullptr || !mesh->HasBones())
+            continue;
+
+        for (uint32 boneIdx = 0; boneIdx < mesh->mNumBones; ++boneIdx)
+        {
+            const aiBone* srcBone = mesh->mBones[boneIdx];
+            if (srcBone == nullptr)
+                continue;
+
+            auto it = _boneNameToIndex.find(srcBone->mName.C_Str());
+            if (it == _boneNameToIndex.end())
+                continue;
+
+            FExportBoneData& bone = _bones[it->second];
+            bone.offsetMatrix = To_MatrixBin(Convert_AssimpMatrix(srcBone->mOffsetMatrix));
+            bone.hasOffsetMatrix = true;
+        }
+    }
+
+    LOG_INFO("Build_BoneHierarchy done. boneCount={}", _bones.size());
+
+    return !_bones.empty();
+}
+
+bool Converter::Build_SkeletalMeshData()
+{
+    _meshes.clear();
+    _meshes.reserve(_scene->mNumMeshes);
+
+    for (uint32 meshIndex = 0; meshIndex < _scene->mNumMeshes; ++meshIndex)
+    {
+        const aiMesh* srcMesh = _scene->mMeshes[meshIndex];
+        if (srcMesh == nullptr)
+            continue;
+
+        FExportMeshData meshData{};
+
+        meshData.name = srcMesh->mName.length > 0 ? srcMesh->mName.C_Str() :
+            ("Mesh_" + to_string(meshIndex));
+
+        meshData.materialIndex = srcMesh->mMaterialIndex;
+        meshData.isAnimated = true;
+        meshData.animVertices.resize(srcMesh->mNumVertices);
+        meshData.indices.reserve(srcMesh->mNumFaces * 3);
+
+        for (uint32 v = 0; v < srcMesh->mNumVertices; ++v)
+        {
+            FMeshVertexAnimBin& vertex = meshData.animVertices[v];
+
+            vertex.px = srcMesh->mVertices[v].x;
+            vertex.py = srcMesh->mVertices[v].y;
+            vertex.pz = srcMesh->mVertices[v].z;
+
+            if (srcMesh->HasNormals())
+            {
+                vertex.nx = srcMesh->mNormals[v].x;
+                vertex.ny = srcMesh->mNormals[v].y;
+                vertex.nz = srcMesh->mNormals[v].z;
+            }
+
+            if (srcMesh->HasTangentsAndBitangents())
+            {
+                vertex.tx = srcMesh->mTangents[v].x;
+                vertex.ty = srcMesh->mTangents[v].y;
+                vertex.tz = srcMesh->mTangents[v].z;
+            }
+
+            if (srcMesh->HasTextureCoords(0))
+            {
+                vertex.u = srcMesh->mTextureCoords[0][v].x;
+                vertex.v = srcMesh->mTextureCoords[0][v].y;
+            }
+        }
+
+        for (uint32 boneIdx = 0; boneIdx < srcMesh->mNumBones; ++boneIdx)
+        {
+            const aiBone* srcBone = srcMesh->mBones[boneIdx];
+            if (srcBone == nullptr)
+                continue;
+
+            const string boneName = srcBone->mName.C_Str();
+            const int32 boneIndex = Find_BoneIndex_ByName(boneName);
+            if (boneIndex < 0)
+                continue;
+
+            FExportMeshBoneRef boneRef{};
+            boneRef.name = boneName;
+            boneRef.boneIndex = static_cast<uint32>(boneIndex);
+            boneRef.offsetMatrix = To_MatrixBin(Convert_AssimpMatrix(srcBone->mOffsetMatrix));
+            meshData.boneRefs.push_back(boneRef);
+
+            for (uint32 weightIdx = 0; weightIdx < srcBone->mNumWeights; ++weightIdx)
+            {
+                const aiVertexWeight& vw = srcBone->mWeights[weightIdx];
+                if (vw.mVertexId >= meshData.animVertices.size())
+                    continue;
+
+                Add_BoneInfluence(meshData.animVertices[vw.mVertexId], static_cast<uint32>(boneIndex), vw.mWeight);
+            }
+        }
+
+        for (auto& vertex : meshData.animVertices)
+            Normalize_BoneWeights(vertex);
+
+        for (uint32 f = 0; f < srcMesh->mNumFaces; ++f)
+        {
+            const aiFace& face = srcMesh->mFaces[f];
+            if (face.mNumIndices != 3)
+                continue;
+
+            meshData.indices.push_back(face.mIndices[0]);
+            meshData.indices.push_back(face.mIndices[1]);
+            meshData.indices.push_back(face.mIndices[2]);
+        }
+
+        _meshes.push_back(std::move(meshData));
+    }
+
+    LOG_INFO("Build_SkeletalMeshData done. meshCount={}", _meshes.size());
+    return !_meshes.empty();
+}
+
+bool Converter::Build_AnimationData()
+{
+    _animations.clear();
+
+    if (_scene == nullptr || !_scene->HasAnimations())
+        return true;
+
+    _animations.reserve(_scene->mNumAnimations);
+
+    for (uint32 animIndex = 0; animIndex < _scene->mNumAnimations; ++animIndex)
+    {
+        const aiAnimation* srcAnim = _scene->mAnimations[animIndex];
+        if (srcAnim == nullptr)
+            continue;
+
+        FExportAnimationClip clip{};
+        clip.name = srcAnim->mName.length > 0 ? srcAnim->mName.C_Str() : ("Anim_" + to_string(animIndex));
+        clip.duration = static_cast<float>(srcAnim->mDuration);
+        clip.ticksPerSecond = (srcAnim->mTicksPerSecond > 0.0)
+            ? static_cast<float>(srcAnim->mTicksPerSecond)
+            : 25.f;
+
+        clip.channels.reserve(srcAnim->mNumChannels);
+
+        for (uint32 channelIndex = 0; channelIndex < srcAnim->mNumChannels; ++channelIndex)
+        {
+            const aiNodeAnim* srcChannel = srcAnim->mChannels[channelIndex];
+            if (srcChannel == nullptr)
+                continue;
+
+            FExportAnimationChannel channel{};
+            channel.nodeName = srcChannel->mNodeName.C_Str();
+            channel.boneIndex = Find_BoneIndex_ByName(channel.nodeName);
+
+            if (srcChannel->mNumRotationKeys == 0)
+                continue;
+
+            channel.keyFrames.reserve(srcChannel->mNumRotationKeys);
+
+            uint32 posCursor = 0;
+            uint32 scaleCursor = 0;
+
+            for (uint32 rotIndex = 0; rotIndex < srcChannel->mNumRotationKeys; ++rotIndex)
+            {
+                const aiQuatKey& rotKey = srcChannel->mRotationKeys[rotIndex];
+                const float currentTime = static_cast<float>(rotKey.mTime);
+
+                while (posCursor + 1 < srcChannel->mNumPositionKeys &&
+                    static_cast<float>(srcChannel->mPositionKeys[posCursor + 1].mTime) <= currentTime)
+                {
+                    ++posCursor;
+                }
+
+                while (scaleCursor + 1 < srcChannel->mNumScalingKeys &&
+                    static_cast<float>(srcChannel->mScalingKeys[scaleCursor + 1].mTime) <= currentTime)
+                {
+                    ++scaleCursor;
+                }
+
+                FKeyFrameBin key{};
+                key.time = currentTime;
+
+                key.rotation[0] = rotKey.mValue.x;
+                key.rotation[1] = rotKey.mValue.y;
+                key.rotation[2] = rotKey.mValue.z;
+                key.rotation[3] = rotKey.mValue.w;
+
+                if (srcChannel->mNumPositionKeys > 0)
+                {
+                    const aiVectorKey& posKey = srcChannel->mPositionKeys[posCursor];
+                    key.translation[0] = posKey.mValue.x;
+                    key.translation[1] = posKey.mValue.y;
+                    key.translation[2] = posKey.mValue.z;
+                }
+
+                if (srcChannel->mNumScalingKeys > 0)
+                {
+                    const aiVectorKey& scaleKey = srcChannel->mScalingKeys[scaleCursor];
+                    key.scale[0] = scaleKey.mValue.x;
+                    key.scale[1] = scaleKey.mValue.y;
+                    key.scale[2] = scaleKey.mValue.z;
+                }
+
+                channel.keyFrames.push_back(key);
+            }
+
+            clip.channels.push_back(std::move(channel));
+        }
+
+        _animations.push_back(std::move(clip));
+    }
+
+    LOG_INFO("Build_AnimationData done. animationCount={}", _animations.size());
+    return true;
+}
+
 
 bool Converter::Build_MaterialData(const wstring& srcPath)
 {
@@ -209,24 +449,108 @@ bool Converter::Write_MeshBin(const wstring& outputPath)
         return false;
     }
 
-    FMeshFileHeader header{};
+    if (_resolvedModelType == EConvertModelType::StaticMesh)
+    {
+        FStaticMeshFileHeader header{};
+        header.meshCount = static_cast<uint32>(_meshes.size());
+        header.materialCount = static_cast<uint32>(_materials.size());
+        writer.Write(header);
+
+        for (const auto& meshData : _meshes)
+        {
+            writer.WriteString(meshData.name);
+            writer.Write(meshData.materialIndex);
+
+            const uint32 vertexCount = static_cast<uint32>(meshData.staticVertices.size());
+            writer.Write(vertexCount);
+            writer.WriteBytes(meshData.staticVertices.data(), sizeof(FMeshVertexBin) * vertexCount);
+
+            const uint32 indexCount = static_cast<uint32>(meshData.indices.size());
+            writer.Write(indexCount);
+            writer.WriteBytes(meshData.indices.data(), sizeof(uint32) * indexCount);
+        }
+
+        return true;
+    }
+
+    FSkeletalMeshFileHeader header{};
     header.meshCount = static_cast<uint32>(_meshes.size());
     header.materialCount = static_cast<uint32>(_materials.size());
+    header.flags = MESHBIN_FLAG_HAS_SKINNING;
+
+    if (!_animations.empty())
+        header.flags |= MESHBIN_FLAG_HAS_ANIMATION;
+
+    header.boneCount = static_cast<uint32>(_bones.size());
+    header.animationCount = static_cast<uint32>(_animations.size());
 
     writer.Write(header);
 
-    for (const FExportMeshData& meshData : _meshes)
+    for (const auto& meshData : _meshes)
     {
         writer.WriteString(meshData.name);
-        writer.Write(meshData.materialIndex);
 
-        const uint32 vertexCount = static_cast<uint32>(meshData.vertices.size());
-        writer.Write(vertexCount);
-        writer.WriteBytes(meshData.vertices.data(), sizeof(FMeshVertexBin) * meshData.vertices.size());
+        FMeshSectionBin section{};
+        section.materialIndex = meshData.materialIndex;
+        section.vertexType = 1;
+        section.vertexCount = static_cast<uint32>(meshData.animVertices.size());
+        section.indexCount = static_cast<uint32>(meshData.indices.size());
+        section.boneRefCount = static_cast<uint32>(meshData.boneRefs.size());
+        writer.Write(section);
 
-        const uint32 indexCount = static_cast<uint32>(meshData.indices.size());
-        writer.Write(indexCount);
-        writer.WriteBytes(meshData.indices.data(), sizeof(uint32) * meshData.indices.size());
+        writer.WriteBytes(meshData.animVertices.data(),
+            sizeof(FMeshVertexAnimBin) * meshData.animVertices.size());
+
+        writer.WriteBytes(meshData.indices.data(),
+            sizeof(uint32) * meshData.indices.size());
+
+        for (const auto& boneRef : meshData.boneRefs)
+        {
+            writer.WriteString(boneRef.name);
+
+            FMeshBoneRefBin boneRefBin{};
+            boneRefBin.boneIndex = boneRef.boneIndex;
+            boneRefBin.offsetMatrix = boneRef.offsetMatrix;
+            writer.Write(boneRefBin);
+        }
+    }
+
+    for (const auto& bone : _bones)
+    {
+        writer.WriteString(bone.name);
+
+        FBoneBin bin{};
+        bin.parentIndex = bone.parentIndex;
+        bin.depth = bone.depth;
+        bin.nodeTransform = bone.nodeTransform;
+        bin.offsetMatrix = bone.offsetMatrix;
+        bin.hasOffsetMatrix = bone.hasOffsetMatrix ? 1u : 0u;
+        writer.Write(bin);
+    }
+
+    // [추가] 3. Animation Clip Array
+    for (const auto& clip : _animations)
+    {
+        writer.WriteString(clip.name);
+
+        FAnimationClipBin clipBin{};
+        clipBin.duration = clip.duration;
+        clipBin.ticksPerSecond = clip.ticksPerSecond;
+        clipBin.channelCount = static_cast<uint32>(clip.channels.size());
+        writer.Write(clipBin);
+
+        for (const auto& channel : clip.channels)
+        {
+            writer.WriteString(channel.nodeName);
+
+            FAnimationChannelBin channelBin{};
+            channelBin.boneIndex = channel.boneIndex;
+            channelBin.keyFrameCount = static_cast<uint32>(channel.keyFrames.size());
+            writer.Write(channelBin);
+
+            writer.WriteBytes(channel.keyFrames.data(),
+                sizeof(FKeyFrameBin) * channel.keyFrames.size());
+        }
     }
 
     return true;
@@ -236,11 +560,14 @@ EConvertModelType Converter::Resolve_ModelType(const wstring& srcPath, EConvertM
 {
     if (requestedType != EConvertModelType::Auto)
     {
-        LOG_INFO("Model type forced: {} -> {}", fs::path(srcPath).string(), ToString(requestedType));
+        LOG_INFO("Model type forced: {} -> {}",
+            fs::path(srcPath).string(),
+            ToString(requestedType));
+
         return requestedType;
     }
 
-    // Auto 판별은 PreTransformVertices 없이 먼저 읽기
+    // Auto 판별은 Skeletal 기준으로 먼저 읽어서 본/애니메이션 존재 여부 확인
     if (!Read_AssetFile(srcPath, EConvertModelType::SkeletalMesh))
         return EConvertModelType::END;
 
@@ -294,19 +621,24 @@ bool Converter::Write_ModelMeta(const wstring& meshPath, EConvertModelType resol
 
     string guid;
     if (!Try_ReadExistingGuid(metaPath.wstring(), guid))
-    {
         guid = Generate_Guid_String();
-        if (guid.empty())
-        {
-            LOG_ERROR("Failed to generate guid for meta: {}", metaPath.string());
-            return false;
-        }
-    }
 
     json root;
     root["guid"] = guid;
     root["type"] = "model";
     root["modelType"] = ToString(resolvedType);
+
+    // 애니메이션 순서를 보기 위해
+    root["animationClipCount"] = static_cast<uint32>(_animations.size());
+    root["animationClips"] = json::array();
+
+    for (uint32 i = 0; i < _animations.size(); ++i)
+    {
+        json clip;
+        clip["index"] = i;
+        clip["name"] = _animations[i].name;
+        root["animationClips"].push_back(clip);
+    }
 
     ofstream file(metaPath, ios_base::out | ios_base::trunc);
     if (!file.is_open())
@@ -604,6 +936,113 @@ void Converter::Clear()
         _importer->FreeScene();
 
     _scene = nullptr;
+}
+
+void Converter::Collect_Bones_DFS(aiNode* node, int32 parentIndex, uint32 depth)
+{
+    if (node == nullptr)
+        return;
+
+    const uint32 currentIndex = static_cast<uint32>(_bones.size());
+
+    FExportBoneData bone{};
+    bone.name = node->mName.C_Str();
+    bone.parentIndex = parentIndex;
+    bone.depth = depth;
+    bone.nodeTransform = To_MatrixBin(Convert_AssimpMatrix(node->mTransformation));
+
+    _bones.push_back(bone);
+    _boneNameToIndex[bone.name] = currentIndex;
+
+    for (uint32 i = 0; i < node->mNumChildren; ++i)
+    {
+        Collect_Bones_DFS(node->mChildren[i], static_cast<int32>(currentIndex), depth + 1);
+    }
+
+}
+
+int32 Converter::Find_BoneIndex_ByName(const string& name) const
+{
+    auto it = _boneNameToIndex.find(name);
+
+    if (it == _boneNameToIndex.end())
+        return -1;
+
+    return it->second;
+}
+
+void Converter::Add_BoneInfluence(FMeshVertexAnimBin& vertex, uint32 boneIndex, float weight)
+{
+    if (weight <= 0.f)
+        return;
+
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        if (vertex.blendWeight[i] == 0.f)
+        {
+            vertex.blendIndex[i] = boneIndex;
+            vertex.blendWeight[i] = weight;
+
+            return;
+        }
+    }
+
+    uint32 minIndex = 0;
+    for (uint32 i = 1; i < 4; ++i)
+    {
+        if (vertex.blendWeight[i] < vertex.blendWeight[minIndex])
+        {
+            minIndex = i;
+        }
+    }
+
+    if (weight > vertex.blendWeight[minIndex])
+    {
+        vertex.blendIndex[minIndex] = boneIndex;
+        vertex.blendWeight[minIndex] = weight;
+    }
+
+}
+
+void Converter::Normalize_BoneWeights(FMeshVertexAnimBin& vertex)
+{
+    float sum = vertex.blendWeight[0] + vertex.blendWeight[1] +
+        vertex.blendWeight[2] + vertex.blendWeight[3];
+
+    if (sum <= FLT_EPSILON)
+    {
+        // 영향이 가는 뼈가 없으면 0번 본 100%로 세팅
+        vertex.blendIndex[0] = 0;
+        vertex.blendWeight[0] = 1.f;
+
+        return;
+    }
+
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        vertex.blendWeight[i] /= sum;
+    }
+
+}
+
+Matrix Converter::Convert_AssimpMatrix(const aiMatrix4x4& m) const
+{
+    Matrix out(
+        m.a1, m.b1, m.c1, m.d1,
+        m.a2, m.b2, m.c2, m.d2,
+        m.a3, m.b3, m.c3, m.d3,
+        m.a4, m.b4, m.c4, m.d4);
+
+    return out;
+}
+
+FMatrixBin Converter::To_MatrixBin(const Matrix& mat) const
+{
+    FMatrixBin out{};
+
+    memcpy(out.m, &mat, sizeof(float) * 16);
+
+    return out;
 }
 
 string Converter::EscapeJson(const string& value)

@@ -258,7 +258,7 @@ HRESULT StaticMeshActor::Ready_Components()
     Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
     Matrix preTransform = scaleMatrix * rotationMatrix;
 
-    auto proto = Model::Create(_device, _context, EModelType::StaticMesh, _resolvedPath, preTransform);
+    auto proto = Model::Create(_device, _context, EMeshVertexType::StaticMesh, _resolvedPath, preTransform);
     CHECK_NULL(proto, E_FAIL);
 
     GAME->Add_Component_Prototype(ETOI(ELevelType::Static), modelKey, proto);

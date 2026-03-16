@@ -28,15 +28,15 @@ public:
     HRESULT Save_Prefab(const string& prefabPath, shared_ptr<GameObject> gameObject);
 
     // Prefab에서 GameObject 생성 (인스턴싱)
-    shared_ptr<GameObject> Instantiate_Prefab(const string& prefabName, const json& overrides = {});
-    shared_ptr<FPrefabDesc> Get_PrefabData(const string& prefabName);
+    Shared<GameObject>  Instantiate_Prefab(const string& prefabName, const json& overrides = {});
+    Shared<FPrefabDesc> Get_PrefabData(const string& prefabName);
 
 private:
     // 직렬화
-    json Serialize_GameObject(shared_ptr<GameObject> gameObject);
+    json                Serialize_GameObject(shared_ptr<GameObject> gameObject);
     // 역직렬화
-    shared_ptr<GameObject> Deserialize_GameObject(const FPrefabDesc& desc, const json& overrides);
-
+    Shared<GameObject>  Deserialize_GameObject(const FPrefabDesc& desc, const json& overrides);
+    string              Normalize_PrefabPath(const string& prefabPath);
 
 private:
     ComPtr<Device>          _device;

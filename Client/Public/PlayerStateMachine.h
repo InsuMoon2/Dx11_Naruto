@@ -5,8 +5,14 @@
 #include "MovementComponent.h"
 
 NS_BEGIN(Client)
-    class InputComponent;
+class InputComponent;
 class MovementComponent;
+
+struct FStateAnimationDesc
+{
+    string  animationName = "";
+    bool    loop = true;
+};
 
 class PlayerStateMachine final : public Component
 {
@@ -34,6 +40,9 @@ public:
     Shared<InputComponent>      Get_Input()     const { return _input; }
     Shared<MovementComponent>   Get_Movement()  const { return _movement; }
 
+    const FStateAnimationDesc*  Find_StateAnimation(EPlayerState stateID) const;
+    FStateAnimationDesc&        Edit_StateAnimation(EPlayerState stateID);
+
 private:
     Shared<InputComponent>                      _input;
     Shared<MovementComponent>                   _movement;
@@ -44,6 +53,10 @@ private:
     Shared<IPlayerState>                        _currentState = nullptr;
     EPlayerState                                _currentStateID = EPlayerState::END;
     EPlayerState                                _prevStateID = EPlayerState::END;
+
+protected:
+    umap<EPlayerState, FStateAnimationDesc>     _stateAnimations;
+    //vector<string>                              _
 
 protected:
     json To_Json() const override;

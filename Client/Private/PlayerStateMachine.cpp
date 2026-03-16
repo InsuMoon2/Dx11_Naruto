@@ -117,10 +117,33 @@ MovementComponent::FMoveCommand PlayerStateMachine::Init_MoveCommand() const
     return cmd;
 }
 
+const FStateAnimationDesc* PlayerStateMachine::Find_StateAnimation(EPlayerState stateID) const
+{
+    auto iter = _stateAnimations.find(stateID);
+
+    if (iter == _stateAnimations.end())
+        return nullptr;
+
+    return &iter->second;
+}
+
 json PlayerStateMachine::To_Json() const
 {
     json root = Component::To_Json();
-    
+
+    json animArray = json::array();
+
+    for (const auto& [stateID, desc] : _stateAnimations)
+    {
+        json item;
+        item["state"] = string(magic_enum::enum_name(stateID));
+        item["animationName"] = desc.animationName;
+        item["loop"] = desc.loop;
+        animArray.push_back(item);
+    }
+
+    root["stateAnimations"] = animArray;
+
     return root;
 }
 
@@ -128,7 +151,24 @@ void PlayerStateMachine::From_Json(const json& data)
 {
     Component::From_Json(data);
 
-   
+    _stateAnimations.clear();
+
+    if (!data.contains("stateAnimations") || !data["stateAnimations"].is_array())
+        return;
+
+    for (const auto& item : data["stateAnimations"])
+    {
+        string stateName = item.value("state", "");
+        auto stateOpt = magic_enum::enum_cast<EPlayerState>(stateName);
+        if (!stateOpt.has_value())
+            continue;
+
+        FStateAnimationDesc desc;
+        desc.animationName = item.value("animationName", "");
+        desc.loop = item.value("loop", true);
+
+        _stateAnimations[stateOpt.value()] = desc;
+    }
 }
 
 Shared<PlayerStateMachine> PlayerStateMachine::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

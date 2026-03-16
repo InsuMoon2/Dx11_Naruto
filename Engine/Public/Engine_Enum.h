@@ -48,7 +48,7 @@ namespace Engine
     static constexpr uint32 MATERIAL_TEXTURE_SLOT_COUNT =
         static_cast<uint32>(EMaterialTextureSlot::END);
 
-    enum class EModelType { StaticMesh, SkeletalMesh, END };
+    enum class EMeshVertexType { StaticMesh, SkeletalMesh, END };
 
 }
 

@@ -423,5 +423,8 @@
     <FxCompile Include="..\Bin\Shaders\Shader_VtxStaticMesh.hlsl">
       <Filter>94. Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_VtxAnimMesh.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

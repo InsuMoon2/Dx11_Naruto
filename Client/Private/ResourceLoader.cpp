@@ -374,7 +374,7 @@ HRESULT ResourceLoader::Load_Model(const json& data)
 
         string levelStr = item.value("level", "Static");
         string modelTypeStr = item.value("modelType", "Static");
-        EModelType modelType = (modelTypeStr == "SkeletalMesh") ? EModelType::SkeletalMesh : EModelType::StaticMesh;
+        EMeshVertexType modelType = (modelTypeStr == "SkeletalMesh") ? EMeshVertexType::SkeletalMesh : EMeshVertexType::StaticMesh;
 
         uint32 typeId = Get_ComponentID_From_String(idStr);
         uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
@@ -390,7 +390,7 @@ HRESULT ResourceLoader::Load_Model(const json& data)
             {
                 Matrix preTransform = Matrix::Identity;
 
-                if (modelType == EModelType::SkeletalMesh)
+                if (modelType == EMeshVertexType::SkeletalMesh)
                 {
                     preTransform =
                         Matrix::CreateScale(0.01f) *
@@ -608,6 +608,11 @@ ResourceLoader::FInputLayoutInfo ResourceLoader::Get_InputLayout(const string& n
     if (name == "VtxMesh")
     {
         return { FVertexMesh::Elements, FVertexMesh::numElements };
+    }
+
+    if (name == "VtxAnim")
+    {
+        return { FVertexAnimationMesh::Elements, FVertexAnimationMesh::numElements };
     }
 
     return { nullptr, 0 };

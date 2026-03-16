@@ -32,7 +32,7 @@ void Level_MainTitle::Update(float timeDelta)
     if (INPUT->KeyDown(KEY_TYPE::SPACE))
     {
         GAME->Change_Level(ETOI(ELevelType::Loading),
-            Level_Loading::Create(_device, _context, ELevelType::GamePlay, false));
+            Level_Loading::Create(_device, _context, ELevelType::GamePlay, true));
     }
 }
 

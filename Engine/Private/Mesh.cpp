@@ -10,10 +10,7 @@ Mesh::Mesh(const Mesh& rhs)
     : VIBuffer(rhs)
     , _materialIndex(rhs._materialIndex)
     , _meshName(rhs._meshName)
-{
-}
-
-Mesh::~Mesh()
+    , _vertexType(rhs._vertexType)
 {
 }
 
@@ -22,6 +19,17 @@ HRESULT Mesh::Initialize_Prototype(const string& meshName, uint32 materialIndex,
 {
     _meshName = meshName;
     _materialIndex = materialIndex;
+    _vertexType = EMeshVertexType::StaticMesh;
+
+    return Create_Buffers(vertices, indices);
+}
+
+HRESULT Mesh::Initialize_Prototype(const string& meshName, uint32 materialIndex, const vector<VTXANIM>& vertices,
+    const vector<uint32>& indices)
+{
+    _meshName = meshName;
+    _materialIndex = materialIndex;
+    _vertexType = EMeshVertexType::SkeletalMesh;
 
     return Create_Buffers(vertices, indices);
 }
@@ -67,8 +75,59 @@ HRESULT Mesh::Create_Buffers(const vector<VTXMESH>& vertices, const vector<uint3
     return S_OK;
 }
 
+HRESULT Mesh::Create_Buffers(const vector<VTXANIM>& vertices, const vector<uint32>& indices)
+{
+    _numVertexBuffers = 1;
+    _numVertices = static_cast<uint32>(vertices.size());
+    _vertexStride = sizeof(VTXANIM);
+    _numIndices = static_cast<uint32>(indices.size());
+    _indexStride = sizeof(uint32);
+    _primitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+    D3D11_BUFFER_DESC vertexBufferDesc{};
+    vertexBufferDesc.ByteWidth = _vertexStride * _numVertices;
+    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vertexBufferDesc.StructureByteStride = _vertexStride;
+
+    D3D11_SUBRESOURCE_DATA vertexInitialData{};
+    vertexInitialData.pSysMem = vertices.data();
+
+    CHECK_FAILED(_device->CreateBuffer(
+        &vertexBufferDesc, &vertexInitialData, _vertexBuffer.GetAddressOf()), E_FAIL);
+
+    D3D11_BUFFER_DESC indexBufferDesc{};
+    indexBufferDesc.ByteWidth = _indexStride * _numIndices;
+    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    indexBufferDesc.StructureByteStride = _indexStride;
+
+    D3D11_SUBRESOURCE_DATA indexInitialData{};
+    indexInitialData.pSysMem = indices.data();
+
+    CHECK_FAILED(_device->CreateBuffer(
+        &indexBufferDesc, &indexInitialData, _indexBuffer.GetAddressOf()), E_FAIL);
+
+    return S_OK;
+}
+
 Shared<Mesh> Mesh::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const string& meshName,
-    uint32 materialIndex, const vector<VTXMESH>& vertices, const vector<uint32>& indices)
+                          uint32 materialIndex, const vector<VTXMESH>& vertices, const vector<uint32>& indices)
+{
+    auto instance = make_shared<Mesh>(device, context);
+
+    if (FAILED(instance->Initialize_Prototype(meshName, materialIndex, vertices, indices)))
+    {
+        MSG_BOX("Failed to Create : Mesh");
+        instance->Free();
+        return nullptr;
+    }
+
+    return instance;
+}
+
+Shared<Mesh> Mesh::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const string& meshName,
+    uint32 materialIndex, const vector<VTXANIM>& vertices, const vector<uint32>& indices)
 {
     auto instance = make_shared<Mesh>(device, context);
 

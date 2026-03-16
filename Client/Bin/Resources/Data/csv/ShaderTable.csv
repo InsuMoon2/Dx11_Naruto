@@ -4,3 +4,4 @@ Shader,COMPONENT_TYPE_SHADER_VTXNORTEX,../../Client/Bin/Shaders/Shader_VtxNorTex
 Shader,COMPONENT_TYPE_SHADER_VTXMESH,../../Client/Bin/Shaders/Shader_VtxMesh.hlsl,,Static,VtxMesh
 Shader,COMPONENT_TYPE_SHADER_UI,../../Client/Bin/Shaders/Shader_UI.hlsl,,Static,VtxTex
 Shader,COMPONENT_TYPE_SHADER_STATIC_MESH,../../Client/Bin/Shaders/Shader_VtxStaticMesh.hlsl,,Static,VtxMesh
+Shader,COMPONENT_TYPE_SHADER_VTXANIMMESH,../../Client/Bin/Shaders/Shader_VtxAnimMesh.hlsl,,Static,VtxAnim

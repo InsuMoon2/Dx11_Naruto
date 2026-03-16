@@ -37,6 +37,8 @@ void UI_Manager::Update(float timeDelta)
         }
     }
 
+    
+
     Update_UIAnimations(timeDelta);
 }
 

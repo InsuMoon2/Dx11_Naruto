@@ -1,7 +1,7 @@
 {
     "endFrame": 60,
     "fps": 60,
-    "loop": false,
+    "loop": true,
     "name": "NewUIAnimation",
     "startFrame": 0,
     "targetName": "Press Text",
@@ -18,9 +18,18 @@
                     ]
                 },
                 {
-                    "frame": 36,
+                    "frame": 18,
                     "value": [
                         1600.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 36,
+                    "value": [
+                        1200.0,
                         0.0,
                         0.0,
                         0.0
@@ -28,6 +37,20 @@
                 }
             ],
             "property": "PositionX"
+        },
+        {
+            "keys": [
+                {
+                    "frame": 9,
+                    "value": [
+                        700.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "property": "PositionY"
         }
     ]
 }

@@ -60,7 +60,7 @@ namespace Engine
         Vec3    tangent;
         Vec2    texcoord;
 
-        Vec4    blendIndex;
+        XMUINT4 blendIndex;
         Vec4    blendWeight;
 
         static const uint32 numElements = { 6 };

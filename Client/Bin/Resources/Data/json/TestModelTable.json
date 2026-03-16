@@ -1,0 +1,34 @@
+{
+    "ModelTable": [
+        {
+            "id": "COMPONENT_TYPE_MODEL_PLAYER",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara.meshbin",
+            "count": 1,
+            "modelType": "SkeletalMesh"
+        },
+        {
+            "id": "COMPONENT_TYPE_MODEL_MONSTER",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Models/Boruto/Boruto.meshbin",
+            "count": 1,
+            "modelType": "SkeletalMesh"
+        },
+        {
+            "id": "COMPONENT_TYPE_MODEL_SASKE",
+            "level": "Static",
+            "path": "../../Client/Bin/Resources/Models/Saske/Saske.meshbin",
+            "count": 1,
+            "modelType": "SkeletalMesh"
+        }
+    ],
+    "ModelTable2": [
+        {
+            "id": "COMPONENT_TYPE_MODEL_PLAYER",
+            "level": "Static",
+            "path": "TestPath",
+            "count": 1,
+            "modelType": "SkeletalMesh"
+        }
+    ]
+}

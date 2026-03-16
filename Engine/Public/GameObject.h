@@ -49,12 +49,13 @@ public:
     {
         uint32 id = T::StaticTypeID();
 
-        auto iter = _components.find(id);
+        for (auto& [key, comp] : _components)
+        {
+            if (comp && comp->Get_ComponentID() == id)
+                return static_pointer_cast<T>(comp);
+        }
 
-        if (iter == _components.end())
-            return nullptr;
-
-        return static_pointer_cast<T>(iter->second);
+        return nullptr;
     }
 
     shared_ptr<Component> Get_Component(uint32 id);

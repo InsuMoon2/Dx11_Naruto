@@ -5,6 +5,7 @@
 #include "Component_Factory.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include <magic_enum/magic_enum.hpp>
 
 Prefab_Manager::Prefab_Manager(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -52,17 +53,47 @@ HRESULT Prefab_Manager::Load_Prefab(const string& prefabPath)
     file >> root;
     file.close();
 
+    if (!root.contains("object_type"))
+    {
+        LOG_ERROR("Prefab has no object_type : {}", prefabPath);
+        return E_FAIL;
+    }
+
+    if (!root.contains("components"))
+    {
+        LOG_ERROR("Prefab has no components : {}", prefabPath);
+        return E_FAIL;
+    }
+
+
     // Prefab 데이터 생성
     auto prefabData = make_shared<FPrefabDesc>();
 
     fs::path path(prefabPath);
     string fileName = path.filename().string();
-    size_t dotPos = fileName.find('.'); // 첫번째 마침표 위치 찾기
-    string prefabKey = (dotPos != string::npos) ? fileName.substr(0, dotPos) : path.stem().string();
-    prefabData->prefab_name = prefabKey;
 
+    const string suffix = ".prefab.json";
+    string prefabKey;
+
+    if (fileName.size() >= suffix.size() &&
+        fileName.compare(fileName.size() - suffix.size(), suffix.size(), suffix) == 0)
+    {
+        prefabKey = fileName.substr(0, fileName.size() - suffix.size());
+    }
+    else
+    {
+        prefabKey = path.stem().string();
+    }
+
+    prefabData->prefab_name = prefabKey;
     prefabData->object_type = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
-        root["object_type"].get<std::string>()).value_or(Protocol::OBJECT_TYPE_NONE);
+        root["object_type"].get<string>()).value_or(Protocol::OBJECT_TYPE_NONE);
+
+    if (prefabData->object_type == Protocol::OBJECT_TYPE_NONE)
+    {
+        LOG_ERROR("Invalid object_type in prefab : {}", prefabPath);
+        return E_FAIL;
+    }
 
     prefabData->components = root["components"];
 
@@ -71,7 +102,6 @@ HRESULT Prefab_Manager::Load_Prefab(const string& prefabPath)
         prefabData->custom_properties = root["custom_properties"];
     }
 
-    // 데이터 캐싱
     _prefabs[prefabKey] = prefabData;
 
     LOG_INFO("Loaded prefab : {}", prefabKey);
@@ -81,6 +111,8 @@ HRESULT Prefab_Manager::Load_Prefab(const string& prefabPath)
 
 HRESULT Prefab_Manager::Save_Prefab(const string& prefabPath, shared_ptr<GameObject> gameObject)
 {
+    string normalizePath = Normalize_PrefabPath(prefabPath);
+
     json root = Serialize_GameObject(gameObject);
 
     ofstream file(prefabPath);
@@ -105,7 +137,21 @@ shared_ptr<GameObject> Prefab_Manager::Instantiate_Prefab(const string& prefabNa
 
     if (!desc)
     {
-        LOG_ERROR("Prefab not found: {}", prefabName);
+        LOG_ERROR("Prefab not found: '{}'", prefabName);
+
+        if (!_prefabs.empty())
+        {
+            string keys;
+            for (const auto& [key, _] : _prefabs)
+            {
+                if (!keys.empty())
+                    keys += ", ";
+                keys += key;
+            }
+
+            LOG_WARN("Available prefab keys: {}", keys);
+        }
+
         return nullptr;
     }
 
@@ -143,7 +189,10 @@ shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc&
 
     if (!gameObject)
     {
-        LOG_ERROR("Failed to Create GameObject to Factory");
+        LOG_ERROR("Failed to clone prototype for prefab. prefab='{}', object_type='{}' ({})",
+            desc.prefab_name, magic_enum::enum_name(desc.object_type),
+            static_cast<uint32>(desc.object_type));
+
         return nullptr;
     }
 
@@ -208,6 +257,19 @@ shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc&
     gameObject->Set_Name(Utils::ToWString(desc.prefab_name));
 
     return gameObject;
+}
+
+string Prefab_Manager::Normalize_PrefabPath(const string& prefabPath)
+{
+    const string suffix = ".prefab.json";
+
+    if (prefabPath.size() >= suffix.size() &&
+            prefabPath.compare(prefabPath.size() - suffix.size(), suffix.size(), suffix) == 0)
+    {
+        return prefabPath;
+    }
+
+    return prefabPath + suffix;
 }
 
 unique_ptr<Prefab_Manager> Prefab_Manager::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

@@ -190,10 +190,10 @@ void Level_Gameplay::Spawn_LocalPlayer()
         }
     }
 
-    auto player = Spawn_Helper::Prefab("TestPlayer")
+    auto player = Spawn_Helper::Prefab("TestPlayer2")
         .AtLevel(ETOI(ELevelType::GamePlay))
         .Position(spawnPos)
-        .InLayer(TEXT("Layer_Builder"))
+        .InLayer(TEXT("Layer_Player"))
         .Spawn();
 
     CHECK_NULL(player);

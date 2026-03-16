@@ -262,6 +262,11 @@ void Hierarchy::Draw_ObjectNode(shared_ptr<GameObject> gameObject, int index)
         if (sceneView)
         {
             auto transform = gameObject->Get_Component<Transform>();
+            auto owner = transform->Get_Owner();
+
+            // UI 는 이동 X
+            if (auto ui = dynamic_pointer_cast<UIObject>(gameObject))
+                return;
 
             if (transform)
             {

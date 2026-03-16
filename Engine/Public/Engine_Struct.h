@@ -58,11 +58,11 @@ namespace Engine
 
     struct FKeyFrame
     {
-        Vec3    scale;
-        Vec4    rotation;       // 쿼터니온이여서 Vec4
-        Vec3    translation;
+        float   time = 0.f;
 
-        float   trackPosition;
+        Vec3    scale = Vec3(1.f, 1.f, 1.f);
+        Quat    rotation = Quat::Identity;
+        Vec3    translation = Vec3::Zero;
     };
     
 }

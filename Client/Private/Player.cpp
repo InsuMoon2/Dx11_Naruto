@@ -34,7 +34,7 @@ HRESULT Player::Initialize(void* arg)
 {
     CHECK_FAILED(Character::Initialize(arg), E_FAIL);
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXMESH, _shaderCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXANIMMESH, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_SASKE, _model), E_FAIL);
 
     return S_OK;
@@ -43,7 +43,6 @@ HRESULT Player::Initialize(void* arg)
 void Player::BeginPlay()
 {
     Character::BeginPlay();
-
 
 }
 
@@ -56,6 +55,7 @@ void Player::Update(float timeDelta)
 {
     Character::Update(timeDelta);
 
+    _model->Play_Animation(timeDelta);  
 }
 
 void Player::Late_Update(float timeDelta)
@@ -70,8 +70,10 @@ HRESULT Player::Render()
     Character::Render();
 
     size_t numMeshes = _model->Get_NumMeshes();
+    
     for (size_t i = 0; i < numMeshes; i++)
     {
+        CHECK_FAILED(_model->Bind_BoneMatrices(_shaderCom, "g_BoneMatrices"), E_FAIL);
         _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
 
         CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
@@ -101,8 +103,7 @@ HRESULT Player::Bind_ShaderResources()
     _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
     _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
 
-    GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
-
+    GAME->Bind_CamPosition(_shaderCom, "g_vCamPosition");
     CHECK_FAILED(Bind_Lights(), E_FAIL);
 
     return S_OK;
@@ -124,10 +125,12 @@ HRESULT Player::Bind_Lights()
 
     CHECK_NULL(lightDesc, E_FAIL);
 
-    _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
-    _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Vec4));
-    _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Vec4));
-    _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Vec4));
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_vLightDir", &lightDesc->direction, sizeof(Vec4)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_vLightDiffuse", &lightDesc->diffuse, sizeof(Vec4)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_vLightAmbient", &lightDesc->ambient, sizeof(Vec4)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_vLightSpecular", &lightDesc->specular, sizeof(Vec4)), E_FAIL);
+
+    return S_OK;
 }
 
 shared_ptr<GameObject> Player::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

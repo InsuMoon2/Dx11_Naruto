@@ -45,14 +45,14 @@ public:
     };
 
 public: /* 애니메이션 재생용 */
-    bool    Play_UIAnimation(Shared<UIObject> target, const string& animationName);
-    bool    Play_UIAnimation(const wstring& targetName, const string& animationName);
+    bool                    Play_UIAnimation(Shared<UIObject> target, const string& animationName);
+    bool                    Play_UIAnimation(const wstring& targetName, const string& animationName);
 
-    bool    Pause_UIAnimation(Shared<UIObject> target, const string& animationName);
-    bool    Pause_UIAnimation(const wstring& targetName, const string& animationName);
+    bool                    Pause_UIAnimation(Shared<UIObject> target, const string& animationName);
+    bool                    Pause_UIAnimation(const wstring& targetName, const string& animationName);
 
-    bool    Stop_UIAnimation(Shared<UIObject> target, const string& animationName);
-    bool    Stop_UIAnimation(const wstring& targetName, const string& animationName);
+    bool                    Stop_UIAnimation(Shared<UIObject> target, const string& animationName);
+    bool                    Stop_UIAnimation(const wstring& targetName, const string& animationName);
 
 private:
     uint32                  Get_UIPrototypeLevel() const { return _uiPrototypeLevel; }

@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "Character.h"
-
 #include "Controller.h"
 
 Character::Character(ComPtr<Device> device, ComPtr<DeviceContext> context)
