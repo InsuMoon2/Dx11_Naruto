@@ -3,6 +3,7 @@
 #include "PlayerStateMachine.h"
 #include "InputComponent.h"
 #include "MovementComponent.h"
+#include "Model.h"
 
 PlayerState_DoubleJump::PlayerState_DoubleJump()
 {
@@ -14,35 +15,54 @@ PlayerState_DoubleJump::~PlayerState_DoubleJump()
 
 void PlayerState_DoubleJump::Enter(PlayerStateMachine* state)
 {
-    auto cmd = state->Init_MoveCommand();
-    cmd.doublejump = true;
+    if (!state)
+        return;
 
-    state->Get_Movement()->Apply_Command(cmd);
-    state->Get_Movement()->Update(0.f);  // Jump Velocity 설정
+    auto movement = state->Get_Movement();
+    if (!movement)
+        return;
 
-    // TODO : PlayAnimation : Double Jump
+    movement->Set_OrientRotationToMovement(true);
 
+    movement->Start_DoubleJump();
+    state->Apply_StateAnimation(EPlayerState::DoubleJump);
 }
 
 void PlayerState_DoubleJump::Update(PlayerStateMachine* state, float timeDelta)
 {
     auto input = state->Get_Input();
-    const auto& frame = input->Get_Frame();
-
+	auto model = state->Get_Model();
     auto movement = state->Get_Movement();
-    auto cmd = state->Init_MoveCommand();
 
-    movement->Apply_Command(cmd);
-    movement->Update(timeDelta);
+	auto cmd = state->Init_MoveCommand();
+	movement->Apply_Command(cmd);
+	movement->Update(timeDelta);
 
-    // 착지 판정
-    if (movement->Is_OnGround())
-    {
-        bool hasInput = Vec2(frame.moveX, frame.moveY).LengthSquared() > FLT_EPSILON;
+	if (!movement->Is_OnGround())
+		return;
 
-        // 입력값이 있으면 Run, 없으면 Idle
-        state->Change_State(hasInput ? EPlayerState::Run : EPlayerState::Idle);
-    }
+	const bool hasInput = input->Has_MoveInput();
+	const auto* desc = state->Find_StateAnimation(EPlayerState::DoubleJump);
+
+	if (!desc)
+	{
+		state->Change_State(hasInput ? EPlayerState::Run : EPlayerState::Idle);
+		return;
+	}
+
+	if (desc->mode == EStateAnimationMode::Sequence)
+	{
+		model->Request_AnimEnd();
+
+		if (model->Is_AnimationSequenceFinished())
+		{
+			state->Change_State(hasInput ? EPlayerState::Run : EPlayerState::Idle);
+		}
+
+		return;
+	}
+
+	state->Change_State(hasInput ? EPlayerState::Run : EPlayerState::Idle);
 }
 
 void PlayerState_DoubleJump::Exit(PlayerStateMachine* state)

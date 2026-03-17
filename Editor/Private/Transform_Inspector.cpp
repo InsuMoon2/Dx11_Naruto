@@ -15,10 +15,15 @@ void Transform_Inspector::Draw_Inspector(shared_ptr<Component> component)
 
     ImGui::Spacing();
 
-    // ── 위치 ──
-    ImGui::TextDisabled(" 위치");
+    const float labelWidth = 52.f;
+
+    // 위치
     {
         Vec3 pos = transform->Get_LocalPosition();
+
+        ImGui::AlignTextToFramePadding();
+        ImGui::TextDisabled("위치");
+        ImGui::SameLine(labelWidth);
 
         if (Draw_XYZRow("Pos", pos, 0.1f))
             transform->Set_LocalPosition(pos);
@@ -26,20 +31,27 @@ void Transform_Inspector::Draw_Inspector(shared_ptr<Component> component)
         if (ImGui::IsItemActivated())
             _capturedPos = transform->Get_LocalPosition();
 
-        if (ImGui::IsItemDeactivatedAfterEdit()) {
-            Vec3 old = _capturedPos, nw = transform->Get_LocalPosition();
+        if (ImGui::IsItemDeactivatedAfterEdit())
+        {
+            Vec3 old = _capturedPos;
+            Vec3 nw = transform->Get_LocalPosition();
 
             EDITOR->ExecuteCommand(Action_Command::Create(
                 [=]() { transform->Set_LocalPosition(old); },
-                [=]() { transform->Set_LocalPosition(nw); }, "Transform Position"));
+                [=]() { transform->Set_LocalPosition(nw); },
+                "Transform Position"));
         }
     }
+
     ImGui::Spacing();
 
-    // ── 회전 ──
-    ImGui::TextDisabled(" 회전");
+    // 회전
     {
         Vec3 euler = transform->Get_LocalEulerAngles();
+
+        ImGui::AlignTextToFramePadding();
+        ImGui::TextDisabled("회전");
+        ImGui::SameLine(labelWidth);
 
         if (Draw_XYZRow("Rot", euler, 1.0f))
             transform->Set_LocalEulerAngles(euler.x, euler.y, euler.z);
@@ -47,20 +59,27 @@ void Transform_Inspector::Draw_Inspector(shared_ptr<Component> component)
         if (ImGui::IsItemActivated())
             _capturedRot = transform->Get_LocalEulerAngles();
 
-        if (ImGui::IsItemDeactivatedAfterEdit()) {
-            Vec3 old = _capturedRot, nw = transform->Get_LocalEulerAngles();
+        if (ImGui::IsItemDeactivatedAfterEdit())
+        {
+            Vec3 old = _capturedRot;
+            Vec3 nw = transform->Get_LocalEulerAngles();
 
             EDITOR->ExecuteCommand(Action_Command::Create(
                 [=]() { transform->Set_LocalEulerAngles(old.x, old.y, old.z); },
-                [=]() { transform->Set_LocalEulerAngles(nw.x, nw.y, nw.z); }, "Transform Rotation"));
+                [=]() { transform->Set_LocalEulerAngles(nw.x, nw.y, nw.z); },
+                "Transform Rotation"));
         }
     }
+
     ImGui::Spacing();
 
-    // ── 크기 ──
-    ImGui::TextDisabled(" 크기");
+    // 크기
     {
         Vec3 scale = transform->Get_LocalScale();
+
+        ImGui::AlignTextToFramePadding();
+        ImGui::TextDisabled("크기");
+        ImGui::SameLine(labelWidth);
 
         if (Draw_XYZRow("Scl", scale, 0.01f))
             transform->Set_LocalScale(scale);
@@ -68,16 +87,21 @@ void Transform_Inspector::Draw_Inspector(shared_ptr<Component> component)
         if (ImGui::IsItemActivated())
             _capturedScale = transform->Get_LocalScale();
 
-        if (ImGui::IsItemDeactivatedAfterEdit()) {
-            Vec3 old = _capturedScale, nw = transform->Get_LocalScale();
+        if (ImGui::IsItemDeactivatedAfterEdit())
+        {
+            Vec3 old = _capturedScale;
+            Vec3 nw = transform->Get_LocalScale();
 
             EDITOR->ExecuteCommand(Action_Command::Create(
                 [=]() { transform->Set_LocalScale(old); },
-                [=]() { transform->Set_LocalScale(nw); }, "Transform Scale"));
+                [=]() { transform->Set_LocalScale(nw); },
+                "Transform Scale"));
         }
     }
+
     ImGui::Spacing();
 }
+
 
 bool Transform_Inspector::XYZ_DragFloat(const char* label, ImVec4 color, float& value, float speed,
     const char* uniqueId, float fieldWidth)

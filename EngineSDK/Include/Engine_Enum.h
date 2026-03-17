@@ -50,5 +50,7 @@ namespace Engine
 
     enum class EMeshVertexType { StaticMesh, SkeletalMesh, END };
 
+    enum class EAnimPhase { Start, Loop, End };
+
 }
 

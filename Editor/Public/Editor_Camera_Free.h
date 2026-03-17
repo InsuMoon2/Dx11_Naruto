@@ -27,6 +27,8 @@ public:
     
     Matrix  Get_ViewMatrix() const;
 
+    void    Apply_EditorDesc(const FEditorCameraDesc& desc);
+
 private:
     
 

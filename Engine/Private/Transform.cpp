@@ -160,6 +160,11 @@ void Transform::Add_LocalRotation(const Quat& deltaRotation)
     _localRotation = _localRotation * deltaRotation;
     _localRotation.Normalize();
 
+    Vec3 euler = _localRotation.ToEuler();
+    _localEulerAngles.x = XMConvertToDegrees(euler.x);
+    _localEulerAngles.y = XMConvertToDegrees(euler.y);
+    _localEulerAngles.z = XMConvertToDegrees(euler.z);
+
     Mark_Dirty();
 }
 

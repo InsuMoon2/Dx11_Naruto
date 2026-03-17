@@ -43,6 +43,9 @@ public:
 
 public:
     const FInputFrame& Get_Frame() const { return _frame; }
+    bool               Has_MoveInput() const;
+    Vec2               Get_MoveAxis() const;
+
 
 protected:
     json To_Json() const override;

@@ -49,6 +49,8 @@ namespace fs = std::filesystem;
 #include "Editor_Enum.h"
 #include "Editor_Struct.h"
 
+#include "Client_Defines.h"
+
 // ============================================
 //        메모리 누수 감지
 // ============================================

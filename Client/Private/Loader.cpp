@@ -23,6 +23,7 @@
 #include "SkillComponent.h"
 #include "Level.h"
 
+#include "Model.h"
 #include "Camera_Free.h"
 #include "Camera_Target.h"
 #include "MyPlayer.h"
@@ -35,7 +36,7 @@
 #include "Shader.h"
 #include "UI_LoadingProgressBar.h"
 #include "UI_LoadingSpinner.h"
-#include "UI_MainTitleText.h"
+#include "UI_MainTitleMenuButton.h"
 #include "UI_PlayerHP.h"
 #include "UI_PlayerHUD.h"
 #include "UI_PlayerSkill.h"

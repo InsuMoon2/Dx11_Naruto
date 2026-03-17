@@ -63,7 +63,7 @@ HRESULT UI_Text::Render()
     finalStyle.color.w *= _tintColor.w;
     finalStyle.color.w *= _opacity;
 
-    HRESULT hr = GAME->Draw_Text(_text, rect, _style);
+    HRESULT hr = GAME->Draw_Text(_text, rect, finalStyle);
     CHECK_FAILED(hr, E_FAIL);
 
     return S_OK;
@@ -74,8 +74,8 @@ RECT UI_Text::Build_ScreenRect() const
     float designX = GAME->Get_WindowWidth();
     float designY = GAME->Get_WindowHeight();
 
-    float currentViewX = GAME->Get_ViewportWidth();
-    float currentViewY = GAME->Get_ViewportHeight();
+    float currentViewX = GAME->Get_UIViewportWidth();
+    float currentViewY = GAME->Get_UIViewportHeight();
 
     float ratioX = currentViewX / designX;
     float ratioY = currentViewY / designY;

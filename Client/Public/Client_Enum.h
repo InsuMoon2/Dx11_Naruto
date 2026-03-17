@@ -34,6 +34,7 @@ namespace Client
         END
     };
 
-
+    // 애니메이션이 하나인지, Start -> Loop -> End로 세팅될건지
+    enum class EStateAnimationMode { Single, Sequence, END };
 
 }

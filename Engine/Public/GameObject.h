@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <type_traits>
+
 #include "Transform.h"
 #include "GameInstance.h"
 
@@ -43,10 +45,16 @@ public: /* PendingKill */
 
     const string& Get_GUID() const { return _guid; }
 
+    void Set_SourcePrefabName(const string& prefabName) { _sourcePrefabName = prefabName; }
+    const string& Get_SourcePrefabName() const { return _sourcePrefabName; }
+
 public:
     template<typename T>
     shared_ptr<T> Get_Component()
     {
+        static_assert(std::is_base_of_v<Component, T>,
+            "GameObject::Get_Component<T>() requires T to derive from Component.");
+
         uint32 id = T::StaticTypeID();
 
         for (auto& [key, comp] : _components)
@@ -127,7 +135,9 @@ protected: /* Values */
     bool _hasBegunPlay = false;
 
     // GUID
-    string _guid; // "550e840... 뭐 이런식으로 결과값이 나옴"
+    string _guid;
+
+    string _sourcePrefabName = "";
 
 public:
     virtual shared_ptr<GameObject> Clone(void* arg) abstract;

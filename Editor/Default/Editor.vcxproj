@@ -244,6 +244,8 @@
     <ClInclude Include="..\Public\Model_Inspector.h" />
     <ClInclude Include="..\Public\Notification_Manager.h" />
     <ClInclude Include="..\Public\PlayerSession_Manager.h" />
+    <ClInclude Include="..\Public\PlayerStateMachine_Inspector.h" />
+    <ClInclude Include="..\Public\Prefab_PreviewCameraSettings.h" />
     <ClInclude Include="..\Public\Prefab_View.h" />
     <ClInclude Include="..\Public\Profiler_View.h" />
     <ClInclude Include="..\Public\Property_Command.h" />
@@ -286,6 +288,8 @@
     <ClCompile Include="..\Private\Model_Inspector.cpp" />
     <ClCompile Include="..\Private\Notification_Manager.cpp" />
     <ClCompile Include="..\Private\PlayerSession_Manager.cpp" />
+    <ClCompile Include="..\Private\PlayerStateMachine_Inspector.cpp" />
+    <ClCompile Include="..\Private\Prefab_PreviewCameraSettings.cpp" />
     <ClCompile Include="..\Private\Prefab_View.cpp" />
     <ClCompile Include="..\Private\Profiler_View.cpp" />
     <ClCompile Include="..\Private\Property_Command.cpp" />

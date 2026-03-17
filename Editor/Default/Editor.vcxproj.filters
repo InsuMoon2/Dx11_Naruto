@@ -161,6 +161,8 @@
     </ClInclude>
     <ClInclude Include="..\Public\Editor_SequencerAdapterBase.h" />
     <ClInclude Include="..\Public\UI_AnimSequencerAdapter.h" />
+    <ClInclude Include="..\Public\PlayerStateMachine_Inspector.h" />
+    <ClInclude Include="..\Public\Prefab_PreviewCameraSettings.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -275,6 +277,8 @@
     </ClCompile>
     <ClCompile Include="..\Private\Editor_SequencerAdapterBase.cpp" />
     <ClCompile Include="..\Private\UI_AnimSequencerAdapter.cpp" />
+    <ClCompile Include="..\Private\PlayerStateMachine_Inspector.cpp" />
+    <ClCompile Include="..\Private\Prefab_PreviewCameraSettings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

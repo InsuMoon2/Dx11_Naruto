@@ -11,6 +11,7 @@ class ENGINE_DLL Animation final : public Base
 {
 public:
     Animation();
+    Animation(const Animation& rhs);
     virtual ~Animation() = default;
 
 public:
@@ -32,6 +33,7 @@ private:
 
 public:
     static Shared<Animation> Create(const FAnimationClipRaw& src);
+    Shared<Animation>        Clone();
     void Free() override;
 };
 

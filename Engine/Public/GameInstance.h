@@ -91,6 +91,10 @@ public: /* Graphic Device */
 	HRESULT                 Clear_Buffers(const Color& clearColor);
 	HRESULT                 Present();
 
+    float                   Get_UIViewportWidth() const;
+    float                   Get_UIViewportHeight() const;
+    void                    Set_UIViewportSize(float width, float height);
+
 
 public: /* ImGui */
     void                    Set_ImGuiContext(void* context);
@@ -148,7 +152,7 @@ public: /* Prefeb */
     Shared<GameObject>      Instantiate_Prefab(const string& prefabName, const json& overrides = {});
     HRESULT                 Save_Prefab(const string& prefabPath, Shared<GameObject> gameObject);
     HRESULT                 Load_Prefab(const string& prefabPath);
-
+    void                    Reapply_Prefabs_InCurrentLevel();
 
 public: /* PipeLine */
     const Matrix*           Get_Transform(ETransformState state) const;
@@ -275,6 +279,10 @@ private: /* Delegate Hub */
 private:
     EGameState                      _gameState = EGameState::Play;
     bool                            _gameInputEnabled = false;
+
+private:
+    float                           _uiViewportWidth = 0.f;
+    float                           _uiViewportHeight = 0.f;
 
 public:
 	void Free() override;

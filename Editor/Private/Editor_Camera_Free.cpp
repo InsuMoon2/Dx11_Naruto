@@ -62,6 +62,24 @@ Matrix Editor_Camera_Free::Get_ViewMatrix() const
     return _transformCom->Get_WorldMatrix().Invert();
 }
 
+void Editor_Camera_Free::Apply_EditorDesc(const FEditorCameraDesc& desc)
+{
+    _cameraSpeed = desc.speedPerSec;
+    _mouseSensor = desc.mouseSensor;
+
+    _fovY = desc.fovY;
+    _nearZ = desc.nearZ;
+    _farZ = desc.farZ;
+
+    if (_transformCom)
+    {
+        _transformCom->Set_LocalPosition(desc.eye);
+        _transformCom->LookAt(desc.at);
+    }
+
+    Update_TransformMatrices();
+}
+
 Shared<Editor_Camera_Free> Editor_Camera_Free::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<Editor_Camera_Free>(device, context);

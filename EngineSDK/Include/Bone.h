@@ -8,6 +8,7 @@ class ENGINE_DLL Bone final : public Base
 {
 public:
     Bone();
+    Bone(const Bone& rhs);
     virtual ~Bone() = default;
 
 public:
@@ -40,6 +41,7 @@ private:
 
 public:
     static Shared<Bone> Create(const FBoneRaw& src);
+    Shared<Bone>        Clone() const;
     void Free() override {};
 
 };

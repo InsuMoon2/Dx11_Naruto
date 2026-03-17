@@ -37,6 +37,11 @@ public:
     void Set_InputEnabled(bool enabled) { _inputEnabled = enabled; }
     bool Is_InputEnabled() const { return _inputEnabled; }
 
+public:
+    float Get_FovY() const { return _fovY; }
+    float Get_NearZ() const { return _nearZ; }
+    float Get_FarZ() const { return _farZ; }
+
 protected:
     // View + Proj 행렬을 PipeLine에 세팅
     void    Update_TransformMatrices();

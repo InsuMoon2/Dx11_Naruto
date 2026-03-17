@@ -118,6 +118,9 @@ json GameObject::To_Json() const
     j["object_type"] = magic_enum::enum_name(_objectType);
     j["guid"] = _guid;
 
+    if (!_sourcePrefabName.empty())
+        j["prefab_name"] = _sourcePrefabName;
+
     json components = json::array();
     for (auto& [id, comp] : _components)
     {
@@ -144,6 +147,11 @@ void GameObject::From_Json(const json& data)
     if (data.contains("guid"))
     {
         _guid = data["guid"].get<string>();
+    }
+
+    if (data.contains("prefab_name"))
+    {
+        _sourcePrefabName = data["prefab_name"].get<string>();
     }
 
     // 컴포넌트 로드는 Prefab_Manager에서 세팅하기

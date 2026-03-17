@@ -31,6 +31,8 @@ public:
     Shared<GameObject>  Instantiate_Prefab(const string& prefabName, const json& overrides = {});
     Shared<FPrefabDesc> Get_PrefabData(const string& prefabName);
 
+    void Reapply_Prefabs_InLevel(uint32 levelIndex);
+
 private:
     // 직렬화
     json                Serialize_GameObject(shared_ptr<GameObject> gameObject);
@@ -38,6 +40,7 @@ private:
     Shared<GameObject>  Deserialize_GameObject(const FPrefabDesc& desc, const json& overrides);
     string              Normalize_PrefabPath(const string& prefabPath);
 
+    void Reapply_Prefab_ToObject(const FPrefabDesc& desc, Shared<GameObject> gameObject);
 private:
     ComPtr<Device>          _device;
     ComPtr<DeviceContext>   _context;

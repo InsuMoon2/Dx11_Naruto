@@ -3,6 +3,18 @@
 
 #include "Bone.h"
 
+Channel::Channel()
+{
+}
+
+Channel::Channel(const Channel& rhs)
+    : _nodeName(rhs._nodeName)
+    , _boneIndex(rhs._boneIndex)
+    , _keyFrames(rhs._keyFrames)
+    , _currentKeyFrameIndex(0)
+{
+}
+
 HRESULT Channel::Initialize(const FAnimationChannelRaw& src)
 {
     _nodeName = src.nodeName;
@@ -94,6 +106,11 @@ Shared<Channel> Channel::Create(const FAnimationChannelRaw& src)
     }
 
     return instance;
+}
+
+Shared<Channel> Channel::Clone() const
+{
+    return make_shared<Channel>(*this);
 }
 
 void Channel::Free()

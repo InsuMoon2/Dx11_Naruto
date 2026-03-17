@@ -66,11 +66,6 @@ void PlayerController::Update(float timeDelta)
             _skill->Try_Activate(1);
     }
 
-    if (GAME->Is_GameInputEnabled())
-    {
-        Update_Camera();
-    }
-
     if (_stateMachine)
         _stateMachine->Update(timeDelta);
 
@@ -85,34 +80,16 @@ json PlayerController::To_Json() const
 {
     json root = Controller::To_Json();
 
+    root["useControlYaw"] = _bUseControllerRotationYaw;
+
     return root;
 }
 
 void PlayerController::From_Json(const json& data)
 {
     Controller::From_Json(data);
-}
 
-void PlayerController::Update_Camera()
-{
-    auto activeCamera = GAME->Get_ActiveCamera();
-    if (activeCamera && activeCamera->Get_ObjectType() == Protocol::OBJECT_TYPE_CAMERA_TARGET)
-    {
-        auto camera = dynamic_pointer_cast<Camera_Target>(
-            GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_TARGET));
-
-        if (camera && camera->Get_UseControlYaw())
-        {
-            // 카메라 Yaw 값을 플레이어한테 적용
-            float cameraYaw = camera->Get_Yaw();
-            auto transform = Get_Pawn()->Get_Component<Transform>();
-
-            transform->Set_WorldRotation(
-                0.f,
-                (cameraYaw),
-                0.f);
-        }
-    }
+    _bUseControllerRotationYaw = data.value("useControlYaw", true);
 }
 
 Shared<PlayerController> PlayerController::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

@@ -7,6 +7,7 @@
 #include "Model_Inspector.h"
 #include "Texture.h"
 #include "Model.h"
+#include "PlayerStateMachine_Inspector.h"
 
 IMPLEMENT_SINGLETON(Inspector_Factory)
 
@@ -20,6 +21,7 @@ void Inspector_Factory::Initialize()
     Register_Inspector(Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT, make_shared<Texture_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_AI, make_shared<BehaviorTree_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_MODEL, make_shared<Model_Inspector>());
+    Register_Inspector(Protocol::COMPONENT_TYPE_PLAYER_STATE, make_shared<PlayerStateMachine_Inspector>());
 
 }
 

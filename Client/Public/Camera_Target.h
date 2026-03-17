@@ -32,10 +32,7 @@ public:
 
 public:
     void    Set_TargetTransform(Shared<Transform> target) { _targetTransform = target; }
-    void    Set_UseControllerRotationYaw(bool bUse) { _bUseControllerRotationYaw = bUse; }
-
-    bool    Get_UseControlYaw() const { return _bUseControllerRotationYaw; }
-    void    Set_UseControlYaw(bool check) { _bUseControllerRotationYaw = check; }
+    
     float   Get_Yaw() const { return _yaw; }
 
 
@@ -58,7 +55,6 @@ private:
     float           _distanceMax = 15.f;
     float           _zoomSpeed = 2.f;
 
-    bool            _bUseControllerRotationYaw = true;
 
 public:
     static Shared<Camera_Target> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

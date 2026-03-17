@@ -53,6 +53,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
         desc.hWnd, desc.winMode, desc.viewportWidth, desc.viewportHeight,
         deviceOut, contextOut);
 
+    _uiViewportWidth = static_cast<float>(desc.viewportWidth);
+    _uiViewportHeight = static_cast<float>(desc.viewportHeight);
+
     CHECK_NULL(_graphicDevice, E_FAIL);
 
     INPUT->Init(desc.hWnd);
@@ -118,6 +121,7 @@ void GameInstance::Update_Engine(float timeDelta)
     _levelManager->Update(timeDelta);
     _objectManager->Update(timeDelta);
     _uiManager->Update(timeDelta);
+
 }
 
 void GameInstance::Late_Update_Engine(float timeDelta)
@@ -220,6 +224,22 @@ HRESULT GameInstance::Present()
         return E_FAIL;
 
     return _graphicDevice->Present();
+}
+
+float GameInstance::Get_UIViewportWidth() const
+{
+    return (_uiViewportWidth > 0.f) ? _uiViewportWidth : _graphicDevice->Get_ViewportWidth();
+}
+
+float GameInstance::Get_UIViewportHeight() const
+{
+    return (_uiViewportHeight > 0.f) ? _uiViewportHeight : _graphicDevice->Get_ViewportHeight();
+}
+
+void GameInstance::Set_UIViewportSize(float width, float height)
+{
+    _uiViewportWidth = width;
+    _uiViewportHeight = height;
 }
 
 void GameInstance::Set_ImGuiContext(void* context)
@@ -346,6 +366,11 @@ HRESULT GameInstance::Save_Prefab(const string& prefabPath, shared_ptr<GameObjec
 HRESULT GameInstance::Load_Prefab(const string& prefabPath)
 {
     return _prefabManager->Load_Prefab(prefabPath);
+}
+
+void GameInstance::Reapply_Prefabs_InCurrentLevel()
+{
+    _prefabManager->Reapply_Prefabs_InLevel(Current_Level());
 }
 
 const Matrix* GameInstance::Get_Transform(ETransformState state) const

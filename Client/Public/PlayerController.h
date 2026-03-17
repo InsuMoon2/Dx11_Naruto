@@ -27,18 +27,21 @@ public:
 public:
     void    Send_MovePacket();
 
+    bool    Get_UseControlYaw() const { return _bUseControllerRotationYaw; }
+    void    Set_UseControlYaw(bool check) { _bUseControllerRotationYaw = check; }
+
 protected:
     json    To_Json() const override;
     void    From_Json(const json& data) override;
-
-private:
-    void    Update_Camera();
 
 private:
     Shared<InputComponent>      _input;
     Shared<MovementComponent>   _movement;
     Shared<PlayerStateMachine>  _stateMachine;
     Shared<SkillComponent>      _skill;
+
+private:
+    bool                        _bUseControllerRotationYaw = true;
 
 public:
     static Shared<PlayerController> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

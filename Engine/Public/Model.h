@@ -30,13 +30,34 @@ public:
 
     size_t          Get_NumMeshes() const { return _meshes.size(); }
 
-    void            Set_Animation(uint32 animIndex, bool isLoop);
-    void            Set_Animation(const string& animName, bool isLoop);
+public:
+    // 단일 애니메이션 재생
+    void    Set_Animation(uint32 animIndex, bool isLoop);
+    void    Set_Animation(const string& animName, bool isLoop);
+    void    Set_Animation(const FAnimationClipSetting& clip);
 
+
+    void Set_AnimationSequence(
+        const FAnimationClipSetting& startClip,
+        const FAnimationClipSetting& loopClip,
+        const FAnimationClipSetting& endClip);
+
+    void            Request_AnimEnd();
+    EAnimPhase      Get_AnimPhase() const { return _animPhase; }
+
+    uint32          Get_AnimationCount() const;
+    const string&   Get_AnimationName(uint32 index) const;
     int32           Find_AnimationIndex_ByName(const string& animName);
 
     bool            Play_Animation(float timeDelta);
     HRESULT         Bind_BoneMatrices(Shared<Shader> shader, const char* constantName);
+
+    bool            Has_Animations() const { return !_animations.empty(); }
+    bool            Has_ActiveAnimation() const
+    {
+        return _currentAnimationIndex >= 0 &&
+            _currentAnimationIndex < static_cast<int32>(_animations.size());
+    }
 
 public:
     json    To_Json() const override;
@@ -47,6 +68,11 @@ public:
 
     uint32  Get_MeshMaterialIndex(uint32 index) const;
     string  Get_MeshName(uint32 index);
+
+    void    Set_AnimationPlayRate(float playRate);
+    float   Get_AnimationPlayRate() const { return _animationPlayRate; }
+
+    bool    Is_AnimationSequenceFinished() const { return _isAnimSequenceFinished; }
 
 private:
     // .meshbin 확장자일 때 들어오는 초기화 경로
@@ -67,6 +93,17 @@ private:
     void    Apply_MaterialOverrides(const json& data);
     string  Build_MaterialJsonPath(const string& modelFilePath) const;
 
+
+private:
+    void    Apply_AnimationClip(uint32 animIndex, bool isLoop, float playRate);
+    bool    Find_AnimationIndex(const string& animName, uint32& outIndex) const;
+
+    // 단일 클립 재생으로 돌아갈 때 시퀀스 상태를 정리한다.
+    void    Reset_AnimationSequenceState();
+
+    // End 클립이 없거나 End까지 끝났을 때 공통 종료 처리
+    void    Complete_AnimationSequence();
+
 private:
     EMeshVertexType                 _modelType = { EMeshVertexType::END };
     Matrix                          _preLocalTransformMatrix = {};
@@ -85,6 +122,18 @@ private:
     bool                            _isAnimationLoop = false;
 
     string                          _modelGuid = "";
+
+private: /* 애니메이션 재생 관련 */
+    float                           _animationPlayRate = 1.f;
+
+    EAnimPhase                      _animPhase = EAnimPhase::Start;
+
+    FAnimationClipSetting           _startClip;
+    FAnimationClipSetting           _loopClip;
+    FAnimationClipSetting           _endClip;
+
+    bool                            _hasAnimSequence = false;
+    bool                            _isAnimSequenceFinished = false;
 
 public:
     static Shared<Model> Create(ComPtr<Device> device, ComPtr<DeviceContext> context,

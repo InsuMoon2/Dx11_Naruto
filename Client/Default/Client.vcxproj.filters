@@ -149,7 +149,7 @@
     <ClInclude Include="..\Public\UI_LoadingSpinner.h">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UI_MainTitleText.h" />
+    <ClInclude Include="..\Public\UI_MainTitleMenuButton.h" />
     <ClInclude Include="..\Public\Background.h">
       <Filter>02. GameObject\02. UI\01. Background</Filter>
     </ClInclude>
@@ -288,7 +288,7 @@
     <ClCompile Include="..\Private\UI_LoadingSpinner.cpp">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UI_MainTitleText.cpp" />
+    <ClCompile Include="..\Private\UI_MainTitleMenuButton.cpp" />
     <ClCompile Include="..\Private\Background.cpp">
       <Filter>02. GameObject\02. UI\01. Background</Filter>
     </ClCompile>

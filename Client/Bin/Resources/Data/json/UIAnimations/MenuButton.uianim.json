@@ -1,0 +1,56 @@
+{
+    "endFrame": 60,
+    "fps": 60,
+    "loop": false,
+    "name": "NewUIAnimation",
+    "startFrame": 0,
+    "targetName": "Menu Text 0",
+    "tracks": [
+        {
+            "keys": [
+                {
+                    "frame": 0,
+                    "value": [
+                        300.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 12,
+                    "value": [
+                        740.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "property": "ScaleX"
+        },
+        {
+            "keys": [
+                {
+                    "frame": 0,
+                    "value": [
+                        0.20000000298023224,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 12,
+                    "value": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "property": "Alpha"
+        }
+    ]
+}

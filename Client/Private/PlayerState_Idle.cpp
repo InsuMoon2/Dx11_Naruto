@@ -16,20 +16,10 @@ PlayerState_Idle::~PlayerState_Idle()
 
 void PlayerState_Idle::Enter(PlayerStateMachine* state)
 {
-    auto owner = state->Get_Owner();
-
-    auto modelCom = owner->Get_Component(Protocol::COMPONENT_TYPE_MODEL_SASKE);
-    if (!modelCom) return;
-
-    auto model = static_pointer_cast<Model>(modelCom);
-    if (!model) return;
-
-    const auto* animDesc = state->Find_StateAnimation(EPlayerState::Idle);
-    if (!animDesc || animDesc->animationName.empty())
+    if (!state)
         return;
 
-    model->Set_Animation(animDesc->animationName, animDesc->loop);
-
+    state->Apply_StateAnimation(EPlayerState::Idle);
 }
 
 void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)

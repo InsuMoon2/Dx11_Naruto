@@ -272,7 +272,7 @@
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\UI_LoadingProgressBar.h" />
     <ClInclude Include="..\Public\UI_LoadingSpinner.h" />
-    <ClInclude Include="..\Public\UI_MainTitleText.h" />
+    <ClInclude Include="..\Public\UI_MainTitleMenuButton.h" />
     <ClInclude Include="..\public\UI_PlayerHP.h" />
     <ClInclude Include="..\Public\UI_PlayerHUD.h" />
     <ClInclude Include="..\Public\UI_PlayerSkill.h" />
@@ -347,7 +347,7 @@
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\UI_LoadingProgressBar.cpp" />
     <ClCompile Include="..\Private\UI_LoadingSpinner.cpp" />
-    <ClCompile Include="..\Private\UI_MainTitleText.cpp" />
+    <ClCompile Include="..\Private\UI_MainTitleMenuButton.cpp" />
     <ClCompile Include="..\Private\UI_PlayerHP.cpp" />
     <ClCompile Include="..\Private\UI_PlayerHUD.cpp" />
     <ClCompile Include="..\Private\UI_PlayerSkill.cpp" />

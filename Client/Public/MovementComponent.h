@@ -19,7 +19,7 @@ public:
         float maxSprintSpeed = 7.f;
         float acceleration = 20.f;
         float deceleration = 24.f;
-        float yawSpeed = 0.2f;      // Mouse delta -> Yaw factor
+        float yawSpeed = 360.f;    
 
         float jumpVelocity = 8.f;
         float doubleJumpVelocity = 6.f;
@@ -33,12 +33,15 @@ public:
 
     struct FMoveCommand
     {
-        Vec2 moveAxis = Vec2::Zero;
-        Vec2 lookDelta = Vec2::Zero;
-        bool sprint = false;
-        bool jump = false;
-        bool doublejump = false;
+        Vec2  moveAxis = Vec2::Zero;
+        Vec2  lookDelta = Vec2::Zero;
+        bool  sprint = false;
+        bool  jump = false;
+        bool  doublejump = false;
         float superJumpVelocity = 0.f;
+
+        Vec3  moveBasisForward = Vec3(0.f, 0.f, 1.f);
+        Vec3  moveBasisRight = Vec3(1.f, 0.f, 0.f);
     };
 
 public:
@@ -60,10 +63,19 @@ public:
 
     const FMovementDesc& Get_MoveDesc() const { return _moveDesc; }
 
+    void Start_Jump();
+    void Start_DoubleJump();
+
+public:
+    bool Get_OrientRotationToMovement() const { return _bOrientRotationToMovement; }
+    void Set_OrientRotationToMovement(bool check) { _bOrientRotationToMovement = check; }
+
 private:
     void Update_Rotation(float timeDelta, Shared<Transform> transform);
     void Update_Velocity(float timeDelta, Shared<Transform> transform);
     void Apply_Movement(float timeDelta, Shared<Transform> transform);
+
+    Vec3 Build_DesiredMoveDirection() const;
 
 private:
     FMovementDesc _moveDesc;
@@ -77,6 +89,8 @@ private:
     float   _verticalVelocity = 0.f;
 
     Shared<Transform> _transform;
+
+    bool _bOrientRotationToMovement = false;
 
 public:
     static Shared<MovementComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

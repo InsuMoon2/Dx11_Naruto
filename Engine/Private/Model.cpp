@@ -22,13 +22,36 @@ Model::Model(const Model& rhs)
     , _meshes(rhs._meshes)
     , _numMaterials(rhs._numMaterials)
     , _materials(rhs._materials)
-    , _bones(rhs._bones)                      
-    , _animations(rhs._animations)            
-    , _boneMatrices(rhs._boneMatrices)        
-    , _currentAnimationIndex(rhs._currentAnimationIndex)
-    , _isAnimationLoop(rhs._isAnimationLoop) 
+    , _currentAnimationIndex(-1)
+    , _isAnimationLoop(false)
     , _modelGuid(rhs._modelGuid)
+    , _animationPlayRate(1.f)
+    , _animPhase(EAnimPhase::Start)
+    , _startClip{}
+    , _loopClip{}
+    , _endClip{}
+    , _hasAnimSequence(false)
+    , _isAnimSequenceFinished(false)
 {
+    _bones.reserve(rhs._bones.size());
+    for (const auto& bone : rhs._bones)
+    {
+        if (bone)
+            _bones.push_back(bone->Clone());
+        else
+            _bones.push_back(nullptr);
+    }
+
+    _animations.reserve(rhs._animations.size());
+    for (const auto& animation : rhs._animations)
+    {
+        if (animation)
+            _animations.push_back(animation->Clone());
+        else
+            _animations.push_back(nullptr);
+    }
+
+    _boneMatrices.assign(_bones.size(), Matrix::Identity);
 }
 
 HRESULT Model::Initialize_Prototype(EMeshVertexType type, const string& modelFilePath, const Matrix& preLocalTransformMatrix)
@@ -81,32 +104,103 @@ HRESULT Model::Bind_Material(Shared<Shader> shader, const char* constantName, ui
 
 void Model::Set_Animation(uint32 animIndex, bool isLoop)
 {
-    if (animIndex >= _animations.size())
-        return;
-
-    //LOG_INFO("Set_Animation index = {}, animationCount = {}", animIndex, _animations.size());
-
-    _currentAnimationIndex = static_cast<int32>(animIndex);
-    _isAnimationLoop = isLoop;
-    _animations[animIndex]->Reset();
-
-    for (auto& bone : _bones)
-    {
-        bone->Reset_ToNodeTransform();
-    }
+    Reset_AnimationSequenceState();
+    Apply_AnimationClip(animIndex, isLoop, _animationPlayRate);
 }
 
 void Model::Set_Animation(const string& animName, bool isLoop)
 {
-    const int32 index = Find_AnimationIndex_ByName(animName);
+    uint32 animIndex = 0;
+    if (!Find_AnimationIndex(animName, animIndex))
+        return;
 
-    if (index < 0)
+    Set_Animation(animIndex, isLoop);
+}
+
+void Model::Set_Animation(const FAnimationClipSetting& clip)
+{
+    if (clip.animationName.empty())
+        return;
+
+    uint32 animIndex = 0;
+    if (!Find_AnimationIndex(clip.animationName, animIndex))
+        return;
+
+    Reset_AnimationSequenceState();
+    Apply_AnimationClip(animIndex, clip.loop, clip.playRate);
+}
+
+void Model::Set_AnimationSequence(const FAnimationClipSetting& startClip, const FAnimationClipSetting& loopClip,
+    const FAnimationClipSetting& endClip)
+{
+    uint32 loopIndex = 0;
+    if (loopClip.animationName.empty() || !Find_AnimationIndex(loopClip.animationName, loopIndex))
     {
-        LOG_WARN("Animation clip not found: {}", animName);
+        Reset_AnimationSequenceState();
         return;
     }
 
-    Set_Animation(static_cast<uint32>(index), isLoop);
+    _startClip = startClip;
+    _loopClip = loopClip;
+    _endClip = endClip;
+
+    _hasAnimSequence = true;
+    _isAnimSequenceFinished = false;
+
+    uint32 startIndex = 0;
+    if (!_startClip.animationName.empty() && Find_AnimationIndex(_startClip.animationName, startIndex))
+    {
+        _animPhase = EAnimPhase::Start;
+        Apply_AnimationClip(startIndex, _startClip.loop, _startClip.playRate);
+        return;
+    }
+
+    _animPhase = EAnimPhase::Loop;
+    Apply_AnimationClip(loopIndex, _loopClip.loop, _loopClip.playRate);
+}
+
+void Model::Request_AnimEnd()
+{
+    if (!_hasAnimSequence || _isAnimSequenceFinished)
+        return;
+
+    if (_animPhase == EAnimPhase::End)
+        return;
+
+    if (_endClip.animationName.empty())
+    {
+        Complete_AnimationSequence();
+        return;
+    }
+
+    uint32 endIndex = 0;
+    if (!Find_AnimationIndex(_endClip.animationName, endIndex))
+    {
+        Complete_AnimationSequence();
+        return;
+    }
+
+    _animPhase = EAnimPhase::End;
+    Apply_AnimationClip(endIndex, _endClip.loop, _endClip.playRate);
+}
+
+
+uint32 Model::Get_AnimationCount() const
+{
+    return static_cast<uint32>(_animations.size());
+}
+
+const string& Model::Get_AnimationName(uint32 index) const
+{
+    static const string empty = "";
+
+    if (index >= _animations.size())
+        return empty;
+
+    if (_animations[index] == nullptr)
+        return empty;
+
+    return _animations[index]->Get_Name();
 }
 
 int32 Model::Find_AnimationIndex_ByName(const string& animName)
@@ -136,8 +230,11 @@ bool Model::Play_Animation(float timeDelta)
         bone->Reset_ToNodeTransform();
     }
 
-    const bool finished =
-        _animations[_currentAnimationIndex]->Update_TransformationMatrices(timeDelta, _bones, _isAnimationLoop);
+    const bool clipFinished =
+        _animations[_currentAnimationIndex]->Update_TransformationMatrices(
+            timeDelta * _animationPlayRate,
+            _bones,
+            _isAnimationLoop);
 
     for (size_t i = 0; i < _bones.size(); ++i)
     {
@@ -154,7 +251,36 @@ bool Model::Play_Animation(float timeDelta)
         }
     }
 
-    return finished;
+    if (!_hasAnimSequence)
+    {
+        // 단일 클립 재생은 기존 동작을 유지
+        return clipFinished;
+    }
+
+    if (!clipFinished)
+        return false;
+
+    if (_animPhase == EAnimPhase::Start)
+    {
+        uint32 loopIndex = 0;
+        if (Find_AnimationIndex(_loopClip.animationName, loopIndex))
+        {
+            _animPhase = EAnimPhase::Loop;
+            Apply_AnimationClip(loopIndex, _loopClip.loop, _loopClip.playRate);
+        }
+        else
+        {
+            Complete_AnimationSequence();
+        }
+    }
+
+    if (_animPhase == EAnimPhase::End)
+    {
+        Complete_AnimationSequence();
+        return true;
+    }
+
+    return false;
 }
 
 HRESULT Model::Bind_BoneMatrices(Shared<Shader> shader, const char* constantName)
@@ -247,6 +373,57 @@ string Model::Build_MaterialJsonPath(const string& modelFilePath) const
     path.replace_extension(".material.json");
 
     return path.string();
+}
+
+void Model::Apply_AnimationClip(uint32 animIndex, bool isLoop, float playRate)
+{
+    if (animIndex >= _animations.size() || !_animations[animIndex])
+        return;
+
+    _currentAnimationIndex = static_cast<int32>(animIndex);
+    _isAnimationLoop = isLoop;
+    _animationPlayRate = Utils::Max(playRate, 0.01f);
+    _animations[animIndex]->Reset();
+
+    // 클립 전환 시 본 로컬 포즈를 기본 자세로 다시 맞춘다.
+    for (auto& bone : _bones)
+    {
+        if (bone)
+            bone->Reset_ToNodeTransform();
+    }
+}
+
+bool Model::Find_AnimationIndex(const string& animName, uint32& outIndex) const
+{
+    const int32 index = const_cast<Model*>(this)->Find_AnimationIndex_ByName(animName);
+    if (index < 0)
+        return false;
+
+    outIndex = static_cast<uint32>(index);
+    return true;
+}
+
+void Model::Reset_AnimationSequenceState()
+{
+    _hasAnimSequence = false;
+    _isAnimSequenceFinished = false;
+    _animPhase = EAnimPhase::Start;
+    _startClip = {};
+    _loopClip = {};
+    _endClip = {};
+}
+
+void Model::Complete_AnimationSequence()
+{
+    _animPhase = EAnimPhase::End;
+    _currentAnimationIndex = -1;
+    _isAnimationLoop = false;
+    _isAnimSequenceFinished = true;
+}
+
+void Model::Set_AnimationPlayRate(float playRate)
+{
+    _animationPlayRate = max(playRate, 0.01f);
 }
 
 json Model::To_Json() const
@@ -531,6 +708,9 @@ void Model::Free()
 {
     Component::Free();
 
-    _meshes.clear();
+    _boneMatrices.clear();
+    _animations.clear();
+    _bones.clear();
     _materials.clear();
+    _meshes.clear();
 }

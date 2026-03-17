@@ -64,5 +64,12 @@ namespace Engine
         Quat    rotation = Quat::Identity;
         Vec3    translation = Vec3::Zero;
     };
-    
+
+    struct FAnimationClipSetting
+    {
+        string  animationName = "";
+        bool    loop = true;
+        float   playRate = 1.f;
+    };
+
 }

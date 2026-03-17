@@ -28,8 +28,7 @@ void PlayerState_SuperJump::Enter(PlayerStateMachine* state)
     movement->Apply_Command(cmd);
     movement->Update(0.f);
     
-    // TODO : PlayAnimation : Super Jump
-
+    state->Apply_StateAnimation(EPlayerState::SuperJump);
 }
 
 void PlayerState_SuperJump::Update(PlayerStateMachine* state, float timeDelta)

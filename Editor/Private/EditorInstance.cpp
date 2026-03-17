@@ -74,6 +74,8 @@ void EditorInstance::Play()
 {
     Save_SceneSnapshot();
 
+    GAME->Reapply_Prefabs_InCurrentLevel();
+
     GAME->Set_GameState(EGameState::Play);
     ImGui::SetWindowFocus("Game");
 

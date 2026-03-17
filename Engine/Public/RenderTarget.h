@@ -29,6 +29,9 @@ public:
 
     ComPtr<Texture2D> Get_Texture2D() const { return _texture; }
 
+    uint32 Get_Width() const { return _width; }
+    uint32 Get_Height() const { return _height; }
+
 private:
     void Release();
 

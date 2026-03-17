@@ -7,6 +7,23 @@ Animation::Animation()
 {
 }
 
+Animation::Animation(const Animation& rhs)
+    : _name(rhs._name)
+    , _duration(rhs._duration)
+    , _ticksPersecond(rhs._ticksPersecond)
+    , _currentTrackPosition(0.f)
+{
+    _channels.reserve(rhs._channels.size());
+
+    for (const auto& channel : rhs._channels)
+    {
+        if (channel)
+            _channels.push_back(channel->Clone());
+        else
+            _channels.push_back(nullptr);
+    }
+}
+
 HRESULT Animation::Initialize(const FAnimationClipRaw& src)
 {
     _name                   = src.name;
@@ -82,4 +99,9 @@ Shared<Animation> Animation::Create(const FAnimationClipRaw& src)
     }
 
     return instance;
+}
+
+Shared<Animation> Animation::Clone()
+{
+    return make_shared<Animation>(*this);
 }

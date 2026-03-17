@@ -102,15 +102,20 @@ void Editor_Manager::Render()
     // 렌더링 수행
     if (targetRT)
     {
+        GAME->Set_UIViewportSize(targetRT->Get_Width(), targetRT->Get_Height());
+
         targetRT->BindAsTarget();
-        targetRT->Clear(Color(0.53f, 0.81f, 0.92f, 1.f)); // 하늘색
+        targetRT->Clear(Color(0.53f, 0.81f, 0.92f, 1.f));
 
         CHECK_FAILED(GAME->Set_TextTarget_Texture(targetRT->Get_Texture2D()), );
 
-        GAME->Draw(); // 실제 게임 렌더링
+        GAME->Draw();
+
         targetRT->UnbindAll();
 
         CHECK_FAILED(GAME->Reset_TextTarget_BackBuffer(), );
+
+        GAME->Set_UIViewportSize(GAME->Get_ViewportWidth(), GAME->Get_ViewportHeight());
     }
 
     GAME->BindBackBuffer();

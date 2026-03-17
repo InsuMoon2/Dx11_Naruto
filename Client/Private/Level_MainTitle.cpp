@@ -5,6 +5,7 @@
 #include "Loader.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "UI_MainTitleMenuButton.h"
 
 Level_MainTitle::Level_MainTitle(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -20,7 +21,8 @@ HRESULT Level_MainTitle::Initialize()
     if (FAILED(Ready_Layer_UI()))
         return E_FAIL;
 
-    
+    Apply_TitlePhase();
+    Apply_MenuSelection();
 
     return S_OK;
 }
@@ -29,11 +31,18 @@ void Level_MainTitle::Update(float timeDelta)
 {
     Level::Update(timeDelta);
 
-    if (INPUT->KeyDown(KEY_TYPE::SPACE))
+    switch (_titleState)
     {
-        GAME->Change_Level(ETOI(ELevelType::Loading),
-            Level_Loading::Create(_device, _context, ELevelType::GamePlay, true));
+    case ETitleState::PressSpace:
+        Update_PressPhase();
+        break;
+
+    case ETitleState::SelectMenu:
+        Update_SelectPhase();
+        break;
     }
+
+    
 }
 
 void Level_MainTitle::Late_Update(float timeDelta)
@@ -112,49 +121,140 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
 
         desc.levelIndex = ETOI(ELevelType::MainTitle);
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MAIN_TITLE;
-        desc.textureIndex = ETOI(EMainTitle::Text0);
+        desc.textureIndex = ETOI(EMainTitle::PressText0);
 
         desc.zOrder = 0.51f;
 
-        auto text = static_pointer_cast<Background>(
+        _pressText = static_pointer_cast<Background>(
             GAME->Add_UI(
                 Protocol::OBJECT_TYPE_BACKGROUND,
                 EUILayer::Overlay,
                 &desc));
 
-        if (!text) return E_FAIL;
+        if (!_pressText) return E_FAIL;
 
-        GAME->Play_UIAnimation(text, "PressText");
+        GAME->Play_UIAnimation(_pressText, "PressText");
     }
 
-    // Temp : 텍스트 출력용
+    // Menu Text
     {
-        UI_Text::FUITextDesc desc{};
-        desc.name = TEXT("MainTitle_DebugText");
-        desc.posX = 300.f;
-        desc.posY = 120.f;
-        desc.sizeX = 500.f;
-        desc.sizeY = 80.f;
-        desc.zOrder = 0.8f;
-        desc.levelIndex = ETOI(ELevelType::MainTitle);
+        const array<wstring, 3> menuLabels =
+        {
+            L"게임 시작",
+            L"게임 설정",
+            L"게임 종료"
+        };
 
-        desc.text = L"MAIN TITLE DEBUG";
-        desc.style.fontFamily = L"Malgun Gothic";
-        desc.style.fontSize = 36.f;
-        desc.style.color = Color(1.f, 0.f, 0.f, 1.f);
-        desc.style.hAlign = ETextHAlign::Left;
-        desc.style.vAlign = ETextVAlign::Top;
-        desc.style.wordWrap = false;
+        const float startY = viewport.y * 0.7f;
+        const float spacing = 24.f;
+        const float menuWidth = 740.f;
+        const float menuHeight = 90.f;
 
-        auto debugText = static_pointer_cast<UI_Text>(
-            GAME->Add_UI(
-                Protocol::OBJECT_TYPE_UI_TEXT,
-                EUILayer::Overlay,
-                &desc));
-        CHECK_NULL(debugText, E_FAIL);
+        for (int32 i = 0; i < 3; ++i)
+        {
+            UI_MainTitleMenuButton::FMainTitleMenuDesc desc{};
+            desc.name = format(L"Menu Text {}", i);
+            desc.posX = viewport.x * 0.5f;
+            desc.posY = startY + i * (menuHeight + spacing);
+            desc.sizeX = menuWidth;
+            desc.sizeY = menuHeight;
+            desc.levelIndex = ETOI(ELevelType::MainTitle);
+            desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MAIN_TITLE;
+            desc.textureIndex = ETOI(EMainTitle::TitleMenuBtn);
+            desc.zOrder = 0.52f + i * 0.001f;
+
+            desc.labelText = menuLabels[i];
+            desc.labelOffset = Vec2(0.f, 0.f);
+            desc.labelSize = Vec2(500.f, 80.f);
+
+            _menuText[i] = static_pointer_cast<UI_MainTitleMenuButton>(
+                GAME->Add_UI(Protocol::OBJECT_TYPE_UI_MAIN_TITLE_TEXT, EUILayer::Overlay, &desc));
+            CHECK_NULL(_menuText[i], E_FAIL);
+
+            _menuText[i]->Set_Visibility(false);
+        }
     }
 
     return S_OK;
+}
+
+void Level_MainTitle::Update_PressPhase()
+{
+    if (INPUT->KeyDown(KEY_TYPE::SPACE))
+    {
+        _titleState = ETitleState::SelectMenu;
+        Apply_TitlePhase();
+        Apply_MenuSelection();
+    }
+}
+
+void Level_MainTitle::Update_SelectPhase()
+{
+    if (INPUT->KeyDown(KEY_TYPE::UP) || INPUT->KeyDown(KEY_TYPE::W))
+    {
+        _selectedIndex = (_selectedIndex + 2) % 3;
+        Apply_MenuSelection();
+    }
+
+    if (INPUT->KeyDown(KEY_TYPE::DOWN) || INPUT->KeyDown(KEY_TYPE::S))
+    {
+        _selectedIndex = (_selectedIndex + 1) % 3;
+        Apply_MenuSelection();
+    }
+
+    if (INPUT->KeyDown(KEY_TYPE::ENTER) || INPUT->KeyDown(KEY_TYPE::SPACE))
+    {
+        Execute_SelectedMenu();
+    }
+}
+
+void Level_MainTitle::Apply_TitlePhase()
+{
+    const bool isPressPhase = (_titleState == ETitleState::PressSpace);
+    const bool isSelectPhase = (_titleState == ETitleState::SelectMenu);
+
+    if (_pressText)
+        _pressText->Set_Visibility(isPressPhase);
+
+    for (auto& menu : _menuText)
+    {
+        if (menu)
+            menu->Set_Visibility(isSelectPhase);
+    }
+}
+
+void Level_MainTitle::Apply_MenuSelection()
+{
+    for (int32 i = 0; i < 3; ++i)
+    {
+        if (_menuText[i])
+        {
+            _menuText[i]->Set_Selected(i == _selectedIndex);
+
+            GAME->Play_UIAnimation(_menuText[i], "MenuButton");
+        }
+            
+    }
+}
+
+void Level_MainTitle::Execute_SelectedMenu()
+{
+    switch (_selectedIndex)
+    {
+    case 0:
+        GAME->Change_Level(
+            ETOI(ELevelType::Loading),
+            Level_Loading::Create(_device, _context, ELevelType::GamePlay, true));
+        break;
+
+    case 1:
+        //LOG_WARN("MainTitle: Game Settings selected");
+        break;
+
+    case 2:
+        //PostQuitMessage(0);
+        break;
+    }
 }
 
 shared_ptr<Level_MainTitle> Level_MainTitle::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

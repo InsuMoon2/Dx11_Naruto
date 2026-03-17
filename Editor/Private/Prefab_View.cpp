@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Prefab_View.h"
-
+#include "Model.h"
 #include "Content_Browser.h"
 #include "Editor_Camera_Free.h"
 #include "GameInstance.h"
@@ -10,6 +10,7 @@
 #include "RenderTarget.h"
 #include "Reflection_Inspector.h"
 #include "DebugDraw.h"
+#include "Prefab_PreviewCameraSettings.h"
 
 Prefab_View::Prefab_View()
     : EditorWindow(TEXT("Prefab"))
@@ -25,7 +26,10 @@ void Prefab_View::Initialize()
 {
     EditorWindow::Initialize();
 
-   
+    if (!_previewCameraSettings)
+        _previewCameraSettings = Prefab_PreviewCameraSettings::Create();
+
+    _previewCameraSettings->Load_Settings();
 }
 
 void Prefab_View::Update(float timeDelta)
@@ -33,7 +37,7 @@ void Prefab_View::Update(float timeDelta)
     EditorWindow::Update(timeDelta);
 
     Handle_Guizmo_Shotcut();
-    
+    Tick_PreviewAnimation(timeDelta);
 }
 
 void Prefab_View::OnGui()
@@ -154,8 +158,10 @@ void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath
 {
     _prefabName = prefabName;
     _prefabPath = prefabPath;
-
     _previewObject = nullptr;
+    _previewHasBegunPlay = false;
+
+    _selectedComponentId = Transform::StaticTypeID();
 
     // 인스턴스화
     _previewObject = GAME->Instantiate_Prefab(prefabName, {});
@@ -174,21 +180,14 @@ void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath
         {
             _previewCamera = Editor_Camera_Free::Create(GAME->Get_Device(), GAME->Get_Context());
 
-            Editor_Camera_Free::FEditorCameraDesc desc;
-
-            desc.speedPerSec = 20.f;   
-            desc.rotationPerSec = 90.f;
-
-            desc.eye = Vec3(-7.f, 3.f, -10.f);
-            desc.at = Vec3(6.f, 0.f, 0.f);
-            desc.fovY = XM_PIDIV4;
-            desc.nearZ = 0.1f;
-            desc.farZ = 1000.f;
-
-            desc.mouseSensor = 0.15f;
-
+            auto desc = _previewCameraSettings->Build_Desc();
             _previewCamera->Initialize(&desc);
         }
+
+        Apply_PreviewCameraSettings();
+
+        Preview_BeginPlay();
+        Tick_PreviewAnimation(0.f);
     }
 
 }
@@ -196,6 +195,7 @@ void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath
 void Prefab_View::Close_Prefab()
 {
     _isOpen = false;
+    _previewHasBegunPlay = false;
 
     _previewCamera.reset();
     _previewObject.reset();
@@ -224,6 +224,24 @@ void Prefab_View::Pre_Render()
     GAME->Set_Transform(ETransformState::View, _previewView);
     GAME->Set_Transform(ETransformState::Proj, _previewProj);
 
+    FLightDesc savedLight{};
+    bool hasSavedLight = false;
+
+    if (const FLightDesc* lightDesc = GAME->Get_LightDesc(0))
+    {
+        savedLight = *lightDesc;
+        hasSavedLight = true;
+    }
+
+    FLightDesc previewLight{};
+    previewLight.direction = Vec4(0.f, -1.f, 0.f, 0.f);
+    previewLight.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
+    previewLight.ambient = Vec4(1.f, 1.f, 1.f, 1.f);
+    previewLight.specular = Vec4(0.f, 0.f, 0.f, 1.f);
+
+    GAME->Clear_Lights();
+    GAME->Add_Light(previewLight);
+
     _prevRT->Clear(Color(0.15f, 0.15f, 0.15f, 1.f));
     _prevRT->BindAsTarget();
 
@@ -231,9 +249,70 @@ void Prefab_View::Pre_Render()
 
     GAME->BindBackBuffer();
 
+    GAME->Clear_Lights();
+
+    if (hasSavedLight)
+        GAME->Add_Light(savedLight);
+
     // 기존 View/Proj 복원
     GAME->Set_Transform(ETransformState::View, savedView);
     GAME->Set_Transform(ETransformState::Proj, savedProj);
+}
+
+void Prefab_View::Draw_PreviewCameraInspector()
+{
+    if (!_previewCamera)
+        return;
+
+    ImGui::TextColored(ImVec4(0.7f, 0.9f, 1.f, 1.f), "[ Preview Camera ]");
+    ImGui::Separator();
+    ImGui::Spacing();
+
+    auto cameraTransform = _previewCamera->Get_Component<Transform>();
+    if (cameraTransform)
+    {
+        ImGui::PushID("PreviewCameraTransform");
+        Inspector::Draw_Component(Transform::StaticTypeID(), cameraTransform);
+        ImGui::PopID();
+    }
+    else
+    {
+        ImGui::TextDisabled("Preview camera transform not found.");
+        ImGui::Spacing();
+    }
+
+    auto& cameraRefInfo = _previewCamera->Get_ReflectionInfo();
+    if (!cameraRefInfo.properties.empty())
+    {
+        static Reflection_Inspector autoInspector;
+        autoInspector.Draw_FromReflection(_previewCamera.get(), cameraRefInfo);
+
+        ImGui::Spacing();
+    }
+
+    if (ImGui::Button("Save Current View", ImVec2(-1.f, 28.f)))
+    {
+        _previewCameraSettings->Capture_FromCamera(_previewCamera);
+        _previewCameraSettings->Save_Settings();
+    }
+
+    if (ImGui::Button("Reset To Saved", ImVec2(-1.f, 28.f)))
+    {
+        Apply_PreviewCameraSettings();
+    }
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+}
+
+void Prefab_View::Apply_PreviewCameraSettings()
+{
+    if (!_previewCamera || !_previewCameraSettings)
+        return;
+
+    const auto desc = _previewCameraSettings->Build_Desc();
+    _previewCamera->Apply_EditorDesc(desc);
 }
 
 void Prefab_View::Draw_Header()
@@ -322,8 +401,9 @@ void Prefab_View::Draw_ComponentInspector()
     if (!_previewObject)
         return;
 
-    auto& refInfo = _previewObject->Get_ReflectionInfo();
+    Draw_PreviewCameraInspector();
 
+    auto& refInfo = _previewObject->Get_ReflectionInfo();
     if (!refInfo.properties.empty())
     {
         string objName = Utils::ToString(_previewObject->Get_Name());
@@ -332,17 +412,15 @@ void Prefab_View::Draw_ComponentInspector()
         ImGui::Spacing();
 
         static Reflection_Inspector autoInspector;
-
         autoInspector.Draw_FromReflection(_previewObject.get(), refInfo);
+
         ImGui::Spacing();
         ImGui::Separator();
         ImGui::Spacing();
     }
 
     if (_selectedComponentId == 0)
-    {
         return;
-    }
 
     auto& components = _previewObject->Get_Components();
     auto it = components.find(_selectedComponentId);
@@ -351,6 +429,7 @@ void Prefab_View::Draw_ComponentInspector()
 
     Inspector::Draw_Component(it->first, it->second);
 }
+
 
 void Prefab_View::Draw_Buttons()
 {
@@ -449,6 +528,41 @@ void Prefab_View::Handle_Guizmo_Shotcut()
         if (ImGui::IsKeyPressed(ImGuiKey_R)) _gizmoOperation = ImGuizmo::SCALE;
         if (ImGui::IsKeyPressed(ImGuiKey_Q)) _gizmoOperation = (ImGuizmo::OPERATION)0;
     }
+}
+
+void Prefab_View::Preview_BeginPlay()
+{
+    if (!_previewObject || _previewHasBegunPlay)
+        return;
+
+    _previewObject->BeginPlay();
+    _previewHasBegunPlay = true;
+}
+
+Shared<Model> Prefab_View::Find_PreviewModel() const
+{
+    if (!_previewObject)
+        return nullptr;
+
+    auto component = _previewObject->Find_Component_ByStaticType(Model::StaticTypeID());
+    if (!component)
+        return nullptr;
+
+    return dynamic_pointer_cast<Model>(component);
+}
+
+void Prefab_View::Tick_PreviewAnimation(float timeDelta)
+{
+    if (!_isOpen || !_previewObject)
+        return;
+
+    Preview_BeginPlay();
+
+    auto model = Find_PreviewModel();
+    if (!model || !model->Has_Animations())
+        return;
+
+    model->Play_Animation(timeDelta);
 }
 
 shared_ptr<Prefab_View> Prefab_View::Create()

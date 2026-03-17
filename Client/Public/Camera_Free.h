@@ -29,6 +29,10 @@ public:
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
 
+public:
+    float Get_MouseSensor() const { return _mouseSensor; }
+    float Get_CameraSpeed() const { return _cameraSpeed; }
+
 protected:
     float _mouseSensor = {};
     float _cameraSpeed = 10.f;

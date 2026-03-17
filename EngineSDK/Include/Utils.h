@@ -16,6 +16,18 @@ public:
 
     static bool     EndsWidth(const string& value, const string& suffix);
 
+public:
+    template <typename T>
+    static T Max(const T& a, const T& b)
+    {
+        return (a < b) ? b : a;
+    }
+
+    template <typename T>
+    static T Min(const T& a, const T& b)
+    {
+        return (b < a) ? b : a;
+    }
 };
 
 NS_END

@@ -14,7 +14,7 @@ bool MovementComponent::Register_Properties()
     PROPERTY_FLOAT("Max Sprint Speed", _moveDesc.maxSprintSpeed, 0.f, 30.f);
     PROPERTY_FLOAT("Acceleration", _moveDesc.acceleration, 0.f, 50.f);
     PROPERTY_FLOAT("Deceleration", _moveDesc.deceleration, 0.f, 50.f);
-    PROPERTY_FLOAT("Yaw Speed", _moveDesc.yawSpeed, 0.f, 5.f);
+    PROPERTY_FLOAT("Yaw Speed", _moveDesc.yawSpeed, 0.f, 1080.f);
     PROPERTY_FLOAT("Jump Velocity", _moveDesc.jumpVelocity, 0.f, 30.f);
     PROPERTY_FLOAT("Gravity", _moveDesc.gravity, -50.f, 0.f);
     PROPERTY_FLOAT("Ground Y", _moveDesc.groundY, -100.f, 100.f);
@@ -82,64 +82,75 @@ void MovementComponent::Update(float timeDelta)
     Update_Rotation(timeDelta, _transform);
     Update_Velocity(timeDelta, _transform);
     Apply_Movement(timeDelta, _transform);
+
+}
+
+void MovementComponent::Start_Jump()
+{
+    if (!_onGround)
+        return;
+
+    _verticalVelocity = _moveDesc.jumpVelocity;
+    _onGround = false;
+    _canDoubleJump = true;
+}
+
+void MovementComponent::Start_DoubleJump()
+{
+    if (_onGround || !_canDoubleJump)
+        return;
+
+    _verticalVelocity = _moveDesc.doubleJumpVelocity;
+    _canDoubleJump = false;
 }
 
 void MovementComponent::Update_Rotation(float timeDelta, Shared<Transform> transform)
 {
-    float yawDelta = _commandDesc.lookDelta.x * _moveDesc.yawSpeed;
+    if (!_bOrientRotationToMovement)
+        return;
 
-    if (fabsf(yawDelta) > 0.0001f)
-    {
-        transform->Rotate_Axis(Vec3::Up, yawDelta);
-    }
+    Vec3 desiredDir = Build_DesiredMoveDirection();
+    if (desiredDir.LengthSquared() <= FLT_EPSILON)
+        return;
+
+    const float targetYaw = XMConvertToDegrees(atan2f(desiredDir.x, desiredDir.z));
+
+    Vec3 currentEuler = transform->Get_LocalEulerAngles();
+    float currentYaw = currentEuler.y;
+
+    float deltaYaw = targetYaw - currentYaw;
+
+    while (deltaYaw > 180.f)
+        deltaYaw -= 360.f;
+
+    while (deltaYaw < -180.f)
+        deltaYaw += 360.f;
+
+    const float maxStep = _moveDesc.yawSpeed * timeDelta;
+
+    deltaYaw = ::clamp(deltaYaw, -maxStep, maxStep);
+
+    transform->Set_LocalEulerAngles(
+        currentEuler.x,
+        currentYaw + deltaYaw,
+        currentEuler.z);
 }
 
 void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> transform)
 {
-    // 입력 정규화
-    Vec2 input = _commandDesc.moveAxis;
-    if (input.LengthSquared() > 1.f)
-        input.Normalize();
+    Vec3 desiredDir = Build_DesiredMoveDirection();
 
-    // 월드 방향 계산
-    Vec3 desiredDir = transform->Get_WorldRight() * input.x + transform->Get_WorldForward() * input.y;
-
-    if (desiredDir.LengthSquared() > FLT_EPSILON)
-        desiredDir.Normalize();
-
-    float   targetSpeed = _commandDesc.sprint ? _moveDesc.maxSprintSpeed : _moveDesc.maxWalkSpeed;
-    Vec3    targetVelocity = desiredDir * targetSpeed;
+    float targetSpeed = _commandDesc.sprint ? _moveDesc.maxSprintSpeed : _moveDesc.maxWalkSpeed;
+    Vec3 targetVelocity = desiredDir * targetSpeed;
     targetVelocity.y = _velocity.y;
 
-    // 보간
-    bool    hasInput = (input.LengthSquared() > FLT_EPSILON);
-    float   accel = hasInput ? _moveDesc.acceleration : _moveDesc.deceleration;
-    float   alpha = ::clamp(accel * timeDelta, 0.f, 1.f);
+    bool hasInput = (_commandDesc.moveAxis.LengthSquared() > FLT_EPSILON);
+    float accel = hasInput ? _moveDesc.acceleration : _moveDesc.deceleration;
 
-    // 수평 이동
+    float alpha = ::clamp(accel * timeDelta, 0.f, 1.f);
+
     _velocity.x = ::lerp(_velocity.x, targetVelocity.x, alpha);
     _velocity.z = ::lerp(_velocity.z, targetVelocity.z, alpha);
-
-    // 컨트롤 처음 눌렀을 때
-    if (_onGround && _commandDesc.superJumpVelocity > 0.f)
-    {
-        _verticalVelocity = _commandDesc.superJumpVelocity;
-        _onGround = false;
-        _canDoubleJump = false; // 슈퍼점프하고는 2단점프 하게 할지?
-    }
-    // 일반 점프
-    else if (_onGround && _commandDesc.jump)
-    {
-        _verticalVelocity = _moveDesc.jumpVelocity;
-        _onGround = false;
-        _canDoubleJump = true;
-    }
-    // 2단 점프
-    else if (!_onGround && _commandDesc.doublejump && _canDoubleJump)
-    {
-        _verticalVelocity = _moveDesc.doubleJumpVelocity;
-        _canDoubleJump = false;
-    }
 
     if (!_onGround)
     {
@@ -147,7 +158,6 @@ void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> trans
     }
 
     _velocity.y = _verticalVelocity;
-
 }
 
 void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transform)
@@ -171,6 +181,32 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
         _onGround = false;
     }
 
+}
+
+Vec3 MovementComponent::Build_DesiredMoveDirection() const
+{
+    Vec2 input = _commandDesc.moveAxis;
+    if (input.LengthSquared() > 1.f)
+        input.Normalize();
+
+    Vec3 forward = _commandDesc.moveBasisForward;
+    Vec3 right = _commandDesc.moveBasisRight;
+
+    forward.y = 0.f;
+    right.y = 0.f;
+
+    if (forward.LengthSquared() > FLT_EPSILON)
+        forward.Normalize();
+
+    if (right.LengthSquared() > FLT_EPSILON)
+        right.Normalize();
+
+    Vec3 desiredDir = right * input.x + forward * input.y;
+
+    if (desiredDir.LengthSquared() > FLT_EPSILON)
+        desiredDir.Normalize();
+
+    return desiredDir;
 }
 
 Shared<MovementComponent> MovementComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

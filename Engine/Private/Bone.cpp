@@ -5,6 +5,17 @@ Bone::Bone()
 {
 }
 
+Bone::Bone(const Bone& rhs)
+    : _name(rhs._name)
+    , _parentIndex(rhs._parentIndex)
+    , _hasOffsetMatrix(rhs._hasOffsetMatrix)
+    , _nodeTransform(rhs._nodeTransform)
+    , _offsetMatrix(rhs._offsetMatrix)
+    , _localTransform(rhs._nodeTransform)
+    , _combinedTransform(Matrix::Identity)
+{
+}
+
 HRESULT Bone::Initialize(const FBoneRaw& src)
 {
     _name = src.name;
@@ -59,4 +70,9 @@ Shared<Bone> Bone::Create(const FBoneRaw& src)
     }
 
     return instance;
+}
+
+Shared<Bone> Bone::Clone() const
+{
+    return make_shared<Bone>(*this);
 }

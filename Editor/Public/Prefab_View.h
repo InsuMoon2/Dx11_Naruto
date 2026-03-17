@@ -5,11 +5,12 @@
 NS_BEGIN(Engine)
 class GameObject;
 class RenderTarget;
+class Model;
 NS_END
 
 NS_BEGIN(Editor)
-
-class Editor_Camera_Free;
+    class Prefab_PreviewCameraSettings;
+    class Editor_Camera_Free;
 
 class Prefab_View : public EditorWindow
 {
@@ -32,6 +33,9 @@ public:
     bool Is_Open() const { return _isOpen; }
     void Pre_Render() override;
 
+    void Draw_PreviewCameraInspector();
+    void Apply_PreviewCameraSettings();
+
 private: 
     void Draw_Header();
     void Draw_ComponentList();
@@ -40,6 +44,11 @@ private:
 
     void Update_ImGuizmo();
     void Handle_Guizmo_Shotcut();
+
+private:
+    void            Preview_BeginPlay();
+    Shared<Model>   Find_PreviewModel() const;
+    void            Tick_PreviewAnimation(float timeDelta);
 
 public:
     static shared_ptr<Prefab_View> Create();
@@ -55,6 +64,8 @@ private:
 
     uint32 _selectedComponentId = 0;
 
+    bool   _previewHasBegunPlay = false;
+
 private: /* preview */
     Shared<RenderTarget>    _prevRT;
     Matrix                  _previewView;
@@ -63,9 +74,7 @@ private: /* preview */
     ImVec2                  _previewScreenPos;   
     ImVec2                  _previewImGuiSize;
 
-    //Unique<PrimitiveBatch<DirectX::VertexPositionColor>> _gridBatch = nullptr;
-    //Unique<BasicEffect> _gridEffect = nullptr;
-    //ComPtr<ID3D11InputLayout>                        _gridInputLayout;
+    Shared<Prefab_PreviewCameraSettings> _previewCameraSettings;
 
 private: /* ImGuizmo */
     ImGuizmo::OPERATION _gizmoOperation = ImGuizmo::TRANSLATE;

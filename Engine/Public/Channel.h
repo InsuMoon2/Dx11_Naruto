@@ -9,7 +9,8 @@ class Bone;
 class ENGINE_DLL Channel final : public Base
 {
 public:
-    Channel() = default;
+    Channel();
+    Channel(const Channel& rhs);
     virtual ~Channel() = default;
 
 public:
@@ -30,6 +31,7 @@ private:
 
 public:
     static Shared<Channel> Create(const FAnimationChannelRaw& src);
+    Shared<Channel>        Clone() const;
     void    Free() override;
 
 };

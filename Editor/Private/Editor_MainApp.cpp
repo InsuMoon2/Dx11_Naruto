@@ -21,6 +21,7 @@
 #include "UI_PlayerSkill.h"
 #include "UI_PlayerStatus.h"
 #include "UI_SkillSlot.h"
+#include "UI_MainTitleMenuButton.h"
 
 Editor_MainApp::Editor_MainApp()
 {
@@ -173,6 +174,9 @@ HRESULT Editor_MainApp::Ready_StaticLevel()
 
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_PLAYER_HUD,
         UI_PlayerHUD::Create(_device, _context));
+
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_MAIN_TITLE_TEXT,
+        UI_MainTitleMenuButton::Create(_device, _context));
 
     return S_OK;
 }

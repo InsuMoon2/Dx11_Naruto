@@ -96,6 +96,16 @@ void InputComponent::Reset_FrameInput()
     _frame.useSkillDown[1] = false;
 }
 
+bool InputComponent::Has_MoveInput() const
+{
+    return Vec2(_frame.moveX, _frame.moveY).LengthSquared() > FLT_EPSILON;
+}
+
+Vec2 InputComponent::Get_MoveAxis() const
+{
+    return Vec2(_frame.moveX, _frame.moveY);
+}
+
 json InputComponent::To_Json() const
 {
     json j = Component::To_Json();

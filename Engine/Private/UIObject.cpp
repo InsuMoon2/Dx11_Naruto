@@ -45,8 +45,8 @@ HRESULT UIObject::Initialize(void* arg)
     _zOrder = desc->zOrder;
     _levelIndex = desc->levelIndex;
 
-    _viewportWidth = GAME->Get_ViewportWidth();
-    _viewportHeight = GAME->Get_ViewportHeight();
+    _viewportWidth = GAME->Get_UIViewportWidth();
+    _viewportHeight = GAME->Get_UIViewportHeight();
 
     _transformCom->Set_LocalPosition(_posX, _posY, _zOrder);
     _transformCom->Set_LocalScale(_sizeX, _sizeY, 1.f);
@@ -138,8 +138,8 @@ void UIObject::Update_Transform()
     float designX = GAME->Get_WindowWidth();
     float designY = GAME->Get_WindowHeight();
 
-    float currentViewX = GAME->Get_ViewportWidth();
-    float currentViewY = GAME->Get_ViewportHeight();
+    float currentViewX = GAME->Get_UIViewportWidth();
+    float currentViewY = GAME->Get_UIViewportHeight();
 
     _transformMatrices[ETOI(ETransformState::Proj)] = XMMatrixOrthographicLH(
         currentViewX, currentViewY, 0.f, 1.f);

@@ -4,15 +4,13 @@
 #include "IPlayerState.h"
 #include "MovementComponent.h"
 
+NS_BEGIN(Engine)
+class Model;
+NS_END
+
 NS_BEGIN(Client)
 class InputComponent;
 class MovementComponent;
-
-struct FStateAnimationDesc
-{
-    string  animationName = "";
-    bool    loop = true;
-};
 
 class PlayerStateMachine final : public Component
 {
@@ -21,7 +19,7 @@ class PlayerStateMachine final : public Component
 public:
     explicit         PlayerStateMachine(ComPtr<Device> device, ComPtr<DeviceContext> context);
     explicit         PlayerStateMachine(const PlayerStateMachine& rhs);
-    virtual         ~PlayerStateMachine();
+    virtual         ~PlayerStateMachine() = default;
 
 public:
     HRESULT         Initialize_Prototype() override;
@@ -37,15 +35,25 @@ public:
 public:
     EPlayerState                Get_CurrentStateID() const { return _currentStateID; }
     EPlayerState                Get_PrevStateID()    const { return _prevStateID; }
-    Shared<InputComponent>      Get_Input()     const { return _input; }
-    Shared<MovementComponent>   Get_Movement()  const { return _movement; }
+    Shared<InputComponent>      Get_Input()          const { return _input; }
+    Shared<MovementComponent>   Get_Movement()       const { return _movement; }
+    Shared<Model>               Get_Model();
 
+    vector<string>              Get_AvaiableAnimationNames();
     const FStateAnimationDesc*  Find_StateAnimation(EPlayerState stateID) const;
     FStateAnimationDesc&        Edit_StateAnimation(EPlayerState stateID);
+
+    bool                        Apply_StateAnimation(EPlayerState stateID);
+
+    bool                        Preview_StateAnimation(EPlayerState stateID, int32 sequenceSlot);
+
+    // 플레이어 강제 상태 변경
+    void                        Force_Enter_State(EPlayerState stateID);
 
 private:
     Shared<InputComponent>                      _input;
     Shared<MovementComponent>                   _movement;
+    Shared<Model>                               _model;
 
 private:
     umap<EPlayerState, Shared<IPlayerState>>    _states;
@@ -56,7 +64,6 @@ private:
 
 protected:
     umap<EPlayerState, FStateAnimationDesc>     _stateAnimations;
-    //vector<string>                              _
 
 protected:
     json To_Json() const override;
@@ -68,5 +75,6 @@ public:
     void Free() override;
 
 };
+
 
 NS_END

@@ -168,6 +168,27 @@ shared_ptr<FPrefabDesc> Prefab_Manager::Get_PrefabData(const string& prefabName)
     return iter->second;
 }
 
+void Prefab_Manager::Reapply_Prefabs_InLevel(uint32 levelIndex)
+{
+    const auto objects = GAME->Get_GameObjects(levelIndex);
+
+    for (const auto& obj : objects)
+    {
+        if (!obj || obj->Is_Destroy())
+            continue;
+
+        const string& prefabName = obj->Get_SourcePrefabName();
+        if (prefabName.empty())
+            continue;
+
+        auto prefabDesc = Get_PrefabData(prefabName);
+        if (!prefabDesc)
+            continue;
+
+        Reapply_Prefab_ToObject(*prefabDesc, obj);
+    }
+}
+
 json Prefab_Manager::Serialize_GameObject(shared_ptr<GameObject> gameObject)
 {
     json root = gameObject->To_Json();
@@ -255,6 +276,7 @@ shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc&
     }
 
     gameObject->Set_Name(Utils::ToWString(desc.prefab_name));
+    gameObject->Set_SourcePrefabName(desc.prefab_name);
 
     return gameObject;
 }
@@ -270,6 +292,45 @@ string Prefab_Manager::Normalize_PrefabPath(const string& prefabPath)
     }
 
     return prefabPath + suffix;
+}
+
+void Prefab_Manager::Reapply_Prefab_ToObject(const FPrefabDesc& desc, Shared<GameObject> gameObject)
+{
+    if (!gameObject)
+        return;
+
+    for (const auto& compData : desc.components)
+    {
+        if (compData.is_null() || !compData.contains("type"))
+            continue;
+
+        uint32 typeId = 0;
+
+        if (compData["type"].is_string())
+        {
+            const auto result = magic_enum::enum_cast<Protocol::ComponentID>(
+                compData["type"].get<string>());
+
+            if (!result.has_value())
+                continue;
+
+            typeId = static_cast<uint32>(result.value());
+        }
+        else
+        {
+            typeId = compData["type"].get<uint32>();
+        }
+
+        // 씬에 배치된 위치/회전/스케일은 유지
+        if (typeId == Transform::StaticTypeID())
+            continue;
+
+        auto comp = gameObject->Find_Component_ByStaticType(typeId);
+        if (!comp)
+            continue;
+
+        comp->From_Json(compData);
+    }
 }
 
 unique_ptr<Prefab_Manager> Prefab_Manager::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

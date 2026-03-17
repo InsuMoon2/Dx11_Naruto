@@ -2,6 +2,10 @@
 
 #include "Client_Enum.h"
 
+NS_BEGIN(Engine)
+struct FAnimationClipSetting;
+NS_END
+
 namespace Client
 {
     struct FSkillData
@@ -30,6 +34,27 @@ namespace Client
         bool isSkeletal = false;
 
         FSkillData skillData{};
+    };
+
+    struct FStateAnimationDesc
+    {
+        EStateAnimationMode mode = EStateAnimationMode::Single;
+
+        // 싱글용
+        FAnimationClipSetting single;
+
+        // 시퀀스용
+        FAnimationClipSetting start;
+        FAnimationClipSetting loop;
+        FAnimationClipSetting end;
+
+        float	playRate = 1.f;
+
+        // 루프 애니메이션이 있으면 시퀀스로 판단
+        bool Has_Sequence() const
+        {
+            return !loop.animationName.empty();
+        }
     };
 
 }
