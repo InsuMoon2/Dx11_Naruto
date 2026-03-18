@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Editor_MainApp.h"
 
+#include "AnimNotify_Inspector_Factory.h"
 #include "UI_Text.h"
 
 #include "Texture.h"
@@ -219,5 +220,6 @@ void Editor_MainApp::Free()
     Event_Manager::DestroyInstance();
 
     Inspector_Factory::DestroyInstance();
+    AnimNotify_Inspector_Factory::DestroyInstance();
     
 }

@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "EditorInstance.h"
+
+#include "AnimNotify_Inspector_Factory.h"
 #include "BehaviorTree_View.h"
 #include "ImGui_Manager.h"    
 #include "Editor_Manager.h"
@@ -25,6 +27,7 @@ HRESULT EditorInstance::Initialize_Editor(const EDITOR_DESC& desc, ComPtr<Device
     GAME->Set_ImGuiContext(ImGui::GetCurrentContext());
 
     Inspector_Factory::GetInstance()->Initialize();
+    AnimNotify_Inspector_Factory::GetInstance()->Initialize();
 
     _editorManager = Editor_Manager::Create();
     CHECK_NULL(_editorManager, E_FAIL);

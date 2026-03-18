@@ -215,6 +215,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\AnimationState_Inspector.h" />
+    <ClInclude Include="..\Public\Animation_View.h" />
+    <ClInclude Include="..\Public\AnimNotifyState_Inspector.h" />
+    <ClInclude Include="..\Public\AnimNotify_Inspector_Factory.h" />
+    <ClInclude Include="..\Public\AnimNotify_Inspector.h" />
+    <ClInclude Include="..\Public\AnimSequencerAdapter.h" />
     <ClInclude Include="..\Public\BehaviorTree_Inspector.h" />
     <ClInclude Include="..\Public\BehaviorTree_View.h" />
     <ClInclude Include="..\Public\CommandHistory.h" />
@@ -265,6 +270,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\AnimationState_Inspector.cpp" />
+    <ClCompile Include="..\Private\Animation_View.cpp" />
+    <ClCompile Include="..\Private\AnimNotifyState_Inspector.cpp" />
+    <ClCompile Include="..\Private\AnimNotify_Inspector_Factory.cpp" />
+    <ClCompile Include="..\Private\AnimNotify_Inspector.cpp" />
+    <ClCompile Include="..\Private\AnimSequencerAdapter.cpp" />
     <ClCompile Include="..\Private\BehaviorTree_Inspector.cpp" />
     <ClCompile Include="..\Private\BehaviorTree_View.cpp" />
     <ClCompile Include="..\Private\CommandHistory.cpp" />

@@ -218,15 +218,31 @@
     <ClInclude Include="..\Public\UI_Text.h">
       <Filter>01. Utility\03. GameObject\02. UI\00. Text</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UI_AnimSerializer.h" />
-    <ClInclude Include="..\Public\UI_AnimUtility.h" />
-    <ClInclude Include="..\Public\UI_AnimPlayer.h" />
     <ClInclude Include="..\Public\ModelBin_Types.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Bone.h" />
     <ClInclude Include="..\Public\Channel.h" />
     <ClInclude Include="..\Public\Animation.h" />
+    <ClInclude Include="..\Public\AnimNotify_Types.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_AnimPlayer.h">
+      <Filter>01. Utility\03. GameObject\02. UI\00. UI Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_AnimSerializer.h">
+      <Filter>01. Utility\03. GameObject\02. UI\00. UI Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_AnimUtility.h">
+      <Filter>01. Utility\03. GameObject\02. UI\00. UI Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimNotifyState.h">
+      <Filter>10. Notify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimNotify.h">
+      <Filter>10. Notify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimNotify_Serializer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -393,6 +409,12 @@
     </Filter>
     <Filter Include="01. Utility\03. GameObject\02. UI\00. Text">
       <UniqueIdentifier>{ce9dc287-2d3d-47b8-9f8f-f0639bf0b413}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. GameObject\02. UI\00. UI Animation">
+      <UniqueIdentifier>{51528b2e-0855-4634-a79c-3a7b7a3cec00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. Notify">
+      <UniqueIdentifier>{998c659e-9beb-45b6-9825-64e4cbdc5346}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -580,12 +602,25 @@
     <ClCompile Include="..\Private\UI_Text.cpp">
       <Filter>01. Utility\03. GameObject\02. UI\00. Text</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UI_AnimSerializer.cpp" />
-    <ClCompile Include="..\Private\UI_AnimUtility.cpp" />
-    <ClCompile Include="..\Private\UI_AnimPlayer.cpp" />
     <ClCompile Include="..\Private\Bone.cpp" />
     <ClCompile Include="..\Private\Channel.cpp" />
     <ClCompile Include="..\Private\Animation.cpp" />
+    <ClCompile Include="..\Private\UI_AnimPlayer.cpp">
+      <Filter>01. Utility\03. GameObject\02. UI\00. UI Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_AnimSerializer.cpp">
+      <Filter>01. Utility\03. GameObject\02. UI\00. UI Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_AnimUtility.cpp">
+      <Filter>01. Utility\03. GameObject\02. UI\00. UI Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimNotifyState.cpp">
+      <Filter>10. Notify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimNotify.cpp">
+      <Filter>10. Notify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimNotify_Serializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

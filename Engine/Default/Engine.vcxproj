@@ -241,6 +241,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Animation.h" />
+    <ClInclude Include="..\Public\AnimNotify.h" />
+    <ClInclude Include="..\Public\AnimNotifyState.h" />
+    <ClInclude Include="..\Public\AnimNotify_Serializer.h" />
+    <ClInclude Include="..\Public\AnimNotify_Types.h" />
     <ClInclude Include="..\Public\Asset_Manager.h" />
     <ClInclude Include="..\Public\BehaviorTree.h" />
     <ClInclude Include="..\Public\AnimNotify_Factory.h" />
@@ -323,6 +327,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Animation.cpp" />
+    <ClCompile Include="..\Private\AnimNotify.cpp" />
+    <ClCompile Include="..\Private\AnimNotifyState.cpp" />
+    <ClCompile Include="..\Private\AnimNotify_Serializer.cpp" />
     <ClCompile Include="..\Private\Asset_Manager.cpp" />
     <ClCompile Include="..\Private\BehaviorTree.cpp" />
     <ClCompile Include="..\Private\AnimNotify_Factory.cpp" />

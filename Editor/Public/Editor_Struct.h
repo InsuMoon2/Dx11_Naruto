@@ -3,13 +3,15 @@
 namespace ed = ax::NodeEditor;
 
 NS_BEGIN(Engine)
-    struct FUIAnimAsset;
-    class BTNode;
+struct FUIAnimAsset;
+struct FAnimNotifyClipData;
+class  BTNode;
 NS_END
 
 NS_BEGIN(Editor)
 
 class UI_Animation_View;
+class Animation_View;
 
 struct FBTEditorNode
 {
@@ -49,6 +51,20 @@ struct FUIAnimSequencerContext
     int* selectedTrackIndex = nullptr;
     int* selectedKeyIndex = nullptr;
 
+};
+
+struct FAnimSequencerContext
+{
+    Animation_View* view = nullptr;
+    FAnimNotifyClipData* clip = nullptr;
+
+    int32* selectedNotifyIndex = nullptr;
+    int32* selectedStateIndex = nullptr;
+
+    int32 pendingMarkStartFrame = -1;
+    int32 pendingMarkEndFrame = -1;
+    bool isMarkingState = false;
+    bool clickedOnNotify = false;
 };
 
 NS_END
