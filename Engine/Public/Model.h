@@ -72,7 +72,15 @@ public:
     void    Set_AnimationPlayRate(float playRate);
     float   Get_AnimationPlayRate() const { return _animationPlayRate; }
 
+    // 블렌딩용
+    void    Set_AnimationBlendDuration(float seconds);
+    float   Get_AnimationBlendDuration() { return _animationBlendDuration; }
+
+    bool    Is_CurrentAnimationFinished() const { return _isCurrentAnimationFinished; }
     bool    Is_AnimationSequenceFinished() const { return _isAnimSequenceFinished; }
+
+    float   Get_CurrentTrackPosition() const { return _currentClip.trackPosition; }
+    float   Get_CurrentAnimationDuration() const;
 
 private:
     // .meshbin 확장자일 때 들어오는 초기화 경로
@@ -104,6 +112,45 @@ private:
     // End 클립이 없거나 End까지 끝났을 때 공통 종료 처리
     void    Complete_AnimationSequence();
 
+private: /* blend */
+
+    // clip 전환 진입점
+    bool    Find_BeginAnimationTransition(const FAnimationClipSetting& clip);
+
+    // 첫 clip이거나 블렌드가 필요 없을 떄
+    void    Begin_ImmediateClip(const FPlayingClipState& clipState);
+    void    Clear_BlendState();
+
+    // 현재 적용 중 포즈 캡처
+    void    Capture_CurrentPose(vector<FAnimationLocalPose>& outPose) const;
+
+    // 특정 clip state 기준으로 포즈 샘플링
+    bool    Sample_ClipPose(const FPlayingClipState& clipState, vector<FAnimationLocalPose>& outPose) const;
+
+    // 샘플링된 local pose를 실제 bone local transform에 반영
+    void    Apply_LocalPoses_ToBones(const vector<FAnimationLocalPose>& poses);
+
+    // bone local이 반영된 뒤 combined/skiing matrix 갱신
+    void    Update_BoneMatrices_FromBones();
+
+    void    Sync_LegacyAnimationState();
+
+    // 두 포즈를 SRT 기준으로 블렌딩 진행
+    static void Blend_LocalPoses(
+        const vector<FAnimationLocalPose>& fromPose,
+        const vector<FAnimationLocalPose>& toPose,
+        float blendRatio,
+        vector<FAnimationLocalPose>& outPose);
+
+private:
+    bool    Has_StartAnimation() const;
+    bool    Has_LoopAnimation() const;
+    bool    Has_EndAnimation() const;
+
+    bool    Try_PlayBestSequenceEntry();
+    bool    Try_AdvanceSequenceAfterCurrentFinished();
+
+
 private:
     EMeshVertexType                 _modelType = { EMeshVertexType::END };
     Matrix                          _preLocalTransformMatrix = {};
@@ -134,6 +181,23 @@ private: /* 애니메이션 재생 관련 */
 
     bool                            _hasAnimSequence = false;
     bool                            _isAnimSequenceFinished = false;
+    bool                            _isCurrentAnimationFinished = false;
+
+private: /* 블렌딩 */
+
+    float                           _animationBlendDuration = 0.15f;
+
+    // 현재/다음 애니메이션 상태
+    FPlayingClipState               _currentClip;
+    FAnimationBlendState            _blendState;
+
+    // 프레임별 샘플 pose 버퍼
+    vector<FAnimationLocalPose>     _currentSamplePose;
+    vector<FAnimationLocalPose>     _nextSamplePose;
+    vector<FAnimationLocalPose>     _blendedPose;
+
+    // 마지막 적용 pose를 유지하면 시퀀스 종료 후 다음 전환 부드럽게
+    vector<FAnimationLocalPose>     _lastAppliedPose;
 
 public:
     static Shared<Model> Create(ComPtr<Device> device, ComPtr<DeviceContext> context,

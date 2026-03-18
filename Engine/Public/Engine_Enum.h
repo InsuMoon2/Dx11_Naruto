@@ -16,7 +16,7 @@ namespace Engine
 
     enum class EBTNodeResult { NotExecuted, Succeeded, Failed, InProgress, Aborted };
 
-    enum class EBlackboardValueType { Int, Float, Bool, Vector3, END };
+    enum class EBlackboardValueType { Int, Float, Bool, Vector3, String, END };
  
     enum class ETransformState { View, Proj, END };
 

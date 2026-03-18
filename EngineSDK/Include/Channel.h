@@ -19,6 +19,9 @@ public:
     void    Reset();
     void    Update_TransformationMatrix(float trackPosition, vector<Shared<Bone>>& bones);
 
+    void    Sample_LocalPose(float trackPosition, FAnimationLocalPose& outPose) const;
+    int32   Get_BoneIndex() const { return _boneIndex; }
+
 private:
     void    Apply_KeyFrame(const FKeyFrame& key, const Shared<Bone>& bone);
 

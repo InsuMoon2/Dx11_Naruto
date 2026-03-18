@@ -10,7 +10,7 @@ class Blackboard;
 class ENGINE_DLL BehaviorTree : public Component
 {
 public:
-    GENERATED_COMPONENT(BehaviorTree, Protocol::COMPONENT_TYPE_AI)
+    GENERATED_COMPONENT(BehaviorTree, Protocol::COMPONENT_TYPE_BEHAVIOR)
 
 public:
     explicit BehaviorTree(ComPtr<Device> device, ComPtr<DeviceContext> context);

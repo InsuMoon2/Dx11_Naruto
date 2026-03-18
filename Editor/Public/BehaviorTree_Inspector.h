@@ -16,7 +16,7 @@ public:
 
 public:
     void    Draw_Inspector(shared_ptr<Component> component) override;
-    uint32  Get_ComponentType() const override { return Protocol::COMPONENT_TYPE_AI; }
+    uint32  Get_ComponentType() const override { return Protocol::COMPONENT_TYPE_BEHAVIOR; }
 
 private:
     void    Draw_WaitMode(Shared<BTTask_Wait> node);

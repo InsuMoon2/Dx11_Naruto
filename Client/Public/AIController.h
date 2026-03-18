@@ -9,6 +9,7 @@ NS_END
 
 NS_BEGIN(Client)
 class MovementComponent;
+class AnimationStateComponent;
 
 class AIController : public Controller
 {
@@ -30,11 +31,15 @@ protected:
     void    From_Json(const json& data) override;
 
 private:
-    Shared<BehaviorTree> _behavior;
-    Shared<MovementComponent> _movement;
-    Shared<Blackboard> _blackboard;
+    Shared<BehaviorTree>        _behavior;
+    Shared<MovementComponent>   _movement;
+    Shared<Blackboard>          _blackboard;
+    Shared<AnimationStateComponent> _animationState;
 
-    wstring _btFilePath;
+    wstring                     _btFilePath;
+
+    string                      _lastAnimState = "";
+    int32                       _lastAnimDirection = static_cast<int32>(EMoveInputDirection::Forward);
 
 public:
     static Shared<AIController> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

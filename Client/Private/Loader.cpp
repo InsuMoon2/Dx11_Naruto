@@ -149,6 +149,7 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<AIController>(staticLevel);
     GAME->Register_ComponentFactory<PlayerStateMachine>(staticLevel);
     GAME->Register_ComponentFactory<SkillComponent>(staticLevel);
+    GAME->Register_ComponentFactory<AnimationStateComponent>(staticLevel);
     //GAME->Register_ComponentFactory<Model>(staticLevel);
 
     /* GameObject */

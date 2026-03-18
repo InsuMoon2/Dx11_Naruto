@@ -21,11 +21,14 @@ public:
         float deceleration = 24.f;
         float yawSpeed = 360.f;    
 
-        float jumpVelocity = 8.f;
-        float doubleJumpVelocity = 6.f;
+        float jumpVelocity = 11.f;
+        float doubleJumpVelocity = 9.f;
 
         float superJumpMinVelocity = 10.f;
-        float superJumpMaxVelocity = 30.f;
+        float superJumpMaxVelocity = 50.f;
+
+        float dashDistance = 6.f;
+        float dashDuration = 0.18f;
 
         float gravity = -20.f;
         float groundY = 5.f;        // Temp값. 일단 5로 조절
@@ -35,7 +38,9 @@ public:
     {
         Vec2  moveAxis = Vec2::Zero;
         Vec2  lookDelta = Vec2::Zero;
+
         bool  sprint = false;
+
         bool  jump = false;
         bool  doublejump = false;
         float superJumpVelocity = 0.f;
@@ -65,10 +70,17 @@ public:
 
     void Start_Jump();
     void Start_DoubleJump();
+    void Start_SuperJump(float velocity);
+
+    //void Start_Dash(EMoveInputDirection inputDir, float distance, float duration);
+    void Start_Dash(const Vec3& worldDir, float distance, float duration);
+    void Stop_Dash();
 
 public:
     bool Get_OrientRotationToMovement() const { return _bOrientRotationToMovement; }
     void Set_OrientRotationToMovement(bool check) { _bOrientRotationToMovement = check; }
+
+    float Get_DashNormalizedTime() const;
 
 private:
     void Update_Rotation(float timeDelta, Shared<Transform> transform);
@@ -80,6 +92,7 @@ private:
 private:
     FMovementDesc _moveDesc;
     FMoveCommand _commandDesc;
+    EMoveInputDirection _moveInputDirection;
 
     Vec3    _velocity = Vec3::Zero;
 
@@ -91,6 +104,13 @@ private:
     Shared<Transform> _transform;
 
     bool _bOrientRotationToMovement = false;
+
+    bool                _isDashing = false;
+    EMoveInputDirection _dashInputDirection = EMoveInputDirection::Forward;
+    Vec3                _dashWorldDirection = Vec3::Zero;
+    float               _dashElapsed = 0.f;
+    float               _dashDuration = 0.f;
+    float               _dashSpeed = 0.f;
 
 public:
     static Shared<MovementComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

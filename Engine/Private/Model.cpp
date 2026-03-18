@@ -12,6 +12,7 @@
 Model::Model(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
+    _blendState.duration = _animationBlendDuration;
 }
 
 Model::Model(const Model& rhs)
@@ -26,13 +27,19 @@ Model::Model(const Model& rhs)
     , _isAnimationLoop(false)
     , _modelGuid(rhs._modelGuid)
     , _animationPlayRate(1.f)
+    , _animationBlendDuration(rhs._animationBlendDuration)
     , _animPhase(EAnimPhase::Start)
     , _startClip{}
     , _loopClip{}
     , _endClip{}
     , _hasAnimSequence(false)
     , _isAnimSequenceFinished(false)
+    , _currentClip{}
+    , _blendState{}
+    , _isCurrentAnimationFinished(false)
 {
+    _blendState.duration = _animationBlendDuration;
+
     _bones.reserve(rhs._bones.size());
     for (const auto& bone : rhs._bones)
     {
@@ -104,42 +111,38 @@ HRESULT Model::Bind_Material(Shared<Shader> shader, const char* constantName, ui
 
 void Model::Set_Animation(uint32 animIndex, bool isLoop)
 {
-    Reset_AnimationSequenceState();
-    Apply_AnimationClip(animIndex, isLoop, _animationPlayRate);
+    if (animIndex >= _animations.size())
+        return;
+
+    FAnimationClipSetting clip;
+    clip.animationName = Get_AnimationName(animIndex);
+    clip.loop = isLoop;
+    clip.playRate = 1.f;
+
+    Set_Animation(clip);
 }
 
 void Model::Set_Animation(const string& animName, bool isLoop)
 {
-    uint32 animIndex = 0;
-    if (!Find_AnimationIndex(animName, animIndex))
-        return;
+    FAnimationClipSetting clip;
+    clip.animationName = animName;
+    clip.loop = isLoop;
+    clip.playRate = 1.f;
 
-    Set_Animation(animIndex, isLoop);
+    Set_Animation(clip);
 }
 
 void Model::Set_Animation(const FAnimationClipSetting& clip)
 {
-    if (clip.animationName.empty())
-        return;
-
-    uint32 animIndex = 0;
-    if (!Find_AnimationIndex(clip.animationName, animIndex))
-        return;
-
     Reset_AnimationSequenceState();
-    Apply_AnimationClip(animIndex, clip.loop, clip.playRate);
+    Find_BeginAnimationTransition(clip);
 }
 
-void Model::Set_AnimationSequence(const FAnimationClipSetting& startClip, const FAnimationClipSetting& loopClip,
+void Model::Set_AnimationSequence(
+    const FAnimationClipSetting& startClip,
+    const FAnimationClipSetting& loopClip,
     const FAnimationClipSetting& endClip)
 {
-    uint32 loopIndex = 0;
-    if (loopClip.animationName.empty() || !Find_AnimationIndex(loopClip.animationName, loopIndex))
-    {
-        Reset_AnimationSequenceState();
-        return;
-    }
-
     _startClip = startClip;
     _loopClip = loopClip;
     _endClip = endClip;
@@ -147,16 +150,10 @@ void Model::Set_AnimationSequence(const FAnimationClipSetting& startClip, const 
     _hasAnimSequence = true;
     _isAnimSequenceFinished = false;
 
-    uint32 startIndex = 0;
-    if (!_startClip.animationName.empty() && Find_AnimationIndex(_startClip.animationName, startIndex))
+    if (!Try_PlayBestSequenceEntry())
     {
-        _animPhase = EAnimPhase::Start;
-        Apply_AnimationClip(startIndex, _startClip.loop, _startClip.playRate);
-        return;
+        Complete_AnimationSequence();
     }
-
-    _animPhase = EAnimPhase::Loop;
-    Apply_AnimationClip(loopIndex, _loopClip.loop, _loopClip.playRate);
 }
 
 void Model::Request_AnimEnd()
@@ -167,23 +164,19 @@ void Model::Request_AnimEnd()
     if (_animPhase == EAnimPhase::End)
         return;
 
-    if (_endClip.animationName.empty())
-    {
-        Complete_AnimationSequence();
-        return;
-    }
-
-    uint32 endIndex = 0;
-    if (!Find_AnimationIndex(_endClip.animationName, endIndex))
+    if (!Has_EndAnimation())
     {
         Complete_AnimationSequence();
         return;
     }
 
     _animPhase = EAnimPhase::End;
-    Apply_AnimationClip(endIndex, _endClip.loop, _endClip.playRate);
-}
 
+    if (!Find_BeginAnimationTransition(_endClip))
+    {
+        Complete_AnimationSequence();
+    }
+}
 
 uint32 Model::Get_AnimationCount() const
 {
@@ -218,64 +211,103 @@ int32 Model::Find_AnimationIndex_ByName(const string& animName)
 
 bool Model::Play_Animation(float timeDelta)
 {
-    if (_currentAnimationIndex < 0 ||
-        _currentAnimationIndex >= static_cast<int32>(_animations.size()))
+    if (!_currentClip.Is_Valid())
     {
+        if (!_lastAppliedPose.empty())
+        {
+            Apply_LocalPoses_ToBones(_lastAppliedPose);
+            Update_BoneMatrices_FromBones();
+        }
+
         return false;
     }
 
-    // 매 프레임 기본 자세로 먼저 되돌리고 채널 덮어쓰기
     for (auto& bone : _bones)
     {
-        bone->Reset_ToNodeTransform();
+        if (bone)
+            bone->Reset_ToNodeTransform();
     }
 
-    const bool clipFinished =
-        _animations[_currentAnimationIndex]->Update_TransformationMatrices(
-            timeDelta * _animationPlayRate,
-            _bones,
-            _isAnimationLoop);
+    bool currentFinished = false;
 
-    for (size_t i = 0; i < _bones.size(); ++i)
+    if (_currentClip.animIndex >= 0 &&
+        _currentClip.animIndex < static_cast<int32>(_animations.size()) &&
+        _animations[_currentClip.animIndex] != nullptr)
     {
-        const int32 parentIndex = _bones[i]->Get_ParentIndex();
-        const Matrix* parentMatrix = (parentIndex >= 0) ?
-            &_bones[parentIndex]->Get_CombinedTransform() : nullptr;
+        currentFinished = _animations[_currentClip.animIndex]->Advance_TrackPosition(
+            timeDelta * _currentClip.playRate,
+            _currentClip.loop,
+            _currentClip.trackPosition);
 
-        _bones[i]->Update_Combined(parentMatrix, _preLocalTransformMatrix);
-        _boneMatrices[i] = _bones[i]->Get_SkinningMatrix();
-
-        if (!_boneMatrices.empty())
-        {
-            const Matrix& m = _boneMatrices[0];
-        }
+        Sample_ClipPose(_currentClip, _currentSamplePose);
     }
+
+    if (_blendState.active)
+    {
+        _isCurrentAnimationFinished = false;
+
+        if (_blendState.next.animIndex >= 0 &&
+            _blendState.next.animIndex < static_cast<int32>(_animations.size()) &&
+            _animations[_blendState.next.animIndex] != nullptr)
+        {
+            _animations[_blendState.next.animIndex]->Advance_TrackPosition(
+                timeDelta * _blendState.next.playRate,
+                _blendState.next.loop,
+                _blendState.next.trackPosition);
+
+            Sample_ClipPose(_blendState.next, _nextSamplePose);
+        }
+
+        _blendState.elapsed += timeDelta;
+
+        const float blendRatio = (_blendState.duration <= FLT_EPSILON)
+            ? 1.f
+            : Utils::Min(_blendState.elapsed / _blendState.duration, 1.f);
+
+        // 현재 포즈와 다음 포즈를 SRT 기준으로 블렌딩
+        Blend_LocalPoses(_blendState.fromPose, _nextSamplePose, blendRatio, _blendedPose);
+        Apply_LocalPoses_ToBones(_blendedPose);
+        Update_BoneMatrices_FromBones();
+
+        _lastAppliedPose = _blendedPose;
+
+        if (blendRatio >= 1.f)
+        {
+            // 전환 시, 다음 애니메이션을 현재 애니메이션으로 다시 세팅
+            _currentClip = _blendState.next;
+            Clear_BlendState();
+            Sync_LegacyAnimationState();
+        }
+
+        return false;
+    }
+
+    Apply_LocalPoses_ToBones(_currentSamplePose);
+    Update_BoneMatrices_FromBones();
+
+    _lastAppliedPose = _currentSamplePose;
+    Sync_LegacyAnimationState();
 
     if (!_hasAnimSequence)
     {
-        // 단일 클립 재생은 기존 동작을 유지
-        return clipFinished;
+        _isCurrentAnimationFinished = currentFinished;
+        return currentFinished;
     }
 
-    if (!clipFinished)
+    if (!currentFinished)
         return false;
 
     if (_animPhase == EAnimPhase::Start)
     {
-        uint32 loopIndex = 0;
-        if (Find_AnimationIndex(_loopClip.animationName, loopIndex))
-        {
-            _animPhase = EAnimPhase::Loop;
-            Apply_AnimationClip(loopIndex, _loopClip.loop, _loopClip.playRate);
-        }
-        else
-        {
-            Complete_AnimationSequence();
-        }
+        if (!Try_AdvanceSequenceAfterCurrentFinished())
+            return _isAnimSequenceFinished;
+
+        return false;
     }
 
     if (_animPhase == EAnimPhase::End)
     {
+        _isCurrentAnimationFinished = true;
         Complete_AnimationSequence();
         return true;
     }
@@ -415,15 +447,272 @@ void Model::Reset_AnimationSequenceState()
 
 void Model::Complete_AnimationSequence()
 {
-    _animPhase = EAnimPhase::End;
-    _currentAnimationIndex = -1;
-    _isAnimationLoop = false;
+    _hasAnimSequence = false;
     _isAnimSequenceFinished = true;
+
+    _startClip = {};
+    _loopClip = {};
+    _endClip = {};
+}
+
+bool Model::Find_BeginAnimationTransition(const FAnimationClipSetting& clip)
+{
+    if (clip.animationName.empty())
+        return false;
+
+    uint32 animIndex = 0;
+    if (!Find_AnimationIndex(clip.animationName, animIndex))
+        return false;
+
+    FPlayingClipState targetClip{};
+    targetClip.animIndex = static_cast<int32>(animIndex);
+    targetClip.loop = clip.loop;
+    targetClip.playRate = Utils::Max(clip.playRate, 0.01f);
+    targetClip.trackPosition = 0.f;
+
+    _isAnimSequenceFinished = false;
+
+    // 아직 현재 재생중인 애니메이션이 없으면 바로 시작
+    if (!_currentClip.Is_Valid())
+    {
+        Begin_ImmediateClip(targetClip);
+        return true;
+    }
+
+    // 다음 애니메이션과 cross fade 시작
+    Capture_CurrentPose(_blendState.fromPose);
+    Sample_ClipPose(targetClip, _blendState.toPose);
+
+    _blendState.active = true;
+    _blendState.duration = _animationBlendDuration;
+    _blendState.elapsed = 0.f;
+    _blendState.next = targetClip;
+
+    _nextSamplePose = _blendState.toPose;
+    return true;
+}
+
+void Model::Begin_ImmediateClip(const FPlayingClipState& clipState)
+{
+    _currentClip = clipState;
+    _isCurrentAnimationFinished = false;
+    Clear_BlendState();
+    Sync_LegacyAnimationState();
+}
+
+void Model::Clear_BlendState()
+{
+    _blendState.active = false;
+    _blendState.elapsed = 0.f;
+    _blendState.duration = _animationBlendDuration;
+    _blendState.next = {};
+
+    _blendState.fromPose.clear();
+    _blendState.toPose.clear();
+}
+
+void Model::Capture_CurrentPose(vector<FAnimationLocalPose>& outPose) const
+{
+    outPose.clear();
+    outPose.resize(_bones.size());
+
+    // 이미 직전 프레임 최종 적용 포즈가 있으면, 그걸 우선해서 사용
+    if (_lastAppliedPose.size() == _bones.size())
+    {
+        outPose = _lastAppliedPose;
+        return;
+    }
+
+    if (_currentClip.Is_Valid())
+    {
+        Sample_ClipPose(_currentClip, outPose);
+    }
+}
+
+bool Model::Sample_ClipPose(const FPlayingClipState& clipState, vector<FAnimationLocalPose>& outPose) const
+{
+    outPose.clear();
+    outPose.resize(_bones.size());
+
+    if (!clipState.Is_Valid())
+        return false;
+
+    if (clipState.animIndex < 0 || clipState.animIndex >= static_cast<int32>(_animations.size()))
+        return false;
+
+    const auto& animation = _animations[clipState.animIndex];
+    if (!animation)
+        return false;
+
+    animation->Sample_LocalPoses(clipState.trackPosition, outPose);
+    return true;
+}
+
+void Model::Apply_LocalPoses_ToBones(const vector<FAnimationLocalPose>& poses)
+{
+    for (size_t i = 0; i < _bones.size(); ++i)
+    {
+        if (!_bones[i])
+            continue;
+
+        if (i >= poses.size() || !poses[i].valid)
+        {
+            _bones[i]->Reset_ToNodeTransform();
+            continue;
+        }
+
+        Matrix local = Matrix::CreateScale(poses[i].scale)
+            * Matrix::CreateFromQuaternion(poses[i].rotation)
+            * Matrix::CreateTranslation(poses[i].translation);
+
+        _bones[i]->Set_LocalTransform(local);
+    }
+}
+
+void Model::Update_BoneMatrices_FromBones()
+{
+    for (size_t i = 0; i < _bones.size(); ++i)
+    {
+        if (!_bones[i])
+            continue;
+
+        const int32 parentIndex = _bones[i]->Get_ParentIndex();
+        const Matrix* parentMatrix = (parentIndex >= 0)
+            ? &_bones[parentIndex]->Get_CombinedTransform()
+            : nullptr;
+
+        _bones[i]->Update_Combined(parentMatrix, _preLocalTransformMatrix);
+        _boneMatrices[i] = _bones[i]->Get_SkinningMatrix();
+    }
+}
+
+void Model::Sync_LegacyAnimationState()
+{
+    _currentAnimationIndex = _currentClip.animIndex;
+    _isAnimationLoop = _currentClip.loop;
+}
+
+void Model::Blend_LocalPoses(const vector<FAnimationLocalPose>& fromPose, const vector<FAnimationLocalPose>& toPose,
+    float blendRatio, vector<FAnimationLocalPose>& outPose)
+{
+    const size_t poseCount = Utils::Max(fromPose.size(), toPose.size());
+
+    outPose.clear();
+    outPose.resize(poseCount);
+
+    for (size_t i = 0; i < poseCount; i++)
+    {
+        const bool hasFrom = i < fromPose.size() && fromPose[i].valid;
+        const bool hasTo = i < toPose.size() && toPose[i].valid;
+
+        if (hasFrom && hasTo)
+        {
+            outPose[i].scale = Vec3::Lerp(fromPose[i].scale, toPose[i].scale, blendRatio);
+            outPose[i].rotation = Quat::Slerp(fromPose[i].rotation, toPose[i].rotation, blendRatio);
+            outPose[i].translation = Vec3::Lerp(fromPose[i].translation, toPose[i].translation, blendRatio);
+            outPose[i].valid = true;
+            continue;
+        }
+
+        if (hasTo)
+        {
+            outPose[i] = toPose[i];
+            outPose[i].valid = true;
+            continue;
+        }
+
+        if (hasFrom)
+        {
+            outPose[i] = fromPose[i];
+            outPose[i].valid = true;
+            continue;
+        }
+
+        outPose[i] = {};
+    }
+}
+
+bool Model::Has_StartAnimation() const
+{
+    return !_startClip.animationName.empty();
+}
+
+bool Model::Has_LoopAnimation() const
+{
+    return !_loopClip.animationName.empty();
+}
+
+bool Model::Has_EndAnimation() const
+{
+    return !_endClip.animationName.empty();
+}
+
+bool Model::Try_PlayBestSequenceEntry()
+{
+    if (Has_StartAnimation())
+    {
+        _animPhase = EAnimPhase::Start;
+        return Find_BeginAnimationTransition(_startClip);
+    }
+
+    if (Has_LoopAnimation())
+    {
+        _animPhase = EAnimPhase::Loop;
+        return Find_BeginAnimationTransition(_loopClip);
+    }
+
+    if (Has_EndAnimation())
+    {
+        _animPhase = EAnimPhase::End;
+        return Find_BeginAnimationTransition(_endClip);
+    }
+
+    return false;
+}
+
+bool Model::Try_AdvanceSequenceAfterCurrentFinished()
+{
+    if (_animPhase == EAnimPhase::Start)
+    {
+        if (Has_LoopAnimation())
+        {
+            _animPhase = EAnimPhase::Loop;
+            return Find_BeginAnimationTransition(_loopClip);
+        }
+
+        if (Has_EndAnimation())
+        {
+            _animPhase = EAnimPhase::End;
+            return Find_BeginAnimationTransition(_endClip);
+        }
+
+        Complete_AnimationSequence();
+        return false;
+    }
+
+    if (_animPhase == EAnimPhase::End)
+    {
+        Complete_AnimationSequence();
+        return false;
+    }
+
+    return false;
 }
 
 void Model::Set_AnimationPlayRate(float playRate)
 {
-    _animationPlayRate = max(playRate, 0.01f);
+    _animationPlayRate = Utils::Max(playRate, 0.01f);
+
+    if (_currentClip.Is_Valid())
+    {
+        _currentClip.playRate = _animationPlayRate;
+        Sync_LegacyAnimationState();
+    }
+
+    if (_blendState.active && _blendState.next.Is_Valid())
+    {
+        _blendState.next.playRate = _animationPlayRate;
+    }
 }
 
 json Model::To_Json() const
@@ -515,6 +804,34 @@ string Model::Get_MeshName(uint32 index)
         return "";
 
     return _meshes[index]->Get_MeshName();
+}
+
+void Model::Set_AnimationBlendDuration(float seconds)
+{
+    _animationBlendDuration = Utils::Max(seconds, 0.01f);
+
+    if (_blendState.active)
+    {
+        _blendState.duration = _animationBlendDuration;
+    }
+}
+
+float Model::Get_CurrentAnimationDuration() const
+{
+    if (!_currentClip.Is_Valid())
+        return 0.f;
+
+    if (_currentClip.animIndex < 0 ||
+        _currentClip.animIndex >= static_cast<int32>(_animations.size()))
+    {
+        return 0.f;
+    }
+
+    const auto& animation = _animations[_currentClip.animIndex];
+    if (!animation)
+        return 0.f;
+
+    return animation->Get_Duration();
 }
 
 HRESULT Model::Initialize_FromMeshBin(const string& modelFilePath)

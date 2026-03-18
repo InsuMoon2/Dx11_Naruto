@@ -55,6 +55,11 @@ void Blackboard::Set_ValueAsVector(const string& key, Vec3 value)
     _vecValues[key] = value;
 }
 
+void Blackboard::Set_ValueAsString(const string& key, const string& value)
+{
+    _stringValues[key] = value;
+}
+
 void Blackboard::Set_ValueAsObject(const string& key, Shared<GameObject> value)
 {
     // 이거 순환참조 조심해야함
@@ -98,6 +103,16 @@ Vec3 Blackboard::Get_ValueAsVector(const string& key)
     LOG_WARN("Blackboard Key Not Found (Vector): {}", key);
 
     return Vec3::Zero;
+}
+
+string Blackboard::Get_ValueAsString(const string& key)
+{
+    auto iter = _stringValues.find(key);
+    if (iter != _stringValues.end())
+        return iter->second;
+
+    LOG_WARN("Blackboard Key Not Found (String): {}", key);
+    return "";
 }
 
 Shared<GameObject> Blackboard::Get_ValueAsObject(const string& key)

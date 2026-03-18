@@ -23,7 +23,7 @@
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_MainTitle.h">
-      <Filter>01. Levels\01. Logo</Filter>
+      <Filter>01. Levels\01. MainTitle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Gameplay.h">
       <Filter>01. Levels\02. GamePlay</Filter>
@@ -103,17 +103,8 @@
     <ClInclude Include="..\Public\IPlayerState.h">
       <Filter>95. Interface</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_Idle.h">
-      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Camera_Target.h">
       <Filter>02. GameObject\04. Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_Run.h">
-      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_Jump.h">
-      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_PlayerStatus.h">
       <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
@@ -137,12 +128,6 @@
     <ClInclude Include="..\Public\UI_SkillSlot.h">
       <Filter>02. GameObject\02. UI\02. Player\01. Skill</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_DoubleJump.h">
-      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_SuperJump.h">
-      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_LoadingProgressBar.h">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClInclude>
@@ -153,6 +138,34 @@
     <ClInclude Include="..\Public\Background.h">
       <Filter>02. GameObject\02. UI\01. Background</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_DoubleJump.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Idle.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Jump.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Run.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_SuperJump.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_SuperJumpCharge.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_HeightLand.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Equipment.h">
+      <Filter>01. Levels\03. Equipment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Dash.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimationStateComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -165,7 +178,7 @@
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_MainTitle.cpp">
-      <Filter>01. Levels\01. Logo</Filter>
+      <Filter>01. Levels\01. MainTitle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Gameplay.cpp">
       <Filter>01. Levels\02. GamePlay</Filter>
@@ -242,17 +255,8 @@
     <ClCompile Include="..\Private\IPlayerState.cpp">
       <Filter>95. Interface</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_Idle.cpp">
-      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Camera_Target.cpp">
       <Filter>02. GameObject\04. Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_Run.cpp">
-      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_Jump.cpp">
-      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_PlayerStatus.cpp">
       <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
@@ -276,12 +280,6 @@
     <ClCompile Include="..\Private\UI_SkillSlot.cpp">
       <Filter>02. GameObject\02. UI\02. Player\01. Skill</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_DoubleJump.cpp">
-      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_SuperJump.cpp">
-      <Filter>03. Component\03. PlayerState\00. PlayerState</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UI_LoadingProgressBar.cpp">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClCompile>
@@ -292,6 +290,34 @@
     <ClCompile Include="..\Private\Background.cpp">
       <Filter>02. GameObject\02. UI\01. Background</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_DoubleJump.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Idle.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Jump.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Run.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_SuperJump.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_SuperJumpCharge.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_HeightLand.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Equipment.cpp">
+      <Filter>01. Levels\03. Equipment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Dash.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimationStateComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -305,9 +331,6 @@
     </Filter>
     <Filter Include="01. Levels\00. Loading">
       <UniqueIdentifier>{50520abd-aed1-4511-8551-af0e9b3e55a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\01. Logo">
-      <UniqueIdentifier>{2e50a110-967f-4faa-9713-38d22bea33cd}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Levels\02. GamePlay">
       <UniqueIdentifier>{c58091b5-21bf-4f78-ae91-95a21cea922d}</UniqueIdentifier>
@@ -395,6 +418,18 @@
     </Filter>
     <Filter Include="02. GameObject\02. UI\02. Player\01. Skill">
       <UniqueIdentifier>{cb9de10c-0449-4421-bca4-611dd20d3372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component\03. PlayerState\00. PlayerState\00. Base">
+      <UniqueIdentifier>{65f4b38a-ca68-48bf-8041-2dd0618f7d70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Component\03. PlayerState\00. PlayerState\01. Attack">
+      <UniqueIdentifier>{e721084d-6c2d-4fe1-aa55-3037c8a5ca88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\03. Equipment">
+      <UniqueIdentifier>{ff21d754-34a7-420e-82fb-64410cac9c20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\01. MainTitle">
+      <UniqueIdentifier>{2e50a110-967f-4faa-9713-38d22bea33cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

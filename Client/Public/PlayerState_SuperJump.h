@@ -15,7 +15,7 @@ public:
     void Update(PlayerStateMachine* state, float timeDelta) override;
     void Exit(PlayerStateMachine* state) override;
 
-    EPlayerState Get_StateID() const override { return EPlayerState::Jump; }
+    EPlayerState Get_StateID() const override { return EPlayerState::SuperJump; }
 
 public:
     static Shared<PlayerState_SuperJump> Create();

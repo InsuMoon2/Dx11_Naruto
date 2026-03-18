@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "InputComponent.h"
 #include "MovementComponent.h"
+#include "AnimationStateComponent.h"
 #include "Model.h"
 #include "PlayerState_DoubleJump.h"
 #include "Transform.h"
@@ -11,6 +12,9 @@
 #include "PlayerState_Jump.h"
 #include "PlayerState_SuperJump.h"
 #include "Camera.h"
+#include "PlayerState_Dash.h"
+#include "PlayerState_HeightLand.h"
+#include "PlayerState_SuperJumpCharge.h"
 
 IMPLEMENT_REFLECTION(PlayerStateMachine)
 
@@ -33,7 +37,6 @@ PlayerStateMachine::PlayerStateMachine(const PlayerStateMachine& rhs)
     : Component(rhs)
 {
     _states = rhs._states;
-    _stateAnimations = rhs._stateAnimations;
 
     _currentState = nullptr;
     _currentStateID = EPlayerState::END;
@@ -50,7 +53,12 @@ HRESULT PlayerStateMachine::Initialize_Prototype()
 
     Register_State(EPlayerState::Jump, PlayerState_Jump::Create());
     Register_State(EPlayerState::DoubleJump, PlayerState_DoubleJump::Create());
+    Register_State(EPlayerState::SuperJumpCharge, PlayerState_SuperJumpCharge::Create());
     Register_State(EPlayerState::SuperJump, PlayerState_SuperJump::Create());
+
+    Register_State(EPlayerState::HeightLand, PlayerState_HeightLand::Create());
+
+    Register_State(EPlayerState::Dash, PlayerState_Dash::Create());
 
     return S_OK;
 }
@@ -69,11 +77,11 @@ void PlayerStateMachine::BeginPlay()
     auto owner = Get_Owner();
     _input = owner->Get_Component<InputComponent>();
     _movement = owner->Get_Component<MovementComponent>();
-    _model = Get_Model();
+    _animationState = owner->Get_Component<AnimationStateComponent>();
 
     CHECK_NULL(_input);
     CHECK_NULL(_movement);
-    CHECK_NULL(_model);
+    CHECK_NULL(_animationState);
 
     Change_State(EPlayerState::Idle);
 }
@@ -82,6 +90,13 @@ void PlayerStateMachine::Update(float timeDelta)
 {
     if (_currentState)
         _currentState->Update(this, timeDelta);
+}
+
+string PlayerStateMachine::To_AnimationStateName(EPlayerState stateID)
+{
+    const auto name = magic_enum::enum_name(stateID);
+
+    return name.empty() ? "" : string(name);
 }
 
 void PlayerStateMachine::Register_State(EPlayerState stateID, Shared<IPlayerState> state)
@@ -116,7 +131,7 @@ MovementComponent::FMoveCommand PlayerStateMachine::Init_MoveCommand() const
 
     MovementComponent::FMoveCommand cmd;
     cmd.moveAxis = Vec2(frame.moveX, frame.moveY);
-    cmd.sprint = frame.sprintPress;
+    cmd.sprint = false;
     cmd.jump = false;
 
     auto activeCamera = GAME->Get_ActiveCamera();
@@ -145,127 +160,55 @@ MovementComponent::FMoveCommand PlayerStateMachine::Init_MoveCommand() const
     return cmd;
 }
 
-Shared<Model> PlayerStateMachine::Get_Model()
+bool PlayerStateMachine::Play_AnimState(EPlayerState stateID)
 {
-    auto owner = Get_Owner();
-    if (!owner)
-    {
-        _model.reset();
-        return nullptr;
-    }
-
-    auto modelCom = owner->Get_Component(Protocol::COMPONENT_TYPE_MODEL_SASKE);
-    if (!modelCom)
-    {
-        _model.reset();
-        return nullptr;
-    }
-
-    _model = static_pointer_cast<Model>(modelCom);
-    return _model;
+    return _animationState->Play_State(To_AnimationStateName(stateID));
 }
 
-vector<string> PlayerStateMachine::Get_AvaiableAnimationNames()
+bool PlayerStateMachine::Play_DirectionalAnimState(EPlayerState stateID, EMoveInputDirection dir)
 {
-    vector<string> result;
-
-    const auto model = Get_Model();
-    if (!model)
-        return result;
-
-    const uint32 count = model->Get_AnimationCount();
-    result.reserve(count);
-
-    for (uint32 i = 0; i < count; ++i)
-    {
-        const string& name = model->Get_AnimationName(i);
-        if (!name.empty())
-        {
-            result.push_back(name);
-        }
-    }
-
-    return result;
+    return _animationState->Play_DirectionalState(To_AnimationStateName(stateID), dir);
 }
 
-const FStateAnimationDesc* PlayerStateMachine::Find_StateAnimation(EPlayerState stateID) const
+bool PlayerStateMachine::Play_AnimStateLoopOnly(EPlayerState stateID)
 {
-    auto iter = _stateAnimations.find(stateID);
-
-    if (iter == _stateAnimations.end())
-        return nullptr;
-
-    return &iter->second;
+    return _animationState->Play_StateLoopOnly(To_AnimationStateName(stateID));
 }
 
-FStateAnimationDesc& PlayerStateMachine::Edit_StateAnimation(EPlayerState stateID)
+void PlayerStateMachine::Request_AnimStateEnd()
 {
-    return _stateAnimations[stateID];
+    _animationState->Request_StateEnd();
 }
 
-bool PlayerStateMachine::Apply_StateAnimation(EPlayerState stateID)
+bool PlayerStateMachine::Is_AnimStateFinished() const
 {
-    auto model = Get_Model();
-    if (!model)
-        return false;
-
-    const auto* animDesc = Find_StateAnimation(stateID);
-    if (!animDesc)
-        return false;
-
-    if (animDesc->mode == EStateAnimationMode::Sequence)
-    {
-        if (animDesc->loop.animationName.empty())
-            return false;
-
-        model->Set_AnimationSequence(animDesc->start, animDesc->loop, animDesc->end);
-        return true;
-    }
-
-    if (animDesc->single.animationName.empty())
-        return false;
-
-    model->Set_Animation(animDesc->single);
-
-    return true;
+    return _animationState ? _animationState->Is_CurrentStateFinished() : false;
 }
 
-bool PlayerStateMachine::Preview_StateAnimation(EPlayerState stateID, int32 sequenceSlot)
+bool PlayerStateMachine::Is_AnimSequenceFinished() const
 {
-    auto model = Get_Model();
-    if (!model)
-        return false;
+    return _animationState ? _animationState->Is_CurrentStateSequenceFinished() : false;
+}
 
-    const auto* animDesc = Find_StateAnimation(stateID);
-    if (!animDesc)
-        return false;
+const FStateAnimationDesc* PlayerStateMachine::Find_AnimStateDesc(EPlayerState stateID) const
+{
+    return _animationState ?
+        _animationState->Find_State(To_AnimationStateName(stateID)) : nullptr;
+}
 
-    model->Set_AnimationPlayRate(animDesc->playRate);
+EAnimPhase PlayerStateMachine::Get_AnimPhase() const
+{
+    return _animationState ? _animationState->Get_CurrentAnimPhase() : EAnimPhase::Start;
+}
 
-    if (animDesc->mode == EStateAnimationMode::Sequence)
-    {
-        const FAnimationClipSetting* clip = nullptr;
+float PlayerStateMachine::Get_AnimTrackPosition() const
+{
+    return _animationState ? _animationState->Get_CurrentTrackPosition() : 0.f;
+}
 
-        if (sequenceSlot == 0)
-            clip = &animDesc->start;
-        else if (sequenceSlot == 1)
-            clip = &animDesc->loop;
-        else
-            clip = &animDesc->end;
-
-        if (!clip || clip->animationName.empty())
-            return false;
-
-        model->Set_Animation(*clip);
-        return true;
-    }
-
-    if (animDesc->single.animationName.empty())
-        return false;
-
-    model->Set_Animation(animDesc->single);
-
-    return true;
+float PlayerStateMachine::Get_AnimDuration() const
+{
+    return _animationState ? _animationState->Get_CurrentAnimationDuration() : 0.f;
 }
 
 void PlayerStateMachine::Force_Enter_State(EPlayerState stateID)
@@ -316,6 +259,29 @@ json PlayerStateMachine::To_Json() const
             { "loop", desc.end.loop },
             { "playRate", desc.end.playRate }
         };
+
+        item["directional"] = {
+        { "forward", {
+            { "animationName", desc.directional.forward.animationName },
+            { "loop", desc.directional.forward.loop },
+            { "playRate", desc.directional.forward.playRate }
+        } },
+        { "backward", {
+            { "animationName", desc.directional.backward.animationName },
+            { "loop", desc.directional.backward.loop },
+            { "playRate", desc.directional.backward.playRate }
+        } },
+        { "left", {
+            { "animationName", desc.directional.left.animationName },
+            { "loop", desc.directional.left.loop },
+            { "playRate", desc.directional.left.playRate }
+        } },
+        { "right", {
+            { "animationName", desc.directional.right.animationName },
+            { "loop", desc.directional.right.loop },
+            { "playRate", desc.directional.right.playRate }
+        } }
+            };
 
         animArray.push_back(item);
     }
@@ -376,6 +342,43 @@ void PlayerStateMachine::From_Json(const json& data)
             desc.end.animationName = end.value("animationName", "");
             desc.end.loop = end.value("loop", false);
             desc.end.playRate = end.value("playRate", 1.f);
+        }
+
+        if (item.contains("directional"))
+        {
+            const auto& directional = item["directional"];
+
+            if (directional.contains("forward"))
+            {
+                const auto& forward = directional["forward"];
+                desc.directional.forward.animationName = forward.value("animationName", "");
+                desc.directional.forward.loop = forward.value("loop", false);
+                desc.directional.forward.playRate = forward.value("playRate", 1.f);
+            }
+
+            if (directional.contains("backward"))
+            {
+                const auto& backward = directional["backward"];
+                desc.directional.backward.animationName = backward.value("animationName", "");
+                desc.directional.backward.loop = backward.value("loop", false);
+                desc.directional.backward.playRate = backward.value("playRate", 1.f);
+            }
+
+            if (directional.contains("left"))
+            {
+                const auto& left = directional["left"];
+                desc.directional.left.animationName = left.value("animationName", "");
+                desc.directional.left.loop = left.value("loop", false);
+                desc.directional.left.playRate = left.value("playRate", 1.f);
+            }
+
+            if (directional.contains("right"))
+            {
+                const auto& right = directional["right"];
+                desc.directional.right.animationName = right.value("animationName", "");
+                desc.directional.right.loop = right.value("loop", false);
+                desc.directional.right.playRate = right.value("playRate", 1.f);
+            }
         }
 
         // 구형 일단은 호환

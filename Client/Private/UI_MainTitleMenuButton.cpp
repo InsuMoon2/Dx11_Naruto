@@ -128,7 +128,7 @@ HRESULT UI_MainTitleMenuButton::Ready_ChildText(const FMainTitleMenuDesc* desc)
 
         textDesc.text = desc->labelText;
         textDesc.style.fontFamily = L"Malgun Gothic";
-        textDesc.style.fontSize = 36.f;
+        textDesc.style.fontSize = desc->fontSize;
         textDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
         textDesc.style.hAlign = ETextHAlign::Center;
         textDesc.style.vAlign = ETextVAlign::Middle;

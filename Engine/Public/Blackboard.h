@@ -24,6 +24,7 @@ public:
     void Set_ValueAsFloat(const string& key, float value);
     void Set_ValueAsBool(const string& key, bool value);
     void Set_ValueAsVector(const string& key, Vec3 value);
+    void Set_ValueAsString(const string& key, const string& value);
     void Set_ValueAsObject(const string& key, Shared<GameObject> value);
 
     // 데이터 가져오기
@@ -31,6 +32,7 @@ public:
     float Get_ValueAsFloat(const string& key);
     bool  Get_ValueAsBool(const string& key);
     Vec3  Get_ValueAsVector(const string& key);
+    string Get_ValueAsString(const string& key);
     Shared<GameObject> Get_ValueAsObject(const string& key);
 
     bool HasKey(const string& key) const;
@@ -44,6 +46,7 @@ private:
     map<string, float>              _floatValues;
     map<string, bool>               _boolValues;
     map<string, Vec3>               _vecValues;
+    map<string, string>             _stringValues;
     map<string, Shared<GameObject>> _objectValues;
 
 public:

@@ -36,6 +36,50 @@ namespace Client
         FSkillData skillData{};
     };
 
+    struct FDirectionClipDesc
+    {
+        FAnimationClipSetting forward;
+        FAnimationClipSetting backward;
+        FAnimationClipSetting right;
+        FAnimationClipSetting left;
+
+        // 뭐라도 있나
+        bool Has_Any() const
+        {
+            return !forward.animationName.empty()
+                || !backward.animationName.empty()
+                || !left.animationName.empty()
+                || !right.animationName.empty();
+        }
+
+        const FAnimationClipSetting* Find(EMoveInputDirection dir) const
+        {
+            switch (dir)
+            {
+            case EMoveInputDirection::Forward:
+                if (!forward.animationName.empty()) return &forward;
+                break;
+
+            case EMoveInputDirection::Backward:
+                if (!backward.animationName.empty()) return &backward;
+                break;
+
+            case EMoveInputDirection::Left:
+                if (!left.animationName.empty()) return &left;
+                break;
+
+            case EMoveInputDirection::Right:
+                if (!right.animationName.empty()) return &right;
+                break;
+            }
+
+            if (!forward.animationName.empty())
+                return &forward;
+
+            return nullptr;
+        }
+    };
+
     struct FStateAnimationDesc
     {
         EStateAnimationMode mode = EStateAnimationMode::Single;
@@ -48,14 +92,18 @@ namespace Client
         FAnimationClipSetting loop;
         FAnimationClipSetting end;
 
-        float	playRate = 1.f;
+        // 방향성 있는 싱글
+        FDirectionClipDesc    directional;
 
-        // 루프 애니메이션이 있으면 시퀀스로 판단
         bool Has_Sequence() const
         {
-            return !loop.animationName.empty();
+            return !start.animationName.empty()
+                || !loop.animationName.empty()
+                || !end.animationName.empty();
         }
     };
+
+   
 
 }
 

@@ -23,6 +23,8 @@ public:
 
         Vec2 labelOffset = Vec2::Zero;
         Vec2 labelSize = Vec2::Zero;
+
+        float fontSize = 24.f;;
     };
 
 public:

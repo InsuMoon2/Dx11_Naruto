@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "Level_MainTitle.h"
+#include "Level_Equipment.h"
 #include "UI_Text.h"
 #include "Background.h"
 #include "Loader.h"
@@ -7,16 +7,16 @@
 #include "Level_Loading.h"
 #include "UI_MainTitleMenuButton.h"
 
-Level_MainTitle::Level_MainTitle(ComPtr<Device> device, ComPtr<DeviceContext> context)
+Level_Equipment::Level_Equipment(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
 {
 }
 
-Level_MainTitle::~Level_MainTitle()
+Level_Equipment::~Level_Equipment()
 {
 }
 
-HRESULT Level_MainTitle::Initialize()
+HRESULT Level_Equipment::Initialize()
 {
     if (FAILED(Ready_Layer_UI()))
         return E_FAIL;
@@ -27,7 +27,7 @@ HRESULT Level_MainTitle::Initialize()
     return S_OK;
 }
 
-void Level_MainTitle::Update(float timeDelta)
+void Level_Equipment::Update(float timeDelta)
 {
     Level::Update(timeDelta);
 
@@ -45,14 +45,14 @@ void Level_MainTitle::Update(float timeDelta)
     
 }
 
-void Level_MainTitle::Late_Update(float timeDelta)
+void Level_Equipment::Late_Update(float timeDelta)
 {
     Level::Late_Update(timeDelta);
 
 
 }
 
-HRESULT Level_MainTitle::Render()
+HRESULT Level_Equipment::Render()
 {
     #ifdef _DEBUG
     SetWindowText(g_hWnd, TEXT("현재 레벨 : Logo"));
@@ -62,7 +62,7 @@ HRESULT Level_MainTitle::Render()
     return S_OK;
 }
 
-HRESULT Level_MainTitle::Ready_Layer_UI()
+HRESULT Level_Equipment::Ready_Layer_UI()
 {
     Vec2 viewport = { GAME->Get_WindowWidth(), GAME->Get_WindowHeight() };
 
@@ -180,7 +180,7 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
     return S_OK;
 }
 
-void Level_MainTitle::Update_PressPhase()
+void Level_Equipment::Update_PressPhase()
 {
     if (INPUT->KeyDown(KEY_TYPE::SPACE))
     {
@@ -190,7 +190,7 @@ void Level_MainTitle::Update_PressPhase()
     }
 }
 
-void Level_MainTitle::Update_SelectPhase()
+void Level_Equipment::Update_SelectPhase()
 {
     if (INPUT->KeyDown(KEY_TYPE::UP) || INPUT->KeyDown(KEY_TYPE::W))
     {
@@ -210,7 +210,7 @@ void Level_MainTitle::Update_SelectPhase()
     }
 }
 
-void Level_MainTitle::Apply_TitlePhase()
+void Level_Equipment::Apply_TitlePhase()
 {
     const bool isPressPhase = (_titleState == ETitleState::PressSpace);
     const bool isSelectPhase = (_titleState == ETitleState::SelectMenu);
@@ -225,7 +225,7 @@ void Level_MainTitle::Apply_TitlePhase()
     }
 }
 
-void Level_MainTitle::Apply_MenuSelection()
+void Level_Equipment::Apply_MenuSelection()
 {
     for (int32 i = 0; i < 3; ++i)
     {
@@ -239,35 +239,33 @@ void Level_MainTitle::Apply_MenuSelection()
     }
 }
 
-void Level_MainTitle::Execute_SelectedMenu()
+void Level_Equipment::Execute_SelectedMenu()
 {
     switch (_selectedIndex)
     {
-    case 0: // 게임 시작
+    case 0:
         GAME->Change_Level(
             ETOI(ELevelType::Loading),
             Level_Loading::Create(_device, _context, ELevelType::GamePlay, true));
         break;
 
-    case 1: // 일단은, Equipment
-        GAME->Change_Level(
-            ETOI(ELevelType::Loading),
-            Level_Loading::Create(_device, _context, ELevelType::Equipment, true));
+    case 1:
+        //LOG_WARN("MainTitle: Game Settings selected");
         break;
 
-    case 2: // 게임종료는 실제 실행 ㄴ
+    case 2:
         //PostQuitMessage(0);
         break;
     }
 }
 
-shared_ptr<Level_MainTitle> Level_MainTitle::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+shared_ptr<Level_Equipment> Level_Equipment::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
-    auto instance = make_shared<Level_MainTitle>(device, context);
+    auto instance = make_shared<Level_Equipment>(device, context);
 
     if (FAILED(instance->Initialize()))
     {
-        MSG_BOX("Failed to Create : Level_MainTitle");
+        MSG_BOX("Failed to Create : Level_Equipment");
 
         return nullptr;
     }
@@ -275,7 +273,7 @@ shared_ptr<Level_MainTitle> Level_MainTitle::Create(ComPtr<Device> device, ComPt
     return instance;
 }
 
-void Level_MainTitle::Free()
+void Level_Equipment::Free()
 {
     Level::Free();
 

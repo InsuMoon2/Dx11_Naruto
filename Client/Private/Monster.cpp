@@ -61,6 +61,7 @@ void Monster::Update(float timeDelta)
     Character::Update(timeDelta);
 
     _aiController->Update(timeDelta);
+    _model->Play_Animation(timeDelta);
 }
 
 void Monster::Late_Update(float timeDelta)
@@ -78,6 +79,8 @@ HRESULT Monster::Render()
 
     for (size_t i = 0; i < numMeshes; i++)
     {
+        CHECK_FAILED(_model->Bind_BoneMatrices(_shaderCom, "g_BoneMatrices"), E_FAIL);
+
         _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
 
         _shaderCom->Begin_Pass(0);
@@ -141,9 +144,11 @@ HRESULT Monster::Ready_Components()
 
     // AI
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_AI_CONTROLLER, _aiController), E_FAIL);;
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_AI, _behavior), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_BEHAVIOR, _behavior), E_FAIL);
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXMESH, _shaderCom), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_ANIMATION_STATE, _behavior), E_FAIL);
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXANIMMESH, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_MONSTER, _model), E_FAIL);
 
     return S_OK;

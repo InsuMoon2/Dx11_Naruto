@@ -19,6 +19,9 @@ bool MovementComponent::Register_Properties()
     PROPERTY_FLOAT("Gravity", _moveDesc.gravity, -50.f, 0.f);
     PROPERTY_FLOAT("Ground Y", _moveDesc.groundY, -100.f, 100.f);
 
+    PROPERTY_FLOAT("Dash Distance", _moveDesc.dashDistance, 0.f, 30.f);
+    PROPERTY_FLOAT("Dash Duration", _moveDesc.dashDuration, 0.01f, 1.f);
+
     return true;
 }
 
@@ -104,6 +107,100 @@ void MovementComponent::Start_DoubleJump()
     _canDoubleJump = false;
 }
 
+void MovementComponent::Start_SuperJump(float velocity)
+{
+    if (!_onGround)
+        return;
+
+    _verticalVelocity = Utils::Max(velocity, _moveDesc.superJumpMinVelocity);
+    _onGround = false;
+
+    // 슈퍼점프 이후 더블점프 가능하게할지?
+    //_canDoubleJump = false;
+}
+
+void MovementComponent::Start_Dash(const Vec3& worldDir, float distance, float duration)
+{
+    Vec3 dashDir = worldDir;
+    dashDir.y = 0.f;
+
+    if (dashDir.LengthSquared() <= FLT_EPSILON)
+        return;
+
+    dashDir.Normalize();
+
+    _isDashing = true;
+    _dashWorldDirection = dashDir;
+    _dashElapsed = 0.f;
+    _dashDuration = Utils::Max(duration, 0.01f);
+
+    _dashSpeed = distance / _dashDuration;
+}
+
+//void MovementComponent::Start_Dash(EMoveInputDirection inputDir, float distance, float duration)
+//{
+//
+//    Vec3 forward    = _transform->Get_WorldForward();
+//    Vec3 right      = _transform->Get_WorldRight();
+//
+//    // y값 제거
+//    forward.y = 0;
+//    right.y = 0;
+//    // 정규화
+//    if (forward.LengthSquared() > FLT_EPSILON)
+//        forward.Normalize();
+//
+//    if (right.LengthSquared() > FLT_EPSILON)
+//        right.Normalize();
+//
+//    Vec3 dashDir = forward;
+//
+//    switch (inputDir)
+//    {
+//    case EMoveInputDirection::Forward:
+//        dashDir = forward;
+//        break;
+//    case EMoveInputDirection::Backward:
+//        dashDir = -forward;
+//        break;
+//    case EMoveInputDirection::Left:
+//        dashDir = -right;
+//        break;
+//    case EMoveInputDirection::Right:
+//        dashDir = right;
+//        break;
+//    // 기본값은 forward로
+//    default: dashDir = forward; break;
+//    }
+//
+//    _isDashing = true;
+//    _dashInputDirection = inputDir;
+//    _dashWorldDirection = dashDir;
+//    _dashElapsed = 0.f;
+//    _dashDuration = Utils::Max(duration, 0.01f);
+//
+//    // 거리 / 시간 기반으로 속도 세팅
+//    _dashSpeed = distance / _dashDuration;
+//}
+
+void MovementComponent::Stop_Dash()
+{
+    _isDashing = false;
+    _dashInputDirection = EMoveInputDirection::Forward;
+    _dashWorldDirection = Vec3::Zero;
+    _dashElapsed = 0.f;
+    _dashDuration = 0.f;
+    _dashSpeed = 0.f;
+}
+
+float MovementComponent::Get_DashNormalizedTime() const
+{
+    if (!_isDashing || _dashDuration <= FLT_EPSILON)
+        return 1.f;
+
+    return ::clamp(_dashElapsed / _dashDuration, 0.f, 1.f);
+}
+
 void MovementComponent::Update_Rotation(float timeDelta, Shared<Transform> transform)
 {
     if (!_bOrientRotationToMovement)
@@ -139,6 +236,28 @@ void MovementComponent::Update_Rotation(float timeDelta, Shared<Transform> trans
 void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> transform)
 {
     Vec3 desiredDir = Build_DesiredMoveDirection();
+
+    // 대쉬 우선
+    if (_isDashing)
+    {
+        _dashElapsed += timeDelta;
+
+        _velocity.x = _dashWorldDirection.x * _dashSpeed;
+        _velocity.z = _dashWorldDirection.z * _dashSpeed;
+
+        if (_dashElapsed >= _dashDuration)
+        {
+            Stop_Dash();
+        }
+
+        if (!_onGround)
+        {
+            _verticalVelocity += _moveDesc.gravity * timeDelta;
+        }
+
+        _velocity.y = _verticalVelocity;
+        return;
+    }
 
     float targetSpeed = _commandDesc.sprint ? _moveDesc.maxSprintSpeed : _moveDesc.maxWalkSpeed;
     Vec3 targetVelocity = desiredDir * targetSpeed;

@@ -19,7 +19,7 @@ void PlayerState_Idle::Enter(PlayerStateMachine* state)
     if (!state)
         return;
 
-    state->Apply_StateAnimation(EPlayerState::Idle);
+    state->Play_AnimState(EPlayerState::Idle);
 }
 
 void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
@@ -28,15 +28,21 @@ void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
     auto movement = state->Get_Movement();
     const auto& frame = input->Get_Frame();
 
-    if (frame.superJumpUp && frame.superJumpCharge > 0.f)
+    if (frame.superJumpPress && frame.superJumpCharge > 0.f)
     {
-        state->Change_State(EPlayerState::SuperJump);
+        state->Change_State(EPlayerState::SuperJumpCharge);
         return;
     }
 
     if (frame.jumpDown)
     {
         state->Change_State(EPlayerState::Jump);
+        return;
+    }
+
+    if (frame.dashDown)
+    {
+        state->Change_State(EPlayerState::Dash);
         return;
     }
 

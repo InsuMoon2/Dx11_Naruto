@@ -86,6 +86,53 @@ void Channel::Update_TransformationMatrix(float trackPosition, vector<Shared<Bon
     bones[_boneIndex]->Set_LocalTransform(local);
 }
 
+void Channel::Sample_LocalPose(float trackPosition, FAnimationLocalPose& outPose) const
+{
+    outPose = {};
+
+    if (_keyFrames.empty())
+        return;
+
+    if (_keyFrames.size() == 1)
+    {
+        outPose.scale = _keyFrames[0].scale;
+        outPose.rotation = _keyFrames[0].rotation;
+        outPose.translation = _keyFrames[0].translation;
+        outPose.valid = true;
+
+        return;
+    }
+
+    uint32 keyIndex = 0;
+    while (keyIndex + 1 < _keyFrames.size() &&
+            trackPosition >= _keyFrames[keyIndex + 1].time)
+    {
+        ++keyIndex;
+    }
+
+    if (keyIndex + 1 >= _keyFrames.size())
+    {
+        const FKeyFrame& last = _keyFrames.back();
+
+        outPose.scale = last.scale;
+        outPose.rotation = last.rotation;
+        outPose.translation = last.translation;
+        outPose.valid = true;
+        return;
+    }
+
+    const FKeyFrame& cur = _keyFrames[keyIndex];
+    const FKeyFrame& next = _keyFrames[keyIndex + 1];
+
+    const float delta = next.time - cur.time;
+    const float ratio = (delta <= FLT_EPSILON) ? 0.f : (trackPosition - cur.time) / delta;
+
+    outPose.scale = Vec3::Lerp(cur.scale, next.scale, ratio);
+    outPose.rotation = Quat::Slerp(cur.rotation, next.rotation, ratio);
+    outPose.translation = Vec3::Lerp(cur.translation, next.translation, ratio);
+    outPose.valid = true;
+}
+
 void Channel::Apply_KeyFrame(const FKeyFrame& key, const Shared<Bone>& bone)
 {
     Matrix local = Matrix::CreateScale(key.scale)

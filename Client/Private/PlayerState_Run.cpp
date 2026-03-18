@@ -24,37 +24,43 @@ void PlayerState_Run::Enter(PlayerStateMachine* state)
         movement->Set_OrientRotationToMovement(true);
     }
 
-    state->Apply_StateAnimation(EPlayerState::Run);
+    state->Play_AnimState(EPlayerState::Run);
 }
 
 void PlayerState_Run::Update(PlayerStateMachine* state, float timeDelta)
 {
     auto input = state->Get_Input();
     auto movement = state->Get_Movement();
-    auto model = state->Get_Model();
-    if (!input || !movement || !model)
+    if (!input || !movement)
         return;
 
     const auto& frame = input->Get_Frame();
+    auto cmd = state->Init_MoveCommand();
 
-    if (frame.superJumpUp && frame.superJumpCharge > 0.f)
+    if (frame.superJumpPress && frame.superJumpCharge > 0.f)
     {
-        state->Change_State(EPlayerState::SuperJump);
+        state->Change_State(EPlayerState::SuperJumpCharge);
         return;
     }
 
     if (frame.jumpDown)
     {
+        movement->Apply_Command(cmd);
+        movement->Update(timeDelta);
         state->Change_State(EPlayerState::Jump);
         return;
     }
 
-    auto cmd = state->Init_MoveCommand();
+    if (frame.dashDown)
+    {
+        state->Change_State(EPlayerState::Dash);
+        return;
+    }
 
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
 
-    const auto* desc = state->Find_StateAnimation(EPlayerState::Run);
+    const auto* desc = state->Find_AnimStateDesc(EPlayerState::Run);
     if (!desc)
     {
         state->Change_State(EPlayerState::Idle);
@@ -64,12 +70,13 @@ void PlayerState_Run::Update(PlayerStateMachine* state, float timeDelta)
     if (input->Has_MoveInput())
     {
         if (desc->mode == EStateAnimationMode::Sequence &&
-                model->Get_AnimPhase() == EAnimPhase::End)
+                state->Get_AnimPhase() == EAnimPhase::End)
         {
             FAnimationClipSetting startClip = desc->start;
             startClip.animationName.clear();
 
-            model->Set_AnimationSequence(startClip, desc->loop, desc->end);
+            // RunEnd까지 갔다가 다시 이동이 들어오면, Start 생략 후, Loop로 복귀
+            state->Play_AnimStateLoopOnly(EPlayerState::Run);
         }
 
         return;
@@ -78,9 +85,9 @@ void PlayerState_Run::Update(PlayerStateMachine* state, float timeDelta)
     if (desc->mode == EStateAnimationMode::Sequence)
     {
         // 입력이 끊기면 RunEnd, End가 끝나야 Idle로 넘어가기
-        model->Request_AnimEnd();
+        state->Request_AnimStateEnd();
 
-        if (model->Is_AnimationSequenceFinished())
+        if (state->Is_AnimSequenceFinished())
         {
             state->Change_State(EPlayerState::Idle);
         }

@@ -214,6 +214,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\AnimationState_Inspector.h" />
     <ClInclude Include="..\Public\BehaviorTree_Inspector.h" />
     <ClInclude Include="..\Public\BehaviorTree_View.h" />
     <ClInclude Include="..\Public\CommandHistory.h" />
@@ -263,6 +264,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\AnimationState_Inspector.cpp" />
     <ClCompile Include="..\Private\BehaviorTree_Inspector.cpp" />
     <ClCompile Include="..\Private\BehaviorTree_View.cpp" />
     <ClCompile Include="..\Private\CommandHistory.cpp" />

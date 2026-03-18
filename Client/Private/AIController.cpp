@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "AIController.h"
+
+#include "AnimationStateComponent.h"
 #include "BehaviorTree.h"
 #include "MovementComponent.h"
 #include "GameObject.h"
@@ -37,6 +39,7 @@ void AIController::BeginPlay()
 
     _movement = pawn->Get_Component<MovementComponent>();
     _behavior = pawn->Get_Component<BehaviorTree>();
+    _animationState = pawn->Get_Component<AnimationStateComponent>();
 
     if (_behavior)
         _blackboard = _behavior->Get_Blackboard();
@@ -58,13 +61,50 @@ void AIController::Update(float timeDelta)
             command.moveAxis.x = _blackboard->Get_ValueAsFloat("MoveAxisX");
 
         if (_blackboard->HasKey("MoveAxisY"))
-            command.moveAxis.x = _blackboard->Get_ValueAsFloat("MoveAxisY");
+            command.moveAxis.y = _blackboard->Get_ValueAsFloat("MoveAxisY");
 
         if (_blackboard->HasKey("Sprint"))
             command.sprint = _blackboard->Get_ValueAsBool("Sprint");
 
         _movement->Apply_Command(command);
         _movement->Update(timeDelta);
+    }
+
+    if (_animationState && _blackboard)
+    {
+        string animState = _blackboard->HasKey("AnimState")
+            ? _blackboard->Get_ValueAsString("AnimState")
+            : "";
+
+        EMoveInputDirection dir = EMoveInputDirection::Forward;
+        if (_blackboard->HasKey("AnimDirection"))
+        {
+            dir = static_cast<EMoveInputDirection>(_blackboard->Get_ValueAsInt("AnimDirection"));
+        }
+
+        if (!animState.empty())
+        {
+            const auto* stateDesc = _animationState->Find_State(animState);
+            if (stateDesc)
+            {
+                if (stateDesc->mode == EStateAnimationMode::DirectionalSingle)
+                {
+                    _animationState->Play_DirectionalState(animState, dir);
+                }
+                else
+                {
+                    _animationState->Play_State(animState);
+                }
+            }
+
+            if (_blackboard->HasKey("AnimRequestEnd") &&
+                    _blackboard->Get_ValueAsBool("AnimRequestEnd"))
+            {
+                _animationState->Request_StateEnd();
+                _blackboard->Set_ValueAsBool("AnimRequestend", false);
+            }
+        }
+
     }
 
 }

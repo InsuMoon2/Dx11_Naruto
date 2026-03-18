@@ -23,17 +23,15 @@ void PlayerState_Jump::Enter(PlayerStateMachine* state)
 		return;
 
     movement->Set_OrientRotationToMovement(true);
-
 	movement->Start_Jump();
 
-	state->Apply_StateAnimation(EPlayerState::Jump);
+	state->Play_AnimState(EPlayerState::Jump);
 }
 
 void PlayerState_Jump::Update(PlayerStateMachine* state, float timeDelta)
 {
     auto input = state->Get_Input();
     auto movement = state->Get_Movement();
-    auto model = state->Get_Model();
     const auto& frame = input->Get_Frame();
 
     auto cmd = state->Init_MoveCommand();
@@ -53,7 +51,7 @@ void PlayerState_Jump::Update(PlayerStateMachine* state, float timeDelta)
         return;
 
     const bool hasInput = input->Has_MoveInput();
-    const auto* desc = state->Find_StateAnimation(EPlayerState::Jump);
+    const auto* desc = state->Find_AnimStateDesc(EPlayerState::Jump);
 
     if (!desc)
     {
@@ -70,10 +68,10 @@ void PlayerState_Jump::Update(PlayerStateMachine* state, float timeDelta)
             return;
         }
 
-        model->Request_AnimEnd();
+        state->Request_AnimStateEnd();
 
         // 입력이 없을 때만 End가 끝난 뒤 Idle로 전환
-        if (model->Is_AnimationSequenceFinished())
+        if (state->Is_AnimSequenceFinished())
         {
             state->Change_State(EPlayerState::Idle);
         }

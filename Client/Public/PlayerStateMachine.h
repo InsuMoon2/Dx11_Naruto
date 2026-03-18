@@ -11,6 +11,7 @@ NS_END
 NS_BEGIN(Client)
 class InputComponent;
 class MovementComponent;
+class AnimationStateComponent;
 
 class PlayerStateMachine final : public Component
 {
@@ -37,23 +38,45 @@ public:
     EPlayerState                Get_PrevStateID()    const { return _prevStateID; }
     Shared<InputComponent>      Get_Input()          const { return _input; }
     Shared<MovementComponent>   Get_Movement()       const { return _movement; }
-    Shared<Model>               Get_Model();
+    //Shared<Model>               Get_Model();
+    Shared<AnimationStateComponent> Get_AnimationState() const { return _animationState; }
 
-    vector<string>              Get_AvaiableAnimationNames();
-    const FStateAnimationDesc*  Find_StateAnimation(EPlayerState stateID) const;
-    FStateAnimationDesc&        Edit_StateAnimation(EPlayerState stateID);
+public:
+    bool    Play_AnimState(EPlayerState stateID);
+    bool    Play_DirectionalAnimState(EPlayerState stateID, EMoveInputDirection dir);
+    bool    Play_AnimStateLoopOnly(EPlayerState stateID);
 
-    bool                        Apply_StateAnimation(EPlayerState stateID);
+    void    Request_AnimStateEnd();
+    bool    Is_AnimStateFinished() const;
+    bool    Is_AnimSequenceFinished() const;
 
-    bool                        Preview_StateAnimation(EPlayerState stateID, int32 sequenceSlot);
+    const FStateAnimationDesc* Find_AnimStateDesc(EPlayerState stateID) const;
 
+    EAnimPhase      Get_AnimPhase() const;
+    float           Get_AnimTrackPosition() const;
+    float           Get_AnimDuration() const;
+
+public:
     // 플레이어 강제 상태 변경
     void                        Force_Enter_State(EPlayerState stateID);
+
+    void                        Set_PendingSuperJumpVelocity(float velocity) { _pendingSuperJumpVelocity = velocity; }
+    void                        Set_PendingLandingDir(Vec3 dir) { _pendingLandDirection= dir; }
+
+    float                       Get_PendingSuperJumpVeloicty() { return _pendingSuperJumpVelocity; }
+    Vec3                        Get_PendingLandingDir() { return _pendingLandDirection; }
+
+    void                        Set_PendingMoveInputDirection(EMoveInputDirection dir) { _pendingMoveInputDirection = dir; }
+    EMoveInputDirection         Get_PendingMoveInputDirection() const { return _pendingMoveInputDirection; }
+
+private:
+    static string               To_AnimationStateName(EPlayerState stateID);
 
 private:
     Shared<InputComponent>                      _input;
     Shared<MovementComponent>                   _movement;
-    Shared<Model>                               _model;
+    //Shared<Model>                               _model;
+    Shared<AnimationStateComponent>             _animationState;
 
 private:
     umap<EPlayerState, Shared<IPlayerState>>    _states;
@@ -61,6 +84,11 @@ private:
     Shared<IPlayerState>                        _currentState = nullptr;
     EPlayerState                                _currentStateID = EPlayerState::END;
     EPlayerState                                _prevStateID = EPlayerState::END;
+
+    float                                       _pendingSuperJumpVelocity = 0.f;
+    Vec3                                        _pendingLandDirection = Vec3::Zero;
+
+    EMoveInputDirection                         _pendingMoveInputDirection = EMoveInputDirection::Forward;
 
 protected:
     umap<EPlayerState, FStateAnimationDesc>     _stateAnimations;

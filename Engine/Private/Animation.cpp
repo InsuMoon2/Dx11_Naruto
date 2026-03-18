@@ -83,6 +83,52 @@ bool Animation::Update_TransformationMatrices(float timeDelta, vector<Shared<Bon
     return finished;
 }
 
+bool Animation::Advance_TrackPosition(float timeDelta, bool isLoop, float& inOutTrackPosition) const
+{
+    if (_duration <= FLT_EPSILON)
+        return true;
+
+    inOutTrackPosition += _ticksPersecond * timeDelta;
+
+    bool finished = false;
+
+    if (inOutTrackPosition >= _duration)
+    {
+        finished = true;
+
+        if (isLoop)
+        {
+            inOutTrackPosition = fmod(inOutTrackPosition, _duration);
+        }
+        else
+        {
+            inOutTrackPosition = _duration;
+        }
+    }
+
+    return finished;
+}
+
+void Animation::Sample_LocalPoses(float trackPosition, vector<FAnimationLocalPose>& inOutPoses) const
+{
+    for (auto& pose : inOutPoses)
+    {
+        pose = {};
+    }
+
+    for (const auto& channel : _channels)
+    {
+        if (!channel)
+            continue;
+
+        const int32 boneIndex = channel->Get_BoneIndex();
+        if (boneIndex < 0 || boneIndex >= static_cast<int32>(inOutPoses.size()))
+            continue;
+
+        channel->Sample_LocalPose(trackPosition, inOutPoses[boneIndex]);
+    }
+}
+
 void Animation::Free()
 {
     Base::Free();

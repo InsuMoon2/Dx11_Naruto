@@ -72,4 +72,41 @@ namespace Engine
         float   playRate = 1.f;
     };
 
+    struct FAnimationLocalPose
+    {
+        Vec3    scale = Vec3::One;
+        Quat    rotation = Quat::Identity;
+        Vec3    translation = Vec3::Zero;
+
+        // 해당 Bone Channel이 현재 애니메이션에 실제로 존재하는지 확인용
+        bool    valid = false;
+    };
+
+    // 현재 재생중인 Clip의 runtime 상태
+    struct FPlayingClipState
+    {
+        int32   animIndex = -1;
+        bool    loop = false;
+        float   playRate = 1.f;
+        float   trackPosition = 0.f;
+
+        bool Is_Valid() const { return animIndex >= 0; }
+    };
+
+    // 한 전환에 대한 runtime blend 상태
+    struct FAnimationBlendState
+    {
+        bool    active = false;
+        float   duration = 0.15f;
+        float   elapsed = 0.f;
+
+        // 전환 대상 clip
+        FPlayingClipState next;
+
+        // 시작 pose와 목표 pose 따로 세팅
+        vector<FAnimationLocalPose> fromPose;
+        vector<FAnimationLocalPose> toPose;
+
+    };
+
 }

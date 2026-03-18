@@ -3,6 +3,9 @@
 #include "Component_Inspector.h"
 #include "Client_Enum.h"
 
+NS_BEGIN(Engine)
+NS_END
+
 NS_BEGIN(Client)
 class PlayerStateMachine;
 struct FStateAnimationDesc;
@@ -37,16 +40,21 @@ private:
     void    Draw_SequenceAnimationSection(Shared<PlayerStateMachine> stateMachine,
         FStateAnimationDesc& desc);
 
+    void    Draw_DirectionalAnimationSection(Shared<PlayerStateMachine> stateMachine,
+        FStateAnimationDesc& desc);
+
     void    Draw_PreviewControls(Shared<PlayerStateMachine> stateMachine,
         FStateAnimationDesc& desc);
 
     static FAnimationClipSetting* Get_SelectedSequenceSlot(FStateAnimationDesc& desc, int32 slotIndex);
+    static FAnimationClipSetting* Get_SelectedDirectionalSlot(FDirectionClipDesc& desc, int32 slotIndex);
 
 private:
     EPlayerState    _selectedState = EPlayerState::Idle;
     char            _searchBuffer[256] = "";
 
     int32           _selectedSequenceSlot = 0;
+    int32           _selectedDirectionalSlot = 0;
 
 };
 

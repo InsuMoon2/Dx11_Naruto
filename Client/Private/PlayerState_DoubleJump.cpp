@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "PlayerState_DoubleJump.h"
+
+#include "AnimationStateComponent.h"
 #include "PlayerStateMachine.h"
 #include "InputComponent.h"
 #include "MovementComponent.h"
@@ -25,13 +27,13 @@ void PlayerState_DoubleJump::Enter(PlayerStateMachine* state)
     movement->Set_OrientRotationToMovement(true);
 
     movement->Start_DoubleJump();
-    state->Apply_StateAnimation(EPlayerState::DoubleJump);
+    state->Play_AnimState(EPlayerState::DoubleJump);
 }
 
 void PlayerState_DoubleJump::Update(PlayerStateMachine* state, float timeDelta)
 {
     auto input = state->Get_Input();
-	auto model = state->Get_Model();
+    auto anim = state->Get_AnimationState();
     auto movement = state->Get_Movement();
 
 	auto cmd = state->Init_MoveCommand();
@@ -42,7 +44,7 @@ void PlayerState_DoubleJump::Update(PlayerStateMachine* state, float timeDelta)
 		return;
 
 	const bool hasInput = input->Has_MoveInput();
-	const auto* desc = state->Find_StateAnimation(EPlayerState::DoubleJump);
+	const auto* desc = anim->Find_State("DoubleJump");
 
 	if (!desc)
 	{
@@ -50,17 +52,24 @@ void PlayerState_DoubleJump::Update(PlayerStateMachine* state, float timeDelta)
 		return;
 	}
 
-	if (desc->mode == EStateAnimationMode::Sequence)
-	{
-		model->Request_AnimEnd();
+    if (desc->mode == EStateAnimationMode::Sequence)
+    {
+        if (hasInput)
+        {
+            state->Change_State(EPlayerState::Run);
+            return;
+        }
 
-		if (model->Is_AnimationSequenceFinished())
-		{
-			state->Change_State(hasInput ? EPlayerState::Run : EPlayerState::Idle);
-		}
+        state->Request_AnimStateEnd();
 
-		return;
-	}
+        // 입력이 없을 때만 End가 끝난 뒤 Idle로 전환
+        if (state->Is_AnimSequenceFinished())
+        {
+            state->Change_State(EPlayerState::Idle);
+        }
+
+        return;
+    }
 
 	state->Change_State(hasInput ? EPlayerState::Run : EPlayerState::Idle);
 }

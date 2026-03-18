@@ -9,6 +9,7 @@ InputComponent::InputComponent(ComPtr<Device> device, ComPtr<DeviceContext> cont
 InputComponent::InputComponent(const InputComponent& rhs)
     : Component(rhs)
     , _frame(rhs._frame)
+    , _inputGate(rhs._inputGate)
 {
 }
 
@@ -26,6 +27,8 @@ HRESULT InputComponent::Initialize_Prototype()
 HRESULT InputComponent::Initialize(void* arg)
 {
     _frame = {};
+    _superJumpCharge = 0.f;
+    _inputGate = {};
 
     Component::Initialize(arg);
 
@@ -41,7 +44,7 @@ void InputComponent::BeginPlay()
 
 void InputComponent::Update_Input(float timeDelta)
 {
-    _frame = {};
+    _frame = {};    
 
     if (!GAME->Is_GameInputEnabled())
     {
@@ -49,47 +52,88 @@ void InputComponent::Update_Input(float timeDelta)
         return;
     }
 
-    if (INPUT->KeyPress(KEY_TYPE::W)) _frame.moveY += 1.f;
-    if (INPUT->KeyPress(KEY_TYPE::S)) _frame.moveY -= 1.f;
+    float rawMoveX = 0.f;
+    float rawMoveY = 0.f;
 
-    if (INPUT->KeyPress(KEY_TYPE::A)) _frame.moveX -= 1.f;
-    if (INPUT->KeyPress(KEY_TYPE::D)) _frame.moveX += 1.f;
+    if (INPUT->KeyPress(KEY_TYPE::W)) rawMoveY += 1.f;
+    if (INPUT->KeyPress(KEY_TYPE::S)) rawMoveY -= 1.f;
+    if (INPUT->KeyPress(KEY_TYPE::A)) rawMoveX -= 1.f;
+    if (INPUT->KeyPress(KEY_TYPE::D)) rawMoveX += 1.f;
 
-    _frame.sprintPress  = INPUT->KeyPress(KEY_TYPE::SHIFT);
-    _frame.sprintDown   = INPUT->KeyDown(KEY_TYPE::SHIFT);
-    _frame.jumpDown     = INPUT->KeyDown(KEY_TYPE::SPACE);
+    const bool rawDashDown = INPUT->KeyDown(KEY_TYPE::SHIFT);
 
-    _frame.useSkillDown[0] = INPUT->KeyDown(KEY_TYPE::KEY_1);
-    _frame.useSkillDown[1] = INPUT->KeyDown(KEY_TYPE::KEY_2);
+    const bool rawJumpDown = INPUT->KeyDown(KEY_TYPE::SPACE);
+
+    const bool rawSkill1Down = INPUT->KeyDown(KEY_TYPE::KEY_1);
+    const bool rawSkill2Down = INPUT->KeyDown(KEY_TYPE::KEY_2);
+
+    const bool rawCtrlPress = INPUT->KeyPress(KEY_TYPE::LCTRL);
+    const bool rawCtrlUp = INPUT->KeyUp(KEY_TYPE::LCTRL);
+
+    Vec2 rawMouseDelta = INPUT->GetMouseDelta();
 
     // TODO : Ctrl : 슈퍼점프, Left : 약공, Right : 강공, 우클릭 -> 벽타기 입체기동
     // TODO : 2단점프까지 가능하도록
-    bool ctrlPress  = INPUT->KeyPress(KEY_TYPE::LCTRL);
-    bool ctrlUp     = INPUT->KeyUp(KEY_TYPE::LCTRL);
-
-    if (ctrlPress)
+    if (_inputGate.allowSuperJump && rawCtrlPress)
     {
         _superJumpCharge = ::clamp(_superJumpCharge + timeDelta, 0.f, MAX_JUMP_CHARGE);
     }
-    else if (!ctrlUp)
+    else if (!_inputGate.allowSuperJump || !rawCtrlPress)
     {
-        _superJumpCharge = 0.f;
+        // Ctrl을 떼었거나 gate에서 super jump를 막고 있으면 charge를 초기화
+        if (!rawCtrlUp)
+        {
+            _superJumpCharge = 0.f;
+        }
     }
 
-    Vec2 mouseDelta = INPUT->GetMouseDelta();
-    _frame.lookYaw = mouseDelta.x;
-    _frame.lookPitch = mouseDelta.y;
+    // gate 적용 후 frame에 반영
+    if (_inputGate.allowMove)
+    {
+        _frame.moveX = rawMoveX;
+        _frame.moveY = rawMoveY;
+    }
 
-    _frame.superJumpCharge = _superJumpCharge;
-    _frame.superJumpPress = ctrlPress;
-    _frame.superJumpUp = ctrlUp;
+    if (_inputGate.allowLook)
+    {
+        _frame.lookYaw = rawMouseDelta.x;
+        _frame.lookPitch = rawMouseDelta.y;
+    }
+
+    if (_inputGate.allowDash)
+    {
+        _frame.dashDown = rawDashDown;
+    }
+
+    if (_inputGate.allowJump)
+    {
+        _frame.jumpDown = rawJumpDown;
+    }
+
+    if (_inputGate.allowSkill)
+    {
+        _frame.useSkillDown[0] = rawSkill1Down;
+        _frame.useSkillDown[1] = rawSkill2Down;
+    }
+
+    if (_inputGate.allowSuperJump)
+    {
+        _frame.superJumpPress = rawCtrlPress;
+        _frame.superJumpUp = rawCtrlUp;
+        _frame.superJumpCharge = _superJumpCharge;
+    }
+    else
+    {
+        _frame.superJumpPress = false;
+        _frame.superJumpUp = false;
+        _frame.superJumpCharge = 0.f;
+    }
 }
 
 void InputComponent::Reset_FrameInput()
 {
     _frame.jumpDown = false;
-    _frame.sprintDown = false;
-
+    _frame.dashDown = false;
     _frame.superJumpUp = false;
 
     _frame.useSkillDown[0] = false;
@@ -104,6 +148,61 @@ bool InputComponent::Has_MoveInput() const
 Vec2 InputComponent::Get_MoveAxis() const
 {
     return Vec2(_frame.moveX, _frame.moveY);
+}
+
+void InputComponent::Set_InputMode(EPlayerInputMode mode)
+{
+    _inputMode = mode;
+    _inputGate = Get_InputGate_Preset(mode);
+}
+
+InputComponent::FInputGate InputComponent::Get_InputGate_Preset(EPlayerInputMode mode)
+{
+    FInputGate gate{};
+
+    switch (mode)
+    {
+    case EPlayerInputMode::Normal:
+        gate.allowMove = true;
+        gate.allowLook = true;
+        gate.allowDash = true;
+        gate.allowJump = true;
+        gate.allowSuperJump = true;
+        gate.allowSkill = true;
+        break;
+
+    case EPlayerInputMode::LookOnly:
+        gate.allowMove = false;
+        gate.allowLook = true;
+        gate.allowDash = false;
+        gate.allowJump = false;
+        gate.allowSuperJump = false;
+        gate.allowSkill = false;
+        break;
+
+    case EPlayerInputMode::MoveAndLook:
+        gate.allowMove = true;
+        gate.allowLook = true;
+        gate.allowDash = false;
+        gate.allowJump = false;
+        gate.allowSuperJump = false;
+        gate.allowSkill = false;
+        break;
+
+    case EPlayerInputMode::BlockAll:
+        gate.allowMove = false;
+        gate.allowLook = false;
+        gate.allowDash = false;
+        gate.allowJump = false;
+        gate.allowSuperJump = false;
+        gate.allowSkill = false;
+        break;
+
+    default:
+        break;
+    }
+
+    return gate;
 }
 
 json InputComponent::To_Json() const

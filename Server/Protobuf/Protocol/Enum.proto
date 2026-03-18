@@ -13,7 +13,7 @@ enum ComponentID
     COMPONENT_TYPE_TERRAIN              = 6;
     COMPONENT_TYPE_MODEL                = 7;
   
-    COMPONENT_TYPE_AI                   = 100;
+    COMPONENT_TYPE_BEHAVIOR             = 100;
     COMPONENT_TYPE_CONTROLLER           = 101;
 
 
@@ -56,6 +56,7 @@ enum ComponentID
     COMPONENT_TYPE_INPUT                = 1006;
     COMPONENT_TYPE_PLAYER_STATE         = 1007;
     COMPONENT_TYPE_SKILL                = 1008;
+    COMPONENT_TYPE_ANIMATION_STATE      = 1009;
 }
 
 enum OBJECT_TYPE

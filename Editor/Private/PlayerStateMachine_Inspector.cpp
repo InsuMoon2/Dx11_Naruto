@@ -74,18 +74,22 @@ void PlayerStateMachine_Inspector::Draw_Inspector(shared_ptr<Component> componen
     {
         Draw_SingleAnimationSection(stateMachine, desc);
     }
-    else
+    else if (desc.mode == EStateAnimationMode::Sequence)
     {
         Draw_SequenceAnimationSection(stateMachine, desc);
+    }
+    else if (desc.mode == EStateAnimationMode::DirectionalSingle)
+    {
+        Draw_DirectionalAnimationSection(stateMachine, desc);
     }
 
     ImGui::Spacing();
 
-    ImGui::SetNextItemWidth(120.f);
-    ImGui::DragFloat("Play Rate", &desc.playRate, 0.01f, 0.05f, 3.f, "%.2f");
+    //ImGui::SetNextItemWidth(120.f);
+    //ImGui::DragFloat("Play Rate", &desc.playRate, 0.01f, 0.05f, 3.f, "%.2f");
 
-    // 재생속도는 0 이하가 되지 않게 보정
-    desc.playRate = Utils::Max(desc.playRate, 0.01f);
+    //// 재생속도는 0 이하가 되지 않게 보정
+    //desc.playRate = Utils::Max(desc.playRate, 0.01f);
 
     ImGui::Spacing();
     Draw_PreviewControls(stateMachine, desc);
@@ -137,6 +141,13 @@ void PlayerStateMachine_Inspector::Draw_ModeCombo(FStateAnimationDesc& desc)
             desc.mode = EStateAnimationMode::Sequence;
 
         if (sequenceSelected)
+            ImGui::SetItemDefaultFocus();
+
+        const bool directionalSelected = (desc.mode == EStateAnimationMode::DirectionalSingle);
+        if (ImGui::Selectable("DirectionalSingle", directionalSelected))
+            desc.mode = EStateAnimationMode::DirectionalSingle;
+
+        if (directionalSelected)
             ImGui::SetItemDefaultFocus();
 
         ImGui::EndCombo();
@@ -250,12 +261,64 @@ void PlayerStateMachine_Inspector::Draw_SequenceAnimationSection(Shared<PlayerSt
     ImGui::Spacing();
 }
 
+void PlayerStateMachine_Inspector::Draw_DirectionalAnimationSection(Shared<PlayerStateMachine> stateMachine,
+    FStateAnimationDesc& desc)
+{
+    ImGui::Text("Forward Clip");
+    ImGui::SameLine(120.f);
+    ImGui::TextDisabled("%s",
+        desc.directional.forward.animationName.empty() ? "<None>" : desc.directional.forward.animationName.c_str());
+
+    ImGui::Text("Backward Clip");
+    ImGui::SameLine(120.f);
+    ImGui::TextDisabled("%s",
+        desc.directional.backward.animationName.empty() ? "<None>" : desc.directional.backward.animationName.c_str());
+
+    ImGui::Text("Left Clip");
+    ImGui::SameLine(120.f);
+    ImGui::TextDisabled("%s",
+        desc.directional.left.animationName.empty() ? "<None>" : desc.directional.left.animationName.c_str());
+
+    ImGui::Text("Right Clip");
+    ImGui::SameLine(120.f);
+    ImGui::TextDisabled("%s",
+        desc.directional.right.animationName.empty() ? "<None>" : desc.directional.right.animationName.c_str());
+
+    ImGui::Spacing();
+
+    const char* slotLabels[] = { "Forward", "Backward", "Left", "Right" };
+    ImGui::SetNextItemWidth(120.f);
+    ImGui::Combo("Direction Slot", &_selectedDirectionalSlot, slotLabels, IM_ARRAYSIZE(slotLabels));
+
+    auto* selectedSlot = Get_SelectedDirectionalSlot(desc.directional, _selectedDirectionalSlot);
+    if (!selectedSlot)
+        return;
+
+    Draw_AnimationList(stateMachine, desc, &selectedSlot->animationName);
+
+    ImGui::Spacing();
+    ImGui::Checkbox("Slot Loop", &selectedSlot->loop);
+
+    ImGui::SetNextItemWidth(120.f);
+    ImGui::DragFloat("Slot Play Rate", &selectedSlot->playRate, 0.01f, 0.05f, 3.f, "%.2f");
+    selectedSlot->playRate = Utils::Max(selectedSlot->playRate, 0.01f);
+
+    ImGui::Spacing();
+}
+
 void PlayerStateMachine_Inspector::Draw_PreviewControls(Shared<PlayerStateMachine> stateMachine,
                                                         FStateAnimationDesc& desc)
 {
     if (ImGui::Button("Preview Play", ImVec2(140.f, 30.f)))
     {
-        stateMachine->Preview_StateAnimation(_selectedState, _selectedSequenceSlot);
+        if (desc.mode == EStateAnimationMode::DirectionalSingle)
+        {
+            stateMachine->Preview_StateAnimation(_selectedState, _selectedDirectionalSlot);
+        }
+        else
+        {
+            stateMachine->Preview_StateAnimation(_selectedState, _selectedSequenceSlot);
+        }
     }
 
     ImGui::SameLine();
@@ -273,11 +336,18 @@ void PlayerStateMachine_Inspector::Draw_PreviewControls(Shared<PlayerStateMachin
         {
             desc.single = {};
         }
-        else
+        else if (desc.mode == EStateAnimationMode::Sequence)
         {
             desc.start = {};
             desc.loop = {};
             desc.end = {};
+        }
+        else if (desc.mode == EStateAnimationMode::DirectionalSingle)
+        {
+            desc.directional.forward = {};
+            desc.directional.backward = {};
+            desc.directional.left = {};
+            desc.directional.right = {};
         }
     }
 }
@@ -291,4 +361,17 @@ FAnimationClipSetting* PlayerStateMachine_Inspector::Get_SelectedSequenceSlot(FS
         return &desc.loop;
 
     return &desc.end;
+}
+
+FAnimationClipSetting* PlayerStateMachine_Inspector::Get_SelectedDirectionalSlot(FDirectionClipDesc& desc,
+    int32 slotIndex)
+{
+    if (slotIndex == 0)
+        return &desc.forward;
+    if (slotIndex == 1)
+        return &desc.backward;
+    if (slotIndex == 2)
+        return &desc.left;
+
+    return &desc.right;
 }

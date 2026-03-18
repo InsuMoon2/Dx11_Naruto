@@ -64,10 +64,12 @@
         },
         {
             "Acceleration": 20.0,
+            "Dash Distance": 6.0,
+            "Dash Duration": 0.18000000715255737,
             "Deceleration": 24.0,
             "Gravity": -20.0,
             "Ground Y": 5.0,
-            "Jump Velocity": 8.0,
+            "Jump Velocity": 10.0,
             "Max Sprint Speed": 70.0,
             "Max Walk Speed": 40.0,
             "Yaw Speed": 360.0,
@@ -79,6 +81,28 @@
         {
             "stateAnimations": [
                 {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
                     "end": {
                         "animationName": "",
                         "loop": false,
@@ -103,6 +127,28 @@
                     "state": "Idle"
                 },
                 {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
                     "end": {
                         "animationName": "SK_CHR_Sasuke|Sasuke_Run_End",
                         "loop": false,
@@ -127,6 +173,28 @@
                     "state": "Run"
                 },
                 {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
                     "end": {
                         "animationName": "SK_CHR_Sasuke|Sasuke_Land",
                         "loop": false,
@@ -134,8 +202,8 @@
                     },
                     "loopClip": {
                         "animationName": "SK_CHR_Sasuke|Sasuke_Jump_Vertical",
-                        "loop": false,
-                        "playRate": 3.0
+                        "loop": true,
+                        "playRate": 2.0
                     },
                     "mode": "Sequence",
                     "single": {
@@ -145,21 +213,43 @@
                     },
                     "start": {
                         "animationName": "",
-                        "loop": true,
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "state": "Jump"
                 },
                 {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
                     "end": {
-                        "animationName": "SK_CHR_Sasuke|Sasuke_HeightLand",
+                        "animationName": "SK_CHR_Sasuke|Sasuke_Land",
                         "loop": false,
                         "playRate": 1.5
                     },
                     "loopClip": {
-                        "animationName": "SK_CHR_Sasuke|Sasuke_DoubleJump",
+                        "animationName": "SK_CHR_Sasuke|Sasuke_Fall_Front_Loop",
                         "loop": true,
-                        "playRate": 2.5
+                        "playRate": 1.600000023841858
                     },
                     "mode": "Sequence",
                     "single": {
@@ -168,13 +258,81 @@
                         "playRate": 2.5
                     },
                     "start": {
-                        "animationName": "",
+                        "animationName": "SK_CHR_Sasuke|Sasuke_DoubleJump",
                         "loop": false,
                         "playRate": 2.5
                     },
                     "state": "DoubleJump"
                 },
                 {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "loopClip": {
+                        "animationName": "SK_CHR_Sasuke|Sasuke_Fall_Front_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "state": "SuperJump"
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
                     "end": {
                         "animationName": "SK_CHR_Sasuke|Sasuke_ChakraJump_Charge_End",
                         "loop": false,
@@ -196,7 +354,99 @@
                         "loop": false,
                         "playRate": 1.0
                     },
-                    "state": "SuperJump"
+                    "state": "SuperJumpCharge"
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_Sasuke|Sasuke_HeightLand",
+                        "loop": false,
+                        "playRate": 1.399999976158142
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "state": "HeightLand"
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Behind",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Front",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Run_Left",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Run_Right",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "DirectionalSingle",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "state": "Dash"
                 }
             ],
             "type": "COMPONENT_TYPE_PLAYER_STATE"
@@ -209,7 +459,7 @@
             "type": "COMPONENT_TYPE_SKILL"
         }
     ],
-    "guid": "92ae3154-4fb6-482b-affa-1c0005bb7fc3",
+    "guid": "81495c9a-48c5-4d8f-9e59-3844a4052bd6",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"
