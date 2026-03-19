@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "AnimNotify_Serializer.h"
-
+#include "GameInstance.h"
 #include <fstream>
 
 #include "AnimNotify_Factory.h"
@@ -152,6 +152,14 @@ fs::path AnimNotify_Serializer::Get_BaseFolderPath()
 
 fs::path AnimNotify_Serializer::Get_ModelNotifyFilePath(const string& modelGuid)
 {
+    wstring resolvePath = GAME->Resolve_AssetPath(modelGuid);
+    if (!resolvePath.empty())
+    {
+        string stem = fs::path(resolvePath).stem().string();
+        return Get_BaseFolderPath() / (stem + ".animnotify.json");
+    }
+
+    // 역조회 실패 시.
     return Get_BaseFolderPath() / (modelGuid + ".animnotify.json");
 }
 

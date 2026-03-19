@@ -108,6 +108,8 @@ private:
     void    Apply_MaterialOverrides(const json& data);
     string  Build_MaterialJsonPath(const string& modelFilePath) const;
 
+    HRESULT Reload_ModelFromGuid(const string& guid, EMeshVertexType modelType);
+
 
 private:
     void    Apply_AnimationClip(uint32 animIndex, bool isLoop, float playRate);

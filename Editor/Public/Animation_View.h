@@ -53,10 +53,16 @@ public:
 
 private:
     void Draw_ToolBar();
-    void Draw_LeftPanel();
-    void Draw_Sequencer();
-    void Draw_RightPanel();
+    void Draw_TopLayout();
+    void Draw_BottomLayout();
+
+    void Draw_ClipBrowserPanel();
     void Draw_PreviewPanel();
+    void Draw_SelectedDetailPanel();
+
+    void Draw_EventListPanel();
+    void Draw_Sequencer();
+    void Draw_CreatePanel();
 
     void Draw_ClipList();
     void Draw_NotifyList();
@@ -84,10 +90,18 @@ private:
     void Fit_PreviewCamera_ToOwner();
     void Handle_PlaybackShortcut();
 
-    
+    bool Passes_ClipSearch(const string& clipName) const;
+    bool Has_SelectedNotify() const;
+    bool Has_SelectedState() const;
+    void Clear_SelectedEntries();
 
     FAnimNotifyClipData* Get_CurrentClip();
     const FAnimNotifyClipData* Get_CurrentClip() const;
+
+    float Get_TopPanelHeight() const;
+    float Get_TopChildHeight() const;
+
+    void Start_CurrentClipPlaybackFromFrame(int32 frame);
 
 private:
     Shared<Model>               _model;
@@ -116,6 +130,8 @@ private:
 
     ImVec2 _previewScreenPos = ImVec2(0.f, 0.f);
     ImVec2 _previewImGuiSize = ImVec2(0.f, 0.f);
+
+    string _clipSearchText;
 
 private:
     bool _openCreateNotifyPopup = false;

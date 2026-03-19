@@ -19,10 +19,30 @@
             "type": "COMPONENT_TYPE_TRANSFORM"
         },
         {
-            "bt_guid": "",
+            "bt_guid": "ba360ec8-2caa-415f-89d8-0ddcbc10797c",
             "type": "COMPONENT_TYPE_BEHAVIOR"
         },
         {
+            "materials": [
+                {
+                    "material_name": "MI_CHR_WhiteZetsuCrowdForm",
+                    "texture_overrides": {
+                        "base_color_0": "0e95e6f4-fc18-4933-a422-ab7b89bebfa0"
+                    }
+                },
+                {
+                    "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeL",
+                    "texture_overrides": {
+                        "base_color_0": "5e492b47-e261-423e-8aeb-e6efec68b442"
+                    }
+                },
+                {
+                    "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeR",
+                    "texture_overrides": {
+                        "base_color_0": "5e492b47-e261-423e-8aeb-e6efec68b442"
+                    }
+                }
+            ],
             "model_guid": "396d55ff-515e-41e6-9e02-2fcdd7698e57",
             "model_type": "SkeletalMesh",
             "type": "COMPONENT_TYPE_MODEL"
@@ -57,12 +77,59 @@
             "type": "COMPONENT_TYPE_MOVEMENT"
         },
         {
-            "animation_states": [],
+            "animation_states": [
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Idle",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                }
+            ],
             "current_state": "",
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
         }
     ],
-    "guid": "99541bc0-c9a5-4be9-8e1c-aab02a054817",
+    "guid": "8ac8f63b-f57b-488f-9ab8-a1d6bf786e86",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster",
     "static_class": "Monster"

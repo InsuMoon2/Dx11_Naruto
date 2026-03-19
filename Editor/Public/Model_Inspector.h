@@ -21,6 +21,7 @@ public:
     uint32 Get_ComponentType() const override { return Protocol::COMPONENT_TYPE_MODEL; }
 
 private:
+    static json Build_ModelSwapJson(const json& sourceData, const string& newGuid, const string& newModelType);
     static bool Is_SkeletalMeshAsset(const FAssetMeta* meta);
 
     void Draw_ModelPicker(Shared<Model> model, json& data);

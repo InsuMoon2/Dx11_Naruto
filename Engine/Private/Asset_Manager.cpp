@@ -16,7 +16,6 @@ HRESULT Asset_Manager::Initialize(const wstring& resourceRoot)
     if (fs::exists(_cachePath))
     {
         Load_Cache();
-        Deduplicate_Assets_ByPath();
         Refresh_Cache();
         Scan_And_Register(_resourceRoot);
         Deduplicate_Assets_ByPath();
@@ -274,7 +273,6 @@ bool Asset_Manager::Load_Meta(const wstring& metaPath)
 
         _guidToMeta[meta.guid] = meta;
         _pathToGuid[pathKey] = meta.guid;
-        Deduplicate_Assets_ByPath(meta.guid);
 
         return true;
     }
@@ -365,8 +363,6 @@ void Asset_Manager::Load_Cache()
             _guidToMeta[meta.guid] = meta;
             _pathToGuid[Normalize_PathKey(meta.fullPath)] = meta.guid;
         }
-
-        Deduplicate_Assets_ByPath();
     }
 
     catch (const exception& e)

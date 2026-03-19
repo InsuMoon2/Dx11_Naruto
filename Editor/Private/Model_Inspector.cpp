@@ -19,6 +19,18 @@ s_TextureTypes[] =
     { EMaterialTextureSlot::Roughness, "Roughness"  }, 
 };
 
+json Model_Inspector::Build_ModelSwapJson(const json& sourceData, const string& newGuid, const string& newModelType)
+{
+    json result = sourceData;
+
+    result.erase("materials");
+
+    result["model_guid"] = newGuid;
+    result["model_type"] = newModelType;
+
+    return result;
+}
+
 bool Model_Inspector::Is_SkeletalMeshAsset(const FAssetMeta* meta)
 {
     if (!meta)
@@ -30,8 +42,6 @@ bool Model_Inspector::Is_SkeletalMeshAsset(const FAssetMeta* meta)
     if (meta->modelType != "SkeletalMesh")
         return false;
 
-    // [중요]
-    // Model 컴포넌트 교체 대상은 런타임에서 바로 읽을 수 있는 .meshbin 스켈레탈 메시만 허용한다.
     const fs::path assetPath(meta->fullPath);
     return Utils::ToLowerCopy(assetPath.extension().string()) == ".meshbin";
 }
@@ -125,9 +135,8 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
 
             if (ImGui::Selectable(label.c_str(), isSelected, ImGuiSelectableFlags_None, ImVec2(260.f, 0)))
             {
-                data["model_guid"] = meta->guid;
-                data["model_type"] = meta->modelType;
-                model->From_Json(data);
+                json swapData = Build_ModelSwapJson(data, meta->guid, meta->modelType);
+                model->From_Json(swapData);
 
                 ImGui::CloseCurrentPopup();
             }
@@ -146,8 +155,11 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
 
         if (ImGui::Selectable("(None) - 해제", false))
         {
-            data["model_guid"] = "";
-            model->From_Json(data);
+            json clearData = Build_ModelSwapJson(
+                data,
+                "",
+                data.value("model_type", string("SkeletalMesh")));
+            model->From_Json(clearData);
 
             ImGui::CloseCurrentPopup();
         }
@@ -172,10 +184,8 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
 
                 string mType = meta->modelType;
 
-                data["model_guid"] = guid;
-                data["model_type"] = mType;
-
-                model->From_Json(data);
+                json swapData = Build_ModelSwapJson(data, guid, mType);
+                model->From_Json(swapData);
 
                 LOG_INFO("Model Assigned: {}", Utils::ToString(resolved));
             }

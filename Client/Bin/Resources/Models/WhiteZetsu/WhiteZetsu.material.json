@@ -4,16 +4,31 @@
     {
       "material_name": "MI_CHR_WhiteZetsuCrowdForm",
       "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_WhiteZetsuCrowdForm_BC.png"
+        } 
       ]
     },
     {
       "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeL",
       "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_WhiteZetsuCrowdForm_Eye_BC.png"
+        }
       ]
     },
     {
       "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeR",
       "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "T_CHR_WhiteZetsuCrowdForm_Eye_BC.png"
+        }
       ]
     }
   ]

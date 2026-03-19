@@ -83,6 +83,11 @@ HRESULT Model::Initialize_Prototype(EMeshVertexType type, const string& modelFil
         return E_FAIL;
     }
 
+    wstring wpath = Utils::ToWString(fs::absolute(modelFilePath).string());
+    string guid = GAME->Find_AssetGUID(wpath);
+    if (!guid.empty())
+        _modelGuid = guid;
+
     return Initialize_FromMeshBin(modelFilePath);
 }
 
@@ -1072,36 +1077,114 @@ void Model::From_Json(const json& data)
     if (!data.contains("model_guid"))
         return;
 
-    string newGuid = data["model_guid"].get<string>();
-    string newTypeStr = data.value("model_type", "SkeletalMesh");
+    const string newGuid = data["model_guid"].get<string>();
+    const string newTypeStr = data.value("model_type", "SkeletalMesh");
 
-    EMeshVertexType newType = (newTypeStr == "SkeletalMesh") ? EMeshVertexType::SkeletalMesh : EMeshVertexType::StaticMesh;
+    const EMeshVertexType newType =
+        (newTypeStr == "SkeletalMesh") ? EMeshVertexType::SkeletalMesh : EMeshVertexType::StaticMesh;
 
-    // Guid, 타입 둘다 같으면 로딩 스킵 (이미 프로토타입에서 로딩)
+    // 같은 GUID/같은 타입이면 실제 리로드는 하지 않고 머티리얼 오버라이드만 다시 적용
     if (newGuid == _modelGuid && newType == _modelType)
     {
         Apply_MaterialOverrides(data);
         return;
     }
 
-    _modelGuid = newGuid;
-    _modelType = newType;
-
-    Invalidate_AnimNotifyAsset();
-
-    wstring path = GAME->Resolve_AssetPath(_modelGuid);
-    if (path.empty())
+    if (newGuid.empty())
     {
-        LOG_WARN("Model GUID not found: {}", _modelGuid);
+        _modelGuid.clear();
+        _modelType = newType;
+
+        Invalidate_AnimNotifyAsset();
+
+        // 기존 모델 데이터를 완전히 비워서 inspector와 runtime 상태가 함께 초기화
+        _meshes.clear();
+        _materials.clear();
+        _bones.clear();
+        _animations.clear();
+        _boneMatrices.clear();
+
+        _numMeshes = 0;
+        _numMaterials = 0;
+
+        _currentAnimationIndex = -1;
+        _isAnimationLoop = false;
+        _animationPlayRate = 1.f;
+
+        _currentClip = {};
+        _blendState = {};
+
+        _hasAnimSequence = false;
+        _isAnimSequenceFinished = false;
+        _isCurrentAnimationFinished = false;
+        _animPhase = EAnimPhase::Start;
+
+        _currentSamplePose.clear();
+        _nextSamplePose.clear();
+        _blendedPose.clear();
+        _lastAppliedPose.clear();
+
         return;
     }
 
-    // 기존 데이터 밀기
+    if (FAILED(Reload_ModelFromGuid(newGuid, newType)))
+    {
+        LOG_WARN("Model::From_Json - failed to reload model from guid: {}", newGuid);
+        return;
+    }
+
+    // 머리티얼 다시 세팅
+    Apply_MaterialOverrides(data);
+}
+
+HRESULT Model::Reload_ModelFromGuid(const string& guid, EMeshVertexType modelType)
+{
+    const wstring resolvedPath = GAME->Resolve_AssetPath(guid);
+    if (resolvedPath.empty())
+    {
+        LOG_WARN("Model GUID not found: {}", guid);
+        return E_FAIL;
+    }
+
+    const string modelFilePath = Utils::ToString(resolvedPath);
+
+    _modelGuid = guid;
+    _modelType = modelType;
+
+    Invalidate_AnimNotifyAsset();
+
     _meshes.clear();
     _materials.clear();
+    _bones.clear();
+    _animations.clear();
+    _boneMatrices.clear();
 
-    // 모델 로드 후, 머티리얼 오버라이드 적용 guid로 세팅되게
-    Apply_MaterialOverrides(data);
+    _numMeshes = 0;
+    _numMaterials = 0;
+
+    _currentAnimationIndex = -1;
+    _isAnimationLoop = false;
+    _animationPlayRate = 1.f;
+
+    _currentClip = {};
+    _blendState = {};
+
+    _hasAnimSequence = false;
+    _isAnimSequenceFinished = false;
+    _isCurrentAnimationFinished = false;
+    _animPhase = EAnimPhase::Start;
+
+    _currentSamplePose.clear();
+    _nextSamplePose.clear();
+    _blendedPose.clear();
+    _lastAppliedPose.clear();
+
+    // 실제 mesh/material/animation 데이터를 다시 읽기
+    CHECK_FAILED(Initialize_FromMeshBin(modelFilePath), E_FAIL);
+
+    Sync_LegacyAnimationState();
+
+    return S_OK;
 }
 
 Shared<ModelMaterial> Model::Get_Material(uint32 index) const

@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Animation_View.h"
-
+#include "Notification_Manager.h"
 #include "AnimNotify_Serializer.h"
 #include "AnimNotify_Factory.h"
 #include "AnimNotify_Inspector_Factory.h"
@@ -14,12 +14,30 @@
 #include "GameInstance.h"
 #include "Transform.h"
 
+static bool Contains_CaseInsensitive(const string& text, const string& pattern)
+{
+    if (pattern.empty())
+        return true;
+
+    auto it = std::search(
+        text.begin(),
+        text.end(),
+        pattern.begin(),
+        pattern.end(),
+        [](char lhs, char rhs)
+        {
+            return std::tolower(static_cast<unsigned char>(lhs)) ==
+                   std::tolower(static_cast<unsigned char>(rhs));
+        });
+
+    return it != text.end();
+}
+
 Animation_View::Animation_View()
     : EditorWindow(TEXT("Animation View"))
     , _sequencerAdapter(&_sequencerState, &_sequencerContext)
 {
 }
-
 
 void Animation_View::Initialize()
 {
@@ -43,32 +61,34 @@ void Animation_View::Update(float timeDelta)
     EditorWindow::Update(timeDelta);
 
     if (_previewCamera && _isPreviewHovered)
-    {
         _previewCamera->Priority_Update(timeDelta);
-    }
 
     if (!_model || !_isPlaying)
         return;
 
     // 프리뷰 재생 중, 노티파이 실행 금지
     _model->Play_Animation(timeDelta, false);
-
     _previewPlaybackTimeSec += timeDelta;
 
     const int32 fps = Get_CurrentClipFps();
+    const int32 frameMin = Get_FrameMin();
     const int32 frameMax = Get_FrameMax();
 
     _sequencerState.currentFrame = std::clamp(
-        static_cast<int32>(std::round(_previewPlaybackTimeSec * static_cast<float>(fps))),
-        Get_FrameMin(),
-        frameMax);
+        static_cast<int32>(std::round(
+            _previewPlaybackTimeSec * static_cast<float>(fps))),
+                frameMin,
+                frameMax);
 
     if (_sequencerState.currentFrame >= frameMax)
     {
-        _sequencerState.currentFrame = frameMax;
-        _isPlaying = false;
+        _model->Set_Animation(static_cast<uint32>(_selectedClipIndex), false);
+        _sequencerState.currentFrame = frameMin;
+        _previewPlaybackTimeSec = 0.f;
 
         Apply_CurrentFrame_ToPreview();
+
+        _isPlaying = true;
     }
 }
 
@@ -90,26 +110,9 @@ void Animation_View::OnGui()
     Draw_ToolBar();
     ImGui::Separator();
 
-    Draw_PreviewPanel();
+    Draw_TopLayout();
     ImGui::Separator();
-
-    if (ImGui::BeginTable("AnimationViewLayout", 3, ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerV))
-    {
-        ImGui::TableSetupColumn("Left", ImGuiTableColumnFlags_WidthFixed, 260.f);
-        ImGui::TableSetupColumn("Timeline", ImGuiTableColumnFlags_WidthStretch);
-        ImGui::TableSetupColumn("Right", ImGuiTableColumnFlags_WidthFixed, 340.f);
-
-        ImGui::TableNextColumn();
-        Draw_LeftPanel();
-
-        ImGui::TableNextColumn();
-        Draw_Sequencer();
-
-        ImGui::TableNextColumn();
-        Draw_RightPanel();
-
-        ImGui::EndTable();
-    }
+    Draw_BottomLayout();
 
     Handle_CreateNotifyPopup();
     Handle_CreateStatePopup();
@@ -184,10 +187,10 @@ void Animation_View::Open_Model(Shared<Model> model)
     _model = model;
     _previewOwner.reset();
     _modelGuid.clear();
+    _clipSearchText.clear();
 
     _selectedClipIndex = -1;
-    _selectedNotifyIndex = -1;
-    _selectedStateIndex = -1;
+    Clear_SelectedEntries();
 
     _isPlaying = false;
     _previewPlaybackTimeSec = 0.f;
@@ -316,18 +319,16 @@ void Animation_View::Add_State_ByFrameRange(int32 startFrame, int32 endFrame, co
 void Animation_View::Draw_ToolBar()
 {
     if (ImGui::Button("Save"))
+    {
         Save();
+        NOTIFY("노티파이 저장");
+    }
 
     ImGui::SameLine();
 
     if (ImGui::Button("Play"))
     {
-        if (_model && _selectedClipIndex >= 0)
-        {
-            _model->Set_Animation(static_cast<uint32>(_selectedClipIndex), false);
-            _previewPlaybackTimeSec = static_cast<float>(_sequencerState.currentFrame) / static_cast<float>(Get_CurrentClipFps());
-            _isPlaying = true;
-        }
+        Start_CurrentClipPlaybackFromFrame(_sequencerState.currentFrame);
     }
 
     ImGui::SameLine();
@@ -362,13 +363,122 @@ void Animation_View::Draw_ToolBar()
     }
 }
 
-void Animation_View::Draw_LeftPanel()
+void Animation_View::Draw_TopLayout()
 {
-    Draw_ClipList();
+    const float topHeight = Get_TopPanelHeight();
+
+    if (ImGui::BeginTable(
+        "AnimationViewTopLayout",
+        3,
+        ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerV,
+        ImVec2(0.f, topHeight)))
+    {
+        ImGui::TableSetupColumn("ClipBrowser", ImGuiTableColumnFlags_WidthFixed, 300.f);
+        ImGui::TableSetupColumn("Preview", ImGuiTableColumnFlags_WidthStretch);
+        ImGui::TableSetupColumn("SelectedDetail", ImGuiTableColumnFlags_WidthFixed, 360.f);
+
+        ImGui::TableNextColumn();
+        Draw_ClipBrowserPanel();
+
+        ImGui::TableNextColumn();
+        Draw_PreviewPanel();
+
+        ImGui::TableNextColumn();
+        Draw_SelectedDetailPanel();
+
+        ImGui::EndTable();
+    }
+}
+
+void Animation_View::Draw_BottomLayout()
+{
+    if (ImGui::BeginTable(
+        "AnimationViewBottomLayout",
+        3,
+        ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerV))
+    {
+        ImGui::TableSetupColumn("EventLists", ImGuiTableColumnFlags_WidthFixed, 300.f);
+        ImGui::TableSetupColumn("Sequencer", ImGuiTableColumnFlags_WidthStretch);
+        ImGui::TableSetupColumn("CreatePanel", ImGuiTableColumnFlags_WidthFixed, 320.f);
+
+        ImGui::TableNextColumn();
+        Draw_EventListPanel();
+
+        ImGui::TableNextColumn();
+        Draw_Sequencer();
+
+        ImGui::TableNextColumn();
+        Draw_CreatePanel();
+
+        ImGui::EndTable();
+    }
+}
+
+void Animation_View::Draw_ClipBrowserPanel()
+{
+    ImGui::Text("Animation Clips");
     ImGui::Separator();
-    Draw_NotifyList();
+
+    if (ImGui::BeginChild("ClipBrowserPanel", ImVec2(0.f, Get_TopChildHeight()), true))
+    {
+        char searchBuffer[256] = {};
+        strcpy_s(searchBuffer, _clipSearchText.c_str());
+
+        if (ImGui::InputTextWithHint("##ClipSearch", "Search clips...", searchBuffer, static_cast<size_t>(std::size(searchBuffer))))
+            _clipSearchText = searchBuffer;
+
+        ImGui::Spacing();
+        Draw_ClipList();
+    }
+    ImGui::EndChild();
+}
+
+void Animation_View::Draw_SelectedDetailPanel()
+{
+    ImGui::Text("Selected Detail");
     ImGui::Separator();
-    Draw_StateList();
+
+    if (ImGui::BeginChild("SelectedDetailPanel", ImVec2(0.f, Get_TopChildHeight()), true))
+    {
+        if (Has_SelectedNotify())
+        {
+            Draw_SelectedNotifyInspector();
+        }
+        else if (Has_SelectedState())
+        {
+            Draw_SelectedStateInspector();
+        }
+        else
+        {
+            ImGui::TextDisabled("No notify selected");
+            ImGui::Spacing();
+            ImGui::TextWrapped("노티파이 또는 노티파이 스테이트를 선택 ㄱㄱ");
+        }
+    }
+    ImGui::EndChild();
+}
+
+void Animation_View::Draw_EventListPanel()
+{
+    const float availableHeight = ImGui::GetContentRegionAvail().y;
+    const float topHeight = max(120.f, availableHeight * 0.5f - 6.f);
+
+    if (ImGui::BeginChild("NotifyListContainer", ImVec2(0.f, topHeight), false))
+        Draw_NotifyList();
+    ImGui::EndChild();
+
+    ImGui::Spacing();
+
+    if (ImGui::BeginChild("StateListContainer", ImVec2(0.f, 0.f), false))
+        Draw_StateList();
+    ImGui::EndChild();
+}
+
+void Animation_View::Draw_CreatePanel()
+{
+    Draw_CreateNotifySection();
+    ImGui::Separator();
+    Draw_CreateStateSection();
 }
 
 void Animation_View::Draw_Sequencer()
@@ -405,8 +515,7 @@ void Animation_View::Draw_Sequencer()
             ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) &&
             ImGui::IsMouseClicked(ImGuiMouseButton_Left))
         {
-            _selectedNotifyIndex = -1;
-            _selectedStateIndex = -1;
+            Clear_SelectedEntries();
         }
 
         // Notify 생성은 adapter가 아니라 Animation_View가 우클릭 팝업으로 처리
@@ -443,28 +552,11 @@ void Animation_View::Draw_Sequencer()
     if (!_isPlaying)
         Apply_CurrentFrame_ToPreview();
 }
-
-
-void Animation_View::Draw_RightPanel()
-{
-    Draw_CreateNotifySection();
-    ImGui::Separator();
-
-    Draw_CreateStateSection();
-    ImGui::Separator();
-
-    Draw_SelectedNotifyInspector();
-    ImGui::Separator();
-
-    Draw_SelectedStateInspector();
-}
-
 void Animation_View::Draw_PreviewPanel()
 {
     ImGui::Text("Preview");
 
-    const float previewHeight = 460.f;
-    ImVec2 previewSize(ImGui::GetContentRegionAvail().x, previewHeight);
+    ImVec2 previewSize(ImGui::GetContentRegionAvail().x, Get_TopChildHeight());
 
     ImGui::BeginChild(
         "AnimationPreviewChild",
@@ -521,29 +613,37 @@ void Animation_View::Draw_PreviewPanel()
 
 void Animation_View::Draw_ClipList()
 {
-    ImGui::Text("Animation Clips");
-    ImGui::Separator();
-
     if (!_model)
     {
         ImGui::TextDisabled("No model opened");
         return;
     }
 
-    if (ImGui::BeginChild("AnimationClipList", ImVec2(0.f, 220.f), true))
+    if (ImGui::BeginChild("AnimationClipList", ImVec2(0.f, 0.f), true))
     {
         const uint32 count = _model->Get_AnimationCount();
+        bool foundAny = false;
+
         for (uint32 i = 0; i < count; ++i)
         {
-            const bool selected = (_selectedClipIndex == static_cast<int32>(i));
             const string label = _model->Get_AnimationName(i);
+            if (!Passes_ClipSearch(label))
+                continue;
+
+            foundAny = true;
+
+            const bool selected = (_selectedClipIndex == static_cast<int32>(i));
 
             if (ImGui::Selectable(label.c_str(), selected))
             {
                 _selectedClipIndex = static_cast<int32>(i);
+                Clear_SelectedEntries();
                 Refresh_CurrentClip();
             }
         }
+
+        if (!foundAny)
+            ImGui::TextDisabled("No clips found");
     }
     ImGui::EndChild();
 }
@@ -552,10 +652,11 @@ void Animation_View::Draw_NotifyList()
 {
     auto* clip = Get_CurrentClip();
 
-    ImGui::Text("Notifies");
+    const int32 notifyCount = clip ? static_cast<int32>(clip->notifies.size()) : 0;
+    ImGui::Text("Notifies (%d)", notifyCount);
     ImGui::Separator();
 
-    if (ImGui::BeginChild("NotifyList", ImVec2(0.f, 170.f), true))
+    if (ImGui::BeginChild("NotifyList", ImVec2(0.f, 0.f), true))
     {
         if (!clip)
         {
@@ -590,10 +691,11 @@ void Animation_View::Draw_StateList()
 {
     auto* clip = Get_CurrentClip();
 
-    ImGui::Text("Notify States");
+    const int32 stateCount = clip ? static_cast<int32>(clip->notifyStates.size()) : 0;
+    ImGui::Text("Notify States (%d)", stateCount);
     ImGui::Separator();
 
-    if (ImGui::BeginChild("StateList", ImVec2(0.f, 170.f), true))
+    if (ImGui::BeginChild("StateList", ImVec2(0.f, 0.f), true))
     {
         if (!clip)
         {
@@ -688,14 +790,21 @@ void Animation_View::Draw_SelectedStateInspector()
 
     const int32 fps = Get_CurrentClipFps();
 
+    const int32 frameMin = Get_FrameMin();
+    const int32 frameMax = Get_FrameMax();
+    const int32 safeStateStartMax = max(frameMin, frameMax - 1);
+
     ImGui::Text("Type: %s", entry.notifyState->Get_TypeName().c_str());
 
     int32 startFrame = static_cast<int32>(std::round(entry.startSec * fps));
     int32 endFrame = static_cast<int32>(std::round((entry.startSec + entry.durationSec) * fps));
 
+    startFrame = std::clamp(startFrame, frameMin, safeStateStartMax);
+    endFrame = std::clamp(endFrame, startFrame + 1, frameMax);
+
     if (ImGui::InputInt("Start Frame##SelectedState", &startFrame))
     {
-        startFrame = std::clamp(startFrame, Get_FrameMin(), endFrame - 1);
+        startFrame = std::clamp(startFrame, frameMin, endFrame - 1);
         entry.durationSec = static_cast<float>(endFrame - startFrame) / static_cast<float>(fps);
         entry.startSec = static_cast<float>(startFrame) / static_cast<float>(fps);
         MarkDirty();
@@ -703,7 +812,7 @@ void Animation_View::Draw_SelectedStateInspector()
 
     if (ImGui::InputInt("End Frame##SelectedState", &endFrame))
     {
-        endFrame = std::clamp(endFrame, startFrame + 1, Get_FrameMax());
+        endFrame = std::clamp(endFrame, startFrame + 1, frameMax);
         entry.durationSec = static_cast<float>(endFrame - startFrame) / static_cast<float>(fps);
         MarkDirty();
     }
@@ -717,6 +826,7 @@ void Animation_View::Draw_SelectedStateInspector()
     if (ImGui::Button("Delete Notify State"))
         Delete_SelectedState();
 }
+
 
 void Animation_View::Draw_CreateNotifySection()
 {
@@ -786,25 +896,35 @@ void Animation_View::Draw_CreateStateSection()
         ImGui::EndCombo();
     }
 
-    int32 startFrame = (_sequencerContext.pendingMarkStartFrame >= 0) ? _sequencerContext.pendingMarkStartFrame : _sequencerState.currentFrame;
-    int32 endFrame = (_sequencerContext.pendingMarkEndFrame >= 0) ? _sequencerContext.pendingMarkEndFrame : (_sequencerState.currentFrame + 10);
+    const int32 frameMin = Get_FrameMin();
+    const int32 frameMax = Get_FrameMax();
+    const int32 safeStateStartMax = max(frameMin, frameMax - 1);
 
-    startFrame = std::clamp(startFrame, Get_FrameMin(), Get_FrameMax());
-    endFrame = std::clamp(endFrame, startFrame + 1, Get_FrameMax());
+    int32 startFrame = (_sequencerContext.pendingMarkStartFrame >= 0)
+        ? _sequencerContext.pendingMarkStartFrame
+        : _sequencerState.currentFrame;
+
+    int32 endFrame = (_sequencerContext.pendingMarkEndFrame >= 0)
+        ? _sequencerContext.pendingMarkEndFrame
+        : (_sequencerState.currentFrame + 10);
+
+    startFrame = std::clamp(startFrame, frameMin, safeStateStartMax);
+    endFrame = std::clamp(endFrame, startFrame + 1, frameMax);
 
     if (ImGui::InputInt("Start Frame##CreateState", &startFrame))
-        _requestedCreateStateStartFrame = std::clamp(startFrame, Get_FrameMin(), endFrame - 1);
+        _requestedCreateStateStartFrame = std::clamp(startFrame, frameMin, endFrame - 1);
     else
         _requestedCreateStateStartFrame = startFrame;
 
     if (ImGui::InputInt("End Frame##CreateState", &endFrame))
-        _requestedCreateStateEndFrame = std::clamp(endFrame, _requestedCreateStateStartFrame + 1, Get_FrameMax());
+        _requestedCreateStateEndFrame = std::clamp(endFrame, _requestedCreateStateStartFrame + 1, frameMax);
     else
         _requestedCreateStateEndFrame = endFrame;
 
     if (ImGui::Button("Add Notify State"))
         Add_State_ByFrameRange(_requestedCreateStateStartFrame, _requestedCreateStateEndFrame, typeNames[_createStateTypeIndex]);
 }
+
 
 void Animation_View::Handle_CreateNotifyPopup()
 {
@@ -914,8 +1034,12 @@ void Animation_View::Begin_CreateNotifyPopup(int32 frame)
 
 void Animation_View::Begin_CreateStatePopup(int32 startFrame, int32 endFrame)
 {
-    _requestedCreateStateStartFrame = std::clamp(startFrame, Get_FrameMin(), Get_FrameMax());
-    _requestedCreateStateEndFrame = std::clamp(endFrame, _requestedCreateStateStartFrame + 1, Get_FrameMax());
+    const int32 frameMin = Get_FrameMin();
+    const int32 frameMax = Get_FrameMax();
+    const int32 safeStateStartMax = max(frameMin, frameMax - 1);
+
+    _requestedCreateStateStartFrame = std::clamp(startFrame, frameMin, safeStateStartMax);
+    _requestedCreateStateEndFrame = std::clamp(endFrame, _requestedCreateStateStartFrame + 1, frameMax);
     _openCreateStatePopup = true;
 }
 
@@ -956,14 +1080,13 @@ void Animation_View::Save_NotifyAsset()
         _asset);
 
     GAME->Scan_Assets(TEXT("../../Client/Bin/Resources"));
+
     ClearDirty();
 }
 
 void Animation_View::Refresh_CurrentClip()
 {
-    _selectedNotifyIndex = -1;
-    _selectedStateIndex = -1;
-
+    Clear_SelectedEntries();
     _sequencerState.currentFrame = Get_FrameMin();
     _previewPlaybackTimeSec = 0.f;
     _isPlaying = false;
@@ -974,6 +1097,10 @@ void Animation_View::Refresh_CurrentClip()
     {
         _model->Set_Animation(static_cast<uint32>(_selectedClipIndex), false);
         Apply_CurrentFrame_ToPreview();
+
+        // 최소 프레임, 0프레임부터 다시 실행
+        Start_CurrentClipPlaybackFromFrame(Get_FrameMin());
+
     }
         
 }
@@ -1075,12 +1202,43 @@ void Animation_View::Handle_PlaybackShortcut()
     const bool isAtEndFrame = (_sequencerState.currentFrame >= Get_FrameMax());
     if (isAtEndFrame)
     {
-        _sequencerState.currentFrame = Get_FrameMin();
-        Apply_CurrentFrame_ToPreview();
+        Start_CurrentClipPlaybackFromFrame(Get_FrameMin());
+        return;
     }
 
-    _previewPlaybackTimeSec = Get_CurrentFrameTimeSec();
-    _isPlaying = true;
+    Start_CurrentClipPlaybackFromFrame(_sequencerState.currentFrame);
+}
+
+bool Animation_View::Passes_ClipSearch(const string& clipName) const
+{
+    return Contains_CaseInsensitive(clipName, _clipSearchText);
+}
+
+bool Animation_View::Has_SelectedNotify() const
+{
+    const auto* clip = Get_CurrentClip();
+    if (!clip)
+        return false;
+
+    return _selectedNotifyIndex >= 0 &&
+           _selectedNotifyIndex < static_cast<int32>(clip->notifies.size());
+}
+
+bool Animation_View::Has_SelectedState() const
+{
+    const auto* clip = Get_CurrentClip();
+    if (!clip)
+        return false;
+
+    return _selectedStateIndex >= 0 &&
+           _selectedStateIndex < static_cast<int32>(clip->notifyStates.size());
+}
+
+void Animation_View::Clear_SelectedEntries()
+{
+    _selectedNotifyIndex = -1;
+    _selectedStateIndex = -1;
+    _sequencerState.selectedEntry = -1;
 }
 
 float Animation_View::Get_CurrentFrameTimeSec() const
@@ -1167,6 +1325,34 @@ const FAnimNotifyClipData* Animation_View::Get_CurrentClip() const
     return AnimNotify_Serializer::Find_Clip(
         _asset,
         _model->Get_AnimationName(static_cast<uint32>(_selectedClipIndex)));
+}
+
+float Animation_View::Get_TopPanelHeight() const
+{
+    const float textLine = ImGui::GetTextLineHeight();
+    const float spacingY = ImGui::GetStyle().ItemSpacing.y;
+    const float separatorY = 4.f;
+
+    return textLine + spacingY + separatorY + spacingY + Get_TopChildHeight();
+}
+
+float Animation_View::Get_TopChildHeight() const
+{
+    return 430.f;
+}
+
+void Animation_View::Start_CurrentClipPlaybackFromFrame(int32 frame)
+{
+    if (!_model || _selectedClipIndex < 0)
+        return;
+
+    _sequencerState.currentFrame = std::clamp(frame, Get_FrameMin(), Get_FrameMax());
+    _previewPlaybackTimeSec = Get_CurrentFrameTimeSec();
+
+    _model->Set_Animation(static_cast<uint32>(_selectedClipIndex), false);
+    Apply_CurrentFrame_ToPreview();
+
+    _isPlaying = true;
 }
 
 void Animation_View::Delete_SelectedNotify()

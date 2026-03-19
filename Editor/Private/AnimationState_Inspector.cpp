@@ -33,7 +33,7 @@ void AnimationState_Inspector::Draw_Inspector(shared_ptr<Component> component)
 
     if (_selectedStateName.empty())
     {
-        ImGui::TextDisabled("State not added yet.");
+        ImGui::TextDisabled("추가된 상태가 없음");
         return;
     }
 
