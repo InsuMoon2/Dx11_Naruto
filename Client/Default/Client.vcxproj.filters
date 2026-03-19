@@ -166,6 +166,10 @@
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AnimationStateComponent.h" />
+    <ClInclude Include="..\Public\AN_Test.h">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ANS_Test.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -318,6 +322,10 @@
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AnimationStateComponent.cpp" />
+    <ClCompile Include="..\Private\AN_Test.cpp">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ANS_Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -430,6 +438,15 @@
     </Filter>
     <Filter Include="01. Levels\01. MainTitle">
       <UniqueIdentifier>{2e50a110-967f-4faa-9713-38d22bea33cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Notify">
+      <UniqueIdentifier>{fef9dc88-a1e7-49b4-b213-bd7ab5729d84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Notify\00. AnimNotify">
+      <UniqueIdentifier>{d99f203a-1581-4ee9-a96f-b23b3e79056d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Notify\01. AnimNotifyState">
+      <UniqueIdentifier>{e527449f-4dd4-48cc-ad52-ce449cbf6695}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

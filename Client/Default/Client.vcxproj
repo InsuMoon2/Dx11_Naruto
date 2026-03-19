@@ -228,6 +228,8 @@
   <ItemGroup>
     <ClInclude Include="..\Public\AIController.h" />
     <ClInclude Include="..\Public\AnimationStateComponent.h" />
+    <ClInclude Include="..\Public\ANS_Test.h" />
+    <ClInclude Include="..\Public\AN_Test.h" />
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
     <ClInclude Include="..\Public\Camera_Target.h" />
@@ -315,6 +317,8 @@
     </ClCompile>
     <ClCompile Include="..\Private\AIController.cpp" />
     <ClCompile Include="..\Private\AnimationStateComponent.cpp" />
+    <ClCompile Include="..\Private\ANS_Test.cpp" />
+    <ClCompile Include="..\Private\AN_Test.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Target.cpp" />

@@ -23,6 +23,10 @@ public:
     Shared<AnimNotifyState_Inspector>   Get_NotifyStateInspector(const string& typeName);
 
 private:
+    void Register_Notifies();
+    void Register_NotifyState();
+
+private:
     umap<string, Shared<AnimNotify_Inspector>> _notifyInspectors;
     umap<string, Shared<AnimNotifyState_Inspector>> _notifyStateInspectors;
 };

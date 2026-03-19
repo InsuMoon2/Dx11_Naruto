@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Asset_Manager.h"
+#include <algorithm>
 #include <fstream>
+#include <cwctype>
 
 Asset_Manager::Asset_Manager()
 {
@@ -14,13 +16,16 @@ HRESULT Asset_Manager::Initialize(const wstring& resourceRoot)
     if (fs::exists(_cachePath))
     {
         Load_Cache();
+        Deduplicate_Assets_ByPath();
         Refresh_Cache();
         Scan_And_Register(_resourceRoot);
+        Deduplicate_Assets_ByPath();
         Save_Cache();
     }
     else
     {
         Scan_And_Register(_resourceRoot);
+        Deduplicate_Assets_ByPath();
         Save_Cache();
     }
 
@@ -38,9 +43,9 @@ const FAssetMeta* Asset_Manager::Find_ByGUID(const string& guid) const
 
 string Asset_Manager::Find_GUID(const wstring& filePath) const
 {
-    wstring absPath = fs::absolute(filePath).wstring();
+    const wstring pathKey = Normalize_PathKey(filePath);
 
-    auto iter = _pathToGuid.find(absPath);
+    auto iter = _pathToGuid.find(pathKey);
     if (iter == _pathToGuid.end())
         return "";
 
@@ -63,10 +68,11 @@ string Asset_Manager::Register_Asset(const wstring& filePath, const string& type
     if (!Should_RegisterAsset(fs::path(filePath)))
         return "";
 
-    wstring absPath = fs::absolute(filePath).wstring();
+    const wstring absPath = fs::absolute(filePath).wstring();
+    const wstring pathKey = Normalize_PathKey(absPath);
 
     // 이미 등록돼있으면 기존 GUID 반환
-    auto existing = _pathToGuid.find(absPath);
+    auto existing = _pathToGuid.find(pathKey);
     if (existing != _pathToGuid.end())
         return existing->second;
 
@@ -90,7 +96,7 @@ string Asset_Manager::Register_Asset(const wstring& filePath, const string& type
     Save_Meta(metaPath, meta);
 
     _guidToMeta[meta.guid] = meta;
-    _pathToGuid[absPath] = meta.guid;
+    _pathToGuid[pathKey] = meta.guid;
 
     Save_Cache();
 
@@ -158,14 +164,16 @@ void Asset_Manager::Update_AssetPath(const string& guid, const wstring& newFileP
         return;
 
     // 기존 경로 찾아서 갱신
-    wstring oldPath = iter->second.fullPath;
-    _pathToGuid.erase(oldPath);
+    const wstring oldPathKey = Normalize_PathKey(iter->second.fullPath);
+    _pathToGuid.erase(oldPathKey);
 
-    wstring absNewPath = fs::absolute(newFilePath).wstring();
+    const wstring absNewPath = fs::absolute(newFilePath).wstring();
+    const wstring newPathKey = Normalize_PathKey(absNewPath);
     iter->second.fullPath = absNewPath;
     iter->second.relativePath = fs::relative(absNewPath, _resourceRoot).wstring();
 
-    _pathToGuid[absNewPath] = guid;
+    _pathToGuid[newPathKey] = guid;
+    Deduplicate_Assets_ByPath(guid);
 
     Save_Cache();
 }
@@ -173,6 +181,7 @@ void Asset_Manager::Update_AssetPath(const string& guid, const wstring& newFileP
 void Asset_Manager::Refresh_Cache()
 {
     vector<string> invalidGuids;
+    const size_t previousCount = _guidToMeta.size();
 
     // 존재하지 않는 파일 검사
     for (const auto& [guid, meta] : _guidToMeta)
@@ -186,12 +195,16 @@ void Asset_Manager::Refresh_Cache()
     // 무효화된 에셋 삭제
     for (const string& guid : invalidGuids)
     {
-        wstring path = _guidToMeta[guid].fullPath;
-        _pathToGuid.erase(path);
+        const wstring pathKey = Normalize_PathKey(_guidToMeta[guid].fullPath);
+        _pathToGuid.erase(pathKey);
         _guidToMeta.erase(guid);
     }
 
-    if (!invalidGuids.empty())
+    // [추가]
+    // 같은 파일을 가리키는 중복 GUID도 함께 정리한다.
+    Deduplicate_Assets_ByPath();
+
+    if (!invalidGuids.empty() || previousCount != _guidToMeta.size())
     {
         Save_Cache(); // 캐시 파일 다시 쓰기
         LOG_INFO("{} 개의 유실된 에셋을 레지스트리에서 정리", invalidGuids.size());
@@ -246,8 +259,9 @@ bool Asset_Manager::Load_Meta(const wstring& metaPath)
         if (!root.contains("guid"))
             return false;
 
-        wstring assetPath = metaPath.substr(0, metaPath.size() - 5); // .meta 제거
-        wstring absPath = fs::absolute(assetPath).wstring();
+        const wstring assetPath = metaPath.substr(0, metaPath.size() - 5); // .meta 제거
+        const wstring absPath = fs::absolute(assetPath).wstring();
+        const wstring pathKey = Normalize_PathKey(absPath);
 
         FAssetMeta meta;
         meta.guid = root["guid"].get<string>();
@@ -259,7 +273,8 @@ bool Asset_Manager::Load_Meta(const wstring& metaPath)
         meta.relativePath = relative.wstring();
 
         _guidToMeta[meta.guid] = meta;
-        _pathToGuid[absPath] = meta.guid;
+        _pathToGuid[pathKey] = meta.guid;
+        Deduplicate_Assets_ByPath(meta.guid);
 
         return true;
     }
@@ -348,8 +363,10 @@ void Asset_Manager::Load_Cache()
             meta.fullPath = (fs::path(_resourceRoot) / meta.relativePath).wstring();
 
             _guidToMeta[meta.guid] = meta;
-            _pathToGuid[meta.fullPath] = meta.guid;
+            _pathToGuid[Normalize_PathKey(meta.fullPath)] = meta.guid;
         }
+
+        Deduplicate_Assets_ByPath();
     }
 
     catch (const exception& e)
@@ -467,11 +484,97 @@ bool Asset_Manager::EndsWith(const string& value, const string& suffix)
     return value.compare(value.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
+wstring Asset_Manager::Normalize_PathKey(const wstring& path)
+{
+    if (path.empty())
+        return L"";
+
+    const fs::path normalizedPath = fs::absolute(fs::path(path)).lexically_normal();
+    wstring pathKey = normalizedPath.wstring();
+
+    // [중요]
+    // Windows 경로는 대소문자 구분이 사실상 없으므로 캐시 키를 소문자로 통일한다.
+    std::transform(pathKey.begin(), pathKey.end(), pathKey.begin(),
+        [](wchar_t ch) { return static_cast<wchar_t>(std::towlower(ch)); });
+
+    return pathKey;
+}
+
+wstring Asset_Manager::Make_AssetIdentityKey(const FAssetMeta& meta)
+{
+    if (!meta.relativePath.empty())
+    {
+        wstring relativeKey = fs::path(meta.relativePath).lexically_normal().wstring();
+
+        std::transform(relativeKey.begin(), relativeKey.end(), relativeKey.begin(),
+            [](wchar_t ch) { return static_cast<wchar_t>(std::towlower(ch)); });
+
+        return relativeKey;
+    }
+
+    return Normalize_PathKey(meta.fullPath);
+}
+
+void Asset_Manager::Deduplicate_Assets_ByPath(const string& preferGuid)
+{
+    umap<wstring, string> keyToGuid;
+    vector<string> guidsToRemove;
+
+    for (const auto& [guid, meta] : _guidToMeta)
+    {
+        const wstring identityKey = Make_AssetIdentityKey(meta);
+        if (identityKey.empty())
+            continue;
+
+        auto iter = keyToGuid.find(identityKey);
+        if (iter == keyToGuid.end())
+        {
+            keyToGuid[identityKey] = guid;
+            continue;
+        }
+
+        // [중요]
+        // .meta에서 읽은 GUID나 방금 갱신한 GUID를 우선 보존할 수 있게 한다.
+        if (!preferGuid.empty() && guid == preferGuid)
+        {
+            guidsToRemove.push_back(iter->second);
+            iter->second = guid;
+        }
+        else
+        {
+            guidsToRemove.push_back(guid);
+        }
+    }
+
+    if (guidsToRemove.empty())
+    {
+        Rebuild_PathIndex();
+        return;
+    }
+
+    for (const string& guid : guidsToRemove)
+        _guidToMeta.erase(guid);
+
+    Rebuild_PathIndex();
+}
+
+void Asset_Manager::Rebuild_PathIndex()
+{
+    _pathToGuid.clear();
+
+    for (const auto& [guid, meta] : _guidToMeta)
+    {
+        const wstring pathKey = Normalize_PathKey(meta.fullPath);
+        if (!pathKey.empty())
+            _pathToGuid[pathKey] = guid;
+    }
+}
+
 void Asset_Manager::Unregister_AssetPath(const wstring& assetPath)
 {
-    const wstring absPath = fs::absolute(assetPath).wstring();
+    const wstring pathKey = Normalize_PathKey(assetPath);
 
-    auto pathIter = _pathToGuid.find(absPath);
+    auto pathIter = _pathToGuid.find(pathKey);
     if (pathIter == _pathToGuid.end())
         return;
 

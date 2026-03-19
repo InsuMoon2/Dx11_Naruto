@@ -85,31 +85,31 @@ bool AnimNotify_Serializer::From_Json(const json& root, FAnimNotifyAsset& outAss
                 entry.notify = instance;
                 clip.notifies.push_back(entry);
             }
-
-            if (clipJson.contains("notify_states") && clipJson["notify_states"].is_array())
-            {
-                for (const auto& stateJson : clipJson["notify_states"])
-                {
-                    const string typeName = stateJson.value("type", "");
-                    auto instance = AnimNotify_Factory::Create_NotifyState(typeName);
-                    if (!instance)
-                    {
-                        LOG_WARN("Unknown AnimNotifyState type: {}", typeName);
-                        continue;
-                    }
-
-                    instance->Deserialize_Payload(stateJson.value("payload", json::object()));
-
-                    FAnimNotifyStateEntry entry;
-                    entry.startSec = stateJson.value("start_sec", 0.f);
-                    entry.durationSec = max(0.f, stateJson.value("duration_sec", 0.f));
-                    entry.notifyState = instance;
-                    clip.notifyStates.push_back(entry);
-                }
-            }
-
-            outAsset.clips.push_back(clip);
         }
+
+        if (clipJson.contains("notify_states") && clipJson["notify_states"].is_array())
+        {
+            for (const auto& stateJson : clipJson["notify_states"])
+            {
+                const string typeName = stateJson.value("type", "");
+                auto instance = AnimNotify_Factory::Create_NotifyState(typeName);
+                if (!instance)
+                {
+                    LOG_WARN("Unknown AnimNotifyState type: {}", typeName);
+                    continue;
+                }
+
+                instance->Deserialize_Payload(stateJson.value("payload", json::object()));
+
+                FAnimNotifyStateEntry entry;
+                entry.startSec = stateJson.value("start_sec", 0.f);
+                entry.durationSec = max(0.f, stateJson.value("duration_sec", 0.f));
+                entry.notifyState = instance;
+                clip.notifyStates.push_back(entry);
+            }
+        }
+
+        outAsset.clips.push_back(clip);
     }
 
     return true;
@@ -147,7 +147,7 @@ bool AnimNotify_Serializer::Load_FromFile(const wstring& filePath, FAnimNotifyAs
 
 fs::path AnimNotify_Serializer::Get_BaseFolderPath()
 {
-    return fs::path("../../Client/Bin/Resources/Data/json/AnimationNotifies");
+    return fs::path("../../Client/Bin/Resources/Data/json/AnimNotifies");
 }
 
 fs::path AnimNotify_Serializer::Get_ModelNotifyFilePath(const string& modelGuid)

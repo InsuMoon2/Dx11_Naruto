@@ -19,6 +19,23 @@ s_TextureTypes[] =
     { EMaterialTextureSlot::Roughness, "Roughness"  }, 
 };
 
+bool Model_Inspector::Is_SkeletalMeshAsset(const FAssetMeta* meta)
+{
+    if (!meta)
+        return false;
+
+    if (meta->type != "model" && meta->type != "Model")
+        return false;
+
+    if (meta->modelType != "SkeletalMesh")
+        return false;
+
+    // [중요]
+    // Model 컴포넌트 교체 대상은 런타임에서 바로 읽을 수 있는 .meshbin 스켈레탈 메시만 허용한다.
+    const fs::path assetPath(meta->fullPath);
+    return Utils::ToLowerCopy(assetPath.extension().string()) == ".meshbin";
+}
+
 void Model_Inspector::Draw_Inspector(shared_ptr<Component> component)
 {
     auto model = static_pointer_cast<Model>(component);
@@ -87,8 +104,15 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
             ImGui::TextDisabled("(등록된 모델 없음)");
         }
 
+        bool hasSelectableModel = false;
+
         for (auto* meta : assets)
         {
+            if (!Is_SkeletalMeshAsset(meta))
+                continue;
+
+            hasSelectableModel = true;
+
             string name = fs::path(meta->fullPath).stem().string();
             bool isSelected = (meta->guid == modelGuid);
 
@@ -110,6 +134,11 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
 
             if (isSelected)
                 ImGui::PopStyleColor();
+        }
+
+        if (!hasSelectableModel)
+        {
+            ImGui::TextDisabled("(meshbin 스켈레탈 메시 없음)");
         }
 
         ImGui::Spacing();
@@ -134,7 +163,14 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
             if (!resolved.empty())
             {
                 auto* meta = GAME->Find_AssetByGUID(guid);
-                string mType = meta ? meta->modelType : "SkeletalMesh";
+                if (!Is_SkeletalMeshAsset(meta))
+                {
+                    LOG_WARN("Model Assigned skipped - skeletal meshbin only: {}", guid);
+                    ImGui::EndDragDropTarget();
+                    return;
+                }
+
+                string mType = meta->modelType;
 
                 data["model_guid"] = guid;
                 data["model_type"] = mType;

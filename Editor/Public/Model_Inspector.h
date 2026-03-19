@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Component_Inspector.h"
+#include "Engine_Struct.h"
 
 NS_BEGIN(Engine)
 class Model;
@@ -20,6 +21,8 @@ public:
     uint32 Get_ComponentType() const override { return Protocol::COMPONENT_TYPE_MODEL; }
 
 private:
+    static bool Is_SkeletalMeshAsset(const FAssetMeta* meta);
+
     void Draw_ModelPicker(Shared<Model> model, json& data);
     void Draw_MeshList(Shared<Model> model);
     void Draw_MaterialSlots(Shared<Model> model);

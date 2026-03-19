@@ -1,4 +1,4 @@
-﻿// https://github.com/CedricGuillemet/ImGuizmo
+// https://github.com/CedricGuillemet/ImGuizmo
 // v1.92.5 WIP
 //
 // The MIT License(MIT)
@@ -95,7 +95,8 @@ namespace ImSequencer
       if (frameCount > 0)
       {
           float availableWidth = canvas_size.x - legendWidth - 30.f;
-          float fitWidth = availableWidth / (float)frameCount;
+          // frameMax 자체(inclusive)까지 딱 맞게 표시하려면 frameCount+1 칸으로 나눠야 함
+          float fitWidth = availableWidth / (float)(frameCount + 1);
           framePixelWidthTarget = ImClamp(fitWidth, 2.f, 50.f);
           framePixelWidth = framePixelWidthTarget;
       }
@@ -229,7 +230,8 @@ namespace ImSequencer
          //header frame number and lines
          int modFrameCount = 10;
          int frameStep = 1;
-         while ((modFrameCount * framePixelWidth) < 150)
+         // 임계값을 낮게 잡아야 20~40프레임 단위로 번호가 표시됨 (150이면 80단위까지 2배씩 커짐)
+         while ((modFrameCount * framePixelWidth) < 50)
          {
             modFrameCount *= 2;
             frameStep *= 2;
@@ -250,11 +252,38 @@ namespace ImSequencer
                draw_list->AddLine(ImVec2((float)px, canvas_pos.y + (float)ItemHeight), ImVec2((float)px, canvas_pos.y + (float)regionHeight - 1), 0x30606060, 1);
             }
 
-            if (baseIndex && px > (canvas_pos.x + legendWidth))
+            if (baseIndex && px >= (canvas_pos.x + legendWidth) && px <= (canvas_size.x + canvas_pos.x))
             {
                char tmps[512];
                ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%d", i);
-               draw_list->AddText(ImVec2((float)px + 3.f, canvas_pos.y), 0xFFBBBBBB, tmps);
+               ImVec2 textSize = ImGui::CalcTextSize(tmps);
+
+               // frameMax 픽셀 위치 계산
+               int pxMax = (int)canvas_pos.x + int(sequence->GetFrameMax() * framePixelWidth)
+                         + legendWidth - int(firstFrameUsed * framePixelWidth);
+
+               // 배수 프레임인데 frameMax 번호와 텍스트 너비 이내로 너무 가까우면 번호 생략
+               // (눈금선은 그대로 그려짐, 텍스트만 스킵)
+               if (i != sequence->GetFrameMax() && abs(px - pxMax) < (int)(textSize.x + 8.f))
+               {
+                  // 겹침 방지: 배수 번호 생략
+               }
+               else
+               {
+                  float textX;
+                  // 마지막 프레임은 눈금 왼쪽에 붙여서 화면 밖으로 잘리지 않게
+                  if (i == sequence->GetFrameMax())
+                     textX = (float)px - textSize.x - 2.f;
+                  else
+                     textX = (float)px + 3.f;
+
+                  // 텍스트가 legendWidth 좌측 경계 밖으로 빠지지 않도록
+                  textX = ImMax(textX, (float)(canvas_pos.x + legendWidth) + 2.f);
+                  // 텍스트가 화면 오른쪽 끝을 넘지 않도록
+                  textX = ImMin(textX, canvas_pos.x + canvas_size.x - textSize.x - 2.f);
+
+                  draw_list->AddText(ImVec2(textX, canvas_pos.y + 2.f), 0xFFBBBBBB, tmps);
+               }
             }
 
          };
@@ -354,8 +383,10 @@ namespace ImSequencer
 
             ImVec2 pos = ImVec2(contentMin.x + legendWidth - firstFrameUsed * framePixelWidth, contentMin.y + ItemHeight * i + 1 + customHeight);
             ImVec2 slotP1(pos.x + *start * framePixelWidth, pos.y + 2);
-            ImVec2 slotP2(pos.x + *end * framePixelWidth + framePixelWidth, pos.y + ItemHeight - 2);
-            ImVec2 slotP3(pos.x + *end * framePixelWidth + framePixelWidth, pos.y + ItemHeight - 2 + localCustomHeight);
+            // *end(=frameMax)는 inclusive이므로 불필요한 +framePixelWidth 제거
+            // 기존 코드는 슬롯 끝이 한 칸 더 튀어나갔던 문제를 수정
+            ImVec2 slotP2(pos.x + *end * framePixelWidth, pos.y + ItemHeight - 2);
+            ImVec2 slotP3(pos.x + *end * framePixelWidth, pos.y + ItemHeight - 2 + localCustomHeight);
             unsigned int slotColor = color | 0xFF000000;
             unsigned int slotColorHalf = (color & 0xFFFFFF) | 0x40000000;
 

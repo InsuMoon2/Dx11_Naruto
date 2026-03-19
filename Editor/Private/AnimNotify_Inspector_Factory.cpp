@@ -1,6 +1,10 @@
 ﻿#include "pch.h"
 #include "AnimNotify_Inspector_Factory.h"
+#include "AnimNotify_Factory.h"
+#include "ANS_Test.h"
+#include "AN_Test.h"
 
+// 싱글톤일 필요가 있는가?
 IMPLEMENT_SINGLETON(AnimNotify_Inspector_Factory)
 
 void AnimNotify_Inspector_Factory::Initialize()
@@ -11,10 +15,10 @@ void AnimNotify_Inspector_Factory::Initialize()
     // 커스텀 노티파이 등록
     {
         /* Notify */
-
-
+        Register_Notifies();
 
         /* Notify State */
+        Register_NotifyState();
     }
 }
 
@@ -46,4 +50,16 @@ Shared<AnimNotifyState_Inspector> AnimNotify_Inspector_Factory::Get_NotifyStateI
         return nullptr;
 
     return iter->second;
+}
+
+void AnimNotify_Inspector_Factory::Register_Notifies()
+{
+    AnimNotify_Factory::Register_Notify("AN_Test",
+        []() -> Shared<AnimNotify> { return make_shared<AN_Test>(); });
+}
+
+void AnimNotify_Inspector_Factory::Register_NotifyState()
+{
+    AnimNotify_Factory::Register_NotifyState("ANS_Test",
+        []() -> Shared<AnimNotifyState> { return make_shared<ANS_Test>(); });
 }

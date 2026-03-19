@@ -46,6 +46,22 @@ private:
     void                Load_Cache();
     void                Save_Cache();
 
+    // [추가]
+    // 같은 파일을 상대/절대 경로 표기 차이로 중복 등록하지 않도록 비교용 경로를 정규화한다.
+    static wstring      Normalize_PathKey(const wstring& path);
+
+    // [추가]
+    // relativePath가 있으면 그 값을 우선 기준으로, 없으면 fullPath를 기준으로 중복 여부를 판단한다.
+    static wstring      Make_AssetIdentityKey(const FAssetMeta& meta);
+
+    // [추가]
+    // 현재 캐시/메타 로드 결과에서 같은 에셋 경로를 가리키는 중복 GUID를 하나로 정리한다.
+    void                Deduplicate_Assets_ByPath(const string& preferGuid = "");
+
+    // [추가]
+    // _guidToMeta 상태를 기준으로 _pathToGuid 인덱스를 다시 구성한다.
+    void                Rebuild_PathIndex();
+
     bool                Should_RegisterAsset(const fs::path& path) const;
     static bool         EndsWith(const string& value, const string& suffix);
 

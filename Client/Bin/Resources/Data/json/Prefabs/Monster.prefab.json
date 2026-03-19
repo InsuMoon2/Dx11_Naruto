@@ -20,24 +20,11 @@
         },
         {
             "bt_guid": "",
-            "type": "COMPONENT_TYPE_AI"
+            "type": "COMPONENT_TYPE_BEHAVIOR"
         },
         {
-            "materials": [
-                {
-                    "material_name": "MI_CHR_Boruto"
-                },
-                {
-                    "material_name": "MI_CHR_Boruto_EyeL"
-                },
-                {
-                    "material_name": "MI_CHR_Boruto_EyeR"
-                },
-                {
-                    "material_name": "MI_CHR_Boruto_Metal"
-                }
-            ],
-            "model_type": "StaticMesh",
+            "model_guid": "396d55ff-515e-41e6-9e02-2fcdd7698e57",
+            "model_type": "SkeletalMesh",
             "type": "COMPONENT_TYPE_MODEL"
         },
         {
@@ -58,6 +45,8 @@
         },
         {
             "Acceleration": 20.0,
+            "Dash Distance": 6.0,
+            "Dash Duration": 0.18000000715255737,
             "Deceleration": 24.0,
             "Gravity": -20.0,
             "Ground Y": 5.0,
@@ -66,9 +55,14 @@
             "Max Walk Speed": 2.0,
             "Yaw Speed": 0.20000000298023224,
             "type": "COMPONENT_TYPE_MOVEMENT"
+        },
+        {
+            "animation_states": [],
+            "current_state": "",
+            "type": "COMPONENT_TYPE_ANIMATION_STATE"
         }
     ],
-    "guid": "1c117a1b-e20c-405f-a81b-44941cdcb569",
+    "guid": "99541bc0-c9a5-4be9-8e1c-aab02a054817",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster",
     "static_class": "Monster"
