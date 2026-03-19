@@ -439,3 +439,5 @@ FodyWeavers.xsd
 
 # 에셋 캐시 (로컬 자동 생성, 커밋 불필요)
 .asset_cache.json
+Client/Bin/Resources/Models/Saske/Saske.fbx
+Client/Bin/Resources/Models/WhiteZetsu/WhiteZetsu.fbx
