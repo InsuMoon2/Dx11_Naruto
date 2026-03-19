@@ -7,9 +7,12 @@
 NS_BEGIN(Engine)
 class Model;
 class RenderTarget;
+class GameObject;
 NS_END
 
 NS_BEGIN(Editor)
+
+class Editor_Camera_Free;
 
 class Animation_View : public EditorWindow
 {
@@ -42,6 +45,11 @@ public:
 
     int32 Get_CurrentClipFps() const;
     int32 Get_CurrentClipFrameMax() const;
+    float Get_CurrentFrameTimeSec() const;
+
+    float Get_CurrentClipLengthSec() const;
+
+    int32 Pixel_ToFrame_InSequencer(float pixelX, float trackMinX, float trackMaxX) const;
 
 private:
     void Draw_ToolBar();
@@ -72,29 +80,42 @@ private:
     void Refresh_CurrentClip();
     void Apply_CurrentFrame_ToPreview();
 
-    int32 Pixel_ToFrame_InSequencer(float pixelX, float trackMinX, float trackMaxX) const;
+    void Ensure_PreviewCamera();
+    void Fit_PreviewCamera_ToOwner();
+    void Handle_PlaybackShortcut();
+
+    
 
     FAnimNotifyClipData* Get_CurrentClip();
     const FAnimNotifyClipData* Get_CurrentClip() const;
 
 private:
-    Shared<Model>       _model;
-    string              _modelGuid;
+    Shared<Model>               _model;
+    Shared<GameObject>          _previewOwner;
+    Shared<Editor_Camera_Free>  _previewCamera;
+    Shared<RenderTarget>        _previewRT;
 
-    FAnimNotifyAsset    _asset;
+    string                      _modelGuid;
+
+    FAnimNotifyAsset            _asset;
 
     int32 _selectedClipIndex = -1;
     int32 _selectedNotifyIndex = -1;
     int32 _selectedStateIndex = -1;
 
     bool  _isPlaying = false;
+    bool  _isPreviewHovered = false;
     float _previewPlaybackTimeSec = 0.f;
 
     FSequencerUIState       _sequencerState;
     FAnimSequencerContext   _sequencerContext;
     AnimSequencerAdapter    _sequencerAdapter;
 
-    Shared<RenderTarget>    _previewRT;
+    Matrix _previewView = Matrix::Identity;
+    Matrix _previewProj = Matrix::Identity;
+
+    ImVec2 _previewScreenPos = ImVec2(0.f, 0.f);
+    ImVec2 _previewImGuiSize = ImVec2(0.f, 0.f);
 
 private:
     bool _openCreateNotifyPopup = false;

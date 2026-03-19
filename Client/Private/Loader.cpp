@@ -42,6 +42,7 @@
 #include "UI_PlayerSkill.h"
 #include "UI_PlayerStatus.h"
 #include "UI_SkillSlot.h"
+#include "AnimationStateComponent.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)

@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_WhiteZetsuCrowdForm",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeL",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeR",
+      "textures": [
+      ]
+    }
+  ]
+}

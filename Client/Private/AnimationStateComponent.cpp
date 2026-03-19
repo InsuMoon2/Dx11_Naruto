@@ -266,6 +266,23 @@ bool AnimationStateComponent::Preview_State(const string& stateName, int32 slotI
     return true;
 }
 
+bool AnimationStateComponent::Remove_State(const string& stateName)
+{
+    auto iter = _stateAnimations.find(stateName);
+    if (iter == _stateAnimations.end())
+        return false;
+
+    _stateAnimations.erase(iter);
+
+    if (_currentStateName == stateName)
+        _currentStateName.clear();
+
+    if (_prevStateName == stateName)
+        _prevStateName.clear();
+
+    return true;
+}
+
 json AnimationStateComponent::To_Json() const
 {
     json root = Component::To_Json();

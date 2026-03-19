@@ -48,6 +48,7 @@ public: /* Protobuf */
 
 private:
     float _maxHp        = {};
+
     float _hp           = {};
     float _maxMp        = {};
     float _mp           = {};

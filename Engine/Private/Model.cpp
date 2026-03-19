@@ -9,6 +9,10 @@
 #include "Model_BinaryLoader.h"
 #include "Shader.h"
 
+#include "AnimNotify_Serializer.h"  
+#include "AnimNotify.h"             
+#include "AnimNotifyState.h"        
+
 Model::Model(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
@@ -37,6 +41,9 @@ Model::Model(const Model& rhs)
     , _currentClip{}
     , _blendState{}
     , _isCurrentAnimationFinished(false)
+    , _isAnimNotifyAssetLoaded(false)   
+    , _animNotifyAsset{}
+    , _activeNotifyStates{}
 {
     _blendState.duration = _animationBlendDuration;
 
@@ -211,8 +218,15 @@ int32 Model::Find_AnimationIndex_ByName(const string& animName)
 
 bool Model::Play_Animation(float timeDelta)
 {
+    return Play_Animation(timeDelta, true);
+}
+
+bool Model::Play_Animation(float timeDelta, bool executeNotifies)
+{
     if (!_currentClip.Is_Valid())
     {
+        Stop_AllNotifyStates(executeNotifies);
+
         if (!_lastAppliedPose.empty())
         {
             Apply_LocalPoses_ToBones(_lastAppliedPose);
@@ -230,6 +244,9 @@ bool Model::Play_Animation(float timeDelta)
 
     bool currentFinished = false;
 
+    // 이번 프레임 Notify 판정용
+    const float previousTrackPosition = _currentClip.trackPosition;
+
     if (_currentClip.animIndex >= 0 &&
         _currentClip.animIndex < static_cast<int32>(_animations.size()) &&
         _animations[_currentClip.animIndex] != nullptr)
@@ -241,6 +258,8 @@ bool Model::Play_Animation(float timeDelta)
 
         Sample_ClipPose(_currentClip, _currentSamplePose);
     }
+
+    const bool wrapped = (_currentClip.loop && _currentClip.trackPosition < previousTrackPosition);
 
     if (_blendState.active)
     {
@@ -273,6 +292,8 @@ bool Model::Play_Animation(float timeDelta)
 
         if (blendRatio >= 1.f)
         {
+            Stop_AllNotifyStates(executeNotifies);
+
             // 전환 시, 다음 애니메이션을 현재 애니메이션으로 다시 세팅
             _currentClip = _blendState.next;
             Clear_BlendState();
@@ -287,6 +308,27 @@ bool Model::Play_Animation(float timeDelta)
 
     _lastAppliedPose = _currentSamplePose;
     Sync_LegacyAnimationState();
+
+    if (Ensure_AnimNotifyAssetLoaded())
+    {
+        if (const auto* clipData = Find_CurrentNotifyClip())
+        {
+            FAnimNotifyContext context;
+            context.owner = Get_Owner().get();
+            context.model = this;
+            context.modelGuid = _modelGuid;
+            context.clipName = Get_CurrentAnimationName();
+            context.previousTimeSec = previousTrackPosition;
+            context.currentTimeSec = _currentClip.trackPosition;
+            context.deltaTime = timeDelta;
+            context.isLooping = _currentClip.loop;
+            context.wrapped = wrapped;
+            context.isPreview = !executeNotifies;
+
+            Update_AnimNotifies(*clipData, context, executeNotifies);
+            Update_AnimNotifyStates(*clipData, context, executeNotifies);
+        }
+    }
 
     if (!_hasAnimSequence)
     {
@@ -308,6 +350,9 @@ bool Model::Play_Animation(float timeDelta)
     if (_animPhase == EAnimPhase::End)
     {
         _isCurrentAnimationFinished = true;
+
+        Stop_AllNotifyStates(executeNotifies);
+
         Complete_AnimationSequence();
         return true;
     }
@@ -437,6 +482,8 @@ bool Model::Find_AnimationIndex(const string& animName, uint32& outIndex) const
 
 void Model::Reset_AnimationSequenceState()
 {
+    Stop_AllNotifyStates(false);
+
     _hasAnimSequence = false;
     _isAnimSequenceFinished = false;
     _animPhase = EAnimPhase::Start;
@@ -447,6 +494,8 @@ void Model::Reset_AnimationSequenceState()
 
 void Model::Complete_AnimationSequence()
 {
+    Stop_AllNotifyStates(false);
+
     _hasAnimSequence = false;
     _isAnimSequenceFinished = true;
 
@@ -699,6 +748,277 @@ bool Model::Try_AdvanceSequenceAfterCurrentFinished()
     return false;
 }
 
+bool Model::Ensure_AnimNotifyAssetLoaded()
+{
+    if (_isAnimNotifyAssetLoaded)
+        return true;
+
+    _animNotifyAsset = {};
+    _animNotifyAsset.modelGuid = _modelGuid;
+    _isAnimNotifyAssetLoaded = true;
+
+    if (_modelGuid.empty())
+        return false;
+
+    const fs::path filePath = AnimNotify_Serializer::Get_ModelNotifyFilePath(_modelGuid);
+    if (!fs::exists(filePath))
+        return false;
+
+    return AnimNotify_Serializer::Load_FromFile(filePath.wstring(), _animNotifyAsset);
+}
+
+void Model::Invalidate_AnimNotifyAsset()
+{
+    // 모델 GUID 변경이나 재로딩할 때 Notify 비우기
+    _isAnimNotifyAssetLoaded = false;
+    _animNotifyAsset = {};
+    _activeNotifyStates.clear();
+}
+
+const FAnimNotifyClipData* Model::Find_CurrentNotifyClip() const
+{
+    if (_modelGuid.empty())
+        return nullptr;
+
+    return AnimNotify_Serializer::Find_Clip(_animNotifyAsset, Get_CurrentAnimationName());
+}
+
+void Model::Stop_AllNotifyStates(bool executeEndCheck)
+{
+    // 애니메이션 종료, 애니메이션 전환, 시퀀스 종료 시에는 재생중이더라도 정리가 필요
+    // ex) Hit 되거나, 중간에 순간이동하면서 애니메이션이 갑자기 끊길 때
+    if (_activeNotifyStates.empty())
+        return;
+
+    if (executeEndCheck)
+    {
+        FAnimNotifyContext context;
+        context.owner = Get_Owner().get();
+        context.model = this;
+        context.clipName = Get_CurrentAnimationName();
+        context.currentTimeSec = _currentClip.trackPosition;
+
+        for (auto& active : _activeNotifyStates)
+        {
+            if (active.notifyState)
+                active.notifyState->On_End(context);
+        }
+    }
+
+    _activeNotifyStates.clear();
+}
+
+void Model::Update_AnimNotifies(const FAnimNotifyClipData& clipData, const FAnimNotifyContext& context,
+    bool executeNotifies)
+{
+    // 프리뷰모드에서는 생략하게
+    if (!executeNotifies)
+        return;
+
+    for (const auto& entry : clipData.notifies)
+    {
+        if (!entry.notify)
+            continue;
+
+        if (!Is_NotifyTimeInRange(entry.timeSec,
+            context.previousTimeSec, context.currentTimeSec, context.wrapped))
+            continue;
+
+        entry.notify->Execute(context);
+    }
+}
+
+void Model::Update_AnimNotifyStates(const FAnimNotifyClipData& clipData, const FAnimNotifyContext& context,
+    bool executeNotifies)
+{
+    int size = static_cast<int32>(clipData.notifyStates.size());
+
+    for (int32 stateIndex = 0; stateIndex < size; ++stateIndex)
+    {
+        const auto& entry = clipData.notifyStates[stateIndex];
+
+        const float durationSec = max(entry.durationSec, 0.f);
+        if (durationSec <= 0.f)
+            continue;
+
+        const float startSec = entry.startSec;
+        const float endSec = startSec + durationSec;
+
+        const bool crossedStart = Is_NotifyTimeInRange(
+                startSec,
+                context.previousTimeSec, context.currentTimeSec, context.wrapped);
+
+        const bool isActive = Is_NotifyStateActiveTime(context.currentTimeSec, startSec, durationSec);
+
+        int32 activeIndex = Find_ActiveNotifyStateIndex(_activeNotifyStates, stateIndex);
+
+        // 시작지점을 통과했고, 아직 active가 아니면 시작
+        if (activeIndex < 0 && crossedStart)
+        {
+            FActiveAnimNotifyState activeState;
+            activeState.stateIndex = stateIndex;
+            activeState.startSec = startSec;
+            activeState.endSec = endSec;
+            activeState.notifyState = entry.notifyState;
+
+            _activeNotifyStates.push_back(activeState);
+            activeIndex = static_cast<int32>(_activeNotifyStates.size()) - 1;
+
+            if (executeNotifies)
+                entry.notifyState->On_Begin(context);
+        }
+
+        if (activeIndex < 0)
+            continue;
+
+        if (isActive)
+        {
+            if (executeNotifies && _activeNotifyStates[activeIndex].notifyState)
+                _activeNotifyStates[activeIndex].notifyState->On_Tick(context);
+
+            continue;
+        }
+
+        // State 범위를 벗어나면 End 후 active 제거
+        if (executeNotifies && _activeNotifyStates[activeIndex].notifyState)
+            _activeNotifyStates[activeIndex].notifyState->On_End(context);
+
+        _activeNotifyStates.erase(_activeNotifyStates.begin() + activeIndex);
+    }
+
+}
+
+bool Model::Is_NotifyTimeInRange(float targetTime, float previouseTime, float currentTime, bool wrapped)
+{
+    if (!wrapped)
+        return targetTime >= previouseTime && targetTime <= currentTime;
+
+    return targetTime >= previouseTime || targetTime <= currentTime;
+}
+
+bool Model::Is_NotifyStateActiveTime(float currentTime, float startTime, float duration)
+{
+    const float clampedDuration = max(duration, 0.f);
+    const float endTime = startTime + clampedDuration;
+
+    return currentTime >= startTime && currentTime < endTime;
+}
+
+int32 Model::Find_ActiveNotifyStateIndex(const vector<FActiveAnimNotifyState>& activeStates, int32 stateIndex)
+{
+    for (int32 i = 0; i < static_cast<int32>(activeStates.size()); ++i)
+    {
+        if (activeStates[i].stateIndex == stateIndex)
+            return i;
+    }
+
+    return -1;
+}
+
+float Model::Get_AnimationLengthSec(uint32 animIndex) const
+{
+    if (animIndex >= _animations.size())
+        return 0.f;
+
+    const auto& animation = _animations[animIndex];
+    if (!animation)
+        return 0.f;
+
+    const float ticksPerSecond = animation->Get_TicksPerSecond();
+    if (ticksPerSecond <= FLT_EPSILON)
+        return 0.f;
+
+    return animation->Get_Duration() / ticksPerSecond;
+}
+
+float Model::Get_AnimationTicksPerSecond(uint32 animIndex) const
+{
+    if (animIndex >= _animations.size())
+        return 0.f;
+
+    const auto& animation = _animations[animIndex];
+    if (!animation)
+        return 0.f;
+
+    return animation->Get_TicksPerSecond();
+}
+
+void Model::Set_CurrentTrackPositionTicks(float trackPosition)
+{
+    if (!_currentClip.Is_Valid())
+        return;
+
+    if (_currentClip.animIndex < 0 || _currentClip.animIndex >= static_cast<int32>(_animations.size()))
+        return;
+
+    const auto& animation = _animations[_currentClip.animIndex];
+    if (!animation)
+        return;
+
+    const float duration = animation->Get_Duration();
+    if (duration <= FLT_EPSILON)
+    {
+        _currentClip.trackPosition = 0.f;
+        return;
+    }
+
+    _currentClip.trackPosition = ::clamp(trackPosition, 0.f, duration);
+}
+
+void Model::Sample_CurrentPose()
+{
+    if (!_currentClip.Is_Valid())
+        return;
+
+    if (_currentClip.animIndex < 0 || _currentClip.animIndex >= static_cast<int32>(_animations.size()))
+        return;
+
+    const auto& animation = _animations[_currentClip.animIndex];
+    if (!animation)
+        return;
+
+    if (_lastAppliedPose.size() != _bones.size())
+        _lastAppliedPose.resize(_bones.size());
+
+    animation->Sample_LocalPoses(_currentClip.trackPosition, _lastAppliedPose);
+
+    for (size_t i = 0; i < _bones.size(); ++i)
+    {
+        auto& bone = _bones[i];
+        if (!bone)
+            continue;
+
+        const auto& pose = _lastAppliedPose[i];
+
+        Matrix local =
+            Matrix::CreateScale(pose.scale) *
+            Matrix::CreateFromQuaternion(pose.rotation) *
+            Matrix::CreateTranslation(pose.translation);
+
+        bone->Set_LocalTransform(local);
+    }
+
+    for (size_t i = 0; i < _bones.size(); ++i)
+    {
+        auto& bone = _bones[i];
+        if (!bone)
+            continue;
+
+        const int32 parentIndex = bone->Get_ParentIndex();
+
+        if (parentIndex >= 0 && parentIndex < static_cast<int32>(_bones.size()) && _bones[parentIndex])
+        {
+            const Matrix parentCombined = _bones[parentIndex]->Get_CombinedTransform();
+            bone->Update_Combined(&parentCombined, Matrix::Identity);
+        }
+        else
+        {
+            bone->Update_Combined(nullptr, Matrix::Identity);
+        }
+    }
+}
+
+
 void Model::Set_AnimationPlayRate(float playRate)
 {
     _animationPlayRate = Utils::Max(playRate, 0.01f);
@@ -767,6 +1087,8 @@ void Model::From_Json(const json& data)
     _modelGuid = newGuid;
     _modelType = newType;
 
+    Invalidate_AnimNotifyAsset();
+
     wstring path = GAME->Resolve_AssetPath(_modelGuid);
     if (path.empty())
     {
@@ -832,6 +1154,19 @@ float Model::Get_CurrentAnimationDuration() const
         return 0.f;
 
     return animation->Get_Duration();
+}
+
+const string& Model::Get_CurrentAnimationName() const
+{
+    static const string empty = "";
+
+    if (!_currentClip.Is_Valid())
+        return empty;
+
+    if (_currentClip.animIndex < 0 || _currentClip.animIndex >= static_cast<int32>(_animations.size()))
+        return empty;
+
+    return Get_AnimationName(static_cast<uint32>(_currentClip.animIndex));
 }
 
 HRESULT Model::Initialize_FromMeshBin(const string& modelFilePath)

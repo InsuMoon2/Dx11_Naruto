@@ -291,6 +291,9 @@
     <ClCompile Include="..\Private\AnimNotify_Inspector_Factory.cpp" />
     <ClCompile Include="..\Private\Animation_View.cpp" />
     <ClCompile Include="..\Private\AnimSequencerAdapter.cpp" />
+    <ClCompile Include="..\Private\ImSequencer.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

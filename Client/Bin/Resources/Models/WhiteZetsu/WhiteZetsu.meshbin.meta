@@ -1,0 +1,484 @@
+{
+    "animationClipCount": 119,
+    "animationClips": [
+        {
+            "index": 0,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Aerial_Dash_End"
+        },
+        {
+            "index": 1,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Aerial_Dash_Loop"
+        },
+        {
+            "index": 2,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Aerial_Dash_Start"
+        },
+        {
+            "index": 3,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Behind_End"
+        },
+        {
+            "index": 4,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Behind_Loop"
+        },
+        {
+            "index": 5,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Behind_Start"
+        },
+        {
+            "index": 6,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Front_End"
+        },
+        {
+            "index": 7,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Front_Loop"
+        },
+        {
+            "index": 8,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Front_Start"
+        },
+        {
+            "index": 9,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Left_End"
+        },
+        {
+            "index": 10,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Left_Loop"
+        },
+        {
+            "index": 11,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Left_Start"
+        },
+        {
+            "index": 12,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Right_End"
+        },
+        {
+            "index": 13,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Right_Loop"
+        },
+        {
+            "index": 14,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_AimWalk_Right_Start"
+        },
+        {
+            "index": 15,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Attack_DownStrike"
+        },
+        {
+            "index": 16,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Attack_GroundPunch"
+        },
+        {
+            "index": 17,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Attack_JumpTurnKick"
+        },
+        {
+            "index": 18,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Attack_Punch"
+        },
+        {
+            "index": 19,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_BlowOff_toFall"
+        },
+        {
+            "index": 20,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_Conect_toFall"
+        },
+        {
+            "index": 21,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_D51NJ3_Loop"
+        },
+        {
+            "index": 22,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_D51NJ3_Start"
+        },
+        {
+            "index": 23,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_DownToFloor_Conect_toStand"
+        },
+        {
+            "index": 24,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_Large_Front_Conect_toFall"
+        },
+        {
+            "index": 25,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_Small_Conect_toFall"
+        },
+        {
+            "index": 26,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_UniversalPull_Loop"
+        },
+        {
+            "index": 27,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BellyDown_Large_End"
+        },
+        {
+            "index": 28,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BellyDown_Large_Loop"
+        },
+        {
+            "index": 29,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BellyDown_Large_Start"
+        },
+        {
+            "index": 30,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BellyDown_Middle_End"
+        },
+        {
+            "index": 31,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BellyDown_Middle_Loop"
+        },
+        {
+            "index": 32,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BellyDown_Middle_Start"
+        },
+        {
+            "index": 33,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BellyDown_Small_End"
+        },
+        {
+            "index": 34,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BellyDown_Small_Loop"
+        },
+        {
+            "index": 35,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BellyDown_Small_Start"
+        },
+        {
+            "index": 36,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Bind_Loop"
+        },
+        {
+            "index": 37,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Blasted"
+        },
+        {
+            "index": 38,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BlowOff_ChaseAttack"
+        },
+        {
+            "index": 39,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Burn_Type01"
+        },
+        {
+            "index": 40,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_D45NJ3_End"
+        },
+        {
+            "index": 41,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_D45NJ3_Loop"
+        },
+        {
+            "index": 42,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_D45NJ3_Start"
+        },
+        {
+            "index": 43,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_D51NJ3_Loop"
+        },
+        {
+            "index": 44,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_D51NJ3_Start"
+        },
+        {
+            "index": 45,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_D55NJ2"
+        },
+        {
+            "index": 46,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Down_Loop"
+        },
+        {
+            "index": 47,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Down_Sleep_Type01_Loop"
+        },
+        {
+            "index": 48,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Down_Type01_Loop"
+        },
+        {
+            "index": 49,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_DownHit"
+        },
+        {
+            "index": 50,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_DownToFloor"
+        },
+        {
+            "index": 51,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_DownToFloor_Type01"
+        },
+        {
+            "index": 52,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_DownToWall"
+        },
+        {
+            "index": 53,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Earthquake_Loop"
+        },
+        {
+            "index": 54,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_ElectricShock_End"
+        },
+        {
+            "index": 55,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_ElectricShock_Loop"
+        },
+        {
+            "index": 56,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Fall_Behind_Loop"
+        },
+        {
+            "index": 57,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Fall_ChaseAttack_Behind_Loop"
+        },
+        {
+            "index": 58,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Fall_ChaseAttack_Loop"
+        },
+        {
+            "index": 59,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Fall_Front_Loop"
+        },
+        {
+            "index": 60,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Frozen_Loop"
+        },
+        {
+            "index": 61,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_GuardReverseBlowOff"
+        },
+        {
+            "index": 62,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Hide_Loop"
+        },
+        {
+            "index": 63,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_HideBlowOff"
+        },
+        {
+            "index": 64,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Kamui_Loop"
+        },
+        {
+            "index": 65,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Kunai"
+        },
+        {
+            "index": 66,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left"
+        },
+        {
+            "index": 67,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left_Head"
+        },
+        {
+            "index": 68,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left_Low"
+        },
+        {
+            "index": 69,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_LowFront_Chin"
+        },
+        {
+            "index": 70,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_OneHitDown_Long"
+        },
+        {
+            "index": 71,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_OneHitDown_Short"
+        },
+        {
+            "index": 72,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Paralysis"
+        },
+        {
+            "index": 73,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Restrict_Loop"
+        },
+        {
+            "index": 74,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Right"
+        },
+        {
+            "index": 75,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_ShadowPossession_Loop"
+        },
+        {
+            "index": 76,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff"
+        },
+        {
+            "index": 77,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff_Behind"
+        },
+        {
+            "index": 78,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff_Bound_Conect_toFall"
+        },
+        {
+            "index": 79,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff_Bound_End"
+        },
+        {
+            "index": 80,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff_Bound_Loop"
+        },
+        {
+            "index": 81,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff_Bound_Start"
+        },
+        {
+            "index": 82,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff_Conect_toDown"
+        },
+        {
+            "index": 83,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff_Conect_toStand"
+        },
+        {
+            "index": 84,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff_D52NJ3"
+        },
+        {
+            "index": 85,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff_Large_Up"
+        },
+        {
+            "index": 86,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Stagger_Belly"
+        },
+        {
+            "index": 87,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Struggle_Loop"
+        },
+        {
+            "index": 88,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Struggle_Start"
+        },
+        {
+            "index": 89,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_UpFront_Head"
+        },
+        {
+            "index": 90,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_UpLeft_Shoulder"
+        },
+        {
+            "index": 91,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_DashStep_Behind"
+        },
+        {
+            "index": 92,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_DashStep_Front"
+        },
+        {
+            "index": 93,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_DashStep_Left"
+        },
+        {
+            "index": 94,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_DashStep_Right"
+        },
+        {
+            "index": 95,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Dodge_Run_Left"
+        },
+        {
+            "index": 96,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Dodge_Run_Right"
+        },
+        {
+            "index": 97,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Dying_Aerial_Fall_Behind_Loop"
+        },
+        {
+            "index": 98,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Dying_Blasted"
+        },
+        {
+            "index": 99,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Dying_Type01"
+        },
+        {
+            "index": 100,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_etc_Action_Type01"
+        },
+        {
+            "index": 101,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_etc_Action_Type02"
+        },
+        {
+            "index": 102,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_etc_Action_Type03"
+        },
+        {
+            "index": 103,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_etc_Action_Type04"
+        },
+        {
+            "index": 104,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_etc_Appearance"
+        },
+        {
+            "index": 105,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_etc_Appearance_Type01"
+        },
+        {
+            "index": 106,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_etc_Exit"
+        },
+        {
+            "index": 107,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Fall_Front_Loop"
+        },
+        {
+            "index": 108,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Fall_Vertical_Loop"
+        },
+        {
+            "index": 109,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_GetUp"
+        },
+        {
+            "index": 110,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_GetUp_Type01"
+        },
+        {
+            "index": 111,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop"
+        },
+        {
+            "index": 112,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Land"
+        },
+        {
+            "index": 113,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_RangeAttack_Aerial_BlastPunch"
+        },
+        {
+            "index": 114,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Rolling_GetUp"
+        },
+        {
+            "index": 115,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_End"
+        },
+        {
+            "index": 116,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_Loop"
+        },
+        {
+            "index": 117,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Walk_End"
+        },
+        {
+            "index": 118,
+            "name": "SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Walk_Loop"
+        }
+    ],
+    "guid": "396d55ff-515e-41e6-9e02-2fcdd7698e57",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

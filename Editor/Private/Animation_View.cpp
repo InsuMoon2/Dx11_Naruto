@@ -9,6 +9,11 @@
 #include "Model.h"
 #include "RenderTarget.h"
 
+#include "Editor_Camera_Free.h"
+#include "GameObject.h"
+#include "GameInstance.h"
+#include "Transform.h"
+
 Animation_View::Animation_View()
     : EditorWindow(TEXT("Animation View"))
     , _sequencerAdapter(&_sequencerState, &_sequencerContext)
@@ -37,10 +42,16 @@ void Animation_View::Update(float timeDelta)
 {
     EditorWindow::Update(timeDelta);
 
+    if (_previewCamera && _isPreviewHovered)
+    {
+        _previewCamera->Priority_Update(timeDelta);
+    }
+
     if (!_model || !_isPlaying)
         return;
 
-    _model->Play_Animation(timeDelta);
+    // 프리뷰 재생 중, 노티파이 실행 금지
+    _model->Play_Animation(timeDelta, false);
 
     _previewPlaybackTimeSec += timeDelta;
 
@@ -56,6 +67,8 @@ void Animation_View::Update(float timeDelta)
     {
         _sequencerState.currentFrame = frameMax;
         _isPlaying = false;
+
+        Apply_CurrentFrame_ToPreview();
     }
 }
 
@@ -71,6 +84,8 @@ void Animation_View::OnGui()
     }
 
     _isFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+
+    Handle_PlaybackShortcut();
 
     Draw_ToolBar();
     ImGui::Separator();
@@ -106,6 +121,9 @@ void Animation_View::Pre_Render()
 {
     EditorWindow::Pre_Render();
 
+    if (!_model || !_previewOwner)
+        return;
+
     const uint32 rtWidth = static_cast<uint32>(max(1.f, GAME->Get_ViewportWidth()));
     const uint32 rtHeight = static_cast<uint32>(max(1.f, GAME->Get_ViewportHeight()));
 
@@ -114,11 +132,41 @@ void Animation_View::Pre_Render()
     else
         _previewRT->Resize(rtWidth, rtHeight);
 
-    if (_previewRT)
-        _previewRT->Clear(Color(0.12f, 0.12f, 0.12f, 1.f));
+    Ensure_PreviewCamera();
+    if (!_previewCamera || !_previewRT)
+        return;
 
-    // 현재 단계에서는 Animation_View가 Model 단독 참조만 가지므로
-    // 실제 3D 렌더는 Prefab_View의 preview object / camera handoff가 붙은 뒤 연결한다.
+    Matrix savedView = *GAME->Get_Transform(ETransformState::View);
+    Matrix savedProj = *GAME->Get_Transform(ETransformState::Proj);
+
+    _previewView = _previewCamera->Get_ViewMatrix();
+
+    const float aspect = static_cast<float>(_previewRT->GetWidth()) / max(1.f, static_cast<float>(_previewRT->GetHeight()));
+    _previewProj = XMMatrixPerspectiveFovLH(XM_PIDIV4, aspect, 0.1f, 100.f);
+
+    GAME->Set_Transform(ETransformState::View, _previewView);
+    GAME->Set_Transform(ETransformState::Proj, _previewProj);
+
+    // 라이팅 대충 세팅
+    FLightDesc previewLight{};
+    previewLight.direction = Vec4(0.f, -1.f, 0.f, 0.f);
+    previewLight.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
+    previewLight.ambient = Vec4(1.f, 1.f, 1.f, 1.f);
+    previewLight.specular = Vec4(0.f, 0.f, 0.f, 1.f);
+
+    GAME->Clear_Lights();
+    GAME->Add_Light(previewLight);
+
+    _previewRT->Clear(Color(0.12f, 0.12f, 0.12f, 1.f));
+    _previewRT->BindAsTarget();
+
+    _previewOwner->Render();
+
+    GAME->BindBackBuffer();
+    GAME->Clear_Lights();
+
+    GAME->Set_Transform(ETransformState::View, savedView);
+    GAME->Set_Transform(ETransformState::Proj, savedProj);
 }
 
 bool Animation_View::CanSave() const
@@ -134,6 +182,7 @@ void Animation_View::Save()
 void Animation_View::Open_Model(Shared<Model> model)
 {
     _model = model;
+    _previewOwner.reset();
     _modelGuid.clear();
 
     _selectedClipIndex = -1;
@@ -150,9 +199,14 @@ void Animation_View::Open_Model(Shared<Model> model)
 
     if (_model)
     {
+        _previewOwner = _model->Get_Owner();
+
         json data = _model->To_Json();
         _modelGuid = data.value("model_guid", "");
     }
+
+    Ensure_PreviewCamera();
+    Fit_PreviewCamera_ToOwner();
 
     Load_NotifyAsset();
 
@@ -279,7 +333,10 @@ void Animation_View::Draw_ToolBar()
     ImGui::SameLine();
 
     if (ImGui::Button("Pause"))
+    {
         _isPlaying = false;
+        Apply_CurrentFrame_ToPreview();
+    }
 
     ImGui::SameLine();
 
@@ -290,7 +347,10 @@ void Animation_View::Draw_ToolBar()
         _sequencerState.currentFrame = Get_FrameMin();
 
         if (_model && _selectedClipIndex >= 0)
+        {
             _model->Set_Animation(static_cast<uint32>(_selectedClipIndex), false);
+            Apply_CurrentFrame_ToPreview();
+        }
     }
 
     if (_model && _selectedClipIndex >= 0)
@@ -324,10 +384,12 @@ void Animation_View::Draw_Sequencer()
 
     ImVec2 size = ImGui::GetContentRegionAvail();
 
-    ImGui::BeginChild("AnimationSequencerChild", size, false, ImGuiWindowFlags_HorizontalScrollbar);
+    ImGui::BeginChild("AnimationSequencerChild", size, false);
     {
         //  빈 공간 클릭 해제 판정은 프레임마다 초기화
         _sequencerContext.clickedOnNotify = false;
+
+        _sequencerState.firstFrame = 0;
 
         ImSequencer::Sequencer(
             &_sequencerAdapter,
@@ -401,7 +463,7 @@ void Animation_View::Draw_PreviewPanel()
 {
     ImGui::Text("Preview");
 
-    const float previewHeight = 260.f;
+    const float previewHeight = 460.f;
     ImVec2 previewSize(ImGui::GetContentRegionAvail().x, previewHeight);
 
     ImGui::BeginChild(
@@ -409,6 +471,8 @@ void Animation_View::Draw_PreviewPanel()
         previewSize,
         true,
         ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+    _isPreviewHovered = ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows);
 
     {
         ImVec2 avail = ImGui::GetContentRegionAvail();
@@ -907,14 +971,133 @@ void Animation_View::Refresh_CurrentClip()
     _sequencerContext.clip = Get_CurrentClip();
 
     if (_model && _selectedClipIndex >= 0)
+    {
         _model->Set_Animation(static_cast<uint32>(_selectedClipIndex), false);
+        Apply_CurrentFrame_ToPreview();
+    }
+        
 }
 
 void Animation_View::Apply_CurrentFrame_ToPreview()
 {
-    // 현재 Model 공개 API에는 특정 frame/time으로 직접 점프하는 함수가 없어서
-    // 여기서는 자리만 잡아 둔다.
-    // 후속 엔진 작업에서 Set_AnimationPreviewTime / Set_CurrentTrackPosition 계열 API가 생기면 연결한다.
+    if (!_model || _selectedClipIndex < 0)
+        return;
+
+    const float timeSec = Get_CurrentFrameTimeSec();
+    const float ticksPerSecond = _model->Get_AnimationTicksPerSecond(static_cast<uint32>(_selectedClipIndex));
+    if (ticksPerSecond <= FLT_EPSILON)
+        return;
+
+    const float trackPosition = timeSec * ticksPerSecond;
+
+    _model->Set_CurrentTrackPositionTicks(trackPosition);
+    _model->Sample_CurrentPose();
+}
+
+void Animation_View::Ensure_PreviewCamera()
+{
+    if (_previewCamera)
+        return;
+
+    _previewCamera = Editor_Camera_Free::Create(GAME->Get_Device(), GAME->Get_Context());
+
+    Editor_Camera_Free::FEditorCameraDesc desc{};
+    desc.eye = Vec3(0.f, 2.f, -6.f);
+    desc.at = Vec3(0.f, 1.f, 0.f);
+    desc.fovY = XM_PIDIV4;
+    desc.nearZ = 0.1f;
+    desc.farZ = 100.f;
+    desc.speedPerSec = 10.f;
+    desc.mouseSensor = 0.1f;
+
+    _previewCamera->Initialize(&desc);
+}
+
+void Animation_View::Fit_PreviewCamera_ToOwner()
+{
+    if (!_previewCamera || !_previewOwner)
+        return;
+
+    auto transform = _previewOwner->Get_Transform();
+    if (!transform)
+        return;
+
+    Vec3 forward = transform->Get_WorldForward();
+    forward.y = 0.f;
+
+    if (forward.LengthSquared() <= FLT_EPSILON)
+        forward = Vec3(0.f, 0.f, 1.f);
+
+    forward.Normalize();
+
+    const Vec3 target = transform->Get_WorldPosition() + Vec3(0.f, 1.f, 0.f);
+    const float distance = 5.f;
+    const float height = 1.5f;
+
+    const Vec3 eye = target + forward * distance + Vec3(0.f, height, 0.f);
+
+    Editor_Camera_Free::FEditorCameraDesc desc{};
+    desc.eye = eye;
+    desc.at = target;
+    desc.fovY = XM_PIDIV4;
+    desc.nearZ = 0.1f;
+    desc.farZ = 100.f;
+    desc.speedPerSec = 10.f;
+    desc.mouseSensor = 0.1f;
+
+    _previewCamera->Apply_EditorDesc(desc);
+}
+
+void Animation_View::Handle_PlaybackShortcut()
+{
+    if (!_isFocused || !_model)
+        return;
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    if (io.WantTextInput)
+        return;
+
+    if (ImGui::IsPopupOpen(nullptr, ImGuiPopupFlags_AnyPopupId))
+        return;
+
+    if (!ImGui::IsKeyPressed(ImGuiKey_Space, false))
+        return;
+
+    if (_isPlaying)
+    {
+        _isPlaying = false;
+
+        Apply_CurrentFrame_ToPreview();
+        return;
+    }
+
+    const bool isAtEndFrame = (_sequencerState.currentFrame >= Get_FrameMax());
+    if (isAtEndFrame)
+    {
+        _sequencerState.currentFrame = Get_FrameMin();
+        Apply_CurrentFrame_ToPreview();
+    }
+
+    _previewPlaybackTimeSec = Get_CurrentFrameTimeSec();
+    _isPlaying = true;
+}
+
+float Animation_View::Get_CurrentFrameTimeSec() const
+{
+    const int32 fps = Get_CurrentClipFps();
+    if (fps <= 0)
+        return 0.f;
+
+    return static_cast<float>(_sequencerState.currentFrame) / static_cast<float>(fps);
+}
+
+float Animation_View::Get_CurrentClipLengthSec() const
+{
+    if (!_model || _selectedClipIndex < 0)
+        return 0.f;
+
+    return _model->Get_AnimationLengthSec(static_cast<uint32>(_selectedClipIndex));
 }
 
 int32 Animation_View::Pixel_ToFrame_InSequencer(float pixelX, float trackMinX, float trackMaxX) const
@@ -936,34 +1119,34 @@ int32 Animation_View::Get_FrameMax() const
 
 int32 Animation_View::Get_CurrentClipFrameMax() const
 {
-    const auto* clip = Get_CurrentClip();
-    if (!clip)
-        return 0;
+    if (!_model || _selectedClipIndex < 0)
+        return 60;
 
     const int32 fps = Get_CurrentClipFps();
-    int32 maxFrame = 0;
+    if (fps <= 0)
+        return 60;
 
-    for (const auto& entry : clip->notifies)
-    {
-        maxFrame = max(maxFrame, static_cast<int32>(round(entry.timeSec * fps)));
-    }
+    const float lengthSec = Get_CurrentClipLengthSec();
+    if (lengthSec <= FLT_EPSILON)
+        return 60;
 
-    for (const auto& entry : clip->notifyStates)
-    {
-        const float endSec = entry.startSec + entry.durationSec;
-        maxFrame = max(maxFrame, static_cast<int32>(round(endSec * fps)));
-    }
-
-    return max(maxFrame, 60);
+    return max(1, static_cast<int32>(std::round(lengthSec * static_cast<float>(fps))));
 }
 
 int32 Animation_View::Get_CurrentClipFps() const
 {
     const auto* clip = Get_CurrentClip();
-    if (!clip)
-        return 30;
+    if (clip && clip->displayFps > 0)
+        return clip->displayFps;
 
-    return max(1, clip->displayFps);
+    if (_model && _selectedClipIndex >= 0)
+    {
+        const float ticksPerSecond = _model->Get_AnimationTicksPerSecond(static_cast<uint32>(_selectedClipIndex));
+        if (ticksPerSecond > FLT_EPSILON)
+            return max(1, static_cast<int32>(::round(ticksPerSecond)));
+    }
+
+    return 30;
 }
 
 FAnimNotifyClipData* Animation_View::Get_CurrentClip()

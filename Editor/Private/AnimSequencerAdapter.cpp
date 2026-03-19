@@ -26,11 +26,10 @@ FAnimNotifyClipData* AnimSequencerAdapter::Get_Clip() const
 
 int32 AnimSequencerAdapter::Get_ClipFps() const
 {
-    auto* clip = Get_Clip();
-    if (!clip)
-        return 30;
+    if (_context && _context->view)
+        return max(1, _context->view->Get_CurrentClipFps());
 
-    return max(1, clip->displayFps);
+    return 30;
 }
 
 int AnimSequencerAdapter::GetFrameMin() const
@@ -223,11 +222,13 @@ void AnimSequencerAdapter::Clear_Selection()
 void AnimSequencerAdapter::Draw_NotifyTrack(ImDrawList* drawList, const ImRect& rc)
 {
     auto* clip = Get_Clip();
-    if (!clip)
+    if (!clip || !_context || !_context->view)
         return;
 
     ImGuiIO& io = ImGui::GetIO();
     const int32 fps = Get_ClipFps();
+
+    const int32 sourceFps = _context->view->Get_CurrentClipFps();
 
     for (int32 i = 0; i < static_cast<int32>(clip->notifies.size()); ++i)
     {
@@ -288,6 +289,7 @@ void AnimSequencerAdapter::Draw_NotifyTrack(ImDrawList* drawList, const ImRect& 
         auto selectedNotify = clip->notifies[_draggingNotifyIndex].notify;
         Sort_Notifies(*clip);
         Select_Notify(Find_NotifyIndex_ByInstance(*clip, selectedNotify));
+
         _draggingNotifyIndex = -1;
         _notifyDragOffsetX = 0.f;
     }
@@ -335,7 +337,6 @@ void AnimSequencerAdapter::Draw_StateTrack(ImDrawList* drawList, const ImRect& r
         const unsigned int borderColor = isSelected ? FTrackColors::SelectedBorder : FTrackColors::StateBorder;
         const unsigned int leftHandleColor = isLeftHovered ? FTrackColors::HandleHover : FTrackColors::Handle;
         const unsigned int rightHandleColor = isRightHovered ? FTrackColors::HandleHover : FTrackColors::Handle;
-
         const float borderThickness = isSelected ? 2.f : 1.f;
 
         drawList->AddRectFilled(fullRect.Min, fullRect.Max, fillColor, 3.f);
@@ -450,6 +451,8 @@ void AnimSequencerAdapter::Draw_StateTrack(ImDrawList* drawList, const ImRect& r
             2.f);
     }
 }
+
+
 
 void AnimSequencerAdapter::Handle_StateMarkGesture(const ImRect& rc)
 {

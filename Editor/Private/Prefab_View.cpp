@@ -11,6 +11,7 @@
 #include "Reflection_Inspector.h"
 #include "DebugDraw.h"
 #include "Prefab_PreviewCameraSettings.h"
+#include "Animation_View.h"
 
 Prefab_View::Prefab_View()
     : EditorWindow(TEXT("Prefab"))
@@ -402,6 +403,7 @@ void Prefab_View::Draw_ComponentInspector()
         return;
 
     Draw_PreviewCameraInspector();
+    //Draw_AnimationControls(); 굳이 여기서 안해도 될듯
 
     auto& refInfo = _previewObject->Get_ReflectionInfo();
     if (!refInfo.properties.empty())
@@ -562,7 +564,80 @@ void Prefab_View::Tick_PreviewAnimation(float timeDelta)
     if (!model || !model->Has_Animations())
         return;
 
-    model->Play_Animation(timeDelta);
+    // 프리뷰 애니메이션은 노티파이가 재생되지 않도록 false처리
+    model->Play_Animation(timeDelta, false);
+}
+
+void Prefab_View::Draw_AnimationControls()
+{
+    auto model = Find_PreviewModel();
+    if (!model || !model->Has_Animations())
+        return;
+
+    ImGui::TextColored(ImVec4(0.7f, 0.9f, 1.f, 1.f), "[ Animation ]");
+    ImGui::Separator();
+
+    vector<string> names;
+    vector<const char*> items;
+
+    const uint32 count = model->Get_AnimationCount();
+    names.reserve(count);
+    items.reserve(count);
+
+    for (uint32 i = 0; i < count; ++i)
+        names.push_back(model->Get_AnimationName(i));
+
+    for (auto& name : names)
+        items.push_back(name.c_str());
+
+    // [추가] 현재 선택 인덱스를 안전하게 보정
+    if (!items.empty())
+    {
+        _previewSelectedAnimIndex = std::clamp(
+            _previewSelectedAnimIndex,
+            0,
+            static_cast<int32>(items.size()) - 1);
+
+        ImGui::Combo("Preview Clip", &_previewSelectedAnimIndex, items.data(), static_cast<int32>(items.size()));
+    }
+
+    ImGui::Checkbox("Loop", &_previewAnimLoop);
+
+    if (ImGui::Button("Apply Preview Animation"))
+    {
+        model->Set_Animation(static_cast<uint32>(_previewSelectedAnimIndex), _previewAnimLoop);
+    }
+
+    if (ImGui::Button("Open Animation View"))
+    {
+        Open_AnimationView();
+    }
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+}
+
+void Prefab_View::Open_AnimationView()
+{
+    auto model = Find_PreviewModel();
+    if (!model)
+        return;
+
+    auto animView = dynamic_pointer_cast<Animation_View>(EDITOR->Get_Window(TEXT("Animation View")));
+    if (!animView)
+        return;
+
+    // 현재 preview 중인 model을 Animation View에 넘기기
+    animView->Open_Model(model);
+
+    // combo에서 선택한 애니메이션으로 바로 보여주게
+    if (model->Get_AnimationCount() > 0 &&
+        _previewSelectedAnimIndex >= 0 &&
+        _previewSelectedAnimIndex < static_cast<int32>(model->Get_AnimationCount()))
+    {
+        animView->Focus_Clip(model->Get_AnimationName(static_cast<uint32>(_previewSelectedAnimIndex)));
+    }
 }
 
 shared_ptr<Prefab_View> Prefab_View::Create()

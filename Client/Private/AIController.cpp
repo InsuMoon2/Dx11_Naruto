@@ -87,13 +87,22 @@ void AIController::Update(float timeDelta)
             const auto* stateDesc = _animationState->Find_State(animState);
             if (stateDesc)
             {
-                if (stateDesc->mode == EStateAnimationMode::DirectionalSingle)
+                const int32 dirValue = static_cast<int32>(dir);
+
+                // 상태나 방향이 바뀐 경우에만 재생 변경
+                if (animState != _lastAnimState || dirValue != _lastAnimDirection)
                 {
-                    _animationState->Play_DirectionalState(animState, dir);
-                }
-                else
-                {
-                    _animationState->Play_State(animState);
+                    if (stateDesc->mode == EStateAnimationMode::DirectionalSingle)
+                    {
+                        _animationState->Play_DirectionalState(animState, dir);
+                    }
+                    else
+                    {
+                        _animationState->Play_State(animState);
+                    }
+
+                    _lastAnimState = animState;
+                    _lastAnimDirection = dirValue;
                 }
             }
 
@@ -101,7 +110,7 @@ void AIController::Update(float timeDelta)
                     _blackboard->Get_ValueAsBool("AnimRequestEnd"))
             {
                 _animationState->Request_StateEnd();
-                _blackboard->Set_ValueAsBool("AnimRequestend", false);
+                _blackboard->Set_ValueAsBool("AnimRequestEnd", false);
             }
         }
 

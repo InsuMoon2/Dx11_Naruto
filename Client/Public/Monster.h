@@ -12,6 +12,7 @@ NS_BEGIN(Client)
 class CombatStat;
 class MovementComponent;
 class AIController;
+class AnimationStateComponent;
 
 class Monster : public Character
 {
@@ -42,12 +43,13 @@ protected:
     HRESULT Bind_ShaderResources() override;
 
 private:
-    Shared<Model>               _model{};
+    Shared<Model>                   _model;
 
-    Shared<CombatStat>          _combatStat{};
-    Shared<MovementComponent>   _movement{};
-    Shared<AIController>        _aiController{};
-    Shared<BehaviorTree>        _behavior{};
+    Shared<CombatStat>              _combatStat;
+    Shared<MovementComponent>       _movement;
+    Shared<AIController>            _aiController;
+    Shared<BehaviorTree>            _behavior;
+    Shared<AnimationStateComponent> _animState;
 
     float _test = 10.f;
 

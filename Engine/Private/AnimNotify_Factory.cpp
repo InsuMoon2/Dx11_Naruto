@@ -15,7 +15,7 @@ void AnimNotify_Factory::Register_Notify(const string& typeName, NotifyCreator c
     if (_notifyCreators.contains(typeName))
         return;
 
-    _notifyCreators.emplace(creator);
+    _notifyCreators.emplace(typeName, creator);
 }
 
 void AnimNotify_Factory::Register_NotifyState(const string& typeName, NotifyStateCreator creator)

@@ -10,6 +10,7 @@ class PlayerController;
 class InputComponent;
 class MovementComponent;
 class SkillComponent;
+class AnimationStateComponent;
 
 class MyPlayer final : public Player
 {
@@ -40,6 +41,7 @@ private:
     Shared<PlayerController>    _playerController;
     Shared<PlayerStateMachine>  _stateMachine;
     Shared<SkillComponent>      _skill;
+    Shared<AnimationStateComponent> _animState;
 
 private:
     float _syncTimer = 0.f;

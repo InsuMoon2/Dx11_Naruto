@@ -50,6 +50,10 @@ private:
     Shared<Model>   Find_PreviewModel() const;
     void            Tick_PreviewAnimation(float timeDelta);
 
+private:
+    void    Draw_AnimationControls();
+    void    Open_AnimationView();
+
 public:
     static shared_ptr<Prefab_View> Create();
 
@@ -78,6 +82,10 @@ private: /* preview */
 
 private: /* ImGuizmo */
     ImGuizmo::OPERATION _gizmoOperation = ImGuizmo::TRANSLATE;
+
+private: /* 노티파이 */
+    int32   _previewSelectedAnimIndex = 0;
+    bool    _previewAnimLoop = true;
 
 };
 

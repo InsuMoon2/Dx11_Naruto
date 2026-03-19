@@ -9,6 +9,7 @@
 #include "PlayerStateMachine.h"
 #include "Client_PacketHandler.h"
 #include "SkillComponent.h"
+#include "AnimationStateComponent.h"
 
 MyPlayer::MyPlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Player(device, context)
@@ -53,6 +54,8 @@ HRESULT MyPlayer::Initialize(void* arg)
         CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MOVEMENT, _movement, &moveDesc), E_FAIL);
         CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_INPUT, _input), E_FAIL);
     }
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_ANIMATION_STATE, _animState), E_FAIL);
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PLAYER_CONTROLLER, _playerController), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PLAYER_STATE, _stateMachine), E_FAIL);

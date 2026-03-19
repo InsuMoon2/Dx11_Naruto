@@ -34,11 +34,10 @@ public:
     [[nodiscard]]               MovementComponent::FMoveCommand Init_MoveCommand() const;
 
 public:
-    EPlayerState                Get_CurrentStateID() const { return _currentStateID; }
-    EPlayerState                Get_PrevStateID()    const { return _prevStateID; }
-    Shared<InputComponent>      Get_Input()          const { return _input; }
-    Shared<MovementComponent>   Get_Movement()       const { return _movement; }
-    //Shared<Model>               Get_Model();
+    EPlayerState                    Get_CurrentStateID() const { return _currentStateID; }
+    EPlayerState                    Get_PrevStateID()    const { return _prevStateID; }
+    Shared<InputComponent>          Get_Input()          const { return _input; }
+    Shared<MovementComponent>       Get_Movement()       const { return _movement; }
     Shared<AnimationStateComponent> Get_AnimationState() const { return _animationState; }
 
 public:
@@ -75,7 +74,6 @@ private:
 private:
     Shared<InputComponent>                      _input;
     Shared<MovementComponent>                   _movement;
-    //Shared<Model>                               _model;
     Shared<AnimationStateComponent>             _animationState;
 
 private:
@@ -89,9 +87,6 @@ private:
     Vec3                                        _pendingLandDirection = Vec3::Zero;
 
     EMoveInputDirection                         _pendingMoveInputDirection = EMoveInputDirection::Forward;
-
-protected:
-    umap<EPlayerState, FStateAnimationDesc>     _stateAnimations;
 
 protected:
     json To_Json() const override;

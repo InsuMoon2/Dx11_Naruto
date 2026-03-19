@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "Inspector_Factory.h"
 
-#include "AnimationStateComponent.h"
 #include "CombatStat_Inspector.h"
 #include "Transform_Inspector.h"
 #include "Texture_Inspector.h"
@@ -10,6 +9,7 @@
 #include "Texture.h"
 #include "Model.h"
 #include "PlayerStateMachine_Inspector.h"
+#include "AnimationState_Inspector.h"
 
 IMPLEMENT_SINGLETON(Inspector_Factory)
 
@@ -24,7 +24,7 @@ void Inspector_Factory::Initialize()
     Register_Inspector(Protocol::COMPONENT_TYPE_BEHAVIOR, make_shared<BehaviorTree_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_MODEL, make_shared<Model_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_PLAYER_STATE, make_shared<PlayerStateMachine_Inspector>());
-    Register_Inspector(Protocol::COMPONENT_TYPE_ANIMATION_STATE, make_shared<AnimationStateComponent>());
+    Register_Inspector(Protocol::COMPONENT_TYPE_ANIMATION_STATE, make_shared<AnimationState_Inspector>());
 
 }
 

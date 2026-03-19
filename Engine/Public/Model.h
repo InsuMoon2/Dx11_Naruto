@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Component.h"
+#include "AnimNotify_Types.h"
 
 NS_BEGIN(Engine)
 
@@ -50,6 +51,8 @@ public:
     int32           Find_AnimationIndex_ByName(const string& animName);
 
     bool            Play_Animation(float timeDelta);
+    bool            Play_Animation(float timeDelta, bool executeNotifies);
+
     HRESULT         Bind_BoneMatrices(Shared<Shader> shader, const char* constantName);
 
     bool            Has_Animations() const { return !_animations.empty(); }
@@ -81,6 +84,10 @@ public:
 
     float   Get_CurrentTrackPosition() const { return _currentClip.trackPosition; }
     float   Get_CurrentAnimationDuration() const;
+
+    // 재생중인 애니메이션 이름 반환
+    const string& Get_CurrentAnimationName() const;
+    const string& Get_ModelGuid() const { return _modelGuid; }
 
 private:
     // .meshbin 확장자일 때 들어오는 초기화 경로
@@ -150,6 +157,38 @@ private:
     bool    Try_PlayBestSequenceEntry();
     bool    Try_AdvanceSequenceAfterCurrentFinished();
 
+public: /* 노티파이 */
+    bool    Ensure_AnimNotifyAssetLoaded();
+    void    Invalidate_AnimNotifyAsset();
+    const FAnimNotifyClipData* Find_CurrentNotifyClip() const;
+
+    // 노티파이 스테이트 정리
+    void    Stop_AllNotifyStates(bool executeEndCheck);
+
+    // Notify 체크
+    void    Update_AnimNotifies(
+        const FAnimNotifyClipData& clipData,
+        const FAnimNotifyContext& context,
+        bool executeNotifies);
+
+    // Notify State 체크
+    void    Update_AnimNotifyStates(
+        const FAnimNotifyClipData& clipData,
+        const FAnimNotifyContext& context,
+        bool executeNotifies);
+
+    // 구간 통과 판정
+    static bool Is_NotifyTimeInRange(float targetTime, float previouseTime, float currentTime, bool wrapped);
+    // 특정 시점이 NotifyState 구간 안인지 판정
+    static bool Is_NotifyStateActiveTime(float currentTime, float startTime, float duration);
+    // 실행중인 NotifyState가 구간 안인지 판정
+    static int32 Find_ActiveNotifyStateIndex(const vector<FActiveAnimNotifyState>& activeStates, int32 stateIndex);
+
+    float   Get_AnimationLengthSec(uint32 animIndex) const;
+    float   Get_AnimationTicksPerSecond(uint32 animIndex) const;
+
+    void    Set_CurrentTrackPositionTicks(float trackPosition);
+    void    Sample_CurrentPose();
 
 private:
     EMeshVertexType                 _modelType = { EMeshVertexType::END };
@@ -198,6 +237,11 @@ private: /* 블렌딩 */
 
     // 마지막 적용 pose를 유지하면 시퀀스 종료 후 다음 전환 부드럽게
     vector<FAnimationLocalPose>     _lastAppliedPose;
+
+private: /* 노티파이 */
+    bool                            _isAnimNotifyAssetLoaded = false;
+    FAnimNotifyAsset                _animNotifyAsset;
+    vector<FActiveAnimNotifyState>  _activeNotifyStates;
 
 public:
     static Shared<Model> Create(ComPtr<Device> device, ComPtr<DeviceContext> context,

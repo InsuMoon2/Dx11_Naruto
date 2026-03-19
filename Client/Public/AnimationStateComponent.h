@@ -51,6 +51,8 @@ public:
 
     bool Preview_State(const string& stateName, int32 slotIndex, EMoveInputDirection dir);
 
+    bool Remove_State(const string& stateName);
+
 public:
     json To_Json() const override;
     void From_Json(const json& data) override;
