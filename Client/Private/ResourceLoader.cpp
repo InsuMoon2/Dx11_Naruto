@@ -578,7 +578,11 @@ uint32 ResourceLoader::Get_ComponentID_From_String(const string& idStr)
         descriptor->FindValueByName(idStr);
 
     if (valueDesc == nullptr)
-        return 0;
+    {
+        // Proto에 없는 이름 ex) Model_Armor1과 가틍면 문자열 자체를 해싱해서 고유 ID로 세팅
+        return static_cast<uint32>(std::hash<string>{}(idStr));
+    }
+        
 
     return static_cast<uint32>(valueDesc->number());
 }

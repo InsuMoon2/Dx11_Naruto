@@ -3,12 +3,12 @@
 #include "Controller.h"
 
 Character::Character(ComPtr<Device> device, ComPtr<DeviceContext> context)
-    : GameObject(device, context)
+    : ContainerObject(device, context)
 {
 }
 
 Character::Character(const Character& rhs)
-    : GameObject(rhs)
+    : ContainerObject(rhs)
 {
 }
 
@@ -18,14 +18,14 @@ Character::~Character()
 
 HRESULT Character::Initialize_Prototype()
 {
-    GameObject::Initialize_Prototype();
+    ContainerObject::Initialize_Prototype();
 
     return S_OK;
 }
 
 HRESULT Character::Initialize(void* arg)
 {
-    GameObject::Initialize(arg);
+    ContainerObject::Initialize(arg);
 
     CHECK_FAILED(Ready_Components(), E_FAIL);
 
@@ -34,31 +34,31 @@ HRESULT Character::Initialize(void* arg)
 
 void Character::BeginPlay()
 {
-    GameObject::BeginPlay();
+    ContainerObject::BeginPlay();
 
 
 }
 
 void Character::Priority_Update(float timeDelta)
 {
-    GameObject::Priority_Update(timeDelta);
+    ContainerObject::Priority_Update(timeDelta);
 }
 
 void Character::Update(float timeDelta)
 {
-    GameObject::Update(timeDelta);
+    ContainerObject::Update(timeDelta);
 
 
 }
 
 void Character::Late_Update(float timeDelta)
 {
-    GameObject::Late_Update(timeDelta);
+    ContainerObject::Late_Update(timeDelta);
 }
 
 HRESULT Character::Render()
 {
-    GameObject::Render();
+    ContainerObject::Render();
 
     return S_OK;
 }
@@ -78,5 +78,5 @@ HRESULT Character::Ready_Components()
 
 void Character::Free()
 {
-    GameObject::Free();
+    ContainerObject::Free();
 }

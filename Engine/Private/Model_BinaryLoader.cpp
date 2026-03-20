@@ -1,5 +1,6 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Model_BinaryLoader.h"
+#include "Animation.h"
 
 #include <fstream>
 
@@ -250,4 +251,82 @@ bool Model_BinaryLoader::Load(const string& filePath, FModelBinaryData& outData)
 
     LOG_ERROR("Unsupported meshbin version: {}", filePath);
     return false;
+}
+
+bool Model_BinaryLoader::Load_AnimationOnly(const string& filePath, vector<Shared<class Animation>>& outAnimations)
+{
+    outAnimations.clear();
+
+    ifstream file(filePath, ios_base::binary);
+    if (!file.is_open())
+    {
+        LOG_ERROR("Failed to open animbin: {}", filePath);
+        return false;
+    }
+
+    FAnimationFileHeader header{};
+    if (!Read_Value(file, header))
+        return false;
+
+    if (header.magic != ANIMBIN_MAGIC || header.version != ANIMBIN_VERSION)
+    {
+        LOG_ERROR("Invalid animbin magic/version: {}", filePath);
+        return false;
+    }
+
+    for (uint32 animIndex = 0; animIndex < header.animationCount; ++animIndex)
+    {
+        FAnimationClipRaw clip{};
+
+        if (!Read_String(file, clip.name))
+            return false;
+
+        FAnimationClipBin clipBin{};
+        if (!Read_Value(file, clipBin))
+            return false;
+
+        clip.duration = clipBin.duration;
+        clip.ticksPerSecond = clipBin.ticksPerSecond;
+        clip.channels.reserve(clipBin.channelCount);
+
+        for (uint32 channelIndex = 0; channelIndex < clipBin.channelCount; ++channelIndex)
+        {
+            FAnimationChannelRaw channel{};
+
+            if (!Read_String(file, channel.nodeName))
+                return false;
+
+            FAnimationChannelBin channelBin{};
+            if (!Read_Value(file, channelBin))
+                return false;
+
+            channel.boneIndex = channelBin.boneIndex;
+            channel.keyFrames.resize(channelBin.keyFrameCount);
+
+            for (uint32 keyIndex = 0; keyIndex < channelBin.keyFrameCount; ++keyIndex)
+            {
+                FKeyFrameBin keyBin{};
+                if (!Read_Value(file, keyBin))
+                    return false;
+
+                FKeyFrameRaw key{};
+                key.time = keyBin.time;
+                key.scale = Vec3(keyBin.scale[0], keyBin.scale[1], keyBin.scale[2]);
+                key.rotation = Quat(keyBin.rotation[0], keyBin.rotation[1], keyBin.rotation[2], keyBin.rotation[3]);
+                key.translation = Vec3(keyBin.translation[0], keyBin.translation[1], keyBin.translation[2]);
+
+                channel.keyFrames[keyIndex] = key;
+            }
+
+            clip.channels.push_back(std::move(channel));
+        }
+
+        Shared<Animation> animation = Animation::Create(clip);
+        if (animation)
+        {
+            outAnimations.push_back(std::move(animation));
+        }
+    }
+
+    return true;
 }

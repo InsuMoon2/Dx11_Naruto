@@ -1,10 +1,13 @@
-﻿#pragma once
+#pragma once
 
 NS_BEGIN(Assimp)
 
 constexpr uint32 MESHBIN_MAGIC = 0x4853454D; // 'MESH'
 constexpr uint32 STATIC_MESHBIN_VERSION = 1;
 constexpr uint32 SKELETAL_MESHBIN_VERSION = 2;
+
+constexpr uint32 ANIMBIN_MAGIC = 0x4D494E41; // 'ANIM'
+constexpr uint32 ANIMBIN_VERSION = 1;
 
 enum class EConvertModelType : uint32
 {
@@ -51,7 +54,15 @@ struct FSkeletalMeshFileHeader
     uint32 modelType        = static_cast<uint32>(EConvertModelType::SkeletalMesh);
     uint32 flags            = 0;
     uint32 boneCount        = 0;
+    uint32 animationCount   = 0; // 이제 기본값 0으로 유지 (meshbin에는 애니메이션 포함 안 함)
+};
+
+struct FAnimationFileHeader
+{
+    uint32 magic            = ANIMBIN_MAGIC;
+    uint32 version          = ANIMBIN_VERSION;
     uint32 animationCount   = 0;
+    uint32 reserved         = 0;
 };
 
 struct FMatrixBin

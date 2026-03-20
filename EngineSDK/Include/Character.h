@@ -1,6 +1,7 @@
 ﻿#pragma once
 
-#include "GameObject.h"
+#include "ContainerObject.h"
+#include "ContainerObject.h"
 
 NS_BEGIN(Engine)
 
@@ -9,12 +10,12 @@ class Shader;
 class VIBuffer_Rect;
 class Controller;
 
-class ENGINE_DLL Character abstract : public GameObject
+class ENGINE_DLL Character abstract : public ContainerObject
 {
     GENERATED_BODY(Character)
 
 public:
-    struct FCharacterDesc : public FGameObjectDesc
+    struct FCharacterDesc : public FContainerObjectDesc
     {
         // Temp
         float moveSpeed = 5.f;

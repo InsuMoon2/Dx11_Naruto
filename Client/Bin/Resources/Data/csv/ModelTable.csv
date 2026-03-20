@@ -2,3 +2,8 @@ Type,Id,Path,Count,ModelType,Level,Extra
 Model,COMPONENT_TYPE_MODEL_PLAYER,../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara.meshbin,1,SkeletalMesh,Static,
 Model,COMPONENT_TYPE_MODEL_MONSTER,../../Client/Bin/Resources/Models/Boruto/Boruto.meshbin,1,SkeletalMesh,Static,
 Model,COMPONENT_TYPE_MODEL_SASKE,../../Client/Bin/Resources/Models/Saske/Saske.meshbin,1,SkeletalMesh,Static,
+Model,Model_TestModel,../../Client/Bin/Resources/Models/Custom/Animation/TesetNormal.meshbin,1,SkeletalMesh,Static,
+Model,Model_Body_Upper_Armor1,../../Client/Bin/Resources/Models/Custom/Body_Upper/Armor1.meshbin,1,SkeletalMesh,Static,
+Model,Model_Body_Upper_Coat15,../../Client/Bin/Resources/Models/Custom/Body_Upper/Coat15.meshbin,1,SkeletalMesh,Static,
+Model,Model_Face_Face1,../../Client/Bin/Resources/Models/Custom/Face/Face1.meshbin,1,SkeletalMesh,Static,
+Model,Model_Headgear_Man_Cap1,../../Client/Bin/Resources/Models/Custom/Headgear/Man_Cap1.meshbin,1,SkeletalMesh,Static,

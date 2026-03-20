@@ -43,6 +43,7 @@
 #include "UI_PlayerStatus.h"
 #include "UI_SkillSlot.h"
 #include "AnimationStateComponent.h"
+#include "Player_BodyUpper.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -166,6 +167,8 @@ void Loader::Register_Components()
     GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_TERRAIN,
         Terrain::Create(_device, _context));
 
+    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PART_OBJECT,
+        Player_BodyUpper::Create(_device, _context));
 }
 
 void Loader::Initialize_BT_Nodes()

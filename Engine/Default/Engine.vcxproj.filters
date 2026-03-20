@@ -243,6 +243,13 @@
       <Filter>10. Notify</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AnimNotify_Serializer.h" />
+    <ClInclude Include="..\Public\ContainerObject.h">
+      <Filter>01. Utility\03. GameObject\04. ContainerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PartObject.h">
+      <Filter>01. Utility\03. GameObject\05. PartObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Animation_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -415,6 +422,12 @@
     </Filter>
     <Filter Include="10. Notify">
       <UniqueIdentifier>{998c659e-9beb-45b6-9825-64e4cbdc5346}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. GameObject\04. ContainerObject">
+      <UniqueIdentifier>{e88a5c61-3fc2-485c-a107-cc67355ec2ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. GameObject\05. PartObject">
+      <UniqueIdentifier>{6cbe092d-ee49-4ea8-bb77-349d1fd05792}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -621,6 +634,13 @@
       <Filter>10. Notify</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AnimNotify_Serializer.cpp" />
+    <ClCompile Include="..\Private\ContainerObject.cpp">
+      <Filter>01. Utility\03. GameObject\04. ContainerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PartObject.cpp">
+      <Filter>01. Utility\03. GameObject\05. PartObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Animation_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

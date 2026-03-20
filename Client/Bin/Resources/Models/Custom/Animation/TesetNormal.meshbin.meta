@@ -1,0 +1,2216 @@
+{
+    "animationClipCount": 552,
+    "animationClips": [
+        {
+            "index": 0,
+            "name": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_End"
+        },
+        {
+            "index": 1,
+            "name": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Loop"
+        },
+        {
+            "index": 2,
+            "name": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Start"
+        },
+        {
+            "index": 3,
+            "name": "SK_CHR_NormalModel|CustomMan_Aerial_Ninjutsu_Summoning"
+        },
+        {
+            "index": 4,
+            "name": "SK_CHR_NormalModel|CustomMan_Aerial_RecoveryChakra_End"
+        },
+        {
+            "index": 5,
+            "name": "SK_CHR_NormalModel|CustomMan_Aerial_RecoveryChakra_Loop"
+        },
+        {
+            "index": 6,
+            "name": "SK_CHR_NormalModel|CustomMan_Aerial_RecoveryChakra_Start"
+        },
+        {
+            "index": 7,
+            "name": "SK_CHR_NormalModel|CustomMan_Aerial_TakeMedicine"
+        },
+        {
+            "index": 8,
+            "name": "SK_CHR_NormalModel|CustomMan_Aerial_WallStop"
+        },
+        {
+            "index": 9,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_4VioletFlames_Clone_Idle_Loop"
+        },
+        {
+            "index": 10,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_4VioletFlames_Start"
+        },
+        {
+            "index": 11,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_4VioletFlames_Start_Wep"
+        },
+        {
+            "index": 12,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_ChainSickle_Attract"
+        },
+        {
+            "index": 13,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_ChainSickle_SlashDown"
+        },
+        {
+            "index": 14,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_ChainSickle_WindMill"
+        },
+        {
+            "index": 15,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_01"
+        },
+        {
+            "index": 16,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_01_WEP"
+        },
+        {
+            "index": 17,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_02"
+        },
+        {
+            "index": 18,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_02_WEP"
+        },
+        {
+            "index": 19,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_03"
+        },
+        {
+            "index": 20,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_03_WEP"
+        },
+        {
+            "index": 21,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_04"
+        },
+        {
+            "index": 22,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_04_WEP"
+        },
+        {
+            "index": 23,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_01"
+        },
+        {
+            "index": 24,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_01_WEP"
+        },
+        {
+            "index": 25,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_02"
+        },
+        {
+            "index": 26,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_02_WEP"
+        },
+        {
+            "index": 27,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_03"
+        },
+        {
+            "index": 28,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_03_WEP"
+        },
+        {
+            "index": 29,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_04"
+        },
+        {
+            "index": 30,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_04_WEP"
+        },
+        {
+            "index": 31,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_05"
+        },
+        {
+            "index": 32,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_05_WEP"
+        },
+        {
+            "index": 33,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_06"
+        },
+        {
+            "index": 34,
+            "name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_06_WEP"
+        },
+        {
+            "index": 35,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_BlowOff_toFall"
+        },
+        {
+            "index": 36,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_BlowOff_toFall.001"
+        },
+        {
+            "index": 37,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_Conect_toFall"
+        },
+        {
+            "index": 38,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_Conect_toFall.001"
+        },
+        {
+            "index": 39,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_D45NJ3_Loop"
+        },
+        {
+            "index": 40,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_D45NJ3_Loop.001"
+        },
+        {
+            "index": 41,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_D45NJ3_Start"
+        },
+        {
+            "index": 42,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_D45NJ3_Start.001"
+        },
+        {
+            "index": 43,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_D51NJ3_Loop"
+        },
+        {
+            "index": 44,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_D51NJ3_Loop.001"
+        },
+        {
+            "index": 45,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_D51NJ3_Start"
+        },
+        {
+            "index": 46,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_D51NJ3_Start.001"
+        },
+        {
+            "index": 47,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_DownToFloor_Conect_toStand"
+        },
+        {
+            "index": 48,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_DownToFloor_Conect_toStand.001"
+        },
+        {
+            "index": 49,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_Large_Front_Conect_toFall"
+        },
+        {
+            "index": 50,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_Large_Front_Conect_toFall.001"
+        },
+        {
+            "index": 51,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_ReaperDeathSeal"
+        },
+        {
+            "index": 52,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_ReaperDeathSeal.001"
+        },
+        {
+            "index": 53,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_Small_Conect_toFall"
+        },
+        {
+            "index": 54,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_Small_Conect_toFall.001"
+        },
+        {
+            "index": 55,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_Stagger_Belly"
+        },
+        {
+            "index": 56,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_Stagger_Belly.001"
+        },
+        {
+            "index": 57,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_UniversalPull_Behind_End"
+        },
+        {
+            "index": 58,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_UniversalPull_Behind_End.001"
+        },
+        {
+            "index": 59,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_UniversalPull_Front_End"
+        },
+        {
+            "index": 60,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_UniversalPull_Front_End.001"
+        },
+        {
+            "index": 61,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_UniversalPull_Loop"
+        },
+        {
+            "index": 62,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_UniversalPull_Loop.001"
+        },
+        {
+            "index": 63,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_UniversalPull_Start"
+        },
+        {
+            "index": 64,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_UniversalPull_Start.001"
+        },
+        {
+            "index": 65,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Large_End"
+        },
+        {
+            "index": 66,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Large_End.001"
+        },
+        {
+            "index": 67,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Large_Loop"
+        },
+        {
+            "index": 68,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Large_Loop.001"
+        },
+        {
+            "index": 69,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Large_Start"
+        },
+        {
+            "index": 70,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Large_Start.001"
+        },
+        {
+            "index": 71,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Middle_End"
+        },
+        {
+            "index": 72,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Middle_End.001"
+        },
+        {
+            "index": 73,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Middle_Loop"
+        },
+        {
+            "index": 74,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Middle_Loop.001"
+        },
+        {
+            "index": 75,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Middle_Start"
+        },
+        {
+            "index": 76,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Middle_Start.001"
+        },
+        {
+            "index": 77,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Small_End"
+        },
+        {
+            "index": 78,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Small_End.001"
+        },
+        {
+            "index": 79,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Small_Loop"
+        },
+        {
+            "index": 80,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Small_Loop.001"
+        },
+        {
+            "index": 81,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Small_Start"
+        },
+        {
+            "index": 82,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BellyDown_Small_Start.001"
+        },
+        {
+            "index": 83,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Bind_Loop"
+        },
+        {
+            "index": 84,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Bind_Loop.001"
+        },
+        {
+            "index": 85,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Blasted"
+        },
+        {
+            "index": 86,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Blasted.001"
+        },
+        {
+            "index": 87,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BlowOff_ChaseAttack"
+        },
+        {
+            "index": 88,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_BlowOff_ChaseAttack.001"
+        },
+        {
+            "index": 89,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Burn_Type01"
+        },
+        {
+            "index": 90,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Burn_Type01.001"
+        },
+        {
+            "index": 91,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D29NJ1_End"
+        },
+        {
+            "index": 92,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D29NJ1_End.001"
+        },
+        {
+            "index": 93,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D29NJ1_Loop"
+        },
+        {
+            "index": 94,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D29NJ1_Loop.001"
+        },
+        {
+            "index": 95,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D29NJ1_LostEnd"
+        },
+        {
+            "index": 96,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D29NJ1_LostEnd.001"
+        },
+        {
+            "index": 97,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D29NJ1_Start"
+        },
+        {
+            "index": 98,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D29NJ1_Start.001"
+        },
+        {
+            "index": 99,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D43NJ1"
+        },
+        {
+            "index": 100,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D43NJ1.001"
+        },
+        {
+            "index": 101,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D45NJ3_End"
+        },
+        {
+            "index": 102,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D45NJ3_End.001"
+        },
+        {
+            "index": 103,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D45NJ3_Loop"
+        },
+        {
+            "index": 104,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D45NJ3_Loop.001"
+        },
+        {
+            "index": 105,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D45NJ3_Start"
+        },
+        {
+            "index": 106,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D45NJ3_Start.001"
+        },
+        {
+            "index": 107,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D51NJ3_Loop"
+        },
+        {
+            "index": 108,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D51NJ3_Loop.001"
+        },
+        {
+            "index": 109,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D51NJ3_Start"
+        },
+        {
+            "index": 110,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D51NJ3_Start.001"
+        },
+        {
+            "index": 111,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D55NJ2"
+        },
+        {
+            "index": 112,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_D55NJ2.001"
+        },
+        {
+            "index": 113,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Down_Loop"
+        },
+        {
+            "index": 114,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Down_Loop.001"
+        },
+        {
+            "index": 115,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Down_Sleep_Type01_Loop"
+        },
+        {
+            "index": 116,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Down_Sleep_Type01_Loop.001"
+        },
+        {
+            "index": 117,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Down_Type01_Loop"
+        },
+        {
+            "index": 118,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Down_Type01_Loop.001"
+        },
+        {
+            "index": 119,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_DownHit"
+        },
+        {
+            "index": 120,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_DownHit.001"
+        },
+        {
+            "index": 121,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_DownToFloor"
+        },
+        {
+            "index": 122,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_DownToFloor.001"
+        },
+        {
+            "index": 123,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_DownToFloor_Type01"
+        },
+        {
+            "index": 124,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_DownToFloor_Type01.001"
+        },
+        {
+            "index": 125,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_DownToWall"
+        },
+        {
+            "index": 126,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_DownToWall.001"
+        },
+        {
+            "index": 127,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Earthquake_Loop"
+        },
+        {
+            "index": 128,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Earthquake_Loop.001"
+        },
+        {
+            "index": 129,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_ElectricShock_End"
+        },
+        {
+            "index": 130,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_ElectricShock_End.001"
+        },
+        {
+            "index": 131,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_ElectricShock_Loop"
+        },
+        {
+            "index": 132,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_ElectricShock_Loop.001"
+        },
+        {
+            "index": 133,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Fall_Behind_Loop"
+        },
+        {
+            "index": 134,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Fall_Behind_Loop.001"
+        },
+        {
+            "index": 135,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Fall_ChaseAttack_Behind_Loop"
+        },
+        {
+            "index": 136,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Fall_ChaseAttack_Behind_Loop.001"
+        },
+        {
+            "index": 137,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Fall_ChaseAttack_Loop"
+        },
+        {
+            "index": 138,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Fall_ChaseAttack_Loop.001"
+        },
+        {
+            "index": 139,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Fall_Front_Loop"
+        },
+        {
+            "index": 140,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Fall_Front_Loop.001"
+        },
+        {
+            "index": 141,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Frozen_Loop"
+        },
+        {
+            "index": 142,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Frozen_Loop.001"
+        },
+        {
+            "index": 143,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_GuardReverseBlowOff"
+        },
+        {
+            "index": 144,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_GuardReverseBlowOff.001"
+        },
+        {
+            "index": 145,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Hide_Loop"
+        },
+        {
+            "index": 146,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Hide_Loop.001"
+        },
+        {
+            "index": 147,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_HideBlowOff"
+        },
+        {
+            "index": 148,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_HideBlowOff.001"
+        },
+        {
+            "index": 149,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Kamui_Loop"
+        },
+        {
+            "index": 150,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Kamui_Loop.001"
+        },
+        {
+            "index": 151,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Kunai"
+        },
+        {
+            "index": 152,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Kunai.001"
+        },
+        {
+            "index": 153,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Left"
+        },
+        {
+            "index": 154,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Left.001"
+        },
+        {
+            "index": 155,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Left_Head"
+        },
+        {
+            "index": 156,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Left_Head.001"
+        },
+        {
+            "index": 157,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Left_Low"
+        },
+        {
+            "index": 158,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Left_Low.001"
+        },
+        {
+            "index": 159,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_LowFront_Chin"
+        },
+        {
+            "index": 160,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_LowFront_Chin.001"
+        },
+        {
+            "index": 161,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_OneHitDown_Long"
+        },
+        {
+            "index": 162,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_OneHitDown_Long.001"
+        },
+        {
+            "index": 163,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_OneHitDown_Short"
+        },
+        {
+            "index": 164,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_OneHitDown_Short.001"
+        },
+        {
+            "index": 165,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Paralysis"
+        },
+        {
+            "index": 166,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Paralysis.001"
+        },
+        {
+            "index": 167,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_ReaperDeathSeal"
+        },
+        {
+            "index": 168,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_ReaperDeathSeal.001"
+        },
+        {
+            "index": 169,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Restrict_Loop"
+        },
+        {
+            "index": 170,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Restrict_Loop.001"
+        },
+        {
+            "index": 171,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Right"
+        },
+        {
+            "index": 172,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Right.001"
+        },
+        {
+            "index": 173,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_ShadowPossession_Loop"
+        },
+        {
+            "index": 174,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_ShadowPossession_Loop.001"
+        },
+        {
+            "index": 175,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff"
+        },
+        {
+            "index": 176,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff.001"
+        },
+        {
+            "index": 177,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Behind"
+        },
+        {
+            "index": 178,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Behind.001"
+        },
+        {
+            "index": 179,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Bound_Conect_toFall"
+        },
+        {
+            "index": 180,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Bound_Conect_toFall.001"
+        },
+        {
+            "index": 181,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Bound_End"
+        },
+        {
+            "index": 182,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Bound_End.001"
+        },
+        {
+            "index": 183,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Bound_Loop"
+        },
+        {
+            "index": 184,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Bound_Loop.001"
+        },
+        {
+            "index": 185,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Bound_Start"
+        },
+        {
+            "index": 186,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Bound_Start.001"
+        },
+        {
+            "index": 187,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Conect_toDown"
+        },
+        {
+            "index": 188,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Conect_toDown.001"
+        },
+        {
+            "index": 189,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Conect_toStand"
+        },
+        {
+            "index": 190,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Conect_toStand.001"
+        },
+        {
+            "index": 191,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_D52NJ3"
+        },
+        {
+            "index": 192,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_D52NJ3.001"
+        },
+        {
+            "index": 193,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Large_Up"
+        },
+        {
+            "index": 194,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_SpinBlowOff_Large_Up.001"
+        },
+        {
+            "index": 195,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Stagger_Belly"
+        },
+        {
+            "index": 196,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Stagger_Belly.001"
+        },
+        {
+            "index": 197,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Struggle_Loop"
+        },
+        {
+            "index": 198,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Struggle_Loop.001"
+        },
+        {
+            "index": 199,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Struggle_Start"
+        },
+        {
+            "index": 200,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_Struggle_Start.001"
+        },
+        {
+            "index": 201,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_UpFront_Head"
+        },
+        {
+            "index": 202,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_UpFront_Head.001"
+        },
+        {
+            "index": 203,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_UpLeft_Shoulder"
+        },
+        {
+            "index": 204,
+            "name": "SK_CHR_NormalModel|CustomMan_Beaten_UpLeft_Shoulder.001"
+        },
+        {
+            "index": 205,
+            "name": "SK_CHR_NormalModel|CustomMan_BigSword_DashStep_Behind"
+        },
+        {
+            "index": 206,
+            "name": "SK_CHR_NormalModel|CustomMan_BigSword_DashStep_Front"
+        },
+        {
+            "index": 207,
+            "name": "SK_CHR_NormalModel|CustomMan_BigSword_Dodge_Run_Left"
+        },
+        {
+            "index": 208,
+            "name": "SK_CHR_NormalModel|CustomMan_BigSword_Dodge_Run_Right"
+        },
+        {
+            "index": 209,
+            "name": "SK_CHR_NormalModel|CustomMan_BigSword_HeightLand"
+        },
+        {
+            "index": 210,
+            "name": "SK_CHR_NormalModel|CustomMan_BigSword_Idle_Loop"
+        },
+        {
+            "index": 211,
+            "name": "SK_CHR_NormalModel|CustomMan_BigSword_Land"
+        },
+        {
+            "index": 212,
+            "name": "SK_CHR_NormalModel|CustomMan_BigSword_Run_End"
+        },
+        {
+            "index": 213,
+            "name": "SK_CHR_NormalModel|CustomMan_BigSword_Walk_End"
+        },
+        {
+            "index": 214,
+            "name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_End"
+        },
+        {
+            "index": 215,
+            "name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_Loop"
+        },
+        {
+            "index": 216,
+            "name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_Start"
+        },
+        {
+            "index": 217,
+            "name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Vertical_Charge_End"
+        },
+        {
+            "index": 218,
+            "name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Vertical_Charge_Loop"
+        },
+        {
+            "index": 219,
+            "name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Vertical_Charge_Start"
+        },
+        {
+            "index": 220,
+            "name": "SK_CHR_NormalModel|CustomMan_CharaSelect_Idle"
+        },
+        {
+            "index": 221,
+            "name": "SK_CHR_NormalModel|CustomMan_D84NJ3_Idle_Loop_Wep"
+        },
+        {
+            "index": 222,
+            "name": "SK_CHR_NormalModel|CustomMan_D84NJ3_Ninjutsu_NJ3_Aerial_Start"
+        },
+        {
+            "index": 223,
+            "name": "SK_CHR_NormalModel|CustomMan_D84NJ3_Ninjutsu_NJ3_Aerial_Start_Wep"
+        },
+        {
+            "index": 224,
+            "name": "SK_CHR_NormalModel|CustomMan_D84NJ3_Ninjutsu_NJ3_Attack_Loop"
+        },
+        {
+            "index": 225,
+            "name": "SK_CHR_NormalModel|CustomMan_D84NJ3_Ninjutsu_NJ3_Attack_Loop_Wep"
+        },
+        {
+            "index": 226,
+            "name": "SK_CHR_NormalModel|CustomMan_D84NJ3_Ninjutsu_NJ3_Start"
+        },
+        {
+            "index": 227,
+            "name": "SK_CHR_NormalModel|CustomMan_D84NJ3_Ninjutsu_NJ3_Start_Wep"
+        },
+        {
+            "index": 228,
+            "name": "SK_CHR_NormalModel|CustomMan_DashStep_Behind"
+        },
+        {
+            "index": 229,
+            "name": "SK_CHR_NormalModel|CustomMan_DashStep_Front"
+        },
+        {
+            "index": 230,
+            "name": "SK_CHR_NormalModel|CustomMan_DashStep_Left"
+        },
+        {
+            "index": 231,
+            "name": "SK_CHR_NormalModel|CustomMan_DashStep_Right"
+        },
+        {
+            "index": 232,
+            "name": "SK_CHR_NormalModel|CustomMan_Dodge_Run_Left"
+        },
+        {
+            "index": 233,
+            "name": "SK_CHR_NormalModel|CustomMan_Dodge_Run_Right"
+        },
+        {
+            "index": 234,
+            "name": "SK_CHR_NormalModel|CustomMan_DoubleJump"
+        },
+        {
+            "index": 235,
+            "name": "SK_CHR_NormalModel|CustomMan_Dying_Aerial_Fall_Behind_Loop"
+        },
+        {
+            "index": 236,
+            "name": "SK_CHR_NormalModel|CustomMan_Dying_Blasted"
+        },
+        {
+            "index": 237,
+            "name": "SK_CHR_NormalModel|CustomMan_Dying_Type01"
+        },
+        {
+            "index": 238,
+            "name": "SK_CHR_NormalModel|CustomMan_etc_Appearance"
+        },
+        {
+            "index": 239,
+            "name": "SK_CHR_NormalModel|CustomMan_etc_Hand_Aerial_Spray"
+        },
+        {
+            "index": 240,
+            "name": "SK_CHR_NormalModel|CustomMan_etc_Hand_Spray"
+        },
+        {
+            "index": 241,
+            "name": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop"
+        },
+        {
+            "index": 242,
+            "name": "SK_CHR_NormalModel|CustomMan_Fall_Vertical_Loop"
+        },
+        {
+            "index": 243,
+            "name": "SK_CHR_NormalModel|CustomMan_GetUp"
+        },
+        {
+            "index": 244,
+            "name": "SK_CHR_NormalModel|CustomMan_GetUp_Type01"
+        },
+        {
+            "index": 245,
+            "name": "SK_CHR_NormalModel|CustomMan_Hand_DashStep_Front"
+        },
+        {
+            "index": 246,
+            "name": "SK_CHR_NormalModel|CustomMan_Hand_HeightLand"
+        },
+        {
+            "index": 247,
+            "name": "SK_CHR_NormalModel|CustomMan_Hand_Idle_Loop"
+        },
+        {
+            "index": 248,
+            "name": "SK_CHR_NormalModel|CustomMan_Hand_Land"
+        },
+        {
+            "index": 249,
+            "name": "SK_CHR_NormalModel|CustomMan_Hand_Run_End"
+        },
+        {
+            "index": 250,
+            "name": "SK_CHR_NormalModel|CustomMan_Hand_Walk_End"
+        },
+        {
+            "index": 251,
+            "name": "SK_CHR_NormalModel|CustomMan_HeightLand"
+        },
+        {
+            "index": 252,
+            "name": "SK_CHR_NormalModel|CustomMan_Idle_Loop"
+        },
+        {
+            "index": 253,
+            "name": "SK_CHR_NormalModel|CustomMan_Jump_Front"
+        },
+        {
+            "index": 254,
+            "name": "SK_CHR_NormalModel|CustomMan_Jump_Vertical"
+        },
+        {
+            "index": 255,
+            "name": "SK_CHR_NormalModel|CustomMan_Kunai_DashStep_Front"
+        },
+        {
+            "index": 256,
+            "name": "SK_CHR_NormalModel|CustomMan_Kunai_HeightLand"
+        },
+        {
+            "index": 257,
+            "name": "SK_CHR_NormalModel|CustomMan_Kunai_Idle_Loop"
+        },
+        {
+            "index": 258,
+            "name": "SK_CHR_NormalModel|CustomMan_Kunai_Land"
+        },
+        {
+            "index": 259,
+            "name": "SK_CHR_NormalModel|CustomMan_Kunai_Run_End"
+        },
+        {
+            "index": 260,
+            "name": "SK_CHR_NormalModel|CustomMan_Kunai_Walk_End"
+        },
+        {
+            "index": 261,
+            "name": "SK_CHR_NormalModel|CustomMan_Land"
+        },
+        {
+            "index": 262,
+            "name": "SK_CHR_NormalModel|CustomMan_Land_to_D31NJ1_Charge"
+        },
+        {
+            "index": 263,
+            "name": "SK_CHR_NormalModel|CustomMan_Land_toAmaterasuCharge"
+        },
+        {
+            "index": 264,
+            "name": "SK_CHR_NormalModel|CustomMan_Land_toChidoriCharge"
+        },
+        {
+            "index": 265,
+            "name": "SK_CHR_NormalModel|CustomMan_Land_toD23NJ4Charge"
+        },
+        {
+            "index": 266,
+            "name": "SK_CHR_NormalModel|CustomMan_Land_toRasengunCharge"
+        },
+        {
+            "index": 267,
+            "name": "SK_CHR_NormalModel|CustomMan_Land_toRecoveryChakra"
+        },
+        {
+            "index": 268,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Amaterasu_End"
+        },
+        {
+            "index": 269,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Amaterasu_Loop"
+        },
+        {
+            "index": 270,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Amaterasu_Start"
+        },
+        {
+            "index": 271,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Attack_End"
+        },
+        {
+            "index": 272,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Charge_Conect_toRun"
+        },
+        {
+            "index": 273,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Charge_Lv1"
+        },
+        {
+            "index": 274,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Charge_Lv2toLv3"
+        },
+        {
+            "index": 275,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Charge_Lv2toLv3_Loop"
+        },
+        {
+            "index": 276,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Run_Loop"
+        },
+        {
+            "index": 277,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_ClayC2Dragon"
+        },
+        {
+            "index": 278,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ1_End"
+        },
+        {
+            "index": 279,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ1_Loop"
+        },
+        {
+            "index": 280,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ1_Start"
+        },
+        {
+            "index": 281,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ2"
+        },
+        {
+            "index": 282,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ3_Start"
+        },
+        {
+            "index": 283,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ4_Attack_End"
+        },
+        {
+            "index": 284,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ4_Charge_Conect_toRun"
+        },
+        {
+            "index": 285,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ4_Charge_Lv1"
+        },
+        {
+            "index": 286,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ4_Charge_Lv2toLv3"
+        },
+        {
+            "index": 287,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ4_Charge_Lv2toLv3_Loop"
+        },
+        {
+            "index": 288,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ4_Run_Loop"
+        },
+        {
+            "index": 289,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D27NJ1"
+        },
+        {
+            "index": 290,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D27NJ3_End"
+        },
+        {
+            "index": 291,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D27NJ3_Loop"
+        },
+        {
+            "index": 292,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D27NJ3_Strat"
+        },
+        {
+            "index": 293,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D31NJ1_Charge_Loop"
+        },
+        {
+            "index": 294,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D31NJ1_Charge_Start"
+        },
+        {
+            "index": 295,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D31NJ1_End"
+        },
+        {
+            "index": 296,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D31NJ1_Loop"
+        },
+        {
+            "index": 297,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D31NJ1_Start"
+        },
+        {
+            "index": 298,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D31NJ3"
+        },
+        {
+            "index": 299,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D42NJ2_Start"
+        },
+        {
+            "index": 300,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D42NJ2_Type01"
+        },
+        {
+            "index": 301,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D42NJ2_Type02"
+        },
+        {
+            "index": 302,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D52NJ1"
+        },
+        {
+            "index": 303,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D52NJ1_D52_Fan"
+        },
+        {
+            "index": 304,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D52NJ2"
+        },
+        {
+            "index": 305,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D52NJ2_D52_Fan"
+        },
+        {
+            "index": 306,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D52NJ3"
+        },
+        {
+            "index": 307,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D52NJ3_D52_Fan"
+        },
+        {
+            "index": 308,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_DestroyerFlame_End"
+        },
+        {
+            "index": 309,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_DetonatingClayTwinBirds"
+        },
+        {
+            "index": 310,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_DLCNJ02_End"
+        },
+        {
+            "index": 311,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_DLCNJ02_Start"
+        },
+        {
+            "index": 312,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Fireball_Lv3"
+        },
+        {
+            "index": 313,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_FlameBombs"
+        },
+        {
+            "index": 314,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_FlameControl"
+        },
+        {
+            "index": 315,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_GiantFlameBombs_End"
+        },
+        {
+            "index": 316,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_GiantFlameBombs_Loop"
+        },
+        {
+            "index": 317,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_GiantFlameBombs_Start"
+        },
+        {
+            "index": 318,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_GreatBreach"
+        },
+        {
+            "index": 319,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_LightningStrike"
+        },
+        {
+            "index": 320,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_MultipleSnake"
+        },
+        {
+            "index": 321,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_PhoenixFlower"
+        },
+        {
+            "index": 322,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_PhoenixFlowerNC"
+        },
+        {
+            "index": 323,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Reanimation_End"
+        },
+        {
+            "index": 324,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Reanimation_Loop"
+        },
+        {
+            "index": 325,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Reanimation_Start"
+        },
+        {
+            "index": 326,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_SacredPaperEmissary"
+        },
+        {
+            "index": 327,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_ScrollBird"
+        },
+        {
+            "index": 328,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_ScrollDog"
+        },
+        {
+            "index": 329,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_ScrollGod_Type02"
+        },
+        {
+            "index": 330,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_SeveringWave"
+        },
+        {
+            "index": 331,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_ShikigamiDanceShield"
+        },
+        {
+            "index": 332,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_WaterDragon"
+        },
+        {
+            "index": 333,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Amaterasu_End"
+        },
+        {
+            "index": 334,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Amaterasu_Loop"
+        },
+        {
+            "index": 335,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Amaterasu_Start"
+        },
+        {
+            "index": 336,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_End"
+        },
+        {
+            "index": 337,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_Loop"
+        },
+        {
+            "index": 338,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_Start"
+        },
+        {
+            "index": 339,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_C4Karura_Start"
+        },
+        {
+            "index": 340,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Attack_Lv3_End"
+        },
+        {
+            "index": 341,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Charge_Conect_toRun"
+        },
+        {
+            "index": 342,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Charge_Lv1"
+        },
+        {
+            "index": 343,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Charge_Lv2toLv3"
+        },
+        {
+            "index": 344,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Charge_Lv2toLv3_Loop"
+        },
+        {
+            "index": 345,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Run_Lv3_Loop"
+        },
+        {
+            "index": 346,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_ClayC2Dragon"
+        },
+        {
+            "index": 347,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ1_End"
+        },
+        {
+            "index": 348,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ1_Loop"
+        },
+        {
+            "index": 349,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ1_Start"
+        },
+        {
+            "index": 350,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ2"
+        },
+        {
+            "index": 351,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ3_End"
+        },
+        {
+            "index": 352,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ3_Loop"
+        },
+        {
+            "index": 353,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ3_Start"
+        },
+        {
+            "index": 354,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ4_Attack_Lv3_End"
+        },
+        {
+            "index": 355,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ4_Charge_Conect_toRun"
+        },
+        {
+            "index": 356,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ4_Charge_Lv1"
+        },
+        {
+            "index": 357,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ4_Charge_Lv2toLv3"
+        },
+        {
+            "index": 358,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ4_Charge_Lv2toLv3_Loop"
+        },
+        {
+            "index": 359,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ4_Run_Lv3_Loop"
+        },
+        {
+            "index": 360,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D27NJ1"
+        },
+        {
+            "index": 361,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D27NJ2"
+        },
+        {
+            "index": 362,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D27NJ3_End"
+        },
+        {
+            "index": 363,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D27NJ3_Loop"
+        },
+        {
+            "index": 364,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D27NJ3_Strat"
+        },
+        {
+            "index": 365,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D31NJ1_Attack_End"
+        },
+        {
+            "index": 366,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D31NJ1_Charge_Lv1"
+        },
+        {
+            "index": 367,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D31NJ1_Charge_Lv2toLv3"
+        },
+        {
+            "index": 368,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D31NJ1_Charge_Lv2toLv3_Conect_toRun"
+        },
+        {
+            "index": 369,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D31NJ1_Charge_Lv2toLv3_Loop"
+        },
+        {
+            "index": 370,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D31NJ1_Run_Loop"
+        },
+        {
+            "index": 371,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D31NJ3"
+        },
+        {
+            "index": 372,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D42NJ1_HandSeal_Loop"
+        },
+        {
+            "index": 373,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D42NJ1_HandSeal_Start"
+        },
+        {
+            "index": 374,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D42NJ1_Start"
+        },
+        {
+            "index": 375,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D42NJ2_Start"
+        },
+        {
+            "index": 376,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D42NJ2_Type01"
+        },
+        {
+            "index": 377,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D42NJ2_Type02"
+        },
+        {
+            "index": 378,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D42NJ3"
+        },
+        {
+            "index": 379,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D52NJ1"
+        },
+        {
+            "index": 380,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D52NJ1_D52_Fan"
+        },
+        {
+            "index": 381,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D52NJ2"
+        },
+        {
+            "index": 382,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D52NJ2_D52_Fan"
+        },
+        {
+            "index": 383,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D52NJ3"
+        },
+        {
+            "index": 384,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D52NJ3_D52_Fan"
+        },
+        {
+            "index": 385,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D53NJ1_HandSeal"
+        },
+        {
+            "index": 386,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D53NJ1_HandSeal_Loop"
+        },
+        {
+            "index": 387,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D53NJ1_ShootingAsh"
+        },
+        {
+            "index": 388,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D70NJ1_ArrowMGT"
+        },
+        {
+            "index": 389,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D70NJ1_Finish"
+        },
+        {
+            "index": 390,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D70NJ1_Finish_D43"
+        },
+        {
+            "index": 391,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D70NJ1_Loop"
+        },
+        {
+            "index": 392,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D70NJ1_Loop_D43"
+        },
+        {
+            "index": 393,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D70NJ1_Start"
+        },
+        {
+            "index": 394,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D70NJ1_Start_D43"
+        },
+        {
+            "index": 395,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D70NJ1_Start_SusaItachi"
+        },
+        {
+            "index": 396,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D70NJ1_Start_SusaSasuke"
+        },
+        {
+            "index": 397,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ1_Aerial_End"
+        },
+        {
+            "index": 398,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ1_Aerial_Start"
+        },
+        {
+            "index": 399,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ1_End"
+        },
+        {
+            "index": 400,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ1_Start"
+        },
+        {
+            "index": 401,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ2_Aerial_Throw"
+        },
+        {
+            "index": 402,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ2_Loop"
+        },
+        {
+            "index": 403,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ2_Satetsu_Aerial_Finish"
+        },
+        {
+            "index": 404,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ2_Satetsu_Finish"
+        },
+        {
+            "index": 405,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ2_Start"
+        },
+        {
+            "index": 406,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ2_Throw"
+        },
+        {
+            "index": 407,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ3_Aerial_Start"
+        },
+        {
+            "index": 408,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ3_Start"
+        },
+        {
+            "index": 409,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Aerial_Conect_toRun"
+        },
+        {
+            "index": 410,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Aerial_Dash_Loop"
+        },
+        {
+            "index": 411,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Aerial_End"
+        },
+        {
+            "index": 412,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Aerial_Loop1to2"
+        },
+        {
+            "index": 413,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Aerial_Loop2"
+        },
+        {
+            "index": 414,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Aerial_Start"
+        },
+        {
+            "index": 415,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Conect_toRun"
+        },
+        {
+            "index": 416,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Dash_Loop"
+        },
+        {
+            "index": 417,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_End"
+        },
+        {
+            "index": 418,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Land"
+        },
+        {
+            "index": 419,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Loop1to2"
+        },
+        {
+            "index": 420,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Loop2"
+        },
+        {
+            "index": 421,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ1_Start"
+        },
+        {
+            "index": 422,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ2_Aerial_Attack"
+        },
+        {
+            "index": 423,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ2_Aerial_End"
+        },
+        {
+            "index": 424,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ2_Aerial_Loop"
+        },
+        {
+            "index": 425,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ2_Aerial_Start"
+        },
+        {
+            "index": 426,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ2_Attack"
+        },
+        {
+            "index": 427,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ2_End"
+        },
+        {
+            "index": 428,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ2_Loop"
+        },
+        {
+            "index": 429,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ2_Start"
+        },
+        {
+            "index": 430,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Aerial_Start"
+        },
+        {
+            "index": 431,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Aerial_Start_Wep"
+        },
+        {
+            "index": 432,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Attack_Aerial_cmb_01"
+        },
+        {
+            "index": 433,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Attack_Aerial_cmb_01_Wep"
+        },
+        {
+            "index": 434,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Attack_cmb_01"
+        },
+        {
+            "index": 435,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Attack_cmb_01_Wep"
+        },
+        {
+            "index": 436,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Start"
+        },
+        {
+            "index": 437,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Start_Wep"
+        },
+        {
+            "index": 438,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Aerial_End"
+        },
+        {
+            "index": 439,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Aerial_Loop"
+        },
+        {
+            "index": 440,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Aerial_Loop_D73"
+        },
+        {
+            "index": 441,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Aerial_Start"
+        },
+        {
+            "index": 442,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Aerial_Start_D73"
+        },
+        {
+            "index": 443,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_End"
+        },
+        {
+            "index": 444,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_End_C2Dragon"
+        },
+        {
+            "index": 445,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_End_D73"
+        },
+        {
+            "index": 446,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_End_D73pup"
+        },
+        {
+            "index": 447,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Loop"
+        },
+        {
+            "index": 448,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Loop_C2Dragon"
+        },
+        {
+            "index": 449,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Loop_D73"
+        },
+        {
+            "index": 450,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Loop_D73pup"
+        },
+        {
+            "index": 451,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Start"
+        },
+        {
+            "index": 452,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Start_C2Dragon"
+        },
+        {
+            "index": 453,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Start_D73"
+        },
+        {
+            "index": 454,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D90NJ1_Shoot_Start_D73pup"
+        },
+        {
+            "index": 455,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D93NJ1_Aerial_Start"
+        },
+        {
+            "index": 456,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D93NJ1_Move_Loop"
+        },
+        {
+            "index": 457,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D93NJ1_Start"
+        },
+        {
+            "index": 458,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D93NJ3_Aerial_End"
+        },
+        {
+            "index": 459,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D93NJ3_Aerial_Loop"
+        },
+        {
+            "index": 460,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D93NJ3_Aerial_nie"
+        },
+        {
+            "index": 461,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D93NJ3_Aerial_Start"
+        },
+        {
+            "index": 462,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D93NJ3_End"
+        },
+        {
+            "index": 463,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D93NJ3_Loop"
+        },
+        {
+            "index": 464,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D93NJ3_nie"
+        },
+        {
+            "index": 465,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D93NJ3_Start"
+        },
+        {
+            "index": 466,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ1_Aerial_Counter_End"
+        },
+        {
+            "index": 467,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ1_Aerial_Counter_Loop"
+        },
+        {
+            "index": 468,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ1_Aerial_Counter_Start"
+        },
+        {
+            "index": 469,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ1_Aerial_End"
+        },
+        {
+            "index": 470,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ1_Aerial_Loop"
+        },
+        {
+            "index": 471,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ1_Aerial_Start"
+        },
+        {
+            "index": 472,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ3_Attack_End_tail_Wep"
+        },
+        {
+            "index": 473,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ3_Attack_Loop_tail_Wep"
+        },
+        {
+            "index": 474,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ3_Attack_Start_Appear_Wep"
+        },
+        {
+            "index": 475,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ3_Attack_Start_tail_Wep"
+        },
+        {
+            "index": 476,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ3_Start_Wep"
+        },
+        {
+            "index": 477,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_DestroyerFlame_End"
+        },
+        {
+            "index": 478,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_DestroyerFlame_Loop"
+        },
+        {
+            "index": 479,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_DestroyerFlame_Start"
+        },
+        {
+            "index": 480,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_DetonatingClayTwinBirds"
+        },
+        {
+            "index": 481,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_DLCNJ02_End"
+        },
+        {
+            "index": 482,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_DLCNJ02_Loop"
+        },
+        {
+            "index": 483,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_DLCNJ02_Start"
+        },
+        {
+            "index": 484,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_DLCNJ03"
+        },
+        {
+            "index": 485,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_DLCNJ12_Start"
+        },
+        {
+            "index": 486,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_DLCNJ12_Start_SixTails"
+        },
+        {
+            "index": 487,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_DLCNJ12_Start_Straw"
+        },
+        {
+            "index": 488,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Fireball_Lv3"
+        },
+        {
+            "index": 489,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_FlameBombs"
+        },
+        {
+            "index": 490,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_FlameControl"
+        },
+        {
+            "index": 491,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_GiantFlameBombs_End"
+        },
+        {
+            "index": 492,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_GiantFlameBombs_Loop"
+        },
+        {
+            "index": 493,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_GiantFlameBombs_Start"
+        },
+        {
+            "index": 494,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_GreatBreach"
+        },
+        {
+            "index": 495,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_HidingInAsh_Appear"
+        },
+        {
+            "index": 496,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_HidingInAsh_Loop"
+        },
+        {
+            "index": 497,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_HidingInAsh_Start"
+        },
+        {
+            "index": 498,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Kirin"
+        },
+        {
+            "index": 499,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_LightningStrike"
+        },
+        {
+            "index": 500,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_MultipleSnake"
+        },
+        {
+            "index": 501,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_PhoenixFlower"
+        },
+        {
+            "index": 502,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_PhoenixFlowerNC"
+        },
+        {
+            "index": 503,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Reanimation_End"
+        },
+        {
+            "index": 504,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Reanimation_Loop"
+        },
+        {
+            "index": 505,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Reanimation_Start"
+        },
+        {
+            "index": 506,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_SacredPaperEmissary"
+        },
+        {
+            "index": 507,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_ScrollBird"
+        },
+        {
+            "index": 508,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_ScrollDog_Type02"
+        },
+        {
+            "index": 509,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_ScrollGod_Type02"
+        },
+        {
+            "index": 510,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_SeveringWave"
+        },
+        {
+            "index": 511,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_ShatteredHeaven"
+        },
+        {
+            "index": 512,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_ShikigamiDanceShield"
+        },
+        {
+            "index": 513,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_SusanooFlameControl_Attack"
+        },
+        {
+            "index": 514,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_SusanooFlameControl_Start"
+        },
+        {
+            "index": 515,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_TandemPaperBomb"
+        },
+        {
+            "index": 516,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_TotsukaBlade"
+        },
+        {
+            "index": 517,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_TotsukaBlade_Start"
+        },
+        {
+            "index": 518,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_UchihaFlameForm"
+        },
+        {
+            "index": 519,
+            "name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_WaterDragon"
+        },
+        {
+            "index": 520,
+            "name": "SK_CHR_NormalModel|CustomMan_PaperBomb_Put"
+        },
+        {
+            "index": 521,
+            "name": "SK_CHR_NormalModel|CustomMan_RecoveryChakra_End"
+        },
+        {
+            "index": 522,
+            "name": "SK_CHR_NormalModel|CustomMan_RecoveryChakra_Loop"
+        },
+        {
+            "index": 523,
+            "name": "SK_CHR_NormalModel|CustomMan_RecoveryChakra_Start"
+        },
+        {
+            "index": 524,
+            "name": "SK_CHR_NormalModel|CustomMan_Rolling_GetUp"
+        },
+        {
+            "index": 525,
+            "name": "SK_CHR_NormalModel|CustomMan_Run_End"
+        },
+        {
+            "index": 526,
+            "name": "SK_CHR_NormalModel|CustomMan_Run_Loop"
+        },
+        {
+            "index": 527,
+            "name": "SK_CHR_NormalModel|CustomMan_Run_TurnLeft180"
+        },
+        {
+            "index": 528,
+            "name": "SK_CHR_NormalModel|CustomMan_Run_TurnLeft180_Start"
+        },
+        {
+            "index": 529,
+            "name": "SK_CHR_NormalModel|CustomMan_Run_TurnLeft90_Start"
+        },
+        {
+            "index": 530,
+            "name": "SK_CHR_NormalModel|CustomMan_Run_TurnRight180"
+        },
+        {
+            "index": 531,
+            "name": "SK_CHR_NormalModel|CustomMan_Run_TurnRight180_Start"
+        },
+        {
+            "index": 532,
+            "name": "SK_CHR_NormalModel|CustomMan_Run_TurnRight90_Start"
+        },
+        {
+            "index": 533,
+            "name": "SK_CHR_NormalModel|CustomMan_Run_Type01_Loop"
+        },
+        {
+            "index": 534,
+            "name": "SK_CHR_NormalModel|CustomMan_ShadowClone_Ninjutsu_C4Karura_End"
+        },
+        {
+            "index": 535,
+            "name": "SK_CHR_NormalModel|CustomMan_TakeMedicine"
+        },
+        {
+            "index": 536,
+            "name": "SK_CHR_NormalModel|CustomMan_Walk_End"
+        },
+        {
+            "index": 537,
+            "name": "SK_CHR_NormalModel|CustomMan_Walk_Loop"
+        },
+        {
+            "index": 538,
+            "name": "SK_CHR_NormalModel|CustomMan_Walk_TurnLeft180_Start"
+        },
+        {
+            "index": 539,
+            "name": "SK_CHR_NormalModel|CustomMan_Walk_TurnLeft90_Start"
+        },
+        {
+            "index": 540,
+            "name": "SK_CHR_NormalModel|CustomMan_Walk_TurnRight180_Start"
+        },
+        {
+            "index": 541,
+            "name": "SK_CHR_NormalModel|CustomMan_Walk_TurnRight90_Start"
+        },
+        {
+            "index": 542,
+            "name": "SK_CHR_NormalModel|CustomMan_Walk_Type01_Loop"
+        },
+        {
+            "index": 543,
+            "name": "SK_CHR_NormalModel|CustomMan_WallJump_Loop"
+        },
+        {
+            "index": 544,
+            "name": "SK_CHR_NormalModel|CustomMan_WallStop"
+        },
+        {
+            "index": 545,
+            "name": "SK_CHR_NormalModel|CustomMan_WireJump_Ready"
+        },
+        {
+            "index": 546,
+            "name": "SK_CHR_NormalModel|JKB_Ninjutsu_DLCNJ03"
+        },
+        {
+            "index": 547,
+            "name": "SK_CHR_NormalModel|JKB_Ninjutsu_DLCNJ03_Aerial_Dash_End"
+        },
+        {
+            "index": 548,
+            "name": "SK_CHR_NormalModel|JKB_Ninjutsu_DLCNJ03_Aerial_Dash_Loop"
+        },
+        {
+            "index": 549,
+            "name": "SK_CHR_NormalModel|JKB_Ninjutsu_DLCNJ03_Aerial_Dash_Start"
+        },
+        {
+            "index": 550,
+            "name": "SK_CHR_NormalModel|JKB_Ninjutsu_DLCNJ03_Gigantic"
+        },
+        {
+            "index": 551,
+            "name": "SK_CHR_NormalModel|JKB_Ninjutsu_DLCNJ03_Regeneration"
+        }
+    ],
+    "guid": "5b093ce9-bd01-4631-862a-fcd8b22f3837",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

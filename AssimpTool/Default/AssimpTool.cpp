@@ -54,7 +54,7 @@ static fs::path ResolveDefaultMeshDir(const wchar_t* executablePath)
     static constexpr wchar_t kDefaultRelativePath[] =
         //LR"(Client\Bin\Resources\StaticMesh\KonohaVillage03\Meshes)";
         //LR"(Client\Bin\Resources\Models\Saske)";
-        LR"(Client\Bin\Resources\Models\WhiteZetsu)";
+        LR"(Client\Bin\Resources\Models\Custom\Animation)";
 
     if (fs::path fromWorkingDir = FindExistingPathFromAncestors(fs::current_path(), kDefaultRelativePath);
         !fromWorkingDir.empty())

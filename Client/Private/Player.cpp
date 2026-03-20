@@ -4,13 +4,12 @@
 #include "MovementComponent.h"
 #include "PlayerController.h"
 #include "InputComponent.h"
-
 #include "Texture.h"
 #include "Shader.h"
 #include "Model.h"
 #include "VIBuffer_Rect.h"
-
 #include "NetworkManager.h"
+#include "PartObject.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
@@ -34,8 +33,7 @@ HRESULT Player::Initialize(void* arg)
 {
     CHECK_FAILED(Character::Initialize(arg), E_FAIL);
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXANIMMESH, _shaderCom), E_FAIL);
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_SASKE, _model), E_FAIL);
+    CHECK_FAILED(Ready_PartObjects(), E_FAIL);
 
     return S_OK;
 }
@@ -55,30 +53,22 @@ void Player::Update(float timeDelta)
 {
     Character::Update(timeDelta);
 
-    _model->Play_Animation(timeDelta);  
+    if (_model)
+        _model->Play_Animation(timeDelta, true);
+
 }
 
 void Player::Late_Update(float timeDelta)
 {
     Character::Late_Update(timeDelta);
 
-    GAME->Add_RenderGroup(ERenderGroup::NonBlend, this->GetSharedPtr());
+   
 }
 
 HRESULT Player::Render()
 {
-    Character::Render();
+    //Character::Render();
 
-    size_t numMeshes = _model->Get_NumMeshes();
-    
-    for (size_t i = 0; i < numMeshes; i++)
-    {
-        CHECK_FAILED(_model->Bind_BoneMatrices(_shaderCom, "g_BoneMatrices"), E_FAIL);
-        _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
-
-        CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
-        CHECK_FAILED(_model->Render(i), E_FAIL);
-    }
 
     return S_OK;
 }
@@ -92,12 +82,17 @@ HRESULT Player::Ready_Components()
 {
     Character::Ready_Components();
 
+    //CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXANIMMESH, _shaderCom), E_FAIL);
+    //CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_SASKE, _model) , E_FAIL);
+
+    uint32 saskeKey = static_cast<uint32>(std::hash<string>{}("Model_TestModel"));
+    CHECK_FAILED(Add_Component(saskeKey, _model), E_FAIL);
 
     return S_OK;
 }
 
 HRESULT Player::Bind_ShaderResources()
-{
+{   
     Matrix worldMatrix = _transformCom->Get_WorldMatrix();
     _shaderCom->Bind_Matrix("g_WorldMatrix", &worldMatrix);
     _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
@@ -133,7 +128,40 @@ HRESULT Player::Bind_Lights()
     return S_OK;
 }
 
-shared_ptr<GameObject> Player::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+HRESULT Player::Ready_PartObjects()
+{
+    // TODO : 추가될 파츠 : Headgear, Face, Body Upper, Body Lower, Weapon
+
+    // Body
+    PartObject::FPartObjectDesc bodyDesc{};
+    bodyDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    bodyDesc.modelAssetTag = TEXT("Model_Body_Upper_Coat15");
+    bodyDesc.masterPoseModel = _model;
+    CHECK_FAILED(Add_PartObject(EPartSlot::BodyUpper, Protocol::OBJECT_TYPE_PART_OBJECT, &bodyDesc), E_FAIL);
+
+    // Face
+    PartObject::FPartObjectDesc headDesc{};
+    headDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    headDesc.modelAssetTag = TEXT("Model_Headgear_Man_Cap1");
+    headDesc.masterPoseModel = _model;
+    CHECK_FAILED(Add_PartObject(EPartSlot::Headegear, Protocol::OBJECT_TYPE_PART_OBJECT, &headDesc), E_FAIL);
+
+    // Face
+    PartObject::FPartObjectDesc faceDesc{};
+    faceDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    faceDesc.modelAssetTag = TEXT("Model_Face_Face1");
+    faceDesc.masterPoseModel = _model;
+    CHECK_FAILED(Add_PartObject(EPartSlot::Face, Protocol::OBJECT_TYPE_PART_OBJECT, &faceDesc), E_FAIL);
+
+    // 소켓 생성해서 무기 붙이기
+    {
+
+    }
+
+    return S_OK;
+}
+
+Shared<GameObject> Player::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_shared<Player>(device, context);
 
@@ -145,7 +173,7 @@ shared_ptr<GameObject> Player::Create(ComPtr<Device> device, ComPtr<DeviceContex
     return instance;
 }
 
-shared_ptr<GameObject> Player::Clone(void* arg)
+Shared<GameObject> Player::Clone(void* arg)
 {
     auto instance = make_shared<Player>(*this);
 

@@ -235,8 +235,9 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
         if (!_lastAppliedPose.empty())
         {
             Apply_LocalPoses_ToBones(_lastAppliedPose);
-            Update_BoneMatrices_FromBones();
         }
+
+        Update_BoneMatrices_FromBones();
 
         return false;
     }
@@ -367,11 +368,32 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
 
 HRESULT Model::Bind_BoneMatrices(Shared<Shader> shader, const char* constantName)
 {
-    if (_boneMatrices.empty())
-        return S_OK;
+    //if (_masterPoseModel != nullptr && !_boneRetargetIndices.empty())
+    //{
+    //    // 리타겟팅 된 마스터 뼈 배열 가져오기
+    //    const vector<Matrix>& masterMatrices = _masterPoseModel->_boneMatrices;
 
-    return shader->Bind_RawValue(constantName, _boneMatrices.data(),
-        static_cast<uint32>(sizeof(Matrix) * _boneMatrices.size()));
+    //    vector<Matrix> retargetMatrices(_boneMatrices.size(), Matrix::Identity);
+
+    //    for (size_t i = 0; i < _boneMatrices.size(); ++i)
+    //    {
+    //        int32 masterIndex = _boneRetargetIndices[i];
+
+
+    //        int32 size = static_cast<int32>(masterMatrices.size());
+    //        if (masterIndex != -1 && masterIndex < size)
+    //        {
+    //            retargetMatrices[i] = masterMatrices[masterIndex];
+    //        }
+    //        else
+    //        {
+    //            retargetMatrices[i] = _boneMatrices[i];
+    //        }
+    //    }
+    //    return shader->Bind_RawValue(constantName, retargetMatrices.data(), sizeof(Matrix) * retargetMatrices.size());
+    //}
+
+    return shader->Bind_RawValue(constantName, _boneMatrices.data(), sizeof(Matrix) * _boneMatrices.size());
 }
 
 HRESULT Model::Ready_Materials_FromJson(const string& materialFilePath)
@@ -629,6 +651,22 @@ void Model::Update_BoneMatrices_FromBones()
     {
         if (!_bones[i])
             continue;
+
+        if (_masterPoseModel != nullptr && !_boneRetargetIndices.empty())
+        {
+            int32 masterIndex = _boneRetargetIndices[i];
+
+            if (masterIndex != -1 && masterIndex < static_cast<int32>(_masterPoseModel->_bones.size()))
+            {
+                if (auto masterBone = _masterPoseModel->_bones[masterIndex])
+                {
+                    _bones[i]->Set_CombinedTransform(masterBone->Get_CombinedTransform());
+                    //_boneMatrices[i] = _bones[i]->Get_SkinningMatrix();
+                    _boneMatrices[i] = _masterPoseModel->_boneMatrices[masterIndex];
+                    continue;
+                }
+            }
+        }
 
         const int32 parentIndex = _bones[i]->Get_ParentIndex();
         const Matrix* parentMatrix = (parentIndex >= 0)
@@ -1067,6 +1105,18 @@ json Model::To_Json() const
         j["materials"] = matArray;
     }
 
+    // 장착된 애니메이션 이름 목록 저장
+    if (!_animations.empty())
+    {
+        json animArray = json::array();
+
+        for (auto& anim : _animations)
+        {
+            animArray.push_back(anim->Get_Name());
+        }
+        j["animations"] = animArray;
+    }
+
     return j;
 }
 
@@ -1087,6 +1137,17 @@ void Model::From_Json(const json& data)
     if (newGuid == _modelGuid && newType == _modelType)
     {
         Apply_MaterialOverrides(data);
+
+        if (data.contains("animations"))
+        {
+            _animations.clear();
+            for (const auto& animName : data["animations"])
+            {
+                auto anim = GAME->Get_Animation(animName.get<string>());
+                if (anim)
+                    _animations.push_back(anim);
+            }
+        }
         return;
     }
 
@@ -1135,6 +1196,20 @@ void Model::From_Json(const json& data)
 
     // 머리티얼 다시 세팅
     Apply_MaterialOverrides(data);
+
+    // 매니저 캐싱에서 애니메이션 가져와서 세팅
+    if (data.contains("animations"))
+    {
+        _animations.clear();
+
+        for (const auto& animName : data["animations"])
+        {
+            auto anim = GAME->Get_Animation(animName.get<string>());
+
+            if (anim)
+                _animations.push_back(anim);
+        }
+    }
 }
 
 HRESULT Model::Reload_ModelFromGuid(const string& guid, EMeshVertexType modelType)
@@ -1250,6 +1325,46 @@ const string& Model::Get_CurrentAnimationName() const
         return empty;
 
     return Get_AnimationName(static_cast<uint32>(_currentClip.animIndex));
+}
+
+int32 Model::Get_BoneIndex_ByName(const string& boneName) const
+{
+    for (size_t i = 0; i < _bones.size(); ++i)
+    {
+        if (_bones[i]->Get_Name() == boneName)
+        {
+            return static_cast<int32>(i);
+        }
+    }
+
+    return -1;
+}
+
+void Model::Set_MasterPoseModel(Shared<Model> masterModel)
+{
+    _masterPoseModel = masterModel;
+    _boneRetargetIndices.clear();
+
+    _boneRetargetIndices.resize(_bones.size(), -1);
+
+    for (size_t i = 0; i < _bones.size(); ++i)
+    {
+        string retargetBoneName = _bones[i]->Get_Name();
+
+        int32 masterIndex = masterModel->Get_BoneIndex_ByName(retargetBoneName);
+        _boneRetargetIndices[i] = masterIndex;
+    }
+}
+
+void Model::Add_Animation(Shared<Animation> animation)
+{
+    if (animation)
+        _animations.push_back(animation);
+}
+
+void Model::Set_Animations(const vector<Shared<Animation>>& animations)
+{
+    _animations = animations; 
 }
 
 HRESULT Model::Initialize_FromMeshBin(const string& modelFilePath)

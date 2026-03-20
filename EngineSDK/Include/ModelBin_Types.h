@@ -2,6 +2,17 @@
 
 NS_BEGIN(Engine)
 
+constexpr uint32 ANIMBIN_MAGIC = 0x4D494E41; // 'ANIM'
+constexpr uint32 ANIMBIN_VERSION = 1;
+
+struct FAnimationFileHeader
+{
+    uint32 magic = ANIMBIN_MAGIC;
+    uint32 version = ANIMBIN_VERSION;
+    uint32 animationCount = 0;
+    uint32 reserved = 0;
+};
+
 struct FStaticMeshFileHeader
 {
     uint32 magic = 0;

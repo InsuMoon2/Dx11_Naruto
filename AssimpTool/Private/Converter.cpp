@@ -45,7 +45,7 @@ bool Converter::Convert(const wstring& srcPath, const wstring& dstBasePath, ECon
             return false;
     }
 
-    if (!Build_MaterialData(srcPath))
+    if (!Build_MaterialData(srcPath, dstBasePath))
         return false;
 
     const wstring meshPath = dstBasePath + L".meshbin";
@@ -55,6 +55,9 @@ bool Converter::Convert(const wstring& srcPath, const wstring& dstBasePath, ECon
         return false;
 
     if (!Write_MaterialJson(materialPath))
+        return false;
+
+    if (!Write_AnimBin(dstBasePath))
         return false;
 
     if (!Write_ModelMeta(meshPath, _resolvedModelType))
@@ -383,7 +386,7 @@ bool Converter::Build_AnimationData()
 }
 
 
-bool Converter::Build_MaterialData(const wstring& srcPath)
+bool Converter::Build_MaterialData(const wstring& srcPath, const wstring& dstBasePath)
 {
     if (_scene == nullptr)
         return false;
@@ -417,7 +420,7 @@ bool Converter::Build_MaterialData(const wstring& srcPath)
 
             for (uint32 textureIndex = 0; textureIndex < textureCount; ++textureIndex)
             {
-                string resolvedPath = Resolve_TexturePath(srcMaterial, assimpType, textureIndex, srcPath);
+                string resolvedPath = Resolve_TexturePath(srcMaterial, assimpType, textureIndex, srcPath, dstBasePath);
                 if (resolvedPath.empty())
                     continue;
 
@@ -482,7 +485,7 @@ bool Converter::Write_MeshBin(const wstring& outputPath)
         header.flags |= MESHBIN_FLAG_HAS_ANIMATION;
 
     header.boneCount = static_cast<uint32>(_bones.size());
-    header.animationCount = static_cast<uint32>(_animations.size());
+    header.animationCount = 0;
 
     writer.Write(header);
 
@@ -528,9 +531,38 @@ bool Converter::Write_MeshBin(const wstring& outputPath)
         writer.Write(bin);
     }
 
-    // [추가] 3. Animation Clip Array
+        // 애니메이션 처리는 Write_AnimBin으로 옮겨졌습니다.
+
+    return true;
+}
+
+bool Converter::Write_AnimBin(const wstring& dstBasePath)
+{
+    if (_animations.empty())
+        return true;
+
     for (const auto& clip : _animations)
     {
+        string safeName = clip.name;
+        for (char& c : safeName)
+        {
+            if (c == '|' || c == ':' || c == '*' || c == '?' || c == '<' || c == '>' || c == ' ')
+                c = '_';
+        }
+
+        wstring animPath = dstBasePath + L"_" + wstring(safeName.begin(), safeName.end()) + L".animbin";
+
+        BinaryWriter writer;
+        if (!writer.Open(animPath))
+        {
+            LOG_ERROR("Failed to open animbin output");
+            continue;
+        }
+
+        FAnimationFileHeader header{};
+        header.animationCount = 1;
+        writer.Write(header);
+
         writer.WriteString(clip.name);
 
         FAnimationClipBin clipBin{};
@@ -755,7 +787,7 @@ bool Converter::Write_MaterialJson(const wstring& outputPath)
 }
 
 string Converter::Resolve_TexturePath(const aiMaterial* material, aiTextureType textureType,
-    uint32 textureIndex, const wstring& modelFilePath)
+    uint32 textureIndex, const wstring& modelFilePath, const wstring& dstBasePath)
 {
     if (material == nullptr)
         return "";
@@ -788,26 +820,22 @@ string Converter::Resolve_TexturePath(const aiMaterial* material, aiTextureType 
         texPath = modelDir / texPath;
     }
 
-    string result;
-
     try
     {
-        fs::path relativePath = fs::relative(texPath, modelDir);
-
-        if (!relativePath.empty())
-            result = relativePath.string();
-        else
-            result = texPath.filename().string();
+        texPath = fs::weakly_canonical(texPath);
     }
     catch (...)
     {
-        result = texPath.filename().string();
+        texPath = fs::absolute(texPath);
     }
 
-    if (result.empty())
-        result = texPath.filename().string();
+    if (!fs::exists(texPath))
+    {
+        LOG_WARN("Resolve_TexturePath missing file = {}", texPath.string());
+        return "";
+    }
 
-    return Normalize_Path(result);
+    return Copy_Texture_ToOutput(texPath, dstBasePath);
 }
 
 string Converter::Resolve_ExportTextureSlot(const aiMaterial* material, aiTextureType assimpType, uint32 textureIndex) const
@@ -917,6 +945,59 @@ string Converter::Infer_TextureSlot_FromString(const string& value, const string
         return "roughness";
 
     return fallbackSlot;
+}
+
+fs::path Converter::Build_TextureOutputRelativePath(const fs::path& sourceTexturePath) const
+{
+    // 원본 경로에 Textures 세그먼트가 있으면 그 아래 구조를 최대한 보존한다.
+    fs::path relativeUnderTextures;
+    bool foundTexturesRoot = false;
+
+    for (const auto& part : sourceTexturePath)
+    {
+        const string lower = ToLower_Copy(part.string());
+        if (!foundTexturesRoot)
+        {
+            if (lower == "textures")
+                foundTexturesRoot = true;
+
+            continue;
+        }
+
+        relativeUnderTextures /= part;
+    }
+
+    if (relativeUnderTextures.empty())
+        relativeUnderTextures = sourceTexturePath.filename();
+
+    return fs::path("Textures") / relativeUnderTextures;
+}
+
+string Converter::Copy_Texture_ToOutput(const fs::path& sourceTexturePath, const wstring& dstBasePath) const
+{
+    if (sourceTexturePath.empty() || dstBasePath.empty())
+        return "";
+
+    const fs::path outputBasePath(dstBasePath);
+    const fs::path outputDir = outputBasePath.parent_path();
+    const fs::path relativeTexturePath = Build_TextureOutputRelativePath(sourceTexturePath);
+    const fs::path outputTexturePath = outputDir / relativeTexturePath;
+
+    try
+    {
+        fs::create_directories(outputTexturePath.parent_path());
+        fs::copy_file(sourceTexturePath, outputTexturePath, fs::copy_options::overwrite_existing);
+    }
+    catch (const std::exception& e)
+    {
+        LOG_WARN("Failed to copy texture. src={}, dst={}, reason={}",
+            sourceTexturePath.string(),
+            outputTexturePath.string(),
+            e.what());
+        return "";
+    }
+
+    return Normalize_Path(relativeTexturePath.string());
 }
 
 string Converter::Normalize_Path(const string& value) const

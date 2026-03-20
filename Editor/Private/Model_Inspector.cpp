@@ -3,6 +3,7 @@
 #include "Asset_Manager.h"
 #include "Model.h"
 #include "ModelMaterial.h"
+#include "Animation.h"
 
 static const struct
 {
@@ -200,6 +201,80 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
         data["model_guid"] = "";
         model->From_Json(data);
     }*/
+
+    // 스켈레탈 메시일 경우 애니메이션 세팅
+    if (model->Get_ModelType() == EMeshVertexType::SkeletalMesh)
+    {
+        ImGui::Separator();
+        ImGui::Text("Attached AnimBins");
+
+        ImGui::BeginChild("AttachedAnimList", ImVec2(0.f, 100.f), true);
+        for (uint32 i = 0; i < model->Get_AnimationCount(); ++i)
+        {
+            string animName = model->Get_AnimationName(i);
+            string displayAnimName = animName;
+            size_t barPos = displayAnimName.find('|');
+            if (barPos != string::npos)
+            {
+                displayAnimName = displayAnimName.substr(barPos + 1);
+
+                // 혹시 남아있을 수 있는 공백 제거
+                size_t firstCharPos = displayAnimName.find_first_not_of(" \t");
+                if (firstCharPos != string::npos)
+                    displayAnimName = displayAnimName.substr(firstCharPos);
+            }
+            ImGui::Text(" - %s", displayAnimName.c_str());
+        }
+        ImGui::EndChild();
+        
+        if (ImGui::Button("Add AnimBin..."))
+            ImGui::OpenPopup("Add AnimBin Popup");
+        if (ImGui::BeginPopup("Add AnimBin Popup"))
+        {
+            static char searchBuf[128] = "";
+            ImGui::InputText("Search", searchBuf, IM_ARRAYSIZE(searchBuf));
+            ImGui::Separator();
+
+            auto allAnims = GAME->Get_All_Animations(); 
+            ImGui::BeginChild("AnimListSelect", ImVec2(250.f, 200.f));
+            for (auto& anim : allAnims)
+            {
+                if (!anim) continue;
+
+                string animName = anim->Get_Name();
+                string displayAnimName = animName;
+
+                // 문자열 ('|') 기준 자르기
+                size_t barPos = displayAnimName.find('|');
+                if (barPos != string::npos)
+                {
+                    displayAnimName = displayAnimName.substr(barPos + 1);
+                    size_t firstCharPos = displayAnimName.find_first_not_of(" \t");
+                    if (firstCharPos != string::npos)
+                        displayAnimName = displayAnimName.substr(firstCharPos);
+                }
+                // 대소문자 무시
+
+                if (string(searchBuf).empty() || animName.find(searchBuf) != string::npos || displayAnimName.find(searchBuf) != string::npos)
+                {
+                    if (ImGui::Selectable(displayAnimName.c_str()))
+                    {
+                        model->Add_Animation(anim);
+                        data = model->To_Json(); // 변경된 Json 바로 업데이트
+                    }
+                }
+            }
+            ImGui::EndChild();
+            ImGui::EndPopup();
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Clear All Anims"))
+        {
+            model->Set_Animations({}); // 비우기
+            data = model->To_Json();
+        }
+    }
 }
 
 void Model_Inspector::Draw_MeshList(Shared<Model> model)
@@ -358,3 +433,4 @@ void Model_Inspector::Draw_TextureSlot(Shared<ModelMaterial> material, EMaterial
     }
 
 }
+

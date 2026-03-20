@@ -22,6 +22,7 @@ class Light_Manager;
 class Asset_Manager;
 class UI_Manager;
 class Text_Renderer;
+class Animation_Manager;
 
 class Renderer;
 class PipeLine;
@@ -36,6 +37,8 @@ class Shader;
 
 class Camera;
 class UIObject;
+
+class Animation;
 
 /* Component */
 class Transform;
@@ -251,7 +254,12 @@ public: /* Text Renderer */
     HRESULT Set_TextTarget_Texture(ComPtr<Texture2D> texture);
     HRESULT Reset_TextTarget_BackBuffer();
 
+public: /* Animation Manager */
+    void                Load_Animations_From_Directory(const wstring& directoryPath);
+    Shared<Animation>   Get_Animation(const string& name) const;
 
+    vector<Shared<Animation>> Get_Animations_By_Prefix(const string& prefix) const;
+    vector<Shared<Animation>> Get_All_Animations();
 
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};
@@ -265,6 +273,7 @@ private: /* Manager */
     Unique<Asset_Manager>           _assetManager   {};
     Unique<UI_Manager>              _uiManager      {};
     Unique<Text_Renderer>           _textRenderer   {};
+    Unique<Animation_Manager>       _animationManager{};
 
     Unique<Renderer>                _renderer {};
     Unique<PipeLine>                _pipeLine {};

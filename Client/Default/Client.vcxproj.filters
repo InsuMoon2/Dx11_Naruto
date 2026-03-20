@@ -170,6 +170,9 @@
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ANS_Test.h" />
+    <ClInclude Include="..\Public\Player_BodyUpper.h">
+      <Filter>02. GameObject\00. Player\02. Parts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -326,6 +329,9 @@
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ANS_Test.cpp" />
+    <ClCompile Include="..\Private\Player_BodyUpper.cpp">
+      <Filter>02. GameObject\00. Player\02. Parts</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -447,6 +453,12 @@
     </Filter>
     <Filter Include="04. Notify\01. AnimNotifyState">
       <UniqueIdentifier>{e527449f-4dd4-48cc-ad52-ce449cbf6695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00. Player\01. Container">
+      <UniqueIdentifier>{c69808aa-25f2-44f3-a511-1b3c6551724d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00. Player\02. Parts">
+      <UniqueIdentifier>{f7c6f168-8c98-4b92-aa0c-78c7a8a48d51}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

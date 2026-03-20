@@ -29,6 +29,7 @@
 
 #pragma push_macro("new")
 #undef new
+#include "Animation_Manager.h"
 #include "imgui.h"
 #include "Text_Renderer.h"
 #pragma pop_macro("new")
@@ -101,6 +102,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _textRenderer = Text_Renderer::Create(Get_Device(), _graphicDevice->Get_SwapChain());
     CHECK_NULL(_textRenderer, E_FAIL);
+
+    _animationManager = Animation_Manager::Create(TEXT("../../Client/Bin/Resources/Models/Custom/Animation"));
+    CHECK_NULL(_animationManager, E_FAIL);
 
     return S_OK;
 }
@@ -660,6 +664,26 @@ HRESULT GameInstance::Reset_TextTarget_BackBuffer()
     return _textRenderer->Reset_TargetToSwapChain();
 }
 
+void GameInstance::Load_Animations_From_Directory(const wstring& directoryPath)
+{
+    return _animationManager->Load_Animations_From_Directory(directoryPath);
+}
+
+Shared<Animation> GameInstance::Get_Animation(const string& name) const
+{
+    return _animationManager->Get_Animation(name);
+}
+
+vector<Shared<Animation>> GameInstance::Get_Animations_By_Prefix(const string& prefix) const
+{
+    return _animationManager->Get_Animations_By_Prefix(prefix);
+}
+
+vector<Shared<Animation>> GameInstance::Get_All_Animations()
+{
+    return _animationManager->Get_All_Animations();
+}
+
 Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)
 {
     return _cameraManager->Find_Camera(type);
@@ -681,6 +705,7 @@ void GameInstance::Free()
     _timerManager.reset();  
     _graphicDevice.reset();
     _textRenderer.reset();
+    _animationManager.reset();
 
     _renderer.reset();
     _pipeLine.reset();

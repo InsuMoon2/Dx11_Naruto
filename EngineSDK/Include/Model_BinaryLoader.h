@@ -5,10 +5,15 @@
 
 NS_BEGIN(Engine)
 
+class Animation;
+
 class ENGINE_DLL Model_BinaryLoader final
 {
 public:
     static bool Load(const string& filePath, FModelBinaryData& outData);
+
+    // 애니메이션만 추출, 커스텀 애니메이션
+    bool Load_AnimationOnly(const string& filePath, vector<Shared<Animation>>& outAnimations);
 
 private:
     template<typename T>

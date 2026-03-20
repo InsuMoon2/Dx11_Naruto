@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_Eyes_WThinL_01",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/Eyes/T_CHR_Eye_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_Eyes_WThinR_01",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/Eyes/T_CHR_Eye_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_Face",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_Face_BC.png"
+        }
+      ]
+    }
+  ]
+}

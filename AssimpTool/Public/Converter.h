@@ -19,9 +19,10 @@ private:
     bool    Build_SkeletalMeshData();
     bool    Build_AnimationData();
 
-    bool    Build_MaterialData(const wstring& srcPath);
+    bool    Build_MaterialData(const wstring& srcPath, const wstring& dstBasePath);
     bool    Write_MaterialJson(const wstring& outputPath);
     bool    Write_MeshBin(const wstring& outputPath);
+    bool    Write_AnimBin(const wstring& dstBasePath);
 
 private:
     // 변환 전에 실제 모델 타입을 확정
@@ -38,7 +39,8 @@ private:
 
 
     string              Resolve_TexturePath(const aiMaterial* material, aiTextureType textureType,
-                                uint32 textureIndex, const wstring& modelFilePath);
+                                uint32 textureIndex, const wstring& modelFilePath,
+                                const wstring& dstBasePath);
 
     string              Resolve_ExportTextureSlot(const aiMaterial* material,
                                 aiTextureType assimpType, uint32 textureIndex) const;
@@ -49,6 +51,9 @@ private:
     static string       Read_PropertyString(const aiMaterialProperty* prop);
 
     static string       Infer_TextureSlot_FromString(const string& value, const string& fallbackSlot);
+    filesystem::path    Build_TextureOutputRelativePath(const filesystem::path& sourceTexturePath) const;
+    string              Copy_Texture_ToOutput(const filesystem::path& sourceTexturePath,
+                                const wstring& dstBasePath) const;
 
     string              Normalize_Path(const string& value) const;
     void                Clear();

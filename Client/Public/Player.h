@@ -36,14 +36,16 @@ protected:
     HRESULT Bind_ShaderResources() override;
     HRESULT Bind_Lights() override;
 
+    HRESULT Ready_PartObjects();
+
 private:
     Shared<Model>   _model;
+    uint64          _networkId = 0;
 
-    uint64 _networkId = 0;
 
 public:
-    static shared_ptr<GameObject>  Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
-    virtual shared_ptr<GameObject> Clone(void* arg) override;
+    static Shared<GameObject>  Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    virtual Shared<GameObject> Clone(void* arg) override;
 
 };
 

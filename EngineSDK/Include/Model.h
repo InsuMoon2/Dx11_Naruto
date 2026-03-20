@@ -37,7 +37,6 @@ public:
     void    Set_Animation(const string& animName, bool isLoop);
     void    Set_Animation(const FAnimationClipSetting& clip);
 
-
     void Set_AnimationSequence(
         const FAnimationClipSetting& startClip,
         const FAnimationClipSetting& loopClip,
@@ -71,6 +70,7 @@ public:
 
     uint32  Get_MeshMaterialIndex(uint32 index) const;
     string  Get_MeshName(uint32 index);
+    EMeshVertexType Get_ModelType() const { return _modelType; }
 
     void    Set_AnimationPlayRate(float playRate);
     float   Get_AnimationPlayRate() const { return _animationPlayRate; }
@@ -88,6 +88,14 @@ public:
     // 재생중인 애니메이션 이름 반환
     const string& Get_CurrentAnimationName() const;
     const string& Get_ModelGuid() const { return _modelGuid; }
+
+    int32   Get_BoneIndex_ByName(const string& boneName) const;
+    void    Set_MasterPoseModel(Shared<Model> masterModel);
+
+    // 동적 애니메이션 추가
+    void    Add_Animation(Shared<Animation> animation);
+    // 애니메이션 여러개 추가
+    void    Set_Animations(const vector<Shared<Animation>>& animations);
 
 private:
     // .meshbin 확장자일 때 들어오는 초기화 경로
@@ -115,10 +123,8 @@ private:
     void    Apply_AnimationClip(uint32 animIndex, bool isLoop, float playRate);
     bool    Find_AnimationIndex(const string& animName, uint32& outIndex) const;
 
-    // 단일 클립 재생으로 돌아갈 때 시퀀스 상태를 정리한다.
+    
     void    Reset_AnimationSequenceState();
-
-    // End 클립이 없거나 End까지 끝났을 때 공통 종료 처리
     void    Complete_AnimationSequence();
 
 private: /* blend */
@@ -206,6 +212,7 @@ private:
     vector<Shared<Bone>>            _bones;
     vector<Shared<Animation>>       _animations;
     vector<Matrix>                  _boneMatrices;
+
     int32                           _currentAnimationIndex = -1;
     bool                            _isAnimationLoop = false;
 
@@ -223,6 +230,9 @@ private: /* 애니메이션 재생 관련 */
     bool                            _hasAnimSequence = false;
     bool                            _isAnimSequenceFinished = false;
     bool                            _isCurrentAnimationFinished = false;
+
+    Shared<Model>                   _masterPoseModel;
+    vector<int32>                   _boneRetargetIndices;
 
 private: /* 블렌딩 */
 

@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "blinn1",
+      "textures": [
+        {
+          "slot": "normal",
+          "index": 0,
+          "path": "Textures/3irkbody.png"
+        }
+      ]
+    },
+    {
+      "material_name": "surfaceShader1",
+      "textures": [
+        {
+          "slot": "normal",
+          "index": 0,
+          "path": "Textures/3irkeye.png"
+        }
+      ]
+    }
+  ]
+}

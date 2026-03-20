@@ -241,6 +241,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Animation.h" />
+    <ClInclude Include="..\Public\Animation_Manager.h" />
     <ClInclude Include="..\Public\AnimNotify.h" />
     <ClInclude Include="..\Public\AnimNotifyState.h" />
     <ClInclude Include="..\Public\AnimNotify_Serializer.h" />
@@ -264,6 +265,7 @@
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\Component_Factory.h" />
+    <ClInclude Include="..\Public\ContainerObject.h" />
     <ClInclude Include="..\Public\Controller.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
     <ClInclude Include="..\Public\Debug_Manager.h" />
@@ -289,6 +291,7 @@
     <ClInclude Include="..\Public\Model_BinaryLoader.h" />
     <ClInclude Include="..\Public\Object_Manager.h" />
     <ClInclude Include="..\Public\Panel.h" />
+    <ClInclude Include="..\Public\PartObject.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\PlayerStart.h" />
     <ClInclude Include="..\Public\Prefab_Manager.h" />
@@ -327,6 +330,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Animation.cpp" />
+    <ClCompile Include="..\Private\Animation_Manager.cpp" />
     <ClCompile Include="..\Private\AnimNotify.cpp" />
     <ClCompile Include="..\Private\AnimNotifyState.cpp" />
     <ClCompile Include="..\Private\AnimNotify_Serializer.cpp" />
@@ -349,6 +353,7 @@
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\Component_Factory.cpp" />
+    <ClCompile Include="..\Private\ContainerObject.cpp" />
     <ClCompile Include="..\Private\Controller.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\Private\Debug_Manager.cpp" />
@@ -373,6 +378,7 @@
     <ClCompile Include="..\Private\Model_BinaryLoader.cpp" />
     <ClCompile Include="..\Private\Object_Manager.cpp" />
     <ClCompile Include="..\Private\Panel.cpp" />
+    <ClCompile Include="..\Private\PartObject.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\PlayerStart.cpp" />
     <ClCompile Include="..\Private\Prefab_Manager.cpp" />
