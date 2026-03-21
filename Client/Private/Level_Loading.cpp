@@ -6,6 +6,7 @@
 #include "Background.h"
 #include "Loader.h"
 #include "GameInstance.h"
+#include "Level_Equipment.h"
 #include "Level_Gameplay.h"
 #include "Level_MainTitle.h"
 #include "UI_LoadingSpinner.h"
@@ -70,6 +71,10 @@ void Level_Loading::Update(float timeDelta)
 
         case ELevelType::GamePlay:
             nextLevel = Level_Gameplay::Create(_device, _context);
+            break;
+
+        case ELevelType::Equipment:
+            nextLevel = Level_Equipment::Create(_device, _context);
             break;
         }
 

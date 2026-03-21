@@ -1,0 +1,9 @@
+Diffuse=T_UI_PSSPGauge_Base_BC
+Other[0]=T_UI_PSSPGauge_line_BC
+Other[1]=T_UI_PSSPGauge_frame_M
+Other[2]=T_UI_PSSPGauge_end__M
+Other[3]=T_UI_PSSPGauge_body_M
+Other[4]=T_UI_LifeGauge_body_M
+Other[5]=T_UI_LifeGauge_end__M
+Other[6]=T_UI_LifeGauge_frame_M
+Other[7]=T_UI_LifeGauge_line_BC

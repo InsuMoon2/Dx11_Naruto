@@ -1,0 +1,92 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/UI/ingame/ETC/PlayerStatus/Textures/T_UI_LifeGauge_body_M.T_UI_LifeGauge_body_M'
+    ReferencedTextures[1] = Texture2D'/Game/UI/ingame/ETC/PlayerStatus/Textures/T_UI_LifeGauge_end__M.T_UI_LifeGauge_end__M'
+    ReferencedTextures[2] = Texture2D'/Game/UI/ingame/ETC/PlayerStatus/Textures/T_UI_LifeGauge_frame_M.T_UI_LifeGauge_frame_M'
+    ReferencedTextures[3] = Texture2D'/Game/UI/ingame/ETC/PlayerStatus/Textures/T_UI_LifeGauge_line_BC.T_UI_LifeGauge_line_BC'
+}
+Expressions[54] =
+{
+    Expressions[4] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionTextureSample_16'
+    Expressions[7] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionScalarParameter_3'
+    Expressions[15] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionTextureSample_19'
+    Expressions[30] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionTextureSample_22'
+    Expressions[33] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionTextureSample_30'
+    Expressions[44] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionScalarParameter_0'
+    Expressions[45] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionScalarParameter_1'
+    Expressions[46] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionScalarParameter_4'
+    Expressions[49] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionScalarParameter_2'
+    Expressions[50] = MaterialExpressionVectorParameter'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionVectorParameter_0'
+    Expressions[51] = MaterialExpressionVectorParameter'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionVectorParameter_1'
+    Expressions[52] = MaterialExpressionVectorParameter'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionVectorParameter_2'
+    Expressions[53] = MaterialExpressionTextureSampleParameter2D'/Game/UI/ingame/ETC/PlayerStatus/Materials/M_UI_EnemyLife.MaterialExpressionTextureSampleParameter2D_0'
+}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] = { ParameterInfos[0]={} }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[0] = {}
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[0] = {}
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/UI/ingame/ETC/PlayerStatus/Textures/T_UI_LifeGauge_Base_BC.T_UI_LifeGauge_Base_BC'
+        Name = Base_Color
+        Group = None
+    }
+}
+CollectedScalarParameters[5] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Life_Gauge_Enemy_value, Group=None }
+    CollectedScalarParameters[1] = { Value=0.97, Name=min, Group=None }
+    CollectedScalarParameters[2] = { Value=0.03, Name=max, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Opacity, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=Gauge_Color, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.144128, G=1, B=0, A=1 }
+        Name = Ally_Life
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=1, G=0.887923, B=0, A=1 }
+        Name = HumanBoss_Life
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=1, G=0.01033, B=0.01033, A=1 }
+        Name = Enemy_Life
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

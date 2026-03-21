@@ -151,24 +151,48 @@
       <Filter>06. Command</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Editor_Camera_Free.h" />
-    <ClInclude Include="..\Public\Model_Inspector.h" />
-    <ClInclude Include="..\Public\UI_Animation_View.h" />
     <ClInclude Include="..\Public\Level_Serializer.h">
       <Filter>97. Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Editor_Helper.h">
       <Filter>97. Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Editor_SequencerAdapterBase.h" />
-    <ClInclude Include="..\Public\UI_AnimSequencerAdapter.h" />
-    <ClInclude Include="..\Public\PlayerStateMachine_Inspector.h" />
-    <ClInclude Include="..\Public\Prefab_PreviewCameraSettings.h" />
-    <ClInclude Include="..\Public\AnimationState_Inspector.h" />
-    <ClInclude Include="..\Public\AnimNotify_Inspector.h" />
-    <ClInclude Include="..\Public\AnimNotifyState_Inspector.h" />
-    <ClInclude Include="..\Public\AnimNotify_Inspector_Factory.h" />
-    <ClInclude Include="..\Public\Animation_View.h" />
-    <ClInclude Include="..\Public\AnimSequencerAdapter.h" />
+    <ClInclude Include="..\Public\Animation_View.h">
+      <Filter>03. Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimationState_Inspector.h">
+      <Filter>04. Component_Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimNotify_Inspector.h">
+      <Filter>04. Component_Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimNotify_Inspector_Factory.h">
+      <Filter>05. Inspector_Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimNotifyState_Inspector.h">
+      <Filter>04. Component_Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Editor_SequencerAdapterBase.h">
+      <Filter>97. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerStateMachine_Inspector.h">
+      <Filter>04. Component_Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model_Inspector.h">
+      <Filter>04. Component_Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimSequencerAdapter.h">
+      <Filter>97. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Prefab_PreviewCameraSettings.h">
+      <Filter>97. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Animation_View.h">
+      <Filter>03. Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_AnimSequencerAdapter.h">
+      <Filter>97. Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -270,8 +294,6 @@
       <Filter>06. Command</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Editor_Camera_Free.cpp" />
-    <ClCompile Include="..\Private\Model_Inspector.cpp" />
-    <ClCompile Include="..\Private\UI_Animation_View.cpp" />
     <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
@@ -281,18 +303,44 @@
     <ClCompile Include="..\Private\Editor_Helper.cpp">
       <Filter>97. Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Editor_SequencerAdapterBase.cpp" />
-    <ClCompile Include="..\Private\UI_AnimSequencerAdapter.cpp" />
-    <ClCompile Include="..\Private\PlayerStateMachine_Inspector.cpp" />
-    <ClCompile Include="..\Private\Prefab_PreviewCameraSettings.cpp" />
-    <ClCompile Include="..\Private\AnimationState_Inspector.cpp" />
-    <ClCompile Include="..\Private\AnimNotify_Inspector.cpp" />
-    <ClCompile Include="..\Private\AnimNotifyState_Inspector.cpp" />
-    <ClCompile Include="..\Private\AnimNotify_Inspector_Factory.cpp" />
-    <ClCompile Include="..\Private\Animation_View.cpp" />
-    <ClCompile Include="..\Private\AnimSequencerAdapter.cpp" />
     <ClCompile Include="..\Private\ImSequencer.cpp">
       <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Animation_View.cpp">
+      <Filter>03. Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimationState_Inspector.cpp">
+      <Filter>04. Component_Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimNotify_Inspector.cpp">
+      <Filter>04. Component_Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimNotify_Inspector_Factory.cpp">
+      <Filter>05. Inspector_Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimNotifyState_Inspector.cpp">
+      <Filter>04. Component_Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Editor_SequencerAdapterBase.cpp">
+      <Filter>97. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerStateMachine_Inspector.cpp">
+      <Filter>04. Component_Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model_Inspector.cpp">
+      <Filter>04. Component_Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimSequencerAdapter.cpp">
+      <Filter>97. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Prefab_PreviewCameraSettings.cpp">
+      <Filter>97. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Animation_View.cpp">
+      <Filter>03. Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_AnimSequencerAdapter.cpp">
+      <Filter>97. Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

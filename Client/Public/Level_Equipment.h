@@ -8,18 +8,9 @@ NS_END
 
 NS_BEGIN(Client)
 
-enum class ETitleState { PressSpace, SelectMenu };
-
 class Background;
-class UI_MainTitleMenuButton;
-
-enum class EMainTitle
-{
-    BG_0, BG_1,
-    Logo,
-    PressText0, PressText1, PressText2,
-    TitleMenuBtn,
-};
+class UI_EquipmentTabButton;
+class Player;
 
 class Level_Equipment final : public Level
 {
@@ -36,17 +27,8 @@ public:
 private:
     HRESULT         Ready_Layer_UI();
 
-    void            Update_PressPhase();
-    void            Update_SelectPhase();
-    void            Apply_TitlePhase();
-    void            Apply_MenuSelection();
-    void            Execute_SelectedMenu();
-
 private:
-    ETitleState _titleState = ETitleState::PressSpace;
-
-    Shared<Background> _pressText;
-    array<Shared<UI_MainTitleMenuButton>, 3> _menuText {};
+    //array<Shared<UI_MainTitleMenuButton>, 3> _menuText {};
     int32 _selectedIndex = 0;
 
 public:

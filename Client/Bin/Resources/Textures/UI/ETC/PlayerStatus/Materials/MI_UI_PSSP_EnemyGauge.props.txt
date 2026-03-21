@@ -1,0 +1,76 @@
+Parent = MaterialInstanceConstant'/Game/UI/ingame/ETC/PlayerStatus/Materials/MI_UI_AllyLife.MI_UI_AllyLife'
+ScalarParameterValues[1] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = RefractionDepthBias
+    }
+}
+TextureParameterValues[5] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/UI/ingame/ETC/PlayerStatus/Textures/T_UI_PSSPGauge_Base_BC.T_UI_PSSPGauge_Base_BC'
+        ParameterName = Base_Color
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/UI/ingame/ETC/PlayerStatus/Textures/T_UI_PSSPGauge_line_BC.T_UI_PSSPGauge_line_BC'
+        ParameterName = End_line
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/UI/ingame/ETC/PlayerStatus/Textures/T_UI_PSSPGauge_frame_M.T_UI_PSSPGauge_frame_M'
+        ParameterName = Frame_Mask
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/UI/ingame/ETC/PlayerStatus/Textures/T_UI_PSSPGauge_end__M.T_UI_PSSPGauge_end__M'
+        ParameterName = Gange End Shape
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/UI/ingame/ETC/PlayerStatus/Textures/T_UI_PSSPGauge_body_M.T_UI_PSSPGauge_body_M'
+        ParameterName = Gauge Body Mask
+    }
+}
+VectorParameterValues[1] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=1, G=0.405883, B=0, A=1 }
+        ParameterName = Enemy_Life
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

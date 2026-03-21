@@ -29,7 +29,7 @@ public:
     virtual HRESULT     Initialize(ELevelType nextLevelID, bool loadSharedResources);
     virtual void        Update(float timeDelta) override;
     virtual void        Late_Update(float timeDelta) override;
-    virtual HRESULT    Render() override;
+    virtual HRESULT     Render() override;
 
 private:
     HRESULT  Ready_Layer_UI(const wstring& uiTag);
