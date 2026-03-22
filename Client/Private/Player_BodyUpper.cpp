@@ -3,6 +3,9 @@
 
 #include "Model.h"
 #include "Shader.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(Player_BodyUpper, Protocol::OBJECT_TYPE_PART_OBJECT)
 
 Player_BodyUpper::Player_BodyUpper(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : PartObject(device, context)

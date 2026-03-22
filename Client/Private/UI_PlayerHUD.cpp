@@ -3,11 +3,14 @@
 #include "GameInstance.h"
 #include "UI_PlayerStatus.h"
 #include "UI_PlayerSkill.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(UI_PlayerHUD, Protocol::OBJECT_TYPE_UI_PLAYER_HUD)
 
 UI_PlayerHUD::UI_PlayerHUD(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : HUD(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_UI_PLAYER_HUD);
+    
 }
 
 UI_PlayerHUD::UI_PlayerHUD(const UI_PlayerHUD& rhs)

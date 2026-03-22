@@ -77,7 +77,7 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
 
         desc.levelIndex = ETOI(ELevelType::MainTitle);
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MAIN_TITLE;
-        desc.textureIndex = ETOI(EMainTitle::BG_0);
+        desc.textureIndex = ETOI(EMainTitleTexture::BG_0);
 
         desc.zOrder = 0.5f;
         
@@ -99,7 +99,7 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
 
         desc.levelIndex = ETOI(ELevelType::MainTitle);
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MAIN_TITLE;
-        desc.textureIndex = ETOI(EMainTitle::Logo);
+        desc.textureIndex = ETOI(EMainTitleTexture::Logo);
 
         desc.zOrder = 0.51f;
 
@@ -121,7 +121,7 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
 
         desc.levelIndex = ETOI(ELevelType::MainTitle);
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MAIN_TITLE;
-        desc.textureIndex = ETOI(EMainTitle::PressText0);
+        desc.textureIndex = ETOI(EMainTitleTexture::PressText0);
 
         desc.zOrder = 0.51f;
 
@@ -137,7 +137,7 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
         //GAME->Play_UIAnimation(_pressText, "PressText");
     }
 
-    // Menu Text
+    // Menu Button
     {
         const array<wstring, 3> menuLabels =
         {
@@ -161,7 +161,7 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
             desc.sizeY = menuHeight;
             desc.levelIndex = ETOI(ELevelType::MainTitle);
             desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MAIN_TITLE;
-            desc.textureIndex = ETOI(EMainTitle::TitleMenuBtn);
+            desc.textureIndex = ETOI(EMainTitleTexture::TitleMenuBtn);
             desc.zOrder = 0.52f + i * 0.001f;
 
             desc.labelText = menuLabels[i];
@@ -249,10 +249,10 @@ void Level_MainTitle::Execute_SelectedMenu()
             Level_Loading::Create(_device, _context, ELevelType::GamePlay, true));
         break;
 
-    case 1: // 일단은, Equipment
+    case 1: // 일단은, CharacterSetup
         GAME->Change_Level(
             ETOI(ELevelType::Loading),
-            Level_Loading::Create(_device, _context, ELevelType::Equipment, true));
+            Level_Loading::Create(_device, _context, ELevelType::CharacterSetup, true));
         break;
 
     case 2: // 게임종료는 실제 실행 ㄴ

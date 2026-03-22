@@ -3,11 +3,14 @@
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
 #include "Texture.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(UI_SkillSlot, Protocol::OBJECT_TYPE_UI_SKILL_SLOT)
 
 UI_SkillSlot::UI_SkillSlot(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_UI_SKILL_SLOT);
+    
 }
 
 UI_SkillSlot::UI_SkillSlot(const UI_SkillSlot& rhs)

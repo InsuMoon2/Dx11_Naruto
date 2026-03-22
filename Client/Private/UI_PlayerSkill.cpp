@@ -4,11 +4,14 @@
 #include "Player.h"
 #include "SkillComponent.h"
 #include "SkillDataManager.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(UI_PlayerSkill, Protocol::OBJECT_TYPE_UI_PLAYER_SKILL)
 
 UI_PlayerSkill::UI_PlayerSkill(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Panel(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_UI_PLAYER_SKILL);
+    
 }
 
 UI_PlayerSkill::UI_PlayerSkill(const UI_PlayerSkill& rhs)

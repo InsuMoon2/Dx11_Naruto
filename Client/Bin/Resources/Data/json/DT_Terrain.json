@@ -1,0 +1,9 @@
+{
+    "Terrain": [
+        {
+            "Id": "COMPONENT_TYPE_TERRAIN",
+            "Path": "../../Client/Bin/Resources/Textures/Terrain/Height.bmp",
+            "Level": "Static"
+        }
+    ]
+}

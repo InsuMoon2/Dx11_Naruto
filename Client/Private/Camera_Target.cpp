@@ -1,6 +1,9 @@
 ﻿#include "pch.h"
 #include "Camera_Target.h"
 
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(Camera_Target, Protocol::OBJECT_TYPE_CAMERA_TARGET)
 IMPLEMENT_REFLECTION(Camera_Target);
 
 bool Camera_Target::Register_Properties()
@@ -19,7 +22,7 @@ bool Camera_Target::Register_Properties()
 Camera_Target::Camera_Target(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Camera(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_CAMERA_TARGET);
+    
 }
 
 Camera_Target::Camera_Target(const Camera_Target& rhs)

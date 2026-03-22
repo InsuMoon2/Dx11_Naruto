@@ -198,11 +198,11 @@ HRESULT ResourceLoader::Build_ShaderJobs(const wstring& tablePath, vector<FLoadJ
 
     for (const auto& item : root["Shader"])
     {
-        string idStr = item["id"];
-        string pathStr = item["path"];
-        string layoutStr = item.value("type", "");
-        string levelStr = item.value("level", "Static");
-        int32 count = item.value("count", 1);
+        string idStr = item["Id"];
+        string pathStr = item["Path"];
+        string layoutStr = item.value("Type", "");
+        string levelStr = item.value("Level", "Static");
+        int32 count = item.value("Count", 1);
 
         uint32 typeId = Get_ComponentID_From_String(idStr);
         uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
@@ -358,22 +358,201 @@ HRESULT ResourceLoader::Build_SkillJobs(const wstring& tablePath, vector<FLoadJo
     return S_OK;
 }
 
+HRESULT ResourceLoader::Build_AllResourceJobs(const wstring& tablePath, vector<FLoadJob>& outJobs)
+{
+    ifstream file(tablePath);
+    if (!file.is_open())
+    {
+        LOG_ERROR("Failed to open table: {}", Utils::ToString(tablePath));
+        return E_FAIL;
+    }
+
+    json root;
+    file >> root;
+    file.close();
+
+    unordered_map<uint32, bool> firstTextureByType;
+
+    if (root.contains("Texture"))
+    {
+        for (const auto& item : root["Texture"])
+        {
+            string idStr = item.value("Id", string{});
+            string pathStr = item.value("Path", string{});
+            string levelStr = item.value("Level", "Static");
+            int32  count = item.value("Count", 1);
+
+            if (idStr.empty()) idStr = item.value("id", string{});
+            if (pathStr.empty()) pathStr = item.value("path", string{});
+            if (idStr.empty()) continue;
+
+            uint32 typeId = Get_ComponentID_From_String(idStr);
+            uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+            if (typeId == 0) continue;
+            FLoadJob job;
+
+            job.componentID = typeId;
+            job.levelIndex = levelIndex;
+            job.idStr = idStr;
+            job.pathStr = pathStr;
+            job.count = count;
+
+            if (!firstTextureByType[typeId])
+            {
+                job.type = ELoadJobType::TextureCreate;
+                firstTextureByType[typeId] = true;
+            }
+            else
+            {
+                job.type = ELoadJobType::TextureAppend;
+            }
+
+            outJobs.push_back(job);
+        }
+    }
+
+    if (root.contains("Shader"))
+    {
+        for (const auto& item : root["Shader"])
+        {
+            string idStr = item.value("Id", string{});
+            string pathStr = item.value("Path", string{});
+            string layoutStr = item.value("Extra", string{}); 
+            string levelStr = item.value("Level", "Static");
+            int32  count = item.value("Count", 1);
+
+            if (idStr.empty()) idStr = item.value("id", string{});
+            if (pathStr.empty()) pathStr = item.value("path", string{});
+            if (layoutStr.empty()) layoutStr = item.value("type", string{});
+            if (idStr.empty()) continue;
+
+            uint32 typeId = Get_ComponentID_From_String(idStr);
+            uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+            if (typeId == 0) continue;
+            FLoadJob job{};
+
+            job.type = ELoadJobType::Shader;
+            job.componentID = typeId;
+            job.levelIndex = levelIndex;
+            job.idStr = idStr;
+            job.pathStr = pathStr;
+            job.extraStr = layoutStr;
+            job.count = count;
+            outJobs.push_back(job);
+        }
+    }
+
+    if (root.contains("Model"))
+    {
+        for (const auto& item : root["Model"])
+        {
+            string idStr = item.value("Id", string{});
+            string pathStr = item.value("Path", string{});
+            string guidStr = item.value("Guid", string{});
+            string levelStr = item.value("Level", "Static");
+            string modelTypeStr = item.value("ModelType", "Static");
+
+            if (idStr.empty()) idStr = item.value("id", string{});
+            if (pathStr.empty()) pathStr = item.value("path", string{});
+            if (guidStr.empty()) guidStr = item.value("guid", string{});
+            if (modelTypeStr.empty()) modelTypeStr = item.value("modelType", "Static");
+            if (idStr.empty()) continue;
+
+            if (!guidStr.empty())
+                pathStr = Utils::ToString(GAME->Resolve_AssetPath(guidStr));
+
+            uint32 typeId = Get_ComponentID_From_String(idStr);
+            uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+            if (typeId == 0) continue;
+            FLoadJob job{};
+
+            job.type = ELoadJobType::Model;
+            job.componentID = typeId;
+            job.levelIndex = levelIndex;
+            job.idStr = idStr;
+            job.pathStr = pathStr;
+            job.extraStr = modelTypeStr;
+            job.isSkeletal = (modelTypeStr == "SkeletalMesh");
+
+            outJobs.push_back(job);
+        }
+    }
+
+    if (root.contains("Skill"))
+    {
+        for (const auto& item : root["Skill"])
+        {
+            if (!item.contains("SkillID")) continue;
+            FLoadJob job{};
+            job.type = ELoadJobType::Skill;
+            job.skillData.skill_Id = item.value("SkillID", 0);
+            job.skillData.skillName = Utils::ToWString(item.value("SkillName", string{}));
+            job.skillData.srvIndex = item.value("SrvIndex", 0);
+            job.skillData.coolDown = item.value("Cooldown", 0.f);
+            job.skillData.manaCost = item.value("ManaCost", 0);
+            outJobs.push_back(job);
+        }
+    }
+
+	string jsonKey = "";
+	if (root.contains("DT_GameObject")) jsonKey = "DT_GameObject";
+	else if (root.contains("GameObject")) jsonKey = "GameObject";
+
+	if (!jsonKey.empty())
+	{
+		for (const auto& item : root[jsonKey])
+		{
+			string typeStr = item.value("ObjectType", string{});
+			string levelStr = item.value("Level", "Static");
+
+			const google::protobuf::EnumDescriptor* descriptor = Protocol::OBJECT_TYPE_descriptor();
+			const google::protobuf::EnumValueDescriptor* valueDesc = descriptor->FindValueByName(typeStr);
+			
+			if (valueDesc == nullptr)
+			{
+				LOG_ERROR("엑셀 파싱 에러: {} 라는 ObjectType은 Protobuf Enum에 존재하지 않습니다! 오타를 확인하세요.", typeStr);
+				continue; 
+			}
+
+			uint32 objType = static_cast<uint32>(valueDesc->number());
+			uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+
+			FLoadJob job{};
+			job.type = ELoadJobType::GameObjectPrototype;
+			job.levelIndex = levelIndex;
+			job.objectType = objType;
+			outJobs.push_back(job); 
+		}
+	}
+
+    LOG_INFO("Loaded integrated resources successfully: {}", Utils::ToString(tablePath));
+    return S_OK;
+}
+
 HRESULT ResourceLoader::Load_Model(const json& data)
 {
     for (const auto& item : data)
     {
-        string idStr = item["id"];
+        string idStr = item.value("Id", string{});
+        if(idStr.empty()) idStr = item.value("id", string{});
 
-        string guidStr = item.value("guid", "");
-        string pathStr;
+        string guidStr = item.value("Guid", string{});
+        if (guidStr.empty()) guidStr = item.value("guid", string{});
+
+        string pathStr = item.value("Path", string{});
+        if (pathStr.empty()) pathStr = item.value("path", string{});
 
         if(!guidStr.empty())
             pathStr = Utils::ToString(GAME->Resolve_AssetPath(guidStr));
-        else
-            pathStr = item["path"];
+        
+        string levelStr = item.value("Level", string{});
+        if (levelStr.empty()) levelStr = item.value("level", "Static");
 
-        string levelStr = item.value("level", "Static");
-        string modelTypeStr = item.value("modelType", "Static");
+        string modelTypeStr = item.value("ModelType", string{});
+        if (modelTypeStr.empty()) modelTypeStr = item.value("modelType", "Static");
         EMeshVertexType modelType = (modelTypeStr == "SkeletalMesh") ? EMeshVertexType::SkeletalMesh : EMeshVertexType::StaticMesh;
 
         uint32 typeId = Get_ComponentID_From_String(idStr);
@@ -413,10 +592,17 @@ HRESULT ResourceLoader::Load_Shaders(const json& data)
 {
     for (const auto& item : data)
     {
-        string idStr    = item["id"];
-        string pathStr  = item["path"];
-        string layoutStr  = item.value("type", "");
-        string levelStr   = item.value("level", "Static");
+        string idStr = item.value("Id", string{});
+        if (idStr.empty()) idStr = item.value("id", string{});
+
+        string pathStr = item.value("Path", string{});
+        if (pathStr.empty()) pathStr = item.value("path", string{});
+
+        string layoutStr = item.value("Extra", string{});
+        if (layoutStr.empty()) layoutStr = item.value("type", string{});
+
+        string levelStr = item.value("Level", string{});
+        if (levelStr.empty()) levelStr = item.value("level", "Static");
 
         uint32 typeId = Get_ComponentID_From_String(idStr);
         uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
@@ -454,9 +640,14 @@ HRESULT ResourceLoader::Load_Terrains(const json& data)
 {
     for (const auto& item : data)
     {
-        string idStr = item["id"];
-        string pathStr = item["path"];
-        string levelStr = item.value("level", "Static");
+        string idStr = item.value("Id", string{});
+        if (idStr.empty()) idStr = item.value("id", string{});
+
+        string pathStr = item.value("Path", string{});
+        if (pathStr.empty()) pathStr = item.value("path", string{});
+
+        string levelStr = item.value("Level", string{});
+        if (levelStr.empty()) levelStr = item.value("level", "Static");
 
         uint32 typeId = Get_ComponentID_From_String(idStr);
         uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
@@ -489,10 +680,17 @@ HRESULT ResourceLoader::Load_Textures(const json& data)
 
     for (const auto& item : data)
     {
-        string idStr    = item["id"];
-        string pathStr  = item["path"];
-        string levelStr   = item.value("level", "Static");
-        int32  count      = item.value("count", 1);
+        string idStr = item.value("Id", string{});
+        if (idStr.empty()) idStr = item.value("id", string{});
+
+        string pathStr = item.value("Path", string{});
+        if (pathStr.empty()) pathStr = item.value("path", string{});
+
+        string levelStr = item.value("Level", string{});
+        if (levelStr.empty()) levelStr = item.value("level", "Static");
+
+        int32 count = item.value("Count", 0);
+        if (count == 0) count = item.value("count", 1);
 
         uint32 typeId = Get_ComponentID_From_String(idStr);
         uint32 levelIndex = Get_LevelIndex_From_String(levelStr);

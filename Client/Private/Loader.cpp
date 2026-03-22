@@ -118,7 +118,7 @@ HRESULT Loader::Loading()
         hr = Loading_For_GamePlay();
         break;
 
-    case ELevelType::Equipment:
+    case ELevelType::CharacterSetup:
         hr = Loading_For_Equipment();
         break;
     }
@@ -158,21 +158,7 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<AnimationStateComponent>(staticLevel);
     //GAME->Register_ComponentFactory<Model>(staticLevel);
 
-    /* GameObject */
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PLAYER,
-        MyPlayer::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_REMOTE_PLAYER,
-        RemotePlayer::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_MONSTER,
-        Monster::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_TERRAIN,
-        Terrain::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_PART_OBJECT,
-        Player_BodyUpper::Create(_device, _context));
+ 
 }
 
 void Loader::Initialize_BT_Nodes()
@@ -328,32 +314,17 @@ HRESULT Loader::Execute_Job_OnMainThread(const FLoadJob& job)
 
     case ELoadJobType::GameObjectPrototype:
         {
-        const auto objType = static_cast<Protocol::OBJECT_TYPE>(job.objectType);
+        auto instance = GAME->Create_GameObjectFromFactory(
+            static_cast<Protocol::OBJECT_TYPE>(job.objectType));
 
-        switch (objType)
+        if (instance)
         {
-        case Protocol::OBJECT_TYPE_TERRAIN:
-            CHECK_FAILED(GAME->Add_GameObject_Prototype(job.levelIndex, job.objectType,
-                Terrain::Create(_device, _context)), E_FAIL);
-            break;
-
-        case Protocol::OBJECT_TYPE_CAMERA_FREE:
-            CHECK_FAILED(GAME->Add_GameObject_Prototype(job.levelIndex, job.objectType,
-                Camera_Free::Create(_device, _context)), E_FAIL);
-            break;
-
-        case Protocol::OBJECT_TYPE_CAMERA_TARGET:
-            CHECK_FAILED(GAME->Add_GameObject_Prototype(job.levelIndex, job.objectType,
-                Camera_Target::Create(_device, _context)), E_FAIL);
-            break;
-
-        case Protocol::OBJECT_TYPE_PLAYER_START:
-            CHECK_FAILED(GAME->Add_GameObject_Prototype(job.levelIndex, job.objectType,
-                PlayerStart::Create(_device, _context)), E_FAIL);
-            break;
-
-        default:
-            return E_FAIL;
+            GAME->Add_GameObject_Prototype(job.levelIndex, job.objectType, instance);
+        }
+        else
+        {
+            //LOG_ERROR("로더: 엑셀에 적힌 객체를 팩토리에서 못 찾음!");
+            //return E_FAIL;
         }
         break;
         }
@@ -392,25 +363,17 @@ HRESULT Loader::Loading_For_Maintitle()
         Register_Components();
         Initialize_BT_Nodes();
 
-        lstrcpy(_loadingText, TEXT("셰이더 작업 준비 중"));
-        CHECK_FAILED(_resourceLoader->Build_ShaderJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Shader.json"), jobs), E_FAIL);
 
-        lstrcpy(_loadingText, TEXT("지형 작업 준비 중"));
-        CHECK_FAILED(_resourceLoader->Build_TerrainJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Texture.json"), jobs), E_FAIL);
 
-        lstrcpy(_loadingText, TEXT("텍스처 작업 준비 중"));
-        CHECK_FAILED(_resourceLoader->Build_TextureJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Model.json"), jobs), E_FAIL);
 
-        lstrcpy(_loadingText, TEXT("모델 작업 준비 중"));
-        CHECK_FAILED(_resourceLoader->Build_ModelJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/ModelTable.json"), jobs), E_FAIL);
-
-        lstrcpy(_loadingText, TEXT("스킬 작업 준비 중"));
-        CHECK_FAILED(_resourceLoader->Build_SkillJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/SkillDataTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_SkillData.json"), jobs), E_FAIL);
     }
 
     {
@@ -447,31 +410,18 @@ HRESULT Loader::Loading_For_GamePlay()
 
         lstrcpy(_loadingText, TEXT("공용 리소스 작업 준비 중"));
 
-        CHECK_FAILED(_resourceLoader->Build_ShaderJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Shader.json"), jobs), E_FAIL);
 
-        CHECK_FAILED(_resourceLoader->Build_TerrainJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Texture.json"), jobs), E_FAIL);
 
-        CHECK_FAILED(_resourceLoader->Build_TextureJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Model.json"), jobs), E_FAIL);
 
-        CHECK_FAILED(_resourceLoader->Build_ModelJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/ModelTable.json"), jobs), E_FAIL);
-
-        CHECK_FAILED(_resourceLoader->Build_SkillJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/SkillDataTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_SkillData.json"), jobs), E_FAIL);
     }
-
-    // 게임오브젝트
-    auto pushProto = [&](Protocol::OBJECT_TYPE type)
-        {
-            FLoadJob job{};
-            job.type = ELoadJobType::GameObjectPrototype;
-            job.levelIndex = ETOI(ELevelType::GamePlay);
-            job.objectType = static_cast<uint32>(type);
-            jobs.push_back(std::move(job));
-        };
 
     // 맵
     auto pushChunk = [&](const char* fileName)
@@ -484,16 +434,13 @@ HRESULT Loader::Loading_For_GamePlay()
             jobs.push_back(std::move(job));
         };
 
-    // 게임오브젝트
-    pushProto(Protocol::OBJECT_TYPE_TERRAIN);
-    pushProto(Protocol::OBJECT_TYPE_CAMERA_FREE);
-    pushProto(Protocol::OBJECT_TYPE_CAMERA_TARGET);
-    pushProto(Protocol::OBJECT_TYPE_PLAYER_START);
-
     // 맵 리소스 로드
     pushChunk("BM_KonohaVillage03_Environments_BackdropBuildings");
     pushChunk("BM_KonohaVillage03_Environments_Props");
     pushChunk("BM_KonohaVillage03_Environments_Terrain");
+
+    CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+        TEXT("../../Client/Bin/Resources/Data/json/DT_GameObject.json"), jobs), E_FAIL);
 
     {
         scoped_lock lock(_jobMutex);
@@ -522,27 +469,24 @@ HRESULT Loader::Loading_For_Equipment()
 
         lstrcpy(_loadingText, TEXT("공용 리소스 작업 준비 중"));
 
-        CHECK_FAILED(_resourceLoader->Build_ShaderJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Shader.json"), jobs), E_FAIL);
 
-        CHECK_FAILED(_resourceLoader->Build_TerrainJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Texture.json"), jobs), E_FAIL);
 
-        CHECK_FAILED(_resourceLoader->Build_TextureJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Model.json"), jobs), E_FAIL);
 
-        CHECK_FAILED(_resourceLoader->Build_ModelJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/ModelTable.json"), jobs), E_FAIL);
-
-        CHECK_FAILED(_resourceLoader->Build_SkillJobs(
-            TEXT("../../Client/Bin/Resources/Data/json/SkillDataTable.json"), jobs), E_FAIL);
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_SkillData.json"), jobs), E_FAIL);
     }
 
     auto pushProto = [&](Protocol::OBJECT_TYPE type)
         {
             FLoadJob job{};
             job.type = ELoadJobType::GameObjectPrototype;
-            job.levelIndex = ETOI(ELevelType::Equipment);
+            job.levelIndex = ETOI(ELevelType::CharacterSetup);
             job.objectType = static_cast<uint32>(type);
             jobs.push_back(std::move(job));
         };

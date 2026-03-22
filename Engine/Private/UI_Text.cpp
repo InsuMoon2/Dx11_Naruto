@@ -1,10 +1,13 @@
 ﻿#include "pch.h"
 #include "UI_Text.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(UI_Text, Protocol::OBJECT_TYPE_UI_TEXT)
 
 UI_Text::UI_Text(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_UI_TEXT);
+
 }
 
 UI_Text::UI_Text(const UI_Text& rhs)

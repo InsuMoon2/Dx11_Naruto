@@ -1,15 +1,20 @@
 ﻿#include "pch.h"
 #include "Background.h"
+
+#include "GameObject_Factory.h"
+
 #include "GameInstance.h"
 #include "Texture.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
 #include "Level_MainTitle.h"
 
+REGISTER_GAMEOBJECT(Background, Protocol::OBJECT_TYPE_BACKGROUND)
+
 Background::Background(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject { device, context }
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_BACKGROUND);
+    
 }
 
 Background::Background(const Background& rhs)

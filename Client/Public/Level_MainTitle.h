@@ -13,7 +13,7 @@ enum class ETitleState { PressSpace, SelectMenu };
 class Background;
 class UI_MainTitleMenuButton;
 
-enum class EMainTitle
+enum class EMainTitleTexture
 {
     BG_0, BG_1,
     Logo,

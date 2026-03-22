@@ -294,9 +294,6 @@
       <Filter>06. Command</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Editor_Camera_Free.cpp" />
-    <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp">
-      <Filter>98. Default</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Level_Serializer.cpp">
       <Filter>97. Utils</Filter>
     </ClCompile>

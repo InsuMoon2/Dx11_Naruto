@@ -4,11 +4,14 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(UI_PlayerHP, Protocol::OBJECT_TYPE_UI_PLAYER_HP)
 
 UI_PlayerHP::UI_PlayerHP(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_UI_PLAYER_HP);
+    
 }
 
 UI_PlayerHP::UI_PlayerHP(const UI_PlayerHP& rhs)

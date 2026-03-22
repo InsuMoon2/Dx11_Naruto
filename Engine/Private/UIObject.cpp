@@ -87,6 +87,8 @@ void UIObject::Update(float timeDelta)
 
     _sizeX = _transformCom->Get_LocalScale().x;
     _sizeY = _transformCom->Get_LocalScale().y;
+
+    Update_Transform();
 }
 
 void UIObject::Late_Update(float timeDelta)

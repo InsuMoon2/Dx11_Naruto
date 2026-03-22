@@ -46,6 +46,7 @@ class Transform;
 /* Factory */
 class Component_Factory;
 class BTNode_Factory;
+class GameObject_Factory;
 
 class DelegateHub;
 
@@ -183,6 +184,9 @@ public: /* Component_Factory */
     // 에디터 조회용
     vector<pair<uint32, wstring>>   Get_RegisteredComponents();
 
+public: /* GameObejct Factory */
+    Shared<GameObject>              Create_GameObjectFromFactory(Protocol::OBJECT_TYPE type);
+
 public: /* BTNode_Factory */
     void                            Register_BTNode(const string& category, const string& typeName, BTNode_Factory::Creator creator);
     Shared<BTNode>                  Instantiate_BTNode(const string& typeName);
@@ -281,6 +285,7 @@ private: /* Manager */
 private: /* Factory */
     Unique<Component_Factory>       _componentFactory {};
     Unique<BTNode_Factory>          _btNodeFactory    {};
+    Unique<GameObject_Factory>      _gameObjectFactory{};
 
 private: /* Delegate Hub */
     DelegateHub                     _delegateHub;

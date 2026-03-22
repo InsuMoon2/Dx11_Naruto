@@ -1,0 +1,60 @@
+{
+    "Model": [
+        {
+            "Id": "COMPONENT_TYPE_MODEL_PLAYER",
+            "Path": "../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_MODEL_MONSTER",
+            "Path": "../../Client/Bin/Resources/Models/Boruto/Boruto.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_MODEL_SASKE",
+            "Path": "../../Client/Bin/Resources/Models/Saske/Saske.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_TestModel",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Animation/TesetNormal.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Body_Upper_Armor1",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Upper/Armor1.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Body_Upper_Coat15",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Upper/Coat15.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Face_Face1",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Face/Face1.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Headgear_Man_Cap1",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_Cap1.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        }
+    ]
+}

@@ -1,5 +1,8 @@
 ﻿#include "pch.h"
 #include "RemotePlayer.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(RemotePlayer, Protocol::OBJECT_TYPE_REMOTE_PLAYER)
 
 RemotePlayer::RemotePlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Player(device, context)

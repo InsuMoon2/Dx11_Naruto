@@ -1,0 +1,143 @@
+{
+    "Texture": [
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_DEFAULT",
+            "Path": "../../Client/Bin/Resources/Textures/Default%d.jpg",
+            "Count": 2,
+            "Level": "MainTitle"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_TERRAIN",
+            "Path": "../../Client/Bin/Resources/Textures/Terrain/Tile%d.dds",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKILL_ICON",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_Skill_Gauge_Base%d_BC.png",
+            "Count": 2,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKILL_ICON",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Skill_Icon/Skill_Icon%d.png",
+            "Count": 2,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_PLAYER_STATUS",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_SP_Gauge_Base_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_PLAYER_STATUS",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/life_gauge_masc.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_PLAYER_STATUS",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/life_gauge_masc_Body.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
+            "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle%d.png",
+            "Count": 2,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
+            "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle_Logo.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
+            "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle_Text%d.png",
+            "Count": 3,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
+            "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/T_UI_TitleMenu_Btn_BC.png",
+            "Count": 1,
+            "Level": "Static",
+            "Extra": "Extra Test"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
+            "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/T_UI_TitleMenu_Btn_Effect%d_BC.png",
+            "Count": 2,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_LOADING",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadingScreen_%03d_BC.png",
+            "Count": 2,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_LOADING",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_Load_Icon_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_LOADING",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadIndicator_Base_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_UI_Fcility_Customize_UP.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_UI_Common_RoleItemWindow_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_UI_Common_RoleItem_WinTitle_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_UI_Party_NameBG_Def_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Title_BG_01_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Title_Symbol_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Menu_Btn_00_Def_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Menu_Btn_05_Def_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        }
+    ]
+}

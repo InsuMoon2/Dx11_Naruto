@@ -4,11 +4,14 @@
 #include "Shader.h"
 #include "Model.h"
 #include "ModelMaterial.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(StaticMeshActor, Protocol::OBJECT_TYPE_STATIC_MESH)
 
 StaticMeshActor::StaticMeshActor(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_STATIC_MESH);
+    
 }
 
 StaticMeshActor::StaticMeshActor(const StaticMeshActor& rhs)

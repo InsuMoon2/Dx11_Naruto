@@ -6,11 +6,14 @@
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
 #include "GameInstance.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(UI_MainTitleMenuButton, Protocol::OBJECT_TYPE_UI_MAIN_TITLE_TEXT)
 
 UI_MainTitleMenuButton::UI_MainTitleMenuButton(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_UI_MAIN_TITLE_TEXT);
+    
 }
 
 UI_MainTitleMenuButton::UI_MainTitleMenuButton(const UI_MainTitleMenuButton& rhs)
@@ -53,14 +56,13 @@ void UI_MainTitleMenuButton::Late_Update(float timeDelta)
 HRESULT UI_MainTitleMenuButton::Render()
 {
     if (!_isVisible) return S_OK;
-
     if (!_isSelected) return S_OK;
 
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_worldMatrix), E_FAIL);
     CHECK_FAILED(__super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", ETransformState::View), E_FAIL);
     CHECK_FAILED(__super::Bind_ShaderResource(_shaderCom, "g_ProjMatrix", ETransformState::Proj), E_FAIL);
 
-    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", ETOI(EMainTitle::TitleMenuBtn)), E_FAIL);
+    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", ETOI(EMainTitleTexture::TitleMenuBtn)), E_FAIL);
 
     // 하이라이트 색상 배율
     //float highlight = _isSelected ? 1.0f : 0.6f;

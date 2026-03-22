@@ -1,0 +1,99 @@
+{
+    "DT_GameObject": [
+        {
+            "Id": "Monster",
+            "ObjectType": "OBJECT_TYPE_MONSTER",
+            "Level": "Static"
+        },
+        {
+            "Id": "MyPlayer",
+            "ObjectType": "OBJECT_TYPE_PLAYER",
+            "Level": "Static"
+        },
+        {
+            "Id": "RemotePlayer",
+            "ObjectType": "OBJECT_TYPE_REMOTE_PLAYER",
+            "Level": "Static"
+        },
+        {
+            "Id": "Player_BodyUpper",
+            "ObjectType": "OBJECT_TYPE_PART_OBJECT",
+            "Level": "Static"
+        },
+        {
+            "Id": "StaticMeshActor",
+            "ObjectType": "OBJECT_TYPE_STATIC_MESH",
+            "Level": "Static"
+        },
+        {
+            "Id": "Camera_Free",
+            "ObjectType": "OBJECT_TYPE_CAMERA_FREE",
+            "Level": "Static"
+        },
+        {
+            "Id": "Camera_Target",
+            "ObjectType": "OBJECT_TYPE_CAMERA_TARGET",
+            "Level": "Static"
+        },
+        {
+            "Id": "PlayerStart",
+            "ObjectType": "OBJECT_TYPE_PLAYER_START",
+            "Level": "Static"
+        },
+        {
+            "Id": "Background",
+            "ObjectType": "OBJECT_TYPE_BACKGROUND",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_LoadingProgressBar",
+            "ObjectType": "OBJECT_TYPE_UI_LOADING_PROGRESS_BAR",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_LoadingSpinner",
+            "ObjectType": "OBJECT_TYPE_UI_LOADING_SPINNER",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_MainTitleMenuButton",
+            "ObjectType": "OBJECT_TYPE_UI_MAIN_TITLE_TEXT",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_PlayerHP",
+            "ObjectType": "OBJECT_TYPE_UI_PLAYER_HP",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_PlayerHUD",
+            "ObjectType": "OBJECT_TYPE_UI_PLAYER_HUD",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_PlayerSkill",
+            "ObjectType": "OBJECT_TYPE_UI_PLAYER_SKILL",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_PlayerStatus",
+            "ObjectType": "OBJECT_TYPE_UI_PLAYER_STATUS",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_SkillSlot",
+            "ObjectType": "OBJECT_TYPE_UI_SKILL_SLOT",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_Text",
+            "ObjectType": "OBJECT_TYPE_UI_TEXT",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_TabButton",
+            "ObjectType": "OBJECT_TYPE_UI_TAB",
+            "Level": "Static"
+        }
+    ]
+}

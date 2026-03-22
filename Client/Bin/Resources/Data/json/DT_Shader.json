@@ -1,0 +1,40 @@
+{
+    "Shader": [
+        {
+            "Id": "COMPONENT_TYPE_SHADER_VTXTEX",
+            "Path": "../../Client/Bin/Shaders/Shader_Vtxtex.hlsl",
+            "Level": "Static",
+            "Extra": "VtxTex"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_VTXNORTEX",
+            "Path": "../../Client/Bin/Shaders/Shader_VtxNorTex.hlsl",
+            "Level": "Static",
+            "Extra": "VtxNorTex"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_VTXMESH",
+            "Path": "../../Client/Bin/Shaders/Shader_VtxMesh.hlsl",
+            "Level": "Static",
+            "Extra": "VtxMesh"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_UI",
+            "Path": "../../Client/Bin/Shaders/Shader_UI.hlsl",
+            "Level": "Static",
+            "Extra": "VtxTex"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_STATIC_MESH",
+            "Path": "../../Client/Bin/Shaders/Shader_VtxStaticMesh.hlsl",
+            "Level": "Static",
+            "Extra": "VtxMesh"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_VTXANIMMESH",
+            "Path": "../../Client/Bin/Shaders/Shader_VtxAnimMesh.hlsl",
+            "Level": "Static",
+            "Extra": "VtxAnim"
+        }
+    ]
+}

@@ -4,6 +4,9 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(UI_LoadingSpinner, Protocol::OBJECT_TYPE_UI_LOADING_SPINNER)
 
 UI_LoadingSpinner::UI_LoadingSpinner(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
