@@ -1,10 +1,13 @@
 ﻿#include "pch.h"
 #include "PlayerStart.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(PlayerStart, Protocol::OBJECT_TYPE_PLAYER_START)
 
 PlayerStart::PlayerStart(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_PLAYER_START);
+    
 }
 
 PlayerStart::PlayerStart(const PlayerStart& rhs)

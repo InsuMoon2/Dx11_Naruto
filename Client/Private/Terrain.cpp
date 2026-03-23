@@ -4,11 +4,14 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "VIBuffer_Terrain.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(Terrain, Protocol::OBJECT_TYPE_CAMERA_FREE)
 
 Terrain::Terrain(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_TERRAIN);
+    
 }
 
 Terrain::Terrain(const Terrain& rhs)

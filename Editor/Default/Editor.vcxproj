@@ -165,6 +165,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/;$(SolutionDir)Client\Bin;$(SolutionDir)Server\ServerCore\Bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;Client.lib;ServerCore.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/WHOLEARCHIVE:Client.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">
@@ -313,9 +314,6 @@
     <ClCompile Include="..\Private\Texture_Inspector.cpp" />
     <ClCompile Include="..\Private\Transform_Inspector.cpp" />
     <ClCompile Include="..\Private\Level_Serializer.cpp" />
-    <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">Use</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\Private\UI_Animation_View.cpp" />
     <ClCompile Include="..\Private\UI_AnimSequencerAdapter.cpp" />
     <ClCompile Include="Editor.cpp" />
@@ -326,11 +324,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Editor.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="Editor.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Editor.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

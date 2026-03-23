@@ -27,11 +27,14 @@
 #include "UI_Manager.h"
 #include "UIObject.h"
 
+#include "Animation_Manager.h"
+#include "GameObject_Factory.h"
+#include "Text_Renderer.h"
+
+
 #pragma push_macro("new")
 #undef new
-#include "Animation_Manager.h"
 #include "imgui.h"
-#include "Text_Renderer.h"
 #pragma pop_macro("new")
 
 IMPLEMENT_SINGLETON(GameInstance)
@@ -103,8 +106,12 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     _textRenderer = Text_Renderer::Create(Get_Device(), _graphicDevice->Get_SwapChain());
     CHECK_NULL(_textRenderer, E_FAIL);
 
+    // 노티파이 경로 세팅
     _animationManager = Animation_Manager::Create(TEXT("../../Client/Bin/Resources/Models/Custom/Animation"));
     CHECK_NULL(_animationManager, E_FAIL);
+
+    _gameObjectFactory = GameObject_Factory::Create();
+    CHECK_NULL(_gameObjectFactory, E_FAIL);
 
     return S_OK;
 }
@@ -432,6 +439,11 @@ Shared<Component> GameInstance::Instantiate_FromFactory(uint32 typeId)
 vector<pair<uint32, wstring>> GameInstance::Get_RegisteredComponents()
 {
     return _componentFactory->Get_RegisteredComponents();
+}
+
+Shared<GameObject> GameInstance::Create_GameObjectFromFactory(Protocol::OBJECT_TYPE type)
+{
+    return _gameObjectFactory->Create_Object(Get_Device(), Get_Context(), type);
 }
 
 void GameInstance::Register_BTNode(const string& category, const string& typeName, BTNode_Factory::Creator creator)

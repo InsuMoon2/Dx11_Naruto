@@ -34,6 +34,8 @@ public:
     HRESULT Build_ModelJobs(const wstring& tablePath, vector<FLoadJob>& outJobs);
     HRESULT Build_SkillJobs(const wstring& tablePath, vector<FLoadJob>& outJobs);
 
+    HRESULT Build_AllResourceJobs(const wstring& tablePath, vector<FLoadJob>& outJobs);
+
 private:
     HRESULT Load_Textures(const json& data);
     HRESULT Load_Shaders(const json& data);

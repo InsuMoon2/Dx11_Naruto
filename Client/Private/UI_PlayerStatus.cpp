@@ -7,11 +7,14 @@
 #include "Player.h"
 #include "UI_PlayerHP.h"
 #include "CombatStat.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(UI_PlayerStatus, Protocol::OBJECT_TYPE_UI_PLAYER_STATUS)
 
 UI_PlayerStatus::UI_PlayerStatus(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Panel(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_UI_PLAYER_STATUS);
+    
 }
 
 UI_PlayerStatus::UI_PlayerStatus(const UI_PlayerStatus& rhs)

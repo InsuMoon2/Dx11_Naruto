@@ -6,6 +6,7 @@
 #include "Background.h"
 #include "Loader.h"
 #include "GameInstance.h"
+#include "Level_CharacterSetup.h"
 #include "Level_Gameplay.h"
 #include "Level_MainTitle.h"
 #include "UI_LoadingSpinner.h"
@@ -71,6 +72,10 @@ void Level_Loading::Update(float timeDelta)
         case ELevelType::GamePlay:
             nextLevel = Level_Gameplay::Create(_device, _context);
             break;
+
+        case ELevelType::CharacterSetup:
+            nextLevel = Level_CharacterSetup::Create(_device, _context);
+            break;
         }
 
         if (nextLevel == nullptr)
@@ -127,6 +132,7 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
                 Protocol::OBJECT_TYPE_BACKGROUND,
                 EUILayer::Overlay,
                 &desc));
+
         CHECK_NULL(_loadingBackground, E_FAIL);
     }
 

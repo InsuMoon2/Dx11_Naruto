@@ -199,8 +199,7 @@ void Asset_Manager::Refresh_Cache()
         _guidToMeta.erase(guid);
     }
 
-    // [추가]
-    // 같은 파일을 가리키는 중복 GUID도 함께 정리한다.
+    // 중복 GUID도 함께 정리
     Deduplicate_Assets_ByPath();
 
     if (!invalidGuids.empty() || previousCount != _guidToMeta.size())
@@ -336,6 +335,9 @@ string Asset_Manager::Detect_AssetType(const wstring& filePath) const
     if (extension == ".ttf" || extension == ".otf")
         return "font";
 
+    if (extension == ".xlsx" || extension == ".csv")
+        return "data_table";
+
     return "unknown";
 }
 
@@ -469,6 +471,9 @@ bool Asset_Manager::Should_RegisterAsset(const fs::path& path) const
     if (ext == ".ttf" || ext == ".otf")
         return true;
 
+    if (ext == ".xlsx" || ext == ".csv")
+        return true;
+
     return false;
 }
 
@@ -488,8 +493,6 @@ wstring Asset_Manager::Normalize_PathKey(const wstring& path)
     const fs::path normalizedPath = fs::absolute(fs::path(path)).lexically_normal();
     wstring pathKey = normalizedPath.wstring();
 
-    // [중요]
-    // Windows 경로는 대소문자 구분이 사실상 없으므로 캐시 키를 소문자로 통일한다.
     std::transform(pathKey.begin(), pathKey.end(), pathKey.begin(),
         [](wchar_t ch) { return static_cast<wchar_t>(std::towlower(ch)); });
 
@@ -529,8 +532,6 @@ void Asset_Manager::Deduplicate_Assets_ByPath(const string& preferGuid)
             continue;
         }
 
-        // [중요]
-        // .meta에서 읽은 GUID나 방금 갱신한 GUID를 우선 보존할 수 있게 한다.
         if (!preferGuid.empty() && guid == preferGuid)
         {
             guidsToRemove.push_back(iter->second);

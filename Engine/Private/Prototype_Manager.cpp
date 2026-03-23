@@ -26,9 +26,9 @@ HRESULT Prototype_Manager::Add_GameObject_Prototype(uint32 levelIndex, uint32 ob
 {
     if (Find_GameObject_Prototype(levelIndex, objID) != nullptr)
     {
-        MSG_BOX("This object is already exists.");
+        //MSG_BOX("This object is already exists.");
 
-        return E_FAIL;
+        //return E_FAIL;
     }
 
     _gameObjectPrototypes[levelIndex].emplace(objID, prototype);
@@ -39,6 +39,12 @@ HRESULT Prototype_Manager::Add_GameObject_Prototype(uint32 levelIndex, uint32 ob
 shared_ptr<GameObject> Prototype_Manager::Clone_GameObject(uint32 levelIndex, uint32 objID, void* arg)
 {
     auto gameObject = Find_GameObject_Prototype(levelIndex, objID);
+
+    if (gameObject == nullptr && levelIndex != 0)
+    {
+        gameObject = Find_GameObject_Prototype(0, objID);
+    }
+
     CHECK_NULL(gameObject, nullptr);
 
     return gameObject->Clone(arg);

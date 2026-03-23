@@ -20,7 +20,8 @@ static const unordered_map<string, EIconType> g_ExtensionToIconMap =
 {
     { ".csv", EIconType::Csv }, { ".CSV", EIconType::Csv },
     { ".json", EIconType::Json }, { ".JSON", EIconType::Json },
-    { ".py", EIconType::Python }, { ".PY", EIconType::Python }
+    { ".py", EIconType::Python }, { ".PY", EIconType::Python },
+    { ".xlsx", EIconType::Xlsl}, { ".XLSX" , EIconType::Xlsl}
 };
 
 Content_Browser::Content_Browser()
@@ -60,6 +61,11 @@ void Content_Browser::Initialize()
         GAME->Get_Context(),
         TEXT("../../Client/Bin/Resources/Textures/Python.png"), 1);
 
+    _iconFiles[ETOI(EIconType::Xlsl)] = Texture::Create(
+        GAME->Get_Device(),
+        GAME->Get_Context(),
+        TEXT("../../Client/Bin/Resources/Textures/DataTable.png"), 1);
+
     // 초기 리소스 스캔 Resources 폴더 기준
     Refresh_Resources();
 
@@ -72,7 +78,7 @@ void Content_Browser::Update(float timeDelta)
 {
     EditorWindow::Update(timeDelta);
 
-    // 새로고침 - 필요할지? 일단 구현
+    // 새로고침 - 필요할지?
     //if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) && ImGui::IsKeyPressed(ImGuiKey_F5))
     //{
     //    Refresh_Resources();

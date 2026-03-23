@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Camera_Free.h"
+#include "GameObject_Factory.h"
 
+REGISTER_GAMEOBJECT(Camera_Free, Protocol::OBJECT_TYPE_CAMERA_FREE)
 IMPLEMENT_REFLECTION(Camera_Free)
 
 bool Camera_Free::Register_Properties()
@@ -17,7 +19,7 @@ bool Camera_Free::Register_Properties()
 Camera_Free::Camera_Free(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Camera(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_CAMERA_FREE);
+    
 }
 
 Camera_Free::Camera_Free(const Camera_Free& rhs)

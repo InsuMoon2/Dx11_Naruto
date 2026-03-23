@@ -1,0 +1,18 @@
+{
+    "DT_SkilLData": [
+        {
+            "SkillID": 1001,
+            "SkillName": "Rasengan",
+            "SrvIndex": 2,
+            "Cooldown": 8,
+            "MansCost": 30
+        },
+        {
+            "SkillID": 1002,
+            "SkillName": "Chidori",
+            "SrvIndex": 3,
+            "Cooldown": 7,
+            "MansCost": 30
+        }
+    ]
+}

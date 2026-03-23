@@ -4,11 +4,14 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(UI_LoadingProgressBar, Protocol::OBJECT_TYPE_UI_LOADING_PROGRESS_BAR)
 
 UI_LoadingProgressBar::UI_LoadingProgressBar(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_UI_LOADING_PROGRESS_BAR);
+    
 }
 
 UI_LoadingProgressBar::UI_LoadingProgressBar(const UI_LoadingProgressBar& rhs)

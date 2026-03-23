@@ -10,6 +10,9 @@
 #include "Client_PacketHandler.h"
 #include "SkillComponent.h"
 #include "AnimationStateComponent.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(MyPlayer, Protocol::OBJECT_TYPE_PLAYER)
 
 MyPlayer::MyPlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Player(device, context)

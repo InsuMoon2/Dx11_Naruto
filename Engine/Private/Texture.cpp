@@ -163,6 +163,14 @@ HRESULT Texture::Bind_SRV(Shared<Shader> shader, const char* constantName, uint3
 
 HRESULT Texture::Add_SRV(const wstring& filePath)
 {
+    for (const auto& existPath : _sourcePaths)
+    {
+        if (existPath == filePath)
+        {
+            return S_OK;
+        }
+    }
+
     // 확장자 확인
     wchar_t ext[MAX_PATH] = {};
     _wsplitpath_s(filePath.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, ext, MAX_PATH);

@@ -1,0 +1,59 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/UI/Common_Textures/Roll_Icon/roll_sha.roll_sha'
+}
+Expressions[30] =
+{
+    Expressions[3] = MaterialExpressionTextureSample'/Game/UI/ingame/Announce/Materials/M_UI_LoopTexture_Mask.MaterialExpressionTextureSample_4'
+    Expressions[4] = MaterialExpressionTextureSample'/Game/UI/ingame/Announce/Materials/M_UI_LoopTexture_Mask.MaterialExpressionTextureSample_9'
+    Expressions[6] = MaterialExpressionTextureSample'/Game/UI/ingame/Announce/Materials/M_UI_LoopTexture_Mask.MaterialExpressionTextureSample_1'
+    Expressions[15] = MaterialExpressionScalarParameter'/Game/UI/ingame/Announce/Materials/M_UI_LoopTexture_Mask.MaterialExpressionScalarParameter_9'
+    Expressions[16] = MaterialExpressionScalarParameter'/Game/UI/ingame/Announce/Materials/M_UI_LoopTexture_Mask.MaterialExpressionScalarParameter_10'
+    Expressions[22] = MaterialExpressionScalarParameter'/Game/UI/ingame/Announce/Materials/M_UI_LoopTexture_Mask.MaterialExpressionScalarParameter_11'
+    Expressions[23] = MaterialExpressionScalarParameter'/Game/UI/ingame/Announce/Materials/M_UI_LoopTexture_Mask.MaterialExpressionScalarParameter_12'
+}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] = { ParameterInfos[0]={} }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[0] = {}
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[0] = {}
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[4] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Vertical Value_tex1, Group=None }
+    CollectedScalarParameters[1] = { Value=2, Name=Horizontal Value_tex1, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Vertical Value_tex2, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 1.5
+        Name = Horizontal Value_tex2
+        Group = None
+    }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

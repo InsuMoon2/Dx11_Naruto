@@ -1,0 +1,23 @@
+{
+    "DT_StaticLevel": [
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_DEFAULT",
+            "Count": 1.0,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_COMBAT_STAT",
+            "Count": 1.0,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_RECT",
+            "Count": 1.0,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER",
+            "Level": "Static "
+        }
+    ]
+}

@@ -10,10 +10,11 @@ NS_BEGIN(Editor)
 
 enum class EIconType
 {
-    Folder, Csv, Json, Python, END
+    Folder, Csv, Json, Python, Xlsl, END
 };
 
-class Content_Browser : public EditorWindow
+class Content_Browser 
+: public EditorWindow
 {
 private:
     struct FFileEntry

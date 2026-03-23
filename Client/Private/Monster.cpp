@@ -9,7 +9,9 @@
 #include "VIBuffer_Rect.h"
 #include "Model.h"
 #include "AnimationStateComponent.h"
+#include "GameObject_Factory.h"
 
+REGISTER_GAMEOBJECT(Monster, Protocol::OBJECT_TYPE_MONSTER)
 IMPLEMENT_REFLECTION(Monster);
 
 bool Monster::Register_Properties()
@@ -25,7 +27,6 @@ bool Monster::Register_Properties()
 Monster::Monster(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
 {
-    Set_ObjectType(Protocol::OBJECT_TYPE_MONSTER);
 }
 
 Monster::Monster(const Monster& rhs)

@@ -40,7 +40,6 @@ public:
 
 public:
     void    Set_Selected(bool bSelected);
-
     void    Set_Visibility(bool active) override;
 
 private:
