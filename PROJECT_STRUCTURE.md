@@ -1,7 +1,7 @@
 # Dx11_Naruto 프로젝트 구조
 
 > AI 어시스턴트는 매 대화 시작 시 이 파일을 먼저 읽고 현재 구조를 기준으로 판단할 것.
-> 마지막 갱신: 2026-03-14
+> 마지막 갱신: 2026-03-21
 
 ## 문서 보강 규칙
 
@@ -165,6 +165,21 @@ Dx11_Naruto/
 | 기타 | `DebugDraw.h`, `Debug_Manager.h`, `Delegate.h`, `DelegateHub.h`, `Utils.h`, `AnimNotify_Factory.h` |
 | protobuf 노출 | `Enum.pb.h`, `Struct.pb.h`, `Protocol.pb.h` |
 
+#### [변경] 주요 헤더 묶음 (2026-03 업데이트)
+
+| 묶음 | 파일 |
+|---|---|
+| 코어 | `Base.h`, `GameInstance.h`, `Graphic_Device.h`, `PipeLine.h`, `Timer.h`, `Timer_Manager.h`, `ICommand.h`, `Level_Manager.h`, `Asset_Manager.h` |
+| 오브젝트/시스템 | `GameObject.h`, `Component.h`, `Level.h`, `Layer.h`, `Object_Manager.h`, `Prototype_Manager.h`, `Prefab_Manager.h`, `GameObject_Factory.h`, `Component_Factory.h`, `Event_Manager.h`, `ContainerObject.h`, `PartObject.h` |
+| 렌더링 | `Shader.h`, `Texture.h`, `Renderer.h`, `RenderTarget.h`, `VIBuffer.h`, `VIBuffer_Rect.h`, `VIBuffer_Terrain.h`, `Mesh.h`, `Model.h`, `ModelMaterial.h`, `Model_BinaryLoader.h`, `ModelBin_Types.h`, `Vertex_Struct.h` |
+| 씬/게임플레이 기반 | `Transform.h`, `Camera.h`, `Camera_Manager.h`, `Character.h`, `Controller.h`, `PlayerStart.h`, `Light.h`, `Light_Manager.h` |
+| UI/텍스트 | `UIObject.h`, `HUD.h`, `Panel.h`, `UI_Manager.h`, `UI_Text.h`, `Text_Renderer.h`, `Text_Types.h`, `UI_AnimPlayer.h`, `UI_AnimSerializer.h`, `UI_AnimTypes.h`, `UI_AnimUtility.h` |
+| BT/AI | `BehaviorTree.h`, `Blackboard.h`, `BTNode.h`, `BTRoot.h`, `BTComposite.h`, `BTTask.h`, `BTTask_MoveTo.h`, `BTTask_Wait.h`, `BTNode_Factory.h` |
+| 애니메이션 | `Animation.h`, `Animation_Manager.h`, `Bone.h`, `Channel.h`, `AnimNotify.h`, `AnimNotifyState.h`, `AnimNotify_Factory.h`, `AnimNotify_Serializer.h`, `AnimNotify_Types.h` |
+| 공용 타입 | `Engine_Define.h`, `Engine_Enum.h`, `Engine_Function.h`, `Engine_Macro.h`, `Engine_Struct.h`, `Engine_Typedef.h`, `Property_Types.h`, `Reflection_Macro.h` |
+| 기타 | `DebugDraw.h`, `Debug_Manager.h`, `Delegate.h`, `DelegateHub.h`, `Utils.h` |
+| protobuf 노출 | `Enum.pb.h`, `Struct.pb.h`, `Protocol.pb.h` |
+
 ### Engine/Private 현재 주요 cpp
 
 실제 구현 파일 기준으로 다음 기능이 들어 있다.
@@ -174,6 +189,16 @@ Dx11_Naruto/
 - AI/BT: `BehaviorTree.cpp`, `Blackboard.cpp`, `BTComposite.cpp`, `BTRoot.cpp`, `BTTask*.cpp`
 - 팩토리/관리: `GameObject_Factory.cpp`, `Component_Factory.cpp`, `Prototype_Manager.cpp`, `Prefab_Manager.cpp`, `Asset_Manager.cpp`
 - 시스템: `Input_Manager.cpp`, `Event_Manager.cpp`, `DelegateHub.cpp`, `DebugDraw.cpp`
+
+#### [변경] 최신 Engine 구현 파트 (2026-03 업데이트)
+
+- 렌더/리소스: `Shader.cpp`, `Texture.cpp`, `Mesh.cpp`, `Model.cpp`, `ModelMaterial.cpp`, `Model_BinaryLoader.cpp`, `RenderTarget.cpp`, `Asset_Manager.cpp`
+- UI/텍스트: `UIObject.cpp`, `UI_Manager.cpp`, `HUD.cpp`, `Panel.cpp`, `UI_Text.cpp`, `Text_Renderer.cpp`, `UI_Anim*.cpp`
+- AI/BT: `BehaviorTree.cpp`, `Blackboard.cpp`, `BTComposite.cpp`, `BTRoot.cpp`, `BTTask*.cpp`
+- 애니메이션/노티파이: `Animation.cpp`, `Animation_Manager.cpp`, `Bone.cpp`, `Channel.cpp`, `AnimNotify*.cpp`
+- 팩토리/관리: `GameObject_Factory.cpp`, `Component_Factory.cpp`, `Prototype_Manager.cpp`, `Prefab_Manager.cpp`, `Level_Manager.cpp`
+- 시스템: `Input_Manager.cpp`, `Event_Manager.cpp`, `DelegateHub.cpp`, `DebugDraw.cpp`
+- 기타: `ContainerObject.cpp`, `PartObject.cpp` (조립형 캐릭터)
 
 ### Engine 주의사항
 
@@ -209,6 +234,19 @@ Dx11_Naruto/
 | UI | `UI_PlayerHUD.h`, `UI_PlayerStatus.h`, `UI_PlayerHP.h`, `UI_PlayerSkill.h`, `UI_SkillSlot.h`, `UI_LoadingProgressBar.h`, `UI_LoadingSpinner.h`, `UI_MainTitleText.h` |
 | 네트워크 | `NetworkManager.h`, `ServerSession.h`, `Client_PacketHandler.h`, `IReplicable.h`, `Protocol_Wrapper.h` |
 | 기타 | `Spawn_Helper.h`, `SkillDataManager.h`, `Client_Defines.h`, `Client_Enum.h`, `Client_Macro.h`, `Client_Struct.h` |
+
+#### [변경] 최신 Client/Public 헤더 (2026-03 업데이트)
+
+| 묶음 | 파일 |
+|---|---|
+| 게임 오브젝트 | `Player.h`, `MyPlayer.h`, `RemotePlayer.h`, `Player_BodyUpper.h`, `Monster.h`, `Terrain.h`, `StaticMeshActor.h`, `Background.h` |
+| 카메라 | `Camera_Free.h`, `Camera_Target.h` |
+| 컴포넌트 | `CombatStat.h`, `InputComponent.h`, `MovementComponent.h`, `PlayerController.h`, `AIController.h`, `Replicator.h`, `SkillComponent.h`, `AnimationStateComponent.h` |
+| FSM | `IPlayerState.h`, `PlayerStateMachine.h`, `PlayerState_Idle.h`, `PlayerState_Run.h`, `PlayerState_Jump.h`, `PlayerState_DoubleJump.h`, `PlayerState_SuperJump.h`, `PlayerState_SuperJumpCharge.h`, `PlayerState_Dash.h`, `PlayerState_HeightLand.h` |
+| 레벨/앱 | `MainApp.h`, `Loader.h`, `ResourceLoader.h`, `Level_MainTitle.h`, `Level_Loading.h`, `Level_Gameplay.h`, `Level_Equipment.h` |
+| UI | `UI_PlayerHUD.h`, `UI_PlayerStatus.h`, `UI_PlayerHP.h`, `UI_PlayerSkill.h`, `UI_SkillSlot.h`, `UI_LoadingProgressBar.h`, `UI_LoadingSpinner.h`, `UI_MainTitleMenuButton.h` |
+| 네트워크 | `NetworkManager.h`, `ServerSession.h`, `Client_PacketHandler.h`, `IReplicable.h`, `Protocol_Wrapper.h` |
+| 기타 | `Spawn_Helper.h`, `SkillDataManager.h`, `Client_Defines.h`, `Client_Enum.h`, `Client_Macro.h`, `Client_Struct.h`, `ANS_Test.h`, `AN_Test.h` |
 
 ### Client 현재 특징
 
@@ -275,6 +313,18 @@ Game/
 | 윈도우 | `EditorWindow.h`, `Scene_View.h`, `Game_View.h`, `Hierarchy.h`, `Inspector.h`, `Content_Browser.h`, `Console_View.h`, `BehaviorTree_View.h`, `Prefab_View.h`, `Profiler_View.h` |
 | 인스펙터 | `Inspector_Factory.h`, `Component_Inspector.h`, `Transform_Inspector.h`, `CombatStat_Inspector.h`, `BehaviorTree_Inspector.h`, `Texture_Inspector.h`, `Model_Inspector.h`, `Reflection_Inspector.h` |
 | 레벨/기타 | `Level_Editor.h`, `Level_Serializer.h`, `Editor_Camera_Free.h`, `PlayerSession_Manager.h` |
+| Undo/Redo | `CommandHistory.h`, `Action_Command.h`, `Property_Command.h` |
+| 공용 | `Editor_Define.h`, `Editor_Enum.h`, `Editor_Macro.h`, `Editor_Struct.h`, `IconsFontAwesome6.h` |
+
+#### [변경] 최신 Editor/Public 헤더 (2026-03 업데이트)
+
+| 묶음 | 파일 |
+|---|---|
+| 코어 | `Editor_MainApp.h`, `Editor_Manager.h`, `EditorInstance.h`, `ImGui_Manager.h`, `Editor_Logger.h`, `Notification_Manager.h`, `Editor_Helper.h` |
+| 윈도우 | `EditorWindow.h`, `Scene_View.h`, `Game_View.h`, `Hierarchy.h`, `Inspector.h`, `Content_Browser.h`, `Console_View.h`, `BehaviorTree_View.h`, `Prefab_View.h`, `Profiler_View.h`, `Animation_View.h`, `UI_Animation_View.h` |
+| 인스펙터 | `Inspector_Factory.h`, `Component_Inspector.h`, `Transform_Inspector.h`, `CombatStat_Inspector.h`, `BehaviorTree_Inspector.h`, `Texture_Inspector.h`, `Model_Inspector.h`, `Reflection_Inspector.h`, `AnimNotify_Inspector.h`, `AnimNotifyState_Inspector.h`, `AnimNotify_Inspector_Factory.h`, `AnimationState_Inspector.h`, `PlayerStateMachine_Inspector.h` |
+| 애니메이션 | `AnimSequencerAdapter.h`, `Editor_SequencerAdapterBase.h`, `UI_AnimSequencerAdapter.h`, `UI_AnimTypes.h` |
+| 레벨/기타 | `Level_Editor.h`, `Level_Serializer.h`, `Editor_Camera_Free.h`, `PlayerSession_Manager.h`, `Prefab_PreviewCameraSettings.h` |
 | Undo/Redo | `CommandHistory.h`, `Action_Command.h`, `Property_Command.h` |
 | 공용 | `Editor_Define.h`, `Editor_Enum.h`, `Editor_Macro.h`, `Editor_Struct.h`, `IconsFontAwesome6.h` |
 
