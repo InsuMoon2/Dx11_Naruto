@@ -48,6 +48,8 @@ public: /* PendingKill */
     void Set_SourcePrefabName(const string& prefabName) { _sourcePrefabName = prefabName; }
     const string& Get_SourcePrefabName() const { return _sourcePrefabName; }
 
+    void Set_Local(bool isLocal);
+
 public:
     template<typename T>
     shared_ptr<T> Get_Component()

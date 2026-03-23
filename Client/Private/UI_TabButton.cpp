@@ -27,6 +27,11 @@ HRESULT UI_TabButton::Initialize(void* arg)
     const auto* desc = static_cast<FUITabDesc*>(arg);
     CHECK_NULL(desc, E_FAIL);
 
+    _textureType = desc->textureType;
+    _normalTextureIndex = desc->textureIndex;
+    _selectedTextureIndex = desc->selectedTextureIndex;
+    _currentTextureIndex = _normalTextureIndex;
+
     CHECK_FAILED(Ready_Components(), E_FAIL);
     CHECK_FAILED(Ready_ChildText(desc), E_FAIL);
 
@@ -55,7 +60,7 @@ HRESULT UI_TabButton::Render()
     CHECK_FAILED(__super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", ETransformState::View), E_FAIL);
     CHECK_FAILED(__super::Bind_ShaderResource(_shaderCom, "g_ProjMatrix", ETransformState::Proj), E_FAIL);
 
-    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", ETOI(ECharacterSetupTexture::TabButton)), E_FAIL);
+    CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _currentTextureIndex), E_FAIL);
 
     float alpha = _opacity;
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &alpha, sizeof(float)), E_FAIL);
@@ -70,7 +75,9 @@ HRESULT UI_TabButton::Render()
 
 void UI_TabButton::Set_Selected(bool bSelected)
 {
-    // 이벤트 넘겨줘야함
+    _isSelected = bSelected;
+
+    _currentTextureIndex = _isSelected ? _selectedTextureIndex : _normalTextureIndex;
 }
 
 void UI_TabButton::Set_Visibility(bool active)
@@ -79,6 +86,19 @@ void UI_TabButton::Set_Visibility(bool active)
 
     if (_labelUI)
         _labelUI->Set_Visibility(active);
+}
+
+HRESULT UI_TabButton::Remove_FromUIManager()
+{
+    if (_labelUI)
+    {
+        CHECK_FAILED(GAME->Remove_UI(_labelUI), E_FAIL);
+        _labelUI = nullptr;
+    }
+
+    CHECK_FAILED(GAME->Remove_UI(static_pointer_cast<UIObject>(GetSharedPtr())), E_FAIL);
+
+    return S_OK;
 }
 
 HRESULT UI_TabButton::Ready_Components()
@@ -92,35 +112,48 @@ HRESULT UI_TabButton::Ready_Components()
 
 HRESULT UI_TabButton::Ready_ChildText(const FUITabDesc* desc)
 {
-    // 텍스트 출력
-    {
-        UI_Text::FUITextDesc textDesc{};
-        textDesc.name = format(L"{} Label", desc->name);
+    UI_Text::FUITextDesc textDesc{};
+    textDesc.name = format(L"{} Label", desc->name);
 
-        textDesc.posX = desc->posX + desc->labelOffset.x;
-        textDesc.posY = desc->posY + desc->labelOffset.y;
+    // 부모 버튼 기준 로컬 오프셋 세팅
+    textDesc.posX = desc->labelOffset.x;
+    textDesc.posY = desc->labelOffset.y;
 
-        textDesc.sizeX = (desc->labelSize.x > 0.f) ? desc->labelSize.x : desc->sizeX;
-        textDesc.sizeY = (desc->labelSize.y > 0.f) ? desc->labelSize.y : desc->sizeY;
+    textDesc.sizeX = (desc->labelSize.x > 0.f) ? desc->labelSize.x : desc->sizeX;
+    textDesc.sizeY = (desc->labelSize.y > 0.f) ? desc->labelSize.y : desc->sizeY;
 
-        textDesc.zOrder = _zOrder + 0.01f;
-        textDesc.levelIndex = desc->levelIndex;
+    textDesc.zOrder = _zOrder + 0.01f;
+    textDesc.levelIndex = desc->levelIndex;
 
-        textDesc.text = desc->labelText;
-        textDesc.style.fontFamily = L"Malgun Gothic";
-        textDesc.style.fontSize = desc->fontSize;
-        textDesc.style.color = Color(0.f, 0.f, 0.f, 1.f);
-        textDesc.style.hAlign = ETextHAlign::Center;
-        textDesc.style.vAlign = ETextVAlign::Middle;
-        textDesc.style.wordWrap = false;
+    textDesc.text = desc->labelText;
+    textDesc.style.fontFamily = L"Malgun Gothic";
+    textDesc.style.fontSize = desc->fontSize;
+    textDesc.style.color = Color(0.f, 0.f, 0.f, 1.f);
+    textDesc.style.hAlign = ETextHAlign::Center;
+    textDesc.style.vAlign = ETextVAlign::Middle;
+    textDesc.style.wordWrap = false;
 
-        _labelUI = static_pointer_cast<UI_Text>(
-            GAME->Add_UI(Protocol::OBJECT_TYPE_UI_TEXT, EUILayer::HUD, &textDesc));
-        CHECK_NULL(_labelUI, E_FAIL);
-    }
+    auto childUI = static_pointer_cast<UI_Text>(
+        GAME->Clone_UI(Protocol::OBJECT_TYPE_UI_TEXT, &textDesc));
+    CHECK_NULL(childUI, E_FAIL);
+
+    childUI->Set_LevelIndex(_levelIndex);
+    childUI->Set_UILayer(Get_UILayer());
+
+    childUI->Get_Transform()->Set_Parent(this->Get_Transform());
+
+    childUI->Set_Name(Get_Name() + L"." + textDesc.name);
+
+    CHECK_FAILED(GAME->Register_UI(Get_UILayer(), childUI), E_FAIL);
+
+    _labelUI = childUI;
+
+    if (!_isVisible)
+        _labelUI->Set_Visibility(false);
 
     return S_OK;
 }
+
 
 Shared<UI_TabButton> UI_TabButton::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {

@@ -96,6 +96,9 @@ HRESULT UI_Manager::Register_UI(EUILayer layer, Shared<UIObject> uiObject)
     }
 
     uiObject->Set_UILayer(layer);
+
+    CHECK_FAILED(uiObject->On_UIRegistered(), E_FAIL);
+
     _uiLayers[ETOI(layer)].push_back(uiObject);
     return S_OK;
 }
@@ -209,6 +212,37 @@ bool UI_Manager::Is_InputBlocked() const
         if (ui->Is_Visibility()) return true;
     }
     return false;
+}
+
+HRESULT UI_Manager::Remove_UI(const wstring& name)
+{
+    auto iter = _uiMap.find(name);
+    if (iter == _uiMap.end())
+        return E_FAIL;
+
+    Shared<UIObject> uiObject = iter->second;
+    CHECK_NULL(uiObject, E_FAIL);
+
+    const EUILayer layer = uiObject->Get_UILayer();
+    _uiLayers[ETOI(layer)].remove(uiObject);
+
+    _uiMap.erase(iter);
+
+    return S_OK;
+}
+
+HRESULT UI_Manager::Remove_UI(const Shared<UIObject>& uiObject)
+{
+    CHECK_NULL(uiObject, E_FAIL);
+
+    const wstring name = uiObject->Get_Name();
+    if (!name.empty())
+        return Remove_UI(name);
+
+    const EUILayer layer = uiObject->Get_UILayer();
+    _uiLayers[ETOI(layer)].remove(uiObject);
+
+    return S_OK;
 }
 
 bool UI_Manager::Play_UIAnimation(Shared<UIObject> target, const string& animationName)

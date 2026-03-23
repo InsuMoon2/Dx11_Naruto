@@ -16,6 +16,7 @@ enum PacketID
     S_RemoveObject  = 5,
     S_Move          = 6,
 
+    C_EnterGame     = 49,
     C_Move          = 50,
 };
 
@@ -32,7 +33,8 @@ public:
     static void Handle_S_Move(Shared<ServerSession> session, BYTE* buffer, int32 len);
 
 	// 보내기
-	static SendBufferRef Make_C_Move(float x, float y, float z, float rotY);
+	static SendBufferRef Make_C_Move(const Protocol::ObjectInfo& objectInfo);
+    static SendBufferRef Make_C_EnterGame(const Vec3& spawnPos, float rotY);
 
 public:
 	template<typename T>

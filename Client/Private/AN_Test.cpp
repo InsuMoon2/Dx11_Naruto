@@ -1,5 +1,8 @@
 ﻿#include "pch.h"
 #include "AN_Test.h"
+#include "AnimNotify_Factory.h"
+
+REGISTER_ANIM_NOTIFY(AN_Test)
 
 string AN_Test::Get_TypeName() const
 {

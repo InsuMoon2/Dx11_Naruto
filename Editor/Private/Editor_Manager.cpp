@@ -77,7 +77,8 @@ void Editor_Manager::Update(float timeDelta)
     {
         GAME->Set_GameInputEnabled(true);
     }
-
+    // RT 크기 미리 반영
+    Sync_RuntimeViewportForGame();
 }
 
 void Editor_Manager::Render()
@@ -201,12 +202,13 @@ void Editor_Manager::Handle_Shortcuts()
     {
         auto console = Get_Window(TEXT("Console"));
         auto content = Get_Window(TEXT("Content Browser"));
+        auto hierachy = Get_Window(TEXT("Hierarchy"));
+        auto inspector = Get_Window(TEXT("Inspector"));
 
-        if (console)
-            console->Set_Active(!console->IsActive());
-
-        if (content)
-            content->Set_Active(!content->IsActive());
+        if (console)   console->Set_Active(!console->IsActive());
+        if (content)   content->Set_Active(!content->IsActive());
+        if (hierachy)  hierachy->Set_Active(!hierachy->IsActive());
+        if (inspector) inspector->Set_Active(!inspector->IsActive());
     }
 }
 
@@ -217,6 +219,33 @@ shared_ptr<EditorWindow> Editor_Manager::Get_Window(const wstring& key)
         return it->second;
 
     return nullptr;
+}
+
+void Editor_Manager::Sync_RuntimeViewportForGame()
+{
+    Shared<RenderTarget> targetRT = nullptr;
+
+    if (GAME->Get_GameState() == EGameState::Play)
+    {
+        auto gameView = dynamic_pointer_cast<Game_View>(Get_Window(TEXT("Game")));
+        if (gameView && gameView->IsActive())
+            targetRT = gameView->Get_RenderTarget();
+    }
+    else
+    {
+        auto sceneView = dynamic_pointer_cast<Scene_View>(Get_Window(TEXT("Scene")));
+        if (sceneView && sceneView->IsActive())
+            targetRT = sceneView->Get_RenderTarget();
+    }
+
+    if (targetRT && targetRT->Get_Width() > 0 && targetRT->Get_Height() > 0)
+    {
+        GAME->Set_UIViewportSize(targetRT->Get_Width(), targetRT->Get_Height());
+    }
+    else
+    {
+        GAME->Set_UIViewportSize(GAME->Get_ViewportWidth(), GAME->Get_ViewportHeight());
+    }
 }
 
 void Editor_Manager::Begin_DockSpace()

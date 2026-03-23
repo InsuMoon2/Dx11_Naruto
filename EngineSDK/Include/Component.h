@@ -31,6 +31,10 @@ public:
     }
 
 public:
+    virtual void Set_IsLocal(bool isLocal) { _isLocal = isLocal; }
+    bool         Is_Local() const { return _isLocal; }
+
+public:
     virtual json    To_Json() const;
     virtual void    From_Json(const json& data);
 
@@ -48,6 +52,7 @@ protected:
 protected:
     Weak<GameObject> _owner;
 
+    bool    _isLocal = true;
 
 public:
     virtual Shared<Component> Clone(void* arg) abstract;

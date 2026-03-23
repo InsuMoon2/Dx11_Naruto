@@ -34,6 +34,7 @@
 
 #pragma push_macro("new")
 #undef new
+#include "Camera.h"
 #include "imgui.h"
 #pragma pop_macro("new")
 
@@ -59,6 +60,15 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _uiViewportWidth = static_cast<float>(desc.viewportWidth);
     _uiViewportHeight = static_cast<float>(desc.viewportHeight);
+
+    // 실제 창 크기와 별개로 UI 기준 캔버스를 저장
+    _uiReferenceWidth = (desc.uiReferenceWidth > 0)
+        ? static_cast<float>(desc.uiReferenceWidth)
+        : _uiViewportWidth;
+
+    _uiReferenceHeight = (desc.uiReferenceHeight > 0)
+        ? static_cast<float>(desc.uiReferenceHeight)
+        : _uiViewportHeight;
 
     CHECK_NULL(_graphicDevice, E_FAIL);
 
@@ -251,6 +261,48 @@ void GameInstance::Set_UIViewportSize(float width, float height)
 {
     _uiViewportWidth = width;
     _uiViewportHeight = height;
+}
+
+float GameInstance::Get_UIReferenceWidth() const
+{
+    return (_uiReferenceWidth > 0.f) ? _uiReferenceWidth : Get_UIViewportWidth();
+}
+
+float GameInstance::Get_UIReferenceHeight() const
+{
+    return (_uiReferenceHeight > 0.f) ? _uiReferenceHeight : Get_UIViewportHeight();
+}
+
+void GameInstance::Set_UIReferenceSize(float width, float height)
+{
+    _uiReferenceWidth = width;
+    _uiReferenceHeight = height;
+}
+
+float GameInstance::Get_UIScale() const
+{
+    const float refW = Get_UIReferenceWidth();
+    const float refH = Get_UIReferenceHeight();
+    const float viewW = Get_UIViewportWidth();
+    const float viewH = Get_UIViewportHeight();
+
+    if (refW <= 0.f || refH <= 0.f)
+        return 1.f;
+
+    // 비율 유지용 단일 스케일
+    return min(viewW / refW, viewH / refH);
+}
+
+Vec2 GameInstance::Get_UIViewportOffset() const
+{
+    const float scale = Get_UIScale();
+    const float contentW = Get_UIReferenceWidth() * scale;
+    const float contentH = Get_UIReferenceHeight() * scale;
+
+    const float offsetX = (Get_UIViewportWidth() - contentW) * 0.5f;
+    const float offsetY = (Get_UIViewportHeight() - contentH) * 0.5f;
+
+    return Vec2(offsetX, offsetY);
 }
 
 void GameInstance::Set_ImGuiContext(void* context)
@@ -604,6 +656,16 @@ Shared<UIObject> GameInstance::Add_UI(uint32 objID, EUILayer layer, void* arg)
 void GameInstance::Set_UIPrototypeLevel(uint32 levelIndex)
 {
     _uiManager->Set_UIPrototypeLevel(levelIndex);
+}
+
+HRESULT GameInstance::Remove_UI(const wstring& name)
+{
+    return _uiManager->Remove_UI(name);
+}
+
+HRESULT GameInstance::Remove_UI(const Shared<UIObject>& uiObject)
+{
+    return _uiManager->Remove_UI(uiObject);
 }
 
 Shared<UIObject> GameInstance::Clone_UI(uint32 objID, void* arg)

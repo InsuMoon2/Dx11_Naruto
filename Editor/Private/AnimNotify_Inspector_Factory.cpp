@@ -12,14 +12,8 @@ void AnimNotify_Inspector_Factory::Initialize()
     _notifyInspectors.clear();
     _notifyStateInspectors.clear();
 
-    // 커스텀 노티파이 등록
-    {
-        /* Notify */
-        Register_Notifies();
-
-        /* Notify State */
-        Register_NotifyState();
-    }
+    //Register_NotifyInspectors();
+    //Register_NotifyStateInspectors();
 }
 
 void AnimNotify_Inspector_Factory::Register_NotifyInspector(const string& typeName,

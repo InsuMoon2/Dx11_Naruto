@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "MyPlayer.h"
 #include "RemotePlayer.h"
+#include "Spawn_Helper.h"
 
 static uint64 s_MyNetworkId = 0;
 static umap<uint64, Weak<Player>> s_NetworkPlayers;
@@ -66,40 +67,35 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
     uint64 myId = pkt.info().objectid();
     s_MyNetworkId = myId;
 
-    // MyPlayer 스폰
+    auto existingIt = s_NetworkPlayers.find(myId);
+    if (existingIt != s_NetworkPlayers.end())
+    {
+        auto existing = existingIt->second.lock();
+        if (existing)
+            return;
+    }
+
     uint32 levelIndex = GAME->Current_Level();
 
-    auto gameObject = GAME->Clone_And_Add_GameObject(
-        ETOI(ELevelType::Static),
-        Protocol::OBJECT_TYPE_PLAYER,   
-        levelIndex,
-        TEXT("Layer_GameObject"));
+    auto gameObject = Spawn_Helper::Prefab("TestPlayer2")
+        .AtLevel(levelIndex)
+        .InLayer(TEXT("Layer_Player"))
+        .Spawn();
 
     if (!gameObject)
         return;
 
     auto player = dynamic_pointer_cast<Player>(gameObject);
-    if (player)
-    {
-        player->Set_NetworkId(myId);
-        s_NetworkPlayers[myId] = player;
+    if (!player)
+        return;
 
-        // PlayerStart 위치 찾기
-        auto gameObjects = GAME->Get_GameObjects(GAME->Current_Level());
-        for (auto& obj : gameObjects)
-        {
-            if (obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER_START)
-            {
-                player->Get_Component<Transform>()->Set_LocalPosition(
-                    obj->Get_Component<Transform>()->Get_WorldPosition());
-                break;
-            }
-        }
+    player->Set_NetworkId(myId);
+    player->Sync(pkt.info());
 
-        GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(player->Get_Component<Transform>());
-        GAME->Get_DelegateHub().OnPlayerObjectSpawned.Broadcast(player);
-    }
+    s_NetworkPlayers[myId] = player;
 
+    GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(player->Get_Component<Transform>());
+    GAME->Get_DelegateHub().OnPlayerObjectSpawned.Broadcast(player);
 }
 
 void Client_PacketHandler::Handle_S_AddObject(Shared<ServerSession> session, BYTE* buffer, int32 len)
@@ -107,47 +103,43 @@ void Client_PacketHandler::Handle_S_AddObject(Shared<ServerSession> session, BYT
     Protocol::S_AddObject pkt;
     ParsePacket(buffer, pkt);
 
-    // 오브젝트 순회
     for (int i = 0; i < pkt.objects_size(); i++)
     {
         const Protocol::ObjectInfo& info = pkt.objects(i);
         uint64 objectId = info.objectid();
 
-        // 자기 아이디는 무시
         if (objectId == s_MyNetworkId)
             continue;
 
-        // 등록 된 플레이언지 확인
         auto it = s_NetworkPlayers.find(objectId);
         if (it != s_NetworkPlayers.end())
         {
-            // 아직 존재하면, 스킵
             if (!it->second.expired())
                 continue;
         }
 
-        // RemotePlayer 스폰
         uint32 levelIndex = GAME->Current_Level();
 
-        auto gameObject = GAME->Clone_And_Add_GameObject(
-            ETOI(ELevelType::Static),
-            Protocol::OBJECT_TYPE_REMOTE_PLAYER,
-            levelIndex,
-            TEXT("Layer_GameObject"));
+        auto gameObject = Spawn_Helper::Prefab("RemotePlayer")
+            .AtLevel(levelIndex)
+            .InLayer(TEXT("Layer_GameObject"))
+            .Spawn();
 
         if (!gameObject)
             continue;
 
-        // NetworkId 세팅, map에 등록
         auto remote = dynamic_pointer_cast<Player>(gameObject);
-        if (remote)
-        {
-            remote->Set_NetworkId(objectId);
-            s_NetworkPlayers[objectId] = remote;
-        }
+        if (!remote)
+            continue;
 
+        remote->Set_NetworkId(objectId);
+        remote->Set_Local(false);
+        remote->Sync(info);
+
+        s_NetworkPlayers[objectId] = remote;
     }
 }
+
 
 void Client_PacketHandler::Handle_S_RemoveObject(Shared<ServerSession> session, BYTE* buffer, int32 len)
 {
@@ -205,15 +197,25 @@ void Client_PacketHandler::Handle_S_Move(Shared<ServerSession> session, BYTE* bu
     player->Sync(pkt.info());
 }
 
-SendBufferRef Client_PacketHandler::Make_C_Move(float x, float y, float z, float rotY)
+SendBufferRef Client_PacketHandler::Make_C_Move(const Protocol::ObjectInfo& objectInfo)
 {
     Protocol::C_Move pkt;
-    auto* info = pkt.mutable_info();
-    auto* pos = info->mutable_pos();
-    pos->set_x(x);
-    pos->set_y(y);
-    pos->set_z(z);
-    info->set_rot_y(rotY);
+
+    *pkt.mutable_info() = objectInfo;
 
     return MakeSendBuffer(pkt, C_Move);
+}
+
+SendBufferRef Client_PacketHandler::Make_C_EnterGame(const Vec3& spawnPos, float rotY)
+{
+    Protocol::C_EnterGame pkt;
+
+    auto* protoPos = pkt.mutable_spawn_pos();
+    protoPos->set_x(spawnPos.x);
+    protoPos->set_y(spawnPos.y);
+    protoPos->set_z(spawnPos.z);
+
+    pkt.set_rot_y(rotY);
+
+    return MakeSendBuffer(pkt, C_EnterGame);
 }

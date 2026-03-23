@@ -1,28 +1,12 @@
 ﻿#include "pch.h"
 #include "Editor_MainApp.h"
-
 #include "AnimNotify_Inspector_Factory.h"
-#include "UI_Text.h"
-
-#include "Texture.h"
-#include "Background.h"
 #include "EditorInstance.h"
 #include "GameInstance.h"
-#include "Level_Editor.h"
 #include "Level_Loading.h"
 #include "ResourceLoader.h"
 #include "VIBuffer_Rect.h"
-#include "Shader.h"
 #include "Event_Manager.h"
-#include "StaticMeshActor.h"
-#include "UI_LoadingProgressBar.h"
-#include "UI_LoadingSpinner.h"
-#include "UI_PlayerHP.h"
-#include "UI_PlayerHUD.h"
-#include "UI_PlayerSkill.h"
-#include "UI_PlayerStatus.h"
-#include "UI_SkillSlot.h"
-#include "UI_MainTitleMenuButton.h"
 
 Editor_MainApp::Editor_MainApp()
 {
@@ -45,10 +29,14 @@ HRESULT Editor_MainApp::Initialize()
         engineDesc.viewportHeight = g_winSizeY;
         engineDesc.numLevels = ETOI(ELevelType::END);
 
+        engineDesc.uiReferenceWidth = 1920;
+        engineDesc.uiReferenceHeight = 1080;
+
         if (FAILED(GAME->Initialize_Engine(engineDesc, _device, _context)))
             return E_FAIL;
 
         GAME->Set_UIPrototypeLevel(ETOI(ELevelType::Static));
+        GAME->Set_EditorRuntime(true);
     }
 
     // Editor Setting (항상 활성화)

@@ -1,0 +1,471 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                -5.0
+            ],
+            "rotation": [
+                -0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "Attack": 100.0,
+            "Defense": 5.0,
+            "HP": 100.0,
+            "MP": 100.0,
+            "Max HP": 100.0,
+            "Max MP": 100.0,
+            "Speed": 5.0,
+            "type": "COMPONENT_TYPE_COMBAT_STAT"
+        },
+        {
+            "type": "COMPONENT_TYPE_PLAYER_CONTROLLER",
+            "useControlYaw": true
+        },
+        {
+            "Acceleration": 20.0,
+            "Dash Distance": 6.0,
+            "Dash Duration": 0.18000000715255737,
+            "Deceleration": 24.0,
+            "Gravity": -20.0,
+            "Ground Y": 5.0,
+            "Jump Velocity": 10.0,
+            "Max Sprint Speed": 70.0,
+            "Max Walk Speed": 40.0,
+            "Yaw Speed": 360.0,
+            "type": "COMPONENT_TYPE_MOVEMENT"
+        },
+        {
+            "type": "COMPONENT_TYPE_INPUT"
+        },
+        {
+            "type": "COMPONENT_TYPE_PLAYER_STATE"
+        },
+        {
+            "slotSkillID": [
+                1001,
+                1002
+            ],
+            "type": "COMPONENT_TYPE_SKILL"
+        },
+        {
+            "animation_states": [
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Behind",
+                            "loop": false,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Front",
+                            "loop": false,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Run_Left",
+                            "loop": false,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Run_Right",
+                            "loop": false,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "HeightLand",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Idle",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_BigSword_Idle_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Run_End",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "key": "Run",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Run_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Land",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "key": "Jump",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
+                        "loop": true,
+                        "playRate": 1.5
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Jump_Vertical",
+                        "loop": false,
+                        "playRate": 1.5
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Dash",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "DirectionalSingle",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_ChakraJump_Charge_Start",
+                            "loop": false,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "SuperJumpCharge",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Land",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "key": "DoubleJump",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
+                        "loop": true,
+                        "playRate": 1.5
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_DoubleJump",
+                        "loop": false,
+                        "playRate": 1.7000000476837158
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "SuperJump",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "SK_CHR_Sasuke|Sasuke_Fall_Front_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                }
+            ],
+            "current_state": "Idle",
+            "type": "COMPONENT_TYPE_ANIMATION_STATE"
+        },
+        {
+            "animations": [
+                "SK_CHR_NormalModel|CustomMan_BigSword_Idle_Loop",
+                "SK_CHR_NormalModel|CustomMan_Run_Loop",
+                "SK_CHR_NormalModel|CustomMan_DoubleJump",
+                "SK_CHR_NormalModel|CustomMan_Jump_Vertical",
+                "SK_CHR_NormalModel|CustomMan_Jump_Front",
+                "SK_CHR_NormalModel|CustomMan_HeightLand",
+                "SK_CHR_NormalModel|CustomMan_BigSword_Land",
+                "SK_CHR_NormalModel|CustomMan_Land",
+                "SK_CHR_NormalModel|CustomMan_Run_End",
+                "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop"
+            ],
+            "materials": [
+                {
+                    "material_name": "blinn1",
+                    "texture_overrides": {
+                        "normal_0": "074f4f94-359a-4e60-9b0d-a13383ac0b87"
+                    }
+                },
+                {
+                    "material_name": "surfaceShader1",
+                    "texture_overrides": {
+                        "normal_0": "b0732445-2384-4135-8356-71024c73fed1"
+                    }
+                }
+            ],
+            "model_guid": "5b093ce9-bd01-4631-862a-fcd8b22f3837",
+            "model_type": "SkeletalMesh",
+            "type": "COMPONENT_TYPE_MODEL"
+        }
+    ],
+    "guid": "84550033-4d4d-425f-9192-72f62dc29e5f",
+    "object_type": "OBJECT_TYPE_REMOTE_PLAYER",
+    "prefab_name": "RemotePlayer",
+    "static_class": "RemotePlayer"
+}

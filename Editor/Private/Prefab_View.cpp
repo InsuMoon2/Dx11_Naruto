@@ -320,6 +320,46 @@ void Prefab_View::Draw_Header()
 {
     ImGui::TextColored(ImVec4(1, 1, 0, 1), "Prefab: %s", _prefabName.c_str());
     ImGui::TextDisabled("Path: %s", _prefabPath.c_str());
+    ImGui::Separator();
+    ImGui::Spacing();
+
+    if (_previewObject)
+    {
+        ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.f), "[ Class Type Override ]");
+
+        // 검색 필터용 InputText
+        static char filterBuffer[64] = "";
+        ImGui::InputText("Search Type", filterBuffer, IM_ARRAYSIZE(filterBuffer));
+
+        Protocol::OBJECT_TYPE currentType = _previewObject->Get_ObjectType();
+        string currentTypeName = string(magic_enum::enum_name(currentType));
+
+        // 콤보 박스 렌더링
+        if (ImGui::BeginCombo("Type", currentTypeName.c_str()))
+        {
+            string filterStr = filterBuffer;
+            std::transform(filterStr.begin(), filterStr.end(), filterStr.begin(), ::toupper);
+
+            for (auto& enumVal : magic_enum::enum_values<Protocol::OBJECT_TYPE>())
+            {
+                string typeName = string(magic_enum::enum_name(enumVal));
+
+                if (!filterStr.empty() && typeName.find(filterStr) == string::npos)
+                    continue;
+
+                bool isSelected = (currentType == enumVal);
+                if (ImGui::Selectable(typeName.c_str(), isSelected))
+                {
+                    _previewObject->Set_ObjectType(enumVal);
+                    MarkDirty();
+                }
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+    }
 }
 
 void Prefab_View::Draw_ComponentList()
@@ -401,6 +441,9 @@ void Prefab_View::Draw_ComponentInspector()
 {
     if (!_previewObject)
         return;
+
+    Draw_Header();
+    ImGui::Separator();
 
     Draw_PreviewCameraInspector();
     //Draw_AnimationControls(); 굳이 여기서 안해도 될듯

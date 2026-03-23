@@ -1,25 +1,11 @@
 ﻿#include "pch.h"
 #include "MainApp.h"
-
-#include "Background.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "NetworkManager.h"
 #include "VIBuffer_Rect.h"
-#include "Shader.h"
-#include "Texture.h"
 #include "Event_Manager.h"
 #include "ResourceLoader.h"
-#include "StaticMeshActor.h"
-#include "UI_LoadingProgressBar.h"
-#include "UI_LoadingSpinner.h"
-#include "UI_PlayerHP.h"
-#include "UI_PlayerHUD.h"
-#include "UI_PlayerSkill.h"
-#include "UI_PlayerStatus.h"
-#include "UI_SkillSlot.h"
-#include "UI_MainTitleMenuButton.h"
-#include "UI_Text.h"
 
 MainApp::MainApp()
 {
@@ -34,23 +20,37 @@ HRESULT MainApp::Initialize()
 {
     // Engine Setting
     {
+        RECT clientRect;
+        GetClientRect(g_hWnd, &clientRect);
+        unsigned int realWidth = clientRect.right - clientRect.left;
+        unsigned int realHeight = clientRect.bottom - clientRect.top;
+
         ENGINE_DESC engineDesc = {};
         engineDesc.hWnd = g_hWnd;
         engineDesc.winMode = EWinMode::Win;
-        engineDesc.viewportWidth = g_winSizeX;
-        engineDesc.viewportHeight = g_winSizeY;
+
+        engineDesc.viewportWidth = realWidth;
+        engineDesc.viewportHeight = realHeight;
+
         engineDesc.numLevels = ETOI(ELevelType::END);
+
+        engineDesc.uiReferenceWidth = 1920;
+        engineDesc.uiReferenceHeight = 1080;
+
+        GAME->Set_UIViewportSize((float)realWidth, (float)realHeight);
 
         if (FAILED(GAME->Initialize_Engine(engineDesc, _device, _context)))
             return E_FAIL;
 
         GAME->Set_UIPrototypeLevel(ETOI(ELevelType::Static));
+        GAME->Set_EditorRuntime(false);
     }
 
     CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
     CHECK_FAILED(Ready_StartLevel(ELevelType::MainTitle), E_FAIL);
 
     GAME->Set_GameState(EGameState::Play);
+    GAME->Set_GameInputEnabled(true);
 
     return S_OK;
 }
@@ -65,12 +65,6 @@ void MainApp::Update(float timeDelta)
     INPUT->Update(timeDelta);
 
     GAME->Update_Engine(timeDelta);
-
-    if (!_networkConnected && GAME->Current_Level() == ETOI(ELevelType::GamePlay))
-    {
-        NetworkManager::GetInstance()->Initialize();
-        _networkConnected = true;
-    }
 
     NetworkManager::GetInstance()->Update();
 }
@@ -97,59 +91,37 @@ HRESULT MainApp::Ready_StaticLevel()
     CHECK_NULL(resourceLoader, E_FAIL);
 
     CHECK_FAILED(resourceLoader->Load_ShaderTable(
-        TEXT("../../Client/Bin/Resources/Data/json/ShaderTable.json")), E_FAIL);
-
-    CHECK_FAILED(resourceLoader->Load_TerrainTable(
-        TEXT("../../Client/Bin/Resources/Data/json/TerrainTable.json")), E_FAIL);
+        TEXT("../../Client/Bin/Resources/Data/json/DT_Shader.json")), E_FAIL);
 
     CHECK_FAILED(resourceLoader->Load_TextureTable(
-        TEXT("../../Client/Bin/Resources/Data/json/TextureTable.json")), E_FAIL);
+        TEXT("../../Client/Bin/Resources/Data/json/DT_Texture.json")), E_FAIL);
 
     CHECK_FAILED(GAME->Add_Component_Prototype(
         ETOI(ELevelType::Static),
         Protocol::COMPONENT_TYPE_RECT,
         VIBuffer_Rect::Create(_device, _context)), E_FAIL);
 
-    if (FAILED(GAME->Add_GameObject_Prototype(ETOI(ELevelType::Static),
-        Protocol::OBJECT_TYPE_STATIC_MESH,
-        StaticMeshActor::Create(_device, _context))))
+    vector<FLoadJob> jobs;
+
+    CHECK_FAILED(resourceLoader->Build_AllResourceJobs(
+        TEXT("../../Client/Bin/Resources/Data/json/DT_GameObject.json"), jobs), E_FAIL);
+
+    for (auto& job : jobs)
     {
-        return E_FAIL;
+        if (job.type != ELoadJobType::GameObjectPrototype)
+            continue;
+
+        auto instance = GAME->Create_GameObjectFromFactory(
+            static_cast<Protocol::OBJECT_TYPE>(job.objectType));
+
+        if (!instance)
+            continue;
+
+        CHECK_FAILED(
+            GAME->Add_GameObject_Prototype(job.levelIndex, job.objectType, instance),
+            E_FAIL);
     }
-
-    // UI
-    const uint32 staticLevel = ETOI(ELevelType::Static);
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_BACKGROUND,
-        Background::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_TEXT,
-        UI_Text::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_LOADING_SPINNER,
-        UI_LoadingSpinner::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_LOADING_PROGRESS_BAR,
-        UI_LoadingProgressBar::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_PLAYER_HP,
-        UI_PlayerHP::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_SKILL_SLOT,
-        UI_SkillSlot::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_PLAYER_STATUS,
-        UI_PlayerStatus::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_PLAYER_SKILL,
-        UI_PlayerSkill::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_PLAYER_HUD,
-        UI_PlayerHUD::Create(_device, _context));
-
-    GAME->Add_GameObject_Prototype(staticLevel, Protocol::OBJECT_TYPE_UI_MAIN_TITLE_TEXT,
-        UI_MainTitleMenuButton::Create(_device, _context));
-
+   
     return S_OK;
 }
 

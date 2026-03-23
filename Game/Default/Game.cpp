@@ -10,6 +10,8 @@ FILE* debug;
 
 #define MAX_LOADSTRING 100
 
+static bool g_engineInitialized = false;
+
 // 전역 변수:
 HWND        g_hWnd;
 HINSTANCE   g_hInst;
@@ -19,8 +21,10 @@ WCHAR       szWindowClass[MAX_LOADSTRING];  // 기본 창 클래스 이름입니
 
 namespace Client
 {
-    unsigned int g_winSizeX = 800;
-    unsigned int g_winSizeY = 600;
+    //unsigned int g_winSizeX = 1024;
+    //unsigned int g_winSizeY = 768;
+    unsigned int g_winSizeX = 1600;
+    unsigned int g_winSizeY = 900;
 }
 
 struct LaunchParams
@@ -111,6 +115,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
     mainApp = MainApp::Create();
     CHECK_NULL(mainApp, FALSE);
+    g_engineInitialized = true;
 
     GAME->Add_Timer(L"Timer_Default");
     GAME->Add_Timer(L"Timer_60FPS");
@@ -149,6 +154,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
     mainApp->Free();
     mainApp.reset();
+    g_engineInitialized = false;
 
     google::protobuf::ShutdownProtobufLibrary();
 
@@ -239,6 +245,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam,
         _tfreopen_s(&debug, _T("CONERR"), _T("w"), stderr);
         _tsetlocale(LC_ALL, _T(""));
     } break;
+
+    case WM_SIZE:
+    {
+        if (wParam == SIZE_MINIMIZED)
+            break;
+
+        if (!g_engineInitialized)
+            break;
+
+        const uint32 newWidth = LOWORD(lParam);
+        const uint32 newHeight = HIWORD(lParam);
+
+        if (newWidth == 0 || newHeight == 0)
+            break;
+
+        CHECK_FAILED(GAME->Resize_BackBuffer(newWidth, newHeight), 0);
+
+        GAME->Set_UIViewportSize(static_cast<float>(newWidth), static_cast<float>(newHeight));
+    }
+    break;
 
     case WM_CLOSE: {
         FreeConsole();

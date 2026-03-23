@@ -20,6 +20,7 @@ public:
     {
         Headegear,
         Accessory,
+        Onepiece,
         BodyUpper,
         BodyLower,
         Face,
@@ -42,14 +43,14 @@ public:
     HRESULT Render() override;
 
 public:
-    HRESULT Change_PartObject(EPartSlot);
+    HRESULT             Change_PartObject(EPartSlot slot, uint32 objID, void* arg);
+
+protected:
+    HRESULT             Add_PartObject(EPartSlot slot, uint32 objID, void* arg);
+    Shared<PartObject>  Find_PartObject(EPartSlot slot);
 
 protected:
     array<Shared<PartObject>, ETOI(EPartSlot::END)> _partObjects;
-
-protected:
-    HRESULT Add_PartObject(EPartSlot slot, uint32 objID, void* arg);
-    Shared<PartObject> Find_PartObject(EPartSlot slot);
 
 public:
     virtual Shared<GameObject> Clone(void* arg) = 0;

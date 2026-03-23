@@ -137,32 +137,27 @@ void UIObject::Set_UITint(const Color& color)
 
 void UIObject::Update_Transform()
 {
-    float designX = GAME->Get_WindowWidth();
-    float designY = GAME->Get_WindowHeight();
+    const float viewW = GAME->Get_UIViewportWidth();
+    const float viewH = GAME->Get_UIViewportHeight();
 
-    float currentViewX = GAME->Get_UIViewportWidth();
-    float currentViewY = GAME->Get_UIViewportHeight();
+    const float uiScale = GAME->Get_UIScale();
+    const Vec2 uiOffset = GAME->Get_UIViewportOffset();
 
-    _transformMatrices[ETOI(ETransformState::Proj)] = XMMatrixOrthographicLH(
-        currentViewX, currentViewY, 0.f, 1.f);
+    _transformMatrices[ETOI(ETransformState::Proj)] =
+        XMMatrixOrthographicLH(viewW, viewH, 0.f, 1.f);
 
-    // 현재 크기 / 원본 크기
-    float ratioX = currentViewX / designX;
-    float ratioY = currentViewY / designY;
+    const float finalSizeX = _sizeX * uiScale;
+    const float finalSizeY = _sizeY * uiScale;
 
-    float finalSizeX = _sizeX * ratioX;
-    float finalSizeY = _sizeY * ratioY;
-    float finalPosX = _posX * ratioX;
-    float finalPosY = _posY * ratioY;
+    // 기준 캔버스 좌표 -> 실제 viewport 중앙 영역
+    const float finalPosX = uiOffset.x + (_posX * uiScale);
+    const float finalPosY = uiOffset.y + (_posY * uiScale);
 
-    // UI 크기 (픽셀 단위로)
-
-    // Translatino : 화면 좌표 -> NDC 좌표 변환
-    float ndcX = finalPosX - (currentViewX * 0.5f);
-    float ndcY = -finalPosY + (currentViewY * 0.5f);
+    const float ndcX = finalPosX - (viewW * 0.5f);
+    const float ndcY = -finalPosY + (viewH * 0.5f);
 
     Matrix scaleMatrix = XMMatrixScaling(finalSizeX, finalSizeY, 1.f);
-    Matrix rotMatrix   = XMMatrixRotationZ(XMConvertToRadians(_rotationZ));
+    Matrix rotMatrix = XMMatrixRotationZ(XMConvertToRadians(_rotationZ));
     Matrix transMatrix = XMMatrixTranslation(ndcX, ndcY, 0.f);
 
     _worldMatrix = scaleMatrix * rotMatrix * transMatrix;

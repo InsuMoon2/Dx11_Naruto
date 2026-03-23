@@ -126,11 +126,12 @@ enum OBJECT_TYPE : int {
   OBJECT_TYPE_NONE = 0,
   OBJECT_TYPE_PLAYER = 1,
   OBJECT_TYPE_REMOTE_PLAYER = 2,
+  OBJECT_TYPE_PREVIEW_PLAYER = 3,
   OBJECT_TYPE_MONSTER = 4,
-  OBJECT_TYPE_TERRAIN = 3,
   OBJECT_TYPE_CAMERA_FREE = 5,
   OBJECT_TYPE_CAMERA_TARGET = 6,
   OBJECT_TYPE_PLAYER_START = 7,
+  OBJECT_TYPE_TERRAIN = 8,
   OBJECT_TYPE_BACKGROUND = 10,
   OBJECT_TYPE_STATIC_MESH = 11,
   OBJECT_TYPE_PART_OBJECT = 12,
@@ -170,8 +171,13 @@ inline bool OBJECT_TYPE_Parse(absl::string_view name, OBJECT_TYPE* value) {
 }
 enum OBJECT_STATE_TYPE : int {
   OBJECT_STATE_TYPE_IDLE = 0,
-  OBJECT_STATE_TYPE_MOVE = 1,
-  OBJECT_STATE_TYPE_SKILL = 2,
+  OBJECT_STATE_TYPE_RUN = 1,
+  OBJECT_STATE_TYPE_JUMP = 2,
+  OBJECT_STATE_TYPE_DOUBLE_JUMP = 3,
+  OBJECT_STATE_TYPE_SUPER_JUMP_CHARGE = 4,
+  OBJECT_STATE_TYPE_SUPER_JUMP = 5,
+  OBJECT_STATE_TYPE_HEIGHT_LAND = 6,
+  OBJECT_STATE_TYPE_DASH = 7,
   OBJECT_STATE_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   OBJECT_STATE_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -181,8 +187,8 @@ enum OBJECT_STATE_TYPE : int {
 bool OBJECT_STATE_TYPE_IsValid(int value);
 extern const uint32_t OBJECT_STATE_TYPE_internal_data_[];
 constexpr OBJECT_STATE_TYPE OBJECT_STATE_TYPE_MIN = static_cast<OBJECT_STATE_TYPE>(0);
-constexpr OBJECT_STATE_TYPE OBJECT_STATE_TYPE_MAX = static_cast<OBJECT_STATE_TYPE>(2);
-constexpr int OBJECT_STATE_TYPE_ARRAYSIZE = 2 + 1;
+constexpr OBJECT_STATE_TYPE OBJECT_STATE_TYPE_MAX = static_cast<OBJECT_STATE_TYPE>(7);
+constexpr int OBJECT_STATE_TYPE_ARRAYSIZE = 7 + 1;
 const ::google::protobuf::EnumDescriptor*
 OBJECT_STATE_TYPE_descriptor();
 template <typename T>
@@ -195,47 +201,47 @@ const std::string& OBJECT_STATE_TYPE_Name(T value) {
 template <>
 inline const std::string& OBJECT_STATE_TYPE_Name(OBJECT_STATE_TYPE value) {
   return ::google::protobuf::internal::NameOfDenseEnum<OBJECT_STATE_TYPE_descriptor,
-                                                 0, 2>(
+                                                 0, 7>(
       static_cast<int>(value));
 }
 inline bool OBJECT_STATE_TYPE_Parse(absl::string_view name, OBJECT_STATE_TYPE* value) {
   return ::google::protobuf::internal::ParseNamedEnum<OBJECT_STATE_TYPE>(
       OBJECT_STATE_TYPE_descriptor(), name, value);
 }
-enum DIR_TYPE : int {
-  DIR_TYPE_UP = 0,
-  DIR_TYPE_DOWN = 1,
-  DIR_TYPE_LEFT = 2,
-  DIR_TYPE_RIGHT = 3,
-  DIR_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
+enum MOVE_INPUT_DIR_TYPE : int {
+  MOVE_INPUT_DIR_TYPE_FORWARD = 0,
+  MOVE_INPUT_DIR_TYPE_BACKWARD = 1,
+  MOVE_INPUT_DIR_TYPE_LEFT = 2,
+  MOVE_INPUT_DIR_TYPE_RIGHT = 3,
+  MOVE_INPUT_DIR_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
-  DIR_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
+  MOVE_INPUT_DIR_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::max(),
 };
 
-bool DIR_TYPE_IsValid(int value);
-extern const uint32_t DIR_TYPE_internal_data_[];
-constexpr DIR_TYPE DIR_TYPE_MIN = static_cast<DIR_TYPE>(0);
-constexpr DIR_TYPE DIR_TYPE_MAX = static_cast<DIR_TYPE>(3);
-constexpr int DIR_TYPE_ARRAYSIZE = 3 + 1;
+bool MOVE_INPUT_DIR_TYPE_IsValid(int value);
+extern const uint32_t MOVE_INPUT_DIR_TYPE_internal_data_[];
+constexpr MOVE_INPUT_DIR_TYPE MOVE_INPUT_DIR_TYPE_MIN = static_cast<MOVE_INPUT_DIR_TYPE>(0);
+constexpr MOVE_INPUT_DIR_TYPE MOVE_INPUT_DIR_TYPE_MAX = static_cast<MOVE_INPUT_DIR_TYPE>(3);
+constexpr int MOVE_INPUT_DIR_TYPE_ARRAYSIZE = 3 + 1;
 const ::google::protobuf::EnumDescriptor*
-DIR_TYPE_descriptor();
+MOVE_INPUT_DIR_TYPE_descriptor();
 template <typename T>
-const std::string& DIR_TYPE_Name(T value) {
-  static_assert(std::is_same<T, DIR_TYPE>::value ||
+const std::string& MOVE_INPUT_DIR_TYPE_Name(T value) {
+  static_assert(std::is_same<T, MOVE_INPUT_DIR_TYPE>::value ||
                     std::is_integral<T>::value,
-                "Incorrect type passed to DIR_TYPE_Name().");
-  return DIR_TYPE_Name(static_cast<DIR_TYPE>(value));
+                "Incorrect type passed to MOVE_INPUT_DIR_TYPE_Name().");
+  return MOVE_INPUT_DIR_TYPE_Name(static_cast<MOVE_INPUT_DIR_TYPE>(value));
 }
 template <>
-inline const std::string& DIR_TYPE_Name(DIR_TYPE value) {
-  return ::google::protobuf::internal::NameOfDenseEnum<DIR_TYPE_descriptor,
+inline const std::string& MOVE_INPUT_DIR_TYPE_Name(MOVE_INPUT_DIR_TYPE value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<MOVE_INPUT_DIR_TYPE_descriptor,
                                                  0, 3>(
       static_cast<int>(value));
 }
-inline bool DIR_TYPE_Parse(absl::string_view name, DIR_TYPE* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<DIR_TYPE>(
-      DIR_TYPE_descriptor(), name, value);
+inline bool MOVE_INPUT_DIR_TYPE_Parse(absl::string_view name, MOVE_INPUT_DIR_TYPE* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<MOVE_INPUT_DIR_TYPE>(
+      MOVE_INPUT_DIR_TYPE_descriptor(), name, value);
 }
 
 // ===================================================================
@@ -284,10 +290,10 @@ inline const EnumDescriptor* GetEnumDescriptor<::Protocol::OBJECT_STATE_TYPE>() 
   return ::Protocol::OBJECT_STATE_TYPE_descriptor();
 }
 template <>
-struct is_proto_enum<::Protocol::DIR_TYPE> : std::true_type {};
+struct is_proto_enum<::Protocol::MOVE_INPUT_DIR_TYPE> : std::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor<::Protocol::DIR_TYPE>() {
-  return ::Protocol::DIR_TYPE_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor<::Protocol::MOVE_INPUT_DIR_TYPE>() {
+  return ::Protocol::MOVE_INPUT_DIR_TYPE_descriptor();
 }
 
 }  // namespace protobuf

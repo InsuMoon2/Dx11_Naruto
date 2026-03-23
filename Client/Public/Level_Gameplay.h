@@ -18,7 +18,7 @@ public:
     virtual ~Level_Gameplay();
 
 public:
-    virtual HRESULT Initialize();
+    virtual HRESULT Initialize(EGameplaySpawnMode spawnMode);
 
     virtual void    Update(float timeDelta) override;
     virtual void    Late_Update(float timeDelta) override;
@@ -34,16 +34,20 @@ private:
 
 private:
     void            Spawn_LocalPlayer();
-
     void            On_PlayerObjectSpawned(Shared<GameObject> obj);
+
+    void            Try_SendEnterGamePacket();
 
 private:
     Shared<UI_PlayerHUD> _playerHUD;
 
     FDelegateHandle     _playerObjectSpawnedHandle = {};
 
+    EGameplaySpawnMode  _spawnMode = EGameplaySpawnMode::END;
+    bool                _enterGameSent = false;
+
 public:
-    static shared_ptr<Level_Gameplay> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    static Shared<Level_Gameplay> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode);
 
     virtual void Free() override;
 

@@ -1,5 +1,8 @@
 ﻿#include "pch.h"
 #include "ANS_Test.h"
+#include "AnimNotify_Factory.h"
+
+REGISTER_ANIM_NOTIFY_STATE(ANS_Test)
 
 string ANS_Test::Get_TypeName() const
 {

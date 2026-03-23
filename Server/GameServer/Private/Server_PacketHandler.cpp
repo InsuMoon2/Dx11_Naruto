@@ -17,6 +17,9 @@ void Server_PacketHandler::HandlePacket(shared_ptr<GameSession> session, BYTE* b
         Handle_C_Move(session, buffer, len);
         break;
 
+    case C_EnterGame:
+        Handle_C_EnterGame(session, buffer, len);
+
     default:
         break;
     }
@@ -32,6 +35,22 @@ void Server_PacketHandler::Handle_C_Move(shared_ptr<GameSession> session, BYTE* 
     pkt.mutable_info()->set_objectid(session->Get_PlayerId());
 
     GRoom->Handle_C_Move(pkt);
+}
+
+void Server_PacketHandler::Handle_C_EnterGame(shared_ptr<GameSession> session, BYTE* buffer, int32 len)
+{
+    if (session->Get_PlayerId() != 0)
+        return;
+
+    Protocol::C_EnterGame pkt;
+    ParsePacket(buffer, pkt);
+
+    GRoom->Enter_GameRoom(
+        session,
+        pkt.spawn_pos().x(),
+        pkt.spawn_pos().y(),
+        pkt.spawn_pos().z(),
+        pkt.rot_y());
 }
 
 SendBufferRef Server_PacketHandler::Make_S_MyPlayer(Protocol::ObjectInfo& info)

@@ -166,8 +166,10 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../EngineSDK/Lib/;$(SolutionDir)Client\Bin;$(SolutionDir)Server\ServerCore\Bin;$(SolutionDir)Server\Protobuf\Lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libprotobufd.lib;Engine.lib;Client.lib;ServerCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../EngineSDK/Lib/;$(SolutionDir)Client\Bin;$(SolutionDir)Server\ServerCore\Bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Engine.lib;Client.lib;ServerCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/WHOLEARCHIVE:Client.lib %(AdditionalOptions)</AdditionalOptions>
+      <IgnoreSpecificDefaultLibraries>libprotobuf-lite.lib;libprotobuf-lited.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">
@@ -189,6 +191,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/;$(SolutionDir)Client\Bin;$(SolutionDir)Server\ServerCore\Bin;$(SolutionDir)Server\Protobuf\Lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libprotobufd.lib;Engine.lib;Client.lib;ServerCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libprotobuf-lite.lib;libprotobuf-lited.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -213,6 +216,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/;$(SolutionDir)Client\Bin;$(SolutionDir)Server\ServerCore\Bin;$(SolutionDir)Server\Protobuf\Lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libprotobuf.lib;Engine.lib;Client.lib;ServerCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libprotobuf-lite.lib;libprotobuf-lited.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

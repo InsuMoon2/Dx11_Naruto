@@ -3,6 +3,7 @@
 
 #include "Camera_Free.h"
 #include "Camera_Target.h"
+#include "Client_PacketHandler.h"
 #include "Loader.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
@@ -22,18 +23,27 @@ Level_Gameplay::~Level_Gameplay()
 {
 }
 
-HRESULT Level_Gameplay::Initialize()
+HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
 {
+    _spawnMode = spawnMode;
+
     CHECK_FAILED(Ready_Lights(), E_FAIL);
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
     CHECK_FAILED(Ready_UI(), E_FAIL);
 
-    // 서버 연결 없으면 로컬 플레이어 스폰
-    if (!NetworkManager::GetInstance()->IsConnected())
+    if (_spawnMode == EGameplaySpawnMode::LocalOnly)
     {
         Spawn_LocalPlayer();
+
+        _enterGameSent = true;
     }
-  
+    else
+    {
+        _enterGameSent = false;
+
+        Try_SendEnterGamePacket();
+    }
+
     return S_OK;
 }
 
@@ -41,6 +51,10 @@ void Level_Gameplay::Update(float timeDelta)
 {
     Level::Update(timeDelta);
 
+    if (_spawnMode == EGameplaySpawnMode::Server && !_enterGameSent)
+    {
+        Try_SendEnterGamePacket();
+    }
 }
 
 void Level_Gameplay::Late_Update(float timeDelta)
@@ -217,11 +231,45 @@ void Level_Gameplay::On_PlayerObjectSpawned(Shared<GameObject> obj)
     _playerHUD->Bind_Player(player);
 }
 
-shared_ptr<Level_Gameplay> Level_Gameplay::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+void Level_Gameplay::Try_SendEnterGamePacket()
+{
+    if (_enterGameSent)
+        return;
+
+    if (!NetworkManager::GetInstance()->IsConnected())
+        return;
+
+    Vec3 spawnPos = Vec3(0.f, 0.f, 0.f);
+    float spawnRotY = 0.f;
+
+    auto gameObjects = GAME->Get_GameObjects(ETOI(ELevelType::GamePlay));
+    for (auto& obj : gameObjects)
+    {
+        if (obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER_START)
+        {
+            auto transform = obj->Get_Component<Transform>();
+            if (transform)
+            {
+                spawnPos = transform->Get_WorldPosition();
+                spawnRotY = transform->Get_LocalRotation().ToEuler().y;
+            }
+            break;
+        }
+    }
+
+    auto buf = Client_PacketHandler::Make_C_EnterGame(spawnPos, spawnRotY);
+    if (!buf)
+        return;
+
+    NetworkManager::GetInstance()->Send_Packet(buf);
+    _enterGameSent = true;
+}
+
+shared_ptr<Level_Gameplay> Level_Gameplay::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode)
 {
     auto instance = make_shared<Level_Gameplay>(device, context);
 
-    if (FAILED(instance->Initialize()))
+    if (FAILED(instance->Initialize(spawnMode)))
     {
         MSG_BOX("Failed to Create : Level_GamePlay");
 

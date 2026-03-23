@@ -30,23 +30,31 @@ public:
     // 내 캐릭터는 서버 위치 무시
     void Sync(const Protocol::ObjectInfo& info) override {}
 
+public:
+    void Force_SendMovePacket();
+
 private:
-    void    Send_MovePacket();
+    void    Send_MovePacket(bool forceSend);
+    Protocol::ObjectInfo Build_NetworkInfo() const;
+    bool    Should_SendMovePacket(const Protocol::ObjectInfo& nextInfo) const;
+
     HRESULT Ready_Components() override;
 
 private:
-    Shared<CombatStat>          _combatStat;
     Shared<InputComponent>      _input;
     Shared<MovementComponent>   _movement;
     Shared<PlayerController>    _playerController;
     Shared<PlayerStateMachine>  _stateMachine;
     Shared<SkillComponent>      _skill;
-    Shared<AnimationStateComponent> _animState;
 
 private:
     float _syncTimer = 0.f;
-    float _syncInterval = 0.1f; // 일단 0.1초마다. 나중에 늘릴 예정
+    float _syncInterval = 1.f / 30.f;
+
     Vec3 _lastSyncPos = {};
+    float _lastSyncRotY = 0.f;
+    Protocol::OBJECT_STATE_TYPE   _lastObjectState = Protocol::OBJECT_STATE_TYPE_IDLE;
+    Protocol::MOVE_INPUT_DIR_TYPE _lastMoveDir = Protocol::MOVE_INPUT_DIR_TYPE_FORWARD;
 
 public:
     static shared_ptr<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

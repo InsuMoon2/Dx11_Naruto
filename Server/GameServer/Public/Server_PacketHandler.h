@@ -15,6 +15,7 @@ enum PacketID
     S_Move          = 6,
                        
     // Client -> Server
+    C_EnterGame     = 49,
     C_Move          = 50,
 
 };
@@ -36,6 +37,7 @@ public:
 
     // 받기
     static void Handle_C_Move(shared_ptr<GameSession> session, BYTE* buffer, int32 len);
+    static void Handle_C_EnterGame(shared_ptr<GameSession> session, BYTE* buffer, int32 len);
 
     // 보내기
     static SendBufferRef Make_S_MyPlayer(Protocol::ObjectInfo& info);

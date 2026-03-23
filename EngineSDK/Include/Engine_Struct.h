@@ -11,6 +11,9 @@ namespace Engine
         uint32      viewportWidth;
         uint32      viewportHeight;
 
+        uint32      uiReferenceWidth = 1920;
+        uint32      uiReferenceHeight = 1080;
+
     } ENGINE_DESC;
 
     typedef struct tagEditorDesc

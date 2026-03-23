@@ -119,7 +119,7 @@ HRESULT Loader::Loading()
         break;
 
     case ELevelType::CharacterSetup:
-        hr = Loading_For_Equipment();
+        hr = Loading_For_CharacterSetup();
         break;
     }
 
@@ -457,7 +457,7 @@ HRESULT Loader::Loading_For_GamePlay()
     return S_OK;
 }
 
-HRESULT Loader::Loading_For_Equipment()
+HRESULT Loader::Loading_For_CharacterSetup()
 {
     vector<FLoadJob> jobs;
 
@@ -480,19 +480,22 @@ HRESULT Loader::Loading_For_Equipment()
 
         CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
             TEXT("../../Client/Bin/Resources/Data/json/DT_SkillData.json"), jobs), E_FAIL);
+
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_GameObject.json"), jobs), E_FAIL);
     }
 
-    auto pushProto = [&](Protocol::OBJECT_TYPE type)
-        {
-            FLoadJob job{};
-            job.type = ELoadJobType::GameObjectPrototype;
-            job.levelIndex = ETOI(ELevelType::CharacterSetup);
-            job.objectType = static_cast<uint32>(type);
-            jobs.push_back(std::move(job));
-        };
+    //auto pushProto = [&](Protocol::OBJECT_TYPE type)
+    //    {
+    //        FLoadJob job{};
+    //        job.type = ELoadJobType::GameObjectPrototype;
+    //        job.levelIndex = ETOI(ELevelType::CharacterSetup);
+    //        job.objectType = static_cast<uint32>(type);
+    //        jobs.push_back(std::move(job));
+    //    };
 
-    pushProto(Protocol::OBJECT_TYPE_CAMERA_FREE);
-    pushProto(Protocol::OBJECT_TYPE_CAMERA_TARGET);
+    //pushProto(Protocol::OBJECT_TYPE_CAMERA_FREE);
+    //pushProto(Protocol::OBJECT_TYPE_CAMERA_TARGET);
 
     {
         scoped_lock lock(_jobMutex);

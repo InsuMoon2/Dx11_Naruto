@@ -2,6 +2,7 @@
 #include "AnimationStateComponent.h"
 #include "GameObject.h"
 #include "Model.h"
+#include "PlayerStateMachine.h"
 
 AnimationStateComponent::AnimationStateComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -283,6 +284,7 @@ bool AnimationStateComponent::Remove_State(const string& stateName)
     return true;
 }
 
+
 json AnimationStateComponent::To_Json() const
 {
     json root = Component::To_Json();
@@ -442,6 +444,149 @@ void AnimationStateComponent::From_Json(const json& data)
         }
 
         _stateAnimations[stateKey] = desc;
+    }
+}
+
+void AnimationStateComponent::Capture_FromStateMachine(const Shared<PlayerStateMachine> stateMachine)
+{
+    if (!stateMachine)
+        return;
+
+    _replicatedState.state = stateMachine->Get_CurrentStateID();
+    _replicatedState.dir = stateMachine->Get_PendingMoveInputDirection();
+
+    // 일단 Dash / HeightLand / Jump만 재시작 필요 상태?
+    switch (_replicatedState.state)
+    {
+    case EPlayerState::Jump:
+    case EPlayerState::DoubleJump:
+    case EPlayerState::SuperJump:
+    case EPlayerState::HeightLand:
+    case EPlayerState::Dash:
+        _replicatedState.forceRestart = true;
+        break;
+    default:
+        _replicatedState.forceRestart = false;
+        break;
+    }
+
+}
+
+void AnimationStateComponent::Sync_FromNetwork(const FAnimReplicatedState& state)
+{
+    _replicatedState = state;
+}
+
+void AnimationStateComponent::Apply_NetworkState()
+{
+    if (!_model)
+        _model = Resolve_Model();
+
+    if (!_model)
+        return;
+
+    // 변경 상태가 없으면 스킵
+    if (_replicatedState.state == _appliedState.state &&
+        _replicatedState.dir == _appliedState.dir &&
+        !_replicatedState.forceRestart)
+    {
+        return;
+    }
+
+    bool played = false;
+
+    // 방향이 필요한지? -> Direct Sequence인지 분기
+    if (_replicatedState.state == EPlayerState::Dash)
+    {
+        played = Play_DirectionalState(
+            To_AnimationStateName(_replicatedState.state), _replicatedState.dir);
+    }
+    else
+    {
+        played = Play_State(To_AnimationStateName(_replicatedState.state));
+    }
+
+    if (played)
+    {
+        _appliedState = _replicatedState;
+        _replicatedState.forceRestart = false;
+    }
+}
+
+void AnimationStateComponent::Write_ToObjectInfo(Protocol::ObjectInfo& info) const
+{
+    info.set_object_state(To_ProtoState(_replicatedState.state));
+    info.set_move_dir(To_ProtoDir(_replicatedState.dir));
+}
+
+void AnimationStateComponent::Read_FromObjectInfo(const Protocol::ObjectInfo& info)
+{
+    FAnimReplicatedState state{};
+    state.state = From_ProtoState(info.object_state());
+    state.dir = From_ProtoDir(info.move_dir());
+
+    Sync_FromNetwork(state);
+}
+
+string AnimationStateComponent::To_AnimationStateName(EPlayerState state)
+{
+    auto name = magic_enum::enum_name(state);
+    return name.empty() ? "" : string(name);
+}
+
+Protocol::OBJECT_STATE_TYPE AnimationStateComponent::To_ProtoState(EPlayerState state)
+{
+    switch (state)
+    {
+    case EPlayerState::Idle:            return Protocol::OBJECT_STATE_TYPE_IDLE;
+    case EPlayerState::Run:             return Protocol::OBJECT_STATE_TYPE_RUN;
+    case EPlayerState::Jump:            return Protocol::OBJECT_STATE_TYPE_JUMP;
+    case EPlayerState::DoubleJump:      return Protocol::OBJECT_STATE_TYPE_DOUBLE_JUMP;
+    case EPlayerState::SuperJumpCharge: return Protocol::OBJECT_STATE_TYPE_SUPER_JUMP_CHARGE;
+    case EPlayerState::SuperJump:       return Protocol::OBJECT_STATE_TYPE_SUPER_JUMP;
+    case EPlayerState::HeightLand:      return Protocol::OBJECT_STATE_TYPE_HEIGHT_LAND;
+    case EPlayerState::Dash:            return Protocol::OBJECT_STATE_TYPE_DASH;
+    default:                            return Protocol::OBJECT_STATE_TYPE_IDLE;
+    }
+}
+
+Protocol::MOVE_INPUT_DIR_TYPE AnimationStateComponent::To_ProtoDir(EMoveInputDirection dir)
+{
+    switch (dir)
+    {
+    case EMoveInputDirection::Forward:  return Protocol::MOVE_INPUT_DIR_TYPE_FORWARD;
+    case EMoveInputDirection::Backward: return Protocol::MOVE_INPUT_DIR_TYPE_BACKWARD;
+    case EMoveInputDirection::Left:     return Protocol::MOVE_INPUT_DIR_TYPE_LEFT;
+    case EMoveInputDirection::Right:    return Protocol::MOVE_INPUT_DIR_TYPE_RIGHT;
+    default:                            return Protocol::MOVE_INPUT_DIR_TYPE_FORWARD;
+    }
+}
+
+EPlayerState AnimationStateComponent::From_ProtoState(Protocol::OBJECT_STATE_TYPE state)
+{
+    switch (state)
+    {
+    case Protocol::OBJECT_STATE_TYPE_IDLE:              return EPlayerState::Idle;
+    case Protocol::OBJECT_STATE_TYPE_RUN:               return EPlayerState::Run;
+    case Protocol::OBJECT_STATE_TYPE_JUMP:              return EPlayerState::Jump;
+    case Protocol::OBJECT_STATE_TYPE_DOUBLE_JUMP:       return EPlayerState::DoubleJump;
+    case Protocol::OBJECT_STATE_TYPE_SUPER_JUMP_CHARGE: return EPlayerState::SuperJumpCharge;
+    case Protocol::OBJECT_STATE_TYPE_SUPER_JUMP:        return EPlayerState::SuperJump;
+    case Protocol::OBJECT_STATE_TYPE_HEIGHT_LAND:       return EPlayerState::HeightLand;
+    case Protocol::OBJECT_STATE_TYPE_DASH:              return EPlayerState::Dash;
+    default:                                            return EPlayerState::Idle;
+    }
+}
+
+EMoveInputDirection AnimationStateComponent::From_ProtoDir(Protocol::MOVE_INPUT_DIR_TYPE dir)
+{
+    switch (dir)
+    {
+    case Protocol::MOVE_INPUT_DIR_TYPE_FORWARD:  return EMoveInputDirection::Forward;
+    case Protocol::MOVE_INPUT_DIR_TYPE_BACKWARD: return EMoveInputDirection::Backward;
+    case Protocol::MOVE_INPUT_DIR_TYPE_LEFT:     return EMoveInputDirection::Left;
+    case Protocol::MOVE_INPUT_DIR_TYPE_RIGHT:    return EMoveInputDirection::Right;
+    default:                                     return EMoveInputDirection::Forward;
     }
 }
 

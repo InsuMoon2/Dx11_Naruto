@@ -661,7 +661,7 @@ bool Converter::Write_ModelMeta(const wstring& meshPath, EConvertModelType resol
     root["modelType"] = ToString(resolvedType);
 
     // 애니메이션 순서를 보기 위해
-    root["animationClipCount"] = static_cast<uint32>(_animations.size());
+    /*root["animationClipCount"] = static_cast<uint32>(_animations.size());
     root["animationClips"] = json::array();
 
     for (uint32 i = 0; i < _animations.size(); ++i)
@@ -670,6 +670,20 @@ bool Converter::Write_ModelMeta(const wstring& meshPath, EConvertModelType resol
         clip["index"] = i;
         clip["name"] = _animations[i].name;
         root["animationClips"].push_back(clip);
+    }*/
+
+    root["boneCount"] = static_cast<uint32>(_bones.size());
+    root["bones"] = json::array();
+    for (uint32 i = 0; i < _bones.size(); ++i)
+    {
+        const FExportBoneData& boneData = _bones[i];
+        json boneJson;
+        boneJson["index"] = i;
+        boneJson["name"] = boneData.name;
+        boneJson["parentIndex"] = boneData.parentIndex;
+
+        boneJson["depth"] = boneData.depth;
+        root["bones"].push_back(boneJson);
     }
 
     ofstream file(metaPath, ios_base::out | ios_base::trunc);

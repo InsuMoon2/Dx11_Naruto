@@ -65,11 +65,12 @@ enum OBJECT_TYPE
 	OBJECT_TYPE_NONE                    = 0;
 	OBJECT_TYPE_PLAYER                  = 1;
     OBJECT_TYPE_REMOTE_PLAYER           = 2;
+    OBJECT_TYPE_PREVIEW_PLAYER          = 3;
 	OBJECT_TYPE_MONSTER                 = 4;
-    OBJECT_TYPE_TERRAIN                 = 3;
     OBJECT_TYPE_CAMERA_FREE             = 5;
     OBJECT_TYPE_CAMERA_TARGET           = 6;
     OBJECT_TYPE_PLAYER_START            = 7;
+    OBJECT_TYPE_TERRAIN                 = 8;
 
     OBJECT_TYPE_BACKGROUND              = 10;
     OBJECT_TYPE_STATIC_MESH             = 11;
@@ -91,15 +92,19 @@ enum OBJECT_TYPE
 
 enum OBJECT_STATE_TYPE
 {
-	OBJECT_STATE_TYPE_IDLE              = 0;
-	OBJECT_STATE_TYPE_MOVE              = 1;
-	OBJECT_STATE_TYPE_SKILL             = 2;
+    OBJECT_STATE_TYPE_IDLE = 0;
+    OBJECT_STATE_TYPE_RUN = 1;
+    OBJECT_STATE_TYPE_JUMP = 2;
+    OBJECT_STATE_TYPE_DOUBLE_JUMP = 3;
+    OBJECT_STATE_TYPE_SUPER_JUMP_CHARGE = 4;
+    OBJECT_STATE_TYPE_SUPER_JUMP = 5;
+    OBJECT_STATE_TYPE_HEIGHT_LAND = 6;
+    OBJECT_STATE_TYPE_DASH = 7;
 }
-
-enum DIR_TYPE
+enum MOVE_INPUT_DIR_TYPE
 {
-	DIR_TYPE_UP                         = 0;
-	DIR_TYPE_DOWN                       = 1;
-	DIR_TYPE_LEFT                       = 2;
-	DIR_TYPE_RIGHT                      = 3;
+    MOVE_INPUT_DIR_TYPE_FORWARD = 0;
+    MOVE_INPUT_DIR_TYPE_BACKWARD = 1;
+    MOVE_INPUT_DIR_TYPE_LEFT = 2;
+    MOVE_INPUT_DIR_TYPE_RIGHT = 3;
 }

@@ -16,15 +16,16 @@ class UI_TabButton : public UIObject
 public:
     struct FUITabDesc : public FUIDesc
     {
-        uint32 textureIndex = 0;
-        uint32 textureType = Protocol::COMPONENT_TYPE_TEXTURE_EQUIPMENT;
+        uint32  textureIndex = 0;
+        uint32  textureType = Protocol::COMPONENT_TYPE_TEXTURE_EQUIPMENT;
+        uint32  selectedTextureIndex = 0;
 
         wstring labelText = L"";
 
-        Vec2 labelOffset = Vec2::Zero;
-        Vec2 labelSize = Vec2::Zero;
+        Vec2    labelOffset = Vec2::Zero;
+        Vec2    labelSize = Vec2::Zero;
 
-        float fontSize = 24.f;;
+        float   fontSize = 24.f;;
     };
 
 public:
@@ -42,6 +43,8 @@ public:
     void    Set_Selected(bool bSelected);
     void    Set_Visibility(bool active) override;
 
+    HRESULT Remove_FromUIManager();
+
 private:
     HRESULT Ready_Components();
     HRESULT Ready_ChildText(const FUITabDesc* desc);
@@ -54,6 +57,11 @@ private:
 
 private:
     bool    _isSelected = false;
+
+    uint32  _textureType = Protocol::COMPONENT_TYPE_TEXTURE_EQUIPMENT;
+    uint32  _normalTextureIndex = 0;
+    uint32  _selectedTextureIndex = 0;
+    uint32  _currentTextureIndex = 0;
 
 public:
     static Shared<UI_TabButton> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

@@ -21,10 +21,11 @@ Level_Loading::~Level_Loading()
 {
 }
 
-HRESULT Level_Loading::Initialize(ELevelType nextLevelID, bool loadSharedResources)
+HRESULT Level_Loading::Initialize(ELevelType nextLevelID, bool loadSharedResources, EGameplaySpawnMode spawnMode)
 {
     _nextLevelID = nextLevelID;
     _loadSharedResources = loadSharedResources;
+    _gameplaySpawnMode = spawnMode;
 
     if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
         return E_FAIL;
@@ -70,7 +71,7 @@ void Level_Loading::Update(float timeDelta)
             break;
 
         case ELevelType::GamePlay:
-            nextLevel = Level_Gameplay::Create(_device, _context);
+            nextLevel = Level_Gameplay::Create(_device, _context, _gameplaySpawnMode);
             break;
 
         case ELevelType::CharacterSetup:
@@ -110,7 +111,7 @@ HRESULT Level_Loading::Render()
 
 HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
 {
-    Vec2 viewport = Vec2(GAME->Get_WindowWidth(), GAME->Get_WindowHeight());
+    Vec2 viewport = Vec2(GAME->Get_UIReferenceWidth(), GAME->Get_UIReferenceHeight());
 
     // 로딩 백그라운드
     {
@@ -180,14 +181,14 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
     return S_OK;
 }
 
-shared_ptr<Level_Loading> Level_Loading::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, ELevelType nextLevelID, bool loadSharedResources)
+shared_ptr<Level_Loading> Level_Loading::Create(ComPtr<Device> device, ComPtr<DeviceContext> context,
+    ELevelType nextLevelID, bool loadSharedResources, EGameplaySpawnMode gameplaySpawnMode)
 {
     auto instance = make_shared<Level_Loading>(device, context);
 
-    if (FAILED(instance->Initialize(nextLevelID, loadSharedResources)))
+    if (FAILED(instance->Initialize(nextLevelID, loadSharedResources, gameplaySpawnMode)))
     {
-        MSG_BOX("Faield to Created : Loading");
-
+        MSG_BOX("Failed to Create : Level_Loading");
         return nullptr;
     }
 

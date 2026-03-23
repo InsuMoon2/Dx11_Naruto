@@ -23,6 +23,13 @@ Spawn_Helper::Builder& Spawn_Helper::Builder::InLayer(const wstring& layerTag)
     return *this;
 }
 
+Spawn_Helper::Builder& Spawn_Helper::Builder::SpawnAs(uint32 objectType)
+{
+    _spawnDesc.overrides["object_type"] = objectType;
+
+    return *this;
+}
+
 Spawn_Helper::Builder& Spawn_Helper::Builder::Position(const Vec3& position)
 {
     _spawnDesc.overrides["position"] = { position.x, position.y, position.z };

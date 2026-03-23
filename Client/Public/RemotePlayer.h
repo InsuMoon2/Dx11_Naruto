@@ -19,13 +19,16 @@ public:
     void    Update(float timeDelta) override;
 
 public:
-    void Sync(const Protocol::ObjectInfo& info) override;
+    void    Sync(const Protocol::ObjectInfo& info) override;
 
 private:
     // 보간용 데이터
-    Vec3 _targetPos = {};
+    Vec3  _targetPos = {};
     float _targetRotY = 0.f;
-    float _lerpSpeed = 10.f;
+    float _lerpSpeed = 15.f;
+
+    bool  _hasReceivedFirstSync = false;
+    float _snapDistanceSq = 9.f;
 
 public:
     static shared_ptr<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

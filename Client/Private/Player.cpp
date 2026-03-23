@@ -1,15 +1,10 @@
 ﻿#include "pch.h"
 #include "Player.h"
 #include "CombatStat.h"
-#include "MovementComponent.h"
-#include "PlayerController.h"
-#include "InputComponent.h"
-#include "Texture.h"
 #include "Shader.h"
 #include "Model.h"
-#include "VIBuffer_Rect.h"
-#include "NetworkManager.h"
 #include "PartObject.h"
+#include "AnimationStateComponent.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
@@ -78,15 +73,39 @@ void Player::Sync(const Protocol::ObjectInfo& info)
     _transformCom->Set_LocalPosition(info.pos().x(), info.pos().y(), info.pos().z());
 }
 
+HRESULT Player::Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetTag)
+{
+    if (modelAssetTag.empty())
+        return Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_OBJECT, nullptr);
+
+    PartObject::FPartObjectDesc partDesc{};
+    partDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    partDesc.modelAssetTag = modelAssetTag;
+    partDesc.masterPoseModel = _model;
+
+    return Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_OBJECT, &partDesc);
+}
+
 HRESULT Player::Ready_Components()
 {
     Character::Ready_Components();
 
+    {
+        CombatStat::FCombatStatDesc statDesc;
+        statDesc.maxHp = 100.f;
+        statDesc.attack = 100.f;
+
+        CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COMBAT_STAT, _combatStat, &statDesc), E_FAIL);
+    }
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_ANIMATION_STATE, _animState), E_FAIL);
+
+    // 파츠 오브젝트에서 관리
     //CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXANIMMESH, _shaderCom), E_FAIL);
     //CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_SASKE, _model) , E_FAIL);
 
-    uint32 saskeKey = static_cast<uint32>(std::hash<string>{}("Model_TestModel"));
-    CHECK_FAILED(Add_Component(saskeKey, _model), E_FAIL);
+    uint32 testModelKey = static_cast<uint32>(std::hash<string>{}("Model_TestModel"));
+    CHECK_FAILED(Add_Component(testModelKey, _model), E_FAIL);
 
     return S_OK;
 }
@@ -132,14 +151,7 @@ HRESULT Player::Ready_PartObjects()
 {
     // TODO : 추가될 파츠 : Headgear, Face, Body Upper, Body Lower, Weapon
 
-    // Body
-    PartObject::FPartObjectDesc bodyDesc{};
-    bodyDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
-    bodyDesc.modelAssetTag = TEXT("Model_Body_Upper_Coat15");
-    bodyDesc.masterPoseModel = _model;
-    CHECK_FAILED(Add_PartObject(EPartSlot::BodyUpper, Protocol::OBJECT_TYPE_PART_OBJECT, &bodyDesc), E_FAIL);
-
-    // Face
+    // Headgear
     PartObject::FPartObjectDesc headDesc{};
     headDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
     headDesc.modelAssetTag = TEXT("Model_Headgear_Man_Cap1");
@@ -152,6 +164,13 @@ HRESULT Player::Ready_PartObjects()
     faceDesc.modelAssetTag = TEXT("Model_Face_Face1");
     faceDesc.masterPoseModel = _model;
     CHECK_FAILED(Add_PartObject(EPartSlot::Face, Protocol::OBJECT_TYPE_PART_OBJECT, &faceDesc), E_FAIL);
+
+    // Onepiece
+    PartObject::FPartObjectDesc onePieceDesc{};
+    onePieceDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    onePieceDesc.modelAssetTag = TEXT("Model_Body_Upper_Coat15");
+    onePieceDesc.masterPoseModel = _model;
+    CHECK_FAILED(Add_PartObject(EPartSlot::Onepiece, Protocol::OBJECT_TYPE_PART_OBJECT, &onePieceDesc), E_FAIL);
 
     // 소켓 생성해서 무기 붙이기
     {

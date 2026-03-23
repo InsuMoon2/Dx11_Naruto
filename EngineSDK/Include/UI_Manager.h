@@ -44,6 +44,10 @@ public:
         return _uiLayers[ETOI(layer)];
     };
 
+public:
+    HRESULT                 Remove_UI(const wstring& name);
+    HRESULT                 Remove_UI(const Shared<UIObject>& uiObject);
+
 public: /* 애니메이션 재생용 */
     bool                    Play_UIAnimation(Shared<UIObject> target, const string& animationName);
     bool                    Play_UIAnimation(const wstring& targetName, const string& animationName);

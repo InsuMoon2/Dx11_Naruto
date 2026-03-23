@@ -31,6 +31,8 @@ public:
     Shared<EditorWindow> Get_Window(const wstring& key);
     const auto& Get_Windows() const { return _windows; }
 
+    void    Sync_RuntimeViewportForGame();
+
 private:
     void    Begin_DockSpace();
     void    Show_MenuBar();

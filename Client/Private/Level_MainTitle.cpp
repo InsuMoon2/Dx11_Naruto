@@ -5,6 +5,7 @@
 #include "Loader.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "NetworkManager.h"
 #include "UI_MainTitleMenuButton.h"
 
 Level_MainTitle::Level_MainTitle(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -64,7 +65,7 @@ HRESULT Level_MainTitle::Render()
 
 HRESULT Level_MainTitle::Ready_Layer_UI()
 {
-    Vec2 viewport = { GAME->Get_WindowWidth(), GAME->Get_WindowHeight() };
+    const Vec2 viewport = { GAME->Get_UIReferenceWidth(), GAME->Get_UIReferenceHeight() };
 
     // MainTitle
     {
@@ -244,15 +245,29 @@ void Level_MainTitle::Execute_SelectedMenu()
     switch (_selectedIndex)
     {
     case 0: // 게임 시작
+    {
+        const EGameplaySpawnMode spawnMode =
+            GAME->Is_EditorRuntime() ? EGameplaySpawnMode::LocalOnly
+            : EGameplaySpawnMode::Server;
+
+        if (spawnMode == EGameplaySpawnMode::Server)
+        {
+            if (!NetworkManager::GetInstance()->IsNetworkEnabled())
+            {
+                NetworkManager::GetInstance()->Initialize();
+            }
+        }
+
         GAME->Change_Level(
             ETOI(ELevelType::Loading),
-            Level_Loading::Create(_device, _context, ELevelType::GamePlay, true));
+            Level_Loading::Create(_device, _context, ELevelType::GamePlay, true, spawnMode));
         break;
+    }
 
     case 1: // 일단은, CharacterSetup
         GAME->Change_Level(
             ETOI(ELevelType::Loading),
-            Level_Loading::Create(_device, _context, ELevelType::CharacterSetup, true));
+            Level_Loading::Create(_device, _context, ELevelType::CharacterSetup, true, EGameplaySpawnMode::LocalOnly));
         break;
 
     case 2: // 게임종료는 실제 실행 ㄴ

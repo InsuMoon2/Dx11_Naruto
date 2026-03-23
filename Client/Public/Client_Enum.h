@@ -16,6 +16,8 @@ namespace Client
         END
     };
 
+    enum class EGameplaySpawnMode { LocalOnly, Server, END };
+
     enum class EPlayerState
     {
         Idle,
@@ -37,6 +39,12 @@ namespace Client
         END
     };
 
+    enum class EWeaponType
+    {
+        Hand,
+        BigSwrod,
+    };
+
     enum class EMoveInputDirection { Forward, Backward, Left, Right, END };
 
     // 애니메이션이 하나인지, Start -> Loop -> End로 세팅될건지
@@ -51,4 +59,6 @@ namespace Client
 
         END
     };
+
+    
 }

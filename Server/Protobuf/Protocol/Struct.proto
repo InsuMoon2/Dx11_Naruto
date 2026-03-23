@@ -32,12 +32,15 @@ message CombatStat
 
 message ObjectInfo
 {
-	uint64 objectId = 1;
-	string name = 2;
-    CombatStat stat = 3;
+	uint64              objectId = 1;
+	string              name = 2;
+    CombatStat          stat = 3;
 
-    Vec3  pos = 4;
-    float rot_y = 5;
+    Vec3                pos = 4;
+    float               rot_y = 5;
 
-    OBJECT_TYPE objectType = 6;
+    OBJECT_TYPE         objectType = 6;
+
+    OBJECT_STATE_TYPE   object_state = 10;
+    MOVE_INPUT_DIR_TYPE move_dir = 11;
 }

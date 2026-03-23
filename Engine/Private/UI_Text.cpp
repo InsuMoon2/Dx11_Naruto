@@ -60,6 +60,8 @@ HRESULT UI_Text::Render()
     RECT rect = Build_ScreenRect();
 
     FTextStyle finalStyle = _style;
+    finalStyle.fontSize = max(1.f, _style.fontSize * GAME->Get_UIScale());
+
     finalStyle.color.x *= _tintColor.x;
     finalStyle.color.y *= _tintColor.y;
     finalStyle.color.z *= _tintColor.z;
@@ -74,22 +76,16 @@ HRESULT UI_Text::Render()
 
 RECT UI_Text::Build_ScreenRect() const
 {
-    float designX = GAME->Get_WindowWidth();
-    float designY = GAME->Get_WindowHeight();
+    const float uiScale = GAME->Get_UIScale();
+    const Vec2 uiOffset = GAME->Get_UIViewportOffset();
 
-    float currentViewX = GAME->Get_UIViewportWidth();
-    float currentViewY = GAME->Get_UIViewportHeight();
+    const float halfW = _sizeX * 0.5f;
+    const float halfH = _sizeY * 0.5f;
 
-    float ratioX = currentViewX / designX;
-    float ratioY = currentViewY / designY;
-
-    float halfW = _sizeX * 0.5f;
-    float halfH = _sizeY * 0.5f;
-
-    float left = (_posX - halfW) * ratioX;
-    float top = (_posY - halfH) * ratioY;
-    float right = (_posX + halfW) * ratioX;
-    float bottom = (_posY + halfH) * ratioY;
+    const float left = uiOffset.x + ((_posX - halfW) * uiScale);
+    const float top = uiOffset.y + ((_posY - halfH) * uiScale);
+    const float right = uiOffset.x + ((_posX + halfW) * uiScale);
+    const float bottom = uiOffset.y + ((_posY + halfH) * uiScale);
 
     RECT rc = {};
     rc.left = static_cast<LONG>(left);

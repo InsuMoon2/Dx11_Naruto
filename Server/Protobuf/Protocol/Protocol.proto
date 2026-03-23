@@ -33,6 +33,12 @@ message S_RemoveObject
 	repeated uint64 ids = 1;
 }
 
+message C_EnterGame
+{
+    Vec3  spawn_pos = 1;
+    float rot_y = 2;
+}
+
 message C_Move
 {
 	ObjectInfo info = 1;

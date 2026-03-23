@@ -19,38 +19,42 @@ GameRoom::~GameRoom()
 {
 }
 
-void GameRoom::Enter_GameRoom(Shared<GameSession> session)
+void GameRoom::Enter_GameRoom(
+    Shared<GameSession> session,
+    float spawnX,
+    float spawnY,
+    float spawnZ,
+    float rotY)
 {
-    // 플레이어 생성
     auto player = Player::Create();
     player->Set_Session(session);
     session->Set_PlayerId(player->Get_ObjectID());
 
-    // 입장한 클라에게 Player 세팅
+    auto* protoPos = player->info.mutable_pos();
+    protoPos->set_x(spawnX);
+    protoPos->set_y(spawnY);
+    protoPos->set_z(spawnZ);
+    player->info.set_rot_y(rotY);
+
     {
         SendBufferRef sendBuffer = Server_PacketHandler::Make_S_MyPlayer(player->info);
         session->Send(sendBuffer);
     }
 
-    // 입장한 클라한테 모든 오브젝트 정보 전송
     {
         Protocol::S_AddObject pkt;
 
-        // 플레이어
         for (auto& [id, existingPlayer] : _players)
         {
             Protocol::ObjectInfo* info = pkt.add_objects();
             *info = existingPlayer->info;
         }
 
-        // 몬스터
         for (auto& [id, existingMonster] : _monsters)
         {
             Protocol::ObjectInfo* info = pkt.add_objects();
             *info = existingMonster->info;
         }
-
-        // TODO : 아이템 ?
 
         if (pkt.objects_size() > 0)
         {
@@ -59,11 +63,7 @@ void GameRoom::Enter_GameRoom(Shared<GameSession> session)
         }
     }
 
-    // 플레이어 추가 -> 내부에서 Broadcast로 기존 플레이어들에게 알림
     Add_Player(player);
-
-    cout << "[Room] Player " << player->Get_ObjectID()
-        << " Entered (" << _players.size() << " players)" << endl;
 }
 
 void GameRoom::Leave_GameRoom(Shared<GameSession> session)

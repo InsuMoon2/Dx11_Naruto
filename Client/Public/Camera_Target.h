@@ -13,6 +13,9 @@ public:
     {
         Vec3    offset = { 0.f, 10.f, -10.f };
         float   followSpeed = 5.f;
+
+        bool    enableMouseRotation = true;
+        bool    bindOnPlayerSpawned = true;
     };
 
 public:
@@ -54,6 +57,10 @@ private:
     float           _distanceMin = 3.f;
     float           _distanceMax = 15.f;
     float           _zoomSpeed = 2.f;
+
+private:
+    bool            _enableMouseRotation = true;
+    bool            _bindOnPlayerSpawned = true;
 
 
 public:

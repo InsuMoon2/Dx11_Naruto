@@ -8,9 +8,21 @@ NS_END
 
 NS_BEGIN(Client)
 
+class PlayerStateMachine;
+
 class AnimationStateComponent : public Component
 {
     GENERATED_COMPONENT(AnimationStateComponent, Protocol::COMPONENT_TYPE_ANIMATION_STATE)
+
+public:
+    struct FAnimReplicatedState final
+    {
+        EPlayerState        state = EPlayerState::Idle;
+        EMoveInputDirection dir = EMoveInputDirection::Forward;
+
+        // 루프용
+        bool                forceRestart = false;
+    };
 
 public:
     explicit AnimationStateComponent(ComPtr<Device> device, ComPtr<DeviceContext> context);
@@ -53,11 +65,33 @@ public:
 
     bool Remove_State(const string& stateName);
 
+public: /* Network */
+    // 로컬 플레이어 상태 세팅
+    void Capture_FromStateMachine(const Shared<PlayerStateMachine> stateMachine);
+
+    // 네트워크 수신값을 컴포넌트 내부 상태로 세팅
+    void Sync_FromNetwork(const FAnimReplicatedState& state);
+    void Apply_NetworkState();
+
+    // 패킷 송/수신용
+    void Write_ToObjectInfo(Protocol::ObjectInfo& info) const;
+    void Read_FromObjectInfo(const Protocol::ObjectInfo& info);
+
+    const FAnimReplicatedState& Get_ReplicatedState() const { return _replicatedState; }
+
 public:
     json To_Json() const override;
     void From_Json(const json& data) override;
 
 private:
+    static string To_AnimationStateName(EPlayerState state);
+
+    static Protocol::OBJECT_STATE_TYPE To_ProtoState(EPlayerState state);
+    static Protocol::MOVE_INPUT_DIR_TYPE To_ProtoDir(EMoveInputDirection dir);
+    static EPlayerState From_ProtoState(Protocol::OBJECT_STATE_TYPE state);
+    static EMoveInputDirection From_ProtoDir(Protocol::MOVE_INPUT_DIR_TYPE dir);
+
+
     Shared<Model> Resolve_Model();
 
 private:
@@ -66,6 +100,11 @@ private:
 
     string _currentStateName    = "";
     string _prevStateName       = "";
+
+private: /* Network */
+    FAnimReplicatedState _replicatedState{};
+    FAnimReplicatedState _appliedState{};
+
 
 public:
     static Shared<AnimationStateComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

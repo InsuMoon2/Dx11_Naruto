@@ -47,6 +47,8 @@ HRESULT Camera_Target::Initialize(void* arg)
     FCameraTargetDesc* desc = static_cast<FCameraTargetDesc*>(arg);
     _offset = desc->offset;
     _followSpeed = desc->followSpeed;
+    _enableMouseRotation = desc->enableMouseRotation;
+    _bindOnPlayerSpawned = desc->bindOnPlayerSpawned;
 
     LOG_INFO("Camera_Target: before Camera::Initialize");
     CHECK_FAILED(Camera::Initialize(arg), E_FAIL);
@@ -61,8 +63,11 @@ void Camera_Target::BeginPlay()
 
     GAME->Set_ActiveCamera(GetSharedPtr<Camera>());
 
-    GAME->Get_DelegateHub().OnPlayerSpawned.Add(
-        this, &Camera_Target::Set_TargetTransform);
+    if (_bindOnPlayerSpawned)
+    {
+        GAME->Get_DelegateHub().OnPlayerSpawned.Add(
+            this, &Camera_Target::Set_TargetTransform);
+    }
 }
 
 void Camera_Target::Priority_Update(float timeDelta)
@@ -75,18 +80,21 @@ void Camera_Target::Priority_Update(float timeDelta)
     auto target = _targetTransform.lock();
     if (!target) return;
 
-    float dx = INPUT->GetMouseDelta().x; 
-    float dy = INPUT->GetMouseDelta().y;
+    if (_enableMouseRotation)
+    {
+        float dx = INPUT->GetMouseDelta().x;
+        float dy = INPUT->GetMouseDelta().y;
 
-    _yaw    += dx * _mouseSensor;
-    _pitch  += dy * _mouseSensor;
+        _yaw += dx * _mouseSensor;
+        _pitch += dy * _mouseSensor;
 
-    _pitch = ::clamp(_pitch, _pitchMin, _pitchMax);
+        _pitch = ::clamp(_pitch, _pitchMin, _pitchMax);
 
-    // 줌
-    float wheel = INPUT->GetMouseWheel();
-    _distance -= wheel * _zoomSpeed;
-    _distance = ::clamp(_distance, _distanceMin, _distanceMax);
+        // 줌
+        float wheel = INPUT->GetMouseWheel();
+        _distance -= wheel * _zoomSpeed;
+        _distance = ::clamp(_distance, _distanceMin, _distanceMax);
+    }
 
     float pitchRad = XMConvertToRadians(_pitch);
     float yawRad = XMConvertToRadians(_yaw);

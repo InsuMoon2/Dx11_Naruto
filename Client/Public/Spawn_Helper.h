@@ -27,6 +27,7 @@ public:
     public:
         Builder& AtLevel(uint32 levelIndex);
         Builder& InLayer(const wstring& layerTag);
+        Builder& SpawnAs(uint32 objectType);
 
         Builder& Position(const Vec3& position);
         Builder& Rotation(const Vec3& degree);

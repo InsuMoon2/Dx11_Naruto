@@ -176,6 +176,9 @@
     <ClInclude Include="..\Public\UI_TabButton.h">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PreviewPlayer.h" />
+    <ClInclude Include="..\Public\Customizer_Manager.h" />
+    <ClInclude Include="..\Public\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -338,6 +341,9 @@
     <ClCompile Include="..\Private\UI_TabButton.cpp">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\PreviewPlayer.cpp" />
+    <ClCompile Include="..\Private\Customizer_Manager.cpp" />
+    <ClCompile Include="..\Private\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

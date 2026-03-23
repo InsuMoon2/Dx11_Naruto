@@ -138,6 +138,12 @@
             "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Menu_Btn_05_Def_BC.png",
             "Count": 1,
             "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Menu_Btn_02_Sel_BC.png",
+            "Count": 1,
+            "Level": "Static"
         }
     ]
 }

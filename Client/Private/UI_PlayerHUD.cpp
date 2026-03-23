@@ -70,9 +70,12 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
     _skillPanel = Create_Child<UI_PlayerSkill>(Protocol::OBJECT_TYPE_UI_PLAYER_SKILL, EUILayer::HUD, &skillDesc);
     CHECK_NULL(_skillPanel, E_FAIL);
 
+    const float uiRefWidth = GAME->Get_UIReferenceWidth();
+    const float uiRefHeight = GAME->Get_UIReferenceHeight();
+
     _skillPanel->Get_Transform()->Set_LocalPosition(
-        GAME->Get_WindowWidth() - 220.f,
-        GAME->Get_WindowHeight() - 110.f,
+        uiRefWidth - 220.f,
+        uiRefHeight - 110.f,
         _zOrder);
 
     return S_OK;

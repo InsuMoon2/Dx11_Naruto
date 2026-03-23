@@ -1,0 +1,54 @@
+﻿#pragma once
+
+#include "PartObject.h"
+
+NS_BEGIN(Engine)
+class Shader;
+class Model;
+NS_END
+
+NS_BEGIN(Client)
+
+class Weapon : public PartObject
+{
+    GENERATED_BODY(Weapon)
+
+public:
+    struct FWeaponDesc : public PartObject::FPartObjectDesc
+    {
+        const Matrix* socketMatrix = nullptr;
+    };
+
+public:
+    explicit Weapon(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    explicit Weapon(const Weapon& rhs);
+    virtual ~Weapon() = default;
+
+public:
+    HRESULT Initialize_Prototype() override;
+    HRESULT Initialize(void* arg) override;
+    void    Priority_Update(float timeDelta) override;
+    void    Update(float timeDelta) override;
+    void    Late_Update(float timeDelta) override;
+    HRESULT Render() override;
+
+private:
+    HRESULT Ready_Components(const wstring& modelAssetTag);
+    HRESULT Bind_ShaderResources();
+    HRESULT Bind_Lights();
+
+private:
+    Shared<Shader>  _shader;
+    Shared<Model>   _model;
+
+private:
+    const Matrix* _socketMatrix = nullptr;
+
+public:
+    static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    virtual Shared<GameObject> Clone(void* arg) override;
+    void Free() override;
+
+};
+
+NS_END

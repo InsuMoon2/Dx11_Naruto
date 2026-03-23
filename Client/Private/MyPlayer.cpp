@@ -36,13 +36,6 @@ HRESULT MyPlayer::Initialize(void* arg)
 
     // MyPlayer만 입력/이동 컴포넌트 보유
     {
-        CombatStat::FCombatStatDesc statDesc;
-        statDesc.maxHp = 100.f;
-        statDesc.attack = 100.f;
-
-        CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COMBAT_STAT, _combatStat, &statDesc), E_FAIL);
-    }
-    {
         SkillComponent::FSkillDesc skillDesc;
         skillDesc.slotSkill_Id[0] = 1001; // 나선환
         skillDesc.slotSkill_Id[1] = 1002; // 치도리
@@ -58,7 +51,6 @@ HRESULT MyPlayer::Initialize(void* arg)
         CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_INPUT, _input), E_FAIL);
     }
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_ANIMATION_STATE, _animState), E_FAIL);
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PLAYER_CONTROLLER, _playerController), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PLAYER_STATE, _stateMachine), E_FAIL);
@@ -82,28 +74,56 @@ void MyPlayer::Late_Update(float timeDelta)
     if (_syncTimer >= _syncInterval)
     {
         _syncTimer = 0.f;
-        Send_MovePacket();
+        Send_MovePacket(false);
     }
 }
 
-void MyPlayer::Send_MovePacket()
+void MyPlayer::Force_SendMovePacket()
 {
-    Vec3 pos = _transformCom->Get_LocalPosition();
+    Send_MovePacket(true);
+}
 
-    //if (pos == _lastSyncPos)
-    //    return;
+void MyPlayer::Send_MovePacket(bool forceSend)
+{
+    Protocol::ObjectInfo info = Build_NetworkInfo();
 
-    _lastSyncPos = pos;
+    if (!forceSend && !Should_SendMovePacket(info))
+        return;
+
+    auto buf = Client_PacketHandler::Make_C_Move(info);
+    if (!buf)
+        return;
+
+    GET_SINGLE(NetworkManager)->Send_Packet(buf);
+
+    _lastSyncPos = Vec3(info.pos().x(), info.pos().y(), info.pos().z());
+    _lastSyncRotY = info.rot_y();
+    _lastObjectState = info.object_state();
+    _lastMoveDir = info.move_dir();
+}
+
+Protocol::ObjectInfo MyPlayer::Build_NetworkInfo() const
+{
+    Protocol::ObjectInfo info{};
+    info.set_objectid(Get_NetworkId());
+    info.set_objecttype(Protocol::OBJECT_TYPE_PLAYER);
+
+    Vec3 pos = _transformCom->Get_WorldPosition();
+    auto* protoPos = info.mutable_pos();
+    protoPos->set_x(pos.x);
+    protoPos->set_y(pos.y);
+    protoPos->set_z(pos.z);
+
     float rotY = _transformCom->Get_LocalRotation().ToEuler().y;
+    info.set_rot_y(rotY);
 
-    //LOG_INFO("Send rotY: {}", rotY);
-
-    auto buf = Client_PacketHandler::Make_C_Move(pos.x, pos.y, pos.z, rotY);
-
-    if (buf)
+    if (_animState && _stateMachine)
     {
-        GET_SINGLE(NetworkManager)->Send_Packet(buf);
+        _animState->Capture_FromStateMachine(_stateMachine);
+        _animState->Write_ToObjectInfo(info);
     }
+
+    return info;
 }
 
 HRESULT MyPlayer::Ready_Components()
@@ -111,6 +131,31 @@ HRESULT MyPlayer::Ready_Components()
     Player::Ready_Components();
 
     return S_OK;
+}
+
+bool MyPlayer::Should_SendMovePacket(const Protocol::ObjectInfo& nextInfo) const
+{
+    const Vec3 nextPos(
+        nextInfo.pos().x(),
+        nextInfo.pos().y(),
+        nextInfo.pos().z());
+
+    const float posDeltaSq = Vec3::DistanceSquared(nextPos, _lastSyncPos);
+    const float rotDelta = fabsf(nextInfo.rot_y() - _lastSyncRotY);
+
+    if (posDeltaSq > 0.0001f)
+        return true;
+
+    if (rotDelta > XMConvertToRadians(1.f))
+        return true;
+
+    if (nextInfo.object_state() != _lastObjectState)
+        return true;
+
+    if (nextInfo.move_dir() != _lastMoveDir)
+        return true;
+
+    return false;
 }
 
 shared_ptr<GameObject> MyPlayer::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

@@ -159,8 +159,16 @@ void GameObject::From_Json(const json& data)
 
 HRESULT GameObject::Bind_ShaderResources()
 {
-
     return S_OK;
+}
+
+void GameObject::Set_Local(bool isLocal)
+{
+    // 자신이 리모트 객체면, 내가 가진 모든 컴포넌트들한테도 설정
+    for (auto& pair : _components)
+    {
+        pair.second->Set_IsLocal(isLocal);
+    }
 }
 
 shared_ptr<Component> GameObject::Get_Component(uint32 id)

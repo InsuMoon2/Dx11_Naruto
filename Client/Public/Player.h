@@ -8,6 +8,9 @@ NS_END
 
 NS_BEGIN(Client)
 
+class AnimationStateComponent;
+class CombatStat;
+
 class Player : public Character
 {
     GENERATED_BODY(Player)
@@ -31,6 +34,9 @@ public: /* Network */
     void    Set_NetworkId(uint64 id) { _networkId = id; }
     virtual void Sync(const Protocol::ObjectInfo& info);
 
+public:
+    HRESULT Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetTag);
+
 protected:
     HRESULT Ready_Components() override;
     HRESULT Bind_ShaderResources() override;
@@ -38,9 +44,13 @@ protected:
 
     HRESULT Ready_PartObjects();
 
-private:
-    Shared<Model>   _model;
-    uint64          _networkId = 0;
+protected:
+    Shared<CombatStat>              _combatStat;
+    Shared<AnimationStateComponent> _animState;
+    Shared<Model>                   _model;
+
+protected:
+    uint64                          _networkId = 0;
 
 
 public:

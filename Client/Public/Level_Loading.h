@@ -26,7 +26,7 @@ public:
     virtual ~Level_Loading();
 
 public:
-    virtual HRESULT     Initialize(ELevelType nextLevelID, bool loadSharedResources);
+    virtual HRESULT     Initialize(ELevelType nextLevelID, bool loadSharedResources, EGameplaySpawnMode spawnMode);
     virtual void        Update(float timeDelta) override;
     virtual void        Late_Update(float timeDelta) override;
     virtual HRESULT     Render() override;
@@ -45,10 +45,15 @@ private:
 
     bool                _loadSharedResources = false;
 
+    EGameplaySpawnMode  _gameplaySpawnMode = EGameplaySpawnMode::LocalOnly;
+
 public:
-    static Shared<Level_Loading> Create(
-        ComPtr<Device> device, ComPtr<DeviceContext> context,
-        ELevelType nextLevelID, bool loadSharedResources = false);
+    static shared_ptr<Level_Loading> Create(
+        ComPtr<Device> device,
+        ComPtr<DeviceContext> context,
+        ELevelType nextLevelID,
+        bool loadSharedResources,
+        EGameplaySpawnMode gameplaySpawnMode = EGameplaySpawnMode::LocalOnly);
 
     virtual void Free() override;
 

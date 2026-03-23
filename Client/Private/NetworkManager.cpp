@@ -17,6 +17,9 @@ NetworkManager::~NetworkManager()
 
 void NetworkManager::Initialize()
 {
+    if (_service)
+        return;
+
     SocketUtils::Init();
 
     // 클라이언트 서비스 생성
@@ -29,13 +32,11 @@ void NetworkManager::Initialize()
 
     if (_service->Start())
     {
-        // [수정] cout -> LOG_INFO
         LOG_INFO("=== [Client] Network Service Started ===");
         LOG_INFO("[Client] Connecting to 127.0.0.1:7777...");
     }
     else
     {
-        // [수정] cout -> LOG_ERROR
         LOG_ERROR("[Client] Failed to start network service!");
     }
 
@@ -74,6 +75,9 @@ void NetworkManager::Free()
     {
         _service->CloseService();
     }
+
+    _session.reset();
+    _service.reset();
 
     SocketUtils::Clear();
 

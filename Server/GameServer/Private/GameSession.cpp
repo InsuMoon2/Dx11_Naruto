@@ -16,7 +16,9 @@ GameSession::~GameSession()
 
 void GameSession::OnConnected()
 {
-    GRoom->Enter_GameRoom(GetGameSessionRef());
+    cout << "[Server] Session Connected" << endl;
+
+    //GRoom->Enter_GameRoom(GetGameSessionRef());
 }
 
 void GameSession::OnDisconnected()

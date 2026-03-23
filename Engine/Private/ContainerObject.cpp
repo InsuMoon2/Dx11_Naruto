@@ -64,10 +64,27 @@ HRESULT ContainerObject::Render()
     return S_OK;
 }
 
-HRESULT ContainerObject::Change_PartObject(EPartSlot)
+HRESULT ContainerObject::Change_PartObject(EPartSlot slot, uint32 objID, void* arg)
 {
-    // TODO : 이미 파츠가 있어도, 변경 -> 에디터에서 세팅 예정
+    const int32 index = ETOI(slot);
+    if (index < 0 || index >= ETOI(EPartSlot::END))
+        return E_FAIL;
 
+    if (_partObjects[index])
+    {
+        _partObjects[index]->Set_Destroy(true);
+        _partObjects[index] = nullptr;
+    }
+
+    if (arg == nullptr)
+        return S_OK;
+
+    Shared<PartObject> partObject = static_pointer_cast<PartObject>(
+        GAME->Clone_GameObject(0, objID, arg));
+
+    CHECK_NULL(partObject, E_FAIL);
+
+    _partObjects[index] = partObject;
 
     return S_OK;
 }
@@ -78,8 +95,8 @@ HRESULT ContainerObject::Add_PartObject(EPartSlot slot, uint32 objID, void* arg)
     if (Find_PartObject(slot) != nullptr)
         return E_FAIL;
 
-    // 일단은 Static Level이라고 생각
-    Shared<PartObject> partObject = static_pointer_cast<PartObject>(GAME->Clone_GameObject(0, objID, arg));
+    Shared<PartObject> partObject = static_pointer_cast<PartObject>(
+        GAME->Clone_GameObject(0, objID, arg));
 
     if (partObject == nullptr)
         return E_FAIL;

@@ -18,7 +18,13 @@ public:
     Shared<GameRoom> GetRoomRef() { return shared_from_this(); }
 
 public: /* 입장, 퇴장 */
-    void Enter_GameRoom(Shared<GameSession> session);
+    void Enter_GameRoom(
+        Shared<GameSession> session,
+        float spawnX,
+        float spawnY,
+        float spawnZ,
+        float rotY);
+
     void Leave_GameRoom(Shared<GameSession> session);
 
 public: /* 오브젝트 관리 */

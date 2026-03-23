@@ -929,6 +929,8 @@ class ObjectInfo final : public ::google::protobuf::Message
     kObjectIdFieldNumber = 1,
     kRotYFieldNumber = 5,
     kObjectTypeFieldNumber = 6,
+    kObjectStateFieldNumber = 10,
+    kMoveDirFieldNumber = 11,
   };
   // string name = 2;
   void clear_name() ;
@@ -1006,13 +1008,33 @@ class ObjectInfo final : public ::google::protobuf::Message
   void _internal_set_objecttype(::Protocol::OBJECT_TYPE value);
 
   public:
+  // .Protocol.OBJECT_STATE_TYPE object_state = 10;
+  void clear_object_state() ;
+  ::Protocol::OBJECT_STATE_TYPE object_state() const;
+  void set_object_state(::Protocol::OBJECT_STATE_TYPE value);
+
+  private:
+  ::Protocol::OBJECT_STATE_TYPE _internal_object_state() const;
+  void _internal_set_object_state(::Protocol::OBJECT_STATE_TYPE value);
+
+  public:
+  // .Protocol.MOVE_INPUT_DIR_TYPE move_dir = 11;
+  void clear_move_dir() ;
+  ::Protocol::MOVE_INPUT_DIR_TYPE move_dir() const;
+  void set_move_dir(::Protocol::MOVE_INPUT_DIR_TYPE value);
+
+  private:
+  ::Protocol::MOVE_INPUT_DIR_TYPE _internal_move_dir() const;
+  void _internal_set_move_dir(::Protocol::MOVE_INPUT_DIR_TYPE value);
+
+  public:
   // @@protoc_insertion_point(class_scope:Protocol.ObjectInfo)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      3, 6, 2,
-      32, 2>
+      4, 8, 2,
+      40, 2>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -1037,6 +1059,8 @@ class ObjectInfo final : public ::google::protobuf::Message
     ::uint64_t objectid_;
     float rot_y_;
     int objecttype_;
+    int object_state_;
+    int move_dir_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1684,6 +1708,50 @@ inline ::Protocol::OBJECT_TYPE ObjectInfo::_internal_objecttype() const {
 inline void ObjectInfo::_internal_set_objecttype(::Protocol::OBJECT_TYPE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.objecttype_ = value;
+}
+
+// .Protocol.OBJECT_STATE_TYPE object_state = 10;
+inline void ObjectInfo::clear_object_state() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.object_state_ = 0;
+}
+inline ::Protocol::OBJECT_STATE_TYPE ObjectInfo::object_state() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.object_state)
+  return _internal_object_state();
+}
+inline void ObjectInfo::set_object_state(::Protocol::OBJECT_STATE_TYPE value) {
+  _internal_set_object_state(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.object_state)
+}
+inline ::Protocol::OBJECT_STATE_TYPE ObjectInfo::_internal_object_state() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::Protocol::OBJECT_STATE_TYPE>(_impl_.object_state_);
+}
+inline void ObjectInfo::_internal_set_object_state(::Protocol::OBJECT_STATE_TYPE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.object_state_ = value;
+}
+
+// .Protocol.MOVE_INPUT_DIR_TYPE move_dir = 11;
+inline void ObjectInfo::clear_move_dir() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.move_dir_ = 0;
+}
+inline ::Protocol::MOVE_INPUT_DIR_TYPE ObjectInfo::move_dir() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.move_dir)
+  return _internal_move_dir();
+}
+inline void ObjectInfo::set_move_dir(::Protocol::MOVE_INPUT_DIR_TYPE value) {
+  _internal_set_move_dir(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.move_dir)
+}
+inline ::Protocol::MOVE_INPUT_DIR_TYPE ObjectInfo::_internal_move_dir() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::Protocol::MOVE_INPUT_DIR_TYPE>(_impl_.move_dir_);
+}
+inline void ObjectInfo::_internal_set_move_dir(::Protocol::MOVE_INPUT_DIR_TYPE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.move_dir_ = value;
 }
 
 #ifdef __GNUC__

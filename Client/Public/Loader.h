@@ -40,7 +40,7 @@ public: /* Thread */
 private: /* Loading Level */
     HRESULT Loading_For_Maintitle();
     HRESULT Loading_For_GamePlay();
-    HRESULT Loading_For_Equipment();
+    HRESULT Loading_For_CharacterSetup();
 
 
 private:

@@ -63,6 +63,8 @@ public: /* UI Animation Track*/
     float   Get_UIOpacity() const { return _opacity; }
     const Color& Get_UITint() const { return _tintColor; }
 
+    virtual HRESULT     On_UIRegistered() { return S_OK; }
+
 protected:
     // SRT로 월드 행렬 갱신, 직교 투영 행렬 세팅
     void    Update_Transform();

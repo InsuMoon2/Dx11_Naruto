@@ -79,6 +79,9 @@ public: /* Game State */
     void                    Set_GameInputEnabled(bool enabled) { _gameInputEnabled = enabled; }
     bool                    Is_GameInputEnabled() const { return _gameInputEnabled; }
 
+    void                    Set_EditorRuntime(bool enabled) { _editorRuntime = enabled; }
+    bool                    Is_EditorRuntime() const { return _editorRuntime; }
+
 public: /* Graphic Device */
     ComPtr<Device>          Get_Device();
     ComPtr<DeviceContext>   Get_Context();
@@ -98,6 +101,14 @@ public: /* Graphic Device */
     float                   Get_UIViewportWidth() const;
     float                   Get_UIViewportHeight() const;
     void                    Set_UIViewportSize(float width, float height);
+
+    float                   Get_UIReferenceWidth() const;
+    float                   Get_UIReferenceHeight() const;
+    void                    Set_UIReferenceSize(float width, float height);
+
+    // UI 비율 유지 스케일 + 중앙 오프셋
+    float                    Get_UIScale() const;
+    Vec2                     Get_UIViewportOffset() const;
 
 
 public: /* ImGui */
@@ -240,6 +251,9 @@ public: /* UI */
     HRESULT                         Register_UI(EUILayer layer, Shared<UIObject> uiObject);
     void                            Set_UIPrototypeLevel(uint32 levelIndex);
 
+    HRESULT                         Remove_UI(const wstring& name);
+    HRESULT                         Remove_UI(const Shared<UIObject>& uiObject);
+
 public: /* UI Animation */
     bool                            Play_UIAnimation(Shared<UIObject> target, const string& animationName);
     bool                            Play_UIAnimation(const wstring& targetName, const string& animationName);
@@ -281,6 +295,7 @@ private: /* Manager */
 
     Unique<Renderer>                _renderer {};
     Unique<PipeLine>                _pipeLine {};
+    
 
 private: /* Factory */
     Unique<Component_Factory>       _componentFactory {};
@@ -293,10 +308,14 @@ private: /* Delegate Hub */
 private:
     EGameState                      _gameState = EGameState::Play;
     bool                            _gameInputEnabled = false;
+    bool                            _editorRuntime = false;
 
 private:
     float                           _uiViewportWidth = 0.f;
     float                           _uiViewportHeight = 0.f;
+
+    float                           _uiReferenceHeight = 1080.f;
+    float                           _uiReferenceWidth = 1920.f;
 
 public:
 	void Free() override;
