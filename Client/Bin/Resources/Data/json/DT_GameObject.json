@@ -41,6 +41,16 @@
             "Level": "Static"
         },
         {
+            "Id": "PreviewPlayer",
+            "ObjectType": "OBJECT_TYPE_PREVIEW_PLAYER",
+            "Level": "Static"
+        },
+        {
+            "Id": "Weapon",
+            "ObjectType": "OBJECT_TYPE_PART_WEAPON",
+            "Level": "Static"
+        },
+        {
             "Id": "Background",
             "ObjectType": "OBJECT_TYPE_BACKGROUND",
             "Level": "Static"

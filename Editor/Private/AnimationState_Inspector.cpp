@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "GameObject.h"
 #include "Animation_View.h"
+#include "Editor_Helper.h"
 
 void AnimationState_Inspector::Draw_Inspector(shared_ptr<Component> component)
 {
@@ -51,7 +52,7 @@ void AnimationState_Inspector::Draw_Inspector(shared_ptr<Component> component)
     ImGui::Text("Search");
     ImGui::SameLine(labelOffset);
 
-    const float searchWidth = ::clamp(ImGui::GetContentRegionAvail().x * 0.5f, 220.f, 260.f);
+    const float searchWidth = Utils::Max(320.f, ImGui::GetContentRegionAvail().x - 4.f);
     ImGui::SetNextItemWidth(searchWidth);
     ImGui::InputText("##SearchAnimState", _searchBuffer, IM_ARRAYSIZE(_searchBuffer));
 
@@ -332,14 +333,16 @@ void AnimationState_Inspector::Draw_AnimationList(Shared<AnimationStateComponent
     for (size_t i = 0; i < animationNames.size(); ++i)
     {
         const string& animName = animationNames[i];
+        const string displayName = Editor_Helper::Build_AnimatoinDisplayName(animName);
 
-        if (!Pass_Filter(animName, filterText))
+        if (!Editor_Helper::Passes_AnimationDisplayFilter(animName, filterText))
             continue;
 
         anyVisible = true;
 
         const bool selected = (targetClipName && *targetClipName == animName);
-        string itemLabel = animName + "##Anim_" + to_string(i);
+
+        const string itemLabel = displayName + "##Anim_" + to_string(i);
 
         if (ImGui::Selectable(itemLabel.c_str(), selected))
         {
@@ -349,6 +352,13 @@ void AnimationState_Inspector::Draw_AnimationList(Shared<AnimationStateComponent
 
         if (selected)
             ImGui::SetItemDefaultFocus();
+
+        if (ImGui::IsItemHovered() && displayName != animName)
+        {
+            ImGui::BeginTooltip();
+            ImGui::TextUnformatted(animName.c_str());
+            ImGui::EndTooltip();
+        }
     }
 
     if (!anyVisible)
@@ -377,17 +387,36 @@ void AnimationState_Inspector::Draw_SingleSection(Shared<AnimationStateComponent
 void AnimationState_Inspector::Draw_SequenceSection(Shared<AnimationStateComponent> animState,
     FStateAnimationDesc& desc)
 {
+    const string startDisplay = desc.start.animationName.empty()
+        ? "<None>"
+        : Editor_Helper::Build_AnimatoinDisplayName(desc.start.animationName);
+
+    const string loopDisplay = desc.loop.animationName.empty()
+        ? "<None>"
+        : Editor_Helper::Build_AnimatoinDisplayName(desc.loop.animationName);
+
+    const string endDisplay = desc.end.animationName.empty()
+        ? "<None>"
+        : Editor_Helper::Build_AnimatoinDisplayName(desc.end.animationName);
+
     ImGui::Text("Start Clip");
     ImGui::SameLine(120.f);
-    ImGui::TextDisabled("%s", desc.start.animationName.empty() ? "<None>" : desc.start.animationName.c_str());
+    ImGui::TextDisabled("%s", startDisplay.c_str());
+
+    if (ImGui::IsItemHovered() && !desc.start.animationName.empty() && startDisplay != desc.start.animationName)
+    {
+        ImGui::BeginTooltip();
+        ImGui::TextUnformatted(desc.start.animationName.c_str());
+        ImGui::EndTooltip();
+    }
 
     ImGui::Text("Loop Clip");
     ImGui::SameLine(120.f);
-    ImGui::TextDisabled("%s", desc.loop.animationName.empty() ? "<None>" : desc.loop.animationName.c_str());
+    ImGui::TextDisabled("%s", loopDisplay.c_str());
 
     ImGui::Text("End Clip");
     ImGui::SameLine(120.f);
-    ImGui::TextDisabled("%s", desc.end.animationName.empty() ? "<None>" : desc.end.animationName.c_str());
+    ImGui::TextDisabled("%s", endDisplay.c_str());
 
     ImGui::Spacing();
 

@@ -1,0 +1,45 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_TCHEXA_RoofTile_White",
+      "material_instance_guid": "fb7a0648-cce8-441b-adb7-c13a91600cef"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_BuildingMisc_02",
+      "material_instance_guid": "5d5189b2-b4ec-4238-bfa3-7b87876f2638"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_BuildingMisc_01",
+      "material_instance_guid": "3860a41f-2fdb-460b-98f0-ce6a31771a8c"
+    },
+    {
+      "material_name": "T_ENV_TCHEXA_BoltedPlates_03",
+      "material_instance_guid": "7757eb06-3ca7-4ba9-8332-adae3ba85cd5"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright",
+      "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark",
+      "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_RoofTile_Orange",
+      "material_instance_guid": "86d1b857-07cd-4f4b-838e-f7aaded27c42"
+    },
+    {
+      "material_name": "T_ENV_TCHEXA_Pipe_Brown",
+      "material_instance_guid": "c5d6ad04-50a4-4136-be98-7351bf969d30"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "5b8fe905-a17b-4799-a9d4-a3040a13c84f"
+    },
+    {
+      "material_name": "Material_9",
+      "textures": []
+    }
+  ]
+}

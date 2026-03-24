@@ -1,0 +1,21 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_TCHEXA_LeafMasked_A",
+      "material_instance_guid": "816c0f10-ab00-417c-a295-654259b3a8c5"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_Leaf_A_01",
+      "material_instance_guid": "bdca738f-494b-4767-83af-acfb020cef05"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_Tree_A_Masked_CameraTrans",
+      "material_instance_guid": "0deda11b-3025-4a8c-a302-60dd11a1fd8c"
+    },
+    {
+      "material_name": "Material_3",
+      "textures": []
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_TCHEXA_Curtain_B",
+      "material_instance_guid": "f5d28c15-d19a-42ef-9e85-f6d25a3ea1a3"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

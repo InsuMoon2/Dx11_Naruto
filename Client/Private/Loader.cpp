@@ -43,7 +43,7 @@
 #include "UI_PlayerStatus.h"
 #include "UI_SkillSlot.h"
 #include "AnimationStateComponent.h"
-#include "Player_BodyUpper.h"
+#include "Player_CustomPart.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -435,9 +435,11 @@ HRESULT Loader::Loading_For_GamePlay()
         };
 
     // 맵 리소스 로드
-    pushChunk("BM_KonohaVillage03_Environments_BackdropBuildings");
-    pushChunk("BM_KonohaVillage03_Environments_Props");
-    pushChunk("BM_KonohaVillage03_Environments_Terrain");
+    //pushChunk("BM_KonohaVillage03_Environments_BackdropBuildings");
+    //pushChunk("BM_KonohaVillage03_Environments_Props");
+    //pushChunk("BM_KonohaVillage03_Environments_Terrain");
+    pushChunk("BM_ExamStadium_Env_Terrain");
+    pushChunk("BM_ExamStadium_p");
 
     CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
         TEXT("../../Client/Bin/Resources/Data/json/DT_GameObject.json"), jobs), E_FAIL);

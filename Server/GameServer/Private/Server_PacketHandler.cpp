@@ -45,12 +45,7 @@ void Server_PacketHandler::Handle_C_EnterGame(shared_ptr<GameSession> session, B
     Protocol::C_EnterGame pkt;
     ParsePacket(buffer, pkt);
 
-    GRoom->Enter_GameRoom(
-        session,
-        pkt.spawn_pos().x(),
-        pkt.spawn_pos().y(),
-        pkt.spawn_pos().z(),
-        pkt.rot_y());
+    GRoom->Enter_GameRoom(session, pkt);
 }
 
 SendBufferRef Server_PacketHandler::Make_S_MyPlayer(Protocol::ObjectInfo& info)

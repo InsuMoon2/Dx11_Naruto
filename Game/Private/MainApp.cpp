@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "MainApp.h"
+
+#include "Customizer_Manager.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "NetworkManager.h"
@@ -167,5 +169,6 @@ void MainApp::Free()
 
     Input_Manager::DestroyInstance();
     Event_Manager::DestroyInstance();
+    Customizer_Manager::DestroyInstance();
 
 }

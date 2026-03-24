@@ -25,6 +25,8 @@ public:
         Vec2    labelOffset = Vec2::Zero;
         Vec2    labelSize = Vec2::Zero;
 
+        Color   labelColor = Color(0.f, 0.f, 0.f, 1.f);
+
         float   fontSize = 24.f;;
     };
 
@@ -62,6 +64,8 @@ private:
     uint32  _normalTextureIndex = 0;
     uint32  _selectedTextureIndex = 0;
     uint32  _currentTextureIndex = 0;
+
+    Color   _labelColor;
 
 public:
     static Shared<UI_TabButton> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

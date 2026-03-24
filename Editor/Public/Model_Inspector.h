@@ -24,11 +24,11 @@ private:
     static json Build_ModelSwapJson(const json& sourceData, const string& newGuid, const string& newModelType);
     static bool Is_SkeletalMeshAsset(const FAssetMeta* meta);
 
-    void Draw_ModelPicker(Shared<Model> model, json& data);
-    void Draw_MeshList(Shared<Model> model);
-    void Draw_MaterialSlots(Shared<Model> model);
-    void Draw_TextureSlot(Shared<ModelMaterial> material,
-              EMaterialTextureSlot slot, const char* label, uint32 index);
+    void        Draw_ModelPicker(Shared<Model> model, json& data);
+    void        Draw_MeshList(Shared<Model> model);
+    void        Draw_MaterialSlots(Shared<Model> model);
+    void        Draw_TextureSlot(Shared<ModelMaterial> material,
+                     EMaterialTextureSlot slot, const char* label, uint32 index);
 
 };
 

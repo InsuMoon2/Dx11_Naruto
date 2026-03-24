@@ -6,14 +6,23 @@ NS_BEGIN(Engine)
 class GameObject;
 class RenderTarget;
 class Model;
+class ContainerObject;
 NS_END
 
 NS_BEGIN(Editor)
-    class Prefab_PreviewCameraSettings;
-    class Editor_Camera_Free;
+class Prefab_PreviewCameraSettings;
+class Editor_Camera_Free;
 
 class Prefab_View : public EditorWindow
 {
+public:
+    enum class ESelectionType : uint8
+    {
+        None,
+        Component,
+        PartObject,
+    };
+
 public:
     explicit Prefab_View();
     virtual ~Prefab_View();
@@ -50,9 +59,15 @@ private:
     Shared<Model>   Find_PreviewModel() const;
     void            Tick_PreviewAnimation(float timeDelta);
 
-private:
+private: /* 애니메이션 */
     void    Draw_AnimationControls();
     void    Open_AnimationView();
+
+private: /* 파츠 세팅 */
+    void Draw_PartObjectList();
+    void Draw_PartObjectInspector();
+
+    Shared<ContainerObject> Get_PreviewContainer() const;
 
 public:
     static shared_ptr<Prefab_View> Create();
@@ -65,8 +80,6 @@ private:
 
     Shared<GameObject>          _previewObject;
     Shared<Editor_Camera_Free>  _previewCamera;
-
-    uint32 _selectedComponentId = 0;
 
     bool   _previewHasBegunPlay = false;
 
@@ -86,6 +99,12 @@ private: /* ImGuizmo */
 private: /* 노티파이 */
     int32   _previewSelectedAnimIndex = 0;
     bool    _previewAnimLoop = true;
+
+private:
+    ESelectionType _selectionType = ESelectionType::Component;
+
+    uint32 _selectedComponentId = 0;
+    uint32 _selectedPartSlot = 0;
 
 };
 

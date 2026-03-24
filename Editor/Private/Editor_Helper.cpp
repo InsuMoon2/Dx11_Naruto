@@ -83,3 +83,37 @@ bool Editor_Helper::IsEditorManagedAsset(EAssetOpenType assetType)
         || assetType == EAssetOpenType::BehaviorTree 
         || assetType == EAssetOpenType::UIAnimation;
 }
+
+string Editor_Helper::Build_AnimatoinDisplayName(const string& rawClipName)
+{
+    string displayName = rawClipName;
+
+    // ex) "SK_CHR_NormalModel|CustomMan_Jump_Vertical" -> "CustomMan_Jump_Vertical"
+    const size_t barPos = displayName.find('|');
+    if (barPos != string::npos)
+        displayName = displayName.substr(barPos + 1);
+
+    const size_t firstCharPos = displayName.find_first_not_of(" \t");
+    if (firstCharPos != string::npos)
+        displayName = displayName.substr(firstCharPos);
+
+    static const string prefix = "CustomMan_";
+    if (displayName.rfind(prefix, 0) == 0)
+        displayName = displayName.substr(prefix.size());
+
+    return displayName.empty() ? rawClipName : displayName;
+}
+
+bool Editor_Helper::Passes_AnimationDisplayFilter(const string& rawClipName, const string& filterText)
+{
+    if (filterText.empty())
+        return true;
+
+    const string filterLower = Utils::ToLowerCopy(filterText);
+    const string rawLower = Utils::ToLowerCopy(rawClipName);
+    const string displayLower = Utils::ToLowerCopy(Build_AnimatoinDisplayName(rawClipName));
+
+    // 원본 이름으로도 검색되고, 접두사 제거된 표시 이름으로도 검색되게
+    return rawLower.find(filterLower) != string::npos
+        || displayLower.find(filterLower) != string::npos;
+}

@@ -7,6 +7,9 @@
 #include "Transform.h"
 #include <magic_enum/magic_enum.hpp>
 
+#include "ContainerObject.h"
+#include "PartObject.h"
+
 Prefab_Manager::Prefab_Manager(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
 {
@@ -195,6 +198,15 @@ json Prefab_Manager::Serialize_GameObject(shared_ptr<GameObject> gameObject)
 
     root["prefab_name"] = Utils::ToString(gameObject->Get_Name());
 
+    if (auto container = dynamic_pointer_cast<ContainerObject>(gameObject))
+    {
+        if (root.contains("part_transforms"))
+        {
+            root["custom_properties"]["part_transforms"] = root["part_transforms"];
+            root.erase("part_transforms"); 
+        }
+    }
+
     return root;
 }
 
@@ -275,6 +287,16 @@ shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc&
         }
     }
 
+    if (auto container = dynamic_pointer_cast<ContainerObject>(gameObject))
+    {
+        if (desc.custom_properties.contains("part_transforms"))
+        {
+            json spoof;
+            spoof["part_transforms"] = desc.custom_properties["part_transforms"];
+            container->From_Json(spoof);
+        }
+    }
+
     gameObject->Set_Name(Utils::ToWString(desc.prefab_name));
     gameObject->Set_SourcePrefabName(desc.prefab_name);
 
@@ -330,6 +352,30 @@ void Prefab_Manager::Reapply_Prefab_ToObject(const FPrefabDesc& desc, Shared<Gam
             continue;
 
         comp->From_Json(compData);
+    }
+
+    if (auto container = dynamic_pointer_cast<ContainerObject>(gameObject))
+    {
+        if (desc.custom_properties.contains("part_transforms"))
+        {
+            json spoof;
+            spoof["part_transforms"] = desc.custom_properties["part_transforms"];
+
+            container->From_Json(spoof);
+            for (int i = 0; i < ETOI(ContainerObject::EPartSlot::END); ++i)
+            {
+                auto slot = static_cast<ContainerObject::EPartSlot>(i);
+                if (container->Get_PartObject(slot))
+                {
+                    auto transform = container->Get_PartObject(slot)->Get_Component<Transform>();
+                    string slotName = ContainerObject::Get_PartSlotName(slot);
+                    if (transform && spoof["part_transforms"].contains(slotName))
+                    {
+                        transform->From_Json(spoof["part_transforms"][slotName]);
+                    }
+                }
+            }
+        }
     }
 }
 

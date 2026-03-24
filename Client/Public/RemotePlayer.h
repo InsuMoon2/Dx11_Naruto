@@ -26,7 +26,7 @@ private:
     Vec3  _targetPos = {};
     float _targetRotY = 0.f;
     float _lerpSpeed = 15.f;
-
+                    
     bool  _hasReceivedFirstSync = false;
     float _snapDistanceSq = 9.f;
 

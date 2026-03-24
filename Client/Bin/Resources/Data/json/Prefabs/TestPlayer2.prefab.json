@@ -3,7 +3,7 @@
         {
             "position": [
                 0.0,
-                0.0,
+                5.0,
                 -5.0
             ],
             "rotation": [
@@ -464,7 +464,83 @@
             "type": "COMPONENT_TYPE_MODEL"
         }
     ],
-    "guid": "40d43e18-7812-44dd-bd88-ec88352c8567",
+    "custom_properties": {
+        "part_transforms": {
+            "Face": {
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    -0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "type": "COMPONENT_TYPE_TRANSFORM"
+            },
+            "Headegear": {
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    -0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "type": "COMPONENT_TYPE_TRANSFORM"
+            },
+            "Onepiece": {
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    -0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "type": "COMPONENT_TYPE_TRANSFORM"
+            },
+            "Weapon": {
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    -22.0,
+                    -243.0,
+                    0.0
+                ],
+                "scale": [
+                    0.009999999776482582,
+                    0.009999999776482582,
+                    0.009999999776482582
+                ],
+                "type": "COMPONENT_TYPE_TRANSFORM"
+            }
+        }
+    },
+    "guid": "23a12176-a919-4ddd-8d01-c78158ae271b",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"

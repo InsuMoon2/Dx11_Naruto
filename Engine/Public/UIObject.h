@@ -65,6 +65,10 @@ public: /* UI Animation Track*/
 
     virtual HRESULT     On_UIRegistered() { return S_OK; }
 
+public:
+    ERenderGroup Get_RenderGroup() const { return _renderGroup; }
+    void Set_RenderGroup(ERenderGroup group) { _renderGroup = group; }
+
 protected:
     // SRT로 월드 행렬 갱신, 직교 투영 행렬 세팅
     void    Update_Transform();
@@ -90,6 +94,8 @@ protected:
     EUILayer    _uiLayer    = EUILayer::HUD;
 
     uint32      _levelIndex = 0;
+
+    ERenderGroup _renderGroup = ERenderGroup::UI;
 
 protected:
     float       _rotationZ = 0.f;

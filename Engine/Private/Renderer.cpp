@@ -73,6 +73,8 @@ void Renderer::Draw()
 {
     _drawCallCount = 0;
 
+    Render_BackgroundUI();
+
     Apply_Default3DState();
 
     Render_Priority();
@@ -82,6 +84,30 @@ void Renderer::Draw()
     Render_Blend();
 
     Render_UI();
+}
+
+void Renderer::Render_BackgroundUI()
+{
+    Apply_UIState();
+
+    _renderObjects[ETOI(ERenderGroup::BackgroundUI)].sort([](const Shared<GameObject>& src, const Shared<GameObject>& dst) {
+        auto uiSrc = dynamic_pointer_cast<UIObject>(src);
+        auto uiDst = dynamic_pointer_cast<UIObject>(dst);
+        return uiSrc->Get_ZOrder() < uiDst->Get_ZOrder();
+        });
+
+    for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::BackgroundUI)])
+    {
+        if (renderObject)
+        {
+            renderObject->Render();
+            _drawCallCount++;
+        }
+    }
+
+    _renderObjects[ETOI(ERenderGroup::BackgroundUI)].clear();
+
+    Apply_Default3DState();
 }
 
 void Renderer::Render_Priority()

@@ -135,6 +135,7 @@ enum OBJECT_TYPE : int {
   OBJECT_TYPE_BACKGROUND = 10,
   OBJECT_TYPE_STATIC_MESH = 11,
   OBJECT_TYPE_PART_OBJECT = 12,
+  OBJECT_TYPE_PART_WEAPON = 13,
   OBJECT_TYPE_UI_TEXT = 100,
   OBJECT_TYPE_UI_LOADING_SPINNER = 101,
   OBJECT_TYPE_UI_LOADING_PROGRESS_BAR = 102,
@@ -243,6 +244,40 @@ inline bool MOVE_INPUT_DIR_TYPE_Parse(absl::string_view name, MOVE_INPUT_DIR_TYP
   return ::google::protobuf::internal::ParseNamedEnum<MOVE_INPUT_DIR_TYPE>(
       MOVE_INPUT_DIR_TYPE_descriptor(), name, value);
 }
+enum ANIM_PHASE_TYPE : int {
+  ANIM_PHASE_START = 0,
+  ANIM_PHASE_LOOP = 1,
+  ANIM_PHASE_END = 2,
+  ANIM_PHASE_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::min(),
+  ANIM_PHASE_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::max(),
+};
+
+bool ANIM_PHASE_TYPE_IsValid(int value);
+extern const uint32_t ANIM_PHASE_TYPE_internal_data_[];
+constexpr ANIM_PHASE_TYPE ANIM_PHASE_TYPE_MIN = static_cast<ANIM_PHASE_TYPE>(0);
+constexpr ANIM_PHASE_TYPE ANIM_PHASE_TYPE_MAX = static_cast<ANIM_PHASE_TYPE>(2);
+constexpr int ANIM_PHASE_TYPE_ARRAYSIZE = 2 + 1;
+const ::google::protobuf::EnumDescriptor*
+ANIM_PHASE_TYPE_descriptor();
+template <typename T>
+const std::string& ANIM_PHASE_TYPE_Name(T value) {
+  static_assert(std::is_same<T, ANIM_PHASE_TYPE>::value ||
+                    std::is_integral<T>::value,
+                "Incorrect type passed to ANIM_PHASE_TYPE_Name().");
+  return ANIM_PHASE_TYPE_Name(static_cast<ANIM_PHASE_TYPE>(value));
+}
+template <>
+inline const std::string& ANIM_PHASE_TYPE_Name(ANIM_PHASE_TYPE value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<ANIM_PHASE_TYPE_descriptor,
+                                                 0, 2>(
+      static_cast<int>(value));
+}
+inline bool ANIM_PHASE_TYPE_Parse(absl::string_view name, ANIM_PHASE_TYPE* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ANIM_PHASE_TYPE>(
+      ANIM_PHASE_TYPE_descriptor(), name, value);
+}
 
 // ===================================================================
 
@@ -294,6 +329,12 @@ struct is_proto_enum<::Protocol::MOVE_INPUT_DIR_TYPE> : std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor<::Protocol::MOVE_INPUT_DIR_TYPE>() {
   return ::Protocol::MOVE_INPUT_DIR_TYPE_descriptor();
+}
+template <>
+struct is_proto_enum<::Protocol::ANIM_PHASE_TYPE> : std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor<::Protocol::ANIM_PHASE_TYPE>() {
+  return ::Protocol::ANIM_PHASE_TYPE_descriptor();
 }
 
 }  // namespace protobuf

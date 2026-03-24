@@ -97,6 +97,9 @@ public:
     // 애니메이션 여러개 추가
     void    Set_Animations(const vector<Shared<Animation>>& animations);
 
+    // 소켓 가져오기
+    const Matrix* Get_SocketBoneMatrixPtr(const string& boneName) const;
+
 private:
     // .meshbin 확장자일 때 들어오는 초기화 경로
     HRESULT Initialize_FromMeshBin(const string& modelFilePath);

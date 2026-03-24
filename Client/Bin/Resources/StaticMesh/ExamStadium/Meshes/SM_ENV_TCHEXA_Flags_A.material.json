@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_TCHEXA_Flags_A",
+      "material_instance_guid": "9b2956ce-b257-41ff-9fcc-638e097dd25e"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

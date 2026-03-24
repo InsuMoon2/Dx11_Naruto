@@ -452,24 +452,17 @@ void AnimationStateComponent::Capture_FromStateMachine(const Shared<PlayerStateM
     if (!stateMachine)
         return;
 
-    _replicatedState.state = stateMachine->Get_CurrentStateID();
-    _replicatedState.dir = stateMachine->Get_PendingMoveInputDirection();
+    const EPlayerState nextState = stateMachine->Get_CurrentStateID();
+    const EMoveInputDirection nextDir = stateMachine->Get_PendingMoveInputDirection();
+    const EAnimPhase nextPhase = stateMachine->Get_AnimPhase();
 
-    // 일단 Dash / HeightLand / Jump만 재시작 필요 상태?
-    switch (_replicatedState.state)
-    {
-    case EPlayerState::Jump:
-    case EPlayerState::DoubleJump:
-    case EPlayerState::SuperJump:
-    case EPlayerState::HeightLand:
-    case EPlayerState::Dash:
-        _replicatedState.forceRestart = true;
-        break;
-    default:
-        _replicatedState.forceRestart = false;
-        break;
-    }
+    const bool stateChanged = (_replicatedState.state != nextState);
 
+    _replicatedState.state = nextState;
+    _replicatedState.dir = nextDir;
+    _replicatedState.phase = nextPhase;
+
+    _replicatedState.forceRestart = stateChanged && Requires_ForceRestart(nextState);
 }
 
 void AnimationStateComponent::Sync_FromNetwork(const FAnimReplicatedState& state)
@@ -485,30 +478,67 @@ void AnimationStateComponent::Apply_NetworkState()
     if (!_model)
         return;
 
-    // 변경 상태가 없으면 스킵
-    if (_replicatedState.state == _appliedState.state &&
-        _replicatedState.dir == _appliedState.dir &&
-        !_replicatedState.forceRestart)
-    {
+    const bool stateChanged =
+        _replicatedState.state != _appliedState.state ||
+        _replicatedState.dir != _appliedState.dir;
+
+    const bool phaseChanged =
+        _replicatedState.phase != _appliedState.phase;
+
+    if (!stateChanged && !phaseChanged && !_replicatedState.forceRestart)
         return;
-    }
 
     bool played = false;
+    const string stateName = To_AnimationStateName(_replicatedState.state);
+    const auto* stateDesc = Find_State(stateName);
 
     // 방향이 필요한지? -> Direct Sequence인지 분기
-    if (_replicatedState.state == EPlayerState::Dash)
+    if (_replicatedState.forceRestart)
     {
-        played = Play_DirectionalState(
-            To_AnimationStateName(_replicatedState.state), _replicatedState.dir);
+        if (_replicatedState.state == EPlayerState::Dash)
+        {
+            played = Play_DirectionalState(stateName, _replicatedState.dir);
+        }
+        else
+        {
+            played = Play_State(stateName);
+        }
     }
-    else
+
+    else if (stateChanged)
     {
-        played = Play_State(To_AnimationStateName(_replicatedState.state));
+        if (_replicatedState.state == EPlayerState::Dash)
+        {
+            played = Play_DirectionalState(stateName, _replicatedState.dir);
+        }
+        else
+        {
+            played = Play_State(stateName);
+        }
+    }
+    else if (phaseChanged && stateDesc && stateDesc->mode == EStateAnimationMode::Sequence)
+    {
+        if (_replicatedState.phase == EAnimPhase::End)
+        {
+            Request_StateEnd();
+            played = true;
+        }
+        else if (_appliedState.phase == EAnimPhase::End &&
+            _replicatedState.phase == EAnimPhase::Loop)
+        {
+            played = Play_StateLoopOnly(stateName);
+        }
+        else
+        {
+            played = true;
+        }
     }
 
     if (played)
     {
         _appliedState = _replicatedState;
+
+        // [추가] one-shot pulse 소비
         _replicatedState.forceRestart = false;
     }
 }
@@ -517,6 +547,9 @@ void AnimationStateComponent::Write_ToObjectInfo(Protocol::ObjectInfo& info) con
 {
     info.set_object_state(To_ProtoState(_replicatedState.state));
     info.set_move_dir(To_ProtoDir(_replicatedState.dir));
+
+    info.set_anim_phase(To_ProtoAnimPhase(_replicatedState.phase));
+    info.set_anim_force_restart(_replicatedState.forceRestart);
 }
 
 void AnimationStateComponent::Read_FromObjectInfo(const Protocol::ObjectInfo& info)
@@ -525,6 +558,9 @@ void AnimationStateComponent::Read_FromObjectInfo(const Protocol::ObjectInfo& in
     state.state = From_ProtoState(info.object_state());
     state.dir = From_ProtoDir(info.move_dir());
 
+    state.phase = From_ProtoAnimPhase(info.anim_phase());
+    state.forceRestart = info.anim_force_restart();
+
     Sync_FromNetwork(state);
 }
 
@@ -532,6 +568,21 @@ string AnimationStateComponent::To_AnimationStateName(EPlayerState state)
 {
     auto name = magic_enum::enum_name(state);
     return name.empty() ? "" : string(name);
+}
+
+bool AnimationStateComponent::Requires_ForceRestart(EPlayerState state)
+{
+    switch (state)
+    {
+    case EPlayerState::Jump:
+    case EPlayerState::DoubleJump:
+    case EPlayerState::SuperJump:
+    case EPlayerState::HeightLand:
+    case EPlayerState::Dash:
+        return true;
+    default:
+        return false;
+    }
 }
 
 Protocol::OBJECT_STATE_TYPE AnimationStateComponent::To_ProtoState(EPlayerState state)
@@ -562,6 +613,17 @@ Protocol::MOVE_INPUT_DIR_TYPE AnimationStateComponent::To_ProtoDir(EMoveInputDir
     }
 }
 
+Protocol::ANIM_PHASE_TYPE AnimationStateComponent::To_ProtoAnimPhase(EAnimPhase phase)
+{
+    switch (phase)
+    {
+    case EAnimPhase::Start: return Protocol::ANIM_PHASE_START;
+    case EAnimPhase::Loop:  return Protocol::ANIM_PHASE_LOOP;
+    case EAnimPhase::End:   return Protocol::ANIM_PHASE_END;
+    default:                return Protocol::ANIM_PHASE_START;
+    }
+}
+
 EPlayerState AnimationStateComponent::From_ProtoState(Protocol::OBJECT_STATE_TYPE state)
 {
     switch (state)
@@ -587,6 +649,17 @@ EMoveInputDirection AnimationStateComponent::From_ProtoDir(Protocol::MOVE_INPUT_
     case Protocol::MOVE_INPUT_DIR_TYPE_LEFT:     return EMoveInputDirection::Left;
     case Protocol::MOVE_INPUT_DIR_TYPE_RIGHT:    return EMoveInputDirection::Right;
     default:                                     return EMoveInputDirection::Forward;
+    }
+}
+
+EAnimPhase AnimationStateComponent::From_ProtoAnimPhase(Protocol::ANIM_PHASE_TYPE phase)
+{
+    switch (phase)
+    {
+    case Protocol::ANIM_PHASE_START: return EAnimPhase::Start;
+    case Protocol::ANIM_PHASE_LOOP:  return EAnimPhase::Loop;
+    case Protocol::ANIM_PHASE_END:   return EAnimPhase::End;
+    default:                              return EAnimPhase::Start;
     }
 }
 

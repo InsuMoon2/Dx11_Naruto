@@ -4,6 +4,7 @@
 #include "Camera_Free.h"
 #include "Camera_Target.h"
 #include "Client_PacketHandler.h"
+#include "Customizer_Manager.h"
 #include "Loader.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
@@ -204,19 +205,31 @@ void Level_Gameplay::Spawn_LocalPlayer()
         }
     }
 
-    auto player = Spawn_Helper::Prefab("TestPlayer2")
+    auto playerObj = Spawn_Helper::Prefab("TestPlayer2")
         .AtLevel(ETOI(ELevelType::GamePlay))
         .Position(spawnPos)
         .InLayer(TEXT("Layer_Player"))
         .Spawn();
 
+    auto player = dynamic_pointer_cast<Player>(playerObj);
     CHECK_NULL(player);
+
+    auto custom = GET_SINGLE(Customizer_Manager);
+    const auto& customDesc = custom->Get_CustomizerDesc();
+
+    for (int32 i = 0; i < ETOI(ContainerObject::EPartSlot::END); ++i)
+    {
+        const wstring& partTag = customDesc.partTags[i];
+        if (!partTag.empty())
+        {
+            player->Apply_CustomizingPart(static_cast<ContainerObject::EPartSlot>(i), partTag);
+        }
+    }
 
     // Camera Target 세팅
     GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(player->Get_Component<Transform>());
     // 플레이어
     GAME->Get_DelegateHub().OnPlayerObjectSpawned.Broadcast(player);
-
 }
 
 void Level_Gameplay::On_PlayerObjectSpawned(Shared<GameObject> obj)

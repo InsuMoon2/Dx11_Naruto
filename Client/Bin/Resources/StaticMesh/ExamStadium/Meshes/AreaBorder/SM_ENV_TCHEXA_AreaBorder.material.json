@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "WorldGridMaterial",
+      "textures": []
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

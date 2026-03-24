@@ -1,0 +1,33 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+      "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark_Masked_CameraTrans",
+      "material_instance_guid": "59f1c873-d177-4b49-a8d6-1baebee3ff7d"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_Plaster_White_Masked_CameraTrans",
+      "material_instance_guid": "8fc8fb23-4659-4cb3-ad5e-0c5ada8f8074"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_MetalRoof_White",
+      "material_instance_guid": "68d4a35a-4419-42d0-a1c5-5674d5ba55e9"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_Plaster_Light",
+      "material_instance_guid": "8c5b1379-76fb-414f-8ae5-4ebe9dd2996f"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright",
+      "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d"
+    },
+    {
+      "material_name": "Material_6",
+      "textures": []
+    }
+  ]
+}

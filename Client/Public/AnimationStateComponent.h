@@ -20,6 +20,8 @@ public:
         EPlayerState        state = EPlayerState::Idle;
         EMoveInputDirection dir = EMoveInputDirection::Forward;
 
+        EAnimPhase          phase = EAnimPhase::Start;
+
         // 루프용
         bool                forceRestart = false;
     };
@@ -45,21 +47,21 @@ public:
     void    Request_StateEnd();
 
 public:
-    const FStateAnimationDesc* Find_State(const string& stateName) const;
-    FStateAnimationDesc& Edit_State(const string& stateName);
+    const FStateAnimationDesc*  Find_State(const string& stateName) const;
+    FStateAnimationDesc&        Edit_State(const string& stateName);
 
-    bool    Is_CurrentStateFinished() const;
-    bool    Is_CurrentStateSequenceFinished() const;
+    bool                        Is_CurrentStateFinished() const;
+    bool                        Is_CurrentStateSequenceFinished() const;
 
-    EAnimPhase  Get_CurrentAnimPhase() const;
-    float       Get_CurrentTrackPosition() const;
-    float       Get_CurrentAnimationDuration() const;
+    EAnimPhase                  Get_CurrentAnimPhase() const;
+    float                       Get_CurrentTrackPosition() const;
+    float                       Get_CurrentAnimationDuration() const;
 
-    const string& Get_CurrentStateName() const { return _currentStateName; }
-    const string& Get_PrevStateName() const { return _prevStateName; }
+    const string&               Get_CurrentStateName() const { return _currentStateName; }
+    const string&               Get_PrevStateName() const { return _prevStateName; }
 
-    vector<string>             Get_StateNames() const;
-    vector<string>             Get_ModelAnimationNames() const;
+    vector<string>              Get_StateNames() const;
+    vector<string>              Get_ModelAnimationNames() const;
 
     bool Preview_State(const string& stateName, int32 slotIndex, EMoveInputDirection dir);
 
@@ -86,13 +88,18 @@ public:
 private:
     static string To_AnimationStateName(EPlayerState state);
 
-    static Protocol::OBJECT_STATE_TYPE To_ProtoState(EPlayerState state);
-    static Protocol::MOVE_INPUT_DIR_TYPE To_ProtoDir(EMoveInputDirection dir);
-    static EPlayerState From_ProtoState(Protocol::OBJECT_STATE_TYPE state);
-    static EMoveInputDirection From_ProtoDir(Protocol::MOVE_INPUT_DIR_TYPE dir);
+    static bool Requires_ForceRestart(EPlayerState state);
 
+    static Protocol::OBJECT_STATE_TYPE      To_ProtoState(EPlayerState state);
+    static Protocol::MOVE_INPUT_DIR_TYPE    To_ProtoDir(EMoveInputDirection dir);
 
-    Shared<Model> Resolve_Model();
+    static Protocol::ANIM_PHASE_TYPE        To_ProtoAnimPhase(EAnimPhase phase);
+
+    static EPlayerState                     From_ProtoState(Protocol::OBJECT_STATE_TYPE state);
+    static EMoveInputDirection              From_ProtoDir(Protocol::MOVE_INPUT_DIR_TYPE dir);
+    static EAnimPhase                       From_ProtoAnimPhase(Protocol::ANIM_PHASE_TYPE phase);
+
+    Shared<Model>                           Resolve_Model();
 
 private:
     Shared<Model>                     _model;

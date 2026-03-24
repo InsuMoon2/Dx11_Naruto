@@ -24,6 +24,8 @@ public:
         BodyUpper,
         BodyLower,
         Face,
+
+
         Weapon,
 
         END
@@ -44,6 +46,12 @@ public:
 
 public:
     HRESULT             Change_PartObject(EPartSlot slot, uint32 objID, void* arg);
+    static string       Get_PartSlotName(EPartSlot slot);
+
+    Shared<PartObject>  Get_PartObject(EPartSlot slot) const;
+
+    json To_Json() const override;
+    void From_Json(const json& data) override;
 
 protected:
     HRESULT             Add_PartObject(EPartSlot slot, uint32 objID, void* arg);
@@ -51,6 +59,8 @@ protected:
 
 protected:
     array<Shared<PartObject>, ETOI(EPartSlot::END)> _partObjects;
+
+    json _cachedPartTransforms = json::object();
 
 public:
     virtual Shared<GameObject> Clone(void* arg) = 0;

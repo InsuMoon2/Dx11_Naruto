@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_TCHEXA_Spotlight_A",
+      "material_instance_guid": "4ddf0dee-ac85-475c-86ba-0409e1cfbcb5"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

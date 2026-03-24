@@ -19,22 +19,24 @@ GameRoom::~GameRoom()
 {
 }
 
-void GameRoom::Enter_GameRoom(
-    Shared<GameSession> session,
-    float spawnX,
-    float spawnY,
-    float spawnZ,
-    float rotY)
+void GameRoom::Enter_GameRoom(Shared<GameSession> session, const Protocol::C_EnterGame& pkt)
 {
     auto player = Player::Create();
     player->Set_Session(session);
     session->Set_PlayerId(player->Get_ObjectID());
 
+    //player->info = pkt.info();
+
+    for (auto& pair : pkt.info().equipparts())
+    {
+        (*player->info.mutable_equipparts())[pair.first] = pair.second;
+    }
+
     auto* protoPos = player->info.mutable_pos();
-    protoPos->set_x(spawnX);
-    protoPos->set_y(spawnY);
-    protoPos->set_z(spawnZ);
-    player->info.set_rot_y(rotY);
+    protoPos->set_x(pkt.spawn_pos().x());
+    protoPos->set_y(pkt.spawn_pos().y());
+    protoPos->set_z(pkt.spawn_pos().z());
+    player->info.set_rot_y(pkt.rot_y());
 
     {
         SendBufferRef sendBuffer = Server_PacketHandler::Make_S_MyPlayer(player->info);

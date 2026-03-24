@@ -27,6 +27,7 @@ protected:
     HRESULT Bind_Lights() override;
 
 public:
+    static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     Shared<GameObject> Clone(void* arg) override;
     void Free() override;
 

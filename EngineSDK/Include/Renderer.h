@@ -18,6 +18,7 @@ public:
     void    Draw();
 
 private:
+    void    Render_BackgroundUI();
     void    Render_Priority();
     void    Render_NonBlend();
     void    Render_Blend();

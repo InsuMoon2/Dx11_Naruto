@@ -1,0 +1,29 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright",
+      "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark",
+      "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_BuildingMisc_01",
+      "material_instance_guid": "3860a41f-2fdb-460b-98f0-ce6a31771a8c"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_BuildingMisc_02",
+      "material_instance_guid": "5d5189b2-b4ec-4238-bfa3-7b87876f2638"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_RoofTile_Orange",
+      "material_instance_guid": "86d1b857-07cd-4f4b-838e-f7aaded27c42"
+    },
+    {
+      "material_name": "Material_5",
+      "textures": []
+    }
+  ]
+}

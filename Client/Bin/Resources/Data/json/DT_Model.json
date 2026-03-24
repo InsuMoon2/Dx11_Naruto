@@ -55,6 +55,13 @@
             "Count": 1,
             "ModelType": "SkeletalMesh",
             "Level": "Static"
+        },
+        {
+            "Id": "Model_BigSword",
+            "Path": "../../Client/Bin/Resources/Models/Weapon/BigSword/BigSword.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
         }
     ]
 }

@@ -10,6 +10,11 @@
 #include "UI_TabButton.h"
 #include "Character.h"
 #include "Player.h"
+#include "Camera_Free.h"
+#include "Camera.h"
+#include "NetworkManager.h"
+#include "Spawn_Helper.h"
+#include "Customizer_Manager.h"
 
 Level_CharacterSetup::Level_CharacterSetup(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -26,11 +31,10 @@ HRESULT Level_CharacterSetup::Initialize()
     _selectedTabIndex = 0;
     _selectedOptionIndex = 0;
 
-
     Refresh_TabSelection();
-    Build_OptionButtons();
-    Refresh_OptionSelection();
     Refresh_SelectDescText();
+
+    Refresh_UI_Visibility();
 
     if (!Get_SelectedOptions().empty())
     {
@@ -44,9 +48,14 @@ void Level_CharacterSetup::Update(float timeDelta)
 {
     Level::Update(timeDelta);
 
-    Handle_TabInput();
-    Handle_OptionInput();
-    
+    if (_setupState == ESetupState::Category)
+    {
+        Handle_TabInput();
+    }
+    else if (_setupState == ESetupState::Item)
+    {
+        Handle_OptionInput();
+    }
 }
 
 void Level_CharacterSetup::Late_Update(float timeDelta)
@@ -91,8 +100,8 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
                 EUILayer::HUD,
                 &desc));
 
-        if (!mainTitle)
-            return E_FAIL;
+        CHECK_NULL(mainTitle, E_FAIL);
+        mainTitle->Set_RenderGroup(ERenderGroup::BackgroundUI);
     }
 
     // Window
@@ -180,7 +189,7 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
             tabDesc.levelIndex = ETOI(ELevelType::CharacterSetup);
             tabDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_EQUIPMENT;
             tabDesc.textureIndex = ETOI(ECharacterSetupTexture::TabButton);
-            tabDesc.selectedTextureIndex = ETOI(ECharacterSetupTexture::SelectedButton);
+            tabDesc.selectedTextureIndex = ETOI(ECharacterSetupTexture::TabSelectedButton);
 
             tabDesc.zOrder = 0.52f + i * 0.001f;
 
@@ -200,7 +209,7 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
     }
 
     // Select Button
-    Background::FBackgroundDesc selectButtonDesc{};
+    UI_TabButton::FUITabDesc selectButtonDesc{};
     selectButtonDesc.name = TEXT("SelectButton");
     selectButtonDesc.posX = windowDesc.posX;
     selectButtonDesc.posY = windowDesc.posY + 300.f;
@@ -210,27 +219,23 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
     selectButtonDesc.levelIndex = ETOI(ELevelType::CharacterSetup);
     selectButtonDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_EQUIPMENT;
     selectButtonDesc.textureIndex = ETOI(ECharacterSetupTexture::SelectButton);
+    selectButtonDesc.selectedTextureIndex = ETOI(ECharacterSetupTexture::SelectedButton);
+    selectButtonDesc.labelColor = Color(1.f, 1.f, 1.f, 1.f);
 
     selectButtonDesc.zOrder = 0.51f;
 
-    selectButtonDesc.textDesc.text = L"결정";
-    selectButtonDesc.textDesc.offset = Vec2(0.f, 0.f);
-    selectButtonDesc.textDesc.size = Vec2(420.f, 52.f);
-    selectButtonDesc.textDesc.zOrderOffset = 0.01f;
-    selectButtonDesc.textDesc.style.fontFamily = L"Malgun Gothic";
-    selectButtonDesc.textDesc.style.fontSize = 26.f;
-    selectButtonDesc.textDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
-    selectButtonDesc.textDesc.style.hAlign = ETextHAlign::Center;
-    selectButtonDesc.textDesc.style.vAlign = ETextVAlign::Middle;
-    selectButtonDesc.textDesc.style.wordWrap = false;
+    selectButtonDesc.labelText = L"결정";
+    selectButtonDesc.labelOffset = Vec2(0.f, 0.f);
+    selectButtonDesc.labelSize = Vec2(420.f, 52.f);
+    selectButtonDesc.fontSize = 26.f;
 
-    auto selectButton = static_pointer_cast<Background>(
+    _selectButton = static_pointer_cast<UI_TabButton>(
         GAME->Add_UI(
-            Protocol::OBJECT_TYPE_BACKGROUND,
+            Protocol::OBJECT_TYPE_UI_TAB,
             EUILayer::HUD,
             &selectButtonDesc));
 
-    CHECK_NULL(selectButton, E_FAIL);
+    CHECK_NULL(_selectButton, E_FAIL);
 
     // Select Desc
     Background::FBackgroundDesc selectDesc{};
@@ -342,47 +347,45 @@ HRESULT Level_CharacterSetup::Ready_PreviewScene()
         Camera_Target::FCameraTargetDesc cameraDesc{};
         cameraDesc.speedPerSec = 10.f;
         cameraDesc.rotationPerSec = 90.f;
-        cameraDesc.eye = Vec3(0.f, 8.f, -12.f);
+        cameraDesc.eye = Vec3(0.f, 8.f, 12.f);
         cameraDesc.at = Vec3(0.f, 3.f, 0.f);
         cameraDesc.fovY = XMConvertToRadians(60.f);
         cameraDesc.nearZ = 0.1f;
         cameraDesc.farZ = 1000.f;
         cameraDesc.scale = Vec3(1.f, 1.f, 1.f);
-        cameraDesc.offset = Vec3(0.f, 3.f, -6.f);
-        cameraDesc.followSpeed = 5.f;
+        cameraDesc.offset = Vec3(0.f, 3.f, -6.f); 
         cameraDesc.enableMouseRotation = false;
-        cameraDesc.bindOnPlayerSpawned = true;
+        cameraDesc.bindOnPlayerSpawned = false;
 
-        CHECK_FAILED(
-            GAME->Add_GameObject(
-                ETOI(ELevelType::CharacterSetup),
-                Protocol::OBJECT_TYPE_CAMERA_TARGET,
-                TEXT("Layer_Camera"),
-                &cameraDesc),
-            E_FAIL);
+        auto cameraObj = GAME->Clone_And_Add_GameObject(
+            ETOI(ELevelType::Static),
+            Protocol::OBJECT_TYPE_CAMERA_FREE,
+            ETOI(ELevelType::CharacterSetup),
+            TEXT("Layer_Camera"),
+            &cameraDesc);
+
+        if (cameraObj)
+        {
+            static_pointer_cast<Camera>(cameraObj)->Set_InputEnabled(false);
+            cameraObj->Get_Transform()->Set_LocalPosition(Vec3(7.5f, 3.f, 3.18f));
+        }
+            
     }
 
     // 프리뷰 플레이어
     {
-        Character::FCharacterDesc previewDesc{};
-        previewDesc.name = TEXT("Preview Player");
-        previewDesc.position = Vec3(6.5f, 0.f, 0.f);
-        previewDesc.scale = Vec3(1.f, 1.f, 1.f);
-
-        auto previewObj = GAME->Clone_And_Add_GameObject(
-            0,
-            Protocol::OBJECT_TYPE_PLAYER,
-            ETOI(ELevelType::CharacterSetup),
-            TEXT("Layer_Preview"),
-            &previewDesc);
+        auto previewObj = Spawn_Helper::Prefab("PreviewPlayer")
+            .AtLevel(ETOI(ELevelType::CharacterSetup))
+            .InLayer(TEXT("Layer_Player"))
+            .Position(Vec3(6.5f, 0.f, 0.f))
+            .Scale(Vec3(1.f, 1.f, 1.f))
+            .Spawn();
+                
 
         CHECK_NULL(previewObj, E_FAIL);
 
         _previewPlayer = dynamic_pointer_cast<Player>(previewObj);
         CHECK_NULL(_previewPlayer, E_FAIL);
-
-        // 플레이어 위치 전달
-        GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(_previewPlayer->Get_Transform());
     }
 
     return S_OK;
@@ -419,36 +422,45 @@ void Level_CharacterSetup::Build_OptionButtons()
     _optionButtons.clear();
 
     const auto& options = Get_SelectedOptions();
-    const Vec2 viewport = { GAME->Get_WindowWidth(), GAME->Get_WindowHeight() };
+    float startX = 0.f;
 
-    const float startX = viewport.x * 0.78f;
-    const float startY = viewport.y * 0.34f;
-    const float width = 280.f;
-    const float height = 56.f;
-    const float spacing = 14.f;
+    float startY = 0.f;
+
+    if (_tabButtons[0] != nullptr)
+    {
+        startX = _tabButtons[0]->Get_UIPosX(); 
+        startY = _tabButtons[0]->Get_UIPosY(); 
+    }
+
+    const float width = 718.f * 0.75f;
+    const float height = 64.f * 0.65f;
+    const float spacing = 15.f;
 
     for (int32 i = 0; i < static_cast<int32>(options.size()); ++i)
     {
         UI_TabButton::FUITabDesc desc{};
         desc.name = format(L"OptionButton {}", i);
+
         desc.posX = startX;
         desc.posY = startY + i * (height + spacing);
         desc.sizeX = width;
         desc.sizeY = height;
+
         desc.levelIndex = ETOI(ELevelType::CharacterSetup);
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_EQUIPMENT;
         desc.textureIndex = ETOI(ECharacterSetupTexture::TabButton);
-        desc.selectedTextureIndex = ETOI(ECharacterSetupTexture::SelectedButton);
-        desc.zOrder = 0.60f + i * 0.001f;
+        desc.selectedTextureIndex = ETOI(ECharacterSetupTexture::TabSelectedButton);
+
+        desc.zOrder = 0.52f + i * 0.001f;
         desc.labelText = options[i].displayName;
         desc.labelSize = Vec2(width - 20.f, height);
-        desc.fontSize = 20.f;
+        desc.fontSize = 24.f;
 
         auto button = static_pointer_cast<UI_TabButton>(
             GAME->Add_UI(Protocol::OBJECT_TYPE_UI_TAB, EUILayer::HUD, &desc));
-        CHECK_NULL(button);
 
-        _optionButtons.push_back(button);
+        if (button)
+            _optionButtons.push_back(button);
     }
 
     _selectedOptionIndex = 0;
@@ -461,6 +473,9 @@ void Level_CharacterSetup::Refresh_TabSelection()
         if (_tabButtons[i])
             _tabButtons[i]->Set_Selected(i == _selectedTabIndex);
     }
+
+    if (_selectButton)
+        _selectButton->Set_Selected(_selectedTabIndex == static_cast<int32>(TAB_COUNT));
 }
 
 void Level_CharacterSetup::Refresh_OptionSelection()
@@ -470,6 +485,11 @@ void Level_CharacterSetup::Refresh_OptionSelection()
         if (_optionButtons[i])
             _optionButtons[i]->Set_Selected(i == _selectedOptionIndex);
     }
+
+    if (_selectButton)
+    {
+        _selectButton->Set_Selected(_selectedOptionIndex == static_cast<int32>(Get_SelectedOptions().size()));
+    }
 }
 
 void Level_CharacterSetup::Refresh_SelectDescText()
@@ -477,53 +497,105 @@ void Level_CharacterSetup::Refresh_SelectDescText()
     if (!_selectDescBg)
         return;
 
-    _selectDescBg->Set_LabelText(Get_SelectDescText(Get_SelectSlot()));
+    bool isSelectButtonFocused = false;
+
+    if (_setupState == ESetupState::Category && _selectedTabIndex == static_cast<uint32>(TAB_COUNT))
+        isSelectButtonFocused = true;
+
+    else if (_setupState == ESetupState::Item && _selectedOptionIndex == static_cast<int32>(Get_SelectedOptions().size()))
+        isSelectButtonFocused = true;
+
+    if (isSelectButtonFocused)
+    {
+        _selectDescBg->Set_LabelText(TEXT("캐릭터 생성을 완료합니다."));
+    }
+    else
+    {
+        _selectDescBg->Set_LabelText(Get_SelectDescText(Get_SelectSlot()));
+    }
 }
 
 void Level_CharacterSetup::Handle_TabInput()
 {
-    const int32 tabCount = static_cast<int32>(TAB_COUNT);
+    // 탭 6개 + 버튼 1개
+    const int32 tabCount = static_cast<int32>(TAB_COUNT) + 1;
 
     if (INPUT->KeyDown(KEY_TYPE::UP) || INPUT->KeyDown(KEY_TYPE::W))
     {
         _selectedTabIndex = (_selectedTabIndex - 1 + tabCount) % tabCount;
-        Apply_TabSelection();
 
-        return;
+        Refresh_TabSelection();
+        Refresh_SelectDescText();
     }
 
     if (INPUT->KeyDown(KEY_TYPE::DOWN) || INPUT->KeyDown(KEY_TYPE::S))
     {
         _selectedTabIndex = (_selectedTabIndex + 1) % tabCount;
-        Apply_TabSelection();
+        Refresh_TabSelection();
+        Refresh_SelectDescText();
+    }
 
-        return;
+    if (INPUT->KeyDown(KEY_TYPE::ENTER) || INPUT->KeyDown(KEY_TYPE::SPACE))
+    {
+        if (_selectedTabIndex == static_cast<int32>(TAB_COUNT))
+        {
+            Finish_CharacterSetup();
+            
+            return;
+        }
+
+        _setupState = ESetupState::Item;
+        _selectedOptionIndex = 0;
+
+        Build_OptionButtons();
+        Refresh_UI_Visibility();
     }
 }
 
 void Level_CharacterSetup::Handle_OptionInput()
 {
+    if (INPUT->KeyDown(KEY_TYPE::ESCAPE) || INPUT->KeyDown(KEY_TYPE::BACK))
+    {
+        _setupState = ESetupState::Category;
+        Refresh_UI_Visibility();
+
+        Refresh_TabSelection();
+        Refresh_SelectDescText();
+    }
+
+    
+
     const auto& options = Get_SelectedOptions();
 
     if (options.empty())
         return;
 
     const int32 optionCount = static_cast<int32>(options.size());
+    const int32 totalCount = optionCount + 1;
 
-    if (INPUT->KeyDown(KEY_TYPE::LEFT) || INPUT->KeyDown(KEY_TYPE::A))
+    if (INPUT->KeyDown(KEY_TYPE::UP) || INPUT->KeyDown(KEY_TYPE::W))
     {
-        _selectedOptionIndex = (_selectedOptionIndex - 1 + optionCount) % optionCount;
+        _selectedOptionIndex = (_selectedOptionIndex - 1 + totalCount) % totalCount;
         Refresh_OptionSelection();
-        Apply_SelectedOption();
-        return;
+        Refresh_SelectDescText();
     }
 
-    if (INPUT->KeyDown(KEY_TYPE::RIGHT) || INPUT->KeyDown(KEY_TYPE::D))
+    if (INPUT->KeyDown(KEY_TYPE::DOWN) || INPUT->KeyDown(KEY_TYPE::S))
     {
-        _selectedOptionIndex = (_selectedOptionIndex + 1) % optionCount;
+        _selectedOptionIndex = (_selectedOptionIndex + 1 + totalCount) % totalCount;
         Refresh_OptionSelection();
+        Refresh_SelectDescText();
+    }
+
+    if (INPUT->KeyDown(KEY_TYPE::ENTER) || INPUT->KeyDown(KEY_TYPE::SPACE))
+    {
+        if (_selectedOptionIndex == optionCount)
+        {
+            Finish_CharacterSetup();
+            return;
+        }
+
         Apply_SelectedOption();
-        return;
     }
 }
 
@@ -540,8 +612,9 @@ void Level_CharacterSetup::Apply_SelectedOption()
         return;
 
     const auto& option = options[_selectedOptionIndex];
-
     CHECK_FAILED(_previewPlayer->Apply_CustomizingPart(Get_SelectSlot(), option.modelAssetTag));
+
+    _equippedIndices[_selectedTabIndex] = _selectedOptionIndex;
 }
 
 void Level_CharacterSetup::Apply_TabSelection()
@@ -602,6 +675,65 @@ const tchar* Level_CharacterSetup::Get_SelectDescText(ContainerObject::EPartSlot
     default:
         return TEXT("파츠 선택중입니다.");
     }
+}
+
+void Level_CharacterSetup::Refresh_UI_Visibility()
+{
+    bool isCategory = (_setupState == ESetupState::Category);
+
+    for (int32 i = 0; i < static_cast<int32>(TAB_COUNT); ++i)
+    {
+        if (_tabButtons[i])
+        {
+            _tabButtons[i]->Set_Visibility(isCategory);
+        }
+    }
+
+    if (isCategory)
+    {
+        for (auto button : _optionButtons)
+        {
+            if (button)
+            {
+                button->Remove_FromUIManager();
+            }
+        }
+
+        _optionButtons.clear();
+    }
+
+}
+
+void Level_CharacterSetup::Finish_CharacterSetup()
+{
+    auto custom = GET_SINGLE(Customizer_Manager);
+
+    // 인게임에 가져갈 수 있도록 게임인스턴스에 저장
+    for (int i = 0; i < TAB_COUNT; ++i)
+    {
+        ContainerObject::EPartSlot slot = _tabSlots[i];
+        if (!_catalog[ETOI(slot)].empty())
+        {
+            const wstring& assetTag = _catalog[ETOI(slot)][_equippedIndices[i]].modelAssetTag;
+            custom->Set_Part(slot, assetTag);
+        }
+    }
+
+    // 에디터면 싱글, 서버가 켜져있다면 멀티플레이 판정
+    EGameplaySpawnMode spawnMode =
+        GAME->Is_EditorRuntime() ? EGameplaySpawnMode::LocalOnly : EGameplaySpawnMode::Server;
+
+    if (spawnMode == EGameplaySpawnMode::Server)
+    {
+        if (!NetworkManager::GetInstance()->IsNetworkEnabled())
+        {
+            NetworkManager::GetInstance()->Initialize();
+        }
+    }
+
+    GAME->Change_Level(
+        ETOI(ELevelType::Loading),
+        Level_Loading::Create(_device, _context, ELevelType::GamePlay, true, spawnMode));
 }
 
 Shared<Level_CharacterSetup> Level_CharacterSetup::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

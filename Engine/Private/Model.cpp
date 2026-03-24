@@ -41,7 +41,7 @@ Model::Model(const Model& rhs)
     , _currentClip{}
     , _blendState{}
     , _isCurrentAnimationFinished(false)
-    , _isAnimNotifyAssetLoaded(false)   
+    , _isAnimNotifyAssetLoaded(false)
     , _animNotifyAsset{}
     , _activeNotifyStates{}
 {
@@ -431,7 +431,7 @@ HRESULT Model::Ready_Materials_FromJson(const string& materialFilePath)
                 material = make_shared<ModelMaterial>(_device, _context);
 
                 CHECK_FAILED(material->Initialize_FromMaterialInstance(
-                    Utils::ToString(matInstPath)),E_FAIL);
+                    Utils::ToString(matInstPath)), E_FAIL);
 
                 material->From_Json(item);
             }
@@ -888,8 +888,8 @@ void Model::Update_AnimNotifyStates(const FAnimNotifyClipData& clipData, const F
         const float endSec = startSec + durationSec;
 
         const bool crossedStart = Is_NotifyTimeInRange(
-                startSec,
-                context.previousTimeSec, context.currentTimeSec, context.wrapped);
+            startSec,
+            context.previousTimeSec, context.currentTimeSec, context.wrapped);
 
         const bool isActive = Is_NotifyStateActiveTime(context.currentTimeSec, startSec, durationSec);
 
@@ -1364,7 +1364,17 @@ void Model::Add_Animation(Shared<Animation> animation)
 
 void Model::Set_Animations(const vector<Shared<Animation>>& animations)
 {
-    _animations = animations; 
+    _animations = animations;
+}
+
+const Matrix* Model::Get_SocketBoneMatrixPtr(const string& boneName) const
+{
+    int32 index = Get_BoneIndex_ByName(boneName);
+
+    if (index < 0 || index >= static_cast<int32>(_bones.size()))
+        return nullptr;
+
+    return &(_bones[index]->Get_CombinedTransform());
 }
 
 HRESULT Model::Initialize_FromMeshBin(const string& modelFilePath)
@@ -1476,7 +1486,7 @@ HRESULT Model::Ready_SkeletalMeshes(const FModelBinaryData& data)
             //vertex.position = Vec3::Transform(vertex.position, _preLocalTransformMatrix);
             //vertex.normal = Vec3::TransformNormal(vertex.normal, _preLocalTransformMatrix);
             //vertex.tangent = Vec3::TransformNormal(vertex.tangent, _preLocalTransformMatrix);
-            
+
             vertices.push_back(vertex);
         }
 

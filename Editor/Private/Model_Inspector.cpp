@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "ModelMaterial.h"
 #include "Animation.h"
+#include "Editor_Helper.h"
 
 static const struct
 {
@@ -211,57 +212,64 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
         ImGui::BeginChild("AttachedAnimList", ImVec2(0.f, 100.f), true);
         for (uint32 i = 0; i < model->Get_AnimationCount(); ++i)
         {
-            string animName = model->Get_AnimationName(i);
-            string displayAnimName = animName;
-            size_t barPos = displayAnimName.find('|');
-            if (barPos != string::npos)
-            {
-                displayAnimName = displayAnimName.substr(barPos + 1);
+            const string animName = model->Get_AnimationName(i);
+            const string displayAnimName = Editor_Helper::Build_AnimatoinDisplayName(animName);
 
-                // 혹시 남아있을 수 있는 공백 제거
-                size_t firstCharPos = displayAnimName.find_first_not_of(" \t");
-                if (firstCharPos != string::npos)
-                    displayAnimName = displayAnimName.substr(firstCharPos);
-            }
             ImGui::Text(" - %s", displayAnimName.c_str());
+
+            // Hoever 시 전체 이름 출력
+            if (ImGui::IsItemHovered() && displayAnimName != animName)
+            {
+                ImGui::BeginTooltip();
+                ImGui::TextUnformatted(animName.c_str());
+                ImGui::EndTooltip();
+            }
         }
         ImGui::EndChild();
         
         if (ImGui::Button("Add AnimBin..."))
             ImGui::OpenPopup("Add AnimBin Popup");
+
+        ImGui::SetNextWindowSize(ImVec2(560.f, 360.f), ImGuiCond_Appearing);
+
         if (ImGui::BeginPopup("Add AnimBin Popup"))
         {
             static char searchBuf[128] = "";
+
             ImGui::InputText("Search", searchBuf, IM_ARRAYSIZE(searchBuf));
             ImGui::Separator();
 
-            auto allAnims = GAME->Get_All_Animations(); 
-            ImGui::BeginChild("AnimListSelect", ImVec2(250.f, 200.f));
+            auto allAnims = GAME->Get_All_Animations();
+
+            ImGui::BeginChild("AnimListSelect", ImVec2(0.f, 260.f), true);
+
+            int32 visibleIndex = 0;
+
             for (auto& anim : allAnims)
             {
                 if (!anim) continue;
 
-                string animName = anim->Get_Name();
-                string displayAnimName = animName;
+                const string animName = anim->Get_Name();
+                const string displayAnimName = Editor_Helper::Build_AnimatoinDisplayName(animName);
 
-                // 문자열 ('|') 기준 자르기
-                size_t barPos = displayAnimName.find('|');
-                if (barPos != string::npos)
+                if (!Editor_Helper::Passes_AnimationDisplayFilter(animName, searchBuf))
+                    continue;
+
+                // 화면에는 짧은 이름을 보여주고, 숨은 ID로 raw name을 붙여 중복 충돌 방지
+                const string itemLabel = displayAnimName + "##AnimBin_" + to_string(visibleIndex++);
+
+                if (ImGui::Selectable(itemLabel.c_str(), false, ImGuiSelectableFlags_SpanAvailWidth))
                 {
-                    displayAnimName = displayAnimName.substr(barPos + 1);
-                    size_t firstCharPos = displayAnimName.find_first_not_of(" \t");
-                    if (firstCharPos != string::npos)
-                        displayAnimName = displayAnimName.substr(firstCharPos);
+                    model->Add_Animation(anim);
+                    data = model->To_Json();
                 }
-                // 대소문자 무시
 
-                if (string(searchBuf).empty() || animName.find(searchBuf) != string::npos || displayAnimName.find(searchBuf) != string::npos)
+                // 원본 이름은 tooltip으로 확인
+                if (ImGui::IsItemHovered() && displayAnimName != animName)
                 {
-                    if (ImGui::Selectable(displayAnimName.c_str()))
-                    {
-                        model->Add_Animation(anim);
-                        data = model->To_Json(); // 변경된 Json 바로 업데이트
-                    }
+                    ImGui::BeginTooltip();
+                    ImGui::TextUnformatted(animName.c_str());
+                    ImGui::EndTooltip();
                 }
             }
             ImGui::EndChild();

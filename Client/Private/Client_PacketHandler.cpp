@@ -7,6 +7,7 @@
 #include "MyPlayer.h"
 #include "RemotePlayer.h"
 #include "Spawn_Helper.h"
+#include "Customizer_Manager.h"
 
 static uint64 s_MyNetworkId = 0;
 static umap<uint64, Weak<Player>> s_NetworkPlayers;
@@ -89,6 +90,15 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
     if (!player)
         return;
 
+    for (auto& pair : pkt.info().equipparts())
+    {
+        ContainerObject::EPartSlot slot = static_cast<ContainerObject::EPartSlot>(pair.first);
+        wstring assetTag = Utils::ToWString(pair.second);
+
+        player->Apply_CustomizingPart(slot, assetTag);
+
+    }
+
     player->Set_NetworkId(myId);
     player->Sync(pkt.info());
 
@@ -131,6 +141,14 @@ void Client_PacketHandler::Handle_S_AddObject(Shared<ServerSession> session, BYT
         auto remote = dynamic_pointer_cast<Player>(gameObject);
         if (!remote)
             continue;
+
+        for (auto& pair : info.equipparts())
+        {
+            ContainerObject::EPartSlot slot = static_cast<ContainerObject::EPartSlot>(pair.first);
+            wstring assetTag = Utils::ToWString(pair.second);
+
+            remote->Apply_CustomizingPart(slot, assetTag);
+        }
 
         remote->Set_NetworkId(objectId);
         remote->Set_Local(false);
@@ -216,6 +234,18 @@ SendBufferRef Client_PacketHandler::Make_C_EnterGame(const Vec3& spawnPos, float
     protoPos->set_z(spawnPos.z);
 
     pkt.set_rot_y(rotY);
+
+    auto custom = GET_SINGLE(Customizer_Manager);
+    const auto& customDesc = custom->Get_CustomizerDesc();
+
+    for (int32 i = 0; i < ETOI(ContainerObject::EPartSlot::END); ++i)
+    {
+        const wstring& partTag = customDesc.partTags[i];
+        if (!partTag.empty())
+        {
+            (*pkt.mutable_info()->mutable_equipparts())[i] = Utils::ToString(partTag);
+        }
+    }
 
     return MakeSendBuffer(pkt, C_EnterGame);
 }

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "name": "MI_ENV_TCHEXA_Tree_A_Masked_CameraTrans",
+  "profile": "generic_pbr",
+  "parent": "M_GenericPBR",
+  "base_color_factor": [
+    1.0,
+    1.0,
+    1.0,
+    0.0
+  ],
+  "normal_strength": 0.6,
+  "blend_mode": 0,
+  "textures": [
+    {
+      "slot": "base_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_TCHEXA_Tree_02_BC.png"
+    }
+  ],
+  "source": {
+    "fmodel_mi_json": "MI_ENV_TCHEXA_Tree_A_Masked_CameraTrans.props.txt"
+  }
+}

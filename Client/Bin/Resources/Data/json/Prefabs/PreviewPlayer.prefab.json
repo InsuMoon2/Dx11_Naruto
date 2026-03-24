@@ -1,0 +1,63 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                -5.0
+            ],
+            "rotation": [
+                -0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "Attack": 100.0,
+            "Defense": 5.0,
+            "HP": 100.0,
+            "MP": 100.0,
+            "Max HP": 100.0,
+            "Max MP": 100.0,
+            "Speed": 5.0,
+            "type": "COMPONENT_TYPE_COMBAT_STAT"
+        },
+        {
+            "animation_states": [],
+            "current_state": "",
+            "type": "COMPONENT_TYPE_ANIMATION_STATE"
+        },
+        {
+            "animations": [
+                "SK_CHR_NormalModel|CustomMan_CharaSelect_Idle"
+            ],
+            "materials": [
+                {
+                    "material_name": "blinn1",
+                    "texture_overrides": {
+                        "normal_0": "074f4f94-359a-4e60-9b0d-a13383ac0b87"
+                    }
+                },
+                {
+                    "material_name": "surfaceShader1",
+                    "texture_overrides": {
+                        "normal_0": "b0732445-2384-4135-8356-71024c73fed1"
+                    }
+                }
+            ],
+            "model_guid": "5b093ce9-bd01-4631-862a-fcd8b22f3837",
+            "model_type": "SkeletalMesh",
+            "type": "COMPONENT_TYPE_MODEL"
+        }
+    ],
+    "guid": "d22d91b6-0ca8-44ea-adf3-5d327420c4f8",
+    "object_type": "OBJECT_TYPE_PREVIEW_PLAYER",
+    "prefab_name": "PreviewPlayer",
+    "static_class": "PreviewPlayer"
+}

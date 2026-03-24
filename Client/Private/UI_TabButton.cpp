@@ -31,6 +31,7 @@ HRESULT UI_TabButton::Initialize(void* arg)
     _normalTextureIndex = desc->textureIndex;
     _selectedTextureIndex = desc->selectedTextureIndex;
     _currentTextureIndex = _normalTextureIndex;
+    _labelColor = desc->labelColor;
 
     CHECK_FAILED(Ready_Components(), E_FAIL);
     CHECK_FAILED(Ready_ChildText(desc), E_FAIL);
@@ -128,7 +129,7 @@ HRESULT UI_TabButton::Ready_ChildText(const FUITabDesc* desc)
     textDesc.text = desc->labelText;
     textDesc.style.fontFamily = L"Malgun Gothic";
     textDesc.style.fontSize = desc->fontSize;
-    textDesc.style.color = Color(0.f, 0.f, 0.f, 1.f);
+    textDesc.style.color = _labelColor;
     textDesc.style.hAlign = ETextHAlign::Center;
     textDesc.style.vAlign = ETextVAlign::Middle;
     textDesc.style.wordWrap = false;

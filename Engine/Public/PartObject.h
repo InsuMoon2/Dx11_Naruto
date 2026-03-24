@@ -14,6 +14,7 @@ public:
     struct FPartObjectDesc : public FGameObjectDesc
     {
         const Matrix*   parentMatrix = nullptr;
+
         wstring         modelAssetTag;
 
         // 마스터 모델 -> 얘 기준으로 애니메이션 동작하도록

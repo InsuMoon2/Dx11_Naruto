@@ -61,6 +61,7 @@ HRESULT ContainerObject::Render()
 {
     CHECK_FAILED(GameObject::Render(), E_FAIL);
 
+
     return S_OK;
 }
 
@@ -89,6 +90,56 @@ HRESULT ContainerObject::Change_PartObject(EPartSlot slot, uint32 objID, void* a
     return S_OK;
 }
 
+string ContainerObject::Get_PartSlotName(EPartSlot slot)
+{
+    return string(magic_enum::enum_name(slot));
+}
+
+Shared<PartObject> ContainerObject::Get_PartObject(EPartSlot slot) const
+{
+    const uint32 index = ETOI(slot);
+
+    if (index >= ETOI(EPartSlot::END))
+        return nullptr;
+
+    return _partObjects[index];
+}
+
+json ContainerObject::To_Json() const
+{
+    json j = GameObject::To_Json();
+
+    json partsJson = json::object();
+    for (int i = 0; i  < ETOI(EPartSlot::END); ++i)
+    {
+        if (_partObjects[i])
+        {
+            auto transform = _partObjects[i]->Get_Component<Transform>();
+            if (transform)
+            {
+                string slotName = Get_PartSlotName(static_cast<EPartSlot>(i));
+                partsJson[slotName] = transform->To_Json();
+            }
+        }
+    }
+
+    if (!partsJson.empty())
+    {
+        j["part_transforms"] = partsJson;
+    }
+
+    return j;
+}
+
+void ContainerObject::From_Json(const json& data)
+{
+    GameObject::From_Json(data);
+
+    if (data.contains("part_transforms"))
+        _cachedPartTransforms = data["part_transforms"];
+
+}
+
 HRESULT ContainerObject::Add_PartObject(EPartSlot slot, uint32 objID, void* arg)
 {
     // 이미 파츠 장착
@@ -102,6 +153,15 @@ HRESULT ContainerObject::Add_PartObject(EPartSlot slot, uint32 objID, void* arg)
         return E_FAIL;
 
     _partObjects[ETOI(slot)] = partObject;
+
+    string slotName = Get_PartSlotName(slot);
+    if (_cachedPartTransforms.contains(slotName) && _partObjects[ETOI(slot)])
+    {
+        auto transform = _partObjects[ETOI(slot)]->Get_Component<Transform>();
+        if (transform)
+            transform->From_Json(_cachedPartTransforms[slotName]);
+    }
+
 
     return S_OK;
 }

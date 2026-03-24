@@ -13,6 +13,8 @@ class Background;
 class UI_TabButton;
 class Player;
 
+enum class ESetupState { Category, Item };
+
 enum class ECharacterSetupTexture
 {
     Background,
@@ -23,6 +25,7 @@ enum class ECharacterSetupTexture
     Title_Symbol,
     SelectButton,
     TabButton,
+    TabSelectedButton,
     SelectedButton,
 
     END
@@ -57,17 +60,20 @@ private:
     void            Refresh_TabSelection();
     void            Refresh_OptionSelection();
     void            Refresh_SelectDescText();
+
     void            Handle_TabInput();
     void            Handle_OptionInput();
-    void            Apply_SelectedOption();
 
+    void            Apply_SelectedOption();
     void            Apply_TabSelection();
 
-    ContainerObject::EPartSlot Get_SelectSlot() const;
+    ContainerObject::EPartSlot      Get_SelectSlot() const;
     const vector<FCustomizeOption>& Get_SelectedOptions() const;
-    const tchar* Get_SlotLabel(ContainerObject::EPartSlot slot) const;
+    const tchar*                    Get_SlotLabel(ContainerObject::EPartSlot slot) const;
+    const tchar*                    Get_SelectDescText(ContainerObject::EPartSlot slot);
 
-    const tchar* Get_SelectDescText(ContainerObject::EPartSlot slot);
+    void            Refresh_UI_Visibility();
+    void            Finish_CharacterSetup();
 
 private:
     static constexpr uint32 TAB_COUNT = 6;
@@ -89,9 +95,17 @@ private:
     Shared<Background>  _selectDescBg;
     Shared<Player>      _previewPlayer;
 
+    Shared<UI_TabButton> _selectButton;
+
     // 파츠 선택 인덱스
     int32 _selectedTabIndex = 0;
     int32 _selectedOptionIndex = 0;
+
+    // 마지막으로 고른 파츠 인덱스 번호
+    array<int32, TAB_COUNT> _equippedIndices = { 0, 0, 0, 0, 0, 0 };
+
+private:
+    ESetupState _setupState = ESetupState::Category;
 
 public:
     static shared_ptr<Level_CharacterSetup> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

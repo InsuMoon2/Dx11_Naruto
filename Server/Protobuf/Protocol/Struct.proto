@@ -12,35 +12,41 @@ message Vec3
 
 message BuffData
 {
-	uint64 buffId = 1;
-	float remainTime = 2;
+	uint64 buffId           = 1;
+	float remainTime        = 2;
 	repeated uint64 victims = 3;
 }
 
 message CombatStat
 { 
-    float max_hp = 1;
-    float current_hp = 2;
+    float max_hp        = 1;
+    float current_hp    = 2;
 
-    float max_mp = 3;
-    float current_mp = 4;
+    float max_mp        = 3;
+    float current_mp    = 4;
 
-    float attack = 5;
-    float defense = 6;
-    float speed = 7;
+    float attack        = 5;
+    float defense       = 6;
+    float speed         = 7;
 }
 
 message ObjectInfo
 {
-	uint64              objectId = 1;
-	string              name = 2;
-    CombatStat          stat = 3;
+	uint64              objectId    = 1;
+	string              name        = 2;
+    CombatStat          stat        = 3;
 
-    Vec3                pos = 4;
-    float               rot_y = 5;
+    Vec3                pos         = 4;
+    float               rot_y       = 5;
 
-    OBJECT_TYPE         objectType = 6;
+    OBJECT_TYPE         objectType  = 6;
 
     OBJECT_STATE_TYPE   object_state = 10;
-    MOVE_INPUT_DIR_TYPE move_dir = 11;
+    MOVE_INPUT_DIR_TYPE move_dir    = 11;
+                        
+    ANIM_PHASE_TYPE     anim_phase  = 12;
+    bool                anim_force_restart = 13; // loop
+                        
+    // 파츠             
+    map<int32, string>  equipParts = 14;
 }

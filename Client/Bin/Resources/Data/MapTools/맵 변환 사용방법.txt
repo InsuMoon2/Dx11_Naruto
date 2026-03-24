@@ -1,0 +1,78 @@
+파이썬 코드가 많아서 까먹는다; 적어놓기
+
+ExamStadium 변환 순서
+0. AssimpTool.exe 존재 확인 -> 현재 03.24 일 버전 AssimpTool
+1. RunBuildExamStadiumAndLevel.bat 실행
+2. StaticMesh/ExamStadium, json/ExamStadium_mesh_guid_map.json, json/Levels/BM_ExamStadium_* 생성 확인
+3. Loader.cpp의 Konoha pushChunk 3개를 ExamStadium 2개로 교체
+4. 빌드
+5. GamePlay 진입
+
+
+-- 고봉밥 --
+
+[ExamStadium 맵 변환 사용방법]
+
+1. 실행 파일
+- 배치 실행 위치:
+  D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\Data\MapTools\RunBuildExamStadiumAndLevel.bat
+
+2. 이 배치가 하는 일
+- AssimpTool로 TM_ChuninExamArena 메시를 meshbin으로 변환
+- 생성된 *.meshbin.meta를 읽어서 ExamStadium_mesh_guid_map.json 생성
+- 머티리얼/텍스처를 자동 세팅
+- D:\NarutoExports\MapJSON\ExamStadium 안의 JSON 2개를 engine용 .level.json으로 변환
+
+3. 기본 입력 경로
+- Mesh:
+  D:\NarutoExports\Game\Environments\TrainingMapAssets\TM_ChuninExamArena\Meshes
+- Material:
+  D:\NarutoExports\Game\Environments\TrainingMapAssets\TM_ChuninExamArena\Materials
+- Texture:
+  C:\Users\Moon In Su\Desktop\FModel\Output\Exports\NARUTO\Content\Environments\TrainingMapAssets\TM_ChuninExamArena\Textures
+- Level JSON:
+  D:\NarutoExports\MapJSON\ExamStadium
+
+4. 기본 출력 경로
+- Meshbin:
+  D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\StaticMesh\ExamStadium\Meshes
+- MaterialInstance:
+  D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\Materials\FModel\ExamStadium
+- Texture 복사본:
+  D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\Textures\FModel\ExamStadium
+- GUID 맵:
+  D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\Data\json\ExamStadium_mesh_guid_map.json
+- Level JSON:
+  D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\Data\json\Levels\BM_ExamStadium_Env_Terrain.level.json
+  D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\Data\json\Levels\BM_ExamStadium_p.level.json
+
+5. 실행 순서
+- 1) AssimpTool.exe가 있는지 확인
+  D:\GitDesktop\Dx11_Naruto\AssimpTool\Bin\AssimpTool.exe
+- 2) RunBuildExamStadiumAndLevel.bat 실행
+- 3) 위 출력 파일들이 생성됐는지 확인
+- 4) 게임에서 ExamStadium을 띄우려면 Loader.cpp의 pushChunk를 ExamStadium용으로 교체
+- 5) 클라이언트 빌드 후 GamePlay 진입
+
+6. Loader 교체해야 하는 부분
+- 파일:
+  D:\GitDesktop\Dx11_Naruto\Client\Private\Loader.cpp
+- 현재:
+  pushChunk("BM_KonohaVillage03_Environments_BackdropBuildings");
+  pushChunk("BM_KonohaVillage03_Environments_Props");
+  pushChunk("BM_KonohaVillage03_Environments_Terrain");
+- 교체:
+  pushChunk("BM_ExamStadium_Env_Terrain");
+  pushChunk("BM_ExamStadium_p");
+
+7. 실패 시 먼저 볼 것
+- ExamStadium_mesh_guid_map.json 생성됐는지
+- StaticMesh\ExamStadium\Meshes 아래 *.meshbin / *.meshbin.meta 있는지
+- Levels 아래 BM_ExamStadium_Env_Terrain.level.json / BM_ExamStadium_p.level.json 있는지
+- 로그에 GUID mapping missing 이 많이 뜨는지
+- 로그에 "GUID ... 에 해당하는 에셋을 찾을 수 없습니다" 가 뜨는지
+
+8. 관련 스크립트 위치
+- D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\Data\MapTools\BuildExamStadiumPipeline.py
+- D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\Data\MapTools\ResolveFModelMaterials.py
+- D:\GitDesktop\Dx11_Naruto\Client\Bin\Resources\Data\MapTools\ConvertFModelLevel.py

@@ -37,6 +37,7 @@ message C_EnterGame
 {
     Vec3  spawn_pos = 1;
     float rot_y = 2;
+    ObjectInfo info = 3;
 }
 
 message C_Move

@@ -28,6 +28,9 @@
 #include "google/protobuf/message_lite.h"
 #include "google/protobuf/repeated_field.h"  // IWYU pragma: export
 #include "google/protobuf/extension_set.h"  // IWYU pragma: export
+#include "google/protobuf/map.h"  // IWYU pragma: export
+#include "google/protobuf/map_entry.h"
+#include "google/protobuf/map_field_inl.h"
 #include "google/protobuf/unknown_field_set.h"
 #include "Enum.pb.h"
 // @@protoc_insertion_point(includes)
@@ -62,6 +65,9 @@ extern CombatStatDefaultTypeInternal _CombatStat_default_instance_;
 class ObjectInfo;
 struct ObjectInfoDefaultTypeInternal;
 extern ObjectInfoDefaultTypeInternal _ObjectInfo_default_instance_;
+class ObjectInfo_EquipPartsEntry_DoNotUse;
+struct ObjectInfo_EquipPartsEntry_DoNotUseDefaultTypeInternal;
+extern ObjectInfo_EquipPartsEntry_DoNotUseDefaultTypeInternal _ObjectInfo_EquipPartsEntry_DoNotUse_default_instance_;
 class Vec3;
 struct Vec3DefaultTypeInternal;
 extern Vec3DefaultTypeInternal _Vec3_default_instance_;
@@ -289,6 +295,45 @@ class Vec3 final : public ::google::protobuf::Message
   };
   union { Impl_ _impl_; };
   friend struct ::TableStruct_Struct_2eproto;
+};
+// -------------------------------------------------------------------
+
+class ObjectInfo_EquipPartsEntry_DoNotUse final
+    : public ::google::protobuf::internal::MapEntry<
+          ::int32_t, std::string,
+          ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
+          ::google::protobuf::internal::WireFormatLite::TYPE_STRING> {
+ public:
+  using SuperType = ::google::protobuf::internal::MapEntry<
+      ::int32_t, std::string,
+      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
+      ::google::protobuf::internal::WireFormatLite::TYPE_STRING>;
+  ObjectInfo_EquipPartsEntry_DoNotUse();
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR ObjectInfo_EquipPartsEntry_DoNotUse(
+      ::google::protobuf::internal::ConstantInitialized);
+  explicit ObjectInfo_EquipPartsEntry_DoNotUse(::google::protobuf::Arena* arena);
+  static const ObjectInfo_EquipPartsEntry_DoNotUse* internal_default_instance() {
+    return reinterpret_cast<const ObjectInfo_EquipPartsEntry_DoNotUse*>(
+        &_ObjectInfo_EquipPartsEntry_DoNotUse_default_instance_);
+  }
+
+
+ private:
+  friend class ::google::protobuf::MessageLite;
+  friend struct ::TableStruct_Struct_2eproto;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      1, 2, 0,
+      49, 2>
+      _table_;
+
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
 };
 // -------------------------------------------------------------------
 
@@ -836,7 +881,7 @@ class ObjectInfo final : public ::google::protobuf::Message
     return reinterpret_cast<const ObjectInfo*>(
         &_ObjectInfo_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 3;
+  static constexpr int kIndexInFileMessages = 4;
   friend void swap(ObjectInfo& a, ObjectInfo& b) { a.Swap(&b); }
   inline void Swap(ObjectInfo* other) {
     if (other == this) return;
@@ -923,6 +968,7 @@ class ObjectInfo final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
+    kEquipPartsFieldNumber = 14,
     kNameFieldNumber = 2,
     kStatFieldNumber = 3,
     kPosFieldNumber = 4,
@@ -931,7 +977,24 @@ class ObjectInfo final : public ::google::protobuf::Message
     kObjectTypeFieldNumber = 6,
     kObjectStateFieldNumber = 10,
     kMoveDirFieldNumber = 11,
+    kAnimPhaseFieldNumber = 12,
+    kAnimForceRestartFieldNumber = 13,
   };
+  // map<int32, string> equipParts = 14;
+  int equipparts_size() const;
+  private:
+  int _internal_equipparts_size() const;
+
+  public:
+  void clear_equipparts() ;
+  const ::google::protobuf::Map<::int32_t, std::string>& equipparts() const;
+  ::google::protobuf::Map<::int32_t, std::string>* mutable_equipparts();
+
+  private:
+  const ::google::protobuf::Map<::int32_t, std::string>& _internal_equipparts() const;
+  ::google::protobuf::Map<::int32_t, std::string>* _internal_mutable_equipparts();
+
+  public:
   // string name = 2;
   void clear_name() ;
   const std::string& name() const;
@@ -1028,13 +1091,33 @@ class ObjectInfo final : public ::google::protobuf::Message
   void _internal_set_move_dir(::Protocol::MOVE_INPUT_DIR_TYPE value);
 
   public:
+  // .Protocol.ANIM_PHASE_TYPE anim_phase = 12;
+  void clear_anim_phase() ;
+  ::Protocol::ANIM_PHASE_TYPE anim_phase() const;
+  void set_anim_phase(::Protocol::ANIM_PHASE_TYPE value);
+
+  private:
+  ::Protocol::ANIM_PHASE_TYPE _internal_anim_phase() const;
+  void _internal_set_anim_phase(::Protocol::ANIM_PHASE_TYPE value);
+
+  public:
+  // bool anim_force_restart = 13;
+  void clear_anim_force_restart() ;
+  bool anim_force_restart() const;
+  void set_anim_force_restart(bool value);
+
+  private:
+  bool _internal_anim_force_restart() const;
+  void _internal_set_anim_force_restart(bool value);
+
+  public:
   // @@protoc_insertion_point(class_scope:Protocol.ObjectInfo)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      4, 8, 2,
-      40, 2>
+      4, 11, 3,
+      50, 2>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -1053,6 +1136,10 @@ class ObjectInfo final : public ::google::protobuf::Message
                           const ObjectInfo& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::MapField<ObjectInfo_EquipPartsEntry_DoNotUse, ::int32_t, std::string,
+                      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
+                      ::google::protobuf::internal::WireFormatLite::TYPE_STRING>
+        equipparts_;
     ::google::protobuf::internal::ArenaStringPtr name_;
     ::Protocol::CombatStat* stat_;
     ::Protocol::Vec3* pos_;
@@ -1061,6 +1148,8 @@ class ObjectInfo final : public ::google::protobuf::Message
     int objecttype_;
     int object_state_;
     int move_dir_;
+    int anim_phase_;
+    bool anim_force_restart_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1399,6 +1488,8 @@ inline void CombatStat::_internal_set_speed(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.speed_ = value;
 }
+
+// -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
 
@@ -1752,6 +1843,78 @@ inline ::Protocol::MOVE_INPUT_DIR_TYPE ObjectInfo::_internal_move_dir() const {
 inline void ObjectInfo::_internal_set_move_dir(::Protocol::MOVE_INPUT_DIR_TYPE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.move_dir_ = value;
+}
+
+// .Protocol.ANIM_PHASE_TYPE anim_phase = 12;
+inline void ObjectInfo::clear_anim_phase() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.anim_phase_ = 0;
+}
+inline ::Protocol::ANIM_PHASE_TYPE ObjectInfo::anim_phase() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.anim_phase)
+  return _internal_anim_phase();
+}
+inline void ObjectInfo::set_anim_phase(::Protocol::ANIM_PHASE_TYPE value) {
+  _internal_set_anim_phase(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.anim_phase)
+}
+inline ::Protocol::ANIM_PHASE_TYPE ObjectInfo::_internal_anim_phase() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::Protocol::ANIM_PHASE_TYPE>(_impl_.anim_phase_);
+}
+inline void ObjectInfo::_internal_set_anim_phase(::Protocol::ANIM_PHASE_TYPE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.anim_phase_ = value;
+}
+
+// bool anim_force_restart = 13;
+inline void ObjectInfo::clear_anim_force_restart() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.anim_force_restart_ = false;
+}
+inline bool ObjectInfo::anim_force_restart() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.anim_force_restart)
+  return _internal_anim_force_restart();
+}
+inline void ObjectInfo::set_anim_force_restart(bool value) {
+  _internal_set_anim_force_restart(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.anim_force_restart)
+}
+inline bool ObjectInfo::_internal_anim_force_restart() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.anim_force_restart_;
+}
+inline void ObjectInfo::_internal_set_anim_force_restart(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.anim_force_restart_ = value;
+}
+
+// map<int32, string> equipParts = 14;
+inline int ObjectInfo::_internal_equipparts_size() const {
+  return _internal_equipparts().size();
+}
+inline int ObjectInfo::equipparts_size() const {
+  return _internal_equipparts_size();
+}
+inline void ObjectInfo::clear_equipparts() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.equipparts_.Clear();
+}
+inline const ::google::protobuf::Map<::int32_t, std::string>& ObjectInfo::_internal_equipparts() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.equipparts_.GetMap();
+}
+inline const ::google::protobuf::Map<::int32_t, std::string>& ObjectInfo::equipparts() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_map:Protocol.ObjectInfo.equipParts)
+  return _internal_equipparts();
+}
+inline ::google::protobuf::Map<::int32_t, std::string>* ObjectInfo::_internal_mutable_equipparts() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.equipparts_.MutableMap();
+}
+inline ::google::protobuf::Map<::int32_t, std::string>* ObjectInfo::mutable_equipparts() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_map:Protocol.ObjectInfo.equipParts)
+  return _internal_mutable_equipparts();
 }
 
 #ifdef __GNUC__

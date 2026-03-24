@@ -264,7 +264,7 @@
     <ClInclude Include="..\Public\PlayerState_Run.h" />
     <ClInclude Include="..\Public\PlayerState_SuperJump.h" />
     <ClInclude Include="..\Public\PlayerState_SuperJumpCharge.h" />
-    <ClInclude Include="..\Public\Player_BodyUpper.h" />
+    <ClInclude Include="..\Public\Player_CustomPart.h" />
     <ClInclude Include="..\Public\PreviewPlayer.h" />
     <ClInclude Include="..\Public\RemotePlayer.h" />
     <!-- <ClInclude Include="..\Public\MainApp.h" /> -->
@@ -352,7 +352,7 @@
     <ClCompile Include="..\Private\PlayerState_Run.cpp" />
     <ClCompile Include="..\Private\PlayerState_SuperJump.cpp" />
     <ClCompile Include="..\Private\PlayerState_SuperJumpCharge.cpp" />
-    <ClCompile Include="..\Private\Player_BodyUpper.cpp" />
+    <ClCompile Include="..\Private\Player_CustomPart.cpp" />
     <ClCompile Include="..\Private\PreviewPlayer.cpp" />
     <ClCompile Include="..\Private\RemotePlayer.cpp" />
     <!-- <ClCompile Include="..\Private\MainApp.cpp" /> -->

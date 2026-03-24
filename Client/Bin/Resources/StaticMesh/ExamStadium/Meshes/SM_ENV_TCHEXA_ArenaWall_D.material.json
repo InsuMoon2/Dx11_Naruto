@@ -1,0 +1,21 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Red",
+      "material_instance_guid": "d6beb54e-e928-4923-9051-64fd62eb53ae"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright",
+      "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d"
+    },
+    {
+      "material_name": "T_ENV_TCHEXA_WallBoards_01",
+      "material_instance_guid": "940030e1-af29-49d5-8ac4-3fc6fce7c877"
+    },
+    {
+      "material_name": "Material_3",
+      "textures": []
+    }
+  ]
+}

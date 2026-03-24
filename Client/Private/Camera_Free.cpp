@@ -70,7 +70,7 @@ void Camera_Free::Priority_Update(float timeDelta)
         _cameraSpeed = ::clamp(_cameraSpeed + wheel * 2.f, 1.f, 100.f);
     }
 
-    if (INPUT->KeyPress(KEY_TYPE::RBUTTON))
+    if (INPUT->KeyPress(KEY_TYPE::RBUTTON) && _inputEnabled)
     {
         // 이동
         if (INPUT->KeyPress(KEY_TYPE::W))
@@ -104,8 +104,6 @@ void Camera_Free::Priority_Update(float timeDelta)
         }
 
     }
-
-
 
     // 마지막에 Update 반드시 호출
     Update_TransformMatrices();

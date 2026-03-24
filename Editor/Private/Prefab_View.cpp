@@ -12,6 +12,8 @@
 #include "DebugDraw.h"
 #include "Prefab_PreviewCameraSettings.h"
 #include "Animation_View.h"
+#include "ContainerObject.h"
+#include "PartObject.h"
 
 Prefab_View::Prefab_View()
     : EditorWindow(TEXT("Prefab"))
@@ -162,7 +164,9 @@ void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath
     _previewObject = nullptr;
     _previewHasBegunPlay = false;
 
+    _selectionType = ESelectionType::Component;
     _selectedComponentId = Transform::StaticTypeID();
+    _selectedPartSlot = 0;
 
     // 인스턴스화
     _previewObject = GAME->Instantiate_Prefab(prefabName, {});
@@ -243,10 +247,22 @@ void Prefab_View::Pre_Render()
     GAME->Clear_Lights();
     GAME->Add_Light(previewLight);
 
+    float dt = ImGui::GetIO().DeltaTime;
+
+    bool wasEnableInput = GAME->Is_GameInputEnabled();
+    GAME->Set_GameInputEnabled(false);
+
+    _previewObject->Priority_Update(dt);
+    _previewObject->Update(dt);
+    _previewObject->Late_Update(dt);
+
+    GAME->Set_GameInputEnabled(wasEnableInput);
+
     _prevRT->Clear(Color(0.15f, 0.15f, 0.15f, 1.f));
     _prevRT->BindAsTarget();
 
-    _previewObject->Render();
+    GAME->Draw();
+    //_previewObject->Render();
 
     GAME->BindBackBuffer();
 
@@ -392,10 +408,11 @@ void Prefab_View::Draw_ComponentList()
             continue;
 
         string name = Utils::ToString(comp->Get_Name());
-        bool isSelected = (_selectedComponentId == id);
+        bool isSelected = (_selectionType == ESelectionType::Component && _selectedComponentId == id);
 
         if (ImGui::Selectable(name.c_str(), isSelected))
         {
+            _selectionType = ESelectionType::Component;
             _selectedComponentId = id; 
             MarkDirty();
 
@@ -413,6 +430,9 @@ void Prefab_View::Draw_ComponentList()
             ImGui::EndPopup();
         }
     }
+
+    Draw_PartObjectList();
+
     ImGui::EndChild();
 
     if (ImGui::Button(ICON_FA_PLUS " Add", ImVec2(-1, 30)))
@@ -462,6 +482,12 @@ void Prefab_View::Draw_ComponentInspector()
         ImGui::Spacing();
         ImGui::Separator();
         ImGui::Spacing();
+    }
+
+    if (_selectionType == ESelectionType::PartObject)
+    {
+        Draw_PartObjectInspector();
+        return;
     }
 
     if (_selectedComponentId == 0)
@@ -681,6 +707,82 @@ void Prefab_View::Open_AnimationView()
     {
         animView->Focus_Clip(model->Get_AnimationName(static_cast<uint32>(_previewSelectedAnimIndex)));
     }
+}
+
+void Prefab_View::Draw_PartObjectList()
+{
+    auto container = Get_PreviewContainer();
+    CHECK_NULL(container);
+
+    ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+    ImGui::Text(ICON_FA_CUBES " Part Objects");
+    ImGui::Spacing();
+
+    for (auto slot : magic_enum::enum_values<ContainerObject::EPartSlot>())
+    {
+        if (slot == ContainerObject::EPartSlot::END) continue;
+
+        auto part = container->Get_PartObject(slot);
+        const bool exists = (part != nullptr);
+
+        if (!exists)
+            ImGui::BeginDisabled();
+
+        string slotName = ContainerObject::Get_PartSlotName(slot);
+        bool isSelected = (_selectionType == ESelectionType::PartObject
+            && _selectedPartSlot == static_cast<uint32>(slot));
+
+        if (ImGui::Selectable(slotName.c_str(), isSelected))
+        {
+            _selectionType = ESelectionType::PartObject;
+            _selectedPartSlot = static_cast<uint32>(slot);
+        }
+
+        if (!exists) ImGui::EndDisabled();
+    }
+
+}
+
+void Prefab_View::Draw_PartObjectInspector()
+{
+    auto container = Get_PreviewContainer();
+    if (!container) return;
+
+    auto slot = static_cast<ContainerObject::EPartSlot>(_selectedPartSlot);
+    auto part = container->Get_PartObject(slot);
+
+    if (!part) return;
+
+    auto transform = part->Get_Component<Transform>();
+    if (!transform) return;
+
+    ImGui::TextColored(ImVec4(0.3f, 0.8f, 1.f, 1.f), "[ Part Object ]");
+    ImGui::Separator();
+    ImGui::Text("Slot : %s", ContainerObject::Get_PartSlotName(slot).c_str());
+    ImGui::Text("Class : %s", Utils::ToString(part->Get_Name()).c_str());
+    ImGui::Spacing();
+
+    Inspector::Draw_Component(Transform::StaticTypeID(), transform);
+
+    MarkDirty();
+
+    ImGui::Spacing();
+
+    // 위치 초기화 버튼
+    if (ImGui::Button("Reset Local Transform", ImVec2(-1.f, 28.f)))
+    {
+        transform->Set_LocalPosition(Vec3::Zero);
+        transform->Set_LocalEulerAngles(0.f, 0.f, 0.f);
+        transform->Set_LocalScale(1.f, 1.f, 1.f);
+        MarkDirty();
+    }
+}
+
+Shared<ContainerObject> Prefab_View::Get_PreviewContainer() const
+{
+    if (!_previewObject) return nullptr;
+
+    return dynamic_pointer_cast<ContainerObject>(_previewObject);
 }
 
 shared_ptr<Prefab_View> Prefab_View::Create()

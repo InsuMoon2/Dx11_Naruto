@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "PartObject.h"
 #include "AnimationStateComponent.h"
+#include "Weapon.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
@@ -174,7 +175,12 @@ HRESULT Player::Ready_PartObjects()
 
     // 소켓 생성해서 무기 붙이기
     {
+        Weapon::FWeaponDesc weaponDesc{};
+        weaponDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+        weaponDesc.modelAssetTag = TEXT("Model_BigSword");
+        weaponDesc.socketMatrix = _model->Get_SocketBoneMatrixPtr("Attach_Sword");
 
+        CHECK_FAILED(Add_PartObject(EPartSlot::Weapon, Protocol::OBJECT_TYPE_PART_WEAPON, &weaponDesc), E_FAIL);
     }
 
     return S_OK;

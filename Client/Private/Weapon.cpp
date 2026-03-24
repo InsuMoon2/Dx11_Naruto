@@ -4,7 +4,7 @@
 #include "Shader.h"
 #include "GameObject_Factory.h"
 
-REGISTER_GAMEOBJECT(Weapon, Protocol::OBJECT_TYPE_PART_OBJECT)
+REGISTER_GAMEOBJECT(Weapon, Protocol::OBJECT_TYPE_PART_WEAPON)
 
 Weapon::Weapon(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : PartObject(device, context)
@@ -35,6 +35,12 @@ HRESULT Weapon::Initialize(void* arg)
     }
 
     CHECK_FAILED(Ready_Components(modelTag), E_FAIL);
+
+    if (_transformCom)
+    {
+        _transformCom->Set_LocalScale(Vec3(0.01f, 0.01f, 0.01f));
+        _transformCom->Set_LocalRotation(0.f, 180.f, 0.f);
+    }
 
     return S_OK;
 }
@@ -118,7 +124,7 @@ HRESULT Weapon::Bind_ShaderResources()
     _shader->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
     _shader->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
 
-    GAME->Bind_CamPosition(_shader, "g_vCamPosition");
+    GAME->Bind_CamPosition(_shader, "g_CamPosition");
     CHECK_FAILED(Bind_Lights(), E_FAIL);
 
     return S_OK;
@@ -140,10 +146,10 @@ HRESULT Weapon::Bind_Lights()
 
     if (lightDesc)
     {
-        CHECK_FAILED(_shader->Bind_RawValue("g_vLightDir", &lightDesc->direction, sizeof(Vec4)), E_FAIL);
-        CHECK_FAILED(_shader->Bind_RawValue("g_vLightDiffuse", &lightDesc->diffuse, sizeof(Vec4)), E_FAIL);
-        CHECK_FAILED(_shader->Bind_RawValue("g_vLightAmbient", &lightDesc->ambient, sizeof(Vec4)), E_FAIL);
-        CHECK_FAILED(_shader->Bind_RawValue("g_vLightSpecular", &lightDesc->specular, sizeof(Vec4)), E_FAIL);
+        CHECK_FAILED(_shader->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4)), E_FAIL);
+        CHECK_FAILED(_shader->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Vec4)), E_FAIL);
+        CHECK_FAILED(_shader->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Vec4)), E_FAIL);
+        CHECK_FAILED(_shader->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Vec4)), E_FAIL);
     }
 
     return S_OK;

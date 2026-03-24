@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Editor_MainApp.h"
 #include "AnimNotify_Inspector_Factory.h"
+#include "Customizer_Manager.h"
 #include "EditorInstance.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
@@ -185,5 +186,6 @@ void Editor_MainApp::Free()
 
     Inspector_Factory::DestroyInstance();
     AnimNotify_Inspector_Factory::DestroyInstance();
+    Customizer_Manager::DestroyInstance();
     
 }

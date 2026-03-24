@@ -100,6 +100,7 @@ void MyPlayer::Send_MovePacket(bool forceSend)
     _lastSyncRotY = info.rot_y();
     _lastObjectState = info.object_state();
     _lastMoveDir = info.move_dir();
+    _lastAnimPhase = info.anim_phase();
 }
 
 Protocol::ObjectInfo MyPlayer::Build_NetworkInfo() const
@@ -153,6 +154,12 @@ bool MyPlayer::Should_SendMovePacket(const Protocol::ObjectInfo& nextInfo) const
         return true;
 
     if (nextInfo.move_dir() != _lastMoveDir)
+        return true;
+
+    if (nextInfo.anim_phase() != _lastAnimPhase)
+        return true;
+
+    if (nextInfo.anim_force_restart())
         return true;
 
     return false;

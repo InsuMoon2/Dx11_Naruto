@@ -37,8 +37,6 @@ void UI_Manager::Update(float timeDelta)
         }
     }
 
-    
-
     Update_UIAnimations(timeDelta);
 }
 
@@ -52,7 +50,7 @@ void UI_Manager::Late_Update(float timeDelta)
             {
                 ui->Late_Update(timeDelta);
 
-                GAME->Add_RenderGroup(ERenderGroup::UI, ui);
+                GAME->Add_RenderGroup(ui->Get_RenderGroup(), ui);
             }
         }
     }

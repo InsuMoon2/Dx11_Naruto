@@ -170,7 +170,7 @@
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ANS_Test.h" />
-    <ClInclude Include="..\Public\Player_BodyUpper.h">
+    <ClInclude Include="..\Public\Player_CustomPart.h">
       <Filter>02. GameObject\00. Player\02. Parts</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_TabButton.h">
@@ -335,7 +335,7 @@
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ANS_Test.cpp" />
-    <ClCompile Include="..\Private\Player_BodyUpper.cpp">
+    <ClCompile Include="..\Private\Player_CustomPart.cpp">
       <Filter>02. GameObject\00. Player\02. Parts</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_TabButton.cpp">

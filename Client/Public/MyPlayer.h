@@ -56,6 +56,8 @@ private:
     Protocol::OBJECT_STATE_TYPE   _lastObjectState = Protocol::OBJECT_STATE_TYPE_IDLE;
     Protocol::MOVE_INPUT_DIR_TYPE _lastMoveDir = Protocol::MOVE_INPUT_DIR_TYPE_FORWARD;
 
+    Protocol::ANIM_PHASE_TYPE     _lastAnimPhase = Protocol::ANIM_PHASE_START;
+
 public:
     static shared_ptr<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     shared_ptr<GameObject> Clone(void* arg) override;

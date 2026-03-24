@@ -1,0 +1,21 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+      "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark",
+      "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332"
+    },
+    {
+      "material_name": "MI_ENV_TCHEXA_Plaster_White",
+      "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df"
+    },
+    {
+      "material_name": "Material_3",
+      "textures": []
+    }
+  ]
+}

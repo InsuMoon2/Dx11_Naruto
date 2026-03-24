@@ -1,0 +1,17 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_LKNVLD_CommonBuilding_C",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_BoltedPlates_01_LOD",
+      "textures": []
+    },
+    {
+      "material_name": "Material_2",
+      "textures": []
+    }
+  ]
+}

@@ -76,6 +76,7 @@ enum OBJECT_TYPE
     OBJECT_TYPE_STATIC_MESH             = 11;
 
     OBJECT_TYPE_PART_OBJECT             = 12;
+    OBJECT_TYPE_PART_WEAPON             = 13; // 무기는 뼈대가 없다.
 
     // UI : 100+
     OBJECT_TYPE_UI_TEXT                 = 100;
@@ -107,4 +108,11 @@ enum MOVE_INPUT_DIR_TYPE
     MOVE_INPUT_DIR_TYPE_BACKWARD = 1;
     MOVE_INPUT_DIR_TYPE_LEFT = 2;
     MOVE_INPUT_DIR_TYPE_RIGHT = 3;
+}
+
+enum ANIM_PHASE_TYPE
+{
+    ANIM_PHASE_START = 0;
+    ANIM_PHASE_LOOP  = 1;
+    ANIM_PHASE_END   = 2;
 }
