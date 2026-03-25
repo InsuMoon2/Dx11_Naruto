@@ -213,6 +213,10 @@ public: /* Camera */
 
     Shared<Camera>                  Find_Camera(Protocol::OBJECT_TYPE type);
 
+    /* 시네마틱 */
+    bool                            Play_Cinematic(const wstring& sequenceName);
+    void                            Stop_Cinematic();
+
 public: /* DelegateHub */
     DelegateHub&                    Get_DelegateHub() { return _delegateHub; }
 

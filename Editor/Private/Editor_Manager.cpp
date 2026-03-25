@@ -5,6 +5,7 @@
 
 #include "Animation_View.h"
 #include "BehaviorTree_View.h"
+#include "Cinematic_View.h"
 #include "Scene_View.h"
 #include "Hierarchy.h"
 #include "Console_View.h"
@@ -43,6 +44,8 @@ void Editor_Manager::Initialize()
     Add_Window(TEXT("UI Animation"), UI_Animation_View::Create());
 
     Add_Window(TEXT("Animation View"), Animation_View::Create());
+
+    Add_Window(TEXT("Cinematic View"), Cinematic_View::Create());
 }
 
 void Editor_Manager::Update(float timeDelta)

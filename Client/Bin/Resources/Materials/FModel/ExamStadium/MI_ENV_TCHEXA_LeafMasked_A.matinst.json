@@ -11,7 +11,13 @@
   ],
   "normal_strength": 0.25,
   "blend_mode": 0,
-  "textures": [],
+  "textures": [
+    {
+      "slot": "base_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Leaf_01_BC.png"
+    }
+  ],
   "source": {
     "fmodel_mi_json": "MI_ENV_TCHEXA_LeafMasked_A.props.txt"
   }

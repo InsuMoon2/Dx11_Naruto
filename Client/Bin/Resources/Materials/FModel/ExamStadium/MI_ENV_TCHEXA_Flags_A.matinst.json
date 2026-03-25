@@ -11,7 +11,13 @@
   ],
   "normal_strength": 1.0,
   "blend_mode": 0,
-  "textures": [],
+  "textures": [
+    {
+      "slot": "base_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Event_TeamFlag02_BC.png"
+    }
+  ],
   "source": {
     "fmodel_mi_json": "MI_ENV_TCHEXA_Flags_A.props.txt"
   }

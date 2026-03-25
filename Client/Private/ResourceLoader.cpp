@@ -122,8 +122,14 @@ HRESULT ResourceLoader::Load_SkillTable(const wstring& tablePath)
     file >> root;
     file.close();
 
-    if (root.contains("Skill"))
+    if (root.contains("DT_SkillData"))
+    {
+        CHECK_FAILED(Load_Skills(root["DT_SkillData"]), E_FAIL);
+    }
+    else if (root.contains("Skill"))
+    {
         CHECK_FAILED(Load_Skills(root["Skill"]), E_FAIL);
+    }
 
     LOG_INFO("Loaded: {}", Utils::ToString(tablePath));
 
@@ -338,25 +344,33 @@ HRESULT ResourceLoader::Build_SkillJobs(const wstring& tablePath, vector<FLoadJo
     file >> root;
     file.close();
 
-    if (!root.contains("Skill"))
+    string skillKey = "";
+    if (root.contains("DT_SkillData")) skillKey = "DT_SkillData";
+    else if (root.contains("Skill"))   skillKey = "Skill";
+
+    if (skillKey.empty())
         return S_OK;
 
-    for (const auto& item : root["Skill"])
+    uint32 iconSrvIndex = 0;
+
+    for (const auto& item : root[skillKey])
     {
         FLoadJob job{};
         job.type = ELoadJobType::Skill;
 
-        job.skillData.skill_Id = item["SkillID"];
+        job.skillData.skill_Id = item.value("SkillID", 0);
         job.skillData.skillName = Utils::ToWString(item.value("SkillName", string{}));
-        job.skillData.srvIndex = item.value("SrvIndex", 0);
         job.skillData.coolDown = item.value("Cooldown", 0.f);
-        job.skillData.manaCost = item.value("ManaCost", 0);
+
+        job.skillIconSrvIndex = iconSrvIndex;
 
         outJobs.push_back(job);
+        ++iconSrvIndex;
     }
 
     return S_OK;
 }
+
 
 HRESULT ResourceLoader::Build_AllResourceJobs(const wstring& tablePath, vector<FLoadJob>& outJobs)
 {
@@ -481,21 +495,44 @@ HRESULT ResourceLoader::Build_AllResourceJobs(const wstring& tablePath, vector<F
         }
     }
 
-    if (root.contains("Skill"))
+    string skillKey = "";
+    if (root.contains("DT_SkillData")) skillKey = "DT_SkillData";
+    else if (root.contains("Skill"))   skillKey = "Skill";
+
+    if (!skillKey.empty())
     {
-        for (const auto& item : root["Skill"])
+        uint32 iconSrvIndex = 0;
+
+        for (const auto& item : root[skillKey])
         {
-            if (!item.contains("SkillID")) continue;
+            if (!item.contains("SkillID"))
+                continue;
+
             FLoadJob job{};
             job.type = ELoadJobType::Skill;
             job.skillData.skill_Id = item.value("SkillID", 0);
             job.skillData.skillName = Utils::ToWString(item.value("SkillName", string{}));
-            job.skillData.srvIndex = item.value("SrvIndex", 0);
             job.skillData.coolDown = item.value("Cooldown", 0.f);
-            job.skillData.manaCost = item.value("ManaCost", 0);
+            job.skillData.animStateName = item.value("AnimStateName", string{});
+            job.skillData.loopDurationSec = item.value("LoopDurationSec", 0.f);
+
+            const auto& holdValue = item["IsHoldSkill"];
+
+            if (item.contains("IsHoldSkill"))
+            {
+                if (holdValue.is_boolean())
+                    job.skillData.isHoldSkill = holdValue.get<bool>();
+                else if (holdValue.is_number())
+                    job.skillData.isHoldSkill = (holdValue.get<float>() != 0.f);
+            }
+
+            job.skillIconSrvIndex = iconSrvIndex;
+
             outJobs.push_back(job);
+            ++iconSrvIndex;
         }
     }
+
 
 	string jsonKey = "";
 	if (root.contains("DT_GameObject")) jsonKey = "DT_GameObject";
@@ -755,16 +792,19 @@ HRESULT ResourceLoader::Load_Skills(const json& data)
 
     mgr->Clear();
 
+    uint32 iconSrvIndex = 0;
+
     for (const auto& item : data)
     {
         FSkillData skill;
         skill.skill_Id = item["SkillID"];
         skill.skillName = Utils::ToWString(item.value("SkillName", string{}));
-        skill.srvIndex = item.value("SrvIndex", 0);
         skill.coolDown = item.value("Cooldown", 0.f);
-        skill.manaCost = item.value("ManaCost", 0);
 
         mgr->Register_Skill(skill);
+        mgr->Register_Skill_IconIndex(static_cast<int32>(skill.skill_Id), iconSrvIndex);
+
+        ++iconSrvIndex;
     }
     return S_OK;
 }

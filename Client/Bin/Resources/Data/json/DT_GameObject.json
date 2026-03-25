@@ -51,6 +51,11 @@
             "Level": "Static"
         },
         {
+            "Id": "Camera_Cinematic",
+            "ObjectType": "OBJECT_TYPE_CAMERA_CINEMATIC",
+            "Level": "Static"
+        },
+        {
             "Id": "Background",
             "ObjectType": "OBJECT_TYPE_BACKGROUND",
             "Level": "Static"

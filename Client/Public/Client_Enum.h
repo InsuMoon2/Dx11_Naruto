@@ -32,10 +32,13 @@ namespace Client
         //Attack,
         //Hit,
         Dash,
-        //Skill,
-        //
-        //Dead,
 
+
+        // 스킬 string으로 가능하긴 한데, 안전하게 Enum처리하기
+        Skill_Rasengan,
+        Skill_RasenShuriken,
+
+        Dead,
         END
     };
 

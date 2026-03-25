@@ -37,8 +37,9 @@ HRESULT MyPlayer::Initialize(void* arg)
     // MyPlayer만 입력/이동 컴포넌트 보유
     {
         SkillComponent::FSkillDesc skillDesc;
+
         skillDesc.slotSkill_Id[0] = 1001; // 나선환
-        skillDesc.slotSkill_Id[1] = 1002; // 치도리
+        skillDesc.slotSkill_Id[1] = 1002; // 나선 수리검
 
         CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SKILL, _skill, &skillDesc), E_FAIL);
     }

@@ -30,33 +30,25 @@ void PlayerState_Dash::Enter(PlayerStateMachine* state)
     if (!transform)
         return;
 
-    const auto& frame = input->Get_Frame();
-    const Vec2 moveAxis(frame.moveX, frame.moveY);
-
-    _dashDir = Classify_InputDirection(moveAxis);
+    _dashDir = EMoveInputDirection::Forward;
     state->Set_PendingMoveInputDirection(_dashDir);
 
     // 대쉬 도중 입력막기, 프리셋 세팅 -> 나중에 충돌체쪽도 프리셋 만들기
     input->Set_InputMode(EPlayerInputMode::LookOnly);
     movement->Set_OrientRotationToMovement(false);
 
-    auto cmd = state->Init_MoveCommand();
-
-    Vec3 dashWorldDir =
-        cmd.moveBasisRight * moveAxis.x + cmd.moveBasisForward * moveAxis.y;
+    Vec3 dashWorldDir = transform->Get_WorldForward();
+    dashWorldDir.y = 0.f;
 
     if (dashWorldDir.LengthSquared() <= FLT_EPSILON)
-        dashWorldDir = cmd.moveBasisForward;
+        dashWorldDir = Vec3::Forward;
 
-    dashWorldDir.y = 0.f;
-    if (dashWorldDir.LengthSquared() > FLT_EPSILON)
-        dashWorldDir.Normalize();
+    dashWorldDir.Normalize();
 
     const auto& moveDesc = movement->Get_MoveDesc();
-    //movement->Start_Dash(_dashDir, moveDesc.dashDistance, moveDesc.dashDuration);
     movement->Start_Dash(dashWorldDir, moveDesc.dashDistance, moveDesc.dashDuration);
 
-    state->Play_DirectionalAnimState(EPlayerState::Dash, _dashDir);
+    state->Play_AnimState(EPlayerState::Dash);
 }
 
 void PlayerState_Dash::Update(PlayerStateMachine* state, float timeDelta)
@@ -71,15 +63,15 @@ void PlayerState_Dash::Update(PlayerStateMachine* state, float timeDelta)
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
 
-    if (movement->Get_DashNormalizedTime() >= 0.75f)
-    {
-        input->Set_InputMode(EPlayerInputMode::MoveAndLook);
-    }
+    //if (movement->Get_DashNormalizedTime() >= 0.9f)
+    //{
+    //    input->Set_InputMode(EPlayerInputMode::MoveAndLook);
+    //}
 
     const float currentFrame = state->Get_AnimTrackPosition();
     const float endFrame = state->Get_AnimDuration();
 
-    if (currentFrame >= endFrame - 4.f)
+    if (currentFrame >= endFrame - 1.f)
     {
         if (input->Has_MoveInput())
         {

@@ -49,7 +49,10 @@ private:
 
 private:
     Shared<Shader>        _shaderCom;
-    Shared<Texture>       _textureCom;
+
+    Shared<Texture>       _gaugeTextureCom;
+    Shared<Texture>       _iconTextureCom;
+
     Shared<VIBuffer_Rect> _bufferCom;
 
 public:

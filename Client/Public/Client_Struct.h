@@ -10,11 +10,14 @@ namespace Client
 {
     struct FSkillData
     {
-        uint32  skill_Id = 0;
-        wstring skillName = L"";
-        uint32   srvIndex = 0;
+        uint32   skill_Id = 0;
+        wstring  skillName = L"";
         float    coolDown = 0.f;
-        int      manaCost = 0;
+
+        string   animStateName = "";
+        float    loopDurationSec = 0.f;
+
+        bool     isHoldSkill = false;
     };
 
     struct FLoadJob
@@ -34,6 +37,8 @@ namespace Client
         bool isSkeletal = false;
 
         FSkillData skillData{};
+
+        uint32 skillIconSrvIndex = 0;
     };
 
     struct FDirectionClipDesc

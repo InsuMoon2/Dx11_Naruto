@@ -38,8 +38,6 @@ HRESULT UI_PlayerStatus::Initialize(void* arg)
     UI_PlayerHP::FPlayerHPDesc hpDesc;
     hpDesc.posX = 0.f;
     hpDesc.posY = 0.f;
-    hpDesc.sizeX = 255.f;
-    hpDesc.sizeY = 20.f;
     hpDesc.zOrder = _zOrder + 0.01f;
     hpDesc.levelIndex = _levelIndex;
     hpDesc.textureIndex = 0;
@@ -49,7 +47,7 @@ HRESULT UI_PlayerStatus::Initialize(void* arg)
     if (!_hpBar) return E_FAIL;
 
     _hpBar->Set_FillRange(98.f / 512.f, 413.f / 512.f);
-    _hpBar->Get_Transform()->Set_LocalPosition(53.5f, 30.f, 0.f);
+    _hpBar->Get_Transform()->Set_LocalPosition(53.5f, 25.2f, 0.f);
 
 
     return S_OK;

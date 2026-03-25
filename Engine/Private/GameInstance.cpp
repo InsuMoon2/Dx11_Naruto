@@ -763,6 +763,16 @@ Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)
     return _cameraManager->Find_Camera(type);
 }
 
+bool GameInstance::Play_Cinematic(const wstring& sequenceName)
+{
+    return _cameraManager->Play_Cinematic(sequenceName);
+}
+
+void GameInstance::Stop_Cinematic()
+{
+    return _cameraManager->Stop_Cinematic();
+}
+
 void GameInstance::Free()
 {
     Base::Free();

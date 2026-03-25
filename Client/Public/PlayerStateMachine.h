@@ -68,8 +68,22 @@ public:
     void                        Set_PendingMoveInputDirection(EMoveInputDirection dir) { _pendingMoveInputDirection = dir; }
     EMoveInputDirection         Get_PendingMoveInputDirection() const { return _pendingMoveInputDirection; }
 
+    void                        Set_ActiveSkillSlot(int32 slot) { _activeSkillSlot = slot; }
+    int32                       Get_ActiveSkillSlot() const { return _activeSkillSlot; }
+
 private:
     static string               To_AnimationStateName(EPlayerState stateID);
+
+    
+    
+
+    bool                        Check_Global_Transitions();
+    bool                        Check_Skill_Input();
+
+    // 추가 예정
+    bool                        Check_Death();
+    bool                        Check_Cinematic();
+    bool                        Check_HitReaction(); // 슈퍼아머 아닐 때
 
 private:
     Shared<InputComponent>                      _input;
@@ -87,6 +101,8 @@ private:
     Vec3                                        _pendingLandDirection = Vec3::Zero;
 
     EMoveInputDirection                         _pendingMoveInputDirection = EMoveInputDirection::Forward;
+
+    int32                                       _activeSkillSlot = -1;
 
 protected:
     json To_Json() const override;

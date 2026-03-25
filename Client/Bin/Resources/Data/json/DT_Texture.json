@@ -13,18 +13,6 @@
             "Level": "Static"
         },
         {
-            "Id": "COMPONENT_TYPE_TEXTURE_SKILL_ICON",
-            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_Skill_Gauge_Base%d_BC.png",
-            "Count": 2,
-            "Level": "Static"
-        },
-        {
-            "Id": "COMPONENT_TYPE_TEXTURE_SKILL_ICON",
-            "Path": "../../Client/Bin/Resources/Textures/UI/Skill_Icon/Skill_Icon%d.png",
-            "Count": 2,
-            "Level": "Static"
-        },
-        {
             "Id": "COMPONENT_TYPE_TEXTURE_PLAYER_STATUS",
             "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_SP_Gauge_Base_BC.png",
             "Count": 1,
@@ -149,6 +137,18 @@
             "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
             "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Menu_Btn_00_Sel_BC.png",
             "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKILL_GAUGE",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_Skill_Gauge_Base%d_BC.png",
+            "Count": 2,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKILL_ICON",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Skill_Icon/Skill_Icon%d.png",
+            "Count": 5,
             "Level": "Static"
         }
     ]

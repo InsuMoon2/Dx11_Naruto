@@ -262,6 +262,7 @@
     <ClInclude Include="..\Public\PlayerState_Idle.h" />
     <ClInclude Include="..\Public\PlayerState_Jump.h" />
     <ClInclude Include="..\Public\PlayerState_Run.h" />
+    <ClInclude Include="..\Public\PlayerState_Skill.h" />
     <ClInclude Include="..\Public\PlayerState_SuperJump.h" />
     <ClInclude Include="..\Public\PlayerState_SuperJumpCharge.h" />
     <ClInclude Include="..\Public\Player_CustomPart.h" />
@@ -350,6 +351,7 @@
     <ClCompile Include="..\Private\PlayerState_Idle.cpp" />
     <ClCompile Include="..\Private\PlayerState_Jump.cpp" />
     <ClCompile Include="..\Private\PlayerState_Run.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Skill.cpp" />
     <ClCompile Include="..\Private\PlayerState_SuperJump.cpp" />
     <ClCompile Include="..\Private\PlayerState_SuperJumpCharge.cpp" />
     <ClCompile Include="..\Private\Player_CustomPart.cpp" />

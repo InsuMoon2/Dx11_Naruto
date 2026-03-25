@@ -223,6 +223,8 @@
     <ClInclude Include="..\Public\AnimSequencerAdapter.h" />
     <ClInclude Include="..\Public\BehaviorTree_Inspector.h" />
     <ClInclude Include="..\Public\BehaviorTree_View.h" />
+    <ClInclude Include="..\Public\CameraSequencerAdapter.h" />
+    <ClInclude Include="..\Public\Cinematic_View.h" />
     <ClInclude Include="..\Public\CommandHistory.h" />
     <ClInclude Include="..\Public\Editor_Camera_Free.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
@@ -258,6 +260,7 @@
     <ClInclude Include="..\Public\Property_Command.h" />
     <ClInclude Include="..\Public\Reflection_Inspector.h" />
     <ClInclude Include="..\Public\Scene_View.h" />
+    <ClInclude Include="..\Public\Skill_Inspector.h" />
     <ClInclude Include="..\Public\Texture_Inspector.h" />
     <ClInclude Include="..\Public\Transform_Inspector.h" />
     <ClInclude Include="..\Public\Level_Serializer.h" />
@@ -278,6 +281,8 @@
     <ClCompile Include="..\Private\AnimSequencerAdapter.cpp" />
     <ClCompile Include="..\Private\BehaviorTree_Inspector.cpp" />
     <ClCompile Include="..\Private\BehaviorTree_View.cpp" />
+    <ClCompile Include="..\Private\CameraSequencerAdapter.cpp" />
+    <ClCompile Include="..\Private\Cinematic_View.cpp" />
     <ClCompile Include="..\Private\CommandHistory.cpp" />
     <ClCompile Include="..\Private\Editor_Camera_Free.cpp" />
     <ClCompile Include="..\Private\Editor_Helper.cpp" />
@@ -311,6 +316,7 @@
     <ClCompile Include="..\Private\Property_Command.cpp" />
     <ClCompile Include="..\Private\Reflection_Inspector.cpp" />
     <ClCompile Include="..\Private\Scene_View.cpp" />
+    <ClCompile Include="..\Private\Skill_Inspector.cpp" />
     <ClCompile Include="..\Private\Texture_Inspector.cpp" />
     <ClCompile Include="..\Private\Transform_Inspector.cpp" />
     <ClCompile Include="..\Private\Level_Serializer.cpp" />

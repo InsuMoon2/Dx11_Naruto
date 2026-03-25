@@ -16,6 +16,11 @@
       "slot": "base_color",
       "index": 0,
       "path": "../../../Textures/FModel/ExamStadium/T_ENV_TCHEXA_Leaf_01_BC.png"
+    },
+    {
+      "slot": "normal",
+      "index": 0,
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Ground_02_N.png"
     }
   ],
   "source": {

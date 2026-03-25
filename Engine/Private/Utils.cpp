@@ -38,3 +38,29 @@ bool Utils::EndsWidth(const string& value, const string& suffix)
 
     return equal(suffix.rbegin(), suffix.rend(), value.rbegin());
 }
+
+json Utils::Vec3_ToJson(const Vec3 vec)
+{
+    return { vec.x, vec.y, vec.z };
+}
+
+Vec3 Utils::Vec3_FromJson(const json& j, const Vec3& fallback)
+{
+    if (!j.is_array() || j.size() < 3)
+        return fallback;
+
+    return Vec3(j[0].get<float>(), j[1].get<float>(), j[2].get<float>());
+}
+
+json Utils::Quat_ToJson(const Quat& quat)
+{
+    return { quat.x, quat.y, quat.z, quat.w };
+}
+
+Quat Utils::Quat_FromJson(const json& j)
+{
+    if (!j.is_array() || j.size() < 4)
+        return Quat::Identity;
+    return Quat(j[0].get<float>(), j[1].get<float>(),
+        j[2].get<float>(), j[3].get<float>());
+}

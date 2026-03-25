@@ -16,6 +16,15 @@ public:
 
     static bool     EndsWidth(const string& value, const string& suffix);
 
+    // Vec3 -> josn 배열 [x,y,z]
+    static json Vec3_ToJson(const Vec3 vec);
+    // json 배열 -> Vec3
+    static Vec3 Vec3_FromJson(const json& j, const Vec3& fallback = Vec3::Zero);
+    // Quat -> json 배열 [x,y,z,w]
+    static json Quat_ToJson(const Quat& quat);
+    // json 배열 -> Quat
+    static Quat Quat_FromJson(const json& j);
+
 public:
     template <typename T>
     static T Max(const T& a, const T& b)

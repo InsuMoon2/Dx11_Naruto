@@ -193,6 +193,9 @@
     <ClInclude Include="..\Public\UI_AnimSequencerAdapter.h">
       <Filter>97. Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Cinematic_View.h" />
+    <ClInclude Include="..\Public\CameraSequencerAdapter.h" />
+    <ClInclude Include="..\Public\Skill_Inspector.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -339,6 +342,9 @@
     <ClCompile Include="..\Private\UI_AnimSequencerAdapter.cpp">
       <Filter>97. Utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Cinematic_View.cpp" />
+    <ClCompile Include="..\Private\CameraSequencerAdapter.cpp" />
+    <ClCompile Include="..\Private\Skill_Inspector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

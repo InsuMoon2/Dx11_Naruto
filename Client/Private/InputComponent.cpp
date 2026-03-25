@@ -67,6 +67,9 @@ void InputComponent::Update_Input(float timeDelta)
     const bool rawSkill1Down = INPUT->KeyDown(KEY_TYPE::KEY_1);
     const bool rawSkill2Down = INPUT->KeyDown(KEY_TYPE::KEY_2);
 
+    const bool rawSkill1Press = INPUT->KeyPress(KEY_TYPE::KEY_1);
+    const bool rawSkill2Press = INPUT->KeyPress(KEY_TYPE::KEY_2);
+
     const bool rawCtrlPress = INPUT->KeyPress(KEY_TYPE::LCTRL);
     const bool rawCtrlUp = INPUT->KeyUp(KEY_TYPE::LCTRL);
 
@@ -114,6 +117,9 @@ void InputComponent::Update_Input(float timeDelta)
     {
         _frame.useSkillDown[0] = rawSkill1Down;
         _frame.useSkillDown[1] = rawSkill2Down;
+
+        _frame.useSkillPress[0] = rawSkill1Press;
+        _frame.useSkillPress[1] = rawSkill2Press;
     }
 
     if (_inputGate.allowSuperJump)
@@ -177,7 +183,7 @@ InputComponent::FInputGate InputComponent::Get_InputGate_Preset(EPlayerInputMode
         gate.allowDash = false;
         gate.allowJump = false;
         gate.allowSuperJump = false;
-        gate.allowSkill = false;
+        gate.allowSkill = true;
         break;
 
     case EPlayerInputMode::MoveAndLook:

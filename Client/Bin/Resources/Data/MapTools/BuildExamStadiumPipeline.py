@@ -79,6 +79,7 @@ def parse_args():
     parser.add_argument("--mesh-dst", type=Path, required=True)
     parser.add_argument("--mi-root", type=Path, required=True)
     parser.add_argument("--texture-root", type=Path, required=True)
+    parser.add_argument("--extra-texture-root", type=Path, action="append", default=[])
     parser.add_argument("--copy-textures-to", type=Path, required=True)
     parser.add_argument("--matinst-root", type=Path, required=True)
     parser.add_argument("--level-map-root", type=Path, required=True)
@@ -97,6 +98,7 @@ def main():
     args.mesh_dst = normalize_path(args.mesh_dst)
     args.mi_root = normalize_path(args.mi_root)
     args.texture_root = normalize_path(args.texture_root)
+    args.extra_texture_root = [normalize_path(path) for path in args.extra_texture_root]
     args.copy_textures_to = normalize_path(args.copy_textures_to)
     args.matinst_root = normalize_path(args.matinst_root)
     args.level_map_root = normalize_path(args.level_map_root)
@@ -108,6 +110,8 @@ def main():
     validate_non_empty_path(args.mesh_dst, "--mesh-dst")
     validate_non_empty_path(args.mi_root, "--mi-root")
     validate_non_empty_path(args.texture_root, "--texture-root")
+    for extra_texture_root in args.extra_texture_root:
+        validate_non_empty_path(extra_texture_root, "--extra-texture-root")
     validate_non_empty_path(args.level_map_root, "--level-map-root")
     validate_non_empty_path(args.guid_map_out, "--guid-map-out")
     validate_non_empty_path(args.level_out_dir, "--level-out-dir")
@@ -125,6 +129,10 @@ def main():
 
     if not args.texture_root.exists():
         raise FileNotFoundError(f"texture root not found: {args.texture_root}")
+
+    for extra_texture_root in args.extra_texture_root:
+        if not extra_texture_root.exists():
+            raise FileNotFoundError(f"extra texture root not found: {extra_texture_root}")
 
     if not args.level_map_root.exists():
         raise FileNotFoundError(f"level map root not found: {args.level_map_root}")
@@ -167,6 +175,10 @@ def main():
         "--level-guid-map", str(args.guid_map_out),
         "--level-out-dir", str(args.level_out_dir),
     ]
+
+    # [추가] ExamStadium이 재사용하는 외부 맵 텍스처도 같이 인덱싱
+    for extra_texture_root in args.extra_texture_root:
+        resolve_command.extend(["--extra-texture-root", str(extra_texture_root)])
 
     if args.dry_run:
         resolve_command.append("--dry-run")

@@ -1385,5 +1385,9 @@ void Animation_View::Delete_SelectedState()
 
 Shared<Animation_View> Animation_View::Create()
 {
-    return make_shared<Animation_View>();
+    auto instance = make_shared<Animation_View>();
+
+    instance->Initialize();
+
+    return instance;
 }

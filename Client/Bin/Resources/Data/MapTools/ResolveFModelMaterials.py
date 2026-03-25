@@ -64,6 +64,13 @@ def parse_args():
     parser.add_argument("--mesh-root", type=Path, default=DEFAULT_MESH_ROOT)
     parser.add_argument("--mi-root", type=Path, default=DEFAULT_MI_ROOT)
     parser.add_argument("--texture-root", type=Path, default=DEFAULT_TEXTURE_ROOT)
+    parser.add_argument(
+        "--extra-texture-root",
+        type=Path,
+        action="append",
+        default=[],
+        help="Additional texture roots to index together with --texture-root",
+    )
     parser.add_argument("--copy-textures-to", type=Path, default=DEFAULT_COPY_TEXTURE_ROOT)
     parser.add_argument("--matinst-root", type=Path, default=DEFAULT_MATINST_ROOT)
 
@@ -387,22 +394,47 @@ def normalize_fmodel_material_instance(item: dict):
     }
 
 
-def build_texture_index(texture_root: Path):
+def build_texture_roots(primary_root: Path, extra_roots: list[Path]):
+    roots = []
+    seen = set()
+
+    for root in [primary_root, *extra_roots]:
+        if root is None:
+            continue
+
+        resolved = root.resolve()
+        key = str(resolved).lower()
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+        roots.append(resolved)
+
+    return roots
+
+
+def build_texture_index(texture_roots: list[Path]):
     index = {}
     duplicates = {}
 
-    for path in texture_root.rglob("*"):
-        if not path.is_file():
-            continue
-        if path.suffix.lower() not in IMAGE_EXTENSIONS:
-            continue
-
-        key = path.stem.lower()
-        if key in index:
-            duplicates.setdefault(key, []).append(path)
+    for texture_root in texture_roots:
+        if not texture_root.exists():
+            print(f"[WARN] texture root not found: {texture_root}")
             continue
 
-        index[key] = path
+        for path in texture_root.rglob("*"):
+            if not path.is_file():
+                continue
+            if path.suffix.lower() not in IMAGE_EXTENSIONS:
+                continue
+
+            key = path.stem.lower()
+            if key in index:
+                duplicates.setdefault(key, []).append(path)
+                continue
+
+            index[key] = path
 
     if duplicates:
         print("[WARN] duplicate texture stems found. first match will be used.")
@@ -887,23 +919,30 @@ def main():
     mesh_root = args.mesh_root
     mi_root = args.mi_root
     texture_root = args.texture_root
+    extra_texture_roots = args.extra_texture_root
     copy_root = None if args.no_copy else args.copy_textures_to
     matinst_root = args.matinst_root
     profile_config = DEFAULT_PROFILE_CONFIG
+    texture_roots = build_texture_roots(texture_root, extra_texture_roots)
 
     if not mesh_root.exists():
         raise FileNotFoundError(f"mesh root not found: {mesh_root}")
     if args.mode != "bind_mesh":
         if not mi_root.exists():
             raise FileNotFoundError(f"mi root not found: {mi_root}")
-        if not texture_root.exists():
-            raise FileNotFoundError(f"texture root not found: {texture_root}")
+        if not texture_roots:
+            raise FileNotFoundError("texture roots are empty")
+        if not any(root.exists() for root in texture_roots):
+            raise FileNotFoundError("no valid texture roots found")
 
     if args.mode == "emit_matinst":
         mi_index = build_mi_index(mi_root)
-        texture_index = build_texture_index(texture_root)
+        texture_index = build_texture_index(texture_roots)
 
         print(f"[Resolver] MI indexed      : {len(mi_index)}")
+        print(f"[Resolver] Texture roots    : {len(texture_roots)}")
+        for root in texture_roots:
+            print(f"  - {root}")
         print(f"[Resolver] Textures indexed: {len(texture_index)}")
 
         emit_material_instances(
@@ -941,9 +980,12 @@ def main():
 
     elif args.mode == "all":
         mi_index = build_mi_index(mi_root)
-        texture_index = build_texture_index(texture_root)
+        texture_index = build_texture_index(texture_roots)
 
         print(f"[Resolver] MI indexed      : {len(mi_index)}")
+        print(f"[Resolver] Texture roots    : {len(texture_roots)}")
+        for root in texture_roots:
+            print(f"  - {root}")
         print(f"[Resolver] Textures indexed: {len(texture_index)}")
 
         emit_material_instances(

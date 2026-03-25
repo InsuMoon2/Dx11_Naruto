@@ -30,7 +30,7 @@ public:
         float dashDistance = 6.f;
         float dashDuration = 0.18f;
 
-        float gravity = -20.f;
+        float gravity = -20.f;      // 인스팩터에서 조절해야한다.
         float groundY = 5.f;        // Temp값. 일단 5로 조절
     };
 

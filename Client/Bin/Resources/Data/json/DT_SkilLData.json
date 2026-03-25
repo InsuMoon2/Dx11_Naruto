@@ -1,18 +1,41 @@
 {
-    "DT_SkilLData": [
+    "Skill": [
         {
             "SkillID": 1001,
             "SkillName": "Rasengan",
-            "SrvIndex": 2,
             "Cooldown": 8,
-            "MansCost": 30
+            "AnimStateName": "Skill_Rasengan",
+            "LoopDurationSec": 3,
+            "IsHoldSkill": false
         },
         {
             "SkillID": 1002,
-            "SkillName": "Chidori",
-            "SrvIndex": 3,
+            "SkillName": "Rasen_Shuriken",
             "Cooldown": 7,
-            "MansCost": 30
+            "AnimStateName": "Skill_RasenShuriken",
+            "LoopDurationSec": 5,
+            "IsHoldSkill": true
+        },
+        {
+            "SkillID": 1003,
+            "SkillName": "Fireball",
+            "Cooldown": 5,
+            "LoopDurationSec": 1,
+            "IsHoldSkill": false
+        },
+        {
+            "SkillID": 1004,
+            "SkillName": "Chidori",
+            "Cooldown": 4,
+            "LoopDurationSec": 1,
+            "IsHoldSkill": true
+        },
+        {
+            "SkillID": 1005,
+            "SkillName": "Big_Rasengan",
+            "Cooldown": 5,
+            "LoopDurationSec": 1,
+            "IsHoldSkill": false
         }
     ]
 }

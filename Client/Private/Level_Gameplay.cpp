@@ -45,6 +45,8 @@ HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
         Try_SendEnterGamePacket();
     }
 
+   
+
     return S_OK;
 }
 
@@ -55,6 +57,11 @@ void Level_Gameplay::Update(float timeDelta)
     if (_spawnMode == EGameplaySpawnMode::Server && !_enterGameSent)
     {
         Try_SendEnterGamePacket();
+    }
+
+    if (INPUT->KeyDown(KEY_TYPE::KEY_3))
+    {
+        GAME->Play_Cinematic(TEXT("Test1"));
     }
 }
 

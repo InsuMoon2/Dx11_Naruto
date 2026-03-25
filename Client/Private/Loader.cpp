@@ -309,6 +309,10 @@ HRESULT Loader::Execute_Job_OnMainThread(const FLoadJob& job)
         {
         auto mgr = GET_SINGLE(SkillDataManager);
         mgr->Register_Skill(job.skillData);
+        mgr->Register_Skill_IconIndex(
+            static_cast<int32>(job.skillData.skill_Id),
+            job.skillIconSrvIndex);
+
         break;
         }
 

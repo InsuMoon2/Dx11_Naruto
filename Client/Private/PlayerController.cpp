@@ -56,16 +56,6 @@ void PlayerController::Update(float timeDelta)
 
     _input->Update_Input(timeDelta);
 
-    const auto& frame = _input->Get_Frame();
-    if (_skill)
-    {
-        if (frame.useSkillDown[0])
-            _skill->Try_Activate(0);
-
-        if (frame.useSkillDown[1])
-            _skill->Try_Activate(1);
-    }
-
     if (_stateMachine)
         _stateMachine->Update(timeDelta);
 

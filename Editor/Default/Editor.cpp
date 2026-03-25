@@ -133,25 +133,41 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance;
+    constexpr DWORD kEditorWindowStyle = WS_POPUP | WS_VISIBLE;
 
-    RECT rc = { 0, 0, static_cast<LONG>(EditorApp::g_winSizeX), static_cast<LONG>(EditorApp::g_winSizeY) };
+    MONITORINFO monitorInfo{};
+    monitorInfo.cbSize = sizeof(MONITORINFO);
 
-    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+    HMONITOR hMonitor = MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY);
+    if (!GetMonitorInfo(hMonitor, &monitorInfo))
+        return FALSE;
 
-    int windowWidth = rc.right - rc.left;
-    int windowHeight = rc.bottom - rc.top;
-    int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-    int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-    int posX = (screenWidth - windowWidth) / 2;
-    int posY = (screenHeight - windowHeight) / 2;
+    const RECT& monitorRect = monitorInfo.rcMonitor;
+    const int workWidth = monitorRect.right - monitorRect.left;
+    const int workHeight = monitorRect.bottom - monitorRect.top;
+
+    EditorApp::g_winSizeX = static_cast<unsigned int>(workWidth);
+    EditorApp::g_winSizeY = static_cast<unsigned int>(workHeight);
+
+    RECT rc = { 0, 0, workWidth, workHeight };
+    AdjustWindowRect(&rc, kEditorWindowStyle, FALSE);
+
+    const int windowWidth = rc.right - rc.left;
+    const int windowHeight = rc.bottom - rc.top;
+
+    const int posX = monitorRect.left;
+    const int posY = monitorRect.top;
 
     HWND hWnd = CreateWindowW(
         szWindowClass,
         szTitle,
-        WS_OVERLAPPEDWINDOW,
+        kEditorWindowStyle,
         posX, posY,
         windowWidth, windowHeight,
         nullptr, nullptr, hInstance, nullptr);
+
+    if (!hWnd)
+        return FALSE;
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);

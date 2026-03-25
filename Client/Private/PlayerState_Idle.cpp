@@ -52,6 +52,8 @@ void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
         return;
     }
 
+    
+
     // 감속 처리용
     auto cmd = state->Init_MoveCommand();
     movement->Apply_Command(cmd);

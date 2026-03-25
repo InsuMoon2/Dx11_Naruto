@@ -136,7 +136,23 @@ void ContainerObject::From_Json(const json& data)
     GameObject::From_Json(data);
 
     if (data.contains("part_transforms"))
+    {
         _cachedPartTransforms = data["part_transforms"];
+
+        for (int i = 0; i < ETOI(EPartSlot::END); ++i)
+        {
+            if (_partObjects[i])
+            {
+                string slotName = Get_PartSlotName(static_cast<EPartSlot>(i));
+                if (_cachedPartTransforms.contains(slotName))
+                {
+                    auto transform = _partObjects[i]->Get_Component<Transform>();
+                    if (transform)
+                        transform->From_Json(_cachedPartTransforms[slotName]);
+                }
+            }
+        }
+    }
 
 }
 

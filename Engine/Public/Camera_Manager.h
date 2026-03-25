@@ -5,6 +5,9 @@
 
 NS_BEGIN(Engine)
 class Camera;
+class CameraTrack_Player; 
+class Camera_Cinematic;   
+struct FCameraSequenceAsset;
 
 class ENGINE_DLL Camera_Manager : public Base
 {
@@ -25,9 +28,26 @@ public:
 
     Shared<Camera>  Find_Camera(Protocol::OBJECT_TYPE type);
 
+public: /* 시네마틱 */
+    bool            Play_Cinematic(const wstring& sequenceName);
+    void            Stop_Cinematic();
+    bool            Is_CinematicPlaying() const { return _isCinematicPlaying; }
+    Shared<Camera_Cinematic> Get_CinematicCamera() { return _cineCamera; }
+
+
+
 private:
-    vector<Weak<Camera>> _cameras;
-    Weak<Camera>         _activeCamera;
+    vector<Weak<Camera>>            _cameras;
+    Weak<Camera>                    _activeCamera;
+
+private:
+    Shared<CameraTrack_Player>      _cinePlayer;
+    Shared<Camera_Cinematic>        _cineCamera;
+    Weak<Camera>                    _originCamera;
+
+    Unique<FCameraSequenceAsset>    _currentAsset;
+
+    bool                            _isCinematicPlaying = false;
 
 public:
     static Unique<Camera_Manager> Create();

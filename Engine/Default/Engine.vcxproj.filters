@@ -175,7 +175,6 @@
     <ClInclude Include="..\Public\Mesh.h">
       <Filter>01. Utility\04. Component\05. Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Model.h" />
     <ClInclude Include="..\Public\Property_Types.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
@@ -221,9 +220,6 @@
     <ClInclude Include="..\Public\ModelBin_Types.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Bone.h" />
-    <ClInclude Include="..\Public\Channel.h" />
-    <ClInclude Include="..\Public\Animation.h" />
     <ClInclude Include="..\Public\AnimNotify_Types.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
@@ -242,14 +238,42 @@
     <ClInclude Include="..\Public\AnimNotify.h">
       <Filter>10. Notify</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AnimNotify_Serializer.h" />
     <ClInclude Include="..\Public\ContainerObject.h">
       <Filter>01. Utility\03. GameObject\04. ContainerObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PartObject.h">
       <Filter>01. Utility\03. GameObject\05. PartObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Animation_Manager.h" />
+    <ClInclude Include="..\Public\Animation_Manager.h">
+      <Filter>10. Notify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimNotify_Serializer.h">
+      <Filter>10. Notify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Types.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Animation.h">
+      <Filter>01. Utility\04. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bone.h">
+      <Filter>01. Utility\04. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Channel.h">
+      <Filter>01. Utility\04. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model.h">
+      <Filter>01. Utility\04. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CameraTrack_Serializer.h">
+      <Filter>11. Cinematic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CameraTrack_Player.h">
+      <Filter>11. Cinematic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Cinematic.h">
+      <Filter>11. Cinematic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -429,6 +453,9 @@
     <Filter Include="01. Utility\03. GameObject\05. PartObject">
       <UniqueIdentifier>{6cbe092d-ee49-4ea8-bb77-349d1fd05792}</UniqueIdentifier>
     </Filter>
+    <Filter Include="11. Cinematic">
+      <UniqueIdentifier>{9a19d8a6-5997-4e24-a5f2-bd69c1aaaadb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -584,7 +611,6 @@
     <ClCompile Include="..\Private\Mesh.cpp">
       <Filter>01. Utility\04. Component\05. Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Model.cpp" />
     <ClCompile Include="..\Private\ICommand.cpp">
       <Filter>01. Utility\98. Utils</Filter>
     </ClCompile>
@@ -615,9 +641,6 @@
     <ClCompile Include="..\Private\UI_Text.cpp">
       <Filter>01. Utility\03. GameObject\02. UI\00. Text</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Bone.cpp" />
-    <ClCompile Include="..\Private\Channel.cpp" />
-    <ClCompile Include="..\Private\Animation.cpp" />
     <ClCompile Include="..\Private\UI_AnimPlayer.cpp">
       <Filter>01. Utility\03. GameObject\02. UI\00. UI Animation</Filter>
     </ClCompile>
@@ -633,14 +656,39 @@
     <ClCompile Include="..\Private\AnimNotify.cpp">
       <Filter>10. Notify</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AnimNotify_Serializer.cpp" />
     <ClCompile Include="..\Private\ContainerObject.cpp">
       <Filter>01. Utility\03. GameObject\04. ContainerObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PartObject.cpp">
       <Filter>01. Utility\03. GameObject\05. PartObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Animation_Manager.cpp" />
+    <ClCompile Include="..\Private\Animation_Manager.cpp">
+      <Filter>10. Notify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimNotify_Serializer.cpp">
+      <Filter>10. Notify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Animation.cpp">
+      <Filter>01. Utility\04. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bone.cpp">
+      <Filter>01. Utility\04. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Channel.cpp">
+      <Filter>01. Utility\04. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model.cpp">
+      <Filter>01. Utility\04. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraTrack_Serializer.cpp">
+      <Filter>11. Cinematic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraTrack_Player.cpp">
+      <Filter>11. Cinematic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Cinematic.cpp">
+      <Filter>11. Cinematic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

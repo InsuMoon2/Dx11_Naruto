@@ -11,7 +11,18 @@
   ],
   "normal_strength": 1.5,
   "blend_mode": 0,
-  "textures": [],
+  "textures": [
+    {
+      "slot": "base_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Ground_03_BC.png"
+    },
+    {
+      "slot": "normal",
+      "index": 0,
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Ground_03_N.png"
+    }
+  ],
   "source": {
     "fmodel_mi_json": "MI_ENV_TCHEXA_GroundSoil_A.props.txt"
   }

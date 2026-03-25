@@ -26,6 +26,8 @@ protected:
     HRESULT Bind_ShaderResources() override;
     HRESULT Bind_Lights() override;
 
+    HRESULT Ready_PartObjects() override;
+
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     Shared<GameObject> Clone(void* arg) override;

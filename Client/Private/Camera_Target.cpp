@@ -50,6 +50,8 @@ HRESULT Camera_Target::Initialize(void* arg)
     _enableMouseRotation = desc->enableMouseRotation;
     _bindOnPlayerSpawned = desc->bindOnPlayerSpawned;
 
+    _distance = 3.f;
+
     LOG_INFO("Camera_Target: before Camera::Initialize");
     CHECK_FAILED(Camera::Initialize(arg), E_FAIL);
     LOG_INFO("Camera_Target: Initialize OK");

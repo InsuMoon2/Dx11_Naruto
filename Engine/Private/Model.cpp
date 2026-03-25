@@ -507,6 +507,44 @@ bool Model::Find_AnimationIndex(const string& animName, uint32& outIndex) const
     return true;
 }
 
+bool Model::Has_AnimationName(const string& animName) const
+{
+    if (animName.empty())
+        return false;
+
+    for (const auto& animation : _animations)
+    {
+        if (!animation)
+            continue;
+
+        if (animation->Get_Name() == animName)
+            return true;
+    }
+
+    return false;
+}
+
+void Model::Add_Animation_Unique(vector<Shared<Animation>>& targetAnimations, Shared<Animation> animation) const
+{
+    if (!animation)
+        return;
+
+    const string& animName = animation->Get_Name();
+    if (animName.empty())
+        return;
+
+    for (const auto& existing : targetAnimations)
+    {
+        if (!existing)
+            continue;
+
+        if (existing->Get_Name() == animName)
+            return;
+    }
+
+    targetAnimations.push_back(animation);
+}
+
 void Model::Reset_AnimationSequenceState()
 {
     Stop_AllNotifyStates(false);
@@ -1140,13 +1178,16 @@ void Model::From_Json(const json& data)
 
         if (data.contains("animations"))
         {
-            _animations.clear();
+            vector<Shared<Animation>> uniqueAnimations;
+            uniqueAnimations.reserve(data["animations"].size());
+
             for (const auto& animName : data["animations"])
             {
                 auto anim = GAME->Get_Animation(animName.get<string>());
-                if (anim)
-                    _animations.push_back(anim);
+                Add_Animation_Unique(uniqueAnimations, anim);
             }
+
+            _animations = std::move(uniqueAnimations);
         }
         return;
     }
@@ -1200,15 +1241,16 @@ void Model::From_Json(const json& data)
     // 매니저 캐싱에서 애니메이션 가져와서 세팅
     if (data.contains("animations"))
     {
-        _animations.clear();
+        vector<Shared<Animation>> uniqueAnimations;
+        uniqueAnimations.reserve(data["animations"].size());
 
         for (const auto& animName : data["animations"])
         {
             auto anim = GAME->Get_Animation(animName.get<string>());
-
-            if (anim)
-                _animations.push_back(anim);
+            Add_Animation_Unique(uniqueAnimations, anim);
         }
+
+        _animations = std::move(uniqueAnimations);
     }
 }
 
@@ -1298,16 +1340,19 @@ void Model::Set_AnimationBlendDuration(float seconds)
 
 float Model::Get_CurrentAnimationDuration() const
 {
-    if (!_currentClip.Is_Valid())
+    // 블렌딩 중이면 넘어가는 타겟 애니메이션, 아니면 현재 애니메이션
+    const FPlayingClipState targetClip = _blendState.active ? _blendState.next : _currentClip;
+
+    if (!targetClip.Is_Valid())
         return 0.f;
 
-    if (_currentClip.animIndex < 0 ||
-        _currentClip.animIndex >= static_cast<int32>(_animations.size()))
+    if (targetClip.animIndex < 0 ||
+        targetClip.animIndex >= static_cast<int32>(_animations.size()))
     {
         return 0.f;
     }
 
-    const auto& animation = _animations[_currentClip.animIndex];
+    const auto& animation = _animations[targetClip.animIndex];
     if (!animation)
         return 0.f;
 
@@ -1318,13 +1363,15 @@ const string& Model::Get_CurrentAnimationName() const
 {
     static const string empty = "";
 
-    if (!_currentClip.Is_Valid())
+    const FPlayingClipState& targetClip = _blendState.active ? _blendState.next : _currentClip;
+
+    if (!targetClip.Is_Valid())
         return empty;
 
-    if (_currentClip.animIndex < 0 || _currentClip.animIndex >= static_cast<int32>(_animations.size()))
+    if (targetClip.animIndex < 0 || targetClip.animIndex >= static_cast<int32>(_animations.size()))
         return empty;
 
-    return Get_AnimationName(static_cast<uint32>(_currentClip.animIndex));
+    return Get_AnimationName(static_cast<uint32>(targetClip.animIndex));
 }
 
 int32 Model::Get_BoneIndex_ByName(const string& boneName) const
@@ -1358,13 +1405,31 @@ void Model::Set_MasterPoseModel(Shared<Model> masterModel)
 
 void Model::Add_Animation(Shared<Animation> animation)
 {
-    if (animation)
-        _animations.push_back(animation);
+    if (!animation)
+        return;
+
+    const string& animName = animation->Get_Name();
+    if (animName.empty())
+        return;
+
+    // 같은 이름의 AnimBin은 기존 것을 유지하고 새 중복 추가는 무시한다.
+    if (Has_AnimationName(animName))
+        return;
+
+    _animations.push_back(animation);
 }
 
 void Model::Set_Animations(const vector<Shared<Animation>>& animations)
 {
-    _animations = animations;
+    vector<Shared<Animation>> uniqueAnimations;
+    uniqueAnimations.reserve(animations.size());
+
+    for (const auto& animation : animations)
+    {
+        Add_Animation_Unique(uniqueAnimations, animation);
+    }
+
+    _animations = std::move(uniqueAnimations);
 }
 
 const Matrix* Model::Get_SocketBoneMatrixPtr(const string& boneName) const

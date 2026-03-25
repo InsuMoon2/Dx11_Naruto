@@ -42,7 +42,7 @@ protected:
     HRESULT Bind_ShaderResources() override;
     HRESULT Bind_Lights() override;
 
-    HRESULT Ready_PartObjects();
+    virtual HRESULT Ready_PartObjects();
 
 protected:
     Shared<CombatStat>              _combatStat;

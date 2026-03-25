@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Model.h"
 #include "PlayerStateMachine.h"
+#include <unordered_set>
 
 AnimationStateComponent::AnimationStateComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -199,12 +200,20 @@ vector<string> AnimationStateComponent::Get_ModelAnimationNames() const
 
     const uint32 count = _model->Get_AnimationCount();
     result.reserve(count);
+    unordered_set<string> uniqueNames;
+    uniqueNames.reserve(count);
 
     for (uint32 i = 0; i < count; ++i)
     {
         const string& name = _model->Get_AnimationName(i);
-        if (!name.empty())
-            result.push_back(name);
+        if (name.empty())
+            continue;
+
+        // Model 단계에서 한 번 정리되더라도, 인스펙터 표시에서는 마지막으로 한 번 더 중복을 막는다.
+        if (!uniqueNames.insert(name).second)
+            continue;
+
+        result.push_back(name);
     }
 
     return result;

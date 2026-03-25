@@ -12,9 +12,14 @@
 #include "PlayerState_Jump.h"
 #include "PlayerState_SuperJump.h"
 #include "Camera.h"
+#include "MyPlayer.h"
 #include "PlayerState_Dash.h"
 #include "PlayerState_HeightLand.h"
+#include "PlayerState_Skill.h"
 #include "PlayerState_SuperJumpCharge.h"
+#include "GameObject.h"
+#include "SkillComponent.h"
+#include "SkillDataManager.h"
 
 IMPLEMENT_REFLECTION(PlayerStateMachine)
 
@@ -60,6 +65,7 @@ HRESULT PlayerStateMachine::Initialize_Prototype()
 
     Register_State(EPlayerState::Dash, PlayerState_Dash::Create());
 
+
     return S_OK;
 }
 
@@ -83,13 +89,98 @@ void PlayerStateMachine::BeginPlay()
     CHECK_NULL(_movement);
     CHECK_NULL(_animationState);
 
+    auto Register_Skill = [&](int32 skill_Id)
+        {
+            auto skillState = PlayerState_Skill::Create(skill_Id);
+            Register_State(skillState->Get_StateID(), skillState);
+        };
+
+    // Skill
+    Register_Skill(ETOI(ESkillType::Rasengan));
+    Register_Skill(ETOI(ESkillType::Rasen_Shuriken));
+
     Change_State(EPlayerState::Idle);
 }
 
 void PlayerStateMachine::Update(float timeDelta)
 {
+    if (Check_Global_Transitions())
+        return;
+
     if (_currentState)
         _currentState->Update(this, timeDelta);
+}
+
+bool PlayerStateMachine::Check_Global_Transitions()
+{
+    auto currentId = Get_CurrentStateID();
+    if (currentId == EPlayerState::Dead)
+        return false;
+
+    // TODO : 아직은 처리 안했음
+    if (Check_Death())          return true;
+    if (Check_Cinematic())      return true;
+    if (Check_HitReaction())    return true;
+
+    if (Check_Skill_Input())
+        return true;
+    
+
+    return false; // 바뀐 상태 X
+}
+
+bool PlayerStateMachine::Check_Skill_Input()
+{
+    auto input = Get_Input();
+    const auto& frame = input->Get_Frame();
+
+    // 나중에, 바꿔치기도 스킬로 세팅해줄지.
+    for (int slot = 0; slot < 2; ++slot)
+    {
+        if (frame.useSkillDown[slot])
+        {
+            auto player = static_pointer_cast<MyPlayer>(Get_Owner());
+            auto skillComp = player->Get_Component<SkillComponent>();
+
+            if (skillComp->Try_Activate(slot))
+            {
+                int32 skill_Id = skillComp->Get_EquippedSkillID(slot);
+                auto skill_Data = GET_SINGLE(SkillDataManager)->Get_SkillData(skill_Id);
+
+                if (skill_Data)
+                {
+                    auto enumValue = magic_enum::enum_cast<EPlayerState>(skill_Data->animStateName);
+                    if (enumValue.has_value())
+                    {
+                        string msg = "[SKILL] 발동! ID: " + to_string(skill_Id) + " / 상태: " + skill_Data->animStateName;
+                        LOG_WARN(msg.c_str());
+
+                        Set_ActiveSkillSlot(slot);
+                        Change_State(enumValue.value());
+
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+bool PlayerStateMachine::Check_Death()
+{
+    return false;
+}
+
+bool PlayerStateMachine::Check_Cinematic()
+{
+    return false;
+}
+
+bool PlayerStateMachine::Check_HitReaction()
+{
+    return false;
 }
 
 string PlayerStateMachine::To_AnimationStateName(EPlayerState stateID)

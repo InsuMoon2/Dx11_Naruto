@@ -6,6 +6,8 @@ REM ExamStadium input paths
 if not defined EXAM_MESH_SRC set "EXAM_MESH_SRC=D:\NarutoExports\Game\Environments\TrainingMapAssets\TM_ChuninExamArena\Meshes"
 if not defined EXAM_MI_ROOT set "EXAM_MI_ROOT=D:\NarutoExports\Game\Environments\TrainingMapAssets\TM_ChuninExamArena\Materials"
 if not defined EXAM_TEXTURE_ROOT set "EXAM_TEXTURE_ROOT=C:\Users\Moon In Su\Desktop\FModel\Output\Exports\NARUTO\Content\Environments\TrainingMapAssets\TM_ChuninExamArena\Textures"
+if not defined EXAM_EXTRA_TEXTURE_ROOT_1 set "EXAM_EXTRA_TEXTURE_ROOT_1=C:\Users\Moon In Su\Desktop\FModel\Output\Exports\NARUTO\Content\Environments\LobbyMapAssets\LM_KonohaVillage_BORUTO\Textures"
+if not defined EXAM_EXTRA_TEXTURE_ROOT_2 set "EXAM_EXTRA_TEXTURE_ROOT_2=C:\Users\Moon In Su\Desktop\FModel\Output\Exports\NARUTO\Content\Environments\MapAssets\KonohaForest\Textures"
 if not defined EXAM_LEVEL_MAP_ROOT set "EXAM_LEVEL_MAP_ROOT=D:\NarutoExports\MapJSON\ExamStadium"
 
 REM Output paths are always fixed. Do not inherit them from outer env vars.
@@ -22,6 +24,8 @@ echo [RunBuildExamStadiumAndLevel] Working directory: %CD%
 echo   EXAM_MESH_SRC       = %EXAM_MESH_SRC%
 echo   EXAM_MI_ROOT        = %EXAM_MI_ROOT%
 echo   EXAM_TEXTURE_ROOT   = %EXAM_TEXTURE_ROOT%
+echo   EXAM_EXTRA_TEXTURE_ROOT_1 = %EXAM_EXTRA_TEXTURE_ROOT_1%
+echo   EXAM_EXTRA_TEXTURE_ROOT_2 = %EXAM_EXTRA_TEXTURE_ROOT_2%
 echo   EXAM_LEVEL_MAP_ROOT = %EXAM_LEVEL_MAP_ROOT%
 echo   EXAM_MESH_DST       = %EXAM_MESH_DST%
 echo   EXAM_TEX_DST        = %EXAM_TEX_DST%
@@ -36,6 +40,8 @@ python BuildExamStadiumPipeline.py ^
   --mesh-dst "%EXAM_MESH_DST%" ^
   --mi-root "%EXAM_MI_ROOT%" ^
   --texture-root "%EXAM_TEXTURE_ROOT%" ^
+  --extra-texture-root "%EXAM_EXTRA_TEXTURE_ROOT_1%" ^
+  --extra-texture-root "%EXAM_EXTRA_TEXTURE_ROOT_2%" ^
   --copy-textures-to "%EXAM_TEX_DST%" ^
   --matinst-root "%EXAM_MATINST_DST%" ^
   --level-map-root "%EXAM_LEVEL_MAP_ROOT%" ^

@@ -82,7 +82,7 @@ public:
     bool    Is_CurrentAnimationFinished() const { return _isCurrentAnimationFinished; }
     bool    Is_AnimationSequenceFinished() const { return _isAnimSequenceFinished; }
 
-    float   Get_CurrentTrackPosition() const { return _currentClip.trackPosition; }
+    float   Get_CurrentTrackPosition() const { return _blendState.active ? _blendState.next.trackPosition : _currentClip.trackPosition; }
     float   Get_CurrentAnimationDuration() const;
 
     // 재생중인 애니메이션 이름 반환
@@ -125,6 +125,8 @@ private:
 private:
     void    Apply_AnimationClip(uint32 animIndex, bool isLoop, float playRate);
     bool    Find_AnimationIndex(const string& animName, uint32& outIndex) const;
+    bool    Has_AnimationName(const string& animName) const;
+    void    Add_Animation_Unique(vector<Shared<Animation>>& targetAnimations, Shared<Animation> animation) const;
 
     
     void    Reset_AnimationSequenceState();

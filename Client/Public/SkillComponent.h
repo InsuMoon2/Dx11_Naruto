@@ -6,6 +6,17 @@ NS_BEGIN(Client)
 
 class CombatStat;
 
+enum class ESkillType
+{
+    Rasengan = 1001,
+    Rasen_Shuriken,
+    Fireball,
+    Chidori,
+    Big_Rasengan,
+
+    END
+};
+
 class SkillComponent : public Component
 {
     GENERATED_COMPONENT(SkillComponent, Protocol::COMPONENT_TYPE_SKILL)

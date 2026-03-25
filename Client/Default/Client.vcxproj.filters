@@ -179,6 +179,9 @@
     <ClInclude Include="..\Public\PreviewPlayer.h" />
     <ClInclude Include="..\Public\Customizer_Manager.h" />
     <ClInclude Include="..\Public\Weapon.h" />
+    <ClInclude Include="..\Public\PlayerState_Skill.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -344,6 +347,9 @@
     <ClCompile Include="..\Private\PreviewPlayer.cpp" />
     <ClCompile Include="..\Private\Customizer_Manager.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Skill.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

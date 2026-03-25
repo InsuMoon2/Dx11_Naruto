@@ -37,13 +37,15 @@ HRESULT UI_PlayerSkill::Initialize(void* arg)
     leftDesc.sizeY = 72.f;
     leftDesc.zOrder = _zOrder;
     leftDesc.levelIndex = _levelIndex;
+
     leftDesc.baseSrvIndex = 0;
-    leftDesc.iconSrvIndex = 2;
+    leftDesc.iconSrvIndex = 0;
 
     UI_SkillSlot::FSkillSlotDesc rightDesc = leftDesc;
     rightDesc.posX = 86.f;
-    rightDesc.baseSrvIndex = 1;
-    rightDesc.iconSrvIndex = 3;
+
+    rightDesc.baseSrvIndex = 0;
+    rightDesc.iconSrvIndex = 0;
 
     _slots[0] = Create_Child<UI_SkillSlot>(Protocol::OBJECT_TYPE_UI_SKILL_SLOT, EUILayer::HUD, &leftDesc);
     _slots[1] = Create_Child<UI_SkillSlot>(Protocol::OBJECT_TYPE_UI_SKILL_SLOT, EUILayer::HUD, &rightDesc);
@@ -75,16 +77,20 @@ void UI_PlayerSkill::Update(float timeDelta)
 
     for (int i = 0; i < 2; ++i)
     {
-        int id = skillCom->Get_EquippedSkillID(i);
-        const FSkillData* skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(id);
+        int skill_Id = skillCom->Get_EquippedSkillID(i);
+        const FSkillData* skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(skill_Id);
 
         if (!skillData)
         {
+            _slots[i]->Set_SrvIndex(0);
             _slots[i]->Set_CooldownRatio(0.f);
             continue;
         }
 
-        _slots[i]->Set_SrvIndex(skillData->srvIndex);
+        const uint32 iconSrvIndex =
+            GET_SINGLE(SkillDataManager)->Get_SkillIconSrvIndex(skill_Id);
+
+        _slots[i]->Set_SrvIndex(iconSrvIndex);
         _slots[i]->Set_CooldownRatio(skillCom->Get_CooldownRatio(i));
     }
 }

@@ -49,15 +49,15 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
     UIObject::FUIDesc statDesc;
     statDesc.posX = 0.f;
     statDesc.posY = 0.f;
-    statDesc.sizeX = 500.f;
-    statDesc.sizeY = 160.f;
+    statDesc.sizeX = 512.f;
+    statDesc.sizeY = 128.f;
     statDesc.zOrder = _zOrder + 0.01f;
     statDesc.levelIndex = _levelIndex;
 
     _status = Create_Child<UI_PlayerStatus>(Protocol::OBJECT_TYPE_UI_PLAYER_STATUS, EUILayer::HUD, &statDesc);
     CHECK_NULL(_status, E_FAIL);
 
-    _status->Get_Transform()->Set_LocalPosition(255.f, 750.f, _zOrder);
+    _status->Get_Transform()->Set_LocalPosition(255.f, 945.f, _zOrder);
 
     UIObject::FUIDesc skillDesc;
     skillDesc.posX = 0.f;

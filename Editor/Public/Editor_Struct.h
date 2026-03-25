@@ -12,6 +12,7 @@ NS_BEGIN(Editor)
 
 class UI_Animation_View;
 class Animation_View;
+class Cinematic_View;
 
 struct FBTEditorNode
 {
@@ -58,13 +59,22 @@ struct FAnimSequencerContext
     Animation_View* view = nullptr;
     FAnimNotifyClipData* clip = nullptr;
 
-    int32* selectedNotifyIndex = nullptr;
-    int32* selectedStateIndex = nullptr;
+    int32*  selectedNotifyIndex = nullptr;
+    int32*  selectedStateIndex = nullptr;
 
-    int32 pendingMarkStartFrame = -1;
-    int32 pendingMarkEndFrame = -1;
-    bool isMarkingState = false;
-    bool clickedOnNotify = false;
+    int32   pendingMarkStartFrame = -1;
+    int32   pendingMarkEndFrame = -1;
+
+    bool    isMarkingState = false;
+    bool    clickedOnNotify = false;
+};
+
+struct FCameraSequencerContext
+{
+    Cinematic_View* view = nullptr;
+    FCameraTrack*   track = nullptr;
+
+    int32*          selectedKeyIndex = nullptr;
 };
 
 NS_END

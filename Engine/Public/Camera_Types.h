@@ -1,0 +1,52 @@
+﻿#pragma once
+
+NS_BEGIN(Engine)
+
+// 시네마틱 카메라
+enum class ECineCameraMode : uint8
+{
+    Free, Target, LookAt, Rail, END
+};
+
+// 보간 타입
+enum class ECameraEaseType : uint8
+{
+    Linear, EaseIn, EaseOut, EaseInOut, END
+};
+
+// 단일 키프레임
+struct FCameraKey
+{
+    int32           frame = 0;
+    ECineCameraMode cameraMode = ECineCameraMode::Free; // 기본 Free
+
+    Vec3            position = Vec3::Zero;
+    Quat            rotation = Quat::Identity;
+    float           fovY  = XM_PIDIV4; // 기본 45도
+    ECameraEaseType easeType = ECameraEaseType::Linear;
+
+    // Target / LookAt 모드 전용
+    string          targetTag;      // 레벨에서 찾을 오브젝트 태그
+    float           distance = 10.f;
+    Vec3            targetOffset = Vec3(0.f, 2.f, 0.f);
+    float           pitch = 0.f;
+    float           yaw = 0.f;      // 둘다 degree 값으로 사용
+};
+
+// 트랙 = 키프레임 시퀀스
+struct FCameraTrack
+{
+    string              trackName = "Camera";
+    int32               fps = 30;
+    int32               totalFrame = 300; // 10초 : 30fps
+    vector<FCameraKey>  keys;
+};
+
+// 시퀀스 에셋
+struct FCameraSequenceAsset
+{
+    string          name;
+    FCameraTrack    track;
+};
+
+NS_END

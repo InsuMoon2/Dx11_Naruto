@@ -16,14 +16,15 @@ public:
         float lookYaw = 0.f;    // Mouse X
         float lookPitch = 0.f;  // Mouse Y
 
-        bool dashDown = false;
+        bool  dashDown = false;
 
-        bool jumpDown = false;
-        bool superJumpPress = false;
-        bool superJumpUp = false;
+        bool  jumpDown = false;
+        bool  superJumpPress = false;
+        bool  superJumpUp = false;
         float superJumpCharge = 0.f;
 
-        bool useSkillDown[2] = { false, false };
+        bool  useSkillDown[2] = { false, false };
+        bool  useSkillPress[2] = {};
     };
 
     // 입력 제어용
