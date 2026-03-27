@@ -35,6 +35,7 @@ public:
 
 public:
     EPlayerState                    Get_CurrentStateID() const { return _currentStateID; }
+    Shared<IPlayerState>            Get_CurrentState()   const { return _currentState; }
     EPlayerState                    Get_PrevStateID()    const { return _prevStateID; }
     Shared<InputComponent>          Get_Input()          const { return _input; }
     Shared<MovementComponent>       Get_Movement()       const { return _movement; }

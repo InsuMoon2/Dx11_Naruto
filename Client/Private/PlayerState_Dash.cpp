@@ -63,15 +63,10 @@ void PlayerState_Dash::Update(PlayerStateMachine* state, float timeDelta)
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
 
-    //if (movement->Get_DashNormalizedTime() >= 0.9f)
-    //{
-    //    input->Set_InputMode(EPlayerInputMode::MoveAndLook);
-    //}
-
     const float currentFrame = state->Get_AnimTrackPosition();
     const float endFrame = state->Get_AnimDuration();
 
-    if (currentFrame >= endFrame - 1.f)
+    if (currentFrame >= endFrame - 10.f)
     {
         if (input->Has_MoveInput())
         {

@@ -556,8 +556,238 @@
                     },
                     "mode": "Single",
                     "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Hand_Punch_Left",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
                         "animationName": "",
                         "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_End",
+                        "loop": false,
+                        "playRate": 1.5
+                    },
+                    "key": "JumpDash",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Start",
+                        "loop": false,
+                        "playRate": 1.5
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_1",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_SSp_KWKSciwep_cmb_03",
+                        "loop": false,
+                        "playRate": 1.7000000476837158
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_2",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Hand_StraightPunch",
+                        "loop": false,
+                        "playRate": 1.7000000476837158
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_3",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_SSp_KWKSciwep_cmb_03",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_4",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Sasuke_Attack_TurnKick_Right",
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "start": {
@@ -654,7 +884,12 @@
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Attack_cmb_01",
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Attack_cmb_01_Wep",
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ3_Attack_Loop_tail_Wep",
-                "SK_CHR_NormalModel|CustomMan_D84NJ3_Ninjutsu_NJ3_Attack_Loop"
+                "SK_CHR_NormalModel|CustomMan_D84NJ3_Ninjutsu_NJ3_Attack_Loop",
+                "SK_CHR_NormalModel|CustomMan_Attack_Hand_Punch_Left",
+                "SK_CHR_NormalModel|CustomMan_Attack_Hand_StraightPunch",
+                "SK_CHR_NormalModel|CustomMan_Attack_KickUp",
+                "SK_CHR_NormalModel|CustomMan_Attack_SSp_KWKSciwep_cmb_03",
+                "SK_CHR_NormalModel|CustomMan_Sasuke_Attack_TurnKick_Right"
             ],
             "materials": [
                 {
@@ -751,7 +986,7 @@
             }
         }
     },
-    "guid": "5c1c0cc5-55f9-4a19-b050-ef5d717b7821",
+    "guid": "12ddf339-50cb-4055-8fc9-b0f28ddb853b",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"

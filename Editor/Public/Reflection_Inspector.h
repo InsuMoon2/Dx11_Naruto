@@ -16,7 +16,7 @@ public:
     static void Draw_Properties_Only(void* basePtr, const FClassReflectionInfo& info);
 
 private:
-    void Draw_Property(void* basePtr, const FPropertyInfo& prop);
+    void        Draw_Property(void* basePtr, const FPropertyInfo& prop);
     static void Draw_Property_Simple(void* basePtr, const FPropertyInfo& prop);
 
 private:

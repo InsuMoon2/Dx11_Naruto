@@ -118,7 +118,7 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     CHECK_NULL(_textRenderer, E_FAIL);
 
     // 노티파이 경로 세팅
-    _animationManager = Animation_Manager::Create(TEXT("../../Client/Bin/Resources/Models/Custom/Animation"));
+    _animationManager = Animation_Manager::Create(TEXT("../../Client/Bin/Resources/Models"));
     CHECK_NULL(_animationManager, E_FAIL);
 
     _gameObjectFactory = GameObject_Factory::Create();
@@ -762,6 +762,11 @@ vector<Shared<Animation>> GameInstance::Get_Animations_By_Prefix(const string& p
 vector<Shared<Animation>> GameInstance::Get_All_Animations()
 {
     return _animationManager->Get_All_Animations();
+}
+
+vector<Shared<Animation>> GameInstance::Get_Animations_InFolder(const string& folderPath)
+{
+    return _animationManager->Get_Animations_InFolder(folderPath);
 }
 
 bool GameInstance::Play_Sound(const wstring& soundFile, ESoundChannel channel, float volume)

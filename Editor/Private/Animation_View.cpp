@@ -8,11 +8,15 @@
 #include "AnimNotifyState.h"
 #include "Model.h"
 #include "RenderTarget.h"
+#include "AnimationStateComponent.h"
 
 #include "Editor_Camera_Free.h"
 #include "GameObject.h"
 #include "GameInstance.h"
 #include "Transform.h"
+
+#include "ContainerObject.h"
+#include "PartObject.h"
 
 static bool Contains_CaseInsensitive(const string& text, const string& pattern)
 {
@@ -31,6 +35,17 @@ static bool Contains_CaseInsensitive(const string& text, const string& pattern)
         });
 
     return it != text.end();
+}
+
+static void Collect_AnimationName(const FAnimationClipSetting& clip, unordered_set<string>& outNames)
+{
+    if (!clip.animationName.empty())
+        outNames.insert(clip.animationName);
+}
+
+static bool Has_NotifyPayload(const FAnimNotifyClipData& clip)
+{
+    return !clip.notifies.empty() || !clip.notifyStates.empty();
 }
 
 Animation_View::Animation_View()
@@ -150,7 +165,7 @@ void Animation_View::Pre_Render()
     GAME->Set_Transform(ETransformState::View, _previewView);
     GAME->Set_Transform(ETransformState::Proj, _previewProj);
 
-    // 라이팅 대충 세팅
+    // 라이팅 세팅
     FLightDesc previewLight{};
     previewLight.direction = Vec4(0.f, -1.f, 0.f, 0.f);
     previewLight.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
@@ -160,10 +175,21 @@ void Animation_View::Pre_Render()
     GAME->Clear_Lights();
     GAME->Add_Light(previewLight);
 
+    float dt = ImGui::GetIO().DeltaTime;
+
+    bool wasEnableInput = GAME->Is_GameInputEnabled();
+    GAME->Set_GameInputEnabled(false);
+
+    _previewOwner->Priority_Update(0.f);
+    _previewOwner->Update(0.f);
+    _previewOwner->Late_Update(0.f);
+
+    GAME->Set_GameInputEnabled(wasEnableInput);
+
     _previewRT->Clear(Color(0.12f, 0.12f, 0.12f, 1.f));
     _previewRT->BindAsTarget();
 
-    _previewOwner->Render();
+    GAME->Draw();
 
     GAME->BindBackBuffer();
     GAME->Clear_Lights();
@@ -188,6 +214,8 @@ void Animation_View::Open_Model(Shared<Model> model)
     _previewOwner.reset();
     _modelGuid.clear();
     _clipSearchText.clear();
+    _animStateClipNames.clear();
+    _showAllClips = false;
 
     _selectedClipIndex = -1;
     Clear_SelectedEntries();
@@ -208,15 +236,35 @@ void Animation_View::Open_Model(Shared<Model> model)
         _modelGuid = data.value("model_guid", "");
     }
 
+    Refresh_ClipFilter();
+
     Ensure_PreviewCamera();
     Fit_PreviewCamera_ToOwner();
 
     Load_NotifyAsset();
 
     if (_model && _model->Get_AnimationCount() > 0)
-        _selectedClipIndex = 0;
+    {
+        const uint32 count = _model->Get_AnimationCount();
+        for (uint32 i = 0; i < count; ++i)
+        {
+            const string clipName = _model->Get_AnimationName(i);
+            if (!Passes_AnimStateClipFilter(clipName))
+                continue;
+
+            _selectedClipIndex = static_cast<int32>(i);
+            break;
+        }
+    }
 
     Refresh_CurrentClip();
+
+    if (_previewOwner)
+    {
+        _previewOwner->Priority_Update(0.f);
+        _previewOwner->Late_Update(0.f);
+    }
+
     _isActive = true;
 }
 
@@ -427,6 +475,7 @@ void Animation_View::Draw_ClipBrowserPanel()
         if (ImGui::InputTextWithHint("##ClipSearch", "Search clips...", searchBuffer, static_cast<size_t>(std::size(searchBuffer))))
             _clipSearchText = searchBuffer;
 
+        ImGui::Checkbox("Show All Clips", &_showAllClips);
         ImGui::Spacing();
         Draw_ClipList();
     }
@@ -627,6 +676,9 @@ void Animation_View::Draw_ClipList()
         for (uint32 i = 0; i < count; ++i)
         {
             const string label = _model->Get_AnimationName(i);
+            if (!Passes_AnimStateClipFilter(label))
+                continue;
+
             if (!Passes_ClipSearch(label))
                 continue;
 
@@ -1055,16 +1107,6 @@ void Animation_View::Load_NotifyAsset()
     if (fs::exists(filePath))
         AnimNotify_Serializer::Load_FromFile(filePath.wstring(), _asset);
 
-    if (_model)
-    {
-        const uint32 count = _model->Get_AnimationCount();
-        for (uint32 i = 0; i < count; ++i)
-        {
-            auto& clip = AnimNotify_Serializer::Get_OrAddClip(_asset, _model->Get_AnimationName(i));
-            clip.displayFps = max(1, clip.displayFps);
-        }
-    }
-
     ClearDirty();
 }
 
@@ -1073,11 +1115,22 @@ void Animation_View::Save_NotifyAsset()
     if (_modelGuid.empty())
         return;
 
-    _asset.modelGuid = _modelGuid;
+    FAnimNotifyAsset saveAsset{};
+    saveAsset.modelGuid = _modelGuid;
+
+    for (const auto& clip : _asset.clips)
+    {
+        if (!Has_NotifyPayload(clip))
+            continue;
+
+        saveAsset.clips.push_back(clip);
+    }
 
     AnimNotify_Serializer::Save_ToFile(
         AnimNotify_Serializer::Get_ModelNotifyFilePath(_modelGuid).wstring(),
-        _asset);
+        saveAsset);
+
+    _asset = saveAsset;
 
     GAME->Scan_Assets(TEXT("../../Client/Bin/Resources"));
 
@@ -1107,11 +1160,12 @@ void Animation_View::Refresh_CurrentClip()
 
 void Animation_View::Apply_CurrentFrame_ToPreview()
 {
-    if (!_model || _selectedClipIndex < 0)
+    if (!_model || _selectedClipIndex < 0 || !_previewOwner)
         return;
 
     const float timeSec = Get_CurrentFrameTimeSec();
     const float ticksPerSecond = _model->Get_AnimationTicksPerSecond(static_cast<uint32>(_selectedClipIndex));
+
     if (ticksPerSecond <= FLT_EPSILON)
         return;
 
@@ -1119,6 +1173,26 @@ void Animation_View::Apply_CurrentFrame_ToPreview()
 
     _model->Set_CurrentTrackPositionTicks(trackPosition);
     _model->Sample_CurrentPose();
+
+    auto container = dynamic_pointer_cast<ContainerObject>(_previewOwner);
+    if (container)
+    {
+        for (auto slot : magic_enum::enum_values<ContainerObject::EPartSlot>())
+        {
+            if (slot == ContainerObject::EPartSlot::END)
+                continue;
+            auto partObj = container->Get_PartObject(slot);
+            if (!partObj)
+                continue;
+
+            auto partModel = partObj->Get_Component<Model>();
+            if (partModel)
+            {
+                partModel->Set_CurrentTrackPositionTicks(trackPosition);
+                partModel->Sample_CurrentPose();
+            }
+        }
+    }
 }
 
 void Animation_View::Ensure_PreviewCamera()
@@ -1212,6 +1286,46 @@ void Animation_View::Handle_PlaybackShortcut()
 bool Animation_View::Passes_ClipSearch(const string& clipName) const
 {
     return Contains_CaseInsensitive(clipName, _clipSearchText);
+}
+
+void Animation_View::Refresh_ClipFilter()
+{
+    _animStateClipNames.clear();
+
+    if (!_previewOwner)
+        return;
+
+    auto animState = _previewOwner->Get_Component<AnimationStateComponent>();
+    if (!animState)
+        return;
+
+    const auto stateNames = animState->Get_StateNames();
+    for (const auto& stateName : stateNames)
+    {
+        const auto* desc = animState->Find_State(stateName);
+        if (!desc)
+            continue;
+
+        Collect_AnimationName(desc->single, _animStateClipNames);
+        Collect_AnimationName(desc->start, _animStateClipNames);
+        Collect_AnimationName(desc->loop, _animStateClipNames);
+        Collect_AnimationName(desc->end, _animStateClipNames);
+        Collect_AnimationName(desc->directional.forward, _animStateClipNames);
+        Collect_AnimationName(desc->directional.backward, _animStateClipNames);
+        Collect_AnimationName(desc->directional.left, _animStateClipNames);
+        Collect_AnimationName(desc->directional.right, _animStateClipNames);
+    }
+}
+
+bool Animation_View::Passes_AnimStateClipFilter(const string& clipName) const
+{
+    if (_showAllClips)
+        return true;
+
+    if (_animStateClipNames.empty())
+        return true;
+
+    return _animStateClipNames.contains(clipName);
 }
 
 bool Animation_View::Has_SelectedNotify() const

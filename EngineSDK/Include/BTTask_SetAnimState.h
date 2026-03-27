@@ -6,6 +6,8 @@ NS_BEGIN(Engine)
 
 class ENGINE_DLL BTTask_SetAnimState : public BTTask
 {
+    GENERATED_BT_REFLECTION(BTTask_SetAnimState)
+
 public:
     explicit BTTask_SetAnimState(const string& stateName = "Idle");
     explicit BTTask_SetAnimState(const BTTask_SetAnimState& rhs);
@@ -15,17 +17,17 @@ public:
     void            Initialize() override;
     EBTNodeResult   Update(float timeDelta) override;
 
-    // 에디터 인스팩터에 표시
-    void            OnDraw_Inspector() override;
+    // 에디터 인스팩터에 표시 -> 구조 변경
+    //void            OnDraw_Inspector() override;
 
     json            Serialize_ToJson() override;
     void            Deserialize_FromJson(const json& data) override;
 
 private:
-    // 몬스터는 상태 이름을 string으로 관리하는거 더 편할거같은데, 일단 진행을 해봐야 할거같음
     string          _stateName = "Idle";
 
 public:
+    static Shared<BTTask_SetAnimState> Create();
     Shared<BTNode>  Clone() override;
 
 };

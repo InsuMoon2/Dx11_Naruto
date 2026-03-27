@@ -286,6 +286,8 @@ public: /* Animation Manager */
     vector<Shared<Animation>> Get_Animations_By_Prefix(const string& prefix) const;
     vector<Shared<Animation>> Get_All_Animations();
 
+    vector<Shared<Animation>> Get_Animations_InFolder(const string& folderPath);
+
 public: /* Sound Manager */
     bool                    Play_Sound(const wstring& soundFile, ESoundChannel channel, float volume = 1.f);
     bool                    Play_Sound_Pitched(const wstring& soundFile, ESoundChannel channel, float volume, float pitch);

@@ -7,6 +7,18 @@
 #include "Animation_View.h"
 #include "Editor_Helper.h"
 
+static void Draw_ReadOnlyClipField(const char* label, const char* widgetId, const string& clipName)
+{
+    ImGui::Text("%s", label);
+    ImGui::SameLine(120.f);
+
+    char buffer[512] = {};
+    strcpy_s(buffer, clipName.empty() ? "<None>" : clipName.c_str());
+
+    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+    ImGui::InputText(widgetId, buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_ReadOnly);
+}
+
 void AnimationState_Inspector::Draw_Inspector(shared_ptr<Component> component)
 {
     auto animState = static_pointer_cast<Client::AnimationStateComponent>(component);
@@ -369,9 +381,7 @@ void AnimationState_Inspector::Draw_AnimationList(Shared<AnimationStateComponent
 
 void AnimationState_Inspector::Draw_SingleSection(Shared<AnimationStateComponent> animState, FStateAnimationDesc& desc)
 {
-    ImGui::Text("Selected Clip");
-    ImGui::SameLine(120.f);
-    ImGui::TextDisabled("%s", desc.single.animationName.empty() ? "<None>" : desc.single.animationName.c_str());
+    Draw_ReadOnlyClipField("Selected Clip", "##SelectedSingleClip", desc.single.animationName);
 
     ImGui::Spacing();
     Draw_AnimationList(animState, &desc.single.animationName);
@@ -387,36 +397,9 @@ void AnimationState_Inspector::Draw_SingleSection(Shared<AnimationStateComponent
 void AnimationState_Inspector::Draw_SequenceSection(Shared<AnimationStateComponent> animState,
     FStateAnimationDesc& desc)
 {
-    const string startDisplay = desc.start.animationName.empty()
-        ? "<None>"
-        : Editor_Helper::Build_AnimatoinDisplayName(desc.start.animationName);
-
-    const string loopDisplay = desc.loop.animationName.empty()
-        ? "<None>"
-        : Editor_Helper::Build_AnimatoinDisplayName(desc.loop.animationName);
-
-    const string endDisplay = desc.end.animationName.empty()
-        ? "<None>"
-        : Editor_Helper::Build_AnimatoinDisplayName(desc.end.animationName);
-
-    ImGui::Text("Start Clip");
-    ImGui::SameLine(120.f);
-    ImGui::TextDisabled("%s", startDisplay.c_str());
-
-    if (ImGui::IsItemHovered() && !desc.start.animationName.empty() && startDisplay != desc.start.animationName)
-    {
-        ImGui::BeginTooltip();
-        ImGui::TextUnformatted(desc.start.animationName.c_str());
-        ImGui::EndTooltip();
-    }
-
-    ImGui::Text("Loop Clip");
-    ImGui::SameLine(120.f);
-    ImGui::TextDisabled("%s", loopDisplay.c_str());
-
-    ImGui::Text("End Clip");
-    ImGui::SameLine(120.f);
-    ImGui::TextDisabled("%s", endDisplay.c_str());
+    Draw_ReadOnlyClipField("Start Clip", "##StartClipReadOnly", desc.start.animationName);
+    Draw_ReadOnlyClipField("Loop Clip", "##LoopClipReadOnly", desc.loop.animationName);
+    Draw_ReadOnlyClipField("End Clip", "##EndClipReadOnly", desc.end.animationName);
 
     ImGui::Spacing();
 
@@ -441,21 +424,10 @@ void AnimationState_Inspector::Draw_SequenceSection(Shared<AnimationStateCompone
 void AnimationState_Inspector::Draw_DirectionalSection(Shared<AnimationStateComponent> animState,
     FStateAnimationDesc& desc)
 {
-    ImGui::Text("Forward Clip");
-    ImGui::SameLine(120.f);
-    ImGui::TextDisabled("%s", desc.directional.forward.animationName.empty() ? "<None>" : desc.directional.forward.animationName.c_str());
-
-    ImGui::Text("Backward Clip");
-    ImGui::SameLine(120.f);
-    ImGui::TextDisabled("%s", desc.directional.backward.animationName.empty() ? "<None>" : desc.directional.backward.animationName.c_str());
-
-    ImGui::Text("Left Clip");
-    ImGui::SameLine(120.f);
-    ImGui::TextDisabled("%s", desc.directional.left.animationName.empty() ? "<None>" : desc.directional.left.animationName.c_str());
-
-    ImGui::Text("Right Clip");
-    ImGui::SameLine(120.f);
-    ImGui::TextDisabled("%s", desc.directional.right.animationName.empty() ? "<None>" : desc.directional.right.animationName.c_str());
+    Draw_ReadOnlyClipField("Forward Clip", "##ForwardClipReadOnly", desc.directional.forward.animationName);
+    Draw_ReadOnlyClipField("Backward Clip", "##BackwardClipReadOnly", desc.directional.backward.animationName);
+    Draw_ReadOnlyClipField("Left Clip", "##LeftClipReadOnly", desc.directional.left.animationName);
+    Draw_ReadOnlyClipField("Right Clip", "##RightClipReadOnly", desc.directional.right.animationName);
 
     ImGui::Spacing();
 

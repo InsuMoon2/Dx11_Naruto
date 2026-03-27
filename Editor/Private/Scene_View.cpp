@@ -499,8 +499,8 @@ Vec3 Scene_View::Screen_To_World(Vec2 screenPos)
     Vec3 rayDir = farWorld - nearWorld;
     rayDir.Normalize();
 
-    // 일단 임시값으로 y = 5 평면과의 교차점 계산으로 세팅
-    float targetY = 5;
+    // 일단 임시값으로 y = 5 추후에, 네비메시 이후 평면과의 교차점 계산으로 세팅
+    float targetY = 0.f;
     if (fabsf(rayDir.y) < FLT_EPSILON)
         return Vec3(nearWorld.x, targetY, nearWorld.z);
 

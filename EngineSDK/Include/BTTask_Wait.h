@@ -6,6 +6,8 @@ NS_BEGIN(Engine)
 
 class ENGINE_DLL BTTask_Wait : public BTTask
 {
+    GENERATED_BT_REFLECTION(BTTask_Wait)
+
 public:
     explicit BTTask_Wait(float waitTime = 1.f);
     explicit BTTask_Wait(const BTTask_Wait& rhs);
@@ -30,6 +32,7 @@ private:
     float _elapsed = 0.f;
 
 public:
+    static Shared<BTTask_Wait> Create();
     virtual Shared<BTNode> Clone() override;
 
 };

@@ -147,17 +147,15 @@ void BehaviorTree_Inspector::Draw_Inspector(shared_ptr<Component> component)
 
             if (btView)
             {
+                string resolvedPath;
                 if (!btGuid.empty())
                 {
                     wstring resolved = GAME->Resolve_AssetPath(btGuid);
                     if (!resolved.empty())
-                        btView->Load_BehaviorTree(Utils::ToString(resolved));
+                        resolvedPath = Utils::ToString(resolved);
                 }
 
-                btView->Set_DebugTarget(behavior);
-                btView->Set_DebugMode(true);
-                btView->Set_Active(true);
-
+                btView->Request_DebugSession(resolvedPath, behavior);
             }
         }
 

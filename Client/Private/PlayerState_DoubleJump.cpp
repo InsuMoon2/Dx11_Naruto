@@ -35,6 +35,12 @@ void PlayerState_DoubleJump::Update(PlayerStateMachine* state, float timeDelta)
     auto input = state->Get_Input();
     auto anim = state->Get_AnimationState();
     auto movement = state->Get_Movement();
+    const auto& frame = input->Get_Frame();
+
+    if (frame.jumpDash)
+    {
+        state->Change_State(EPlayerState::JumpDash);
+    }
 
 	auto cmd = state->Init_MoveCommand();
 	movement->Apply_Command(cmd);

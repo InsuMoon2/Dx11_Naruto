@@ -4,6 +4,7 @@
 #include "BTComposite.h"
 #include "BTRoot.h"
 #include "BTTask_MoveTo.h"
+#include "BTTask_SetAnimState.h"
 #include "BTTask_Wait.h"
 
 void BTNode_Factory::Initialize()
@@ -29,15 +30,17 @@ void BTNode_Factory::Register_EngineNodes()
     // Root는 안보이게 (초기 생성 시 자동 생성)
 
     /* Composite */
-    Register("Hidden", "Root", []() {return make_shared<BTRoot>(); });
-    Register("Composite", "Sequence", []() {return make_shared<BTSequence>(); });
-    Register("Composite", "Selector", []() {return make_shared<BTSelector>(); });
+    Register("Hidden", "Root", []() {return BTRoot::Create(); });
+    Register("Composite", "Sequence", []() {return BTSequence::Create(); });
+    Register("Composite", "Selector", []() {return BTSelector::Create(); });
 
     // TODO : Decorator (Invertor, Repeater) 추가 예정
 
     /* Task */
-    Register("Task", "Task_Wait", []() {return make_shared<BTTask_Wait>(); });
-    Register("Task", "Task_Move", []() {return make_shared<BTTask_MoveTo>(); });
+    Register("Task", "Task_Wait", []() {return BTTask_Wait::Create(); });
+    Register("Task", "Task_Move", []() {return BTTask_MoveTo::Create(); });
+
+    Register("Task", "Task_SetAnimState", []() { return BTTask_SetAnimState::Create(); });
 
 }
 

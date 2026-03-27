@@ -14,7 +14,7 @@ class UI_TabButton;
 class Player;
 class Camera_Free;
 
-enum class ESetupState { Category, Item };
+enum class ESetupState { Category, Item, NameInput };
 
 enum class ECharacterSetupTexture
 {
@@ -30,6 +30,9 @@ enum class ECharacterSetupTexture
     SelectedButton,
 
     CharacterSetupText,
+
+    PlayerTextBG,
+    PlayerTextInput,
 
     END
 };
@@ -129,6 +132,11 @@ private:
 
     bool                _isDragging = false;
     float               _rotSensitivity = 0.4f;
+
+private: /* Local Player Name */
+    wstring             _playerName = L"";
+    Shared<Background>  _nameInputBg;
+    Shared<UI_Text>     _nameInputText;
 
 public:
     static shared_ptr<Level_CharacterSetup> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

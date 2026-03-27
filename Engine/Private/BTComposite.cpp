@@ -102,6 +102,11 @@ EBTNodeResult BTSelector::Update(float timeDelta)
     return EBTNodeResult::Failed;
 }
 
+Shared<BTSelector> BTSelector::Create()
+{
+    return make_shared<BTSelector>();
+}
+
 Shared<BTNode> BTSelector::Clone()
 {
     auto newNode = make_shared<BTSelector>();
@@ -161,6 +166,11 @@ EBTNodeResult BTSequence::Update(float timeDelta)
 
     _lastResult = EBTNodeResult::Succeeded;
     return EBTNodeResult::Succeeded;
+}
+
+Shared<BTSequence> BTSequence::Create()
+{
+    return make_shared<BTSequence>();
 }
 
 Shared<BTNode> BTSequence::Clone()

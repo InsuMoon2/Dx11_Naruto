@@ -46,6 +46,13 @@ void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
         return;
     }
 
+    if (frame.attackDown)
+    {
+        state->Change_State(EPlayerState::Attack_1);
+        return;
+    }
+
+
     if (Vec2(frame.moveX, frame.moveY).LengthSquared() > FLT_EPSILON)
     {
         state->Change_State(EPlayerState::Run);

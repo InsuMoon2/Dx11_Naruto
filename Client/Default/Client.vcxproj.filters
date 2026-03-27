@@ -169,7 +169,6 @@
     <ClInclude Include="..\Public\AN_Test.h">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ANS_Test.h" />
     <ClInclude Include="..\Public\Player_CustomPart.h">
       <Filter>02. GameObject\00. Player\02. Parts</Filter>
     </ClInclude>
@@ -182,6 +181,17 @@
     <ClInclude Include="..\Public\PlayerState_Skill.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_JumpDash.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Attack.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ANS_Test.h">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ANS_ComboWindow.h" />
+    <ClInclude Include="..\Public\ANS_CollisionEnable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -337,7 +347,6 @@
     <ClCompile Include="..\Private\AN_Test.cpp">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ANS_Test.cpp" />
     <ClCompile Include="..\Private\Player_CustomPart.cpp">
       <Filter>02. GameObject\00. Player\02. Parts</Filter>
     </ClCompile>
@@ -350,6 +359,17 @@
     <ClCompile Include="..\Private\PlayerState_Skill.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_JumpDash.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Attack.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ANS_Test.cpp">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ANS_ComboWindow.cpp" />
+    <ClCompile Include="..\Private\ANS_CollisionEnable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

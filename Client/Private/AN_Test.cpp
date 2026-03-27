@@ -11,6 +11,11 @@ string AN_Test::Get_TypeName() const
 
 void AN_Test::Execute(const FAnimNotifyContext& context)
 {
+    if (context.isPreview) return;
+
+    if (!context.owner || !context.model)
+        return;
+
     LOG_INFO("AN_Test : Execute Test");
 }
 

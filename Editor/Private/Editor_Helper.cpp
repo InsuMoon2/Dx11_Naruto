@@ -89,7 +89,7 @@ string Editor_Helper::Build_AnimatoinDisplayName(const string& rawClipName)
     string displayName = rawClipName;
 
     // ex) "SK_CHR_NormalModel|CustomMan_Jump_Vertical" -> "CustomMan_Jump_Vertical"
-    const size_t barPos = displayName.find('|');
+    const size_t barPos = displayName.rfind('|');
     if (barPos != string::npos)
         displayName = displayName.substr(barPos + 1);
 

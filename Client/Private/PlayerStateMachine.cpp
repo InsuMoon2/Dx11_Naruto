@@ -18,6 +18,8 @@
 #include "PlayerState_Skill.h"
 #include "PlayerState_SuperJumpCharge.h"
 #include "GameObject.h"
+#include "PlayerState_Attack.h"
+#include "PlayerState_JumpDash.h"
 #include "SkillComponent.h"
 #include "SkillDataManager.h"
 
@@ -64,7 +66,9 @@ HRESULT PlayerStateMachine::Initialize_Prototype()
     Register_State(EPlayerState::HeightLand, PlayerState_HeightLand::Create());
 
     Register_State(EPlayerState::Dash, PlayerState_Dash::Create());
+    Register_State(EPlayerState::JumpDash, PlayerState_JumpDash::Create());
 
+    Register_State(EPlayerState::Attack_1, PlayerState_Attack::Create());
 
     return S_OK;
 }
@@ -95,7 +99,7 @@ void PlayerStateMachine::BeginPlay()
             Register_State(skillState->Get_StateID(), skillState);
         };
 
-    // Skill
+    // Skill 등록
     Register_Skill(ETOI(ESkillType::Rasengan));
     Register_Skill(ETOI(ESkillType::Rasen_Shuriken));
 
@@ -152,7 +156,7 @@ bool PlayerStateMachine::Check_Skill_Input()
                     auto enumValue = magic_enum::enum_cast<EPlayerState>(skill_Data->animStateName);
                     if (enumValue.has_value())
                     {
-                        string msg = "[SKILL] 발동! ID: " + to_string(skill_Id) + " / 상태: " + skill_Data->animStateName;
+                        string msg = "[SKILL] ID: " + to_string(skill_Id) + " / 애니메이션 : " + skill_Data->animStateName;
                         LOG_WARN(msg.c_str());
 
                         Set_ActiveSkillSlot(slot);

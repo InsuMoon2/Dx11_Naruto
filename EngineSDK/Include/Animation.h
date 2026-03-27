@@ -28,9 +28,12 @@ public:
     void    Sample_LocalPoses(float trackPosition, vector<FAnimationLocalPose>& inOutPoses) const;
 
     const string& Get_Name() const { return _name; }
-
-    float Get_Duration() const { return _duration; }
-    float Get_TicksPerSecond() const { return _ticksPersecond; }
+                  
+    float         Get_Duration() const { return _duration; }
+    float         Get_TicksPerSecond() const { return _ticksPersecond; }
+                  
+    const string& Get_SourcePath() const { return _sourcePath; }
+    void          Set_SourcePath(const string& path) { _sourcePath = path; }
 
 private:
     string  _name;
@@ -39,6 +42,8 @@ private:
     float   _currentTrackPosition = 0.f;
 
     vector<Shared<Channel>> _channels;
+
+    string  _sourcePath;
 
 public:
     static Shared<Animation> Create(const FAnimationClipRaw& src);

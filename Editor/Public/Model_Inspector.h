@@ -17,8 +17,8 @@ public:
     virtual ~Model_Inspector() = default;
 
 public:
-    void Draw_Inspector(shared_ptr<Component> component) override;
-    uint32 Get_ComponentType() const override { return Protocol::COMPONENT_TYPE_MODEL; }
+    void    Draw_Inspector(shared_ptr<Component> component) override;
+    uint32  Get_ComponentType() const override { return Protocol::COMPONENT_TYPE_MODEL; }
 
 private:
     static json Build_ModelSwapJson(const json& sourceData, const string& newGuid, const string& newModelType);

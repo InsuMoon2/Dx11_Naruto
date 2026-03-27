@@ -48,7 +48,7 @@ void Prefab_View::OnGui()
     if (!_isOpen)
         return;
 
-    ImVec2 windowSize(1200, 800);
+    ImVec2 windowSize(1600, 1000);
     ImVec2 viewportSize = ImGui::GetMainViewport()->Size;
 
     ImVec2 windowPos(

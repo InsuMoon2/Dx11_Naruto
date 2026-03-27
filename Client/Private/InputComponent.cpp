@@ -73,10 +73,12 @@ void InputComponent::Update_Input(float timeDelta)
     const bool rawCtrlPress = INPUT->KeyPress(KEY_TYPE::LCTRL);
     const bool rawCtrlUp = INPUT->KeyUp(KEY_TYPE::LCTRL);
 
+    const bool rawJumpDash = INPUT->KeyDown(KEY_TYPE::SHIFT);
+
+    const bool rawAttackDown = INPUT->KeyDown(KEY_TYPE::LBUTTON);
+
     Vec2 rawMouseDelta = INPUT->GetMouseDelta();
 
-    // TODO : Ctrl : 슈퍼점프, Left : 약공, Right : 강공, 우클릭 -> 벽타기 입체기동
-    // TODO : 2단점프까지 가능하도록
     if (_inputGate.allowSuperJump && rawCtrlPress)
     {
         _superJumpCharge = ::clamp(_superJumpCharge + timeDelta, 0.f, MAX_JUMP_CHARGE);
@@ -133,6 +135,16 @@ void InputComponent::Update_Input(float timeDelta)
         _frame.superJumpPress = false;
         _frame.superJumpUp = false;
         _frame.superJumpCharge = 0.f;
+    }
+
+    if (_inputGate.allowJumpDash)
+    {
+        _frame.jumpDash = rawJumpDash;
+    }
+
+    if (_inputGate.allowAttack)
+    {
+        _frame.attackDown = rawAttackDown;
     }
 }
 

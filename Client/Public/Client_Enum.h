@@ -30,7 +30,12 @@ namespace Client
         SuperJump,
         HeightLand,
 
-        Attack,
+        Attack_1,
+        Attack_2,
+        Attack_3,
+        Attack_4,
+
+
         Hit,
         Dash,
 

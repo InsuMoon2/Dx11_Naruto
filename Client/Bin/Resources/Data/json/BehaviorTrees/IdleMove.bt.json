@@ -1,0 +1,91 @@
+{
+    "blackboard": {
+        "bools": {},
+        "floats": {},
+        "ints": {},
+        "vectors": {}
+    },
+    "links": [
+        {
+            "end": 4,
+            "id": 8,
+            "start": 2
+        },
+        {
+            "end": 10,
+            "id": 11,
+            "start": 5
+        },
+        {
+            "end": 13,
+            "id": 14,
+            "start": 6
+        },
+        {
+            "end": 16,
+            "id": 17,
+            "start": 7
+        }
+    ],
+    "nodes": [
+        {
+            "id": 1,
+            "input_pin_id": 0,
+            "name": "Root",
+            "output_pin_ids": [
+                2
+            ],
+            "parameters": {},
+            "pos_x": 100.0,
+            "pos_y": 300.0,
+            "type": "Root"
+        },
+        {
+            "id": 3,
+            "input_pin_id": 4,
+            "name": "Sequence",
+            "output_pin_ids": [
+                5,
+                6,
+                7
+            ],
+            "parameters": {},
+            "pos_x": 83.0,
+            "pos_y": 422.0,
+            "type": "Sequence"
+        },
+        {
+            "id": 9,
+            "input_pin_id": 10,
+            "name": "Task_SetAnimState",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -110.0,
+            "pos_y": 652.0,
+            "state_name": "Idle",
+            "type": "Task_SetAnimState"
+        },
+        {
+            "id": 12,
+            "input_pin_id": 13,
+            "name": "Task_Wait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 130.0,
+            "pos_y": 652.0,
+            "type": "Task_Wait",
+            "wait_time": 3.0
+        },
+        {
+            "id": 15,
+            "input_pin_id": 16,
+            "name": "Task_Move",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 386.0,
+            "pos_y": 652.0,
+            "type": "Task_Move"
+        }
+    ],
+    "root_node_id": 1
+}

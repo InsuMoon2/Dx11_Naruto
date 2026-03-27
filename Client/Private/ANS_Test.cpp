@@ -11,16 +11,22 @@ string ANS_Test::Get_TypeName() const
 
 void ANS_Test::On_Begin(const FAnimNotifyContext& context)
 {
+    if (context.isPreview) return;
+
     LOG_INFO("ANS Test : Begin !");
 }
 
 void ANS_Test::On_Tick(const FAnimNotifyContext& context)
 {
+    if (context.isPreview) return;
+
     LOG_INFO("ANS Test : Tick !");
 }
 
 void ANS_Test::On_End(const FAnimNotifyContext& context)
 {
+    if (context.isPreview) return;
+
     LOG_INFO("ANS Test : End !");
 }
 

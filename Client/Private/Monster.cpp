@@ -77,12 +77,14 @@ HRESULT Monster::Render()
 {
     Character::Render();
 
+    if (!_model)
+        return E_FAIL;
+
     size_t numMeshes = _model->Get_NumMeshes();
 
     for (size_t i = 0; i < numMeshes; i++)
     {
         CHECK_FAILED(_model->Bind_BoneMatrices(_shaderCom, "g_BoneMatrices"), E_FAIL);
-
         _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
 
         _shaderCom->Begin_Pass(0);

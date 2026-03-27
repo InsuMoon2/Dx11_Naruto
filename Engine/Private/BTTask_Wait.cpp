@@ -1,6 +1,20 @@
 ﻿#include "pch.h"
 #include "BTTask_Wait.h"
 
+IMPLEMENT_REFLECTION(BTTask_Wait)
+
+bool BTTask_Wait::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "BTTask_Wait";
+
+    PROPERTY_FLOAT("Wiat Time", _waitTime, 0.1f, 10.f);
+
+    //PROPERTY_ENUM("Current State", _currentStateID, EPlayerState);
+
+    return true;
+}
+
 BTTask_Wait::BTTask_Wait(float waitTime)
     : _waitTime(waitTime), _elapsed(0.f)
 {
@@ -59,6 +73,11 @@ json BTTask_Wait::Serialize_ToJson()
 void BTTask_Wait::Deserialize_FromJson(const json& data)
 {
     _waitTime = data.value("wait_time", 1.0f);
+}
+
+Shared<BTTask_Wait> BTTask_Wait::Create()
+{
+    return make_shared<BTTask_Wait>();
 }
 
 Shared<BTNode> BTTask_Wait::Clone()

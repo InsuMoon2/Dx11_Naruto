@@ -41,6 +41,8 @@ void Animation_Manager::Load_Animations_From_Directory(const wstring& directoryP
                     {
                         const string& animName = anim->Get_Name();
 
+                        anim->Set_SourcePath(entry.path().string());
+
                         // 캐시에 저장
                         _animations[animName] = anim;
                         loadedCount++;
@@ -88,6 +90,33 @@ vector<Shared<Animation>> Animation_Manager::Get_All_Animations() const
         result.push_back(pair.second);
     }
 
+    return result;
+}
+
+vector<Shared<Animation>> Animation_Manager::Get_Animations_InFolder(const string& folderPath)
+{
+    vector<Shared<Animation>> result;
+    result.reserve(64);
+
+    if (folderPath.empty()) return result;
+
+    fs::path normalizedFolder = fs::absolute(folderPath).lexically_normal();
+    string folderStr = Utils::ToLowerCopy(normalizedFolder.string());
+
+    for (const auto& [name, anim] : _animations)
+    {
+        const string& sourcePath = anim->Get_SourcePath();
+        if (sourcePath.empty())
+            continue;
+        
+        fs::path animFolder = fs::absolute(sourcePath).parent_path().lexically_normal();
+        string animFolderStr = Utils::ToLowerCopy(animFolder.string());
+
+        if (animFolderStr.find(folderStr) == 0)
+        {
+            result.push_back(anim);
+        }
+    }
     return result;
 }
 

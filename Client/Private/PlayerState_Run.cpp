@@ -57,6 +57,12 @@ void PlayerState_Run::Update(PlayerStateMachine* state, float timeDelta)
         return;
     }
 
+    if (frame.attackDown)
+    {
+        state->Change_State(EPlayerState::Attack_1);
+        return;
+    }
+
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
 

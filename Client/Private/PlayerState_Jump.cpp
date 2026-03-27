@@ -37,6 +37,11 @@ void PlayerState_Jump::Update(PlayerStateMachine* state, float timeDelta)
     auto cmd = state->Init_MoveCommand();
     cmd.jump = false;   // 재점프 방지
 
+    if (frame.jumpDash)
+    {
+        state->Change_State(EPlayerState::JumpDash);
+    }
+
     if (frame.jumpDown && movement->Can_DoubleJump())
     {
         cmd.doublejump = true;

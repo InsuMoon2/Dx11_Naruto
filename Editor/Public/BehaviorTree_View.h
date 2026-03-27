@@ -30,6 +30,8 @@ public:
     void Load_BehaviorTree(const string& path);
     void Save_BehaviorTree(const string& path);
     void Create_BehaviorTree();
+    void Request_DebugSession(const string& path, Weak<BehaviorTree> targetBehavior);
+    void Set_DebugMode(bool enable);
 
 private:
     // UI
@@ -41,6 +43,8 @@ private:
     void Draw_FilePopup();
 
     void Draw_Blackboard();
+    void Update_SelectedNode();
+    void Process_PendingDebugRequest();
 
     // 노드 관리
     void Create_Node(const string& nodeType, ImVec2 position);
@@ -59,10 +63,10 @@ private:
     ImColor Get_NodeColor(const string& nodeType) const;
 
     int     Find_NodeIdByInputPin(ed::PinId pinId) const;
+    void    Recreate_EditorContext();
 
 public:
     void    Set_DebugTarget(Weak<BehaviorTree> targetBehavior) { _debugTarget = targetBehavior; }
-    void    Set_DebugMode(bool enable) { _isDebugMode = enable; }
     bool    Is_DebugMode() const { return _isDebugMode; }
     void    Clear_DebugMode();
 
@@ -97,9 +101,14 @@ private: /* Blackboard */
 
     // 현재 보고있는 AI의 Behavior
     Weak<BehaviorTree> _debugTarget;
+    Weak<BehaviorTree> _pendingDebugTarget;
     map<int, EBTNodeResult> _nodeStateCache; // 매 프레임 업데이트되는 상태값 캐싱
+    string  _pendingDebugPath;
 
     bool    _isDebugMode = false;
+    bool    _requestDebugSession = false;
+    bool    _requestEditorContextReset = false;
+    bool    _requestNavigateToContent = false;
 
 public:
     static Shared<BehaviorTree_View> Create();

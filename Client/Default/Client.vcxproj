@@ -229,6 +229,8 @@
   <ItemGroup>
     <ClInclude Include="..\Public\AIController.h" />
     <ClInclude Include="..\Public\AnimationStateComponent.h" />
+    <ClInclude Include="..\Public\ANS_CollisionEnable.h" />
+    <ClInclude Include="..\Public\ANS_ComboWindow.h" />
     <ClInclude Include="..\Public\ANS_Test.h" />
     <ClInclude Include="..\Public\AN_Test.h" />
     <ClInclude Include="..\Public\Background.h" />
@@ -256,11 +258,13 @@
     <ClInclude Include="..\Public\NetworkManager.h" />
     <ClInclude Include="..\Public\PlayerController.h" />
     <ClInclude Include="..\Public\PlayerStateMachine.h" />
+    <ClInclude Include="..\Public\PlayerState_Attack.h" />
     <ClInclude Include="..\Public\PlayerState_Dash.h" />
     <ClInclude Include="..\Public\PlayerState_DoubleJump.h" />
     <ClInclude Include="..\Public\PlayerState_HeightLand.h" />
     <ClInclude Include="..\Public\PlayerState_Idle.h" />
     <ClInclude Include="..\Public\PlayerState_Jump.h" />
+    <ClInclude Include="..\Public\PlayerState_JumpDash.h" />
     <ClInclude Include="..\Public\PlayerState_Run.h" />
     <ClInclude Include="..\Public\PlayerState_Skill.h" />
     <ClInclude Include="..\Public\PlayerState_SuperJump.h" />
@@ -324,6 +328,8 @@
     </ClCompile>
     <ClCompile Include="..\Private\AIController.cpp" />
     <ClCompile Include="..\Private\AnimationStateComponent.cpp" />
+    <ClCompile Include="..\Private\ANS_CollisionEnable.cpp" />
+    <ClCompile Include="..\Private\ANS_ComboWindow.cpp" />
     <ClCompile Include="..\Private\ANS_Test.cpp" />
     <ClCompile Include="..\Private\AN_Test.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
@@ -345,11 +351,13 @@
     <ClCompile Include="..\Private\NetworkManager.cpp" />
     <ClCompile Include="..\Private\PlayerController.cpp" />
     <ClCompile Include="..\Private\PlayerStateMachine.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Attack.cpp" />
     <ClCompile Include="..\Private\PlayerState_Dash.cpp" />
     <ClCompile Include="..\Private\PlayerState_DoubleJump.cpp" />
     <ClCompile Include="..\Private\PlayerState_HeightLand.cpp" />
     <ClCompile Include="..\Private\PlayerState_Idle.cpp" />
     <ClCompile Include="..\Private\PlayerState_Jump.cpp" />
+    <ClCompile Include="..\Private\PlayerState_JumpDash.cpp" />
     <ClCompile Include="..\Private\PlayerState_Run.cpp" />
     <ClCompile Include="..\Private\PlayerState_Skill.cpp" />
     <ClCompile Include="..\Private\PlayerState_SuperJump.cpp" />

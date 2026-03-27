@@ -19,14 +19,19 @@
             "start": 5
         },
         {
-            "end": 12,
-            "id": 14,
-            "start": 6
-        },
-        {
             "end": 16,
             "id": 17,
             "start": 7
+        },
+        {
+            "end": 19,
+            "id": 20,
+            "start": 5
+        },
+        {
+            "end": 22,
+            "id": 23,
+            "start": 6
         }
     ],
     "nodes": [
@@ -52,8 +57,8 @@
                 7
             ],
             "parameters": {},
-            "pos_x": 96.0,
-            "pos_y": 446.0,
+            "pos_x": 99.0,
+            "pos_y": 422.0,
             "type": "Sequence"
         },
         {
@@ -65,18 +70,7 @@
             "pos_x": -62.0,
             "pos_y": 652.0,
             "type": "Task_Wait",
-            "wait_time": 1.0
-        },
-        {
-            "id": 11,
-            "input_pin_id": 12,
-            "name": "Task_Wait2",
-            "output_pin_ids": [],
-            "parameters": {},
-            "pos_x": 162.0,
-            "pos_y": 652.0,
-            "type": "Task_Wait",
-            "wait_time": 2.0
+            "wait_time": 3.0
         },
         {
             "id": 15,
@@ -84,10 +78,31 @@
             "name": "Task_Wait3",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 370.0,
+            "pos_x": 402.0,
             "pos_y": 652.0,
             "type": "Task_Wait",
-            "wait_time": 3.0
+            "wait_time": 1.5
+        },
+        {
+            "id": 18,
+            "input_pin_id": 19,
+            "name": "Task_SetAnimState",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -286.0,
+            "pos_y": 652.0,
+            "state_name": "Run",
+            "type": "Task_SetAnimState"
+        },
+        {
+            "id": 21,
+            "input_pin_id": 22,
+            "name": "Task_Move",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 178.0,
+            "pos_y": 652.0,
+            "type": "Task_Move"
         }
     ],
     "root_node_id": 1

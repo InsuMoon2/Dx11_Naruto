@@ -23,6 +23,9 @@ public:
         bool  superJumpUp = false;
         float superJumpCharge = 0.f;
 
+        bool  jumpDash = false;
+        bool  attackDown = false;
+
         bool  useSkillDown[2] = { false, false };
         bool  useSkillPress[2] = {};
     };
@@ -36,6 +39,8 @@ public:
         bool allowJump = true;
         bool allowSuperJump = true;
         bool allowSkill = true;
+        bool allowJumpDash = true;
+        bool allowAttack = true;
 
         void Disable_AllInput()
         {
@@ -45,6 +50,8 @@ public:
             allowJump = false;
             allowSuperJump = false;
             allowSkill = false;
+            allowJumpDash = false;
+            allowAttack = false;
         }
 
         void Enable_AllInput()
@@ -55,9 +62,10 @@ public:
             allowJump = true;
             allowSuperJump = true;
             allowSkill = true;
+            allowJumpDash = false;
+            allowAttack = false;
         }
     };
-
 
 public:
     explicit InputComponent(ComPtr<Device> device, ComPtr<DeviceContext> context);
@@ -65,13 +73,13 @@ public:
     virtual ~InputComponent();
 
 public:
-    HRESULT Initialize_Prototype() override;
-    HRESULT Initialize(void* arg) override;
-    void    BeginPlay() override;
+    HRESULT             Initialize_Prototype() override;
+    HRESULT             Initialize(void* arg) override;
+    void                BeginPlay() override;
 
 public:
-    void Update_Input(float timeDelta);
-    void Reset_FrameInput();
+    void                Update_Input(float timeDelta);
+    void                Reset_FrameInput();
 
 
 public:
@@ -109,7 +117,7 @@ private:
     FInputGate       _inputGate;
     EPlayerInputMode _inputMode = EPlayerInputMode::Normal;
 
-    float   _superJumpCharge = 0.f;
+    float           _superJumpCharge = 0.f;
 
 
 public:

@@ -146,6 +146,18 @@
             "Level": "Static"
         },
         {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Menu_DailogBG_Purchase_Product_Base_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Menu_Btn_02_Def_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
             "Id": "COMPONENT_TYPE_TEXTURE_SKILL_GAUGE",
             "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_Skill_Gauge_Base%d_BC.png",
             "Count": 2,

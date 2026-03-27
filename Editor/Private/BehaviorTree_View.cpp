@@ -6,6 +6,7 @@
 #include "BehaviorTree.h"
 #include "BTNode.h"
 #include "Notification_Manager.h"
+#include "Reflection_Inspector.h"
 
 BehaviorTree_View::BehaviorTree_View()
     : EditorWindow(TEXT("BehaviorTree"))
@@ -27,13 +28,31 @@ BehaviorTree_View::~BehaviorTree_View()
 void BehaviorTree_View::Initialize()
 {
     EditorWindow::Initialize();
+    Recreate_EditorContext();
+    Create_BehaviorTree();
+}
+
+void BehaviorTree_View::Recreate_EditorContext()
+{
+    if (_editorContext)
+    {
+        ed::SetCurrentEditor(nullptr);
+        ed::DestroyEditor(_editorContext);
+        _editorContext = nullptr;
+    }
 
     ed::Config config;
-
     config.SettingsFile = nullptr;
+
     _editorContext = ed::CreateEditor(&config);
 
-    Create_BehaviorTree();
+    _selectedNodeId = ed::NodeId();
+    _pendingPositions.clear();
+
+    for (const auto& node : _nodes)
+    {
+        _pendingPositions.insert(node.id.Get());
+    }
 }
 
 void BehaviorTree_View::Update(float timeDelta)
@@ -70,16 +89,27 @@ void BehaviorTree_View::OnGui()
         return;
     }
 
+    if (_requestDebugSession)
+    {
+        Process_PendingDebugRequest();
+    }
+
     _isFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 
     Draw_ToolBar();
     ImGui::Separator();
 
+    if (_requestEditorContextReset)
+    {
+        Recreate_EditorContext();
+        _requestEditorContextReset = false;
+    }
+
     // 좌측 : 노드 에디터
     ImGui::BeginChild("NodeEditorArea", ImVec2(ImGui::GetContentRegionAvail().x * 0.7f, 0), true);
     {
         ed::SetCurrentEditor(_editorContext);
-        ed::Begin("BT Canvas");
+        ed::Begin("BT Canvas", ImGui::GetContentRegionAvail());
 
         for (const auto& node : _nodes)
             Draw_Node(node);
@@ -121,14 +151,31 @@ void BehaviorTree_View::OnGui()
             Handle_LinkCreation();
             Handle_Deletion();
             Draw_ContextMenu();
+        }
+        else
+        {
+            ed::Suspend();
+            ed::ShowBackgroundContextMenu();
+            ed::Resume();
+        }
 
-            for (auto& node : _nodes)
+        Update_SelectedNode();
+
+        for (auto& node : _nodes)
+        {
+            if (!_pendingPositions.contains(node.id.Get()))
             {
-                if (!_pendingPositions.contains(node.id.Get()))
-                {
-                    node.position = ed::GetNodePosition(node.id);
-                }
+                node.position = ed::GetNodePosition(node.id);
             }
+        }
+
+        if (_requestNavigateToContent)
+        {
+            // Debug In Node Editor 진입 시 이전 그래프의 pan/zoom/selection 상태를 버리고
+            // 새로 로드된 그래프 기준으로 뷰를 다시 맞춘다.
+            ed::ClearSelection();
+            ed::NavigateToContent(0.f);
+            _requestNavigateToContent = false;
         }
 
         ed::End();
@@ -192,6 +239,8 @@ void BehaviorTree_View::Load_BehaviorTree(const string& path)
 
     _currentFilePath = path;
     _isDirty = false;
+    _requestEditorContextReset = true;
+    _requestNavigateToContent = true;
 
     _isActive = true;
 }
@@ -223,6 +272,23 @@ void BehaviorTree_View::Create_BehaviorTree()
     _blackboard = Blackboard::Create();
 
     _isDirty = false;
+    _requestEditorContextReset = true;
+    _requestNavigateToContent = true;
+}
+
+void BehaviorTree_View::Request_DebugSession(const string& path, Weak<BehaviorTree> targetBehavior)
+{
+    _pendingDebugPath = path;
+    _pendingDebugTarget = targetBehavior;
+    _requestDebugSession = true;
+    _isActive = true;
+}
+
+void BehaviorTree_View::Set_DebugMode(bool enable)
+{
+    _isDebugMode = enable;
+    //_requestEditorContextReset = true;
+    //_requestNavigateToContent = true;
 }
 
 void BehaviorTree_View::Draw_ToolBar()
@@ -788,7 +854,15 @@ void BehaviorTree_View::Draw_NodeInspector()
 #pragma endregion
     if (selectedNode->runtimeInstance)
     {
-        selectedNode->runtimeInstance->OnDraw_Inspector();
+        const auto& reflInfo = selectedNode->runtimeInstance->GetReflectionInfo();
+        if (!reflInfo.properties.empty())
+        {
+            Reflection_Inspector::Draw_Properties_Only(
+                selectedNode->runtimeInstance.get(), reflInfo);
+        }
+
+        // 이제는 클라랑 ImGui랑 분리시켜놔서 사용 불가
+        //selectedNode->runtimeInstance->OnDraw_Inspector();
     }
 
     if (_isDebugMode)
@@ -968,8 +1042,10 @@ void BehaviorTree_View::Handle_Deletion()
         }
         ed::EndDelete();
     }
+}
 
-    // 노드 선택 처리
+void BehaviorTree_View::Update_SelectedNode()
+{
     if (ed::GetSelectedObjectCount() == 1)
     {
         ed::NodeId selectedNodes[1];
@@ -977,6 +1053,26 @@ void BehaviorTree_View::Handle_Deletion()
 
         _selectedNodeId = selectedNodes[0];
     }
+    else if (ed::GetSelectedObjectCount() == 0)
+    {
+        _selectedNodeId = ed::NodeId();
+    }
+}
+
+void BehaviorTree_View::Process_PendingDebugRequest()
+{
+    _requestDebugSession = false;
+
+    if (!_pendingDebugPath.empty() && _pendingDebugPath != _currentFilePath)
+    {
+        Load_BehaviorTree(_pendingDebugPath);
+    }
+
+    _debugTarget = _pendingDebugTarget;
+    _pendingDebugTarget.reset();
+    _pendingDebugPath.clear();
+
+    Set_DebugMode(true);
 }
 
 json BehaviorTree_View::Serialize_ToJson() const
@@ -1194,6 +1290,8 @@ void BehaviorTree_View::Clear_DebugMode()
     _isDebugMode = false;
     _debugTarget.reset();
     _nodeStateCache.clear();
+    _requestEditorContextReset = true;
+    _requestNavigateToContent = true;
 }
 
 Shared<BehaviorTree_View> BehaviorTree_View::Create()

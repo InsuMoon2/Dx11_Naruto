@@ -20,7 +20,7 @@ public:
     virtual EBTNodeResult Update(float timeDelta);
 
 public:
-    virtual const FClassReflectionInfo& GetRelectionInfo() const
+    virtual const FClassReflectionInfo& GetReflectionInfo() const
     {
         static FClassReflectionInfo empty;
         return empty;

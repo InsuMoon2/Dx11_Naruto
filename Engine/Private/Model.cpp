@@ -271,6 +271,8 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
     {
         _isCurrentAnimationFinished = false;
 
+        const float prevNextTrackPos = _blendState.next.trackPosition;
+
         if (_blendState.next.animIndex >= 0 &&
             _blendState.next.animIndex < static_cast<int32>(_animations.size()) &&
             _animations[_blendState.next.animIndex] != nullptr)
@@ -283,24 +285,54 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
             Sample_ClipPose(_blendState.next, _nextSamplePose);
         }
 
+        const bool nextWrapped = (_blendState.next.loop && _blendState.next.trackPosition < prevNextTrackPos);
+
         _blendState.elapsed += timeDelta;
 
         const float blendRatio = (_blendState.duration <= FLT_EPSILON)
             ? 1.f
             : Utils::Min(_blendState.elapsed / _blendState.duration, 1.f);
 
-        // 현재 포즈와 다음 포즈를 SRT 기준으로 블렌딩
         Blend_LocalPoses(_blendState.fromPose, _nextSamplePose, blendRatio, _blendedPose);
         Apply_LocalPoses_ToBones(_blendedPose);
         Update_BoneMatrices_FromBones();
 
         _lastAppliedPose = _blendedPose;
 
+        if (Ensure_AnimNotifyAssetLoaded())
+        {
+            // next 클립의 애니메이션 이름으로 노티파이 클립 검색
+            string nextAnimName;
+            if (_blendState.next.animIndex >= 0 &&
+                _blendState.next.animIndex < static_cast<int32>(_animations.size()) &&
+                _animations[_blendState.next.animIndex])
+            {
+                nextAnimName = _animations[_blendState.next.animIndex]->Get_Name();
+            }
+
+            if (const auto* nextClipData = AnimNotify_Serializer::Find_Clip(_animNotifyAsset, nextAnimName))
+            {
+                FAnimNotifyContext ctx;
+                ctx.owner = Get_Owner().get();
+                ctx.model = this;
+                ctx.modelGuid = _modelGuid;
+                ctx.clipName = nextAnimName;
+                ctx.previousTimeSec = prevNextTrackPos;
+                ctx.currentTimeSec = _blendState.next.trackPosition;
+                ctx.deltaTime = timeDelta;
+                ctx.isLooping = _blendState.next.loop;
+                ctx.wrapped = nextWrapped;
+                ctx.isPreview = !executeNotifies;
+
+                Update_AnimNotifies(*nextClipData, ctx, executeNotifies);
+                Update_AnimNotifyStates(*nextClipData, ctx, executeNotifies);
+            }
+        }
+
         if (blendRatio >= 1.f)
         {
             Stop_AllNotifyStates(executeNotifies);
 
-            // 전환 시, 다음 애니메이션을 현재 애니메이션으로 다시 세팅
             _currentClip = _blendState.next;
             Clear_BlendState();
             Sync_LegacyAnimationState();
@@ -1189,6 +1221,13 @@ void Model::From_Json(const json& data)
 
             _animations = std::move(uniqueAnimations);
         }
+
+        if (!_animations.empty() && !_currentClip.Is_Valid())
+        {
+            Set_Animation(0, true);
+            Play_Animation(0.f);
+        }
+
         return;
     }
 
@@ -1251,6 +1290,12 @@ void Model::From_Json(const json& data)
         }
 
         _animations = std::move(uniqueAnimations);
+
+        if (!_animations.empty() && !_currentClip.Is_Valid())
+        {
+            Set_Animation(0, true);
+            Play_Animation(0.f);
+        }
     }
 }
 

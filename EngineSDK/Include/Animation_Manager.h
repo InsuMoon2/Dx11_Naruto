@@ -20,8 +20,9 @@ public:
     Shared<Animation>   Get_Animation(const string& name) const;
 
     vector<Shared<Animation>> Get_Animations_By_Prefix(const string& prefix) const;
-
     vector<Shared<Animation>> Get_All_Animations() const;
+
+    vector<Shared<Animation>> Get_Animations_InFolder(const string& folderPath);
 
 private:
     unordered_map<string, Shared<Animation>> _animations;

@@ -35,6 +35,7 @@ MovementComponent::MovementComponent(const MovementComponent& rhs)
     , _moveDesc(rhs._moveDesc)
     , _commandDesc(rhs._commandDesc)
     , _velocity(rhs._velocity)
+    , _gravityEnabled(rhs._gravityEnabled)
 {
 }
 
@@ -93,7 +94,7 @@ void MovementComponent::Start_Jump()
     if (!_onGround)
         return;
 
-    _verticalVelocity = _moveDesc.jumpVelocity;
+    _velocity.y = _moveDesc.jumpVelocity;
     _onGround = false;
     _canDoubleJump = true;
 }
@@ -103,7 +104,7 @@ void MovementComponent::Start_DoubleJump()
     if (_onGround || !_canDoubleJump)
         return;
 
-    _verticalVelocity = _moveDesc.doubleJumpVelocity;
+    _velocity.y = _moveDesc.doubleJumpVelocity;
     _canDoubleJump = false;
 }
 
@@ -112,7 +113,7 @@ void MovementComponent::Start_SuperJump(float velocity)
     if (!_onGround)
         return;
 
-    _verticalVelocity = Utils::Max(velocity, _moveDesc.superJumpMinVelocity);
+    _velocity.y = Utils::Max(velocity, _moveDesc.superJumpMinVelocity);
     _onGround = false;
 
     // 슈퍼점프 이후 더블점프 가능하게할지?
@@ -193,6 +194,13 @@ void MovementComponent::Stop_Dash()
     _dashSpeed = 0.f;
 }
 
+void MovementComponent::Set_Velocity(Vec3 velocity)
+{
+    _velocity = velocity;
+
+
+}
+
 float MovementComponent::Get_DashNormalizedTime() const
 {
     if (!_isDashing || _dashDuration <= FLT_EPSILON)
@@ -250,16 +258,16 @@ void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> trans
             Stop_Dash();
         }
 
-        if (!_onGround)
+        if (_gravityEnabled && !_onGround)
         {
-            _verticalVelocity += _moveDesc.gravity * timeDelta;
+            _velocity.y += _moveDesc.gravity * timeDelta;
         }
 
-        _velocity.y = _verticalVelocity;
         return;
     }
 
     float targetSpeed = _commandDesc.sprint ? _moveDesc.maxSprintSpeed : _moveDesc.maxWalkSpeed;
+
     Vec3 targetVelocity = desiredDir * targetSpeed;
     targetVelocity.y = _velocity.y;
 
@@ -271,12 +279,11 @@ void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> trans
     _velocity.x = ::lerp(_velocity.x, targetVelocity.x, alpha);
     _velocity.z = ::lerp(_velocity.z, targetVelocity.z, alpha);
 
-    if (!_onGround)
+    if (_gravityEnabled && !_onGround)
     {
-        _verticalVelocity += _moveDesc.gravity * timeDelta;
+        _velocity.y += _moveDesc.gravity * timeDelta;
     }
 
-    _velocity.y = _verticalVelocity;
 }
 
 void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transform)
@@ -286,12 +293,12 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
     // TODO : Temp 바닥 충돌처리, 나중에는 충돌체 기준으로
     Vec3 currentPos = transform->Get_WorldPosition();
 
-    if (currentPos.y <= _moveDesc.groundY && _verticalVelocity <= 0.f)
+    if (currentPos.y <= _moveDesc.groundY && _velocity.y <= 0.f)
     {
         currentPos.y = _moveDesc.groundY;
         transform->Set_LocalPosition(currentPos);
 
-        _verticalVelocity = 0.f; // 떨어지는 속도 초기화
+        _velocity.y = 0.f; // 떨어지는 속도 초기화
         _onGround = true;
         _canDoubleJump = false;
     }

@@ -11,6 +11,11 @@ EBTNodeResult BTRoot::Update(float timeDelta)
     return _lastResult;
 }
 
+Shared<BTRoot> BTRoot::Create()
+{
+    return make_shared<BTRoot>();
+}
+
 Shared<BTNode> BTRoot::Clone()
 {
     auto newNode = make_shared<BTRoot>();

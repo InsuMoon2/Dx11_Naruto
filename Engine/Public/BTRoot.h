@@ -12,6 +12,9 @@ public:
 
 public:
     virtual EBTNodeResult  Update(float timeDelta) override;
+
+public:
+    static Shared<BTRoot> Create();
     virtual Shared<BTNode> Clone() override;
 };
 

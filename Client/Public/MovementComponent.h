@@ -76,6 +76,13 @@ public:
     void Start_Dash(const Vec3& worldDir, float distance, float duration);
     void Stop_Dash();
 
+    // 공중콤보 중력조절
+    void Set_GravityEnabled(bool flag) { _gravityEnabled = flag; }
+    bool Is_GravityEnabled() const { return _gravityEnabled; }
+
+    void Set_Velocity(Vec3 velocity);
+    Vec3 Get_Velocity() { return _velocity; }
+
 public:
     bool Get_OrientRotationToMovement() const { return _bOrientRotationToMovement; }
     void Set_OrientRotationToMovement(bool check) { _bOrientRotationToMovement = check; }
@@ -99,8 +106,6 @@ private:
     bool    _onGround = true;
     bool    _canDoubleJump = false;
 
-    float   _verticalVelocity = 0.f;
-
     Shared<Transform> _transform;
 
     bool _bOrientRotationToMovement = false;
@@ -111,6 +116,9 @@ private:
     float               _dashElapsed = 0.f;
     float               _dashDuration = 0.f;
     float               _dashSpeed = 0.f;
+
+    // 중력
+    bool _gravityEnabled = true;
 
 public:
     static Shared<MovementComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

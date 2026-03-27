@@ -65,4 +65,11 @@
     for (auto& _n : _names) _prop.enumNames.push_back(string(_n));           \
     info.properties.push_back(_prop);                                        \
 }
+
+#define PROPERTY_STRING(DisplayName, Member)                               \
+    info.properties.push_back({                                             \
+        DisplayName, Engine::EPropertyType::String,                         \
+        offsetof(SelfType, Member), 0.f, 0.f, 0.f, {}                       \
+    });
+
 #pragma warning(pop)

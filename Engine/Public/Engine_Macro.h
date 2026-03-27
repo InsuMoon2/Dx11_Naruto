@@ -126,4 +126,21 @@ private:                                                                 \
     bool ClassName::_s_reflectionRegistered =                            \
         ClassName::Register_Properties();
 
+
+// ==================================================
+//              BT Task 세팅
+// ==================================================
+#define GENERATED_BT_REFLECTION(ClassName) \
+public: \
+    using SelfType = ClassName; \
+    const FClassReflectionInfo& GetReflectionInfo() const override \
+    { return GetStaticReflectionInfo(); } \
+    static FClassReflectionInfo& GetStaticReflectionInfo() \
+    { static FClassReflectionInfo info; return info; } \
+    static bool _s_reflectionRegistered;\
+    private: \
+        static bool Register_Properties();
+
+
+
 }

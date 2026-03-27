@@ -3,6 +3,7 @@
 #include "EditorWindow.h"
 #include "AnimSequencerAdapter.h"
 #include "AnimNotify_Types.h"
+#include <unordered_set>
 
 NS_BEGIN(Engine)
 class Model;
@@ -82,6 +83,7 @@ private:
 
     void Load_NotifyAsset();
     void Save_NotifyAsset();
+    void Refresh_ClipFilter();
 
     void Refresh_CurrentClip();
     void Apply_CurrentFrame_ToPreview();
@@ -91,6 +93,7 @@ private:
     void Handle_PlaybackShortcut();
 
     bool Passes_ClipSearch(const string& clipName) const;
+    bool Passes_AnimStateClipFilter(const string& clipName) const;
     bool Has_SelectedNotify() const;
     bool Has_SelectedState() const;
     void Clear_SelectedEntries();
@@ -132,6 +135,8 @@ private:
     ImVec2 _previewImGuiSize = ImVec2(0.f, 0.f);
 
     string _clipSearchText;
+    unordered_set<string> _animStateClipNames;
+    bool _showAllClips = false;
 
 private:
     bool _openCreateNotifyPopup = false;

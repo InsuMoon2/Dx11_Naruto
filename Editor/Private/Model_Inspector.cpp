@@ -241,11 +241,22 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
 
             auto allAnims = GAME->Get_All_Animations();
 
-            ImGui::BeginChild("AnimListSelect", ImVec2(0.f, 260.f), true);
+            string modelGuid = data.value("model_guid", string(""));
+            vector<Shared<Animation>> filteredAnims;
+
+            if (!modelGuid.empty())
+            {
+                wstring resolvedPath = GAME->Resolve_AssetPath(modelGuid);
+                if (!resolvedPath.empty())
+                {
+                    fs::path modelFolder = fs::path(resolvedPath).parent_path();
+                    filteredAnims = GAME->Get_Animations_InFolder(modelFolder.string());
+                }
+            }
 
             int32 visibleIndex = 0;
 
-            for (auto& anim : allAnims)
+            for (auto& anim : filteredAnims)
             {
                 if (!anim) continue;
 
@@ -261,6 +272,7 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
                 if (ImGui::Selectable(itemLabel.c_str(), false, ImGuiSelectableFlags_SpanAvailWidth))
                 {
                     model->Add_Animation(anim);
+
                     data = model->To_Json();
                 }
 
@@ -272,7 +284,6 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
                     ImGui::EndTooltip();
                 }
             }
-            ImGui::EndChild();
             ImGui::EndPopup();
         }
 

@@ -4,20 +4,35 @@
 #include "GameObject.h"
 #include "Transform.h"
 
+IMPLEMENT_REFLECTION(BTTask_MoveTo)
+
+bool BTTask_MoveTo::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "BTTask_Move To";
+
+    PROPERTY_STRING("Target Object", _targetObjectKey);
+    PROPERTY_STRING("Target Location", _targetLocationKey);
+    PROPERTY_FLOAT("Acceptance Radius", _acceptanceRadius, 0.1f, 100.f);
+    PROPERTY_BOOL("Use Sprint", _useSprint);
+    PROPERTY_BOOL("Use Move Anim", _controlMoveAnim);
+    PROPERTY_STRING("Move Anim State", _moveAnimState);
+    PROPERTY_STRING("Idle Anim State", _idleAnimState);
+    PROPERTY_BOOL("Write Anim Direction", _writeAnimDirection);
+
+    return true;
+}
+
 BTTask_MoveTo::BTTask_MoveTo()
 {
 }
 
 BTTask_MoveTo::BTTask_MoveTo(const BTTask_MoveTo& rhs)
     : BTTask(rhs)
-    , _targetKey(rhs._targetKey)
+    , _targetLocationKey(rhs._targetLocationKey)
     , _acceptanceRadius(rhs._acceptanceRadius)
 {
 
-}
-
-BTTask_MoveTo::~BTTask_MoveTo()
-{
 }
 
 void BTTask_MoveTo::Initialize()
@@ -37,7 +52,7 @@ EBTNodeResult BTTask_MoveTo::Update(float timeDelta)
     if (!blackboard || !owner)
         return EBTNodeResult::Failed;
 
-    Vec3 targetPos = blackboard->Get_ValueAsVector(_targetKey);
+    Vec3 targetPos = blackboard->Get_ValueAsVector(_targetLocationKey);
     Vec3 currentPos = owner->Get_Component<Transform>()->Get_LocalPosition();
 
     Vec3 direction = targetPos - currentPos;
@@ -61,6 +76,11 @@ EBTNodeResult BTTask_MoveTo::Update(float timeDelta)
     _lastResult = EBTNodeResult::InProgress;
 
     return _lastResult;
+}
+
+Shared<BTTask_MoveTo> BTTask_MoveTo::Create()
+{
+    return make_shared<BTTask_MoveTo>();
 }
 
 Shared<BTNode> BTTask_MoveTo::Clone()
