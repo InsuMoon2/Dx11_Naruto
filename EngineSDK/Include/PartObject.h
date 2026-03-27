@@ -13,7 +13,9 @@ class ENGINE_DLL PartObject : public GameObject
 public:
     struct FPartObjectDesc : public FGameObjectDesc
     {
-        const Matrix*   parentMatrix = nullptr;
+        //const Matrix*   parentMatrix = nullptr;
+
+        Shared<Transform> parentTransform;
 
         wstring         modelAssetTag;
 
@@ -38,12 +40,24 @@ public:
 protected:
     void Update_CombinedWorldMatrix(const Matrix& childMatrix)
     {
-        if (_parentMatrix)
-            _combinedWorldMatrix = childMatrix * (*_parentMatrix);
+        //if (_parentMatrix)
+        //    _combinedWorldMatrix = childMatrix * (*_parentMatrix);
+
+        if (auto parentTransform = _parentTransform.lock())
+        {
+            _combinedWorldMatrix = childMatrix * parentTransform->Get_WorldMatrix();
+        }
+        else
+        {
+            _combinedWorldMatrix = childMatrix;
+        }
     };
 
 protected:
     const Matrix*   _parentMatrix = nullptr;
+
+    Weak<Transform> _parentTransform;
+
     Matrix          _combinedWorldMatrix = Matrix::Identity;
 
 public:

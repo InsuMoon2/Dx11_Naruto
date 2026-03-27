@@ -9,6 +9,9 @@
 #include "Event_Manager.h"
 #include "ResourceLoader.h"
 
+#include <ctime>
+#include <cstdlib>
+
 MainApp::MainApp()
 {
 }
@@ -20,6 +23,8 @@ MainApp::~MainApp()
 
 HRESULT MainApp::Initialize()
 {
+    srand(static_cast<unsigned int>(time(nullptr)));
+
     // Engine Setting
     {
         RECT clientRect;

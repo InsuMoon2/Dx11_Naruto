@@ -2,7 +2,9 @@
     "blackboard": {
         "bools": {},
         "floats": {},
-        "ints": {},
+        "ints": {
+            "TestInt": 3
+        },
         "vectors": {}
     },
     "links": [

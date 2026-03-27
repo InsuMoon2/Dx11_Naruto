@@ -88,6 +88,9 @@ private:
     Shared<UIObject> Find_SelectedUIObject() const;
 
     void    Handle_PlayerbackShortcut();
+    void    Handle_EditShortcut();
+    void    On_KeyFrameDragged(FUIAnimTrack& track, int keyIndex);
+    void    On_KeyFrameDragFinished(FUIAnimTrack& track, int frame);
 
 private:
     void    Draw_KeyList(FUIAnimTrack& track);

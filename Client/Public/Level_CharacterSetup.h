@@ -12,6 +12,7 @@ NS_BEGIN(Client)
 class Background;
 class UI_TabButton;
 class Player;
+class Camera_Free;
 
 enum class ESetupState { Category, Item };
 
@@ -28,7 +29,16 @@ enum class ECharacterSetupTexture
     TabSelectedButton,
     SelectedButton,
 
+    CharacterSetupText,
+
     END
+};
+
+// 선택된 탭 별로 카메라 위치 설정
+struct FCameraPreset
+{
+    Vec3 position;
+    Vec3 rotation;
 };
 
 class Level_CharacterSetup final : public Level
@@ -63,9 +73,13 @@ private:
 
     void            Handle_TabInput();
     void            Handle_OptionInput();
+    void            Handle_RotationInput(float timeDelta);
 
     void            Apply_SelectedOption();
     void            Apply_TabSelection();
+
+    void            Update_CameraLerp(float timeDelta);
+    void            Apply_CameraPreset(int32 tabIndex);
 
     ContainerObject::EPartSlot      Get_SelectSlot() const;
     const vector<FCustomizeOption>& Get_SelectedOptions() const;
@@ -104,8 +118,17 @@ private:
     // 마지막으로 고른 파츠 인덱스 번호
     array<int32, TAB_COUNT> _equippedIndices = { 0, 0, 0, 0, 0, 0 };
 
+    // 카메라 이동
+    Shared<Camera_Free> _previewCamera;
+    Vec3                _cameraTargetPos = Vec3(6.8f, 1.2f, 2.18f);
+    Vec3                _cameraTargetRot = Vec3(9.6f, 163.f, 0.f);
+    float               _cameraLerpSpeed = 5.f;
+
 private:
-    ESetupState _setupState = ESetupState::Category;
+    ESetupState         _setupState = ESetupState::Category;
+
+    bool                _isDragging = false;
+    float               _rotSensitivity = 0.4f;
 
 public:
     static shared_ptr<Level_CharacterSetup> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

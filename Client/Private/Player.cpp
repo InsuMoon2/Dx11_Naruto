@@ -57,14 +57,11 @@ void Player::Update(float timeDelta)
 void Player::Late_Update(float timeDelta)
 {
     Character::Late_Update(timeDelta);
-
-   
 }
 
 HRESULT Player::Render()
 {
     //Character::Render();
-
 
     return S_OK;
 }
@@ -80,7 +77,8 @@ HRESULT Player::Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetT
         return Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_OBJECT, nullptr);
 
     PartObject::FPartObjectDesc partDesc{};
-    partDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    //partDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    partDesc.parentTransform = _transformCom;
     partDesc.modelAssetTag = modelAssetTag;
     partDesc.masterPoseModel = _model;
 
@@ -100,10 +98,6 @@ HRESULT Player::Ready_Components()
     }
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_ANIMATION_STATE, _animState), E_FAIL);
-
-    // 파츠 오브젝트에서 관리
-    //CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXANIMMESH, _shaderCom), E_FAIL);
-    //CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_SASKE, _model) , E_FAIL);
 
     uint32 testModelKey = static_cast<uint32>(std::hash<string>{}("Model_TestModel"));
     CHECK_FAILED(Add_Component(testModelKey, _model), E_FAIL);
@@ -154,21 +148,22 @@ HRESULT Player::Ready_PartObjects()
 
     // Headgear
     PartObject::FPartObjectDesc headDesc{};
-    headDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    //headDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    headDesc.parentTransform = _transformCom;
     headDesc.modelAssetTag = TEXT("Model_Headgear_Man_Cap1");
     headDesc.masterPoseModel = _model;
     CHECK_FAILED(Add_PartObject(EPartSlot::Headegear, Protocol::OBJECT_TYPE_PART_OBJECT, &headDesc), E_FAIL);
 
     // Face
     PartObject::FPartObjectDesc faceDesc{};
-    faceDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    faceDesc.parentTransform = _transformCom;
     faceDesc.modelAssetTag = TEXT("Model_Face_Face1");
     faceDesc.masterPoseModel = _model;
     CHECK_FAILED(Add_PartObject(EPartSlot::Face, Protocol::OBJECT_TYPE_PART_OBJECT, &faceDesc), E_FAIL);
 
     // Onepiece
     PartObject::FPartObjectDesc onePieceDesc{};
-    onePieceDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    onePieceDesc.parentTransform = _transformCom;
     onePieceDesc.modelAssetTag = TEXT("Model_Body_Upper_Coat15");
     onePieceDesc.masterPoseModel = _model;
     CHECK_FAILED(Add_PartObject(EPartSlot::Onepiece, Protocol::OBJECT_TYPE_PART_OBJECT, &onePieceDesc), E_FAIL);
@@ -176,7 +171,7 @@ HRESULT Player::Ready_PartObjects()
     // 소켓 생성해서 무기 붙이기
     {
         Weapon::FWeaponDesc weaponDesc{};
-        weaponDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+        weaponDesc.parentTransform = _transformCom;
         weaponDesc.modelAssetTag = TEXT("Model_BigSword");
         weaponDesc.socketMatrix = _model->Get_SocketBoneMatrixPtr("Attach_Sword");
 

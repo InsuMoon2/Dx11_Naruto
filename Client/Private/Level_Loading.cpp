@@ -1,8 +1,6 @@
 ﻿#include "pch.h"
 #include "Level_Loading.h"
 
-#include <UI_Text.h>
-
 #include "Background.h"
 #include "Loader.h"
 #include "GameInstance.h"
@@ -113,6 +111,9 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
 {
     Vec2 viewport = Vec2(GAME->Get_UIReferenceWidth(), GAME->Get_UIReferenceHeight());
 
+    const uint32 randomOffset = rand() % BACK_GROUND_COUNT;
+    const uint32 selectedBackgroundIndex = ETOI(ELoadingTexture::MainLoading) + randomOffset;
+
     // 로딩 백그라운드
     {
         Background::FBackgroundDesc desc{};
@@ -124,7 +125,9 @@ HRESULT Level_Loading::Ready_Layer_UI(const wstring& uiTag)
 
         desc.levelIndex = ETOI(ELevelType::Loading);
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_LOADING;
-        desc.textureIndex = ETOI(ELoadingTexture::MainLoading);
+
+
+        desc.textureIndex = selectedBackgroundIndex;
 
         desc.zOrder = 0.5f;
 

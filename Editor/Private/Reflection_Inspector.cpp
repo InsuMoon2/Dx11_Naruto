@@ -18,6 +18,14 @@ void Reflection_Inspector::Draw_FromReflection(void* basePtr, const Engine::FCla
     }
 }
 
+void Reflection_Inspector::Draw_Properties_Only(void* basePtr, const FClassReflectionInfo& info)
+{
+    for (const auto& prop : info.properties)
+    {
+        Draw_Property_Simple(basePtr, prop);
+    }
+}
+
 void Reflection_Inspector::Draw_Property(void* basePtr, const Engine::FPropertyInfo& prop)
 {
     void* memberPtr = static_cast<char*>(basePtr) + prop.offset;
@@ -183,5 +191,82 @@ void Reflection_Inspector::Draw_Property(void* basePtr, const Engine::FPropertyI
         ImGui::PopItemWidth();
         break;
     }
+    }
+}
+
+void Reflection_Inspector::Draw_Property_Simple(void* basePtr, const FPropertyInfo& prop)
+{
+    void* memberPtr = static_cast<char*>(basePtr) + prop.offset;
+    string label = "##" + prop.name;
+
+    switch (prop.type)
+    {
+    case EPropertyType::Float:
+    {
+        float* val = static_cast<float*>(memberPtr);
+        ImGui::Text("%s", prop.name.c_str());
+        ImGui::SameLine(120.f);
+        ImGui::PushItemWidth(-1);
+        ImGui::DragFloat(label.c_str(), val, prop.dragSpeed, prop.minVal, prop.maxVal);
+        ImGui::PopItemWidth();
+        break;
+    }
+    case EPropertyType::Int:
+    {
+        int* val = static_cast<int*>(memberPtr);
+        ImGui::Text("%s", prop.name.c_str());
+        ImGui::SameLine(120.f);
+        ImGui::PushItemWidth(-1);
+        ImGui::DragInt(label.c_str(), val, prop.dragSpeed, (int)prop.minVal, (int)prop.maxVal);
+        ImGui::PopItemWidth();
+        break;
+    }
+    case EPropertyType::Bool:
+    {
+        bool* val = static_cast<bool*>(memberPtr);
+        ImGui::Checkbox(prop.name.c_str(), val);
+        break;
+    }
+    case EPropertyType::String:
+    {
+        string* val = static_cast<string*>(memberPtr);
+        ImGui::Text("%s", prop.name.c_str());
+        ImGui::SameLine(120.f);
+        ImGui::PushItemWidth(-1);
+
+        char buf[256] = {};
+        strncpy_s(buf, val->c_str(), sizeof(buf) - 1);
+        if (ImGui::InputText(label.c_str(), buf, sizeof(buf)))
+            *val = buf;
+
+        ImGui::PopItemWidth();
+        break;
+    }
+    case EPropertyType::Enum:
+    {
+        int* val = static_cast<int*>(memberPtr);
+        ImGui::Text("%s", prop.name.c_str());
+        ImGui::SameLine(120.f);
+        ImGui::PushItemWidth(-1);
+
+        const char* preview = (*val >= 0 && *val < (int)prop.enumNames.size())
+            ? prop.enumNames[*val].c_str() : "???";
+
+        if (ImGui::BeginCombo(label.c_str(), preview))
+        {
+            for (int i = 0; i < (int)prop.enumNames.size(); ++i)
+            {
+                bool isSelected = (*val == i);
+                if (ImGui::Selectable(prop.enumNames[i].c_str(), isSelected))
+                    *val = i;
+                if (isSelected) ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+        ImGui::PopItemWidth();
+        break;
+    }
+    default:
+        break;
     }
 }

@@ -40,7 +40,7 @@ void Prefab_View::Update(float timeDelta)
     EditorWindow::Update(timeDelta);
 
     Handle_Guizmo_Shotcut();
-    Tick_PreviewAnimation(timeDelta);
+    
 }
 
 void Prefab_View::OnGui()
@@ -192,7 +192,7 @@ void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath
         Apply_PreviewCameraSettings();
 
         Preview_BeginPlay();
-        Tick_PreviewAnimation(0.f);
+        //Tick_PreviewAnimation(0.f);
     }
 
 }
@@ -620,21 +620,6 @@ Shared<Model> Prefab_View::Find_PreviewModel() const
         return nullptr;
 
     return dynamic_pointer_cast<Model>(component);
-}
-
-void Prefab_View::Tick_PreviewAnimation(float timeDelta)
-{
-    if (!_isOpen || !_previewObject)
-        return;
-
-    Preview_BeginPlay();
-
-    auto model = Find_PreviewModel();
-    if (!model || !model->Has_Animations())
-        return;
-
-    // 프리뷰 애니메이션은 노티파이가 재생되지 않도록 false처리
-    model->Play_Animation(timeDelta, false);
 }
 
 void Prefab_View::Draw_AnimationControls()

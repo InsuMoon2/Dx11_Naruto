@@ -63,12 +63,6 @@
         },
         {
             "Id": "COMPONENT_TYPE_TEXTURE_LOADING",
-            "Path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadingScreen_%03d_BC.png",
-            "Count": 2,
-            "Level": "Static"
-        },
-        {
-            "Id": "COMPONENT_TYPE_TEXTURE_LOADING",
             "Path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_Load_Icon_BC.png",
             "Count": 1,
             "Level": "Static"
@@ -77,6 +71,12 @@
             "Id": "COMPONENT_TYPE_TEXTURE_LOADING",
             "Path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadIndicator_Base_BC.png",
             "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_LOADING",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Loading_Screen/Textures/T_UI_LoadingScreen_%d_BC.png",
+            "Count": 5,
             "Level": "Static"
         },
         {
@@ -136,6 +136,12 @@
         {
             "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
             "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Menu_Btn_00_Sel_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/TextUI/Common_Textures/Menu_Title/T_ui_Title_Logo_CharMake_BC_LOCL.png",
             "Count": 1,
             "Level": "Static"
         },

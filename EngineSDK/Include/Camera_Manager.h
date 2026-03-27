@@ -28,12 +28,17 @@ public:
 
     Shared<Camera>  Find_Camera(Protocol::OBJECT_TYPE type);
 
+public:
+    void            Clear_InvalidCameras();
+
+private:
+    Shared<Camera>  Find_NextValidCamera(const Shared<Camera>& current);
+
 public: /* 시네마틱 */
     bool            Play_Cinematic(const wstring& sequenceName);
     void            Stop_Cinematic();
     bool            Is_CinematicPlaying() const { return _isCinematicPlaying; }
     Shared<Camera_Cinematic> Get_CinematicCamera() { return _cineCamera; }
-
 
 
 private:

@@ -11,6 +11,8 @@
 
 void Camera_Manager::Update(float timeDelta)
 {
+    Clear_InvalidCameras();
+
     // 자유카메라 -> 타겟 카메라 전환용 -> 근데 이거 에디터용으로 옮겨야할듯
     if (INPUT->KeyDown(KEY_TYPE::F8))
         Toggle_Camera();
@@ -45,6 +47,14 @@ void Camera_Manager::Update(float timeDelta)
 
 void Camera_Manager::Set_ActiveCamera(Shared<Camera> camera)
 {
+    if (!camera)
+    {
+        LOG_WARN("Camera_Manager::Set_ActiveCamera - target camera is null");
+        _activeCamera.reset();
+        INPUT->UnlockMouse();
+        return;
+    }
+
     _activeCamera = camera;
 
     if (camera->Get_ObjectType() == Protocol::OBJECT_TYPE_CAMERA_TARGET)
@@ -62,36 +72,42 @@ bool Camera_Manager::Is_ActiveCamera(const Shared<Camera> camera) const
 
 void Camera_Manager::Toggle_Camera()
 {
+    Clear_InvalidCameras();
+
     auto current = _activeCamera.lock();
+    auto nextCam = Find_NextValidCamera(current);
 
-    for (size_t i = 0; i < _cameras.size(); i++)
+    if (!nextCam)
+        return;
+
+    if (current && current != nextCam)
     {
-        if (_cameras[i].lock() == current)
+        auto srcT = current->Get_Component<Transform>();
+        auto destT = nextCam->Get_Component<Transform>();
+
+        if (srcT && destT)
         {
-            size_t next = (i + 1) % _cameras.size();
-            auto nextCam = _cameras[next].lock();
-
-            if (current && nextCam)
-            {
-                auto srcT = current->Get_Component<Transform>();
-                auto destT = nextCam->Get_Component<Transform>();
-                if (srcT && destT)
-                {
-                    destT->Set_LocalPosition(srcT->Get_WorldPosition());
-                    destT->Set_LocalRotation(srcT->Get_WorldRotation());
-                }
-            }
-
-            Set_ActiveCamera(nextCam);
-
-            LOG_INFO("Camera Toggled");
-            return;
+            destT->Set_LocalPosition(srcT->Get_WorldPosition());
+            destT->Set_LocalRotation(srcT->Get_WorldRotation());
         }
     }
+
+    Set_ActiveCamera(nextCam);
 }
 
 void Camera_Manager::Register_Camera(Shared<Camera> camera)
 {
+    if (!camera)
+        return;
+
+    Clear_InvalidCameras();
+
+    for (auto& weakCamera : _cameras)
+    {
+        if (weakCamera.lock() == camera)
+            return;
+    }
+
     _cameras.push_back(camera);
 
     // 첫번째 카메라 액티브로 세팅
@@ -101,6 +117,8 @@ void Camera_Manager::Register_Camera(Shared<Camera> camera)
 
 Shared<Camera> Camera_Manager::Find_Camera(Protocol::OBJECT_TYPE type)
 {
+    Clear_InvalidCameras();
+
     for (auto& weak : _cameras)
     {
         auto camera = weak.lock();
@@ -109,6 +127,74 @@ Shared<Camera> Camera_Manager::Find_Camera(Protocol::OBJECT_TYPE type)
         {
             return camera;
         }
+    }
+
+    return nullptr;
+}
+
+void Camera_Manager::Clear_InvalidCameras()
+{
+    _cameras.erase(remove_if(_cameras.begin(), _cameras.end(),
+        [](const Weak<Camera>& weakCamera)
+        {
+            return weakCamera.expired();
+        }),
+        _cameras.end());
+
+    if (_activeCamera.expired())
+    {
+        _activeCamera.reset();
+        INPUT->UnlockMouse();
+    }
+
+    if (_originCamera.expired())
+    {
+        _originCamera.reset();
+    }
+
+}
+
+Shared<Camera> Camera_Manager::Find_NextValidCamera(const Shared<Camera>& current)
+{
+    Clear_InvalidCameras();
+
+    if (_cameras.empty())
+        return nullptr;
+
+    int32 currentIndex = -1;
+
+    for (int32 i = 0; i < static_cast<int32>(_cameras.size()); ++i)
+    {
+        auto camera = _cameras[i].lock();
+        if (camera == current)
+        {
+            currentIndex = i;
+            break;
+        }
+    }
+
+    // 현재 활성 카메라가 목록에 없으면 첫 번째 유효 카메라 반환
+    if (currentIndex < 0)
+    {
+        for (auto& weakCamera : _cameras)
+        {
+            auto camera = weakCamera.lock();
+            if (camera)
+                return camera;
+        }
+
+        return nullptr;
+    }
+
+    const int32 cameraCount = static_cast<int32>(_cameras.size());
+
+    for (int32 offset = 1; offset <= cameraCount; ++offset)
+    {
+        const int32 nextIndex = (currentIndex + offset) % cameraCount;
+        auto nextCamera = _cameras[nextIndex].lock();
+
+        if (nextCamera)
+            return nextCamera;
     }
 
     return nullptr;

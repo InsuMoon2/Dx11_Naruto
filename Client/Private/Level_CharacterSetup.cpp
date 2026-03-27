@@ -16,6 +16,17 @@
 #include "Spawn_Helper.h"
 #include "Customizer_Manager.h"
 
+// 카메라 줌인 프리셋
+static const FCameraPreset s_CameraPresets[] =
+{
+    { Vec3(6.6f, 1.7f, 0.78f),   Vec3(9.6f, 169.f, 0.f) }, // Headgear
+    { Vec3(6.6f, 1.7f, 0.78f),   Vec3(9.6f, 169.f, 0.f) }, // Face
+    { Vec3(6.6f, 1.1f, 1.48f),  Vec3(9.6f, 169.f, 0.f) }, // Onepiece
+    { Vec3(6.6f, 1.1f, 1.48f),  Vec3(9.6f, 169.f, 0.f) }, // BodyUpper
+    { Vec3(6.6f, 1.1f, 1.48f),  Vec3(9.6f, 169.f, 0.f) }, // BodyLower
+    { Vec3(6.8f, 1.2f, 2.18f), Vec3(9.6f, 163.f, 0.f) }, // Accessory
+};
+
 Level_CharacterSetup::Level_CharacterSetup(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
 {
@@ -47,6 +58,11 @@ HRESULT Level_CharacterSetup::Initialize()
 void Level_CharacterSetup::Update(float timeDelta)
 {
     Level::Update(timeDelta);
+
+    Update_CameraLerp(timeDelta);
+
+    // 플레이어 회전
+    Handle_RotationInput(timeDelta);
 
     if (_setupState == ESetupState::Category)
     {
@@ -258,7 +274,7 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
     selectDesc.textDesc.style.fontFamily = L"Malgun Gothic";
     selectDesc.textDesc.style.fontSize = 26.f;
     selectDesc.textDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
-    selectDesc.textDesc.style.hAlign = ETextHAlign::Left;
+    selectDesc.textDesc.style.hAlign = ETextHAlign::Center;
     selectDesc.textDesc.style.vAlign = ETextVAlign::Middle;
     selectDesc.textDesc.style.wordWrap = false;
 
@@ -283,17 +299,6 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
     titleBgDesc.textureIndex = ETOI(ECharacterSetupTexture::TitleBG);
 
     titleBgDesc.zOrder = 0.51f;
-
-    titleBgDesc.textDesc.text = L"캐릭터 작성";
-    titleBgDesc.textDesc.offset = Vec2(0.f, 0.f);
-    titleBgDesc.textDesc.size = Vec2(420.f, 52.f);
-    titleBgDesc.textDesc.zOrderOffset = 0.01f;
-    titleBgDesc.textDesc.style.fontFamily = L"Malgun Gothic";
-    titleBgDesc.textDesc.style.fontSize = 26.f;
-    titleBgDesc.textDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
-    titleBgDesc.textDesc.style.hAlign = ETextHAlign::Left;
-    titleBgDesc.textDesc.style.vAlign = ETextVAlign::Middle;
-    titleBgDesc.textDesc.style.wordWrap = false;
 
     auto titleBg = static_pointer_cast<Background>(
         GAME->Add_UI(
@@ -322,6 +327,28 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
             Protocol::OBJECT_TYPE_BACKGROUND,
             EUILayer::HUD,
             &titleSymbolDesc));
+
+    CHECK_NULL(titleSymbol, E_FAIL);
+
+    // 캐릭터 작성 텍스트
+    Background::FBackgroundDesc charSetupTextDesc{};
+    charSetupTextDesc.name = TEXT("Character Setup Text");
+    charSetupTextDesc.posX = titleBgDesc.posX + 200.f;
+    charSetupTextDesc.posY = titleBgDesc.posY;
+    charSetupTextDesc.sizeX = 900.f;
+    charSetupTextDesc.sizeY = 200.f;
+
+    charSetupTextDesc.levelIndex = ETOI(ELevelType::CharacterSetup);
+    charSetupTextDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_EQUIPMENT;
+    charSetupTextDesc.textureIndex = ETOI(ECharacterSetupTexture::CharacterSetupText);
+
+    charSetupTextDesc.zOrder = 0.52f;
+
+    auto charSetupText = static_pointer_cast<Background>(
+        GAME->Add_UI(
+            Protocol::OBJECT_TYPE_BACKGROUND,
+            EUILayer::HUD,
+            &charSetupTextDesc));
 
     CHECK_NULL(titleSymbol, E_FAIL);
 
@@ -357,17 +384,18 @@ HRESULT Level_CharacterSetup::Ready_PreviewScene()
         cameraDesc.enableMouseRotation = false;
         cameraDesc.bindOnPlayerSpawned = false;
 
-        auto cameraObj = GAME->Clone_And_Add_GameObject(
+        _previewCamera = static_pointer_cast<Camera_Free>(
+            GAME->Clone_And_Add_GameObject(
             ETOI(ELevelType::Static),
             Protocol::OBJECT_TYPE_CAMERA_FREE,
             ETOI(ELevelType::CharacterSetup),
             TEXT("Layer_Camera"),
-            &cameraDesc);
+            &cameraDesc));
 
-        if (cameraObj)
+        if (_previewCamera)
         {
-            static_pointer_cast<Camera>(cameraObj)->Set_InputEnabled(false);
-            cameraObj->Get_Transform()->Set_LocalPosition(Vec3(7.5f, 3.f, 3.18f));
+            _previewCamera->Get_Transform()->Set_LocalPosition(_cameraTargetPos);
+            _previewCamera->Get_Transform()->Set_LocalRotation(9.6f, 163.f, 0.f);
         }
             
     }
@@ -540,15 +568,25 @@ void Level_CharacterSetup::Handle_TabInput()
         if (_selectedTabIndex == static_cast<int32>(TAB_COUNT))
         {
             Finish_CharacterSetup();
-            
+
             return;
         }
 
         _setupState = ESetupState::Item;
-        _selectedOptionIndex = 0;
 
         Build_OptionButtons();
         Refresh_UI_Visibility();
+        Apply_CameraPreset(_selectedTabIndex);
+
+        const auto& options = Get_SelectedOptions();
+
+        if (!options.empty())
+        {
+            _selectedOptionIndex = 0;
+        }
+
+        Refresh_OptionSelection();
+        Refresh_SelectDescText();
     }
 }
 
@@ -599,6 +637,44 @@ void Level_CharacterSetup::Handle_OptionInput()
     }
 }
 
+void Level_CharacterSetup::Handle_RotationInput(float timeDelta)
+{
+    if (!_previewPlayer)
+        return;
+
+    if (!GAME->Is_GameInputEnabled())
+    {
+        _isDragging = false;
+        return;
+    }
+
+    if (INPUT->KeyDown(KEY_TYPE::LBUTTON))
+    {
+        _isDragging = true;
+    }
+
+    if (INPUT->KeyUp(KEY_TYPE::LBUTTON))
+    {
+        _isDragging = false;
+    }
+
+    if (_isDragging && INPUT->KeyPress(KEY_TYPE::LBUTTON))
+    {
+        Vec2 mouseDelta = INPUT->GetMouseDelta();
+
+        // x축으로 이동량이 있을 때만
+        if (std::abs(mouseDelta.x) > 0.001f)
+        {
+            auto transform = _previewPlayer->Get_Transform();
+
+            float rotateDegress = -mouseDelta.x * _rotSensitivity;
+
+            transform->Rotate_Axis(Vec3::Up, rotateDegress);
+        }
+    }
+
+}
+
 void Level_CharacterSetup::Apply_SelectedOption()
 {
     if (!_previewPlayer)
@@ -624,6 +700,29 @@ void Level_CharacterSetup::Apply_TabSelection()
     Refresh_OptionSelection();
     Refresh_SelectDescText();
     Apply_SelectedOption();
+}
+
+void Level_CharacterSetup::Update_CameraLerp(float timeDelta)
+{
+    if (!_previewCamera)
+        return;
+
+    auto transform = _previewCamera->Get_Transform();
+
+    Vec3 currentPos = transform->Get_LocalPosition();
+    Vec3 newPos = Vec3::Lerp(currentPos, _cameraTargetPos, timeDelta * _cameraLerpSpeed);
+
+    transform->Set_LocalPosition(newPos);
+    transform->Set_LocalRotation(_cameraTargetRot.x, _cameraTargetRot.y, _cameraTargetRot.z);
+}
+
+void Level_CharacterSetup::Apply_CameraPreset(int32 tabIndex)
+{
+    if (tabIndex < 0 || tabIndex >= static_cast<int32>(TAB_COUNT))
+        return;
+
+    _cameraTargetPos  = s_CameraPresets[tabIndex].position;
+    _cameraTargetRot = s_CameraPresets[tabIndex].rotation;
 }
 
 ContainerObject::EPartSlot Level_CharacterSetup::Get_SelectSlot() const

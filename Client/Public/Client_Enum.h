@@ -24,13 +24,14 @@ namespace Client
         Run,
         Jump,
         DoubleJump,
+        JumpDash,
 
         SuperJumpCharge,
         SuperJump,
         HeightLand,
 
-        //Attack,
-        //Hit,
+        Attack,
+        Hit,
         Dash,
 
 
@@ -38,6 +39,16 @@ namespace Client
         Skill_Rasengan,
         Skill_RasenShuriken,
 
+        Dead,
+        END
+    };
+
+    enum class EMonsterState
+    {
+        Idle,
+        Run,
+        Attack,
+        Hit,
         Dead,
         END
     };

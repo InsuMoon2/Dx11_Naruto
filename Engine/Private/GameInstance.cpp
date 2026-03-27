@@ -36,6 +36,7 @@
 #undef new
 #include "Camera.h"
 #include "imgui.h"
+#include "Sound_Manager.h"
 #pragma pop_macro("new")
 
 IMPLEMENT_SINGLETON(GameInstance)
@@ -123,6 +124,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     _gameObjectFactory = GameObject_Factory::Create();
     CHECK_NULL(_gameObjectFactory, E_FAIL);
 
+    _soundManager = Sound_Manager::Create(TEXT("../../Client/Bin/Resources/Sounds"));
+    CHECK_NULL(_soundManager, E_FAIL);
+
     return S_OK;
 }
 
@@ -178,6 +182,8 @@ void GameInstance::Clear_Resources(uint32 levelIndex)
     _objectManager->Clear_Layers(levelIndex);
     _protoManager->Clear_Prototype(levelIndex);
     _uiManager->Clear_UI_ByLevel(levelIndex);
+
+    _cameraManager->Clear_InvalidCameras();
 }
 
 ComPtr<Device> GameInstance::Get_Device()
@@ -758,9 +764,65 @@ vector<Shared<Animation>> GameInstance::Get_All_Animations()
     return _animationManager->Get_All_Animations();
 }
 
+bool GameInstance::Play_Sound(const wstring& soundFile, ESoundChannel channel, float volume)
+{
+    return _soundManager->Play_Once(soundFile, channel, volume);
+}
+
+bool GameInstance::Play_Sound_Pitched(const wstring& soundFile, ESoundChannel channel, float volume, float pitch)
+{
+    return _soundManager->Play_Once_Pitched(soundFile, channel, volume, pitch);
+}
+
+bool GameInstance::Play_BGM(const wstring& soundFile, float volume, bool stopPrevBGM, float fadeOutDuration)
+{
+    return _soundManager->Play_BGM(soundFile, volume, stopPrevBGM, fadeOutDuration);
+}
+
+bool GameInstance::Play_LoopSound(const wstring& soundFile, ESoundChannel channel, float volume, bool stopPrevChannel,
+    float fadeOutDuration)
+{
+    return _soundManager->Play_Loop(soundFile, channel, volume, stopPrevChannel, fadeOutDuration);
+}
+
+void GameInstance::Stop_SoundChannel(ESoundChannel channel, float fadeOutDuration)
+{
+    _soundManager->Stop_Channel(channel, fadeOutDuration);
+}
+
+void GameInstance::Stop_Sound(const wstring& soundFile)
+{
+    _soundManager->Stop_Sound(soundFile);
+}
+
+void GameInstance::Stop_AllSounds(float fadeOutDuration)
+{
+    _soundManager->Stop_All(fadeOutDuration);
+}
+
+void GameInstance::Set_SoundChannelVolume(ESoundChannel channel, float volume)
+{
+    _soundManager->Set_ChannelVolume(channel, volume);
+}
+
+float GameInstance::Get_SoundChannelVolume(ESoundChannel channel) const
+{
+    return _soundManager->Get_ChannelVolume(channel);
+}
+
+bool GameInstance::Has_Sound(const wstring& soundFile) const
+{
+    return _soundManager->Has_Sound(soundFile);
+}
+
 Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)
 {
     return _cameraManager->Find_Camera(type);
+}
+
+void GameInstance::Clear_InvalidCamera()
+{
+    return _cameraManager->Clear_InvalidCameras();
 }
 
 bool GameInstance::Play_Cinematic(const wstring& sequenceName)
@@ -781,6 +843,7 @@ void GameInstance::Free()
     _btNodeFactory.reset();
     _cameraManager.reset();
     _lightManager.reset();
+    _soundManager.reset();
 
     _prefabManager.reset();
     _objectManager.reset(); 

@@ -79,8 +79,7 @@ HRESULT Background::Render()
 
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureIndex), E_FAIL);
 
-    float fAlpha = 1.f;
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &fAlpha, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &_opacity, sizeof(float)), E_FAIL);
 
     CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);

@@ -78,21 +78,24 @@ HRESULT PreviewPlayer::Ready_PartObjects()
 {
     // Headgear
     PartObject::FPartObjectDesc headDesc{};
-    headDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    //headDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    headDesc.parentTransform = _transformCom;
     headDesc.modelAssetTag = TEXT("Model_Headgear_Man_Cap1");
     headDesc.masterPoseModel = _model;
     CHECK_FAILED(Add_PartObject(EPartSlot::Headegear, Protocol::OBJECT_TYPE_PART_OBJECT, &headDesc), E_FAIL);
 
     // Face
     PartObject::FPartObjectDesc faceDesc{};
-    faceDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    //faceDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    faceDesc.parentTransform = _transformCom;
     faceDesc.modelAssetTag = TEXT("Model_Face_Face1");
     faceDesc.masterPoseModel = _model;
     CHECK_FAILED(Add_PartObject(EPartSlot::Face, Protocol::OBJECT_TYPE_PART_OBJECT, &faceDesc), E_FAIL);
 
     // Onepiece
     PartObject::FPartObjectDesc onePieceDesc{};
-    onePieceDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    //onePieceDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    onePieceDesc.parentTransform = _transformCom;
     onePieceDesc.modelAssetTag = TEXT("Model_Body_Upper_Coat15");
     onePieceDesc.masterPoseModel = _model;
     CHECK_FAILED(Add_PartObject(EPartSlot::Onepiece, Protocol::OBJECT_TYPE_PART_OBJECT, &onePieceDesc), E_FAIL);

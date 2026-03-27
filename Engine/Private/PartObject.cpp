@@ -24,7 +24,9 @@ HRESULT PartObject::Initialize(void* arg)
     FPartObjectDesc* partDesc = static_cast<FPartObjectDesc*>(arg);
     if (partDesc)
     {
-        _parentMatrix = partDesc->parentMatrix;
+        //_parentMatrix = partDesc->parentMatrix;
+
+        _parentTransform = partDesc->parentTransform;
     }
 
     return S_OK;

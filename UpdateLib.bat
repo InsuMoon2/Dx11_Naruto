@@ -2,6 +2,8 @@ pushd %~dp0
 xcopy /y /d "Engine\Bin\Engine.dll" "Client\Bin\"
 xcopy /y /d "Engine\Bin\Engine.dll" "Editor\Bin\"
 xcopy /y /d "Engine\Bin\Engine.dll" "Game\Bin\"
+xcopy /y /d "Engine\Bin\fmod*.dll" "Editor\Bin\"
+xcopy /y /d "Engine\Bin\fmod*.dll" "Game\Bin\"
 xcopy /y /d "Engine\Bin\*.dll" "Game\Bin\"
 xcopy /y /d "Engine\Bin\Engine.pdb" "Client\Bin\"        
 xcopy /y /d "Engine\Bin\Engine.pdb" "Editor\Bin\"

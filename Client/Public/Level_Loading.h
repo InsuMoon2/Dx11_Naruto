@@ -12,12 +12,14 @@ class Loader;
 
 enum class ELoadingTexture
 {
-    MainLoading = 0, // 2장
-    SpinnerLogo = 2,
-    ProgressBar = 3,
+    SpinnerLogo = 0,
+    ProgressBar = 1,
+    MainLoading = 2,
 
     END
 };
+
+enum { BACK_GROUND_COUNT = 5 };
 
 class Level_Loading final : public Level
 {

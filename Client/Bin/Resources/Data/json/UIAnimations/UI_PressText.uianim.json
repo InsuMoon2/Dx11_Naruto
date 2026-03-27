@@ -1,0 +1,88 @@
+{
+    "endFrame": 80,
+    "fps": 60,
+    "loop": false,
+    "name": "NewUIAnimation",
+    "startFrame": 0,
+    "targetName": "Press Text",
+    "tracks": [
+        {
+            "keys": [
+                {
+                    "frame": 0,
+                    "value": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 45,
+                    "value": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 59,
+                    "value": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "property": "Alpha"
+        },
+        {
+            "keys": [
+                {
+                    "frame": 45,
+                    "value": [
+                        1400.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 58,
+                    "value": [
+                        1252.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "property": "ScaleX"
+        },
+        {
+            "keys": [
+                {
+                    "frame": 45,
+                    "value": [
+                        220.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 58,
+                    "value": [
+                        180.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "property": "ScaleY"
+        }
+    ]
+}

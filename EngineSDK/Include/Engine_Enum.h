@@ -45,6 +45,20 @@ namespace Engine
         END
     };
 
+    enum class ESoundChannel : uint32
+    {
+        BGM = 0,
+        Effect,
+        UI,
+        Player,
+        Monster,
+        Boss,
+        Ambient,
+        Voice,
+        System,
+        END
+    };
+
     static constexpr uint32 MATERIAL_TEXTURE_SLOT_COUNT =
         static_cast<uint32>(EMaterialTextureSlot::END);
 

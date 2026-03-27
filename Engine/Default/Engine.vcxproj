@@ -178,7 +178,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d11.lib;d2d1.lib;dwrite.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d2d1.lib;dwrite.lib;assimp-vc143-mtd.lib;fmodL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -206,7 +206,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d11.lib;d2d1.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d2d1.lib;dwrite.lib;fmodL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../ThirdPartyLib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>call "$(SolutionDir)UpdateLib.bat"</Command>
@@ -258,6 +259,7 @@
     <ClInclude Include="..\Public\BTRoot.h" />
     <ClInclude Include="..\Public\BTTask.h" />
     <ClInclude Include="..\Public\BTTask_MoveTo.h" />
+    <ClInclude Include="..\Public\BTTask_SetAnimState.h" />
     <ClInclude Include="..\Public\BTTask_Wait.h" />
     <ClInclude Include="..\Public\Camera.h" />
     <ClInclude Include="..\Public\CameraTrack_Player.h" />
@@ -310,6 +312,7 @@
     <ClInclude Include="..\Public\Reflection_Macro.h" />
     <ClInclude Include="..\Public\RenderTarget.h" />
     <ClInclude Include="..\Public\Shader.h" />
+    <ClInclude Include="..\Public\Sound_Manager.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Text_Renderer.h" />
     <ClInclude Include="..\Public\Text_Types.h" />
@@ -350,6 +353,7 @@
     <ClCompile Include="..\Private\BTRoot.cpp" />
     <ClCompile Include="..\Private\BTTask.cpp" />
     <ClCompile Include="..\Private\BTTask_MoveTo.cpp" />
+    <ClCompile Include="..\Private\BTTask_SetAnimState.cpp" />
     <ClCompile Include="..\Private\BTTask_Wait.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />
     <ClCompile Include="..\Private\CameraTrack_Player.cpp" />
@@ -395,6 +399,7 @@
     <ClCompile Include="..\Private\SimpleMath.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\Sound_Manager.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Text_Renderer.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />

@@ -23,6 +23,7 @@ class Asset_Manager;
 class UI_Manager;
 class Text_Renderer;
 class Animation_Manager;
+class Sound_Manager;
 
 class Renderer;
 class PipeLine;
@@ -213,6 +214,8 @@ public: /* Camera */
 
     Shared<Camera>                  Find_Camera(Protocol::OBJECT_TYPE type);
 
+    void                            Clear_InvalidCamera();
+
     /* 시네마틱 */
     bool                            Play_Cinematic(const wstring& sequenceName);
     void                            Stop_Cinematic();
@@ -283,6 +286,30 @@ public: /* Animation Manager */
     vector<Shared<Animation>> Get_Animations_By_Prefix(const string& prefix) const;
     vector<Shared<Animation>> Get_All_Animations();
 
+public: /* Sound Manager */
+    bool                    Play_Sound(const wstring& soundFile, ESoundChannel channel, float volume = 1.f);
+    bool                    Play_Sound_Pitched(const wstring& soundFile, ESoundChannel channel, float volume, float pitch);
+
+    bool                    Play_BGM(const wstring& soundFile,
+        float volume = 1.f,
+        bool stopPrevBGM = true,
+        float fadeOutDuration = 0.f);
+
+    bool                    Play_LoopSound(const wstring& soundFile,
+        ESoundChannel channel,
+        float volume = 1.f,
+        bool stopPrevChannel = false,
+        float fadeOutDuration = 0.f);
+
+    void                    Stop_SoundChannel(ESoundChannel channel, float fadeOutDuration = 0.f);
+    void                    Stop_Sound(const wstring& soundFile);
+    void                    Stop_AllSounds(float fadeOutDuration = 0.f);
+
+    void                    Set_SoundChannelVolume(ESoundChannel channel, float volume);
+    float                   Get_SoundChannelVolume(ESoundChannel channel) const;
+
+    bool                    Has_Sound(const wstring& soundFile) const;
+
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};
 	Unique<Timer_Manager>	        _timerManager   {};
@@ -296,6 +323,7 @@ private: /* Manager */
     Unique<UI_Manager>              _uiManager      {};
     Unique<Text_Renderer>           _textRenderer   {};
     Unique<Animation_Manager>       _animationManager{};
+    Unique<Sound_Manager>           _soundManager{};
 
     Unique<Renderer>                _renderer {};
     Unique<PipeLine>                _pipeLine {};

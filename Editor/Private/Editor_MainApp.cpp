@@ -9,6 +9,9 @@
 #include "VIBuffer_Rect.h"
 #include "Event_Manager.h"
 
+#include <ctime>
+#include <cstdlib>
+
 Editor_MainApp::Editor_MainApp()
 {
     
@@ -21,6 +24,8 @@ Editor_MainApp::~Editor_MainApp()
 
 HRESULT Editor_MainApp::Initialize()
 {
+    srand(static_cast<unsigned int>(time(nullptr)));
+
     // Engine Setting
     {
         ENGINE_DESC engineDesc = {};

@@ -64,6 +64,7 @@ void UI_Animation_View::OnGui()
     _isFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
 
     Handle_PlayerbackShortcut();
+    Handle_EditShortcut();
 
     Draw_ToolBar();
     ImGui::Separator();
@@ -909,6 +910,28 @@ void UI_Animation_View::Handle_PlayerbackShortcut()
     _isPlaying = true;
 }
 
+void UI_Animation_View::Handle_EditShortcut()
+{
+    if (!_isFocused || !_asset)
+        return;
+
+    if (_selectedTrackIndex < 0)
+        return;
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    if (io.WantTextInput)
+        return;
+
+    if (ImGui::IsPopupOpen(nullptr, ImGuiPopupFlags_AnyPopupId))
+        return;
+
+    if (!ImGui::IsKeyPressed(ImGuiKey_K, false))
+        return;
+
+    Add_Key_AtCurrentFrame();
+}
+
 void UI_Animation_View::Draw_KeyList(FUIAnimTrack& track)
 {
     ImGui::Text("Key List");
@@ -937,6 +960,26 @@ void UI_Animation_View::Draw_KeyList(FUIAnimTrack& track)
 
         ImGui::EndListBox();
     }
+}
+
+void UI_Animation_View::On_KeyFrameDragged(FUIAnimTrack& track, int keyIndex)
+{
+    if (keyIndex < 0 || keyIndex >= static_cast<int>(track.keys.size()))
+        return;
+
+    _selectedKeyIndex = keyIndex;
+
+    MarkDirty();
+    Apply_CurrentFrame(_sequencerState.currentFrame);
+}
+
+void UI_Animation_View::On_KeyFrameDragFinished(FUIAnimTrack& track, int frame)
+{
+    Normalize_TrackKeys(track);
+    _selectedKeyIndex = Find_KeyIndex_ByFrame(track, frame);
+
+    MarkDirty();
+    Apply_CurrentFrame(_sequencerState.currentFrame);
 }
 
 void UI_Animation_View::Draw_UIBindingPopup()

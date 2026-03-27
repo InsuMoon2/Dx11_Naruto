@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Base.h"
+#include "Property_Types.h"
 
 NS_BEGIN(Engine)
 
@@ -17,6 +18,13 @@ public:
 public:
     virtual void Initialize();
     virtual EBTNodeResult Update(float timeDelta);
+
+public:
+    virtual const FClassReflectionInfo& GetRelectionInfo() const
+    {
+        static FClassReflectionInfo empty;
+        return empty;
+    }
 
 public:
     // 종료 (Success/Fail/Abort 시 호출)

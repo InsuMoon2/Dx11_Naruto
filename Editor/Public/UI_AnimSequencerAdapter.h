@@ -42,9 +42,14 @@ public:
 private:
     void RebuildCache() const;
     FUIAnimAsset* Get_AssetPtr() const;
+    bool Has_FrameConflict(const Engine::FUIAnimTrack& track, int ignoreKeyIndex, int frame) const;
 
 private:
     FUIAnimSequencerContext* _context = nullptr;
+    int _draggingTrackIndex = -1;
+    int _draggingKeyIndex = -1;
+    int _dragStartFrame = -1;
+    bool _dragMoved = false;
 
     mutable vector<int> _cachedStarts;
     mutable vector<int> _cachedEnds;

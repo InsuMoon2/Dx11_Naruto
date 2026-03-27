@@ -57,15 +57,15 @@ private:
 private:
     void            Preview_BeginPlay();
     Shared<Model>   Find_PreviewModel() const;
-    void            Tick_PreviewAnimation(float timeDelta);
+
 
 private: /* 애니메이션 */
     void    Draw_AnimationControls();
     void    Open_AnimationView();
 
 private: /* 파츠 세팅 */
-    void Draw_PartObjectList();
-    void Draw_PartObjectInspector();
+    void    Draw_PartObjectList();
+    void    Draw_PartObjectInspector();
 
     Shared<ContainerObject> Get_PreviewContainer() const;
 

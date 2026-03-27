@@ -21,7 +21,7 @@ private:
     EPlayerState _myStateId = EPlayerState::END; // 스킬별로 ID 타입 세팅해주기
     int32        _mySkill_Id = 0;
 
-    float        _channelingTimer = 0.f;        // 루프를 도는 지속시간 체크용
+    float        _channelingTimer = 0.f;         // 루프를 도는 지속시간 체크용
     bool         _isEnding = false;
 
 

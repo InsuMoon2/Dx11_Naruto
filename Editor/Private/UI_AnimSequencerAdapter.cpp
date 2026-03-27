@@ -21,6 +21,20 @@ FUIAnimAsset* UI_AnimSequencerAdapter::Get_AssetPtr() const
     return _context->asset->get();
 }
 
+bool UI_AnimSequencerAdapter::Has_FrameConflict(const Engine::FUIAnimTrack& track, int ignoreKeyIndex, int frame) const
+{
+    for (int keyIndex = 0; keyIndex < static_cast<int>(track.keys.size()); ++keyIndex)
+    {
+        if (keyIndex == ignoreKeyIndex)
+            continue;
+
+        if (track.keys[keyIndex].frame == frame)
+            return true;
+    }
+
+    return false;
+}
+
 int UI_AnimSequencerAdapter::GetFrameMin() const
 {
     auto* asset = Get_AssetPtr();
@@ -183,7 +197,7 @@ void UI_AnimSequencerAdapter::CustomDraw(int index, ImDrawList* draw_list, const
 
     for (int keyIndex = 0; keyIndex < static_cast<int>(track.keys.size()); ++keyIndex)
     {
-        const auto& key = track.keys[keyIndex];
+        auto& key = track.keys[keyIndex];
 
         float x = rc.Min.x + (key.frame - frameMin) * pixelPerFrame;
         ImRect keyRect(ImVec2(x - 6.f, rc.Min.y + 3.f), ImVec2(x + 6.f, rc.Max.y - 3.f));
@@ -209,6 +223,45 @@ void UI_AnimSequencerAdapter::CustomDraw(int index, ImDrawList* draw_list, const
 
             if (_state)
                 _state->selectedEntry = index;
+
+            // 드래그 시작 기준 프레임을 기억해 두고, 마우스 이동량을 프레임 단위로 변환한다.
+            _draggingTrackIndex = index;
+            _draggingKeyIndex = keyIndex;
+            _dragStartFrame = key.frame;
+            _dragMoved = false;
+        }
+
+        if (_draggingTrackIndex == index && _draggingKeyIndex == keyIndex && ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+        {
+            const float deltaX = io.MousePos.x - io.MouseClickedPos[ImGuiMouseButton_Left].x;
+            const int frameDelta = static_cast<int>(deltaX / max(pixelPerFrame, 1.f));
+            const int newFrame = clamp(_dragStartFrame + frameDelta, frameMin, frameMax);
+
+            // 같은 frame에 다른 키가 있으면 이동을 막아서 기존 키를 보존한다.
+            if (newFrame != key.frame && !Has_FrameConflict(track, keyIndex, newFrame))
+            {
+                key.frame = newFrame;
+                _dragMoved = true;
+                RebuildCache();
+
+                if (_context->view)
+                    _context->view->On_KeyFrameDragged(track, keyIndex);
+            }
+        }
+
+        if (_draggingTrackIndex == index && _draggingKeyIndex == keyIndex && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+        {
+            const int finalFrame = key.frame;
+
+            _draggingTrackIndex = -1;
+            _draggingKeyIndex = -1;
+            _dragStartFrame = -1;
+            RebuildCache();
+
+            if (_dragMoved && _context->view)
+                _context->view->On_KeyFrameDragFinished(track, finalFrame);
+
+            _dragMoved = false;
         }
     }
 }

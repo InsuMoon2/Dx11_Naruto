@@ -85,12 +85,15 @@ public:
     // 마우스 캡처
     void LockMouse();
     void UnlockMouse();
-    bool IsMouseLocked() const { return _mouseLocked; }
+    bool IsMouseLocked() const           { return _mouseLocked; }
 
-    Vec2  GetMouseDelta() const { return _mouseDelta; }
-    float GetMouseWheel() const { return _mouseWheelDelta; }
+    Vec2  GetMouseDelta() const          { return _mouseDelta; }
+    float GetMouseWheel() const          { return _mouseWheelDelta; }
 
-    void  Set_MouseWheel(float delta) { _mouseWheelDelta = delta; }
+    void  Set_MouseWheel(float delta)    { _mouseWheelDelta = delta; }
+
+    void  Set_InputBlocked(bool blocked)  { _inputBlocked = blocked; }
+    bool  Is_InputBlocked() const         { return _inputBlocked; }
 
 private:
     inline KEY_STATE GetState(KEY_TYPE key) { return _states[static_cast<uint8>(key)]; }
@@ -106,6 +109,9 @@ private:
     Vec2    _mouseDelta = { };
 
     float   _mouseWheelDelta = 0.f;
+
+    bool    _inputBlocked = false; // ImGui에서 키를 쓰고있으면 같이 안먹게
+
 };
 
 NS_END

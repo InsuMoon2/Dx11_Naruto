@@ -87,6 +87,7 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
                 Protocol::OBJECT_TYPE_BACKGROUND,
                 EUILayer::Overlay,
                 &desc));
+
         if (!mainTitle) return E_FAIL;
     }
     // Logo
@@ -95,8 +96,8 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
         desc.name = TEXT("Logo");
         desc.posX = viewport.x * 0.5f;
         desc.posY = viewport.y * 0.3f;
-        desc.sizeX = desc.posX;
-        desc.sizeY = 200.f;
+        desc.sizeX = 1652.f;
+        desc.sizeY = 416.f;
 
         desc.levelIndex = ETOI(ELevelType::MainTitle);
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MAIN_TITLE;
@@ -109,16 +110,20 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
                 Protocol::OBJECT_TYPE_BACKGROUND,
                 EUILayer::Overlay,
                 &desc));
+
         if (!logo) return E_FAIL;
+
+        GAME->Play_UIAnimation(logo, "UI_MainTitleLogo");
+
     }
-    // Text
+    // Press Text
     {
         Background::FBackgroundDesc desc{};
         desc.name = TEXT("Press Text");
         desc.posX = viewport.x * 0.5f;
         desc.posY = viewport.y * 0.7f;
-        desc.sizeX = desc.posX * 0.8f;
-        desc.sizeY = 200.f;
+        desc.sizeX = 1252.f;
+        desc.sizeY = 180.f;
 
         desc.levelIndex = ETOI(ELevelType::MainTitle);
         desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MAIN_TITLE;
@@ -134,8 +139,7 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
 
         if (!_pressText) return E_FAIL;
 
-        // 테스트용
-        //GAME->Play_UIAnimation(_pressText, "PressText");
+        GAME->Play_UIAnimation(_pressText, "UI_PressText");
     }
 
     // Menu Button
