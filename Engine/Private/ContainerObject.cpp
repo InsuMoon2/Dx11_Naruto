@@ -87,6 +87,14 @@ HRESULT ContainerObject::Change_PartObject(EPartSlot slot, uint32 objID, void* a
 
     _partObjects[index] = partObject;
 
+    string slotName = Get_PartSlotName(slot);
+    if (_cachedPartTransforms.contains(slotName) && _partObjects[index])
+    {
+        auto transform = _partObjects[index]->Get_Component<Transform>();
+        if (transform)
+            transform->From_Json(_cachedPartTransforms[slotName]);
+    }
+
     return S_OK;
 }
 

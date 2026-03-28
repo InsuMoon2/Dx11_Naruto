@@ -53,8 +53,10 @@ public:
     const FStateAnimationDesc* Find_AnimStateDesc(EPlayerState stateID) const;
 
     EAnimPhase      Get_AnimPhase() const;
-    float           Get_AnimTrackPosition() const;
-    float           Get_AnimDuration() const;
+    float           Get_AnimTrackPositionTicks() const;
+    float           Get_AnimDurationTicks() const;
+    float           Get_AnimTrackPositionSec() const;
+    float           Get_AnimDurationSec() const;
 
 public:
     // 플레이어 강제 상태 변경

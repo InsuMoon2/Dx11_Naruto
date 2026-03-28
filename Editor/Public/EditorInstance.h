@@ -58,9 +58,9 @@ public: /* Command History */
     void    Redo();
     void    Clear_CommandHistory();
 
-private:
-    void    Save_SceneSnapshot();
-    void    Restore_SceneSnapshot();
+public:
+    void Save_SceneSnapshot();
+    void Restore_SceneSnapshot();
 
 private: /* Manager */
     Unique<ImGui_Manager>           _imguiManager;

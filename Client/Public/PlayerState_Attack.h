@@ -28,6 +28,8 @@ public:
 
     int32 Get_ComboIndex() const { return _comboIndex; }
 
+    void Advance_Combo();
+
 private:
     static constexpr int32 MAX_COMBO = 4;
 

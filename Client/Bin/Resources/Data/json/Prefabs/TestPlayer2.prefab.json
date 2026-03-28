@@ -648,7 +648,7 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_SSp_KWKSciwep_cmb_03",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Hand_Punch_Left",
                         "loop": false,
                         "playRate": 1.7000000476837158
                     },
@@ -986,7 +986,7 @@
             }
         }
     },
-    "guid": "12ddf339-50cb-4055-8fc9-b0f28ddb853b",
+    "guid": "722bc33c-0909-4431-bec6-afe6bc2c793b",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"

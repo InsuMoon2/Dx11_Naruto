@@ -31,6 +31,30 @@
             "Level": "Static"
         },
         {
+            "Id": "COMPONENT_TYPE_TEXTURE_WEAPON_TYPE",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_RollTextIcon_iya.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_WEAPON_TYPE",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_RollTextIcon_mam.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_WEAPON_TYPE",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_RollTextIcon_sem.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_WEAPON_TYPE",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_RollTextIcon_sha.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
             "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
             "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle%d.png",
             "Count": 2,
@@ -167,6 +191,18 @@
             "Id": "COMPONENT_TYPE_TEXTURE_SKILL_ICON",
             "Path": "../../Client/Bin/Resources/Textures/UI/Skill_Icon/Skill_Icon%d.png",
             "Count": 5,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKILL_SUB",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_ShinobiTool_Kunai_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKILL_SUB",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_Clone_BC.png",
+            "Count": 1,
             "Level": "Static"
         }
     ]

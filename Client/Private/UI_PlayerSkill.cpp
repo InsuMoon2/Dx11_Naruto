@@ -5,6 +5,7 @@
 #include "SkillComponent.h"
 #include "SkillDataManager.h"
 #include "GameObject_Factory.h"
+#include "UI_WeaponType.h"
 
 REGISTER_GAMEOBJECT(UI_PlayerSkill, Protocol::OBJECT_TYPE_UI_PLAYER_SKILL)
 
@@ -30,28 +31,7 @@ HRESULT UI_PlayerSkill::Initialize(void* arg)
 {
     CHECK_FAILED(Panel::Initialize(arg), E_FAIL);
 
-    UI_SkillSlot::FSkillSlotDesc leftDesc;
-    leftDesc.posX = 0.f;
-    leftDesc.posY = 0.f;
-    leftDesc.sizeX = 72.f;
-    leftDesc.sizeY = 72.f;
-    leftDesc.zOrder = _zOrder;
-    leftDesc.levelIndex = _levelIndex;
-
-    leftDesc.baseSrvIndex = 0;
-    leftDesc.iconSrvIndex = 0;
-
-    UI_SkillSlot::FSkillSlotDesc rightDesc = leftDesc;
-    rightDesc.posX = 86.f;
-
-    rightDesc.baseSrvIndex = 0;
-    rightDesc.iconSrvIndex = 0;
-
-    _slots[0] = Create_Child<UI_SkillSlot>(Protocol::OBJECT_TYPE_UI_SKILL_SLOT, EUILayer::HUD, &leftDesc);
-    _slots[1] = Create_Child<UI_SkillSlot>(Protocol::OBJECT_TYPE_UI_SKILL_SLOT, EUILayer::HUD, &rightDesc);
-
-    CHECK_NULL(_slots[0], E_FAIL);
-    CHECK_NULL(_slots[1], E_FAIL);
+    CHECK_FAILED(Ready_Skill(arg), E_FAIL);
 
     return S_OK;
 }
@@ -82,16 +62,16 @@ void UI_PlayerSkill::Update(float timeDelta)
 
         if (!skillData)
         {
-            _slots[i]->Set_SrvIndex(0);
-            _slots[i]->Set_CooldownRatio(0.f);
+            _skillSlots[i]->Set_SrvIndex(0);
+            _skillSlots[i]->Set_CooldownRatio(0.f);
             continue;
         }
 
         const uint32 iconSrvIndex =
             GET_SINGLE(SkillDataManager)->Get_SkillIconSrvIndex(skill_Id);
 
-        _slots[i]->Set_SrvIndex(iconSrvIndex);
-        _slots[i]->Set_CooldownRatio(skillCom->Get_CooldownRatio(i));
+        _skillSlots[i]->Set_SrvIndex(iconSrvIndex);
+        _skillSlots[i]->Set_CooldownRatio(skillCom->Get_CooldownRatio(i));
     }
 }
 
@@ -103,6 +83,86 @@ void UI_PlayerSkill::Bind_Player(Shared<Player> player)
     //    _combat = player->Get_Component<CombatStat>();
     //else
     //    _combat.reset();
+}
+
+HRESULT UI_PlayerSkill::Ready_Skill(void* arg)
+{
+    // 스킬
+    UI_SkillSlot::FSkillSlotDesc leftDesc;
+    leftDesc.posX = 0.f;
+    leftDesc.posY = 0.f;
+    leftDesc.sizeX = 94.f;
+    leftDesc.sizeY = 94.f;
+    leftDesc.zOrder = _zOrder;
+    leftDesc.levelIndex = _levelIndex;
+
+    leftDesc.baseSrvIndex = 0;
+    leftDesc.maskSrvIndex = 1;
+    leftDesc.iconSrvIndex = 0;
+
+    UI_SkillSlot::FSkillSlotDesc rightDesc = leftDesc;
+    rightDesc.posX = 121.8f;
+
+    rightDesc.baseSrvIndex = 0;
+    rightDesc.maskSrvIndex = 1;
+    rightDesc.iconSrvIndex = 0;
+
+    _skillSlots[0] = Create_Child<UI_SkillSlot>(Protocol::OBJECT_TYPE_UI_SKILL_SLOT, EUILayer::HUD, &leftDesc);
+    _skillSlots[1] = Create_Child<UI_SkillSlot>(Protocol::OBJECT_TYPE_UI_SKILL_SLOT, EUILayer::HUD, &rightDesc);
+
+    CHECK_NULL(_skillSlots[0], E_FAIL);
+    CHECK_NULL(_skillSlots[1], E_FAIL);
+
+    // 서브 스킬 : 쿠나이 던지기, 바꿔치기
+    UI_SkillSlot::FSkillSlotDesc leftSubDesc;
+    leftSubDesc.posX = leftDesc.posX - 220.f;
+    leftSubDesc.posY = 0.f;
+    leftSubDesc.sizeX = 74.f;
+    leftSubDesc.sizeY = 74.f;
+    leftSubDesc.zOrder = _zOrder;
+    leftSubDesc.levelIndex = _levelIndex;
+
+    leftSubDesc.baseSrvIndex = 0;
+    leftSubDesc.maskSrvIndex = 1;
+    leftSubDesc.iconSrvIndex = 1;
+    leftSubDesc.textureComponentType = Protocol::COMPONENT_TYPE_TEXTURE_SKILL_SUB;
+
+    UI_SkillSlot::FSkillSlotDesc rightSubDesc = leftSubDesc;
+    rightSubDesc.posX = leftSubDesc.posX + 101.8f;
+
+    rightSubDesc.baseSrvIndex = 0;
+    rightSubDesc.maskSrvIndex = 1;
+    rightSubDesc.iconSrvIndex = 0;
+
+    _subSkillSlot[0] = Create_Child<UI_SkillSlot>(Protocol::OBJECT_TYPE_UI_SKILL_SLOT, EUILayer::HUD, &leftSubDesc);
+    _subSkillSlot[1] = Create_Child<UI_SkillSlot>(Protocol::OBJECT_TYPE_UI_SKILL_SLOT, EUILayer::HUD, &rightSubDesc);
+
+    CHECK_NULL(_subSkillSlot[0], E_FAIL);
+    CHECK_NULL(_subSkillSlot[1], E_FAIL);
+
+    // 무기 타입 텍스트
+    UI_WeaponType::FWeaponTypeDesc weaponDesc;
+
+    weaponDesc.posX = leftDesc.posX;
+    weaponDesc.posY = leftDesc.posY - 120.f;
+    weaponDesc.sizeX = 292.f;
+    weaponDesc.sizeY = 40.f;
+    weaponDesc.zOrder = _zOrder;
+    weaponDesc.levelIndex = _levelIndex;
+
+    // 처음에는 격투형으로
+    weaponDesc.weaponTypeBG = UI_WeaponType::EWeaponTypeBG::Fighter;
+
+    weaponDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_WEAPON_TYPE;
+
+    weaponDesc.textDesc.offset = Vec2(18.f, 0.f);
+    weaponDesc.textDesc.size = Vec2(180.f, 32.f);
+    weaponDesc.textDesc.zOrderOffset = 0.01f;
+
+    _weaponTypeUI = Create_Child<UI_WeaponType>(Protocol::OBJECT_TYPE_UI_WEAPON_TYPE, EUILayer::HUD, &weaponDesc);
+    CHECK_NULL(_weaponTypeUI, E_FAIL);
+
+    return S_OK;
 }
 
 Shared<UI_PlayerSkill> UI_PlayerSkill::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

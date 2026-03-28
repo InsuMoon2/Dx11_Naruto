@@ -59,12 +59,22 @@ HRESULT MyPlayer::Initialize(void* arg)
     return S_OK;
 }
 
+void MyPlayer::Priority_Update(float timeDelta)
+{
+    Player::Priority_Update(timeDelta);
+
+    if (_playerController)
+        _playerController->Update(timeDelta);
+
+    if (_skill)
+        _skill->Update(timeDelta);
+}
+
 void MyPlayer::Update(float timeDelta)
 {
     Player::Update(timeDelta);
 
-    _playerController->Update(timeDelta);
-    _skill->Update(timeDelta);
+ 
 }
 
 void MyPlayer::Late_Update(float timeDelta)

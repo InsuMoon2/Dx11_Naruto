@@ -296,14 +296,24 @@ EAnimPhase PlayerStateMachine::Get_AnimPhase() const
     return _animationState ? _animationState->Get_CurrentAnimPhase() : EAnimPhase::Start;
 }
 
-float PlayerStateMachine::Get_AnimTrackPosition() const
+float PlayerStateMachine::Get_AnimTrackPositionTicks() const
 {
-    return _animationState ? _animationState->Get_CurrentTrackPosition() : 0.f;
+    return _animationState ? _animationState->Get_CurrentTrackPositionTicks() : 0.f;
 }
 
-float PlayerStateMachine::Get_AnimDuration() const
+float PlayerStateMachine::Get_AnimDurationTicks() const
 {
-    return _animationState ? _animationState->Get_CurrentAnimationDuration() : 0.f;
+    return _animationState ? _animationState->Get_CurrentAnimationDurationTicks() : 0.f;
+}
+
+float PlayerStateMachine::Get_AnimTrackPositionSec() const
+{
+    return _animationState ? _animationState->Get_CurrentTrackPositionSec() : 0.f;
+}
+
+float PlayerStateMachine::Get_AnimDurationSec() const
+{
+    return _animationState ? _animationState->Get_CurrentAnimationDurationSec() : 0.f;
 }
 
 void PlayerStateMachine::Force_Enter_State(EPlayerState stateID)

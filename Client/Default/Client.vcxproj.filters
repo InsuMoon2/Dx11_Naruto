@@ -192,6 +192,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\ANS_ComboWindow.h" />
     <ClInclude Include="..\Public\ANS_CollisionEnable.h" />
+    <ClInclude Include="..\Public\UI_WeaponType.h">
+      <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -370,6 +373,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ANS_ComboWindow.cpp" />
     <ClCompile Include="..\Private\ANS_CollisionEnable.cpp" />
+    <ClCompile Include="..\Private\UI_WeaponType.cpp">
+      <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

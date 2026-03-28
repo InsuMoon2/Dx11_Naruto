@@ -37,7 +37,6 @@ HRESULT Player::Initialize(void* arg)
 void Player::BeginPlay()
 {
     Character::BeginPlay();
-
 }
 
 void Player::Priority_Update(float timeDelta)
@@ -51,12 +50,12 @@ void Player::Update(float timeDelta)
 
     if (_model)
         _model->Play_Animation(timeDelta, true);
-
 }
 
 void Player::Late_Update(float timeDelta)
 {
     Character::Late_Update(timeDelta);
+
 }
 
 HRESULT Player::Render()
@@ -73,16 +72,35 @@ void Player::Sync(const Protocol::ObjectInfo& info)
 
 HRESULT Player::Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetTag)
 {
-    if (modelAssetTag.empty())
+    // 장착 해제
+    if (modelAssetTag == TEXT("None") || modelAssetTag.empty())
+    {
+        if (slot == EPartSlot::Weapon)
+            return Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_WEAPON, nullptr);
+
         return Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_OBJECT, nullptr);
+    }
 
-    PartObject::FPartObjectDesc partDesc{};
-    //partDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
-    partDesc.parentTransform = _transformCom;
-    partDesc.modelAssetTag = modelAssetTag;
-    partDesc.masterPoseModel = _model;
+    // 슬롯이 무기인 경우
+    if (slot == EPartSlot::Weapon)
+    {
+        Weapon::FWeaponDesc weaponDesc{};
+        weaponDesc.parentTransform = _transformCom;
+        weaponDesc.modelAssetTag = modelAssetTag;
 
-    return Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_OBJECT, &partDesc);
+        weaponDesc.socketMatrix = _model->Get_SocketBoneMatrixPtr("Attach_Sword");
+        return Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_WEAPON, &weaponDesc);
+    }
+
+    // 일반 파츠인 경우
+    else
+    {
+        PartObject::FPartObjectDesc partDesc{};
+        partDesc.parentTransform = _transformCom;
+        partDesc.modelAssetTag = modelAssetTag;
+        partDesc.masterPoseModel = _model;
+        return Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_OBJECT, &partDesc);
+    }
 }
 
 HRESULT Player::Ready_Components()
@@ -168,7 +186,7 @@ HRESULT Player::Ready_PartObjects()
     onePieceDesc.masterPoseModel = _model;
     CHECK_FAILED(Add_PartObject(EPartSlot::Onepiece, Protocol::OBJECT_TYPE_PART_OBJECT, &onePieceDesc), E_FAIL);
 
-    // 소켓 생성해서 무기 붙이기
+
     {
         Weapon::FWeaponDesc weaponDesc{};
         weaponDesc.parentTransform = _transformCom;

@@ -295,6 +295,7 @@
     <ClInclude Include="..\Public\UI_PlayerStatus.h" />
     <ClInclude Include="..\Public\UI_SkillSlot.h" />
     <ClInclude Include="..\Public\UI_TabButton.h" />
+    <ClInclude Include="..\Public\UI_WeaponType.h" />
     <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="pch.h" />
@@ -389,6 +390,7 @@
     <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp" />
     <ClCompile Include="..\Private\UI_SkillSlot.cpp" />
     <ClCompile Include="..\Private\UI_TabButton.cpp" />
+    <ClCompile Include="..\Private\UI_WeaponType.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
     <ClCompile Include="IReplicable.cpp" />
     <ClCompile Include="pch.cpp">

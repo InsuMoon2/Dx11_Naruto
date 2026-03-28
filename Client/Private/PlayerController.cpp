@@ -54,7 +54,8 @@ void PlayerController::Update(float timeDelta)
 {
     Controller::Update(timeDelta);
 
-    _input->Update_Input(timeDelta);
+    if (_input)
+        _input->Update_Input(timeDelta);
 
     if (_stateMachine)
         _stateMachine->Update(timeDelta);

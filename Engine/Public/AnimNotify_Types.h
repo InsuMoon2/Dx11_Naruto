@@ -57,9 +57,14 @@ struct FAnimNotifyAsset
 
 struct FActiveAnimNotifyState
 {
-    int32 stateIndex = -1;
-    float startSec = 0.f;
-    float endSec = 0.f;
+    string clipName;         
+
+    int32 stateIndex = -1;   
+    float startSec = 0.f;    
+    float endSec = 0.f;      
+
+    float lastTimeSec = 0.f; 
+                             
 
     Shared<AnimNotifyState> notifyState;
 };

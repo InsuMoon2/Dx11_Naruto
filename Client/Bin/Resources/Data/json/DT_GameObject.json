@@ -109,6 +109,11 @@
             "Id": "UI_TabButton",
             "ObjectType": "OBJECT_TYPE_UI_TAB",
             "Level": "Static"
+        },
+        {
+            "Id": "UI_WeaponType",
+            "ObjectType": "OBJECT_TYPE_UI_WEAPON_TYPE",
+            "Level": "Static"
         }
     ]
 }

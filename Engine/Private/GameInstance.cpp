@@ -412,6 +412,11 @@ void GameInstance::Clear_Layers(uint32 levelIndex)
     return _objectManager->Clear_Layers(levelIndex);
 }
 
+void GameInstance::Delete_GameObject(uint32 levelIndex, Shared<GameObject> gameObject)
+{
+    return _objectManager->Delete_GameObject(levelIndex, gameObject);
+}
+
 void GameInstance::Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject)
 {
     return _renderer->Add_RenderGroup(renderType, gameObject);

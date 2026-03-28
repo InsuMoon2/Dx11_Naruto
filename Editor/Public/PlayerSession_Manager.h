@@ -13,8 +13,22 @@ public:
     void    Start_MultiPlayer(int32 playerCount);
     void    Stop_AllSession();
 
+public:
+    void    Begin_PlaySession();
+    void    End_PlaySession();
+
+    void    Restore_SceneSnapshot();
     void    Save_SceneSnapshot();
-    void Restore_SceneSnapshot();
+
+private:
+    // 레벨에 있는 플레이어 제거
+    void    Remove_PlaySessionPlayers(uint32 levelIndex);
+    // Player Start 기준으로 스폰 위치, 회전값 세팅
+    bool    Find_GetPlayerSpawnTransform(uint32 levelIndex , Vec3& outSpawnPos, Quat& outSpawnRot) const;
+
+    Shared<GameObject> Spawn_PlaySessionPlayer(uint32 levelIndex);
+
+    void    Apply_PlayerCustomizing(const Shared<GameObject>& playerObj) const;
 
 private:
     bool    Launch_Server();
@@ -25,14 +39,14 @@ private:
 
 private:
     vector<PROCESS_INFORMATION> _activeProcesses;
-    HWND _editorMainWindow = {};
+    HWND                        _editorMainWindow = {};
 
 private:
-    json        _sceneSnapshot;
-    bool        _hasSnapShot = false;
+    json                        _sceneSnapshot;
+    bool                        _hasSnapShot = false;
 
 public:
-    static unique_ptr<PlayerSession_Manager> Create();
+    static Unique<PlayerSession_Manager> Create();
 
 };
 

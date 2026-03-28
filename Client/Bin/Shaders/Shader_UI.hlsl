@@ -1,5 +1,6 @@
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D g_Texture;
+Texture2D g_MaskTexture;
 
 float g_Alpha = 1.0f;
 
@@ -164,6 +165,56 @@ PS_OUT PS_COOLDOWN_OVERLAY(PS_IN In)
         discard;
 
     Out.vColor = float4(0.f, 0.f, 0.f, finalAlpha);
+
+    return Out;
+}
+
+PS_OUT PS_MASKED_UI(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 sampled = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+
+    float4 maskSample = g_MaskTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    float maskAlpha = step(0.1f, maskSample.a);
+    float finalAlpha = sampled.a * maskAlpha * g_Alpha;
+
+    if (finalAlpha < 0.01)
+        discard;
+
+    Out.vColor = sampled;
+    Out.vColor.a = finalAlpha;
+
+    return Out;
+}
+
+PS_OUT PS_MASKED_COOLDOWN_OVERLAY(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 sampled = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float4 maskSample = g_MaskTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    float ratio = saturate(g_CooldownRatio);
+    if (ratio <= 0.001f)
+        discard;
+
+    // 경계 부드러움 범위
+    float edgeSoftness = 0.06f;
+
+    float maskAlpha = step(0.1f, maskSample.a);
+
+    float fillY = 1.f - In.vTexcoord.y;
+    float cooldownMask = smoothstep(ratio - edgeSoftness, ratio + edgeSoftness, In.vTexcoord.y);
+
+    float finalAlpha = sampled.a * maskAlpha * g_CooldownOverlayAlpha * cooldownMask;
+
+    if (finalAlpha < 0.01f)
+        discard;
+
+    Out.vColor = float4(0.f, 0.f, 0.f, finalAlpha);
+
     return Out;
 }
 
@@ -175,6 +226,7 @@ RasterizerState CullNone
 
 technique11 DefaultTechnique
 {
+    // 0
     pass DefaultPass
     {
         SetRasterizerState(CullNone);
@@ -182,7 +234,7 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
     }
-
+    // 1
     pass ColorPass
     {
         SetRasterizerState(CullNone);
@@ -190,7 +242,7 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_COLOR();
     }
-
+    // 2
     pass CoolDownOverlayPass
     {
         SetRasterizerState(CullNone);
@@ -198,7 +250,7 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_COOLDOWN_OVERLAY();
     }
-
+    // 3
     pass HorizontalFillColorPass
     {
         SetRasterizerState(CullNone);
@@ -206,13 +258,29 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_HORIZONTAL_FILL_COLOR();
     }
-
+    // 4
     pass RotationDefaultPass
     {
         SetRasterizerState(CullNone);
 
         VertexShader = compile vs_5_0 VS_ROTATE_UI();
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+    // 5
+    pass MaskedDefaultPass
+    {
+        SetRasterizerState(CullNone);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MASKED_UI();
+    }
+    // 6
+    pass MaskedCoolDownOverlayPass
+    {
+        SetRasterizerState(CullNone);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MASKED_COOLDOWN_OVERLAY();
     }
 }
 

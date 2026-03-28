@@ -72,4 +72,14 @@
         offsetof(SelfType, Member), 0.f, 0.f, 0.f, {}                       \
     });
 
+#define PROPERTY_ENUM_CUSTOM(DisplayName, Member, EnumNamesVec)            \
+{                                                                            \
+    Engine::FPropertyInfo _prop;                                             \
+    _prop.name   = DisplayName;                                              \
+    _prop.type   = Engine::EPropertyType::Enum;                              \
+    _prop.offset = offsetof(SelfType, Member);                               \
+    _prop.enumNames = EnumNamesVec;                                          \
+    info.properties.push_back(_prop);                                        \
+}
+
 #pragma warning(pop)

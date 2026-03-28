@@ -75,9 +75,7 @@ void EditorInstance::Release()
 
 void EditorInstance::Play()
 {
-    Save_SceneSnapshot();
-
-    GAME->Reapply_Prefabs_InCurrentLevel();
+    _playerSessionManager->Begin_PlaySession();
 
     GAME->Set_GameState(EGameState::Play);
     ImGui::SetWindowFocus("Game");
@@ -97,7 +95,8 @@ void EditorInstance::Pause()
 
 void EditorInstance::Stop()
 {
-    Restore_SceneSnapshot();
+    _playerSessionManager->End_PlaySession();
+
     Clear_CommandHistory();  // 커맨드도 초기화
 
     GAME->Set_GameState(EGameState::Edit);
@@ -169,14 +168,4 @@ void EditorInstance::Redo()
 void EditorInstance::Clear_CommandHistory()
 {
     return _commandHistory->Clear();
-}
-
-void EditorInstance::Save_SceneSnapshot()
-{
-    return _playerSessionManager->Save_SceneSnapshot();
-}
-
-void EditorInstance::Restore_SceneSnapshot()
-{
-    return _playerSessionManager->Restore_SceneSnapshot();
 }

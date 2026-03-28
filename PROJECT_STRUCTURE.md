@@ -1,7 +1,7 @@
 # Dx11_Naruto 프로젝트 구조
 
 > AI 어시스턴트는 매 대화 시작 시 이 파일을 먼저 읽고 현재 구조를 기준으로 판단할 것.
-> 마지막 갱신: 2026-03-26
+> 마지막 갱신: 2026-03-28
 
 ## 문서 보강 규칙
 
@@ -158,7 +158,7 @@ Dx11_Naruto/
 - 씬/게임플레이: `Transform`, `Character`, `Controller`, `PlayerStart`, `Light`, `Light_Manager`
 - 유틸/기반 서비스: `DebugDraw`, `Debug_Manager`, `DelegateHub`, `Delegate`, `Event_Manager`, `Input_Manager`, `Utils`
 
-### Engine/Public 주요 헤더 묶음 (92 파일)
+### Engine/Public 주요 헤더 묶음 (94 파일)
 
 | 묶음 | 파일 |
 |---|---|
@@ -168,23 +168,23 @@ Dx11_Naruto/
 | 카메라 | `Camera.h`, `Camera_Manager.h`, `Camera_Cinematic.h`, `CameraTrack_Player.h`, `CameraTrack_Serializer.h`, `Camera_Types.h` |
 | 씬/게임플레이 | `Transform.h`, `Character.h`, `Controller.h`, `PlayerStart.h`, `Light.h`, `Light_Manager.h` |
 | UI/텍스트 | `UIObject.h`, `HUD.h`, `Panel.h`, `UI_Manager.h`, `UI_Text.h`, `Text_Renderer.h`, `Text_Types.h`, `UI_AnimPlayer.h`, `UI_AnimSerializer.h`, `UI_AnimTypes.h`, `UI_AnimUtility.h` |
-| BT/AI | `BehaviorTree.h`, `Blackboard.h`, `BTNode.h`, `BTRoot.h`, `BTComposite.h`, `BTTask.h`, `BTTask_MoveTo.h`, `BTTask_Wait.h`, `BTNode_Factory.h` |
+| BT/AI | `BehaviorTree.h`, `Blackboard.h`, `BTNode.h`, `BTRoot.h`, `BTComposite.h`, `BTTask.h`, `BTTask_MoveTo.h`, `BTTask_Wait.h`, `BTTask_SetAnimState.h`, `BTNode_Factory.h` |
 | 애니메이션 | `Animation.h`, `Animation_Manager.h`, `Bone.h`, `Channel.h` |
 | 애니메이션 노티파이 | `AnimNotify.h`, `AnimNotifyState.h`, `AnimNotify_Factory.h`, `AnimNotify_Serializer.h`, `AnimNotify_Types.h` |
 | 공용 타입 | `Engine_Define.h`, `Engine_Enum.h`, `Engine_Function.h`, `Engine_Macro.h`, `Engine_Struct.h`, `Engine_Typedef.h`, `Property_Types.h`, `Reflection_Macro.h` |
-| 입력/기타 | `Input_Manager.h`, `DebugDraw.h`, `Debug_Manager.h`, `Delegate.h`, `DelegateHub.h`, `Utils.h` |
+| 사운드/입력/기타 | `Sound_Manager.h`, `Input_Manager.h`, `DebugDraw.h`, `Debug_Manager.h`, `Delegate.h`, `DelegateHub.h`, `Utils.h` |
 | protobuf 노출 | `Enum.pb.h`, `Struct.pb.h`, `Protocol.pb.h` |
 
-### Engine/Private 현재 주요 cpp (76 파일)
+### Engine/Private 현재 주요 cpp (78 파일)
 
 - 렌더/리소스: `Shader.cpp`, `Texture.cpp`, `Mesh.cpp`, `Model.cpp`, `ModelMaterial.cpp`, `Model_BinaryLoader.cpp`, `RenderTarget.cpp`, `Renderer.cpp`, `Asset_Manager.cpp`
+- 사운드/입력/시스템: `Sound_Manager.cpp`, `Input_Manager.cpp`, `GameInstance.cpp`, `Graphic_Device.cpp`, `PipeLine.cpp`, `Event_Manager.cpp`, `DelegateHub.cpp`, `DebugDraw.cpp`
 - UI/텍스트: `UIObject.cpp`, `UI_Manager.cpp`, `HUD.cpp`, `Panel.cpp`, `UI_Text.cpp`, `Text_Renderer.cpp`, `UI_AnimPlayer.cpp`, `UI_AnimSerializer.cpp`, `UI_AnimUtility.cpp`
-- AI/BT: `BehaviorTree.cpp`, `Blackboard.cpp`, `BTComposite.cpp`, `BTRoot.cpp`, `BTNode.cpp`, `BTTask.cpp`, `BTTask_MoveTo.cpp`, `BTTask_Wait.cpp`, `BTNode_Factory.cpp`
+- AI/BT: `BehaviorTree.cpp`, `Blackboard.cpp`, `BTComposite.cpp`, `BTRoot.cpp`, `BTNode.cpp`, `BTTask.cpp`, `BTTask_MoveTo.cpp`, `BTTask_Wait.cpp`, `BTTask_SetAnimState.cpp`, `BTNode_Factory.cpp`
 - 애니메이션/노티파이: `Animation.cpp`, `Animation_Manager.cpp`, `Bone.cpp`, `Channel.cpp`, `AnimNotify.cpp`, `AnimNotifyState.cpp`, `AnimNotify_Factory.cpp`, `AnimNotify_Serializer.cpp`
 - 카메라: `Camera.cpp`, `Camera_Manager.cpp`, `Camera_Cinematic.cpp`, `CameraTrack_Player.cpp`, `CameraTrack_Serializer.cpp`
 - 팩토리/관리: `GameObject_Factory.cpp`, `Component_Factory.cpp`, `Prototype_Manager.cpp`, `Prefab_Manager.cpp`, `Level_Manager.cpp`, `Object_Manager.cpp`
 - 씬/게임플레이: `Transform.cpp`, `Character.cpp`, `Controller.cpp`, `PlayerStart.cpp`, `Light.cpp`, `Light_Manager.cpp`
-- 시스템: `GameInstance.cpp`, `Graphic_Device.cpp`, `PipeLine.cpp`, `Input_Manager.cpp`, `Event_Manager.cpp`, `DelegateHub.cpp`, `DebugDraw.cpp`
 - 기타: `ContainerObject.cpp`, `PartObject.cpp`, `SimpleMath.cpp`, `Base.cpp`, `Layer.cpp`, `Level.cpp`, `VIBuffer.cpp`, `VIBuffer_Rect.cpp`, `VIBuffer_Terrain.cpp`, `Timer.cpp`, `Timer_Manager.cpp`, `ICommand.cpp`, `Delegate.cpp`, `Debug_Manager.cpp`, `Utils.cpp`, `Component.cpp`, `GameObject.cpp`
 
 ### Engine 주의사항
@@ -211,25 +211,26 @@ Dx11_Naruto/
 - 로더 / 리소스 테이블 파서
 - 서버 세션 / 패킷 처리 / 네트워크 매니저
 
-### Client/Public 현재 헤더 목록 (61 파일)
+### Client/Public 현재 헤더 목록 (65 파일)
 
 | 묶음 | 파일 |
 |---|---|
 | 게임 오브젝트 | `Player.h`, `MyPlayer.h`, `RemotePlayer.h`, `PreviewPlayer.h`, `Player_CustomPart.h`, `Monster.h`, `Terrain.h`, `StaticMeshActor.h`, `Background.h`, `Weapon.h` |
 | 카메라 | `Camera_Free.h`, `Camera_Target.h` |
 | 컴포넌트 | `CombatStat.h`, `InputComponent.h`, `MovementComponent.h`, `PlayerController.h`, `AIController.h`, `Replicator.h`, `SkillComponent.h`, `AnimationStateComponent.h` |
-| FSM | `IPlayerState.h`, `PlayerStateMachine.h`, `PlayerState_Idle.h`, `PlayerState_Run.h`, `PlayerState_Jump.h`, `PlayerState_DoubleJump.h`, `PlayerState_SuperJump.h`, `PlayerState_SuperJumpCharge.h`, `PlayerState_Dash.h`, `PlayerState_HeightLand.h`, `PlayerState_Skill.h` |
+| FSM | `IPlayerState.h`, `PlayerStateMachine.h`, `PlayerState_Idle.h`, `PlayerState_Run.h`, `PlayerState_Jump.h`, `PlayerState_DoubleJump.h`, `PlayerState_SuperJump.h`, `PlayerState_SuperJumpCharge.h`, `PlayerState_Dash.h`, `PlayerState_JumpDash.h`, `PlayerState_HeightLand.h`, `PlayerState_Attack.h`, `PlayerState_Skill.h` |
 | 레벨/앱 | `MainApp.h`, `Loader.h`, `ResourceLoader.h`, `Level_MainTitle.h`, `Level_Loading.h`, `Level_Gameplay.h`, `Level_CharacterSetup.h` |
 | UI | `UI_PlayerHUD.h`, `UI_PlayerStatus.h`, `UI_PlayerHP.h`, `UI_PlayerSkill.h`, `UI_SkillSlot.h`, `UI_LoadingProgressBar.h`, `UI_LoadingSpinner.h`, `UI_MainTitleMenuButton.h`, `UI_TabButton.h` |
 | 네트워크 | `NetworkManager.h`, `ServerSession.h`, `Client_PacketHandler.h`, `IReplicable.h`, `Protocol_Wrapper.h` |
 | 커스터마이징 | `Customizer_Manager.h` |
-| 기타 | `Spawn_Helper.h`, `SkillDataManager.h`, `Client_Defines.h`, `Client_Enum.h`, `Client_Macro.h`, `Client_Struct.h`, `ANS_Test.h`, `AN_Test.h` |
+| 스킬/데이터 | `SkillDataManager.h`, `Spawn_Helper.h`, `Client_Defines.h`, `Client_Enum.h`, `Client_Macro.h`, `Client_Struct.h` |
+| 테스팅 및 상태 | `ANS_Test.h`, `AN_Test.h`, `ANS_ComboWindow.h`, `ANS_CollisionEnable.h` |
 
-### Client/Private 실제 구현 포인트 (55 파일)
+### Client/Private 실제 구현 포인트 (59 파일)
 
 - 플레이어: `Player.cpp`, `MyPlayer.cpp`, `RemotePlayer.cpp`, `PreviewPlayer.cpp`, `Player_CustomPart.cpp`
 - 몬스터/AI: `Monster.cpp`, `AIController.cpp`
-- FSM: `PlayerStateMachine.cpp`, `PlayerState_Idle.cpp`, `PlayerState_Run.cpp`, `PlayerState_Jump.cpp`, `PlayerState_DoubleJump.cpp`, `PlayerState_SuperJump.cpp`, `PlayerState_SuperJumpCharge.cpp`, `PlayerState_Dash.cpp`, `PlayerState_HeightLand.cpp`, `PlayerState_Skill.cpp`
+- FSM: `PlayerStateMachine.cpp`, `PlayerState_Idle.cpp`, `PlayerState_Run.cpp`, `PlayerState_Jump.cpp`, `PlayerState_DoubleJump.cpp`, `PlayerState_SuperJump.cpp`, `PlayerState_SuperJumpCharge.cpp`, `PlayerState_Dash.cpp`, `PlayerState_JumpDash.cpp`, `PlayerState_HeightLand.cpp`, `PlayerState_Attack.cpp`, `PlayerState_Skill.cpp`, `IPlayerState.cpp`
 - 컴포넌트: `InputComponent.cpp`, `MovementComponent.cpp`, `CombatStat.cpp`, `SkillComponent.cpp`, `AnimationStateComponent.cpp`, `Replicator.cpp`, `PlayerController.cpp`
 - 무기/커스터마이징: `Weapon.cpp`, `Customizer_Manager.cpp`
 - 로딩: `Loader.cpp`, `ResourceLoader.cpp`
@@ -237,7 +238,7 @@ Dx11_Naruto/
 - 네트워크: `NetworkManager.cpp`, `ServerSession.cpp`, `Client_PacketHandler.cpp`
 - UI: `UI_PlayerHUD.cpp`, `UI_PlayerStatus.cpp`, `UI_PlayerHP.cpp`, `UI_PlayerSkill.cpp`, `UI_SkillSlot.cpp`, `UI_LoadingProgressBar.cpp`, `UI_LoadingSpinner.cpp`, `UI_MainTitleMenuButton.cpp`, `UI_TabButton.cpp`
 - 오브젝트: `Terrain.cpp`, `StaticMeshActor.cpp`, `Background.cpp`, `Camera_Free.cpp`, `Camera_Target.cpp`
-- 기타: `Spawn_Helper.cpp`, `SkillDataManager.cpp`, `ANS_Test.cpp`, `AN_Test.cpp`, `IPlayerState.cpp`
+- 기타: `Spawn_Helper.cpp`, `SkillDataManager.cpp`, `ANS_Test.cpp`, `AN_Test.cpp`, `ANS_ComboWindow.cpp`, `ANS_CollisionEnable.cpp`
 
 ### Client 현재 특징
 

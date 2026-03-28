@@ -74,9 +74,19 @@ void UIObject::Update(float timeDelta)
 
     if (_transformCom->Has_Parent())
     {
-        Vec3 parentLocalPos = _transformCom->Get_Parent()->Get_LocalPosition();
-        _posX = parentLocalPos.x + localPos.x;
-        _posY = parentLocalPos.y + localPos.y;
+        auto parentUI = dynamic_pointer_cast<UIObject>(_transformCom->Get_Parent()->Get_Owner());
+
+        if (parentUI)
+        {
+            _posX = parentUI->Get_UIPosX() + localPos.x;
+            _posY = parentUI->Get_UIPosY() + localPos.y;
+        }
+        else
+        {
+            Vec3 parentLocalPos = _transformCom->Get_Parent()->Get_LocalPosition();
+            _posX = parentLocalPos.x + localPos.x;
+            _posY = parentLocalPos.y + localPos.y;
+        }
     }
 
     else

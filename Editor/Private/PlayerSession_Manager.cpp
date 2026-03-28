@@ -2,6 +2,29 @@
 #include "PlayerSession_Manager.h"
 #include "Layer.h"
 #include "GameObject.h"
+#include "Event_Manager.h"
+#include "Player.h"
+#include "Spawn_Helper.h"
+#include "Customizer_Manager.h"
+
+static bool Is_CameraObject(const Shared<GameObject>& obj)
+{
+    if (!obj)
+        return false;
+
+    const auto objType = obj->Get_ObjectType();
+
+    return objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
+        objType == Protocol::OBJECT_TYPE_CAMERA_TARGET;
+}
+
+static bool Is_PlayerObject(const Shared<GameObject>& obj)
+{
+    if (!obj)
+        return false;
+
+    return obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER;
+}
 
 PlayerSession_Manager::~PlayerSession_Manager()
 {
@@ -68,6 +91,38 @@ void PlayerSession_Manager::Stop_AllSession()
         ShowWindow(_editorMainWindow, SW_SHOW);
         SetForegroundWindow(_editorMainWindow);
     }
+}
+
+void PlayerSession_Manager::Begin_PlaySession()
+{
+    const uint32 levelIndex = GAME->Current_Level();
+
+    // 편집할 월드 저장
+    Save_SceneSnapshot();
+
+    // Prefab 원본 변경사항 레벨에 다시 저장
+    GAME->Reapply_Prefabs_InCurrentLevel();
+
+    // 추후에 레벨 GamePlay, 뭐 마을, 등등.. 추가되면 추가?
+    if (levelIndex != ETOI(ELevelType::GamePlay))
+        return;
+
+    // 이전 플레이어 제거
+    Remove_PlaySessionPlayers(levelIndex);
+
+    // 새 플레이어 생성
+    auto playerObj = Spawn_PlaySessionPlayer(levelIndex);
+
+    if (!playerObj)
+    {
+        LOG_WARN("플레이어 생성 안됐음. 왜?");
+    }
+
+}
+
+void PlayerSession_Manager::End_PlaySession()
+{
+    Restore_SceneSnapshot();
 }
 
 bool PlayerSession_Manager::Launch_Server()
@@ -225,65 +280,185 @@ void PlayerSession_Manager::Save_SceneSnapshot()
     _hasSnapShot = true;
 }
 
+void PlayerSession_Manager::Remove_PlaySessionPlayers(uint32 levelIndex)
+{
+    const auto& layers = GAME->Get_Layers(levelIndex);
+    vector<shared_ptr<GameObject>> removeTargets;
+
+    for (const auto& [layerTag, layer] : layers)
+    {
+        if (!layer)
+            continue;
+
+        for (const auto& obj : layer->Get_GameObjects())
+        {
+            if (Is_PlayerObject(obj))
+                removeTargets.push_back(obj);
+        }
+    }
+
+    for (const auto& obj : removeTargets)
+    {
+        GAME->Delete_GameObject(levelIndex, obj);
+    }
+
+}
+
+bool PlayerSession_Manager::Find_GetPlayerSpawnTransform(uint32 levelIndex, Vec3& outSpawnPos, Quat& outSpawnRot) const
+{
+    outSpawnPos = Vec3::Zero;
+    outSpawnRot = Quat::Identity;
+
+    const auto allObjects = GAME->Get_GameObjects(levelIndex);
+
+    for (const auto& obj : allObjects)
+    {
+        if (!obj)
+            continue;
+
+        if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_PLAYER_START)
+            continue;
+
+        auto transform = obj->Get_Transform();
+        CHECK_NULL(transform, false);
+
+        outSpawnPos = transform->Get_WorldPosition();
+        outSpawnRot = transform->Get_WorldRotation();
+
+        return true;
+    }
+
+    return false;
+}
+
+Shared<GameObject> PlayerSession_Manager::Spawn_PlaySessionPlayer(uint32 levelIndex)
+{
+    Vec3 spawnPos = Vec3::Zero;
+    Quat spawnRot = Quat::Identity;
+
+    // 플레이어 스타트가 있으면 그 위치 사용
+    Find_GetPlayerSpawnTransform(levelIndex, spawnPos, spawnRot);
+
+    auto playerObj = Spawn_Helper::Prefab("TestPlayer2")
+        .AtLevel(levelIndex)
+        .InLayer(TEXT("Layer_Player"))
+        .Position(spawnPos)
+        .Spawn();
+
+    CHECK_NULL(playerObj, nullptr);
+
+    auto transform = playerObj->Get_Transform();
+    if (transform)
+    {
+        transform->Set_LocalPosition(spawnPos);
+        transform->Set_LocalRotation(spawnRot);
+    }
+
+    Apply_PlayerCustomizing(playerObj);
+
+    auto player = dynamic_pointer_cast<Player>(playerObj);
+    if (player)
+    {
+        GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(player->Get_Transform());
+        GAME->Get_DelegateHub().OnPlayerObjectSpawned.Broadcast(player);
+    }
+
+    return playerObj;
+}
+
+void PlayerSession_Manager::Apply_PlayerCustomizing(const Shared<GameObject>& playerObj) const
+{
+    auto player = dynamic_pointer_cast<Player>(playerObj);
+    CHECK_NULL(player);
+
+    auto customizer = GET_SINGLE(Customizer_Manager);
+    const auto& customDesc = customizer->Get_CustomizerDesc();
+
+    for (int32 i = 0; i < ETOI(ContainerObject::EPartSlot::END); ++i)
+    {
+        const wstring& partTag = customDesc.partTags[i];
+        if (partTag.empty())
+            continue;
+
+        player->Apply_CustomizingPart(
+            static_cast<ContainerObject::EPartSlot>(i),
+            partTag);
+    }
+}
+
 void PlayerSession_Manager::Restore_SceneSnapshot()
 {
-    if (!_hasSnapShot) return;
+    if (!_hasSnapShot)
+        return;
 
     uint32 levelIndex = _sceneSnapshot.value("levelIndex", GAME->Current_Level());
-
-    // 카메라, 플레이어 임시 보관
-    auto allObjects = GAME->Get_GameObjects(levelIndex);
-
-    vector<pair<shared_ptr<GameObject>, wstring>> preserved;  // 보존할 오브젝트 + 레이어태그
     const auto& layers = GAME->Get_Layers(levelIndex);
+
+    vector<pair<Shared<GameObject>, wstring>> preserved;  // 보존할 오브젝트 + 레이어태그
 
     for (auto& [layerTag, layer] : layers)
     {
         for (auto& obj : layer->Get_GameObjects())
         {
             if (!obj) continue;
+
             auto objType = obj->Get_ObjectType();
+
             if (objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
-                objType == Protocol::OBJECT_TYPE_CAMERA_TARGET ||
-                objType == Protocol::OBJECT_TYPE_PLAYER)
+                objType == Protocol::OBJECT_TYPE_CAMERA_TARGET)
             {
                 preserved.push_back({ obj, layerTag });
             }
         }
     }
 
+    // 현재 월드 다 비우고
     GAME->Clear_Layers(levelIndex);
 
+    // 카메라만 다시 세팅
     for (auto& [obj, layerTag] : preserved)
     {
         GAME->Add_GameObject(levelIndex, layerTag, obj);
     }
 
+    // Play 직전에 저장해 둔 GameObject들 복원
     for (auto& objJson : _sceneSnapshot["gameObjects"])
     {
-        if (!objJson.contains("object_type")) continue;
+        if (!objJson.contains("object_type"))
+            continue;
+
         Protocol::OBJECT_TYPE objType = Protocol::OBJECT_TYPE_NONE;
 
         if (objJson["object_type"].is_string())
         {
             auto result = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
                 objJson["object_type"].get<string>());
-            if (!result.has_value()) continue;
+
+            if (!result.has_value())
+                continue;
+
             objType = result.value();
         }
         else
+        {
             objType = static_cast<Protocol::OBJECT_TYPE>(objJson["object_type"].get<uint32>());
+        }
 
         if (objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
             objType == Protocol::OBJECT_TYPE_CAMERA_TARGET ||
             objType == Protocol::OBJECT_TYPE_PLAYER)
+        {
             continue;
+        }
 
         auto gameObject = GAME->Clone_GameObject(levelIndex, objType, nullptr);
+
         if (!gameObject)
             gameObject = GAME->Clone_GameObject(0, objType, nullptr);
 
-        if (!gameObject) continue;
+        if (!gameObject)
+            continue;
+
         gameObject->From_Json(objJson);
 
         if (objJson.contains("components"))
@@ -318,30 +493,6 @@ void PlayerSession_Manager::Restore_SceneSnapshot()
         GAME->Add_GameObject(levelIndex, layerTag, gameObject);
     }
 
-    auto restoredObjects = GAME->Get_GameObjects(levelIndex);
-    Vec3 spawnPos = Vec3(0.f, 5.f, 0.f);
-    Quat spawnRot = Quat::Identity;
-
-    for (auto& obj : restoredObjects)
-    {
-        if (obj && obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER_START)
-        {
-            auto transform = obj->Get_Component<Transform>();
-            spawnPos = transform->Get_WorldPosition();
-            spawnRot = transform->Get_WorldRotation();
-            break;
-        }
-    }
-    for (auto& obj : restoredObjects)
-    {
-        if (obj && obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER)
-        {
-            auto transform = obj->Get_Component<Transform>();
-            transform->Set_LocalPosition(spawnPos);
-            transform->Set_LocalRotation(spawnRot);
-            break;
-        }
-    }
     _hasSnapShot = false;
 }
 

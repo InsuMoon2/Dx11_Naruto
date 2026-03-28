@@ -42,7 +42,7 @@ private:
     Shared<Model>   _model;
 
 private:
-    const Matrix* _socketMatrix = nullptr;
+    const Matrix*  _socketMatrix = nullptr;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

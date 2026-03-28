@@ -160,6 +160,8 @@ public: /* Object Manager */
 
     void                    Clear_Layers(uint32 levelIndex);
 
+    void                    Delete_GameObject(uint32 levelIndex, Shared<GameObject> gameObject);
+
 public: /* Renderer */
     void                    Add_RenderGroup(ERenderGroup renderType, Shared<GameObject> gameObject);
     int32                   Get_DrawCallCount();

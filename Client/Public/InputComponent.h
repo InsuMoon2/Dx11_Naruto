@@ -62,8 +62,8 @@ public:
             allowJump = true;
             allowSuperJump = true;
             allowSkill = true;
-            allowJumpDash = false;
-            allowAttack = false;
+            allowJumpDash = true;
+            allowAttack = true;
         }
     };
 

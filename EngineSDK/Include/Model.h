@@ -33,14 +33,14 @@ public:
 
 public:
     // 단일 애니메이션 재생
-    void    Set_Animation(uint32 animIndex, bool isLoop);
-    void    Set_Animation(const string& animName, bool isLoop);
-    void    Set_Animation(const FAnimationClipSetting& clip);
+    void            Set_Animation(uint32 animIndex, bool isLoop);
+    void            Set_Animation(const string& animName, bool isLoop);
+    void            Set_Animation(const FAnimationClipSetting& clip);
 
-    void Set_AnimationSequence(
-        const FAnimationClipSetting& startClip,
-        const FAnimationClipSetting& loopClip,
-        const FAnimationClipSetting& endClip);
+    void            Set_AnimationSequence(
+                            const FAnimationClipSetting& startClip,
+                            const FAnimationClipSetting& loopClip,
+                            const FAnimationClipSetting& endClip);
 
     void            Request_AnimEnd();
     EAnimPhase      Get_AnimPhase() const { return _animPhase; }
@@ -82,8 +82,11 @@ public:
     bool    Is_CurrentAnimationFinished() const { return _isCurrentAnimationFinished; }
     bool    Is_AnimationSequenceFinished() const { return _isAnimSequenceFinished; }
 
-    float   Get_CurrentTrackPosition() const { return _blendState.active ? _blendState.next.trackPosition : _currentClip.trackPosition; }
-    float   Get_CurrentAnimationDuration() const;
+    float   Get_CurrentTrackPositionTicks() const { return _blendState.active ? _blendState.next.trackPosition : _currentClip.trackPosition; }
+    float   Get_CurrentTrackPositionSec() const;
+
+    float   Get_CurrentAnimationDurationTicks() const;
+    float   Get_CurrentAnimationDurationSec() const;
 
     // 재생중인 애니메이션 이름 반환
     const string& Get_CurrentAnimationName() const;
@@ -120,7 +123,6 @@ private:
     string  Build_MaterialJsonPath(const string& modelFilePath) const;
 
     HRESULT Reload_ModelFromGuid(const string& guid, EMeshVertexType modelType);
-
 
 private:
     void    Apply_AnimationClip(uint32 animIndex, bool isLoop, float playRate);
@@ -162,6 +164,8 @@ private: /* blend */
         float blendRatio,
         vector<FAnimationLocalPose>& outPose);
 
+    bool    Is_CurrentNotifyClipStillActive(const string& expectedClipName) const;
+
 private:
     bool    Has_StartAnimation() const;
     bool    Has_LoopAnimation() const;
@@ -177,6 +181,10 @@ public: /* 노티파이 */
 
     // 노티파이 스테이트 정리
     void    Stop_AllNotifyStates(bool executeEndCheck);
+
+    void    Stop_NotifyStates_ExceptClip(
+        const string& keepClipName,
+        bool executeEndCheck);
 
     // Notify 체크
     void    Update_AnimNotifies(
@@ -195,13 +203,23 @@ public: /* 노티파이 */
     // 특정 시점이 NotifyState 구간 안인지 판정
     static bool Is_NotifyStateActiveTime(float currentTime, float startTime, float duration);
     // 실행중인 NotifyState가 구간 안인지 판정
-    static int32 Find_ActiveNotifyStateIndex(const vector<FActiveAnimNotifyState>& activeStates, int32 stateIndex);
+    static int32 Find_ActiveNotifyStateIndex(
+        const vector<FActiveAnimNotifyState>& activeStates,
+        const string& clipName,
+        int32 stateIndex);
 
     float   Get_AnimationLengthSec(uint32 animIndex) const;
     float   Get_AnimationTicksPerSecond(uint32 animIndex) const;
 
     void    Set_CurrentTrackPositionTicks(float trackPosition);
     void    Sample_CurrentPose();
+
+private:
+    const FPlayingClipState& Get_VisibleClipState() const;
+    float   Get_ClipDurationTicks(const FPlayingClipState& clipState) const;
+    float   Convert_TrackTicks_ToSeconds(
+        const FPlayingClipState& clipState,
+        float trackTicks) const;
 
 private:
     EMeshVertexType                 _modelType = { EMeshVertexType::END };

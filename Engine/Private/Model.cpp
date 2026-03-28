@@ -250,8 +250,8 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
 
     bool currentFinished = false;
 
-    // 이번 프레임 Notify 판정용
-    const float previousTrackPosition = _currentClip.trackPosition;
+    // 이번 프레임 Notify 판정용 track 위치는 내부 샘플링 단위인 tick으로 유지한다.
+    const float previousTrackTicks = _currentClip.trackPosition;
 
     if (_currentClip.animIndex >= 0 &&
         _currentClip.animIndex < static_cast<int32>(_animations.size()) &&
@@ -265,13 +265,14 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
         Sample_ClipPose(_currentClip, _currentSamplePose);
     }
 
-    const bool wrapped = (_currentClip.loop && _currentClip.trackPosition < previousTrackPosition);
+    const bool wrapped = (_currentClip.loop && _currentClip.trackPosition < previousTrackTicks);
 
     if (_blendState.active)
     {
         _isCurrentAnimationFinished = false;
 
-        const float prevNextTrackPos = _blendState.next.trackPosition;
+        // 블렌드 target clip도 내부적으로는 tick 단위로 진행한다.
+        const float previousNextTrackTicks = _blendState.next.trackPosition;
 
         if (_blendState.next.animIndex >= 0 &&
             _blendState.next.animIndex < static_cast<int32>(_animations.size()) &&
@@ -285,7 +286,7 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
             Sample_ClipPose(_blendState.next, _nextSamplePose);
         }
 
-        const bool nextWrapped = (_blendState.next.loop && _blendState.next.trackPosition < prevNextTrackPos);
+        const bool nextWrapped = (_blendState.next.loop && _blendState.next.trackPosition < previousNextTrackTicks);
 
         _blendState.elapsed += timeDelta;
 
@@ -312,13 +313,18 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
 
             if (const auto* nextClipData = AnimNotify_Serializer::Find_Clip(_animNotifyAsset, nextAnimName))
             {
+                const float prevNextTimeSec =
+                    Convert_TrackTicks_ToSeconds(_blendState.next, previousNextTrackTicks);
+                const float currentNextTimeSec =
+                    Convert_TrackTicks_ToSeconds(_blendState.next, _blendState.next.trackPosition);
+
                 FAnimNotifyContext ctx;
                 ctx.owner = Get_Owner().get();
                 ctx.model = this;
                 ctx.modelGuid = _modelGuid;
                 ctx.clipName = nextAnimName;
-                ctx.previousTimeSec = prevNextTrackPos;
-                ctx.currentTimeSec = _blendState.next.trackPosition;
+                ctx.previousTimeSec = prevNextTimeSec;
+                ctx.currentTimeSec = currentNextTimeSec;
                 ctx.deltaTime = timeDelta;
                 ctx.isLooping = _blendState.next.loop;
                 ctx.wrapped = nextWrapped;
@@ -331,7 +337,15 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
 
         if (blendRatio >= 1.f)
         {
-            Stop_AllNotifyStates(executeNotifies);
+            string nextClipName;
+            if (_blendState.next.animIndex >= 0 &&
+                _blendState.next.animIndex < static_cast<int32>(_animations.size()) &&
+                _animations[_blendState.next.animIndex])
+            {
+                nextClipName = _animations[_blendState.next.animIndex]->Get_Name();
+            }
+
+            Stop_NotifyStates_ExceptClip(nextClipName, executeNotifies);
 
             _currentClip = _blendState.next;
             Clear_BlendState();
@@ -347,17 +361,24 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
     _lastAppliedPose = _currentSamplePose;
     Sync_LegacyAnimationState();
 
+    const int32 beforeAnimIndex = _currentClip.animIndex;
+
     if (Ensure_AnimNotifyAssetLoaded())
     {
         if (const auto* clipData = Find_CurrentNotifyClip())
         {
+            const float previousTimeSec =
+                Convert_TrackTicks_ToSeconds(_currentClip, previousTrackTicks);
+            const float currentTimeSec =
+                Convert_TrackTicks_ToSeconds(_currentClip, _currentClip.trackPosition);
+
             FAnimNotifyContext context;
             context.owner = Get_Owner().get();
             context.model = this;
             context.modelGuid = _modelGuid;
             context.clipName = Get_CurrentAnimationName();
-            context.previousTimeSec = previousTrackPosition;
-            context.currentTimeSec = _currentClip.trackPosition;
+            context.previousTimeSec = previousTimeSec;
+            context.currentTimeSec = currentTimeSec;
             context.deltaTime = timeDelta;
             context.isLooping = _currentClip.loop;
             context.wrapped = wrapped;
@@ -366,6 +387,12 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
             Update_AnimNotifies(*clipData, context, executeNotifies);
             Update_AnimNotifyStates(*clipData, context, executeNotifies);
         }
+    }
+
+    // 콤보 공격 도중에 상태 변경이 일어났다면, 바로 탈출
+    if (beforeAnimIndex != _currentClip.animIndex || _blendState.active)
+    {
+        return false;
     }
 
     if (!_hasAnimSequence)
@@ -794,6 +821,14 @@ void Model::Blend_LocalPoses(const vector<FAnimationLocalPose>& fromPose, const 
     }
 }
 
+bool Model::Is_CurrentNotifyClipStillActive(const string& expectedClipName) const
+{
+    if (expectedClipName.empty())
+        return false;
+
+    return Get_CurrentAnimationName() == expectedClipName;
+}
+
 bool Model::Has_StartAnimation() const
 {
     return !_startClip.animationName.empty();
@@ -905,14 +940,15 @@ void Model::Stop_AllNotifyStates(bool executeEndCheck)
 
     if (executeEndCheck)
     {
-        FAnimNotifyContext context;
-        context.owner = Get_Owner().get();
-        context.model = this;
-        context.clipName = Get_CurrentAnimationName();
-        context.currentTimeSec = _currentClip.trackPosition;
-
         for (auto& active : _activeNotifyStates)
         {
+            FAnimNotifyContext context;
+            context.owner = Get_Owner().get();
+            context.model = this;
+            context.modelGuid = _modelGuid;
+            context.clipName = active.clipName;        
+            context.currentTimeSec = active.lastTimeSec;
+
             if (active.notifyState)
                 active.notifyState->On_End(context);
         }
@@ -946,6 +982,8 @@ void Model::Update_AnimNotifyStates(const FAnimNotifyClipData& clipData, const F
 {
     int size = static_cast<int32>(clipData.notifyStates.size());
 
+    const string expectedClipName = clipData.clipName;
+
     for (int32 stateIndex = 0; stateIndex < size; ++stateIndex)
     {
         const auto& entry = clipData.notifyStates[stateIndex];
@@ -963,15 +1001,17 @@ void Model::Update_AnimNotifyStates(const FAnimNotifyClipData& clipData, const F
 
         const bool isActive = Is_NotifyStateActiveTime(context.currentTimeSec, startSec, durationSec);
 
-        int32 activeIndex = Find_ActiveNotifyStateIndex(_activeNotifyStates, stateIndex);
+        int32 activeIndex = Find_ActiveNotifyStateIndex(_activeNotifyStates, clipData.clipName, stateIndex);
 
         // 시작지점을 통과했고, 아직 active가 아니면 시작
         if (activeIndex < 0 && crossedStart)
         {
             FActiveAnimNotifyState activeState;
+            activeState.clipName = expectedClipName;
             activeState.stateIndex = stateIndex;
             activeState.startSec = startSec;
             activeState.endSec = endSec;
+            activeState.lastTimeSec = context.currentTimeSec;
             activeState.notifyState = entry.notifyState;
 
             _activeNotifyStates.push_back(activeState);
@@ -979,15 +1019,27 @@ void Model::Update_AnimNotifyStates(const FAnimNotifyClipData& clipData, const F
 
             if (executeNotifies)
                 entry.notifyState->On_Begin(context);
+
+            if (!Is_CurrentNotifyClipStillActive(expectedClipName))
+                return;
+
+            activeIndex = Find_ActiveNotifyStateIndex(_activeNotifyStates, expectedClipName, stateIndex);
+            if (activeIndex < 0 || activeIndex >= static_cast<int32>(_activeNotifyStates.size()))
+                continue;
         }
 
         if (activeIndex < 0)
             continue;
 
+        _activeNotifyStates[activeIndex].lastTimeSec = context.currentTimeSec;
+
         if (isActive)
         {
             if (executeNotifies && _activeNotifyStates[activeIndex].notifyState)
                 _activeNotifyStates[activeIndex].notifyState->On_Tick(context);
+
+            if (!Is_CurrentNotifyClipStillActive(expectedClipName))
+                return;
 
             continue;
         }
@@ -995,6 +1047,13 @@ void Model::Update_AnimNotifyStates(const FAnimNotifyClipData& clipData, const F
         // State 범위를 벗어나면 End 후 active 제거
         if (executeNotifies && _activeNotifyStates[activeIndex].notifyState)
             _activeNotifyStates[activeIndex].notifyState->On_End(context);
+
+        if (!Is_CurrentNotifyClipStillActive(expectedClipName))
+            return;
+
+        activeIndex = Find_ActiveNotifyStateIndex(_activeNotifyStates, expectedClipName, stateIndex);
+        if (activeIndex < 0 || activeIndex >= static_cast<int32>(_activeNotifyStates.size()))
+            continue;
 
         _activeNotifyStates.erase(_activeNotifyStates.begin() + activeIndex);
     }
@@ -1017,15 +1076,47 @@ bool Model::Is_NotifyStateActiveTime(float currentTime, float startTime, float d
     return currentTime >= startTime && currentTime < endTime;
 }
 
-int32 Model::Find_ActiveNotifyStateIndex(const vector<FActiveAnimNotifyState>& activeStates, int32 stateIndex)
+int32 Model::Find_ActiveNotifyStateIndex(const vector<FActiveAnimNotifyState>& activeStates, const string& clipName, int32 stateIndex)
 {
     for (int32 i = 0; i < static_cast<int32>(activeStates.size()); ++i)
     {
-        if (activeStates[i].stateIndex == stateIndex)
+        if (activeStates[i].clipName == clipName &&
+            activeStates[i].stateIndex == stateIndex)
+        {
             return i;
+        }
+          
     }
 
     return -1;
+}
+
+void Model::Stop_NotifyStates_ExceptClip(const string& keepClipName, bool executeEndCheck)
+{
+    vector<FActiveAnimNotifyState> remained;
+    remained.reserve(_activeNotifyStates.size());
+
+    for (auto& active : _activeNotifyStates)
+    {
+        if (active.clipName == keepClipName)
+        {
+            remained.push_back(active);
+            continue;
+        }
+
+        if (executeEndCheck && active.notifyState)
+        {
+            FAnimNotifyContext context;
+            context.owner = Get_Owner().get();
+            context.model = this;
+            context.modelGuid = _modelGuid;
+            context.clipName = active.clipName;
+            context.currentTimeSec = active.lastTimeSec;   
+            active.notifyState->On_End(context);
+        }
+    }
+
+    _activeNotifyStates = std::move(remained);
 }
 
 float Model::Get_AnimationLengthSec(uint32 animIndex) const
@@ -1054,6 +1145,29 @@ float Model::Get_AnimationTicksPerSecond(uint32 animIndex) const
         return 0.f;
 
     return animation->Get_TicksPerSecond();
+}
+
+const FPlayingClipState& Model::Get_VisibleClipState() const
+{
+    return _blendState.active ? _blendState.next : _currentClip;
+}
+
+float Model::Get_ClipDurationTicks(const FPlayingClipState& clipState) const
+{
+    if (!clipState.Is_Valid())
+        return 0.f;
+
+    if (clipState.animIndex < 0 ||
+        clipState.animIndex >= static_cast<int32>(_animations.size()))
+    {
+        return 0.f;
+    }
+
+    const auto& animation = _animations[clipState.animIndex];
+    if (!animation)
+        return 0.f;
+
+    return animation->Get_Duration();
 }
 
 void Model::Set_CurrentTrackPositionTicks(float trackPosition)
@@ -1131,6 +1245,24 @@ void Model::Sample_CurrentPose()
     }
 }
 
+float Model::Convert_TrackTicks_ToSeconds(const FPlayingClipState& clipState, float trackTicks) const
+{
+    if (clipState.animIndex < 0 ||
+        clipState.animIndex >= static_cast<int32>(_animations.size()))
+    {
+        return 0.f;
+    }
+
+    const auto& animation = _animations[clipState.animIndex];
+    if (!animation)
+        return 0.f;
+
+    const float ticksPerSecond = animation->Get_TicksPerSecond();
+    if (ticksPerSecond <= FLT_EPSILON)
+        return 0.f;
+
+    return trackTicks / ticksPerSecond;
+}
 
 void Model::Set_AnimationPlayRate(float playRate)
 {
@@ -1383,25 +1515,20 @@ void Model::Set_AnimationBlendDuration(float seconds)
     }
 }
 
-float Model::Get_CurrentAnimationDuration() const
+float Model::Get_CurrentTrackPositionSec() const
 {
-    // 블렌딩 중이면 넘어가는 타겟 애니메이션, 아니면 현재 애니메이션
-    const FPlayingClipState targetClip = _blendState.active ? _blendState.next : _currentClip;
+    const FPlayingClipState& visibleClip = Get_VisibleClipState();
+    return Convert_TrackTicks_ToSeconds(visibleClip, visibleClip.trackPosition);
+}
 
-    if (!targetClip.Is_Valid())
-        return 0.f;
+float Model::Get_CurrentAnimationDurationTicks() const
+{
+    return Get_ClipDurationTicks(Get_VisibleClipState());
+}
 
-    if (targetClip.animIndex < 0 ||
-        targetClip.animIndex >= static_cast<int32>(_animations.size()))
-    {
-        return 0.f;
-    }
-
-    const auto& animation = _animations[targetClip.animIndex];
-    if (!animation)
-        return 0.f;
-
-    return animation->Get_Duration();
+float Model::Get_CurrentAnimationDurationSec() const
+{
+    return Convert_TrackTicks_ToSeconds(Get_VisibleClipState(), Get_CurrentAnimationDurationTicks());
 }
 
 const string& Model::Get_CurrentAnimationName() const

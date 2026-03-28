@@ -644,7 +644,6 @@ void Prefab_View::Draw_AnimationControls()
     for (auto& name : names)
         items.push_back(name.c_str());
 
-    // [추가] 현재 선택 인덱스를 안전하게 보정
     if (!items.empty())
     {
         _previewSelectedAnimIndex = std::clamp(

@@ -3,6 +3,17 @@
 #include "GameObject_Factory.h"
 
 REGISTER_GAMEOBJECT(UI_Text, Protocol::OBJECT_TYPE_UI_TEXT)
+IMPLEMENT_REFLECTION(UI_Text)
+
+bool UI_Text::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "UI_Text";
+
+    PROPERTY_STRING("Text", _text);
+
+    return true;
+}
 
 UI_Text::UI_Text(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)

@@ -13,6 +13,7 @@ Weapon::Weapon(ComPtr<Device> device, ComPtr<DeviceContext> context)
 
 Weapon::Weapon(const Weapon& rhs)
     : PartObject(rhs)
+    , _socketMatrix(rhs._socketMatrix)
 {
 }
 
@@ -60,7 +61,7 @@ void Weapon::Update(float timeDelta)
     {
         socketMatrix = *_socketMatrix;
 
-        // 부모의 Scale이 영향없게 세팅
+        // 부모 Scale 영향 제거
         Vec3 right = socketMatrix.Right();
         Vec3 up = socketMatrix.Up();
         Vec3 backward = socketMatrix.Backward();

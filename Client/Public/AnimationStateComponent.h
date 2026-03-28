@@ -54,8 +54,10 @@ public:
     bool                        Is_CurrentStateSequenceFinished() const;
 
     EAnimPhase                  Get_CurrentAnimPhase() const;
-    float                       Get_CurrentTrackPosition() const;
-    float                       Get_CurrentAnimationDuration() const;
+    float                       Get_CurrentTrackPositionTicks() const;
+    float                       Get_CurrentAnimationDurationTicks() const;
+    float                       Get_CurrentTrackPositionSec() const;
+    float                       Get_CurrentAnimationDurationSec() const;
 
     const string&               Get_CurrentStateName() const { return _currentStateName; }
     const string&               Get_PrevStateName() const { return _prevStateName; }

@@ -1,0 +1,137 @@
+﻿#include "pch.h"
+#include "UI_WeaponType.h"
+#include "Shader.h"
+#include "VIBuffer_Rect.h"
+#include "Texture.h"
+#include "GameObject_Factory.h"
+
+REGISTER_GAMEOBJECT(UI_WeaponType, Protocol::OBJECT_TYPE_UI_WEAPON_TYPE)
+//IMPLEMENT_REFLECTION(UI_WeaponType)
+//
+//bool UI_WeaponType::Register_Properties()
+//{
+//    auto& info = GetStaticReflectionInfo();
+//    info.className = "UI_WeaponType";
+//
+//    PROPERTY_ENUM_CUSTOM("무기 타입", _weaponTypeBG,
+//        (vector<string>{"지원형", "방어형", "격투형", "검술형"}));
+//
+//    return true;
+//}
+
+UI_WeaponType::UI_WeaponType(ComPtr<Device> device, ComPtr<DeviceContext> context)
+    : Background(device, context)
+{
+    
+}
+
+UI_WeaponType::UI_WeaponType(const UI_WeaponType& rhs)
+    : Background(rhs)
+    , _weaponTypeBG(rhs._weaponTypeBG)
+{
+}
+
+HRESULT UI_WeaponType::Initialize_Prototype()
+{
+    CHECK_FAILED(Background::Initialize_Prototype(), E_FAIL);
+
+
+    return S_OK;
+}
+
+HRESULT UI_WeaponType::Initialize(void* arg)
+{
+    auto* desc = static_cast<FWeaponTypeDesc*>(arg);
+    CHECK_NULL(desc, E_FAIL);
+    
+    _weaponTypeBG = desc->weaponTypeBG;
+
+    desc->textureIndex = To_TextureIndex(_weaponTypeBG);
+    desc->textDesc.text = To_TypeName(_weaponTypeBG);
+    desc->textDesc.style.fontFamily = L"Malgun Gothic";
+    desc->textDesc.style.fontSize = 16.f;
+    desc->textDesc.style.hAlign = ETextHAlign::Center;
+    desc->textDesc.style.vAlign = ETextVAlign::Middle;
+
+    desc->textDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
+
+    CHECK_FAILED(Background::Initialize(arg), E_FAIL);
+
+    return S_OK;
+}
+
+void UI_WeaponType::Update(float timeDelta)
+{
+    Background::Update(timeDelta);
+
+    __super::Update_Transform();
+}
+
+HRESULT UI_WeaponType::Render()
+{
+    return Background::Render();
+}
+
+void UI_WeaponType::Set_WeaponType(EWeaponTypeBG weaponTypeName)
+{
+    _weaponTypeBG = weaponTypeName;
+
+    // 텍스처 인덱스 변경 추가
+
+}
+
+uint32 UI_WeaponType::To_TextureIndex(EWeaponTypeBG type)
+{
+    switch (type)
+    {
+    case EWeaponTypeBG::Support:    return 0;
+    case EWeaponTypeBG::Defense:    return 1;
+    case EWeaponTypeBG::Fighter:    return 2;
+    case EWeaponTypeBG::Sword:      return 3;
+    default:                        return 0;
+    }
+}
+
+wstring UI_WeaponType::To_TypeName(EWeaponTypeBG type)
+{
+    switch (type)
+    {
+    case EWeaponTypeBG::Support:    return L"지원형";
+    case EWeaponTypeBG::Defense:    return L"방어형";
+    case EWeaponTypeBG::Fighter:    return L"격투형";
+    case EWeaponTypeBG::Sword:      return L"검술형";
+    default:                        return L"격투형";
+    }
+}
+
+Shared<UI_WeaponType> UI_WeaponType::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+{
+    auto instance = make_shared<UI_WeaponType>(device, context);
+
+    if (FAILED(instance->Initialize_Prototype()))
+    {
+        MSG_BOX("Failed to Create Prototype : UI_WeaponType");
+        return nullptr;
+    }
+
+    return instance;
+}
+
+Shared<GameObject> UI_WeaponType::Clone(void* arg)
+{
+    auto clone = make_shared<UI_WeaponType>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
+    {
+        MSG_BOX("Failed to Cloned : UI_WeaponType");
+
+        return nullptr;
+    }
+
+    return clone;
+}
+
+void UI_WeaponType::Free()
+{
+    Background::Free();
+}

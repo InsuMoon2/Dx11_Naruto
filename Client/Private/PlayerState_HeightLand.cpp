@@ -50,8 +50,8 @@ void PlayerState_HeightLand::Update(PlayerStateMachine* state, float timeDelta)
     if (!transform)
         return;
 
-    const float currentFrame = state->Get_AnimTrackPosition();
-    const float endFrame = state->Get_AnimDuration();
+    const float currentFrame = state->Get_AnimTrackPositionTicks();
+    const float endFrame = state->Get_AnimDurationTicks();
 
     if (currentFrame < endFrame - 7.f)
     {

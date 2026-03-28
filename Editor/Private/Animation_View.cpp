@@ -82,7 +82,7 @@ void Animation_View::Update(float timeDelta)
         return;
 
     // 프리뷰 재생 중, 노티파이 실행 금지
-    _model->Play_Animation(timeDelta, false);
+    // _model->Play_Animation(timeDelta, false);
     _previewPlaybackTimeSec += timeDelta;
 
     const int32 fps = Get_CurrentClipFps();
@@ -100,11 +100,9 @@ void Animation_View::Update(float timeDelta)
         _model->Set_Animation(static_cast<uint32>(_selectedClipIndex), false);
         _sequencerState.currentFrame = frameMin;
         _previewPlaybackTimeSec = 0.f;
-
-        Apply_CurrentFrame_ToPreview();
-
-        _isPlaying = true;
     }
+
+    Apply_CurrentFrame_ToPreview();
 }
 
 void Animation_View::OnGui()

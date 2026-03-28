@@ -75,7 +75,7 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
 
     _skillPanel->Get_Transform()->Set_LocalPosition(
         uiRefWidth - 220.f,
-        uiRefHeight - 110.f,
+        uiRefHeight - 140.f,
         _zOrder);
 
     return S_OK;

@@ -52,7 +52,7 @@ public: /* PendingKill */
 
 public:
     template<typename T>
-    shared_ptr<T> Get_Component()
+    Shared<T> Get_Component()
     {
         static_assert(std::is_base_of_v<Component, T>,
             "GameObject::Get_Component<T>() requires T to derive from Component.");

@@ -11,7 +11,7 @@ NS_END
 
 NS_BEGIN(Client)
 
-class Background final : public UIObject
+class Background : public UIObject
 {
     GENERATED_BODY(Background)
 
@@ -26,7 +26,7 @@ public:
         float       zOrderOffset = 0.01f;
     };
 
-    struct FBackgroundDesc final : public UIObject::FUIDesc
+    struct FBackgroundDesc : public UIObject::FUIDesc
     {
         uint32 textureIndex = 0;
         uint32 textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;

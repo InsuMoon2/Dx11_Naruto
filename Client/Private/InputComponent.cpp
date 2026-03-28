@@ -187,6 +187,7 @@ InputComponent::FInputGate InputComponent::Get_InputGate_Preset(EPlayerInputMode
         gate.allowJump = true;
         gate.allowSuperJump = true;
         gate.allowSkill = true;
+        gate.allowAttack = true;
         break;
 
     case EPlayerInputMode::LookOnly:
@@ -196,6 +197,7 @@ InputComponent::FInputGate InputComponent::Get_InputGate_Preset(EPlayerInputMode
         gate.allowJump = false;
         gate.allowSuperJump = false;
         gate.allowSkill = true;
+        gate.allowAttack = true;
         break;
 
     case EPlayerInputMode::MoveAndLook:
@@ -205,6 +207,7 @@ InputComponent::FInputGate InputComponent::Get_InputGate_Preset(EPlayerInputMode
         gate.allowJump = false;
         gate.allowSuperJump = false;
         gate.allowSkill = false;
+        gate.allowAttack = true;
         break;
 
     case EPlayerInputMode::BlockAll:
@@ -214,6 +217,7 @@ InputComponent::FInputGate InputComponent::Get_InputGate_Preset(EPlayerInputMode
         gate.allowJump = false;
         gate.allowSuperJump = false;
         gate.allowSkill = false;
+        gate.allowAttack = false;
         break;
 
     default:

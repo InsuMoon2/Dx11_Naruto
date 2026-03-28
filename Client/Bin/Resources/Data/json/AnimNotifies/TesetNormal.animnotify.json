@@ -1,18 +1,6 @@
 {
     "clips": [
         {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_BigSword_Idle_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Run_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
             "clip_name": "SK_CHR_NormalModel|CustomMan_DoubleJump",
             "display_fps": 30,
             "notifies": [
@@ -32,210 +20,6 @@
             ]
         },
         {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Jump_Vertical",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Jump_Front",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_HeightLand",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_BigSword_Land",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Land",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Run_End",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_Start",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_End",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Vertical_Charge_Start",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Vertical_Charge_End",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_ChakraJump_Vertical_Charge_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Start",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_End",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_Start",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_End",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Charge_Lv2toLv3_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Run_Lv3_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Charge_Lv2toLv3",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Run_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Charge_Lv2toLv3",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Charge_Lv1",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Charge_Conect_toRun",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Land_toChidoriCharge",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Attack_Lv3_End",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Attack_End",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Charge_Conect_toRun",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Chidori_Charge_Lv2toLv3_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Charge_Lv1",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_DashStep_Front",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Kunai_Idle_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
             "clip_name": "SK_CHR_NormalModel|CustomMan_Idle_Loop",
             "display_fps": 30,
             "notifies": [
@@ -248,304 +32,43 @@
             "notify_states": []
         },
         {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Hand_Idle_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_CharaSelect_Idle",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_D84NJ3_Idle_Loop_Wep",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_4VioletFlames_Clone_Idle_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Beaten_Fall_ChaseAttack_Behind_Loop.001",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_02",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_04",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_SusanooFlameControl_Attack",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_01_WEP",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_03",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ3_Attack_Start_tail_Wep",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_01",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_4VioletFlames_Start_Wep",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_4VioletFlames_Start",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_02_WEP",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_06",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_ChainSickle_Attract",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_ChainSickle_WindMill",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_02_WEP",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_03_WEP",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_01",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_TNT_Scroll_cmb_04_WEP",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_01_WEP",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_02",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_05_WEP",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_03_WEP",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_03",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_04_WEP",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_D23NJ4_Attack_End",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_04",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_TNT_Scroll_cmb_06_WEP",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ3_Attack_End_tail_Wep",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Beaten_BlowOff_ChaseAttack.001",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ2_Attack",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Beaten_Fall_ChaseAttack_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Beaten_Fall_ChaseAttack_Loop.001",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Attack_Aerial_cmb_01",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_D84NJ3_Ninjutsu_NJ3_Attack_Loop_Wep",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D31NJ1_Attack_End",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D23NJ4_Attack_Lv3_End",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ2_Aerial_Attack",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Attack_cmb_01",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D84NJ3_Attack_cmb_01_Wep",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_D94NJ3_Attack_Loop_tail_Wep",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_D84NJ3_Ninjutsu_NJ3_Attack_Loop",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
-        },
-        {
             "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Hand_Punch_Left",
             "display_fps": 30,
             "notifies": [],
-            "notify_states": []
+            "notify_states": [
+                {
+                    "duration_sec": 0.46666666865348816,
+                    "payload": {},
+                    "start_sec": 0.46666666865348816,
+                    "type": "ANS_ComboWindow"
+                }
+            ]
         },
         {
             "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Hand_StraightPunch",
             "display_fps": 30,
             "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_KickUp",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
+            "notify_states": [
+                {
+                    "duration_sec": 0.6666666865348816,
+                    "payload": {},
+                    "start_sec": 1.2000000476837158,
+                    "type": "ANS_ComboWindow"
+                }
+            ]
         },
         {
             "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_SSp_KWKSciwep_cmb_03",
             "display_fps": 30,
             "notifies": [],
-            "notify_states": []
-        },
-        {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Sasuke_Attack_TurnKick_Right",
-            "display_fps": 30,
-            "notifies": [],
-            "notify_states": []
+            "notify_states": [
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {},
+                    "start_sec": 0.46666666865348816,
+                    "type": "ANS_ComboWindow"
+                }
+            ]
         }
     ],
     "model_guid": "5b093ce9-bd01-4631-862a-fcd8b22f3837"

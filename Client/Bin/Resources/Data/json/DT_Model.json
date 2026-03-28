@@ -1,13 +1,6 @@
 {
     "Model": [
         {
-            "Id": "COMPONENT_TYPE_MODEL_PLAYER",
-            "Path": "../../Client/Bin/Resources/Models/Gaara/SK_CHR_Gaara.meshbin",
-            "Count": 1,
-            "ModelType": "SkeletalMesh",
-            "Level": "Static"
-        },
-        {
             "Id": "COMPONENT_TYPE_MODEL_MONSTER",
             "Path": "../../Client/Bin/Resources/Models/Boruto/Boruto.meshbin",
             "Count": 1,

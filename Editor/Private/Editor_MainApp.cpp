@@ -43,6 +43,8 @@ HRESULT Editor_MainApp::Initialize()
 
         GAME->Set_UIPrototypeLevel(ETOI(ELevelType::Static));
         GAME->Set_EditorRuntime(true);
+
+        //GAME->Set_GameState(EGameState::Edit);
     }
 
     // Editor Setting (항상 활성화)

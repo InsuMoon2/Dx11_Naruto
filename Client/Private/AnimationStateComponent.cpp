@@ -153,14 +153,24 @@ EAnimPhase AnimationStateComponent::Get_CurrentAnimPhase() const
     return _model ? _model->Get_AnimPhase() : EAnimPhase::Start;
 }
 
-float AnimationStateComponent::Get_CurrentTrackPosition() const
+float AnimationStateComponent::Get_CurrentTrackPositionTicks() const
 {
-    return _model ? _model->Get_CurrentTrackPosition() : 0.f;
+    return _model ? _model->Get_CurrentTrackPositionTicks() : 0.f;
 }
 
-float AnimationStateComponent::Get_CurrentAnimationDuration() const
+float AnimationStateComponent::Get_CurrentAnimationDurationTicks() const
 {
-    return _model ? _model->Get_CurrentAnimationDuration() : 0.f;
+    return _model ? _model->Get_CurrentAnimationDurationTicks() : 0.f;
+}
+
+float AnimationStateComponent::Get_CurrentTrackPositionSec() const
+{
+    return _model ? _model->Get_CurrentTrackPositionSec() : 0.f;
+}
+
+float AnimationStateComponent::Get_CurrentAnimationDurationSec() const
+{
+    return _model ? _model->Get_CurrentAnimationDurationSec() : 0.f;
 }
 
 const FStateAnimationDesc* AnimationStateComponent::Find_State(const string& stateName) const
@@ -547,7 +557,6 @@ void AnimationStateComponent::Apply_NetworkState()
     {
         _appliedState = _replicatedState;
 
-        // [추가] one-shot pulse 소비
         _replicatedState.forceRestart = false;
     }
 }
