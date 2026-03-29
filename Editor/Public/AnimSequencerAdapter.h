@@ -52,6 +52,7 @@ private:
         ResizeStart,
         ResizeEnd
     };
+
     struct FTrackColors
     {
         static constexpr unsigned int NotifyFill = 0xFF33CC55;
@@ -68,6 +69,12 @@ private:
         static constexpr unsigned int Text = 0xFFFFFFFF;
     };
 
+    struct FResolvedTrackRow
+    {
+        bool isStateTrack = false;
+        int32 trackIndex = 0;
+    };
+
 private:
     FAnimNotifyClipData* Get_Clip() const;
 
@@ -81,14 +88,16 @@ private:
     int32 Pixel_ToFrame(float pixelX, const ImRect& rc) const;
     float Frame_ToPixel(int32 frame, const ImRect& rc) const;
 
-    void Select_Notify(int32 notifyIndex);
-    void Select_State(int32 stateIndex);
+    bool Resolve_TrackRow(int32 rowIndex, FResolvedTrackRow& outRow) const;
+
+    void Select_Notify(int32 notifyIndex, int32 trackIndex);
+    void Select_State(int32 stateIndex, int32 trackIndex);
     void Clear_Selection();
 
-    void Draw_NotifyTrack(ImDrawList* drawList, const ImRect& rc);
-    void Draw_StateTrack(ImDrawList* drawList, const ImRect& rc);
+    void Draw_NotifyTrack(int32 trackIndex, ImDrawList* drawList, const ImRect& rc);
+    void Draw_StateTrack(int32 trackIndex, ImDrawList* drawList, const ImRect& rc);
 
-    void Handle_StateMarkGesture(const ImRect& rc);
+    void Handle_StateMarkGesture(int32 trackIndex, const ImRect& rc);
 
     static void Sort_Notifies(FAnimNotifyClipData& clip);
     static void Sort_States(FAnimNotifyClipData& clip);
@@ -104,14 +113,9 @@ private:
 private:
     FAnimSequencerContext* _context = nullptr;
 
-    mutable int _trackStarts[2] = { 0, 0 };
-    mutable int _trackEnds[2] = { 0, 0 };
-
-    mutable string _trackLabels[2] =
-    {
-        "Notifies",
-        "Notify States"
-    };
+    mutable vector<int> _trackStarts;
+    mutable vector<int> _trackEnds;
+    mutable vector<string> _trackLabels;
 
 private:
     int32 _draggingNotifyIndex = -1;

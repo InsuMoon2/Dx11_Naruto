@@ -21,6 +21,9 @@ public:
     static FAnimNotifyClipData*         Find_Clip(FAnimNotifyAsset& asset, const string& clipName);
     static const FAnimNotifyClipData*   Find_Clip(const FAnimNotifyAsset& asset, const string& clipName);
     static FAnimNotifyClipData&         Get_OrAddClip(FAnimNotifyAsset& asset, const string& clipName);
+
+    static void Ensure_DefaultTracks(FAnimNotifyClipData& clip);
+
 };
 
 NS_END

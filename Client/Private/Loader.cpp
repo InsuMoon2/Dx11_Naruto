@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Loader.h"
 #include "Background.h"
 #include "GameInstance.h"
@@ -44,6 +44,9 @@
 #include "UI_SkillSlot.h"
 #include "AnimationStateComponent.h"
 #include "Player_CustomPart.h"
+
+#include "ComboProfile_Manager.h"
+#include "EquipmentComponent.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -156,9 +159,9 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<PlayerStateMachine>(staticLevel);
     GAME->Register_ComponentFactory<SkillComponent>(staticLevel);
     GAME->Register_ComponentFactory<AnimationStateComponent>(staticLevel);
+    GAME->Register_ComponentFactory<EquipmentComponent>(staticLevel);
     //GAME->Register_ComponentFactory<Model>(staticLevel);
 
- 
 }
 
 void Loader::Initialize_BT_Nodes()
@@ -425,6 +428,10 @@ HRESULT Loader::Loading_For_GamePlay()
 
         CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
             TEXT("../../Client/Bin/Resources/Data/json/DT_SkillData.json"), jobs), E_FAIL);
+
+        // 콤보 프로파일 읽기
+        GET_SINGLE(ComboProfile_Manager)->Load_FromJson(
+            "../../Client/Bin/Resources/Data/json/DT_ComboProfile.json");
     }
 
     // 맵

@@ -50,12 +50,15 @@ int AnimSequencerAdapter::GetFrameMax() const
 
 int AnimSequencerAdapter::GetItemCount() const
 {
-    return 2;
+    auto* clip = Get_Clip();
+    if (!clip)
+        return 0;
+
+    return static_cast<int>(clip->notifyTracks.size() + clip->notifyStateTracks.size());
 }
 
 int AnimSequencerAdapter::GetItemTypeCount() const
 {
-    
     return 0;
 }
 
@@ -64,18 +67,69 @@ const char* AnimSequencerAdapter::GetItemTypeName(int typeIndex) const
     return "";
 }
 
+bool AnimSequencerAdapter::Resolve_TrackRow(int32 rowIndex, FResolvedTrackRow& outRow) const
+{
+    auto* clip = Get_Clip();
+    if (!clip || rowIndex < 0)
+        return false;
+
+    const int32 notifyTrackCount = static_cast<int32>(clip->notifyTracks.size());
+    if (rowIndex < notifyTrackCount)
+    {
+        outRow.isStateTrack = false;
+        outRow.trackIndex = rowIndex;
+        return true;
+    }
+
+    const int32 stateRowIndex = rowIndex - notifyTrackCount;
+    if (stateRowIndex < 0 || stateRowIndex >= static_cast<int32>(clip->notifyStateTracks.size()))
+        return false;
+
+    outRow.isStateTrack = true;
+    outRow.trackIndex = stateRowIndex;
+    return true;
+}
+
 const char* AnimSequencerAdapter::GetItemLabel(int index) const
 {
-    if (index < 0 || index >= 2)
+    auto* clip = Get_Clip();
+    if (!clip)
         return "";
+
+    FResolvedTrackRow row;
+    if (!Resolve_TrackRow(index, row))
+        return "";
+
+    if (_trackLabels.size() <= static_cast<size_t>(index))
+        _trackLabels.resize(index + 1);
+
+    if (!row.isStateTrack)
+    {
+        _trackLabels[index] = clip->notifyTracks[row.trackIndex].name.empty()
+            ? "Notify Track " + to_string(row.trackIndex)
+            : clip->notifyTracks[row.trackIndex].name;
+    }
+    else
+    {
+        _trackLabels[index] = clip->notifyStateTracks[row.trackIndex].name.empty()
+            ? "Notify State Track " + to_string(row.trackIndex)
+            : clip->notifyStateTracks[row.trackIndex].name;
+    }
 
     return _trackLabels[index].c_str();
 }
 
 void AnimSequencerAdapter::Get(int index, int** start, int** end, int* type, unsigned int* color)
 {
-    if (index < 0 || index >= 2)
+    FResolvedTrackRow row;
+    if (!Resolve_TrackRow(index, row))
         return;
+
+    if (_trackStarts.size() <= static_cast<size_t>(index))
+        _trackStarts.resize(index + 1);
+
+    if (_trackEnds.size() <= static_cast<size_t>(index))
+        _trackEnds.resize(index + 1);
 
     _trackStarts[index] = GetFrameMin();
     _trackEnds[index] = GetFrameMax();
@@ -91,7 +145,7 @@ void AnimSequencerAdapter::Get(int index, int** start, int** end, int* type, uns
 
     if (color)
     {
-        if (index == 0)
+        if (!row.isStateTrack)
             *color = FTrackColors::NotifyFill;
         else
             *color = FTrackColors::StateFill;
@@ -100,7 +154,6 @@ void AnimSequencerAdapter::Get(int index, int** start, int** end, int* type, uns
 
 void AnimSequencerAdapter::Add(int type)
 {
-    // 생성은 Animation_View 우측 패널 / 타임라인 gesture로 처리
 }
 
 void AnimSequencerAdapter::Del(int index)
@@ -108,9 +161,9 @@ void AnimSequencerAdapter::Del(int index)
     if (!_context || !_context->view)
         return;
 
-    if (index == 0)
+    if (!_context->isSelectedStateTrack)
         _context->view->Delete_SelectedNotify();
-    else if (index == 1)
+    else
         _context->view->Delete_SelectedState();
 }
 
@@ -138,18 +191,18 @@ void AnimSequencerAdapter::CustomDraw(
     if (!clip || !_context)
         return;
 
-    if (index == 0)
+    FResolvedTrackRow row;
+    if (!Resolve_TrackRow(index, row))
+        return;
+
+    if (!row.isStateTrack)
     {
-        Draw_NotifyTrack(drawList, rc);
+        Draw_NotifyTrack(row.trackIndex, drawList, rc);
         return;
     }
 
-    if (index == 1)
-    {
-        Draw_StateTrack(drawList, rc);
-        Handle_StateMarkGesture(rc);
-        return;
-    }
+    Draw_StateTrack(row.trackIndex, drawList, rc);
+    Handle_StateMarkGesture(row.trackIndex, rc);
 }
 
 int32 AnimSequencerAdapter::Clamp_Frame(int32 frame) const
@@ -186,7 +239,7 @@ float AnimSequencerAdapter::Frame_ToPixel(int32 frame, const ImRect& rc) const
     return rc.Min.x + static_cast<float>(frame - GetFrameMin()) * Get_PixelPerFrame(rc);
 }
 
-void AnimSequencerAdapter::Select_Notify(int32 notifyIndex)
+void AnimSequencerAdapter::Select_Notify(int32 notifyIndex, int32 trackIndex)
 {
     if (_context && _context->selectedNotifyIndex)
         *_context->selectedNotifyIndex = notifyIndex;
@@ -194,11 +247,14 @@ void AnimSequencerAdapter::Select_Notify(int32 notifyIndex)
     if (_context && _context->selectedStateIndex)
         *_context->selectedStateIndex = -1;
 
-    if (_state)
-        _state->selectedEntry = 0;
+    if (_context)
+    {
+        _context->isSelectedStateTrack = false;
+        _context->selectedTrackIndex = trackIndex;
+    }
 }
 
-void AnimSequencerAdapter::Select_State(int32 stateIndex)
+void AnimSequencerAdapter::Select_State(int32 stateIndex, int32 trackIndex)
 {
     if (_context && _context->selectedStateIndex)
         *_context->selectedStateIndex = stateIndex;
@@ -206,8 +262,11 @@ void AnimSequencerAdapter::Select_State(int32 stateIndex)
     if (_context && _context->selectedNotifyIndex)
         *_context->selectedNotifyIndex = -1;
 
-    if (_state)
-        _state->selectedEntry = 1;
+    if (_context)
+    {
+        _context->isSelectedStateTrack = true;
+        _context->selectedTrackIndex = trackIndex;
+    }
 }
 
 void AnimSequencerAdapter::Clear_Selection()
@@ -219,7 +278,7 @@ void AnimSequencerAdapter::Clear_Selection()
         *_context->selectedStateIndex = -1;
 }
 
-void AnimSequencerAdapter::Draw_NotifyTrack(ImDrawList* drawList, const ImRect& rc)
+void AnimSequencerAdapter::Draw_NotifyTrack(int32 trackIndex, ImDrawList* drawList, const ImRect& rc)
 {
     auto* clip = Get_Clip();
     if (!clip || !_context || !_context->view)
@@ -227,13 +286,31 @@ void AnimSequencerAdapter::Draw_NotifyTrack(ImDrawList* drawList, const ImRect& 
 
     ImGuiIO& io = ImGui::GetIO();
     const int32 fps = Get_ClipFps();
+    const bool isSelectedTrack =
+        !_context->isSelectedStateTrack &&
+        _context->selectedTrackIndex == trackIndex;
 
-    const int32 sourceFps = _context->view->Get_CurrentClipFps();
+    if (isSelectedTrack)
+    {
+        drawList->AddRectFilled(
+            ImVec2(rc.Min.x, rc.Min.y + 1.f),
+            ImVec2(rc.Max.x, rc.Max.y - 1.f),
+            0x2223A85A,
+            4.f);
+
+        drawList->AddRect(
+            ImVec2(rc.Min.x, rc.Min.y + 1.f),
+            ImVec2(rc.Max.x, rc.Max.y - 1.f),
+            FTrackColors::SelectedBorder,
+            4.f,
+            0,
+            1.5f);
+    }
 
     for (int32 i = 0; i < static_cast<int32>(clip->notifies.size()); ++i)
     {
         auto& entry = clip->notifies[i];
-        if (!entry.notify)
+        if (!entry.notify || entry.trackIndex != trackIndex)
             continue;
 
         const int32 frame = TimeSec_ToFrame(entry.timeSec, fps);
@@ -267,7 +344,7 @@ void AnimSequencerAdapter::Draw_NotifyTrack(ImDrawList* drawList, const ImRect& 
 
         if (notifyRect.Contains(io.MousePos) && ImGui::IsMouseClicked(0))
         {
-            Select_Notify(i);
+            Select_Notify(i, trackIndex);
             _context->clickedOnNotify = true;
 
             _draggingNotifyIndex = i;
@@ -288,14 +365,24 @@ void AnimSequencerAdapter::Draw_NotifyTrack(ImDrawList* drawList, const ImRect& 
     {
         auto selectedNotify = clip->notifies[_draggingNotifyIndex].notify;
         Sort_Notifies(*clip);
-        Select_Notify(Find_NotifyIndex_ByInstance(*clip, selectedNotify));
+        Select_Notify(Find_NotifyIndex_ByInstance(*clip, selectedNotify), trackIndex);
 
         _draggingNotifyIndex = -1;
         _notifyDragOffsetX = 0.f;
     }
+
+    if (!_context->clickedOnNotify &&
+        !io.KeyShift &&
+        rc.Contains(io.MousePos) &&
+        ImGui::IsMouseClicked(0))
+    {
+        Clear_Selection();
+        Select_Notify(-1, trackIndex);
+        _context->clickedOnNotify = true;
+    }
 }
 
-void AnimSequencerAdapter::Draw_StateTrack(ImDrawList* drawList, const ImRect& rc)
+void AnimSequencerAdapter::Draw_StateTrack(int32 trackIndex, ImDrawList* drawList, const ImRect& rc)
 {
     auto* clip = Get_Clip();
     if (!clip)
@@ -304,11 +391,31 @@ void AnimSequencerAdapter::Draw_StateTrack(ImDrawList* drawList, const ImRect& r
     ImGuiIO& io = ImGui::GetIO();
     const int32 fps = Get_ClipFps();
     const float handleWidth = 10.f;
+    const bool isSelectedTrack =
+        _context->isSelectedStateTrack &&
+        _context->selectedTrackIndex == trackIndex;
+
+    if (isSelectedTrack)
+    {
+        drawList->AddRectFilled(
+            ImVec2(rc.Min.x, rc.Min.y + 1.f),
+            ImVec2(rc.Max.x, rc.Max.y - 1.f),
+            0x221A76C4,
+            4.f);
+
+        drawList->AddRect(
+            ImVec2(rc.Min.x, rc.Min.y + 1.f),
+            ImVec2(rc.Max.x, rc.Max.y - 1.f),
+            FTrackColors::SelectedBorder,
+            4.f,
+            0,
+            1.5f);
+    }
 
     for (int32 i = 0; i < static_cast<int32>(clip->notifyStates.size()); ++i)
     {
         auto& entry = clip->notifyStates[i];
-        if (!entry.notifyState)
+        if (!entry.notifyState || entry.trackIndex != trackIndex)
             continue;
 
         const int32 startFrame = TimeSec_ToFrame(entry.startSec, fps);
@@ -354,21 +461,21 @@ void AnimSequencerAdapter::Draw_StateTrack(ImDrawList* drawList, const ImRect& r
         {
             if (leftHandle.Contains(io.MousePos))
             {
-                Select_State(i);
+                Select_State(i, trackIndex);
                 _context->clickedOnNotify = true;
                 _draggingStateIndex = i;
                 _stateDragMode = EStateDragMode::ResizeStart;
             }
             else if (rightHandle.Contains(io.MousePos))
             {
-                Select_State(i);
+                Select_State(i, trackIndex);
                 _context->clickedOnNotify = true;
                 _draggingStateIndex = i;
                 _stateDragMode = EStateDragMode::ResizeEnd;
             }
             else if (centerRect.Contains(io.MousePos))
             {
-                Select_State(i);
+                Select_State(i, trackIndex);
                 _context->clickedOnNotify = true;
                 _draggingStateIndex = i;
                 _stateDragMode = EStateDragMode::Move;
@@ -420,15 +527,28 @@ void AnimSequencerAdapter::Draw_StateTrack(ImDrawList* drawList, const ImRect& r
     if (_draggingStateIndex >= 0 && !ImGui::IsMouseDown(0))
     {
         auto selectedState = clip->notifyStates[_draggingStateIndex].notifyState;
+        const int32 selectedTrackIndex = clip->notifyStates[_draggingStateIndex].trackIndex;
         Sort_States(*clip);
-        Select_State(Find_StateIndex_ByInstance(*clip, selectedState));
+        Select_State(Find_StateIndex_ByInstance(*clip, selectedState), selectedTrackIndex);
 
         _draggingStateIndex = -1;
         _stateDragOffsetX = 0.f;
         _stateDragMode = EStateDragMode::None;
     }
 
-    if (_context->isMarkingState)
+    if (!_context->clickedOnNotify &&
+        !io.KeyShift &&
+        rc.Contains(io.MousePos) &&
+        ImGui::IsMouseClicked(0))
+    {
+        Clear_Selection();
+        Select_State(-1, trackIndex);
+        _context->clickedOnNotify = true;
+    }
+
+    if (_context->isMarkingState &&
+        _context->isSelectedStateTrack &&
+        _context->selectedTrackIndex == trackIndex)
     {
         const int32 startFrame = min(_context->pendingMarkStartFrame, _context->pendingMarkEndFrame);
         const int32 endFrame = max(_context->pendingMarkStartFrame, _context->pendingMarkEndFrame);
@@ -452,9 +572,7 @@ void AnimSequencerAdapter::Draw_StateTrack(ImDrawList* drawList, const ImRect& r
     }
 }
 
-
-
-void AnimSequencerAdapter::Handle_StateMarkGesture(const ImRect& rc)
+void AnimSequencerAdapter::Handle_StateMarkGesture(int32 trackIndex, const ImRect& rc)
 {
     if (!_context)
         return;
@@ -471,22 +589,29 @@ void AnimSequencerAdapter::Handle_StateMarkGesture(const ImRect& rc)
         io.KeyShift &&
         ImGui::IsMouseClicked(ImGuiMouseButton_Left))
     {
+        _context->isSelectedStateTrack = true;
+        _context->selectedTrackIndex = trackIndex;
         _context->isMarkingState = true;
 
         const int32 startFrame = Pixel_ToFrame(io.MousePos.x, rc);
         _context->pendingMarkStartFrame = startFrame;
         _context->pendingMarkEndFrame = startFrame;
-
         return;
     }
 
-    if (_context->isMarkingState && ImGui::IsMouseDown(ImGuiMouseButton_Left))
+    if (_context->isMarkingState &&
+        _context->isSelectedStateTrack &&
+        _context->selectedTrackIndex == trackIndex &&
+        ImGui::IsMouseDown(ImGuiMouseButton_Left))
     {
         _context->pendingMarkEndFrame = Pixel_ToFrame(io.MousePos.x, rc);
         return;
     }
 
-    if (_context->isMarkingState && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+    if (_context->isMarkingState &&
+        _context->isSelectedStateTrack &&
+        _context->selectedTrackIndex == trackIndex &&
+        ImGui::IsMouseReleased(ImGuiMouseButton_Left))
     {
         _context->pendingMarkEndFrame = Pixel_ToFrame(io.MousePos.x, rc);
         _context->isMarkingState = false;
@@ -498,7 +623,10 @@ void AnimSequencerAdapter::Sort_Notifies(FAnimNotifyClipData& clip)
     sort(clip.notifies.begin(), clip.notifies.end(),
         [](const FAnimNotifyEventEntry& lhs, const FAnimNotifyEventEntry& rhs)
         {
-            return lhs.timeSec < rhs.timeSec;
+            if (lhs.trackIndex == rhs.trackIndex)
+                return lhs.timeSec < rhs.timeSec;
+
+            return lhs.trackIndex < rhs.trackIndex;
         });
 }
 
@@ -507,6 +635,9 @@ void AnimSequencerAdapter::Sort_States(FAnimNotifyClipData& clip)
     sort(clip.notifyStates.begin(), clip.notifyStates.end(),
         [](const FAnimNotifyStateEntry& lhs, const FAnimNotifyStateEntry& rhs)
         {
+            if (lhs.trackIndex != rhs.trackIndex)
+                return lhs.trackIndex < rhs.trackIndex;
+
             if (lhs.startSec == rhs.startSec)
                 return lhs.durationSec < rhs.durationSec;
 

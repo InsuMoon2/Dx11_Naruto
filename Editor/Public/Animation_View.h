@@ -34,11 +34,16 @@ public:
     void Open_Model(Shared<Model> model);
     void Focus_Clip(const string& clipName);
 
+    void Add_NotifyTrack(const string& trackName);
+    void Add_NotifyStateTrack(const string& trackName);
+
     void Add_Notify_AtFrame(int32 frame, const string& typeName);
     void Add_State_ByFrameRange(int32 startFrame, int32 endFrame, const string& typeName);
 
     void Delete_SelectedNotify();
     void Delete_SelectedState();
+    void Delete_SelectedNotifyTrack();
+    void Delete_SelectedNotifyStateTrack();
 
 public:
     int32 Get_FrameMin() const { return 0; }
@@ -72,6 +77,8 @@ private:
     void Draw_SelectedNotifyInspector();
     void Draw_SelectedStateInspector();
 
+    void Draw_NotifyTrackSection();
+    void Draw_NotifyStateTrackSection();
     void Draw_CreateNotifySection();
     void Draw_CreateStateSection();
 
@@ -91,12 +98,17 @@ private:
     void Ensure_PreviewCamera();
     void Fit_PreviewCamera_ToOwner();
     void Handle_PlaybackShortcut();
+    void Handle_DeleteShortcut();
 
     bool Passes_ClipSearch(const string& clipName) const;
     bool Passes_AnimStateClipFilter(const string& clipName) const;
     bool Has_SelectedNotify() const;
     bool Has_SelectedState() const;
+    bool Has_SelectedNotifyTrack() const;
+    bool Has_SelectedNotifyStateTrack() const;
     void Clear_SelectedEntries();
+    void Select_NotifyTrack(int32 trackIndex);
+    void Select_NotifyStateTrack(int32 trackIndex);
 
     FAnimNotifyClipData* Get_CurrentClip();
     const FAnimNotifyClipData* Get_CurrentClip() const;
@@ -119,6 +131,8 @@ private:
     int32 _selectedClipIndex = -1;
     int32 _selectedNotifyIndex = -1;
     int32 _selectedStateIndex = -1;
+    int32 _selectedNotifyTrackIndex = 0;
+    int32 _selectedNotifyStateTrackIndex = 0;
 
     bool  _isPlaying = false;
     bool  _isPreviewHovered = false;
@@ -149,6 +163,8 @@ private:
     int32 _createNotifyTypeIndex = 0;
     int32 _createStateTypeIndex = 0;
 
+    string _newNotifyTrackName = "Notify Track";
+    string _newNotifyStateTrackName = "Notify State Track";
 
 public:
     static Shared<Animation_View> Create();

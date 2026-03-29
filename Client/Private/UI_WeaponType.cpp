@@ -46,16 +46,15 @@ HRESULT UI_WeaponType::Initialize(void* arg)
     
     _weaponTypeBG = desc->weaponTypeBG;
 
+    desc->textureType = Protocol::COMPONENT_TYPE_TEXTURE_WEAPON_TYPE;
     desc->textureIndex = To_TextureIndex(_weaponTypeBG);
-    desc->textDesc.text = To_TypeName(_weaponTypeBG);
-    desc->textDesc.style.fontFamily = L"Malgun Gothic";
-    desc->textDesc.style.fontSize = 16.f;
-    desc->textDesc.style.hAlign = ETextHAlign::Center;
-    desc->textDesc.style.vAlign = ETextVAlign::Middle;
 
-    desc->textDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
+    Setup_DefaultTextDesc(desc->textDesc);
+    desc->textDesc.text = To_TypeName(_weaponTypeBG);
 
     CHECK_FAILED(Background::Initialize(arg), E_FAIL);
+
+    Apply_WeaponTypeVisual();
 
     return S_OK;
 }
@@ -76,8 +75,27 @@ void UI_WeaponType::Set_WeaponType(EWeaponTypeBG weaponTypeName)
 {
     _weaponTypeBG = weaponTypeName;
 
-    // 텍스처 인덱스 변경 추가
+    Apply_WeaponTypeVisual();
+}
 
+void UI_WeaponType::Setup_DefaultTextDesc(FBackgroundTextDesc& textDesc)
+{
+    textDesc.offset = Vec2(0.f, 0.f);
+    textDesc.size = Vec2(180.f, 32.f);
+    textDesc.zOrderOffset = 0.01f;
+
+    textDesc.style.fontFamily = L"Malgun Gothic";
+    textDesc.style.fontSize = 22.f;
+    textDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
+    textDesc.style.hAlign = ETextHAlign::Center;
+    textDesc.style.vAlign = ETextVAlign::Middle;
+    textDesc.style.wordWrap = false;
+}
+
+void UI_WeaponType::Apply_WeaponTypeVisual()
+{
+    Set_BackgroundTextureIndex(To_TextureIndex(_weaponTypeBG));
+    Set_LabelText(To_TypeName(_weaponTypeBG));
 }
 
 uint32 UI_WeaponType::To_TextureIndex(EWeaponTypeBG type)

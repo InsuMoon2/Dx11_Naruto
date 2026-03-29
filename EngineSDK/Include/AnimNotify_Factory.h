@@ -14,8 +14,6 @@ public:
     using NotifyStateCreator = function<Shared<AnimNotifyState>()>;
 
 public:
-    void Initialize();
-
     static void Register_Notify(const string& typeName, NotifyCreator creator);
     static void Register_NotifyState(const string& typeName, NotifyStateCreator creator);
 
@@ -26,8 +24,8 @@ public:
     static vector<string>           Get_NotifyStateTypeNames();
 
 private:
-    static umap<string, NotifyCreator> _notifyCreators;
-    static umap<string, NotifyStateCreator> _notifyStateCreators;
+    static umap<string, NotifyCreator>& Get_NotifyCreators();
+    static umap<string, NotifyStateCreator>& Get_NotifyStateCreators();
 };
 
 // 매크로 정의

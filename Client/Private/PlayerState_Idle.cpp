@@ -48,7 +48,7 @@ void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
 
     if (frame.attackDown)
     {
-        state->Change_State(EPlayerState::Attack_1);
+        state->Change_State(EPlayerState::Attack);
         return;
     }
 

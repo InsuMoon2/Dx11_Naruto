@@ -50,7 +50,7 @@ public:
     bool    Is_AnimStateFinished() const;
     bool    Is_AnimSequenceFinished() const;
 
-    const FStateAnimationDesc* Find_AnimStateDesc(EPlayerState stateID) const;
+    const FStateAnimationDesc* Find_AnimStateDesc(EPlayerState stateID);
 
     EAnimPhase      Get_AnimPhase() const;
     float           Get_AnimTrackPositionTicks() const;
@@ -77,16 +77,18 @@ public:
 private:
     static string               To_AnimationStateName(EPlayerState stateID);
 
-    
-    
 
     bool                        Check_Global_Transitions();
+
     bool                        Check_Skill_Input();
+    bool                        Check_WeaponToggle();
 
     // 추가 예정
     bool                        Check_Death();
     bool                        Check_Cinematic();
     bool                        Check_HitReaction(); // 슈퍼아머 아닐 때
+
+
 
 private:
     Shared<InputComponent>                      _input;

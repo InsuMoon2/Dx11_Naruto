@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "PlayerState_Run.h"
 #include "PlayerStateMachine.h"
 #include "InputComponent.h"
@@ -59,7 +59,7 @@ void PlayerState_Run::Update(PlayerStateMachine* state, float timeDelta)
 
     if (frame.attackDown)
     {
-        state->Change_State(EPlayerState::Attack_1);
+        state->Change_State(EPlayerState::Attack);
         return;
     }
 

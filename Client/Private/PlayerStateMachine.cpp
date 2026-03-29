@@ -22,6 +22,9 @@
 #include "PlayerState_JumpDash.h"
 #include "SkillComponent.h"
 #include "SkillDataManager.h"
+#include "EquipmentComponent.h"
+#include "PlayerState_JumpAttack.h"
+
 
 IMPLEMENT_REFLECTION(PlayerStateMachine)
 
@@ -68,7 +71,9 @@ HRESULT PlayerStateMachine::Initialize_Prototype()
     Register_State(EPlayerState::Dash, PlayerState_Dash::Create());
     Register_State(EPlayerState::JumpDash, PlayerState_JumpDash::Create());
 
-    Register_State(EPlayerState::Attack_1, PlayerState_Attack::Create());
+    Register_State(EPlayerState::Attack, PlayerState_Attack::Create());
+    Register_State(EPlayerState::JumpAttack, PlayerState_JumpAttack::Create());
+
 
     return S_OK;
 }
@@ -128,7 +133,8 @@ bool PlayerStateMachine::Check_Global_Transitions()
 
     if (Check_Skill_Input())
         return true;
-    
+
+    Check_WeaponToggle();
 
     return false; // 바뀐 상태 X
 }
@@ -194,6 +200,50 @@ string PlayerStateMachine::To_AnimationStateName(EPlayerState stateID)
     return name.empty() ? "" : string(name);
 }
 
+bool PlayerStateMachine::Check_WeaponToggle()
+{
+    auto input = Get_Input();
+    if (!input)
+        return false;
+
+    const auto& frame = input->Get_Frame();
+
+    if (!frame.toggleWeaponDown)
+        return false;
+
+    auto player = dynamic_pointer_cast<MyPlayer>(Get_Owner());
+    if (!player)
+        return false;
+
+    auto equipment = player->Get_Component<EquipmentComponent>();
+    if (!equipment)
+        return false;
+
+    auto currentWeapon = equipment->Get_CurrentWeaponType();
+
+    if (currentWeapon == EWeaponType::Hand)
+    {
+        equipment->Toggle_WeaponMode();
+        LOG_INFO("무기 변경: 격투 -> 대검");
+
+        GAME->Get_DelegateHub().OnWeaponTypeChanged.Broadcast(
+            static_cast<int32>(EWeaponType::BigSwrod));
+    }
+    else
+    {
+        equipment->Toggle_WeaponMode();
+        LOG_INFO("무기 변경: 대검 -> 격투");
+
+        GAME->Get_DelegateHub().OnWeaponTypeChanged.Broadcast(
+            static_cast<int32>(EWeaponType::Hand));
+    }
+
+    EPlayerState currentState = Get_CurrentStateID();
+    Play_AnimState(currentState);
+
+    return false;
+}
+
 void PlayerStateMachine::Register_State(EPlayerState stateID, Shared<IPlayerState> state)
 {
     _states[stateID] = state;
@@ -257,17 +307,26 @@ MovementComponent::FMoveCommand PlayerStateMachine::Init_MoveCommand() const
 
 bool PlayerStateMachine::Play_AnimState(EPlayerState stateID)
 {
-    return _animationState->Play_State(To_AnimationStateName(stateID));
+    string resolved = _animationState->Find_StateNameByWeapon(
+        Get_Owner().get(), stateID);
+
+    return _animationState->Play_State(resolved);
 }
 
 bool PlayerStateMachine::Play_DirectionalAnimState(EPlayerState stateID, EMoveInputDirection dir)
 {
-    return _animationState->Play_DirectionalState(To_AnimationStateName(stateID), dir);
+    string resolved = _animationState->Find_StateNameByWeapon(
+        Get_Owner().get(), stateID);
+
+    return _animationState->Play_DirectionalState(resolved, dir);
 }
 
 bool PlayerStateMachine::Play_AnimStateLoopOnly(EPlayerState stateID)
 {
-    return _animationState->Play_StateLoopOnly(To_AnimationStateName(stateID));
+    string resolved = _animationState->Find_StateNameByWeapon(
+        Get_Owner().get(), stateID);
+
+    return _animationState->Play_StateLoopOnly(resolved);
 }
 
 void PlayerStateMachine::Request_AnimStateEnd()
@@ -285,10 +344,15 @@ bool PlayerStateMachine::Is_AnimSequenceFinished() const
     return _animationState ? _animationState->Is_CurrentStateSequenceFinished() : false;
 }
 
-const FStateAnimationDesc* PlayerStateMachine::Find_AnimStateDesc(EPlayerState stateID) const
+const FStateAnimationDesc* PlayerStateMachine::Find_AnimStateDesc(EPlayerState stateID)
 {
-    return _animationState ?
-        _animationState->Find_State(To_AnimationStateName(stateID)) : nullptr;
+    if (!_animationState)
+        return nullptr;
+
+    string resolved = _animationState->Find_StateNameByWeapon(
+        Get_Owner().get(), stateID);
+
+    return _animationState->Find_State(resolved);
 }
 
 EAnimPhase PlayerStateMachine::Get_AnimPhase() const

@@ -195,6 +195,11 @@
     <ClInclude Include="..\Public\UI_WeaponType.h">
       <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\EquipmentComponent.h" />
+    <ClInclude Include="..\Public\ComboProfile_Manager.h" />
+    <ClInclude Include="..\Public\PlayerState_JumpAttack.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -375,6 +380,11 @@
     <ClCompile Include="..\Private\ANS_CollisionEnable.cpp" />
     <ClCompile Include="..\Private\UI_WeaponType.cpp">
       <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EquipmentComponent.cpp" />
+    <ClCompile Include="..\Private\ComboProfile_Manager.cpp" />
+    <ClCompile Include="..\Private\PlayerState_JumpAttack.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

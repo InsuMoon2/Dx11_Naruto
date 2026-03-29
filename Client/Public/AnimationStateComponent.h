@@ -21,9 +21,11 @@ public:
         EMoveInputDirection dir = EMoveInputDirection::Forward;
 
         EAnimPhase          phase = EAnimPhase::Start;
-
-        // 루프용
         bool                forceRestart = false;
+
+        // 공격 프로파일과 콤보 인덱스 -> Attack 상태일 때만
+        EAttackProfileType  attackProfile = EAttackProfileType::Hand_Ground;
+        int32               attackComboIndex = 0;
     };
 
 public:
@@ -83,6 +85,8 @@ public: /* Network */
 
     const FAnimReplicatedState& Get_ReplicatedState() const { return _replicatedState; }
 
+    string Find_StateNameByWeapon(GameObject* owner, EPlayerState state);
+
 public:
     json To_Json() const override;
     void From_Json(const json& data) override;
@@ -90,16 +94,20 @@ public:
 private:
     static string To_AnimationStateName(EPlayerState state);
 
+
     static bool Requires_ForceRestart(EPlayerState state);
 
     static Protocol::OBJECT_STATE_TYPE      To_ProtoState(EPlayerState state);
     static Protocol::MOVE_INPUT_DIR_TYPE    To_ProtoDir(EMoveInputDirection dir);
 
     static Protocol::ANIM_PHASE_TYPE        To_ProtoAnimPhase(EAnimPhase phase);
+    static Protocol::ATTACK_PROFILE_TYPE    To_ProtoAttackProfile(EAttackProfileType profileType);
 
     static EPlayerState                     From_ProtoState(Protocol::OBJECT_STATE_TYPE state);
     static EMoveInputDirection              From_ProtoDir(Protocol::MOVE_INPUT_DIR_TYPE dir);
     static EAnimPhase                       From_ProtoAnimPhase(Protocol::ANIM_PHASE_TYPE phase);
+
+    static EAttackProfileType               From_ProtoAttackProfile(Protocol::ATTACK_PROFILE_TYPE profileType);
 
     Shared<Model>                           Resolve_Model();
 
@@ -120,5 +128,6 @@ public:
     Shared<Component> Clone(void* arg) override;
     void Free() override;
 };
+
 
 NS_END

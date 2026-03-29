@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "AnimNotify_Serializer.h"
 #include "GameInstance.h"
 #include <fstream>
@@ -18,8 +18,24 @@ json AnimNotify_Serializer::To_Json(const FAnimNotifyAsset& asset)
         json clipJson;
         clipJson["clip_name"] = clip.clipName;
         clipJson["display_fps"] = clip.displayFps;
+        clipJson["notify_tracks"] = json::array();
+        clipJson["notify_state_tracks"] = json::array();
         clipJson["notifies"] = json::array();
         clipJson["notify_states"] = json::array();
+
+        for (const auto& track : clip.notifyTracks)
+        {
+            clipJson["notify_tracks"].push_back({
+                { "name", track.name }
+            });
+        }
+
+        for (const auto& track : clip.notifyStateTracks)
+        {
+            clipJson["notify_state_tracks"].push_back({
+                { "name", track.name }
+            });
+        }
 
         for (const auto& entry : clip.notifies)
         {
@@ -28,9 +44,10 @@ json AnimNotify_Serializer::To_Json(const FAnimNotifyAsset& asset)
 
             clipJson["notifies"].push_back({
                 { "time_sec", entry.timeSec },
+                { "track_index", entry.trackIndex },
                 { "type", entry.notify->Get_TypeName() },
                 { "payload", entry.notify->Serialize_Payload() }
-                });
+            });
         }
 
         for (const auto& entry : clip.notifyStates)
@@ -41,9 +58,10 @@ json AnimNotify_Serializer::To_Json(const FAnimNotifyAsset& asset)
             clipJson["notify_states"].push_back({
                 { "start_sec", entry.startSec },
                 { "duration_sec", entry.durationSec },
+                { "track_index", entry.trackIndex },
                 { "type", entry.notifyState->Get_TypeName() },
                 { "payload", entry.notifyState->Serialize_Payload() }
-                });
+            });
         }
 
         root["clips"].push_back(clipJson);
@@ -66,6 +84,28 @@ bool AnimNotify_Serializer::From_Json(const json& root, FAnimNotifyAsset& outAss
         clip.clipName = clipJson.value("clip_name", "");
         clip.displayFps = max(1, clipJson.value("display_fps", 30));
 
+        if (clipJson.contains("notify_tracks") && clipJson["notify_tracks"].is_array())
+        {
+            for (const auto& trackJson : clipJson["notify_tracks"])
+            {
+                FAnimNotifyTrackDesc trackDesc;
+                trackDesc.name = trackJson.value("name", "");
+                clip.notifyTracks.push_back(trackDesc);
+            }
+        }
+
+        if (clipJson.contains("notify_state_tracks") && clipJson["notify_state_tracks"].is_array())
+        {
+            for (const auto& trackJson : clipJson["notify_state_tracks"])
+            {
+                FAnimNotifyTrackDesc trackDesc;
+                trackDesc.name = trackJson.value("name", "");
+                clip.notifyStateTracks.push_back(trackDesc);
+            }
+        }
+
+        Ensure_DefaultTracks(clip);
+
         if (clipJson.contains("notifies") && clipJson["notifies"].is_array())
         {
             for (const auto& notifyJson : clipJson["notifies"])
@@ -82,6 +122,10 @@ bool AnimNotify_Serializer::From_Json(const json& root, FAnimNotifyAsset& outAss
 
                 FAnimNotifyEventEntry entry;
                 entry.timeSec = notifyJson.value("time_sec", 0.f);
+                entry.trackIndex = std::clamp(
+                    notifyJson.value("track_index", 0),
+                    0,
+                    static_cast<int32>(clip.notifyTracks.size()) - 1);
                 entry.notify = instance;
                 clip.notifies.push_back(entry);
             }
@@ -104,6 +148,10 @@ bool AnimNotify_Serializer::From_Json(const json& root, FAnimNotifyAsset& outAss
                 FAnimNotifyStateEntry entry;
                 entry.startSec = stateJson.value("start_sec", 0.f);
                 entry.durationSec = max(0.f, stateJson.value("duration_sec", 0.f));
+                entry.trackIndex = std::clamp(
+                    stateJson.value("track_index", 0),
+                    0,
+                    static_cast<int32>(clip.notifyStateTracks.size()) - 1);
                 entry.notifyState = instance;
                 clip.notifyStates.push_back(entry);
             }
@@ -159,7 +207,6 @@ fs::path AnimNotify_Serializer::Get_ModelNotifyFilePath(const string& modelGuid)
         return Get_BaseFolderPath() / (stem + ".animnotify.json");
     }
 
-    // 역조회 실패 시.
     return Get_BaseFolderPath() / (modelGuid + ".animnotify.json");
 }
 
@@ -191,9 +238,34 @@ FAnimNotifyClipData& AnimNotify_Serializer::Get_OrAddClip(FAnimNotifyAsset& asse
         return *clip;
 
     FAnimNotifyClipData newClip;
-
     newClip.clipName = clipName;
+
+    FAnimNotifyTrackDesc notifyTrackDesc;
+    notifyTrackDesc.name = "Notifies";
+    newClip.notifyTracks.push_back(notifyTrackDesc);
+
+    FAnimNotifyTrackDesc notifyStateTrackDesc;
+    notifyStateTrackDesc.name = "Notify States";
+    newClip.notifyStateTracks.push_back(notifyStateTrackDesc);
+
     asset.clips.push_back(newClip);
 
     return asset.clips.back();
+}
+
+void AnimNotify_Serializer::Ensure_DefaultTracks(FAnimNotifyClipData& clip)
+{
+    if (clip.notifyTracks.empty())
+    {
+        FAnimNotifyTrackDesc trackDesc;
+        trackDesc.name = "Notifies";
+        clip.notifyTracks.push_back(trackDesc);
+    }
+
+    if (clip.notifyStateTracks.empty())
+    {
+        FAnimNotifyTrackDesc trackDesc;
+        trackDesc.name = "Notify States";
+        clip.notifyStateTracks.push_back(trackDesc);
+    }
 }

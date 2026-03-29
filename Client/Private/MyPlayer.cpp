@@ -112,6 +112,8 @@ void MyPlayer::Send_MovePacket(bool forceSend)
     _lastObjectState = info.object_state();
     _lastMoveDir = info.move_dir();
     _lastAnimPhase = info.anim_phase();
+    _lastAttackProfile = info.attack_profile();
+    _lastAttackComboIndex = info.attack_combo_index();
 }
 
 Protocol::ObjectInfo MyPlayer::Build_NetworkInfo() const
@@ -172,6 +174,13 @@ bool MyPlayer::Should_SendMovePacket(const Protocol::ObjectInfo& nextInfo) const
 
     if (nextInfo.anim_force_restart())
         return true;
+
+    if (nextInfo.attack_profile() != _lastAttackProfile)
+        return true;
+
+    if (nextInfo.attack_combo_index() != _lastAttackComboIndex)
+        return true;
+
 
     return false;
 }

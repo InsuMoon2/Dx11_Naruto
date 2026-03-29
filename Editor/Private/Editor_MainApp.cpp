@@ -12,6 +12,8 @@
 #include <ctime>
 #include <cstdlib>
 
+#include "ComboProfile_Manager.h"
+
 Editor_MainApp::Editor_MainApp()
 {
     
@@ -194,5 +196,6 @@ void Editor_MainApp::Free()
     Inspector_Factory::DestroyInstance();
     AnimNotify_Inspector_Factory::DestroyInstance();
     Customizer_Manager::DestroyInstance();
-    
+
+    ComboProfile_Manager::DestroyInstance();
 }

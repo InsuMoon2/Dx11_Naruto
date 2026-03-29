@@ -75,14 +75,29 @@ void UI_PlayerSkill::Update(float timeDelta)
     }
 }
 
+void UI_PlayerSkill::On_WeaponTypeChanged(int32 weaponTypeIndex)
+{
+    if (!_weaponTypeUI)
+        return;
+
+    EWeaponType newType = static_cast<EWeaponType>(weaponTypeIndex);
+
+    if (newType == EWeaponType::BigSwrod)
+        _weaponTypeUI->Set_WeaponType(UI_WeaponType::EWeaponTypeBG::Sword);
+    else
+        _weaponTypeUI->Set_WeaponType(UI_WeaponType::EWeaponTypeBG::Fighter);
+}
+
 void UI_PlayerSkill::Bind_Player(Shared<Player> player)
 {
     _player = player;
 
-    //if (player)
-    //    _combat = player->Get_Component<CombatStat>();
-    //else
-    //    _combat.reset();
+    // 이미 있으면 해제 후 등록
+    if (_weaponTypeHandle.IsValid())
+        GAME->Get_DelegateHub().OnWeaponTypeChanged.Remove(_weaponTypeHandle);
+
+    _weaponTypeHandle = GAME->Get_DelegateHub().OnWeaponTypeChanged.Add(
+        this, &UI_PlayerSkill::On_WeaponTypeChanged);
 }
 
 HRESULT UI_PlayerSkill::Ready_Skill(void* arg)
@@ -152,15 +167,16 @@ HRESULT UI_PlayerSkill::Ready_Skill(void* arg)
 
     // 처음에는 격투형으로
     weaponDesc.weaponTypeBG = UI_WeaponType::EWeaponTypeBG::Fighter;
-
     weaponDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_WEAPON_TYPE;
 
-    weaponDesc.textDesc.offset = Vec2(18.f, 0.f);
-    weaponDesc.textDesc.size = Vec2(180.f, 32.f);
-    weaponDesc.textDesc.zOrderOffset = 0.01f;
-
-    _weaponTypeUI = Create_Child<UI_WeaponType>(Protocol::OBJECT_TYPE_UI_WEAPON_TYPE, EUILayer::HUD, &weaponDesc);
+    _weaponTypeUI = Create_Child<UI_WeaponType>(
+        Protocol::OBJECT_TYPE_UI_WEAPON_TYPE,
+        EUILayer::HUD,
+        &weaponDesc);
     CHECK_NULL(_weaponTypeUI, E_FAIL);
+
+    // 제대로 안들어와서, 명시적으로 한번 더 세팅
+    _weaponTypeUI->Set_WeaponType(UI_WeaponType::EWeaponTypeBG::Fighter);
 
     return S_OK;
 }
@@ -194,5 +210,8 @@ Shared<GameObject> UI_PlayerSkill::Clone(void* arg)
 
 void UI_PlayerSkill::Free()
 {
+    if (_weaponTypeHandle.IsValid())
+        GAME->Get_DelegateHub().OnWeaponTypeChanged.Remove(_weaponTypeHandle);
+
     Panel::Free();
 }

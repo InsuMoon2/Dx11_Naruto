@@ -19,4 +19,12 @@ enum class EAssetOpenType
     END
 };
 
+enum class EAnimNotifyTrackType : uint8
+{
+    Notify,
+    NotifyState,
+
+    END
+};
+
 NS_END

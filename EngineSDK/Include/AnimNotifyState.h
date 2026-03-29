@@ -20,6 +20,13 @@ public:
 
     virtual json Serialize_Payload() const;
     virtual void Deserialize_Payload(const json& payload);
+
+public:
+    virtual FClassReflectionInfo& Get_ReflectionInfo()
+    {
+        static FClassReflectionInfo emptyInfo{};
+        return emptyInfo;
+    }
 };
 
 NS_END

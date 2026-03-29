@@ -38,6 +38,8 @@ void PlayerState_JumpDash::Enter(PlayerStateMachine* state)
     state->Set_PendingMoveInputDirection(_dashDir);
 
     input->Set_InputMode(EPlayerInputMode::LookOnly);
+    input->Set_JumpInputEnabled(true);
+
     movement->Set_OrientRotationToMovement(false);
     movement->Set_GravityEnabled(false); // 공중 대쉬때 중력 끄기
 
@@ -70,8 +72,15 @@ void PlayerState_JumpDash::Update(PlayerStateMachine* state, float timeDelta)
     auto cmd = state->Init_MoveCommand();
 
     cmd.jump = false;
-    cmd.doublejump = false; // 일단 더블점프도 막기
+    cmd.doublejump = false;
     cmd.superJumpVelocity = 0.f;
+
+    if (frame.jumpDown && movement->Can_DoubleJump())
+    {
+        cmd.doublejump = true;
+        state->Change_State(EPlayerState::DoubleJump);
+        return;
+    }
 
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
@@ -130,12 +139,14 @@ void PlayerState_JumpDash::Exit(PlayerStateMachine* state)
 
         // 상태 끝날 때 무조건 중력 복구
         movement->Set_GravityEnabled(true);
+        movement->Reset_DoubleJumpCount();
+
     }
 
     auto input = state->Get_Input();
     if (input)
         input->Set_InputMode(EPlayerInputMode::Normal);
-    
+
 }
 
 Shared<PlayerState_JumpDash> PlayerState_JumpDash::Create()

@@ -13,6 +13,7 @@
 #include "Prefab_PreviewCameraSettings.h"
 #include "Animation_View.h"
 #include "ContainerObject.h"
+#include "MovementComponent.h"
 #include "PartObject.h"
 
 Prefab_View::Prefab_View()
@@ -61,6 +62,8 @@ void Prefab_View::OnGui()
     ImGui::SetNextWindowSize(windowSize, ImGuiCond_Appearing);
 
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+    if (_isGizmoUsing || (_isPreviewHovered && ImGui::IsMouseDown(ImGuiMouseButton_Left)))
+        flags |= ImGuiWindowFlags_NoMove;
 
     string title = "Prefab View - " + _prefabName;
     if (_isDirty)
@@ -104,26 +107,33 @@ void Prefab_View::OnGui()
             ImGui::TableSetColumnIndex(1);
             {
                 ImGui::Text("모델 프리뷰");
-                _previewImGuiSize = ImVec2(ImGui::GetContentRegionAvail().x, 450);
+                const ImVec2 previewChildSize = ImVec2(ImGui::GetContentRegionAvail().x, 450.f);
 
-                ImGui::BeginChild("ModelPreviewChild", _previewImGuiSize, false,
+                ImGui::BeginChild("ModelPreviewChild", previewChildSize, false,
                     ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
                 {
+                    _isPreviewHovered = false;
+                    _isPreviewActive = false;
+                    _isGizmoHovered = false;
+                    _isGizmoUsing = false;
+
                     if (_prevRT)
                     {
-                        _previewScreenPos = ImGui::GetCursorScreenPos();
+                        const ImVec2 imagePos = ImGui::GetCursorScreenPos();
+                        const ImVec2 imageSize = ImGui::GetContentRegionAvail();
 
-                        ImVec2 childSize = ImGui::GetContentRegionAvail();
-                        ImGui::Image((ImTextureID)_prevRT->Get_SRV(), childSize);
+                        ImGui::Image((ImTextureID)_prevRT->Get_SRV(), imageSize);
 
-                        if (ImGui::IsWindowHovered())
+                        Update_PreviewCanvasState(imagePos, imageSize);
+
+                        if (_isPreviewHovered && !_isGizmoUsing && _previewCamera)
                             _previewCamera->Priority_Update(ImGui::GetIO().DeltaTime);
 
                         Update_ImGuizmo();
                     }
                     else
                     {
-                        ImGui::Button("##ModelPreview", _previewImGuiSize);
+                        ImGui::Button("##ModelPreview", previewChildSize);
                     }
                 }
                 ImGui::EndChild();
@@ -193,6 +203,12 @@ void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath
 
         Preview_BeginPlay();
         //Tick_PreviewAnimation(0.f);
+
+        auto movement = _previewObject->Get_Component<MovementComponent>();
+        if (movement)
+        {
+            movement->Set_GravityEnabled(false);
+        }
     }
 
 }
@@ -562,43 +578,80 @@ void Prefab_View::Update_ImGuizmo()
     if (!_previewObject)
         return;
 
-    auto transform = _previewObject->Get_Component<Transform>();
-    if (transform && _gizmoOperation != (ImGuizmo::OPERATION)0)
-    {
-        ImGuizmo::SetOrthographic(false);
-        ImGuizmo::SetDrawlist();
-         
-        ImGuizmo::SetRect(_previewScreenPos.x, _previewScreenPos.y,
-            _previewImGuiSize.x, _previewImGuiSize.y);
+    if (_gizmoOperation == (ImGuizmo::OPERATION)0)
+        return;
 
-        Matrix world = transform->Get_WorldMatrix();
-        ImGuizmo::Manipulate(
-            &_previewView.m[0][0],   
-            &_previewProj.m[0][0],
-            _gizmoOperation, ImGuizmo::LOCAL,
-            &world.m[0][0]
-        );
-        if (ImGuizmo::IsUsing())
+    auto transform = Get_GizmoTargetTransform();
+    if (!transform)
+        return;
+
+    if (_previewViewportSize.x <= 0.f || _previewViewportSize.y <= 0.f)
+        return;
+
+    ImGuizmo::SetOrthographic(false);
+    ImGuizmo::SetDrawlist();
+
+    ImGuizmo::SetRect(_previewScreenPos.x, _previewScreenPos.y,
+        _previewViewportSize.x, _previewViewportSize.y);
+
+    Matrix world = transform->Get_WorldMatrix();
+    ImGuizmo::Manipulate(
+        &_previewView.m[0][0],
+        &_previewProj.m[0][0],
+        _gizmoOperation, ImGuizmo::LOCAL,
+        &world.m[0][0]
+    );
+
+    _isGizmoHovered = ImGuizmo::IsOver();
+    _isGizmoUsing = ImGuizmo::IsUsing();
+
+    if (_isGizmoUsing)
+    {
+        Vec3 scale, translation;
+        Quat rotation;
+        world.Decompose(scale, rotation, translation);
+        auto parent = transform->Get_Parent();
+        transform->Set_WorldPosition(translation);
+        transform->Set_WorldRotation(rotation);
+
+        if (parent)
         {
-            Vec3 scale, translation;
-            Quat rotation;
-            world.Decompose(scale, rotation, translation);
-            transform->Set_WorldPosition(translation);
-            transform->Set_WorldRotation(rotation);
+            Vec3 parentScale = parent->Get_WorldScale();
+            if (parentScale.LengthSquared() > 0.0001f)
+                transform->Set_LocalScale(scale / parentScale);
+        }
+        else
+        {
             transform->Set_LocalScale(scale);
         }
+
+        MarkDirty();
     }
 }
 
 void Prefab_View::Handle_Guizmo_Shotcut()
 {
+    if (!_isPreviewHovered && !_isGizmoUsing)
+        return;
+
     if (!ImGuizmo::IsUsing())
     {
+        if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
+            return;
+
         if (ImGui::IsKeyPressed(ImGuiKey_W)) _gizmoOperation = ImGuizmo::TRANSLATE;
         if (ImGui::IsKeyPressed(ImGuiKey_E)) _gizmoOperation = ImGuizmo::ROTATE;
         if (ImGui::IsKeyPressed(ImGuiKey_R)) _gizmoOperation = ImGuizmo::SCALE;
         if (ImGui::IsKeyPressed(ImGuiKey_Q)) _gizmoOperation = (ImGuizmo::OPERATION)0;
     }
+}
+
+void Prefab_View::Update_PreviewCanvasState(const ImVec2& imagePos, const ImVec2& imageSize)
+{
+    _previewScreenPos = imagePos;
+    _previewViewportSize = imageSize;
+    _isPreviewHovered = ImGui::IsItemHovered();
+    _isPreviewActive = _isPreviewHovered && ImGui::IsMouseDown(ImGuiMouseButton_Left);
 }
 
 void Prefab_View::Preview_BeginPlay()
@@ -719,6 +772,7 @@ void Prefab_View::Draw_PartObjectList()
         if (ImGui::Selectable(slotName.c_str(), isSelected))
         {
             _selectionType = ESelectionType::PartObject;
+            _selectedComponentId = 0;
             _selectedPartSlot = static_cast<uint32>(slot);
         }
 
@@ -767,6 +821,30 @@ Shared<ContainerObject> Prefab_View::Get_PreviewContainer() const
     if (!_previewObject) return nullptr;
 
     return dynamic_pointer_cast<ContainerObject>(_previewObject);
+}
+
+Shared<Transform> Prefab_View::Get_GizmoTargetTransform() const
+{
+    if (!_previewObject)
+        return nullptr;
+
+    if (_selectionType == ESelectionType::PartObject)
+    {
+        auto container = Get_PreviewContainer();
+        if (container)
+        {
+            auto slot = static_cast<ContainerObject::EPartSlot>(_selectedPartSlot);
+            auto part = container->Get_PartObject(slot);
+            if (part)
+            {
+                auto partTransform = part->Get_Component<Transform>();
+                if (partTransform)
+                    return partTransform;
+            }
+        }
+    }
+
+    return _previewObject->Get_Component<Transform>();
 }
 
 shared_ptr<Prefab_View> Prefab_View::Create()

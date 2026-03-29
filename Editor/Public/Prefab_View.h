@@ -7,6 +7,7 @@ class GameObject;
 class RenderTarget;
 class Model;
 class ContainerObject;
+class Transform;
 NS_END
 
 NS_BEGIN(Editor)
@@ -53,6 +54,7 @@ private:
 
     void Update_ImGuizmo();
     void Handle_Guizmo_Shotcut();
+    void Update_PreviewCanvasState(const ImVec2& imagePos, const ImVec2& imageSize);
 
 private:
     void            Preview_BeginPlay();
@@ -68,6 +70,7 @@ private: /* 파츠 세팅 */
     void    Draw_PartObjectInspector();
 
     Shared<ContainerObject> Get_PreviewContainer() const;
+    Shared<Transform> Get_GizmoTargetTransform() const;
 
 public:
     static shared_ptr<Prefab_View> Create();
@@ -89,12 +92,16 @@ private: /* preview */
     Matrix                  _previewProj;
 
     ImVec2                  _previewScreenPos;   
-    ImVec2                  _previewImGuiSize;
+    ImVec2                  _previewViewportSize;
 
     Shared<Prefab_PreviewCameraSettings> _previewCameraSettings;
 
 private: /* ImGuizmo */
     ImGuizmo::OPERATION _gizmoOperation = ImGuizmo::TRANSLATE;
+    bool                _isPreviewHovered = false;
+    bool                _isPreviewActive = false;
+    bool                _isGizmoHovered = false;
+    bool                _isGizmoUsing = false;
 
 private: /* 노티파이 */
     int32   _previewSelectedAnimIndex = 0;

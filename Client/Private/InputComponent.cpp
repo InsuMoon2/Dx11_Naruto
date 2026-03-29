@@ -77,6 +77,9 @@ void InputComponent::Update_Input(float timeDelta)
 
     const bool rawAttackDown = INPUT->KeyDown(KEY_TYPE::LBUTTON);
 
+    // 무기 교체
+    const bool rawToggleWeaponDown = INPUT->KeyDown(KEY_TYPE::TAB);
+
     Vec2 rawMouseDelta = INPUT->GetMouseDelta();
 
     if (_inputGate.allowSuperJump && rawCtrlPress)
@@ -146,6 +149,11 @@ void InputComponent::Update_Input(float timeDelta)
     {
         _frame.attackDown = rawAttackDown;
     }
+
+    if (_inputGate.allowWeaponToggle)
+    {
+        _frame.toggleWeaponDown = rawToggleWeaponDown;
+    }
 }
 
 void InputComponent::Reset_FrameInput()
@@ -188,6 +196,7 @@ InputComponent::FInputGate InputComponent::Get_InputGate_Preset(EPlayerInputMode
         gate.allowSuperJump = true;
         gate.allowSkill = true;
         gate.allowAttack = true;
+        gate.allowWeaponToggle = true;
         break;
 
     case EPlayerInputMode::LookOnly:
@@ -198,6 +207,7 @@ InputComponent::FInputGate InputComponent::Get_InputGate_Preset(EPlayerInputMode
         gate.allowSuperJump = false;
         gate.allowSkill = true;
         gate.allowAttack = true;
+        gate.allowWeaponToggle = false;
         break;
 
     case EPlayerInputMode::MoveAndLook:
@@ -208,6 +218,7 @@ InputComponent::FInputGate InputComponent::Get_InputGate_Preset(EPlayerInputMode
         gate.allowSuperJump = false;
         gate.allowSkill = false;
         gate.allowAttack = true;
+        gate.allowWeaponToggle = true;
         break;
 
     case EPlayerInputMode::BlockAll:
@@ -218,6 +229,7 @@ InputComponent::FInputGate InputComponent::Get_InputGate_Preset(EPlayerInputMode
         gate.allowSuperJump = false;
         gate.allowSkill = false;
         gate.allowAttack = false;
+        gate.allowWeaponToggle = false;
         break;
 
     default:

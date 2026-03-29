@@ -4,6 +4,7 @@
 #include "PlayerStateMachine.h"
 #include "GameObject.h"
 #include "PlayerState_Attack.h"
+#include "PlayerState_JumpAttack.h"
 
 REGISTER_ANIM_NOTIFY_STATE(ANS_ComboWindow)
 
@@ -22,14 +23,28 @@ void ANS_ComboWindow::On_Begin(const FAnimNotifyContext& context)
     auto psm = owner->Get_Component<PlayerStateMachine>();
 
     // 공격 상태인지 확인
-    if (!psm || psm->Get_CurrentStateID() != EPlayerState::Attack_1)
+    auto currentId = psm->Get_CurrentStateID();
+
+    if (currentId != EPlayerState::Attack && currentId != EPlayerState::JumpAttack)
         return;
 
-    auto attackState
+
+    if (currentId == EPlayerState::Attack)
+    {
+        auto attackState
             = dynamic_pointer_cast<PlayerState_Attack>(psm->Get_CurrentState());
 
-    if (attackState)
-        attackState->Open_ComboWindow();
+        if (attackState)
+            attackState->Open_ComboWindow();
+    }
+    else if (currentId == EPlayerState::JumpAttack)
+    {
+        auto jumpAttackState
+            = dynamic_pointer_cast<PlayerState_JumpAttack>(psm->Get_CurrentState());
+
+        if (jumpAttackState)
+            jumpAttackState->Open_ComboWindow();
+    }
 
     LOG_INFO("ComboWindow On Begin! clip={}, prev_sec={}, cur_sec={}, delta={}",
         context.clipName, context.previousTimeSec, context.currentTimeSec, context.deltaTime);
@@ -50,11 +65,24 @@ void ANS_ComboWindow::On_End(const FAnimNotifyContext& context)
 
     auto psm = owner->Get_Component<PlayerStateMachine>();
 
-    auto attackState
-        = dynamic_pointer_cast<PlayerState_Attack>(psm->Get_CurrentState());
+    auto currentId = psm->Get_CurrentStateID();
 
-    if (attackState)
-        attackState->Close_ComboWindow();
+    if (currentId == EPlayerState::Attack)
+    {
+        auto attackState =
+            dynamic_pointer_cast<PlayerState_Attack>(psm->Get_CurrentState());
+
+        if (attackState)
+            attackState->Close_ComboWindow();
+    }
+    else if (currentId == EPlayerState::JumpAttack)
+    {
+        auto jumpAttackState =
+            dynamic_pointer_cast<PlayerState_JumpAttack>(psm->Get_CurrentState());
+
+        if (jumpAttackState)
+            jumpAttackState->Close_ComboWindow();
+    }
 
     LOG_INFO("ComboWindow On End! clip={}, cur_sec={}, delta={}",
         context.clipName, context.currentTimeSec, context.deltaTime);

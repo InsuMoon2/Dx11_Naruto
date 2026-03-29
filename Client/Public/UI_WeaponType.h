@@ -3,7 +3,7 @@
 #include "Background.h"
 
 NS_BEGIN(Engine)
-    class Shader;
+class Shader;
 class Texture;
 class VIBuffer_Rect;
 NS_END
@@ -36,7 +36,10 @@ public:
 public:
     void Set_WeaponType(EWeaponTypeBG weaponTypeName);
 
-private:    // Enum변환용
+    static void Setup_DefaultTextDesc(FBackgroundTextDesc& textDesc);
+    void        Apply_WeaponTypeVisual();
+
+private: // Enum변환용
     static uint32       To_TextureIndex(EWeaponTypeBG type);
     static wstring      To_TypeName(EWeaponTypeBG type);
 
@@ -55,5 +58,7 @@ public:
     void Free() override;
 
 };
+
+
 
 NS_END

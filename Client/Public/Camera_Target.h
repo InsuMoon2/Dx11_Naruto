@@ -54,9 +54,14 @@ private:
     float           _pitchMax = 60.f;
 
     float           _distance = 10.f;
+
+    float           _targetDistance = 10.f;
+
     float           _distanceMin = 3.f;
     float           _distanceMax = 15.f;
+
     float           _zoomSpeed = 2.f;
+    float           _zoomLerpSpeed = 10.f;
 
 private:
     bool            _enableMouseRotation = true;

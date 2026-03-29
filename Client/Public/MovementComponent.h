@@ -78,7 +78,7 @@ public:
 
     // 공중콤보 중력조절
     void Set_GravityEnabled(bool flag) { _gravityEnabled = flag; }
-    bool Is_GravityEnabled() const { return _gravityEnabled; }
+    bool Is_GravityEnabled() const     { return _gravityEnabled; }
 
     void Set_Velocity(Vec3 velocity);
     Vec3 Get_Velocity() { return _velocity; }
@@ -88,6 +88,8 @@ public:
     void Set_OrientRotationToMovement(bool check) { _bOrientRotationToMovement = check; }
 
     float Get_DashNormalizedTime() const;
+
+    void Reset_DoubleJumpCount() { _canDoubleJump = true; }
 
 private:
     void Update_Rotation(float timeDelta, Shared<Transform> transform);

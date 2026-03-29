@@ -49,4 +49,7 @@ message ObjectInfo
                         
     // 파츠             
     map<int32, string>  equipParts = 14;
+
+    ATTACK_PROFILE_TYPE attack_profile = 15;
+    int32               attack_combo_index = 16;
 }

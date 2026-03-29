@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "PartObject.h"
 #include "AnimationStateComponent.h"
+#include "EquipmentComponent.h"
 #include "Weapon.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -37,6 +38,19 @@ HRESULT Player::Initialize(void* arg)
 void Player::BeginPlay()
 {
     Character::BeginPlay();
+
+    auto& delegate = GAME->Get_DelegateHub();
+
+    if (_weaponTypeChangedHandle.IsValid())
+    {
+        delegate.OnWeaponTypeChanged.Remove(_weaponTypeChangedHandle);
+        _weaponTypeChangedHandle.Reset();
+    }
+
+    _weaponTypeChangedHandle = delegate.OnWeaponTypeChanged.Add(this, &Player::On_WeaponTypeChagned);
+
+    if (_equipment)
+        Change_WeaponAttachment(_equipment->Get_CurrentWeaponType());
 }
 
 void Player::Priority_Update(float timeDelta)
@@ -72,13 +86,13 @@ void Player::Sync(const Protocol::ObjectInfo& info)
 
 HRESULT Player::Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetTag)
 {
-    // 장착 해제
-    if (modelAssetTag == TEXT("None") || modelAssetTag.empty())
+    if (_equipment)
     {
-        if (slot == EPartSlot::Weapon)
-            return Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_WEAPON, nullptr);
-
-        return Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_OBJECT, nullptr);
+        // 장착 해제
+        if (modelAssetTag == TEXT("None") || modelAssetTag.empty())
+            _equipment->Unequip_Part(slot);
+        else
+            _equipment->Equip_Part(slot, modelAssetTag);
     }
 
     // 슬롯이 무기인 경우
@@ -88,8 +102,18 @@ HRESULT Player::Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetT
         weaponDesc.parentTransform = _transformCom;
         weaponDesc.modelAssetTag = modelAssetTag;
 
-        weaponDesc.socketMatrix = _model->Get_SocketBoneMatrixPtr("Attach_Sword");
-        return Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_WEAPON, &weaponDesc);
+        EWeaponType currentWeaponType = EWeaponType::Hand;
+        if (_equipment)
+            currentWeaponType = _equipment->Get_CurrentWeaponType();
+
+        weaponDesc.socketMatrix = Find_WeaponSocketMatrix(currentWeaponType);
+
+        HRESULT hr = Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_WEAPON, &weaponDesc);
+
+        if (SUCCEEDED(hr))
+            Change_WeaponAttachment(currentWeaponType);
+
+        return hr;
     }
 
     // 일반 파츠인 경우
@@ -119,6 +143,8 @@ HRESULT Player::Ready_Components()
 
     uint32 testModelKey = static_cast<uint32>(std::hash<string>{}("Model_TestModel"));
     CHECK_FAILED(Add_Component(testModelKey, _model), E_FAIL);
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_EQUIPMENT, _equipment), E_FAIL);
 
     return S_OK;
 }
@@ -186,17 +212,62 @@ HRESULT Player::Ready_PartObjects()
     onePieceDesc.masterPoseModel = _model;
     CHECK_FAILED(Add_PartObject(EPartSlot::Onepiece, Protocol::OBJECT_TYPE_PART_OBJECT, &onePieceDesc), E_FAIL);
 
-
+    // 무기 세팅
     {
         Weapon::FWeaponDesc weaponDesc{};
         weaponDesc.parentTransform = _transformCom;
         weaponDesc.modelAssetTag = TEXT("Model_BigSword");
-        weaponDesc.socketMatrix = _model->Get_SocketBoneMatrixPtr("Attach_Sword");
+
+        EWeaponType currentWeaponType = EWeaponType::Hand;
+        if (_equipment)
+            currentWeaponType = _equipment->Get_CurrentWeaponType();
+
+        weaponDesc.socketMatrix = Find_WeaponSocketMatrix(currentWeaponType);
 
         CHECK_FAILED(Add_PartObject(EPartSlot::Weapon, Protocol::OBJECT_TYPE_PART_WEAPON, &weaponDesc), E_FAIL);
     }
 
     return S_OK;
+}
+
+const Matrix* Player::Find_WeaponSocketMatrix(EWeaponType weaponType) const
+{
+    if (!_model)
+        return nullptr;
+
+    if (weaponType == EWeaponType::Hand)
+        return _model->Get_SocketBoneMatrixPtr("Attach_Sword"); // Hand면 등 뒤 소켓으로
+
+    if (const Matrix* rightWeaponSocket = _model->Get_SocketBoneMatrixPtr("R_Hand_Weapon_cnt_tr"))
+        return rightWeaponSocket;
+
+    // Temp : 만약, 뼈대가 없는 모델이라면 그냥 오른손에 부착해보기 -> 플레이어 모델은 존재함 
+    if (const Matrix* rightHandSocket = _model->Get_SocketBoneMatrixPtr("RightHand"))
+        return rightHandSocket;
+
+    // 오른손도 없다면, 등 뒤에 그대로
+    return _model->Get_SocketBoneMatrixPtr("Attach_Sword");
+}
+
+void Player::Change_WeaponAttachment(EWeaponType weaponType)
+{
+    auto weaponPartBase = Get_PartObject(EPartSlot::Weapon);
+    if (!weaponPartBase)
+        return;
+
+    auto weaponPart = dynamic_pointer_cast<Weapon>(weaponPartBase);
+    if (!weaponPart)
+        return;
+
+    const Matrix* socketMatrix = Find_WeaponSocketMatrix(weaponType);
+    weaponPart->Set_SocketMatrix(socketMatrix);
+}
+
+void Player::On_WeaponTypeChagned(int32 weaponTypeIndex)
+{
+    EWeaponType weaponType = static_cast<EWeaponType>(weaponTypeIndex);
+
+    Change_WeaponAttachment(weaponType);
 }
 
 Shared<GameObject> Player::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

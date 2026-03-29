@@ -18,6 +18,8 @@ enum class KEY_TYPE
     ESCAPE  = VK_ESCAPE,
     BACK    = VK_BACK,
 
+    TAB     = VK_TAB,
+
     F8      = VK_F8,
     F9      = VK_F9,
     F11     = VK_F11,

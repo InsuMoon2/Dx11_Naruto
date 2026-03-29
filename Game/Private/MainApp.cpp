@@ -12,6 +12,8 @@
 #include <ctime>
 #include <cstdlib>
 
+#include "ComboProfile_Manager.h"
+
 MainApp::MainApp()
 {
 }
@@ -176,4 +178,5 @@ void MainApp::Free()
     Event_Manager::DestroyInstance();
     Customizer_Manager::DestroyInstance();
 
+    ComboProfile_Manager::DestroyInstance();
 }

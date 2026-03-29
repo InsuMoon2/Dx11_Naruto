@@ -10,6 +10,7 @@ class GameObject;
 
 DECLARE_DELEGATE(FOnPlayerSpawned, Shared<Transform>);
 DECLARE_DELEGATE(FOnPlayerObjectSpawned, Shared<GameObject>);
+DECLARE_DELEGATE(FOnWeaponTypeChanged, int32);
 
 // 델리게이트들을 모아놓을 허브 : 매니저 역할이긴하네..
 class ENGINE_DLL DelegateHub : public Base
@@ -24,8 +25,10 @@ public:
 public:
     // 위치
     FOnPlayerSpawned        OnPlayerSpawned;
-    // 플레이어
+    // 플레이어 스폰
     FOnPlayerObjectSpawned  OnPlayerObjectSpawned;
+    // 무기 변경
+    FOnWeaponTypeChanged    OnWeaponTypeChanged;
 
     // 추후 확장 할 것들
     // LevelChanged, OnBossKill, MonsterKill .. etc

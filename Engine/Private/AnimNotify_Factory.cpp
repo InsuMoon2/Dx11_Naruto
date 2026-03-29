@@ -1,35 +1,33 @@
 ﻿#include "pch.h"
 #include "AnimNotify_Factory.h"
 
-umap<string, AnimNotify_Factory::NotifyCreator> AnimNotify_Factory::_notifyCreators;
-umap<string, AnimNotify_Factory::NotifyStateCreator> AnimNotify_Factory::_notifyStateCreators;
-
-void AnimNotify_Factory::Initialize()
-{
-    _notifyCreators.clear();
-    _notifyStateCreators.clear();
-}
 
 void AnimNotify_Factory::Register_Notify(const string& typeName, NotifyCreator creator)
 {
-    if (_notifyCreators.contains(typeName))
+    auto& creators = Get_NotifyCreators();
+
+    if (creators.contains(typeName))
         return;
 
-    _notifyCreators.emplace(typeName, creator);
+    creators.emplace(typeName, creator);
 }
 
 void AnimNotify_Factory::Register_NotifyState(const string& typeName, NotifyStateCreator creator)
 {
-    if (_notifyStateCreators.contains(typeName))
+    auto& creators = Get_NotifyStateCreators();
+
+    if (creators.contains(typeName))
         return;
 
-    _notifyStateCreators.emplace(typeName, creator);
+    creators.emplace(typeName, creator);
 }
 
 Shared<AnimNotify> AnimNotify_Factory::Create_Notify(const string& typeName)
 {
-    auto iter = _notifyCreators.find(typeName);
-    if (iter == _notifyCreators.end())
+    auto& creators = Get_NotifyCreators();
+
+    auto iter = creators.find(typeName);
+    if (iter == creators.end())
         return nullptr;
 
     return iter->second();
@@ -37,8 +35,10 @@ Shared<AnimNotify> AnimNotify_Factory::Create_Notify(const string& typeName)
 
 Shared<AnimNotifyState> AnimNotify_Factory::Create_NotifyState(const string& typeName)
 {
-    auto iter = _notifyStateCreators.find(typeName);
-    if (iter == _notifyStateCreators.end())
+    auto& creators = Get_NotifyStateCreators();
+
+    auto iter = creators.find(typeName);
+    if (iter == creators.end())
         return nullptr;
 
     return iter->second();
@@ -46,13 +46,13 @@ Shared<AnimNotifyState> AnimNotify_Factory::Create_NotifyState(const string& typ
 
 vector<string> AnimNotify_Factory::Get_NotifyTypeNames()
 {
-    vector<string> result;
-    result.reserve(_notifyCreators.size()); // 크기 미리 할당
+    auto& creators = Get_NotifyCreators();
 
-    for (const auto& [typeName, creator] : _notifyCreators)
-    {
+    vector<string> result;
+    result.reserve(creators.size());
+
+    for (const auto& [typeName, creator] : creators)
         result.push_back(typeName);
-    }
 
     sort(result.begin(), result.end());
 
@@ -61,15 +61,26 @@ vector<string> AnimNotify_Factory::Get_NotifyTypeNames()
 
 vector<string> AnimNotify_Factory::Get_NotifyStateTypeNames()
 {
-    vector<string> result;
-    result.reserve(_notifyStateCreators.size());
+    auto& creators = Get_NotifyStateCreators();
 
-    for (const auto& [typeName, creator] : _notifyStateCreators)
-    {
+    vector<string> result;
+    result.reserve(creators.size());
+
+    for (const auto& [typeName, creator] : creators)
         result.push_back(typeName);
-    }
 
     sort(result.begin(), result.end());
-
     return result;
+}
+
+umap<string, AnimNotify_Factory::NotifyCreator>& AnimNotify_Factory::Get_NotifyCreators()
+{
+    static umap<string, NotifyCreator> creators;
+    return creators;
+}
+
+umap<string, AnimNotify_Factory::NotifyStateCreator>& AnimNotify_Factory::Get_NotifyStateCreators()
+{
+    static umap<string, NotifyStateCreator> creators;
+    return creators;
 }

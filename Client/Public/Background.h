@@ -55,6 +55,8 @@ public:
 
     void        Set_LabelText(const wstring& text);
 
+    void        Set_BackgroundTextureIndex(uint32 textureIndex) { _textureIndex = textureIndex; }
+
 protected:
     HRESULT     Ready_Components() override;
 

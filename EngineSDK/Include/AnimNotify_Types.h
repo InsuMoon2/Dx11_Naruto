@@ -26,9 +26,17 @@ struct FAnimNotifyContext
     bool    isPreview = false;
 };
 
+struct FAnimNotifyTrackDesc
+{
+    // 에디터에서 표시해줄 트랙 이름
+    string name = "";
+};
+
 struct FAnimNotifyEventEntry
 {
     float timeSec = 0.f;
+
+    int32 trackIndex = 0;
     Shared<AnimNotify> notify;
 };
 
@@ -36,6 +44,8 @@ struct FAnimNotifyStateEntry
 {
     float startSec = 0.f;
     float durationSec = 0.f;
+
+    int32 trackIndex = 0;
     Shared<AnimNotifyState> notifyState;
 };
 
@@ -43,6 +53,9 @@ struct FAnimNotifyClipData
 {
     string clipName;
     int32 displayFps = 30;
+
+    vector<FAnimNotifyTrackDesc> notifyTracks;
+    vector<FAnimNotifyTrackDesc> notifyStateTracks;
 
     vector<FAnimNotifyEventEntry> notifies;
     vector<FAnimNotifyStateEntry> notifyStates;

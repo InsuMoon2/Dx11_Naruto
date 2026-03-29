@@ -60,6 +60,9 @@ private:
 
     Protocol::ANIM_PHASE_TYPE     _lastAnimPhase = Protocol::ANIM_PHASE_START;
 
+    Protocol::ATTACK_PROFILE_TYPE _lastAttackProfile = Protocol::ATTACK_PROFILE_TYPE_HAND_GROUND;
+    int32 _lastAttackComboIndex = 0;
+
 public:
     static shared_ptr<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     shared_ptr<GameObject> Clone(void* arg) override;

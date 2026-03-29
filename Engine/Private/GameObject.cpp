@@ -32,6 +32,8 @@ HRESULT GameObject::Initialize(void* arg)
 
         CHECK_FAILED(_transformCom->Initialize(arg), E_FAIL);
 
+        _transformCom->Set_Owner(GetSharedPtr());
+
         _components.emplace(Transform::StaticTypeID(), _transformCom);
     }
 

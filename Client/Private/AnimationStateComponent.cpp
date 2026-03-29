@@ -5,6 +5,11 @@
 #include "PlayerStateMachine.h"
 #include <unordered_set>
 
+#include "PlayerState_Attack.h"
+
+#include "ComboProfile_Manager.h"
+#include "EquipmentComponent.h"
+
 AnimationStateComponent::AnimationStateComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
@@ -482,6 +487,24 @@ void AnimationStateComponent::Capture_FromStateMachine(const Shared<PlayerStateM
     _replicatedState.phase = nextPhase;
 
     _replicatedState.forceRestart = stateChanged && Requires_ForceRestart(nextState);
+
+    // 다음 변경 상태가 Attack일 때에만 프로파일 체크
+    if (nextState == EPlayerState::Attack)
+    {
+        auto attackState = dynamic_pointer_cast<PlayerState_Attack>(
+            stateMachine->Get_CurrentState());
+
+        if (attackState)
+        {
+            _replicatedState.attackProfile = attackState->Get_ActiveProfileType();
+            _replicatedState.attackComboIndex = attackState->Get_ComboIndex();
+        }
+    }
+    else
+    {
+        _replicatedState.attackProfile = EAttackProfileType::Hand_Ground;
+        _replicatedState.attackComboIndex = 0;
+    }
 }
 
 void AnimationStateComponent::Sync_FromNetwork(const FAnimReplicatedState& state)
@@ -504,62 +527,85 @@ void AnimationStateComponent::Apply_NetworkState()
     const bool phaseChanged =
         _replicatedState.phase != _appliedState.phase;
 
-    if (!stateChanged && !phaseChanged && !_replicatedState.forceRestart)
+    // [추가] 콤보 인덱스 또는 프로파일이 바뀌면 공격 클립을 다시 재생해야 한다.
+    // Attack 상태에서 콤보가 진행될 때 state는 동일하고 index만 올라가기 때문에
+    // stateChanged 만으로는 감지 불가능하므로 별도 체크가 필요하다.
+    const bool attackInfoChanged =
+        _replicatedState.attackComboIndex != _appliedState.attackComboIndex ||
+        _replicatedState.attackProfile != _appliedState.attackProfile;
+
+    if (!stateChanged && !phaseChanged &&
+        !_replicatedState.forceRestart && !attackInfoChanged)
         return;
 
     bool played = false;
-    const string stateName = To_AnimationStateName(_replicatedState.state);
-    const auto* stateDesc = Find_State(stateName);
 
-    // 방향이 필요한지? -> Direct Sequence인지 분기
-    if (_replicatedState.forceRestart)
+    // 수신된 attack_combo_index에 해당하는 animStateKey를 직접 조호ㅣ
+    if (attackInfoChanged)
     {
-        if (_replicatedState.state == EPlayerState::Dash)
+        const FComboProfile* profile =
+            GET_SINGLE(ComboProfile_Manager)->Find(_replicatedState.attackProfile);
+
+        if (profile &&
+            _replicatedState.attackComboIndex < static_cast<int32>(profile->combos.size()))
         {
-            played = Play_DirectionalState(stateName, _replicatedState.dir);
-        }
-        else
-        {
-            played = Play_State(stateName);
+            const string& animKey =
+                profile->combos[_replicatedState.attackComboIndex].animStateKey;
+
+            played = Play_State(animKey);
         }
     }
 
-    else if (stateChanged)
+    // 위에서 재생되지 않은 경우 기존 로직 그대로 실행
+    if (!played)
     {
-        if (_replicatedState.state == EPlayerState::Dash)
+        const string stateName = Find_StateNameByWeapon(
+            Get_Owner().get(), _replicatedState.state);
+
+        const auto* stateDesc = Find_State(stateName);
+
+        if (_replicatedState.forceRestart)
         {
-            played = Play_DirectionalState(stateName, _replicatedState.dir);
+            if (_replicatedState.state == EPlayerState::Dash)
+                played = Play_DirectionalState(stateName, _replicatedState.dir);
+            else
+                played = Play_State(stateName);
         }
-        else
+        else if (stateChanged)
         {
-            played = Play_State(stateName);
+            if (_replicatedState.state == EPlayerState::Dash)
+                played = Play_DirectionalState(stateName, _replicatedState.dir);
+            else
+                played = Play_State(stateName);
         }
-    }
-    else if (phaseChanged && stateDesc && stateDesc->mode == EStateAnimationMode::Sequence)
-    {
-        if (_replicatedState.phase == EAnimPhase::End)
+        else if (phaseChanged && stateDesc &&
+            stateDesc->mode == EStateAnimationMode::Sequence)
         {
-            Request_StateEnd();
-            played = true;
-        }
-        else if (_appliedState.phase == EAnimPhase::End &&
-            _replicatedState.phase == EAnimPhase::Loop)
-        {
-            played = Play_StateLoopOnly(stateName);
-        }
-        else
-        {
-            played = true;
+            if (_replicatedState.phase == EAnimPhase::End)
+            {
+                Request_StateEnd();
+                played = true;
+            }
+            else if (_appliedState.phase == EAnimPhase::End &&
+                _replicatedState.phase == EAnimPhase::Loop)
+            {
+                played = Play_StateLoopOnly(stateName);
+            }
+            else
+            {
+                played = true;
+            }
         }
     }
 
     if (played)
     {
         _appliedState = _replicatedState;
-
         _replicatedState.forceRestart = false;
     }
 }
+
+
 
 void AnimationStateComponent::Write_ToObjectInfo(Protocol::ObjectInfo& info) const
 {
@@ -568,6 +614,9 @@ void AnimationStateComponent::Write_ToObjectInfo(Protocol::ObjectInfo& info) con
 
     info.set_anim_phase(To_ProtoAnimPhase(_replicatedState.phase));
     info.set_anim_force_restart(_replicatedState.forceRestart);
+
+    info.set_attack_profile(To_ProtoAttackProfile(_replicatedState.attackProfile));
+    info.set_attack_combo_index(_replicatedState.attackComboIndex);
 }
 
 void AnimationStateComponent::Read_FromObjectInfo(const Protocol::ObjectInfo& info)
@@ -579,6 +628,9 @@ void AnimationStateComponent::Read_FromObjectInfo(const Protocol::ObjectInfo& in
     state.phase = From_ProtoAnimPhase(info.anim_phase());
     state.forceRestart = info.anim_force_restart();
 
+    state.attackProfile = From_ProtoAttackProfile(info.attack_profile());
+    state.attackComboIndex = info.attack_combo_index();
+
     Sync_FromNetwork(state);
 }
 
@@ -586,6 +638,35 @@ string AnimationStateComponent::To_AnimationStateName(EPlayerState state)
 {
     auto name = magic_enum::enum_name(state);
     return name.empty() ? "" : string(name);
+}
+
+string AnimationStateComponent::Find_StateNameByWeapon(GameObject* owner, EPlayerState state)
+{
+    // 원래 애니메이션 스테이트 이름 가져와서,
+    string baseName = To_AnimationStateName(state);
+    if (baseName.empty())
+        return baseName;
+
+    if (!owner)
+        return baseName;
+
+    auto equipment = owner->Get_Component<EquipmentComponent>();
+    if (!equipment)
+        return baseName;
+
+    // Hand면 그대로
+    EWeaponType weaponType = equipment->Get_CurrentWeaponType();
+    if (weaponType == EWeaponType::Hand)
+        return baseName;
+
+    // BigSword면 접두사 추가, 좋은 방식은 아니긴한데..
+    string variantName = "BigSword_" + baseName;
+
+    if (Find_State(variantName) != nullptr)
+        return variantName;
+
+    //variant가 없으면 기본 상태명으로
+    return baseName;
 }
 
 bool AnimationStateComponent::Requires_ForceRestart(EPlayerState state)
@@ -642,6 +723,18 @@ Protocol::ANIM_PHASE_TYPE AnimationStateComponent::To_ProtoAnimPhase(EAnimPhase 
     }
 }
 
+Protocol::ATTACK_PROFILE_TYPE AnimationStateComponent::To_ProtoAttackProfile(EAttackProfileType profileType)
+{
+    switch (profileType)
+    {
+    case EAttackProfileType::Hand_Ground:       return Protocol::ATTACK_PROFILE_TYPE_HAND_GROUND;
+    case EAttackProfileType::Hand_Aerial:       return Protocol::ATTACK_PROFILE_TYPE_HAND_AERIAL;
+    case EAttackProfileType::BigSword_Ground:   return Protocol::ATTACK_PROFILE_TYPE_BIGSWORD_GROUND;
+    case EAttackProfileType::BigSword_Aerial:   return Protocol::ATTACK_PROFILE_TYPE_BIGSWORD_AERIAL;
+    default:                                    return Protocol::ATTACK_PROFILE_TYPE_HAND_GROUND;
+    }
+}
+
 EPlayerState AnimationStateComponent::From_ProtoState(Protocol::OBJECT_STATE_TYPE state)
 {
     switch (state)
@@ -678,6 +771,18 @@ EAnimPhase AnimationStateComponent::From_ProtoAnimPhase(Protocol::ANIM_PHASE_TYP
     case Protocol::ANIM_PHASE_LOOP:  return EAnimPhase::Loop;
     case Protocol::ANIM_PHASE_END:   return EAnimPhase::End;
     default:                              return EAnimPhase::Start;
+    }
+}
+
+EAttackProfileType AnimationStateComponent::From_ProtoAttackProfile(Protocol::ATTACK_PROFILE_TYPE profileType)
+{
+    switch (profileType)
+    {
+    case Protocol::ATTACK_PROFILE_TYPE_HAND_GROUND:     return EAttackProfileType::Hand_Ground;
+    case Protocol::ATTACK_PROFILE_TYPE_HAND_AERIAL:     return EAttackProfileType::Hand_Aerial;
+    case Protocol::ATTACK_PROFILE_TYPE_BIGSWORD_GROUND: return EAttackProfileType::BigSword_Ground;
+    case Protocol::ATTACK_PROFILE_TYPE_BIGSWORD_AERIAL: return EAttackProfileType::BigSword_Aerial;
+    default:                                            return EAttackProfileType::Hand_Ground;
     }
 }
 

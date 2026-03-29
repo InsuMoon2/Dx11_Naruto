@@ -3,7 +3,6 @@
 #include "Notification_Manager.h"
 #include "AnimNotify_Serializer.h"
 #include "AnimNotify_Factory.h"
-#include "AnimNotify_Inspector_Factory.h"
 #include "AnimNotify.h"
 #include "AnimNotifyState.h"
 #include "Model.h"
@@ -17,6 +16,7 @@
 
 #include "ContainerObject.h"
 #include "PartObject.h"
+#include "Reflection_Inspector.h"
 
 static bool Contains_CaseInsensitive(const string& text, const string& pattern)
 {
@@ -48,6 +48,44 @@ static bool Has_NotifyPayload(const FAnimNotifyClipData& clip)
     return !clip.notifies.empty() || !clip.notifyStates.empty();
 }
 
+static void Remove_NotifyTrackEntries(FAnimNotifyClipData& clip, int32 trackIndex)
+{
+    clip.notifies.erase(
+        remove_if(
+            clip.notifies.begin(),
+            clip.notifies.end(),
+            [trackIndex](const FAnimNotifyEventEntry& entry)
+            {
+                return entry.trackIndex == trackIndex;
+            }),
+        clip.notifies.end());
+
+    for (auto& entry : clip.notifies)
+    {
+        if (entry.trackIndex > trackIndex)
+            --entry.trackIndex;
+    }
+}
+
+static void Remove_NotifyStateTrackEntries(FAnimNotifyClipData& clip, int32 trackIndex)
+{
+    clip.notifyStates.erase(
+        remove_if(
+            clip.notifyStates.begin(),
+            clip.notifyStates.end(),
+            [trackIndex](const FAnimNotifyStateEntry& entry)
+            {
+                return entry.trackIndex == trackIndex;
+            }),
+        clip.notifyStates.end());
+
+    for (auto& entry : clip.notifyStates)
+    {
+        if (entry.trackIndex > trackIndex)
+            --entry.trackIndex;
+    }
+}
+
 Animation_View::Animation_View()
     : EditorWindow(TEXT("Animation View"))
     , _sequencerAdapter(&_sequencerState, &_sequencerContext)
@@ -62,6 +100,8 @@ void Animation_View::Initialize()
     _sequencerContext.clip = nullptr;
     _sequencerContext.selectedNotifyIndex = &_selectedNotifyIndex;
     _sequencerContext.selectedStateIndex = &_selectedStateIndex;
+    _sequencerContext.isSelectedStateTrack = false;
+    _sequencerContext.selectedTrackIndex = 0;
 
     _sequencerState.currentFrame = 0;
     _sequencerState.selectedEntry = -1;
@@ -70,7 +110,6 @@ void Animation_View::Initialize()
 
     _isActive = false;
 }
-
 void Animation_View::Update(float timeDelta)
 {
     EditorWindow::Update(timeDelta);
@@ -119,6 +158,7 @@ void Animation_View::OnGui()
     _isFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
 
     Handle_PlaybackShortcut();
+    Handle_DeleteShortcut();
 
     Draw_ToolBar();
     ImGui::Separator();
@@ -283,18 +323,60 @@ void Animation_View::Focus_Clip(const string& clipName)
     }
 }
 
+void Animation_View::Add_NotifyTrack(const string& trackName)
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip)
+        return;
+
+    FAnimNotifyTrackDesc trackDesc;
+    trackDesc.name = trackName.empty()
+        ? "Notify Track " + to_string(static_cast<int32>(clip->notifyTracks.size()))
+        : trackName;
+    clip->notifyTracks.push_back(trackDesc);
+
+    Select_NotifyTrack(static_cast<int32>(clip->notifyTracks.size()) - 1);
+    MarkDirty();
+}
+
+void Animation_View::Add_NotifyStateTrack(const string& trackName)
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip)
+        return;
+
+    FAnimNotifyTrackDesc trackDesc;
+    trackDesc.name = trackName.empty()
+        ? "Notify State Track " + to_string(static_cast<int32>(clip->notifyStateTracks.size()))
+        : trackName;
+    clip->notifyStateTracks.push_back(trackDesc);
+
+    Select_NotifyStateTrack(static_cast<int32>(clip->notifyStateTracks.size()) - 1);
+    MarkDirty();
+}
+
 void Animation_View::Add_Notify_AtFrame(int32 frame, const string& typeName)
 {
     auto* clip = Get_CurrentClip();
     if (!clip)
         return;
 
+    if (clip->notifyTracks.empty())
+        Add_NotifyTrack("Notifies");
+
     auto instance = AnimNotify_Factory::Create_Notify(typeName);
     if (!instance)
         return;
 
+    int32 trackIndex = _selectedNotifyTrackIndex;
+    if (!_sequencerContext.isSelectedStateTrack)
+        trackIndex = _sequencerContext.selectedTrackIndex;
+
+    trackIndex = std::clamp(trackIndex, 0, static_cast<int32>(clip->notifyTracks.size()) - 1);
+
     FAnimNotifyEventEntry entry;
     entry.timeSec = static_cast<float>(frame) / static_cast<float>(Get_CurrentClipFps());
+    entry.trackIndex = trackIndex;
     entry.notify = instance;
 
     clip->notifies.push_back(entry);
@@ -302,7 +384,10 @@ void Animation_View::Add_Notify_AtFrame(int32 frame, const string& typeName)
     sort(clip->notifies.begin(), clip->notifies.end(),
         [](const FAnimNotifyEventEntry& lhs, const FAnimNotifyEventEntry& rhs)
         {
-            return lhs.timeSec < rhs.timeSec;
+            if (lhs.trackIndex == rhs.trackIndex)
+                return lhs.timeSec < rhs.timeSec;
+
+            return lhs.trackIndex < rhs.trackIndex;
         });
 
     for (int32 i = 0; i < static_cast<int32>(clip->notifies.size()); ++i)
@@ -311,13 +396,14 @@ void Animation_View::Add_Notify_AtFrame(int32 frame, const string& typeName)
         {
             _selectedNotifyIndex = i;
             _selectedStateIndex = -1;
+            Select_NotifyTrack(clip->notifies[i].trackIndex);
             break;
         }
     }
 
+    Select_NotifyTrack(trackIndex);
     MarkDirty();
 }
-
 void Animation_View::Add_State_ByFrameRange(int32 startFrame, int32 endFrame, const string& typeName)
 {
     auto* clip = Get_CurrentClip();
@@ -327,15 +413,25 @@ void Animation_View::Add_State_ByFrameRange(int32 startFrame, int32 endFrame, co
     if (endFrame <= startFrame)
         return;
 
+    if (clip->notifyStateTracks.empty())
+        Add_NotifyStateTrack("Notify States");
+
     auto instance = AnimNotify_Factory::Create_NotifyState(typeName);
     if (!instance)
         return;
 
     const int32 fps = Get_CurrentClipFps();
 
+    int32 trackIndex = _selectedNotifyStateTrackIndex;
+    if (_sequencerContext.isSelectedStateTrack)
+        trackIndex = _sequencerContext.selectedTrackIndex;
+
+    trackIndex = std::clamp(trackIndex, 0, static_cast<int32>(clip->notifyStateTracks.size()) - 1);
+
     FAnimNotifyStateEntry entry;
     entry.startSec = static_cast<float>(startFrame) / static_cast<float>(fps);
     entry.durationSec = static_cast<float>(endFrame - startFrame) / static_cast<float>(fps);
+    entry.trackIndex = trackIndex;
     entry.notifyState = instance;
 
     clip->notifyStates.push_back(entry);
@@ -343,6 +439,9 @@ void Animation_View::Add_State_ByFrameRange(int32 startFrame, int32 endFrame, co
     sort(clip->notifyStates.begin(), clip->notifyStates.end(),
         [](const FAnimNotifyStateEntry& lhs, const FAnimNotifyStateEntry& rhs)
         {
+            if (lhs.trackIndex != rhs.trackIndex)
+                return lhs.trackIndex < rhs.trackIndex;
+
             if (lhs.startSec == rhs.startSec)
                 return lhs.durationSec < rhs.durationSec;
 
@@ -355,13 +454,14 @@ void Animation_View::Add_State_ByFrameRange(int32 startFrame, int32 endFrame, co
         {
             _selectedStateIndex = i;
             _selectedNotifyIndex = -1;
+            Select_NotifyStateTrack(clip->notifyStates[i].trackIndex);
             break;
         }
     }
 
+    Select_NotifyStateTrack(trackIndex);
     MarkDirty();
 }
-
 void Animation_View::Draw_ToolBar()
 {
     if (ImGui::Button("Save"))
@@ -523,11 +623,14 @@ void Animation_View::Draw_EventListPanel()
 
 void Animation_View::Draw_CreatePanel()
 {
+    Draw_NotifyTrackSection();
+    ImGui::Separator();
+    Draw_NotifyStateTrackSection();
+    ImGui::Separator();
     Draw_CreateNotifySection();
     ImGui::Separator();
     Draw_CreateStateSection();
 }
-
 void Animation_View::Draw_Sequencer()
 {
     auto* clip = Get_CurrentClip();
@@ -716,27 +819,44 @@ void Animation_View::Draw_NotifyList()
         {
             const int32 fps = Get_CurrentClipFps();
 
-            for (int32 i = 0; i < static_cast<int32>(clip->notifies.size()); ++i)
+            for (int32 trackIndex = 0; trackIndex < static_cast<int32>(clip->notifyTracks.size()); ++trackIndex)
             {
-                const auto& entry = clip->notifies[i];
-                if (!entry.notify)
-                    continue;
+                const string trackLabel = clip->notifyTracks[trackIndex].name.empty()
+                    ? "Notify Track " + to_string(trackIndex)
+                    : clip->notifyTracks[trackIndex].name;
 
-                const int32 frame = static_cast<int32>(std::round(entry.timeSec * fps));
-                string label = entry.notify->Get_TypeName() + " (" + to_string(frame) + ")";
-
-                if (ImGui::Selectable(label.c_str(), _selectedNotifyIndex == i))
+                if (ImGui::TreeNode((trackLabel + "##NotifyTrack" + to_string(trackIndex)).c_str()))
                 {
-                    _selectedNotifyIndex = i;
-                    _selectedStateIndex = -1;
-                    _sequencerState.selectedEntry = 0;
+                    if (ImGui::Selectable(("Select Track##NotifySelectTrack" + to_string(trackIndex)).c_str(), _selectedNotifyTrackIndex == trackIndex))
+                    {
+                        Clear_SelectedEntries();
+                        Select_NotifyTrack(trackIndex);
+                    }
+
+                    for (int32 i = 0; i < static_cast<int32>(clip->notifies.size()); ++i)
+                    {
+                        const auto& entry = clip->notifies[i];
+                        if (!entry.notify || entry.trackIndex != trackIndex)
+                            continue;
+
+                        const int32 frame = static_cast<int32>(std::round(entry.timeSec * fps));
+                        const string label = entry.notify->Get_TypeName() + " (" + to_string(frame) + ")";
+
+                        if (ImGui::Selectable(label.c_str(), _selectedNotifyIndex == i))
+                        {
+                            _selectedNotifyIndex = i;
+                            _selectedStateIndex = -1;
+                            Select_NotifyTrack(trackIndex);
+                        }
+                    }
+
+                    ImGui::TreePop();
                 }
             }
         }
     }
     ImGui::EndChild();
 }
-
 void Animation_View::Draw_StateList()
 {
     auto* clip = Get_CurrentClip();
@@ -755,29 +875,45 @@ void Animation_View::Draw_StateList()
         {
             const int32 fps = Get_CurrentClipFps();
 
-            for (int32 i = 0; i < static_cast<int32>(clip->notifyStates.size()); ++i)
+            for (int32 trackIndex = 0; trackIndex < static_cast<int32>(clip->notifyStateTracks.size()); ++trackIndex)
             {
-                const auto& entry = clip->notifyStates[i];
-                if (!entry.notifyState)
-                    continue;
+                const string trackLabel = clip->notifyStateTracks[trackIndex].name.empty()
+                    ? "Notify State Track " + to_string(trackIndex)
+                    : clip->notifyStateTracks[trackIndex].name;
 
-                const int32 startFrame = static_cast<int32>(std::round(entry.startSec * fps));
-                const int32 endFrame = static_cast<int32>(std::round((entry.startSec + entry.durationSec) * fps));
-
-                string label = entry.notifyState->Get_TypeName() + " (" + to_string(startFrame) + "~" + to_string(endFrame) + ")";
-
-                if (ImGui::Selectable(label.c_str(), _selectedStateIndex == i))
+                if (ImGui::TreeNode((trackLabel + "##NotifyStateTrack" + to_string(trackIndex)).c_str()))
                 {
-                    _selectedStateIndex = i;
-                    _selectedNotifyIndex = -1;
-                    _sequencerState.selectedEntry = 1;
+                    if (ImGui::Selectable(("Select Track##NotifyStateSelectTrack" + to_string(trackIndex)).c_str(), _selectedNotifyStateTrackIndex == trackIndex))
+                    {
+                        Clear_SelectedEntries();
+                        Select_NotifyStateTrack(trackIndex);
+                    }
+
+                    for (int32 i = 0; i < static_cast<int32>(clip->notifyStates.size()); ++i)
+                    {
+                        const auto& entry = clip->notifyStates[i];
+                        if (!entry.notifyState || entry.trackIndex != trackIndex)
+                            continue;
+
+                        const int32 startFrame = static_cast<int32>(std::round(entry.startSec * fps));
+                        const int32 endFrame = static_cast<int32>(std::round((entry.startSec + entry.durationSec) * fps));
+                        const string label = entry.notifyState->Get_TypeName() + " (" + to_string(startFrame) + "~" + to_string(endFrame) + ")";
+
+                        if (ImGui::Selectable(label.c_str(), _selectedStateIndex == i))
+                        {
+                            _selectedStateIndex = i;
+                            _selectedNotifyIndex = -1;
+                            Select_NotifyStateTrack(trackIndex);
+                        }
+                    }
+
+                    ImGui::TreePop();
                 }
             }
         }
     }
     ImGui::EndChild();
 }
-
 void Animation_View::Draw_SelectedNotifyInspector()
 {
     ImGui::Text("Selected Notify");
@@ -797,26 +933,15 @@ void Animation_View::Draw_SelectedNotifyInspector()
         return;
     }
 
-    const int32 fps = Get_CurrentClipFps();
-
-    ImGui::Text("Type: %s", entry.notify->Get_TypeName().c_str());
-
-    int32 frame = static_cast<int32>(std::round(entry.timeSec * fps));
-    if (ImGui::InputInt("Frame##SelectedNotify", &frame))
+    auto& reflectionINfo = entry.notify->Get_ReflectionInfo();
+    if (reflectionINfo.properties.empty())
     {
-        frame = std::clamp(frame, Get_FrameMin(), Get_FrameMax());
-        entry.timeSec = static_cast<float>(frame) / static_cast<float>(fps);
-        MarkDirty();
+        ImGui::TextDisabled("리플렉션된 프로퍼티 XX");
+        return;
     }
 
-    auto inspector = AnimNotify_Inspector_Factory::GetInstance()->Get_NotifyInspector(entry.notify->Get_TypeName());
-    if (inspector)
-        inspector->Draw_Inspector(entry.notify);
-    else
-        ImGui::TextDisabled("No custom payload inspector");
-
-    if (ImGui::Button("Delete Notify"))
-        Delete_SelectedNotify();
+    Reflection_Inspector::Draw_Properties_Only(entry.notify.get(), reflectionINfo);
+    
 }
 
 void Animation_View::Draw_SelectedStateInspector()
@@ -838,45 +963,105 @@ void Animation_View::Draw_SelectedStateInspector()
         return;
     }
 
-    const int32 fps = Get_CurrentClipFps();
-
-    const int32 frameMin = Get_FrameMin();
-    const int32 frameMax = Get_FrameMax();
-    const int32 safeStateStartMax = max(frameMin, frameMax - 1);
-
-    ImGui::Text("Type: %s", entry.notifyState->Get_TypeName().c_str());
-
-    int32 startFrame = static_cast<int32>(std::round(entry.startSec * fps));
-    int32 endFrame = static_cast<int32>(std::round((entry.startSec + entry.durationSec) * fps));
-
-    startFrame = std::clamp(startFrame, frameMin, safeStateStartMax);
-    endFrame = std::clamp(endFrame, startFrame + 1, frameMax);
-
-    if (ImGui::InputInt("Start Frame##SelectedState", &startFrame))
+    auto& reflectionInfo = entry.notifyState->Get_ReflectionInfo();
+    if (reflectionInfo.properties.empty())
     {
-        startFrame = std::clamp(startFrame, frameMin, endFrame - 1);
-        entry.durationSec = static_cast<float>(endFrame - startFrame) / static_cast<float>(fps);
-        entry.startSec = static_cast<float>(startFrame) / static_cast<float>(fps);
-        MarkDirty();
+        ImGui::TextDisabled("리플렉션된 프로퍼티 XX");
+        return;
     }
 
-    if (ImGui::InputInt("End Frame##SelectedState", &endFrame))
-    {
-        endFrame = std::clamp(endFrame, startFrame + 1, frameMax);
-        entry.durationSec = static_cast<float>(endFrame - startFrame) / static_cast<float>(fps);
-        MarkDirty();
-    }
-
-    auto inspector = AnimNotify_Inspector_Factory::GetInstance()->Get_NotifyStateInspector(entry.notifyState->Get_TypeName());
-    if (inspector)
-        inspector->Draw_Inspector(entry.notifyState);
-    else
-        ImGui::TextDisabled("No custom payload inspector");
-
-    if (ImGui::Button("Delete Notify State"))
-        Delete_SelectedState();
+    Reflection_Inspector::Draw_Properties_Only(entry.notifyState.get(), reflectionInfo);
 }
 
+void Animation_View::Draw_NotifyTrackSection()
+{
+    ImGui::Text("Notify Tracks");
+    ImGui::Separator();
+
+    char buffer[128] = {};
+    strcpy_s(buffer, _newNotifyTrackName.c_str());
+    if (ImGui::InputText("Track Name##NotifyTrack", buffer, static_cast<size_t>(std::size(buffer))))
+        _newNotifyTrackName = buffer;
+
+    if (ImGui::Button("Add Notify Track"))
+        Add_NotifyTrack(_newNotifyTrackName);
+
+    auto* clip = Get_CurrentClip();
+    const bool hasSelectedTrack =
+        clip &&
+        _selectedNotifyTrackIndex >= 0 &&
+        _selectedNotifyTrackIndex < static_cast<int32>(clip->notifyTracks.size());
+
+    ImGui::BeginDisabled(!hasSelectedTrack);
+
+    if (hasSelectedTrack)
+    {
+        auto& trackName = clip->notifyTracks[_selectedNotifyTrackIndex].name;
+        char editBuffer[128] = {};
+        strcpy_s(editBuffer, trackName.c_str());
+
+        if (ImGui::InputText("Selected Track##NotifyTrackEdit", editBuffer, static_cast<size_t>(std::size(editBuffer))))
+        {
+            trackName = editBuffer;
+            MarkDirty();
+        }
+    }
+    else
+    {
+        char disabledBuffer[128] = {};
+        ImGui::InputText("Selected Track##NotifyTrackEdit", disabledBuffer, static_cast<size_t>(std::size(disabledBuffer)), ImGuiInputTextFlags_ReadOnly);
+    }
+
+    if (ImGui::Button("Delete Notify Track"))
+        Delete_SelectedNotifyTrack();
+
+    ImGui::EndDisabled();
+}
+
+void Animation_View::Draw_NotifyStateTrackSection()
+{
+    ImGui::Text("Notify State Tracks");
+    ImGui::Separator();
+
+    char buffer[128] = {};
+    strcpy_s(buffer, _newNotifyStateTrackName.c_str());
+    if (ImGui::InputText("Track Name##NotifyStateTrack", buffer, static_cast<size_t>(std::size(buffer))))
+        _newNotifyStateTrackName = buffer;
+
+    if (ImGui::Button("Add Notify State Track"))
+        Add_NotifyStateTrack(_newNotifyStateTrackName);
+
+    auto* clip = Get_CurrentClip();
+    const bool hasSelectedTrack =
+        clip &&
+        _selectedNotifyStateTrackIndex >= 0 &&
+        _selectedNotifyStateTrackIndex < static_cast<int32>(clip->notifyStateTracks.size());
+
+    ImGui::BeginDisabled(!hasSelectedTrack);
+
+    if (hasSelectedTrack)
+    {
+        auto& trackName = clip->notifyStateTracks[_selectedNotifyStateTrackIndex].name;
+        char editBuffer[128] = {};
+        strcpy_s(editBuffer, trackName.c_str());
+
+        if (ImGui::InputText("Selected Track##NotifyStateTrackEdit", editBuffer, static_cast<size_t>(std::size(editBuffer))))
+        {
+            trackName = editBuffer;
+            MarkDirty();
+        }
+    }
+    else
+    {
+        char disabledBuffer[128] = {};
+        ImGui::InputText("Selected Track##NotifyStateTrackEdit", disabledBuffer, static_cast<size_t>(std::size(disabledBuffer)), ImGuiInputTextFlags_ReadOnly);
+    }
+
+    if (ImGui::Button("Delete Notify State Track"))
+        Delete_SelectedNotifyStateTrack();
+
+    ImGui::EndDisabled();
+}
 
 void Animation_View::Draw_CreateNotifySection()
 {
@@ -974,8 +1159,6 @@ void Animation_View::Draw_CreateStateSection()
     if (ImGui::Button("Add Notify State"))
         Add_State_ByFrameRange(_requestedCreateStateStartFrame, _requestedCreateStateEndFrame, typeNames[_createStateTypeIndex]);
 }
-
-
 void Animation_View::Handle_CreateNotifyPopup()
 {
     if (_openCreateNotifyPopup)
@@ -1138,6 +1321,7 @@ void Animation_View::Save_NotifyAsset()
 void Animation_View::Refresh_CurrentClip()
 {
     Clear_SelectedEntries();
+    Select_NotifyTrack(0);
     _sequencerState.currentFrame = Get_FrameMin();
     _previewPlaybackTimeSec = 0.f;
     _isPlaying = false;
@@ -1148,14 +1332,9 @@ void Animation_View::Refresh_CurrentClip()
     {
         _model->Set_Animation(static_cast<uint32>(_selectedClipIndex), false);
         Apply_CurrentFrame_ToPreview();
-
-        // 최소 프레임, 0프레임부터 다시 실행
         Start_CurrentClipPlaybackFromFrame(Get_FrameMin());
-
     }
-        
 }
-
 void Animation_View::Apply_CurrentFrame_ToPreview()
 {
     if (!_model || _selectedClipIndex < 0 || !_previewOwner)
@@ -1281,6 +1460,45 @@ void Animation_View::Handle_PlaybackShortcut()
     Start_CurrentClipPlaybackFromFrame(_sequencerState.currentFrame);
 }
 
+void Animation_View::Handle_DeleteShortcut()
+{
+    if (!_isFocused || !_model)
+        return;
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    if (io.WantTextInput)
+        return;
+
+    if (ImGui::IsPopupOpen(nullptr, ImGuiPopupFlags_AnyPopupId))
+        return;
+
+    if (!ImGui::IsKeyPressed(ImGuiKey_Delete, false))
+        return;
+
+    if (Has_SelectedNotify())
+    {
+        Delete_SelectedNotify();
+        return;
+    }
+
+    if (Has_SelectedState())
+    {
+        Delete_SelectedState();
+        return;
+    }
+
+    if (_sequencerContext.isSelectedStateTrack)
+    {
+        if (Has_SelectedNotifyStateTrack())
+            Delete_SelectedNotifyStateTrack();
+        return;
+    }
+
+    if (Has_SelectedNotifyTrack())
+        Delete_SelectedNotifyTrack();
+}
+
 bool Animation_View::Passes_ClipSearch(const string& clipName) const
 {
     return Contains_CaseInsensitive(clipName, _clipSearchText);
@@ -1346,11 +1564,63 @@ bool Animation_View::Has_SelectedState() const
            _selectedStateIndex < static_cast<int32>(clip->notifyStates.size());
 }
 
+bool Animation_View::Has_SelectedNotifyTrack() const
+{
+    const auto* clip = Get_CurrentClip();
+    if (!clip)
+        return false;
+
+    return _selectedNotifyTrackIndex >= 0 &&
+           _selectedNotifyTrackIndex < static_cast<int32>(clip->notifyTracks.size());
+}
+
+bool Animation_View::Has_SelectedNotifyStateTrack() const
+{
+    const auto* clip = Get_CurrentClip();
+    if (!clip)
+        return false;
+
+    return _selectedNotifyStateTrackIndex >= 0 &&
+           _selectedNotifyStateTrackIndex < static_cast<int32>(clip->notifyStateTracks.size());
+}
+
 void Animation_View::Clear_SelectedEntries()
 {
     _selectedNotifyIndex = -1;
     _selectedStateIndex = -1;
     _sequencerState.selectedEntry = -1;
+}
+
+void Animation_View::Select_NotifyTrack(int32 trackIndex)
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip || clip->notifyTracks.empty())
+    {
+        _selectedNotifyTrackIndex = -1;
+        _sequencerContext.isSelectedStateTrack = false;
+        _sequencerContext.selectedTrackIndex = 0;
+        return;
+    }
+
+    _selectedNotifyTrackIndex = std::clamp(trackIndex, 0, static_cast<int32>(clip->notifyTracks.size()) - 1);
+    _sequencerContext.isSelectedStateTrack = false;
+    _sequencerContext.selectedTrackIndex = _selectedNotifyTrackIndex;
+}
+
+void Animation_View::Select_NotifyStateTrack(int32 trackIndex)
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip || clip->notifyStateTracks.empty())
+    {
+        _selectedNotifyStateTrackIndex = -1;
+        _sequencerContext.isSelectedStateTrack = true;
+        _sequencerContext.selectedTrackIndex = 0;
+        return;
+    }
+
+    _selectedNotifyStateTrackIndex = std::clamp(trackIndex, 0, static_cast<int32>(clip->notifyStateTracks.size()) - 1);
+    _sequencerContext.isSelectedStateTrack = true;
+    _sequencerContext.selectedTrackIndex = _selectedNotifyStateTrackIndex;
 }
 
 float Animation_View::Get_CurrentFrameTimeSec() const
@@ -1495,6 +1765,52 @@ void Animation_View::Delete_SelectedState()
     MarkDirty();
 }
 
+void Animation_View::Delete_SelectedNotifyTrack()
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip)
+        return;
+
+    if (_selectedNotifyTrackIndex < 0 || _selectedNotifyTrackIndex >= static_cast<int32>(clip->notifyTracks.size()))
+        return;
+
+    const int32 removedTrackIndex = _selectedNotifyTrackIndex;
+    Remove_NotifyTrackEntries(*clip, removedTrackIndex);
+    clip->notifyTracks.erase(clip->notifyTracks.begin() + removedTrackIndex);
+
+    Clear_SelectedEntries();
+
+    if (clip->notifyTracks.empty())
+        Select_NotifyTrack(0);
+    else
+        Select_NotifyTrack(min(removedTrackIndex, static_cast<int32>(clip->notifyTracks.size()) - 1));
+
+    MarkDirty();
+}
+
+void Animation_View::Delete_SelectedNotifyStateTrack()
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip)
+        return;
+
+    if (_selectedNotifyStateTrackIndex < 0 || _selectedNotifyStateTrackIndex >= static_cast<int32>(clip->notifyStateTracks.size()))
+        return;
+
+    const int32 removedTrackIndex = _selectedNotifyStateTrackIndex;
+    Remove_NotifyStateTrackEntries(*clip, removedTrackIndex);
+    clip->notifyStateTracks.erase(clip->notifyStateTracks.begin() + removedTrackIndex);
+
+    Clear_SelectedEntries();
+
+    if (clip->notifyStateTracks.empty())
+        Select_NotifyStateTrack(0);
+    else
+        Select_NotifyStateTrack(min(removedTrackIndex, static_cast<int32>(clip->notifyStateTracks.size()) - 1));
+
+    MarkDirty();
+}
+
 Shared<Animation_View> Animation_View::Create()
 {
     auto instance = make_shared<Animation_View>();
@@ -1503,3 +1819,4 @@ Shared<Animation_View> Animation_View::Create()
 
     return instance;
 }
+

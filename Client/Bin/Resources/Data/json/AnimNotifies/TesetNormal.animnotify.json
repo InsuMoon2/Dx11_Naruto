@@ -7,7 +7,13 @@
                 {
                     "payload": {},
                     "time_sec": 0.6000000238418579,
+                    "track_index": 0,
                     "type": "AN_Test"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
                 }
             ],
             "notify_states": [
@@ -15,7 +21,13 @@
                     "duration_sec": 0.3333333432674408,
                     "payload": {},
                     "start_sec": 0.5666666626930237,
+                    "track_index": 0,
                     "type": "ANS_Test"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
                 }
             ]
         },
@@ -26,21 +38,43 @@
                 {
                     "payload": {},
                     "time_sec": 0.8666666746139526,
+                    "track_index": 0,
                     "type": "AN_Test"
                 }
             ],
-            "notify_states": []
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
         },
         {
             "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Hand_Punch_Left",
             "display_fps": 30,
             "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
             "notify_states": [
                 {
                     "duration_sec": 0.46666666865348816,
                     "payload": {},
                     "start_sec": 0.46666666865348816,
+                    "track_index": 0,
                     "type": "ANS_ComboWindow"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
                 }
             ]
         },
@@ -48,12 +82,23 @@
             "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Hand_StraightPunch",
             "display_fps": 30,
             "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
             "notify_states": [
                 {
                     "duration_sec": 0.6666666865348816,
                     "payload": {},
                     "start_sec": 1.2000000476837158,
+                    "track_index": 0,
                     "type": "ANS_ComboWindow"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
                 }
             ]
         },
@@ -61,12 +106,191 @@
             "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_SSp_KWKSciwep_cmb_03",
             "display_fps": 30,
             "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
             "notify_states": [
                 {
                     "duration_sec": 0.3333333432674408,
                     "payload": {},
                     "start_sec": 0.46666666865348816,
+                    "track_index": 0,
                     "type": "ANS_ComboWindow"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_TurnSlashing_Left",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.5,
+                    "payload": {},
+                    "start_sec": 0.6000000238418579,
+                    "track_index": 0,
+                    "type": "ANS_ComboWindow"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_TurnSlashing_Right",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.4000000059604645,
+                    "payload": {},
+                    "start_sec": 0.6000000238418579,
+                    "track_index": 0,
+                    "type": "ANS_ComboWindow"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_TurnSlashingShoulder_UpRight",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 1.1666666269302368,
+                    "payload": {},
+                    "start_sec": 1.0666667222976685,
+                    "track_index": 0,
+                    "type": "ANS_ComboWindow"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_cmb01",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.46666666865348816,
+                    "payload": {},
+                    "start_sec": 0.2666666805744171,
+                    "track_index": 0,
+                    "type": "ANS_ComboWindow"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_cmb04",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {},
+                    "start_sec": 0.30000001192092896,
+                    "track_index": 0,
+                    "type": "ANS_ComboWindow"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_DoubleTurnKick",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.6000000238418579,
+                    "payload": {},
+                    "start_sec": 1.6333333253860474,
+                    "track_index": 0,
+                    "type": "ANS_ComboWindow"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_HelmDivide",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.6666666865348816,
+                    "payload": {},
+                    "start_sec": 0.800000011920929,
+                    "track_index": 0,
+                    "type": "ANS_ComboWindow"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
                 }
             ]
         }

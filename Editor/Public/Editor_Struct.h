@@ -18,12 +18,12 @@ struct FBTEditorNode
 {
     ed::NodeId id;
     string name;
-    string nodeType;                // Sequence, Selector, Task.. 컴포짓들
+    string nodeType;
 
     ImVec2 position;
-    ed::PinId inputPin;             // 부모 연결
+    ed::PinId inputPin;
 
-    vector<ed::PinId> outputPins;   // 자식 연결들
+    vector<ed::PinId> outputPins;
     map<string, string> parameters;
 
     Shared<BTNode> runtimeInstance;
@@ -51,7 +51,6 @@ struct FUIAnimSequencerContext
 
     int* selectedTrackIndex = nullptr;
     int* selectedKeyIndex = nullptr;
-
 };
 
 struct FAnimSequencerContext
@@ -62,11 +61,14 @@ struct FAnimSequencerContext
     int32*  selectedNotifyIndex = nullptr;
     int32*  selectedStateIndex = nullptr;
 
-    int32   pendingMarkStartFrame = -1;
-    int32   pendingMarkEndFrame = -1;
+    bool isSelectedStateTrack = false;
+    int32 selectedTrackIndex = 0;
 
-    bool    isMarkingState = false;
-    bool    clickedOnNotify = false;
+    int32 pendingMarkStartFrame = -1;
+    int32 pendingMarkEndFrame = -1;
+
+    bool isMarkingState = false;
+    bool clickedOnNotify = false;
 };
 
 struct FCameraSequencerContext

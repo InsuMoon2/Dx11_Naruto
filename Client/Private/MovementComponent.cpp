@@ -117,7 +117,7 @@ void MovementComponent::Start_SuperJump(float velocity)
     _onGround = false;
 
     // 슈퍼점프 이후 더블점프 가능하게할지?
-    //_canDoubleJump = false;
+    _canDoubleJump = true;
 }
 
 void MovementComponent::Start_Dash(const Vec3& worldDir, float distance, float duration)

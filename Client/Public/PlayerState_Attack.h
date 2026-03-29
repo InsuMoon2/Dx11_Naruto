@@ -15,31 +15,34 @@ public:
     void Update(PlayerStateMachine* state, float timeDelta) override;
     void Exit(PlayerStateMachine* state) override;
 
-    EPlayerState Get_StateID() const override { return EPlayerState::Attack_1; }
+    EPlayerState Get_StateID() const override { return EPlayerState::Attack; }
 
 public:
     // ANS_ComboWindow에서 세팅
-    void Open_ComboWindow();
-    void Close_ComboWindow();
+    void    Open_ComboWindow();
+    void    Close_ComboWindow();
 
-    void Buffer_AttackInput();
+    void    Buffer_AttackInput();
 
-    void Reset_Combo();
+    int32   Get_ComboIndex() const { return _comboIndex; }
 
-    int32 Get_ComboIndex() const { return _comboIndex; }
+    void    Reset_Combo();      // 콤보 초기화
+    void    Advance_Combo();    // 다음 콤보로
 
-    void Advance_Combo();
+    EAttackProfileType Get_ActiveProfileType() const { return _activeProfileType; }
 
 private:
-    static constexpr int32 MAX_COMBO = 4;
+    void    Select_Profile(PlayerStateMachine* state);
+    void    Play_CurrentComboClip(PlayerStateMachine* state);
 
+private:
     int32   _comboIndex = 0;
     bool    _comboWindowOpen = false;
+    bool    _hasBufferedAttack = false; // 콤보 입력 가능 구간에서 입력이 들어왔는지 판단
 
-    // 콤보 입력 가능 구간에서 입력이 들어왔는지 판단
-    bool    _hasBufferedAttack = false;
-
-    vector<EPlayerState> _comboAnimStates;
+private: // 콤보 프로파일
+    const FComboProfile* _activeProfile = nullptr;
+    EAttackProfileType   _activeProfileType = EAttackProfileType::Hand_Ground;
 
     // Close_ComboWindow에서 상태 전이용 - Enter에서 캐싱
     PlayerStateMachine* _cachedStateMachine = nullptr;

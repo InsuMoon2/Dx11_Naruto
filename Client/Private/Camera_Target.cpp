@@ -11,10 +11,11 @@ bool Camera_Target::Register_Properties()
     auto& info = GetStaticReflectionInfo();
     info.className = "Camera_Target";
 
-    PROPERTY_VEC3("Offset : ", _offset, 0.1f);
-    PROPERTY_FLOAT("Mouse Sensor", _mouseSensor, 0.1f, 20.f);  
-    PROPERTY_FLOAT("Distance", _distance, 1.f, 50.f);  
-    PROPERTY_FLOAT("Follow Speed", _followSpeed, 0.f, 20.f);   
+    PROPERTY_FLOAT("Distance", _distance, 1.f, 50.f);
+    PROPERTY_FLOAT("Target Distance", _targetDistance, 1.f, 50.f);
+
+    PROPERTY_FLOAT("Follow Speed", _followSpeed, 0.f, 20.f);
+    PROPERTY_FLOAT("Zoom Lerp Speed", _zoomLerpSpeed, 0.f, 30.f);
 
     return true;
 }
@@ -29,6 +30,20 @@ Camera_Target::Camera_Target(const Camera_Target& rhs)
     : Camera(rhs)
     , _offset(rhs._offset)
     , _followSpeed(rhs._followSpeed)
+    , _pitch(rhs._pitch)
+    , _yaw(rhs._yaw)
+    , _heightOffset(rhs._heightOffset)
+    , _mouseSensor(rhs._mouseSensor)
+    , _pitchMin(rhs._pitchMin)
+    , _pitchMax(rhs._pitchMax)
+    , _distance(rhs._distance)
+    , _targetDistance(rhs._targetDistance)
+    , _distanceMin(rhs._distanceMin)
+    , _distanceMax(rhs._distanceMax)
+    , _zoomSpeed(rhs._zoomSpeed)
+    , _zoomLerpSpeed(rhs._zoomLerpSpeed)
+    , _enableMouseRotation(rhs._enableMouseRotation)
+    , _bindOnPlayerSpawned(rhs._bindOnPlayerSpawned)
 {
 }
 
@@ -51,6 +66,8 @@ HRESULT Camera_Target::Initialize(void* arg)
     _bindOnPlayerSpawned = desc->bindOnPlayerSpawned;
 
     _distance = 3.f;
+
+    _targetDistance = _distance;
 
     LOG_INFO("Camera_Target: before Camera::Initialize");
     CHECK_FAILED(Camera::Initialize(arg), E_FAIL);
@@ -94,29 +111,33 @@ void Camera_Target::Priority_Update(float timeDelta)
 
         // 줌
         float wheel = INPUT->GetMouseWheel();
-        _distance -= wheel * _zoomSpeed;
-        _distance = ::clamp(_distance, _distanceMin, _distanceMax);
+        _targetDistance -= wheel * _zoomSpeed;
+        _targetDistance = ::clamp(_targetDistance, _distanceMin, _distanceMax);
     }
+
+    float zoomAlpha = std::clamp(_zoomLerpSpeed * timeDelta, 0.f, 1.f);
+    _distance = std::lerp(_distance, _targetDistance, zoomAlpha);
+    _distance = ::clamp(_distance, _distanceMin, _distanceMax);
 
     float pitchRad = XMConvertToRadians(_pitch);
     float yawRad = XMConvertToRadians(_yaw);
 
     Vec3 targetPos = target->Get_WorldPosition();
-    targetPos.y += _heightOffset;  
-    Vec3 camOffset;
+    targetPos.y += _heightOffset;
 
+    Vec3 camOffset;
     camOffset.x = -cosf(pitchRad) * sinf(yawRad) * _distance;
     camOffset.y = sinf(pitchRad) * _distance;
     camOffset.z = -cosf(pitchRad) * cosf(yawRad) * _distance;
 
     Vec3 desiredPos = targetPos + camOffset;
 
-    // 위치 보간
-    Vec3 currentPos = _transformCom->Get_LocalPosition();
-    Vec3 newPos = Vec3::Lerp(currentPos, desiredPos, _followSpeed * timeDelta);
+    // 보간처리
+    Vec3  currentPos = _transformCom->Get_LocalPosition();
+    float followAlpha = std::clamp(_followSpeed * timeDelta, 0.f, 1.f);
+    Vec3  newPos = Vec3::Lerp(currentPos, desiredPos, followAlpha);
 
-    //_transformCom->Set_LocalPosition(newPos);
-    _transformCom->Set_LocalPosition(desiredPos);
+    _transformCom->Set_LocalPosition(newPos);
     _transformCom->LookAt(targetPos);
 
     Update_TransformMatrices();

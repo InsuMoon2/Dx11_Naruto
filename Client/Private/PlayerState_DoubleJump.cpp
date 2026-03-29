@@ -40,6 +40,13 @@ void PlayerState_DoubleJump::Update(PlayerStateMachine* state, float timeDelta)
     if (frame.jumpDash)
     {
         state->Change_State(EPlayerState::JumpDash);
+        return;
+    }
+
+    if (frame.attackDown && !movement->Is_OnGround())
+    {
+        state->Change_State(EPlayerState::JumpAttack);
+        return;
     }
 
 	auto cmd = state->Init_MoveCommand();

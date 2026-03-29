@@ -10,6 +10,7 @@ NS_BEGIN(Client)
 
 class AnimationStateComponent;
 class CombatStat;
+class EquipmentComponent;
 
 class Player : public Character
 {
@@ -45,13 +46,20 @@ protected:
     virtual HRESULT Ready_PartObjects();
 
 protected:
+    const Matrix* Find_WeaponSocketMatrix(EWeaponType weaponType) const;
+    void  Change_WeaponAttachment(EWeaponType weaponType);
+    void  On_WeaponTypeChagned(int32 weaponTypeIndex);
+
+protected:
     Shared<CombatStat>              _combatStat;
     Shared<AnimationStateComponent> _animState;
     Shared<Model>                   _model;
+    Shared<EquipmentComponent>      _equipment;
 
 protected:
     uint64                          _networkId = 0;
 
+    FDelegateHandle                 _weaponTypeChangedHandle = {};
 
 public:
     static Shared<GameObject>  Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

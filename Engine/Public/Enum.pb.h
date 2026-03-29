@@ -101,6 +101,7 @@ enum ComponentID : int {
   COMPONENT_TYPE_PLAYER_STATE = 1007,
   COMPONENT_TYPE_SKILL = 1008,
   COMPONENT_TYPE_ANIMATION_STATE = 1009,
+  COMPONENT_TYPE_EQUIPMENT = 1010,
   ComponentID_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   ComponentID_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -110,8 +111,8 @@ enum ComponentID : int {
 bool ComponentID_IsValid(int value);
 extern const uint32_t ComponentID_internal_data_[];
 constexpr ComponentID ComponentID_MIN = static_cast<ComponentID>(0);
-constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1009);
-constexpr int ComponentID_ARRAYSIZE = 1009 + 1;
+constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1010);
+constexpr int ComponentID_ARRAYSIZE = 1010 + 1;
 const ::google::protobuf::EnumDescriptor*
 ComponentID_descriptor();
 template <typename T>
@@ -283,6 +284,41 @@ inline bool ANIM_PHASE_TYPE_Parse(absl::string_view name, ANIM_PHASE_TYPE* value
   return ::google::protobuf::internal::ParseNamedEnum<ANIM_PHASE_TYPE>(
       ANIM_PHASE_TYPE_descriptor(), name, value);
 }
+enum ATTACK_PROFILE_TYPE : int {
+  ATTACK_PROFILE_TYPE_HAND_GROUND = 0,
+  ATTACK_PROFILE_TYPE_HAND_AERIAL = 1,
+  ATTACK_PROFILE_TYPE_BIGSWORD_GROUND = 2,
+  ATTACK_PROFILE_TYPE_BIGSWORD_AERIAL = 3,
+  ATTACK_PROFILE_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::min(),
+  ATTACK_PROFILE_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::max(),
+};
+
+bool ATTACK_PROFILE_TYPE_IsValid(int value);
+extern const uint32_t ATTACK_PROFILE_TYPE_internal_data_[];
+constexpr ATTACK_PROFILE_TYPE ATTACK_PROFILE_TYPE_MIN = static_cast<ATTACK_PROFILE_TYPE>(0);
+constexpr ATTACK_PROFILE_TYPE ATTACK_PROFILE_TYPE_MAX = static_cast<ATTACK_PROFILE_TYPE>(3);
+constexpr int ATTACK_PROFILE_TYPE_ARRAYSIZE = 3 + 1;
+const ::google::protobuf::EnumDescriptor*
+ATTACK_PROFILE_TYPE_descriptor();
+template <typename T>
+const std::string& ATTACK_PROFILE_TYPE_Name(T value) {
+  static_assert(std::is_same<T, ATTACK_PROFILE_TYPE>::value ||
+                    std::is_integral<T>::value,
+                "Incorrect type passed to ATTACK_PROFILE_TYPE_Name().");
+  return ATTACK_PROFILE_TYPE_Name(static_cast<ATTACK_PROFILE_TYPE>(value));
+}
+template <>
+inline const std::string& ATTACK_PROFILE_TYPE_Name(ATTACK_PROFILE_TYPE value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<ATTACK_PROFILE_TYPE_descriptor,
+                                                 0, 3>(
+      static_cast<int>(value));
+}
+inline bool ATTACK_PROFILE_TYPE_Parse(absl::string_view name, ATTACK_PROFILE_TYPE* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ATTACK_PROFILE_TYPE>(
+      ATTACK_PROFILE_TYPE_descriptor(), name, value);
+}
 
 // ===================================================================
 
@@ -340,6 +376,12 @@ struct is_proto_enum<::Protocol::ANIM_PHASE_TYPE> : std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor<::Protocol::ANIM_PHASE_TYPE>() {
   return ::Protocol::ANIM_PHASE_TYPE_descriptor();
+}
+template <>
+struct is_proto_enum<::Protocol::ATTACK_PROFILE_TYPE> : std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor<::Protocol::ATTACK_PROFILE_TYPE>() {
+  return ::Protocol::ATTACK_PROFILE_TYPE_descriptor();
 }
 
 }  // namespace protobuf

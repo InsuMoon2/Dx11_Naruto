@@ -24,6 +24,8 @@ public:
     void    BeginPlay() override;
     void    Update(float timeDelta) override;
 
+    void    On_WeaponTypeChanged(int32 weaponTypeIndex);
+
 public:
     void Bind_Player(Shared<Player> player);
 
@@ -38,6 +40,8 @@ private:
     Shared<UI_SkillSlot> _subSkillSlot[2];
 
     Shared<UI_WeaponType> _weaponTypeUI;
+
+    FDelegateHandle       _weaponTypeHandle;
 
 public:
     static Shared<UI_PlayerSkill> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

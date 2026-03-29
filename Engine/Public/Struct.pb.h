@@ -979,6 +979,8 @@ class ObjectInfo final : public ::google::protobuf::Message
     kMoveDirFieldNumber = 11,
     kAnimPhaseFieldNumber = 12,
     kAnimForceRestartFieldNumber = 13,
+    kAttackProfileFieldNumber = 15,
+    kAttackComboIndexFieldNumber = 16,
   };
   // map<int32, string> equipParts = 14;
   int equipparts_size() const;
@@ -1111,12 +1113,32 @@ class ObjectInfo final : public ::google::protobuf::Message
   void _internal_set_anim_force_restart(bool value);
 
   public:
+  // .Protocol.ATTACK_PROFILE_TYPE attack_profile = 15;
+  void clear_attack_profile() ;
+  ::Protocol::ATTACK_PROFILE_TYPE attack_profile() const;
+  void set_attack_profile(::Protocol::ATTACK_PROFILE_TYPE value);
+
+  private:
+  ::Protocol::ATTACK_PROFILE_TYPE _internal_attack_profile() const;
+  void _internal_set_attack_profile(::Protocol::ATTACK_PROFILE_TYPE value);
+
+  public:
+  // int32 attack_combo_index = 16;
+  void clear_attack_combo_index() ;
+  ::int32_t attack_combo_index() const;
+  void set_attack_combo_index(::int32_t value);
+
+  private:
+  ::int32_t _internal_attack_combo_index() const;
+  void _internal_set_attack_combo_index(::int32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:Protocol.ObjectInfo)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      4, 11, 3,
+      4, 13, 3,
       50, 2>
       _table_;
 
@@ -1150,6 +1172,8 @@ class ObjectInfo final : public ::google::protobuf::Message
     int move_dir_;
     int anim_phase_;
     bool anim_force_restart_;
+    int attack_profile_;
+    ::int32_t attack_combo_index_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1915,6 +1939,50 @@ inline ::google::protobuf::Map<::int32_t, std::string>* ObjectInfo::_internal_mu
 inline ::google::protobuf::Map<::int32_t, std::string>* ObjectInfo::mutable_equipparts() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   // @@protoc_insertion_point(field_mutable_map:Protocol.ObjectInfo.equipParts)
   return _internal_mutable_equipparts();
+}
+
+// .Protocol.ATTACK_PROFILE_TYPE attack_profile = 15;
+inline void ObjectInfo::clear_attack_profile() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.attack_profile_ = 0;
+}
+inline ::Protocol::ATTACK_PROFILE_TYPE ObjectInfo::attack_profile() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.attack_profile)
+  return _internal_attack_profile();
+}
+inline void ObjectInfo::set_attack_profile(::Protocol::ATTACK_PROFILE_TYPE value) {
+  _internal_set_attack_profile(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.attack_profile)
+}
+inline ::Protocol::ATTACK_PROFILE_TYPE ObjectInfo::_internal_attack_profile() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::Protocol::ATTACK_PROFILE_TYPE>(_impl_.attack_profile_);
+}
+inline void ObjectInfo::_internal_set_attack_profile(::Protocol::ATTACK_PROFILE_TYPE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.attack_profile_ = value;
+}
+
+// int32 attack_combo_index = 16;
+inline void ObjectInfo::clear_attack_combo_index() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.attack_combo_index_ = 0;
+}
+inline ::int32_t ObjectInfo::attack_combo_index() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.attack_combo_index)
+  return _internal_attack_combo_index();
+}
+inline void ObjectInfo::set_attack_combo_index(::int32_t value) {
+  _internal_set_attack_combo_index(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.attack_combo_index)
+}
+inline ::int32_t ObjectInfo::_internal_attack_combo_index() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.attack_combo_index_;
+}
+inline void ObjectInfo::_internal_set_attack_combo_index(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.attack_combo_index_ = value;
 }
 
 #ifdef __GNUC__

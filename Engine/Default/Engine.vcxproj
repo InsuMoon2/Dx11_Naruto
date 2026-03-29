@@ -247,6 +247,7 @@
     <ClInclude Include="..\Public\AnimNotifyState.h" />
     <ClInclude Include="..\Public\AnimNotify_Serializer.h" />
     <ClInclude Include="..\Public\AnimNotify_Types.h" />
+    <ClInclude Include="..\Public\AN_PlaySound.h" />
     <ClInclude Include="..\Public\Asset_Manager.h" />
     <ClInclude Include="..\Public\BehaviorTree.h" />
     <ClInclude Include="..\Public\AnimNotify_Factory.h" />
@@ -341,6 +342,7 @@
     <ClCompile Include="..\Private\AnimNotify.cpp" />
     <ClCompile Include="..\Private\AnimNotifyState.cpp" />
     <ClCompile Include="..\Private\AnimNotify_Serializer.cpp" />
+    <ClCompile Include="..\Private\AN_PlaySound.cpp" />
     <ClCompile Include="..\Private\Asset_Manager.cpp" />
     <ClCompile Include="..\Private\BehaviorTree.cpp" />
     <ClCompile Include="..\Private\AnimNotify_Factory.cpp" />

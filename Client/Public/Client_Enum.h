@@ -20,7 +20,7 @@ namespace Client
 
     enum class EPlayerState
     {
-        Idle,
+        Idle,       BigSword_Idle,
         Run,
         Jump,
         DoubleJump,
@@ -30,21 +30,34 @@ namespace Client
         SuperJump,
         HeightLand,
 
-        Attack_1,
-        Attack_2,
-        Attack_3,
-        Attack_4,
+        // Attack 진입 판별용
+        Attack, JumpAttack,
 
+        // Attack에 진입하면, ComboProfile에 따라 공격 상태값 알아서 세팅
+        Attack_01,              Attack_02,              Attack_03,          Attack_04,
+        Attack_Air_01,          Attack_Air_02,          Attack_Air_03,      Attack_Air_04,
+        Attack_Sword_01,        Attack_Sword_02,        Attack_Sword_03,    Attack_Sword_04,
+        Attack_SwordAir_01,     Attack_SwordAir_02,
 
         Hit,
         Dash,
-
 
         // 스킬 string으로 가능하긴 한데, 안전하게 Enum처리하기
         Skill_Rasengan,
         Skill_RasenShuriken,
 
         Dead,
+        END
+    };
+
+    enum class EAttackProfileType
+    {
+        Hand_Ground,
+        Hand_Aerial,
+
+        BigSword_Ground,
+        BigSword_Aerial,
+
         END
     };
 

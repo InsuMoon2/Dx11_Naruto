@@ -26,6 +26,8 @@ public:
         bool  jumpDash = false;
         bool  attackDown = false;
 
+        bool  toggleWeaponDown = false;
+
         bool  useSkillDown[2] = { false, false };
         bool  useSkillPress[2] = {};
     };
@@ -42,6 +44,8 @@ public:
         bool allowJumpDash = true;
         bool allowAttack = true;
 
+        bool allowWeaponToggle = true;
+
         void Disable_AllInput()
         {
             allowMove = false;
@@ -52,6 +56,8 @@ public:
             allowSkill = false;
             allowJumpDash = false;
             allowAttack = false;
+
+            allowWeaponToggle = false;
         }
 
         void Enable_AllInput()
@@ -64,6 +70,8 @@ public:
             allowSkill = true;
             allowJumpDash = true;
             allowAttack = true;
+
+            allowWeaponToggle = true;
         }
     };
 

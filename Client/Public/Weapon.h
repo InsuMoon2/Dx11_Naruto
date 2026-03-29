@@ -32,6 +32,9 @@ public:
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
 
+public:
+    void    Set_SocketMatrix(const Matrix* matrix) { _socketMatrix = matrix; }
+
 private:
     HRESULT Ready_Components(const wstring& modelAssetTag);
     HRESULT Bind_ShaderResources();

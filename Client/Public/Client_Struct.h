@@ -10,14 +10,32 @@ namespace Client
 {
     struct FSkillData
     {
-        uint32   skill_Id = 0;
-        wstring  skillName = L"";
-        float    coolDown = 0.f;
+        uint32  skill_Id = 0;
+        wstring skillName = L"";
+        float   coolDown = 0.f;
 
-        string   animStateName = "";
-        float    loopDurationSec = 0.f;
+        string  animStateName = "";
+        float   loopDurationSec = 0.f;
 
-        bool     isHoldSkill = false;
+        bool    isHoldSkill = false;
+    };
+
+    struct FComboEntry
+    {
+        string  animStateKey;
+        float   damageMultiplier = 1.f;
+        bool    canCancel = true;
+    };
+
+    struct FComboProfile
+    {
+        string              profileName;
+
+        EAttackProfileType  profileType = EAttackProfileType::Hand_Ground;
+        EWeaponType         weaponType = EWeaponType::Hand;
+        bool                isAerial = false;
+        int32               maxCombo = 4;
+        vector<FComboEntry> combos;
     };
 
     struct FLoadJob
@@ -107,7 +125,6 @@ namespace Client
                 || !end.animationName.empty();
         }
     };
-
    
 
 }

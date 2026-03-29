@@ -278,6 +278,9 @@
     <ClInclude Include="..\Public\BTTask_SetAnimState.h">
       <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AN_PlaySound.h">
+      <Filter>10. Notify</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -696,6 +699,9 @@
     <ClCompile Include="..\Private\Sound_Manager.cpp" />
     <ClCompile Include="..\Private\BTTask_SetAnimState.cpp">
       <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AN_PlaySound.cpp">
+      <Filter>10. Notify</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
