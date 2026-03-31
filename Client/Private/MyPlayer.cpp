@@ -142,7 +142,7 @@ Protocol::ObjectInfo MyPlayer::Build_NetworkInfo() const
 
 HRESULT MyPlayer::Ready_Components()
 {
-    Player::Ready_Components();
+    CHECK_FAILED(Player::Ready_Components(), E_FAIL);
 
     return S_OK;
 }

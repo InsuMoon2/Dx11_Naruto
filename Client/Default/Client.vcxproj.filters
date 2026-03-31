@@ -200,6 +200,10 @@
     <ClInclude Include="..\Public\PlayerState_JumpAttack.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SkillObject.h" />
+    <ClInclude Include="..\Public\SkillObject_Projectile.h" />
+    <ClInclude Include="..\Public\AN_SpawnSkill.h" />
+    <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -307,9 +311,6 @@
     <ClCompile Include="..\Private\SkillDataManager.cpp">
       <Filter>00. Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp">
-      <Filter>99. Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\SkillComponent.cpp" />
     <ClCompile Include="..\Private\UI_SkillSlot.cpp">
       <Filter>02. GameObject\02. UI\02. Player\01. Skill</Filter>
@@ -386,6 +387,10 @@
     <ClCompile Include="..\Private\PlayerState_JumpAttack.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\SkillObject.cpp" />
+    <ClCompile Include="..\Private\SkillObject_Projectile.cpp" />
+    <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
+    <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

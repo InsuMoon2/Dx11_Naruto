@@ -15,7 +15,12 @@ class PlayerSession_Manager;
 class Notification_Manager;
 class CommandHistory;
 
+class AnimNotify_Inspector_Factory;
+
 class EditorWindow;
+
+class AnimNotify_Inspector;
+class AnimNotifyState_Inspector;
 
 
 class EditorInstance
@@ -58,6 +63,10 @@ public: /* Command History */
     void    Redo();
     void    Clear_CommandHistory();
 
+public: /* AnimNotify_Inspector_Factory */
+    Shared<AnimNotify_Inspector>        Get_NotifyInspector(const string& typeName);
+    Shared<AnimNotifyState_Inspector>   Get_NotifyStateInspector(const string& typeName);
+
 public:
     void Save_SceneSnapshot();
     void Restore_SceneSnapshot();
@@ -69,6 +78,8 @@ private: /* Manager */
     Unique<Notification_Manager>    _notificationManager;
 
     Unique<CommandHistory>          _commandHistory;
+
+    Unique<AnimNotify_Inspector_Factory> _animNotifyInspector_Factory;
 
 private:
     EDITOR_DESC _desc = {};

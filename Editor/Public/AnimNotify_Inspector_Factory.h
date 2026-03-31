@@ -7,8 +7,6 @@ NS_BEGIN(Editor)
 
 class AnimNotify_Inspector_Factory
 {
-    DECLARE_SINGLETON(AnimNotify_Inspector_Factory)
-
 public:
     AnimNotify_Inspector_Factory() = default;
     ~AnimNotify_Inspector_Factory() = default;
@@ -29,6 +27,10 @@ private:
 private:
     umap<string, Shared<AnimNotify_Inspector>> _notifyInspectors;
     umap<string, Shared<AnimNotifyState_Inspector>> _notifyStateInspectors;
+
+public:
+    static Unique<AnimNotify_Inspector_Factory> Create();
+
 };
 
 NS_END

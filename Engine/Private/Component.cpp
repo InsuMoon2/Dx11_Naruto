@@ -3,11 +3,13 @@
 
 Component::Component(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
+    , _isCloned(false)
 {
 }
 
 Component::Component(const Component& rhs)
     : _device(rhs._device), _context(rhs._context)
+    , _isCloned(true)
 {
 }
 

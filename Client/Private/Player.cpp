@@ -4,9 +4,12 @@
 #include "Shader.h"
 #include "Model.h"
 #include "PartObject.h"
-#include "AnimationStateComponent.h"
 #include "EquipmentComponent.h"
 #include "Weapon.h"
+#include "AnimationStateComponent.h"
+#include "Bounding_Capsule.h"
+#include "Bounding_AABB.h"
+#include "Collider.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
@@ -70,6 +73,8 @@ void Player::Late_Update(float timeDelta)
 {
     Character::Late_Update(timeDelta);
 
+    if (_collider)
+        _collider->Update_Collider(_transformCom->Get_WorldMatrix());
 }
 
 HRESULT Player::Render()
@@ -145,6 +150,23 @@ HRESULT Player::Ready_Components()
     CHECK_FAILED(Add_Component(testModelKey, _model), E_FAIL);
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_EQUIPMENT, _equipment), E_FAIL);
+
+    // 충돌체 추가
+    Bounding_Capsule::FBoundingCapsuleDesc capsuleDesc{};
+    capsuleDesc.radius = 0.5f;
+    capsuleDesc.halfHeight = 0.3f;
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, _collider, &capsuleDesc), E_FAIL);
+    _collider->Set_CollisionPreset(Collision_Preset::Player);
+    GAME->Add_Collider(_collider);
+
+   /* Bounding_AABB::FBoundingAABBDesc aabbDesc{};
+    aabbDesc.extents = Vec3(0.4f, 0.6f, 0.4f);
+    aabbDesc.center = Vec3(0.f, aabbDesc.extents.y, 0.f);
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_AABB, _collider, &aabbDesc), E_FAIL);
+    _collider->Set_CollisionPreset(Collision_Preset::Player);
+    GAME->Add_Collider(_collider);*/
 
     return S_OK;
 }

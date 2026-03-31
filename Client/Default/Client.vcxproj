@@ -165,7 +165,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -174,7 +174,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../EngineSDK/Lib/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../EngineSDK/Lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -190,7 +190,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -199,7 +199,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../EngineSDK/Lib/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../EngineSDK/Lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -213,7 +213,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Include/;../Default/;$(SolutionDir)Server\ServerCore\Public;$(SolutionDir)Server\Protobuf\Bin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -222,7 +222,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../EngineSDK/Lib/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../EngineSDK/Lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -232,6 +232,7 @@
     <ClInclude Include="..\Public\ANS_CollisionEnable.h" />
     <ClInclude Include="..\Public\ANS_ComboWindow.h" />
     <ClInclude Include="..\Public\ANS_Test.h" />
+    <ClInclude Include="..\Public\AN_SpawnSkill.h" />
     <ClInclude Include="..\Public\AN_Test.h" />
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
@@ -285,6 +286,9 @@
     <ClInclude Include="..\Public\ServerSession.h" />
     <ClInclude Include="..\Public\SkillComponent.h" />
     <ClInclude Include="..\Public\SkillDataManager.h" />
+    <ClInclude Include="..\Public\SkillObject.h" />
+    <ClInclude Include="..\Public\SkillObject_Projectile.h" />
+    <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
     <ClInclude Include="..\Public\Spawn_Helper.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\StaticMeshActor.h" />
@@ -335,6 +339,7 @@
     <ClCompile Include="..\Private\ANS_CollisionEnable.cpp" />
     <ClCompile Include="..\Private\ANS_ComboWindow.cpp" />
     <ClCompile Include="..\Private\ANS_Test.cpp" />
+    <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
     <ClCompile Include="..\Private\AN_Test.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
@@ -381,6 +386,9 @@
     <ClCompile Include="..\Private\ServerSession.cpp" />
     <ClCompile Include="..\Private\SkillComponent.cpp" />
     <ClCompile Include="..\Private\SkillDataManager.cpp" />
+    <ClCompile Include="..\Private\SkillObject.cpp" />
+    <ClCompile Include="..\Private\SkillObject_Projectile.cpp" />
+    <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
     <ClCompile Include="..\Private\Spawn_Helper.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\StaticMeshActor.cpp" />
@@ -393,7 +401,6 @@
     <ClCompile Include="..\Private\UI_PlayerSkill.cpp" />
     <ClCompile Include="..\Private\UI_PlayerStatus.cpp" />
     <!-- <ClCompile Include="Client.cpp" /> -->
-    <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp" />
     <ClCompile Include="..\Private\UI_SkillSlot.cpp" />
     <ClCompile Include="..\Private\UI_TabButton.cpp" />
     <ClCompile Include="..\Private\UI_WeaponType.cpp" />

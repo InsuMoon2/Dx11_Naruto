@@ -121,6 +121,12 @@ protected:
         return static_pointer_cast<T>(shared_from_this());
     }
 
+public: /* Collision Events. SR때처럼 Stay도 유지하는게 좋을듯 */
+    virtual void OnBeginOverlap(Shared<class Collider> other) {}
+    virtual void OnStayOverlap(Shared<class Collider> other)  {}
+    virtual void OnEndOverlap(Shared<class Collider> other)   {}
+
+
 protected: /* Device */
     ComPtr<Device>          _device = { nullptr };
     ComPtr<DeviceContext>   _context = { nullptr };

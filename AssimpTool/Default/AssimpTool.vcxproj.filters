@@ -30,9 +30,6 @@
     <ClCompile Include="BinaryWriter.cpp">
       <Filter>99. Defines</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Engine\Private\SimpleMath.cpp">
-      <Filter>98. Default</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

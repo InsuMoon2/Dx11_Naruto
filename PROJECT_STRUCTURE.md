@@ -492,6 +492,7 @@ Client/Bin/Resources/
 | `StaticMesh 1차 확장안.md` | 스태틱 메쉬 시스템 확장 설계 문서 |
 | `level_character_setup_guideline.md` | Level_CharacterSetup 구현 가이드라인 |
 | `monster_bt_animation_guide.md` | 몬스터 BT + 애니메이션 통합 가이드 |
+| `CollisionManager_비트마스크_가이드라인.md` | 비트마스크 기반 충돌 시스템 가이드라인 |
 
 ---
 

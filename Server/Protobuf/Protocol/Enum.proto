@@ -12,9 +12,16 @@ enum ComponentID
     COMPONENT_TYPE_SHADER                = 5;
     COMPONENT_TYPE_TERRAIN               = 6;
     COMPONENT_TYPE_MODEL                 = 7;
+    COMPONENT_TYPE_PROJECTILE            = 8;
+
+    COMPONENT_TYPE_COLLIDER_AABB         = 21;
+    COMPONENT_TYPE_COLLIDER_OBB          = 22;
+    COMPONENT_TYPE_COLLIDER_SPHERE       = 23;
+    COMPONENT_TYPE_COLLIDER_CAPSULE      = 24;
   
     COMPONENT_TYPE_BEHAVIOR              = 100;
     COMPONENT_TYPE_CONTROLLER            = 101;
+
 
     // Texture : 200+
     COMPONENT_TYPE_TEXTURE_START         = 200;
@@ -84,6 +91,13 @@ enum OBJECT_TYPE
 
     OBJECT_TYPE_PART_OBJECT             = 14;
     OBJECT_TYPE_PART_WEAPON             = 15; // 무기는 뼈대가 없는 StaticMesdh
+
+    OBJECT_TYPE_SKILL_OBJECT            = 16;
+    OBJECT_TYPE_SKILL_PROJECTILE        = 17;
+
+    // 실제 사용 스킬
+    OBJECT_TYPE_SKILL_RASENGAN          = 18;
+    OBJECT_TYPE_SKILL_RASENSHURIKEN     = 19;
 
     // UI : 100+
     OBJECT_TYPE_UI_TEXT                 = 100;

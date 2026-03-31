@@ -124,7 +124,7 @@ private:
 private: /* Local */
     Vec3    _localPosition = Vec3::Zero;
     Quat    _localRotation = Quat::Identity;
-    Vec3    _localScale    = Vec3::Zero;
+    Vec3    _localScale    = Vec3::One;
 
     Vec3    _localEulerAngles = Vec3::Zero;
 

@@ -56,6 +56,26 @@
             "Level": "Static"
         },
         {
+            "Id": "Skill_Object",
+            "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_Projectile",
+            "ObjectType": "OBJECT_TYPE_SKILL_PROJECTILE",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_Rasengan",
+            "ObjectType": "OBJECT_TYPE_SKILL_RASENGAN",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_RasenShuriken",
+            "ObjectType": "OBJECT_TYPE_SKILL_RASENSHURIKEN",
+            "Level": "Static"
+        },
+        {
             "Id": "Background",
             "ObjectType": "OBJECT_TYPE_BACKGROUND",
             "Level": "Static"

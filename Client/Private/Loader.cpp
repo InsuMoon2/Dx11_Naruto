@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Loader.h"
 #include "Background.h"
 #include "GameInstance.h"
@@ -47,6 +47,8 @@
 
 #include "ComboProfile_Manager.h"
 #include "EquipmentComponent.h"
+
+#include "Collider.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -161,6 +163,22 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<AnimationStateComponent>(staticLevel);
     GAME->Register_ComponentFactory<EquipmentComponent>(staticLevel);
     //GAME->Register_ComponentFactory<Model>(staticLevel);
+
+    auto Register_Collider = [&](Protocol::ComponentID id, EShape shape, const wstring& name)
+        {
+            GAME->Register_ComponentFactory(id, [shape](ComPtr<Device> device, ComPtr<DeviceContext> context)
+                {
+                    return Collider::Create(device, context, shape);
+                },
+                name);
+
+            GAME->Register_ComponentFactory_Prototype(id, staticLevel);
+        };
+
+    Register_Collider(Protocol::COMPONENT_TYPE_COLLIDER_AABB, EShape::AABB, TEXT("Collider_AABB"));
+    Register_Collider(Protocol::COMPONENT_TYPE_COLLIDER_OBB, EShape::OBB, TEXT("Collider_OBB"));
+    Register_Collider(Protocol::COMPONENT_TYPE_COLLIDER_SPHERE, EShape::Sphere, TEXT("Collider_Sphere"));
+    Register_Collider(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, EShape::Capsule, TEXT("Collider_Capsule"));
 
 }
 

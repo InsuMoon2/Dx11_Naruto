@@ -18,6 +18,8 @@
 #include "PartObject.h"
 #include "Reflection_Inspector.h"
 
+#include "AnimNotify_Inspector_Factory.h"
+
 static bool Contains_CaseInsensitive(const string& text, const string& pattern)
 {
     if (pattern.empty())
@@ -933,16 +935,25 @@ void Animation_View::Draw_SelectedNotifyInspector()
         return;
     }
 
-    auto& reflectionINfo = entry.notify->Get_ReflectionInfo();
-    if (reflectionINfo.properties.empty())
+    auto customInspector =
+        EDITOR->Get_NotifyInspector(entry.notify->Get_TypeName());
+
+    if (customInspector)
     {
-        ImGui::TextDisabled("리플렉션된 프로퍼티 XX");
+        customInspector->Draw_Inspector(entry.notify);
         return;
     }
 
-    Reflection_Inspector::Draw_Properties_Only(entry.notify.get(), reflectionINfo);
-    
+    auto& reflectionInfo = entry.notify->Get_ReflectionInfo();
+    if (reflectionInfo.properties.empty())
+    {
+        ImGui::TextDisabled("No editable properties");
+        return;
+    }
+
+    Reflection_Inspector::Draw_Properties_Only(entry.notify.get(), reflectionInfo);
 }
+
 
 void Animation_View::Draw_SelectedStateInspector()
 {

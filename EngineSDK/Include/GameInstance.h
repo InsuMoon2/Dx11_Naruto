@@ -24,6 +24,7 @@ class UI_Manager;
 class Text_Renderer;
 class Animation_Manager;
 class Sound_Manager;
+class Collision_Manager;
 
 class Renderer;
 class PipeLine;
@@ -40,6 +41,8 @@ class Camera;
 class UIObject;
 
 class Animation;
+
+class Collider;
 
 /* Component */
 class Transform;
@@ -82,6 +85,7 @@ public: /* Game State */
 
     void                    Set_EditorRuntime(bool enabled) { _editorRuntime = enabled; }
     bool                    Is_EditorRuntime() const { return _editorRuntime; }
+
 
 public: /* Graphic Device */
     ComPtr<Device>          Get_Device();
@@ -314,6 +318,15 @@ public: /* Sound Manager */
 
     bool                    Has_Sound(const wstring& soundFile) const;
 
+public: /* Collision */
+    void                    Add_Collider(Shared<Collider> collider);
+    void                    Clear_Colliders();
+
+#ifdef _DEBUG
+    void                    Render_Colliders();
+#endif
+
+
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};
 	Unique<Timer_Manager>	        _timerManager   {};
@@ -327,7 +340,8 @@ private: /* Manager */
     Unique<UI_Manager>              _uiManager      {};
     Unique<Text_Renderer>           _textRenderer   {};
     Unique<Animation_Manager>       _animationManager{};
-    Unique<Sound_Manager>           _soundManager{};
+    Unique<Sound_Manager>           _soundManager   {};
+    Unique<Collision_Manager>       _collisionManager{};
 
     Unique<Renderer>                _renderer {};
     Unique<PipeLine>                _pipeLine {};
@@ -352,6 +366,7 @@ private:
 
     float                           _uiReferenceHeight = 1080.f;
     float                           _uiReferenceWidth = 1920.f;
+
 
 public:
 	void Free() override;

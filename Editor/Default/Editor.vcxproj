@@ -221,6 +221,7 @@
     <ClInclude Include="..\Public\AnimNotify_Inspector_Factory.h" />
     <ClInclude Include="..\Public\AnimNotify_Inspector.h" />
     <ClInclude Include="..\Public\AnimSequencerAdapter.h" />
+    <ClInclude Include="..\Public\AN_SpawnSkill_Inspector.h" />
     <ClInclude Include="..\Public\BehaviorTree_Inspector.h" />
     <ClInclude Include="..\Public\BehaviorTree_View.h" />
     <ClInclude Include="..\Public\CameraSequencerAdapter.h" />
@@ -279,6 +280,7 @@
     <ClCompile Include="..\Private\AnimNotify_Inspector_Factory.cpp" />
     <ClCompile Include="..\Private\AnimNotify_Inspector.cpp" />
     <ClCompile Include="..\Private\AnimSequencerAdapter.cpp" />
+    <ClCompile Include="..\Private\AN_SpawnSkill_Inspector.cpp" />
     <ClCompile Include="..\Private\BehaviorTree_Inspector.cpp" />
     <ClCompile Include="..\Private\BehaviorTree_View.cpp" />
     <ClCompile Include="..\Private\CameraSequencerAdapter.cpp" />

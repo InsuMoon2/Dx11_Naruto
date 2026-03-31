@@ -53,6 +53,7 @@ protected:
     Weak<GameObject> _owner;
 
     bool    _isLocal = true;
+    bool    _isCloned = false;
 
 public:
     virtual Shared<Component> Clone(void* arg) abstract;

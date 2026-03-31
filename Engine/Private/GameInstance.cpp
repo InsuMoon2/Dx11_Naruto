@@ -35,6 +35,7 @@
 #pragma push_macro("new")
 #undef new
 #include "Camera.h"
+#include "Collision_Manager.h"
 #include "imgui.h"
 #include "Sound_Manager.h"
 #pragma pop_macro("new")
@@ -127,6 +128,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     _soundManager = Sound_Manager::Create(TEXT("../../Client/Bin/Resources/Sounds"));
     CHECK_NULL(_soundManager, E_FAIL);
 
+    _collisionManager = Collision_Manager::Create();
+    CHECK_NULL(_collisionManager, E_FAIL);
+
     return S_OK;
 }
 
@@ -154,6 +158,8 @@ void GameInstance::Late_Update_Engine(float timeDelta)
     _levelManager->Late_Update(timeDelta);
     _objectManager->Late_Update(timeDelta);
     _uiManager->Late_Update(timeDelta);
+
+    _collisionManager->Update();
 
     EVENT->ProcessEvents();
 }
@@ -825,6 +831,21 @@ bool GameInstance::Has_Sound(const wstring& soundFile) const
     return _soundManager->Has_Sound(soundFile);
 }
 
+void GameInstance::Add_Collider(Shared<Collider> collider)
+{
+    return _collisionManager->Add_Collider(collider);
+}
+
+void GameInstance::Clear_Colliders()
+{
+    return _collisionManager->Clear_Colliders();
+}
+#ifdef _DEBUG
+void GameInstance::Render_Colliders()
+{
+    return _collisionManager->Render_Debug();
+}
+#endif
 Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)
 {
     return _cameraManager->Find_Camera(type);
@@ -854,6 +875,7 @@ void GameInstance::Free()
     _cameraManager.reset();
     _lightManager.reset();
     _soundManager.reset();
+    _collisionManager.reset();
 
     _prefabManager.reset();
     _objectManager.reset(); 

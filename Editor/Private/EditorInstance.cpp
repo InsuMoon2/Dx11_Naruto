@@ -27,7 +27,6 @@ HRESULT EditorInstance::Initialize_Editor(const EDITOR_DESC& desc, ComPtr<Device
     GAME->Set_ImGuiContext(ImGui::GetCurrentContext());
 
     Inspector_Factory::GetInstance()->Initialize();
-    AnimNotify_Inspector_Factory::GetInstance()->Initialize();
 
     _editorManager = Editor_Manager::Create();
     CHECK_NULL(_editorManager, E_FAIL);
@@ -40,6 +39,9 @@ HRESULT EditorInstance::Initialize_Editor(const EDITOR_DESC& desc, ComPtr<Device
 
     _commandHistory = CommandHistory::Create();
     CHECK_NULL(_commandHistory, E_FAIL);
+
+    _animNotifyInspector_Factory = AnimNotify_Inspector_Factory::Create();
+    CHECK_NULL(_animNotifyInspector_Factory, E_FAIL);
 
     ImGui::SetWindowFocus("Game");
 
@@ -168,4 +170,14 @@ void EditorInstance::Redo()
 void EditorInstance::Clear_CommandHistory()
 {
     return _commandHistory->Clear();
+}
+
+Shared<AnimNotify_Inspector> EditorInstance::Get_NotifyInspector(const string& typeName)
+{
+    return _animNotifyInspector_Factory->Get_NotifyInspector(typeName);
+}
+
+Shared<AnimNotifyState_Inspector> EditorInstance::Get_NotifyStateInspector(const string& typeName)
+{
+    return _animNotifyInspector_Factory->Get_NotifyStateInspector(typeName);
 }

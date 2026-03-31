@@ -4,6 +4,7 @@
 
 NS_BEGIN(Engine)
 class Model;
+class Collider;
 NS_END
 
 NS_BEGIN(Client)
@@ -55,6 +56,8 @@ protected:
     Shared<AnimationStateComponent> _animState;
     Shared<Model>                   _model;
     Shared<EquipmentComponent>      _equipment;
+
+    Shared<Collider>                _collider;
 
 protected:
     uint64                          _networkId = 0;

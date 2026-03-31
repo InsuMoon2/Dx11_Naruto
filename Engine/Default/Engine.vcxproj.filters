@@ -274,13 +274,36 @@
     <ClInclude Include="..\Public\Camera_Cinematic.h">
       <Filter>11. Cinematic</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Sound_Manager.h" />
     <ClInclude Include="..\Public\BTTask_SetAnimState.h">
       <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AN_PlaySound.h">
       <Filter>10. Notify</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Collision_Define.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sound_Manager.h">
+      <Filter>95. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collider.h" />
+    <ClInclude Include="..\Public\Bounding.h">
+      <Filter>01. Utility\10. Bouding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding_AABB.h">
+      <Filter>01. Utility\10. Bouding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding_Sphere.h">
+      <Filter>01. Utility\10. Bouding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding_Capsule.h">
+      <Filter>01. Utility\10. Bouding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding_OBB.h">
+      <Filter>01. Utility\10. Bouding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collision_Manager.h" />
+    <ClInclude Include="..\Public\ProjectileComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -463,6 +486,9 @@
     <Filter Include="11. Cinematic">
       <UniqueIdentifier>{9a19d8a6-5997-4e24-a5f2-bd69c1aaaadb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\10. Bouding">
+      <UniqueIdentifier>{4080c360-bf9d-4d93-ae71-dde584ab6947}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -536,9 +562,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Prefab_Manager.cpp">
       <Filter>95. Manager\03. Prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\SimpleMath.cpp">
-      <Filter>01. Utility\98. Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GameObject_Factory.cpp">
       <Filter>01. Utility\98. Utils\00. Factory</Filter>
@@ -696,13 +719,33 @@
     <ClCompile Include="..\Private\Camera_Cinematic.cpp">
       <Filter>11. Cinematic</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Sound_Manager.cpp" />
     <ClCompile Include="..\Private\BTTask_SetAnimState.cpp">
       <Filter>01. Utility\06. Behavior Tree\03. Task Node</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AN_PlaySound.cpp">
       <Filter>10. Notify</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Sound_Manager.cpp">
+      <Filter>95. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider.cpp" />
+    <ClCompile Include="..\Private\Bounding.cpp">
+      <Filter>01. Utility\10. Bouding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_AABB.cpp">
+      <Filter>01. Utility\10. Bouding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_OBB.cpp">
+      <Filter>01. Utility\10. Bouding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_Sphere.cpp">
+      <Filter>01. Utility\10. Bouding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_Capsule.cpp">
+      <Filter>01. Utility\10. Bouding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collision_Manager.cpp" />
+    <ClCompile Include="..\Private\ProjectileComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

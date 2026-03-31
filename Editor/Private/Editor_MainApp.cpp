@@ -194,7 +194,6 @@ void Editor_MainApp::Free()
     Event_Manager::DestroyInstance();
 
     Inspector_Factory::DestroyInstance();
-    AnimNotify_Inspector_Factory::DestroyInstance();
     Customizer_Manager::DestroyInstance();
 
     ComboProfile_Manager::DestroyInstance();

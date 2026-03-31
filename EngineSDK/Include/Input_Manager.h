@@ -20,6 +20,7 @@ enum class KEY_TYPE
 
     TAB     = VK_TAB,
 
+    F1      = VK_F1,
     F8      = VK_F8,
     F9      = VK_F9,
     F11     = VK_F11,

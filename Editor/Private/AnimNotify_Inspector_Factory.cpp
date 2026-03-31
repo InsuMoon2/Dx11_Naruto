@@ -2,18 +2,16 @@
 #include "AnimNotify_Inspector_Factory.h"
 #include "AnimNotify_Factory.h"
 #include "ANS_Test.h"
+#include "AN_SpawnSkill_Inspector.h"
 #include "AN_Test.h"
-
-// 싱글톤일 필요가 있는가?
-IMPLEMENT_SINGLETON(AnimNotify_Inspector_Factory)
 
 void AnimNotify_Inspector_Factory::Initialize()
 {
     _notifyInspectors.clear();
     _notifyStateInspectors.clear();
 
-    //Register_NotifyInspectors();
-    //Register_NotifyStateInspectors();
+    Register_Notifies();
+    Register_NotifyState();
 }
 
 void AnimNotify_Inspector_Factory::Register_NotifyInspector(const string& typeName,
@@ -48,12 +46,19 @@ Shared<AnimNotifyState_Inspector> AnimNotify_Inspector_Factory::Get_NotifyStateI
 
 void AnimNotify_Inspector_Factory::Register_Notifies()
 {
-    AnimNotify_Factory::Register_Notify("AN_Test",
-        []() -> Shared<AnimNotify> { return make_shared<AN_Test>(); });
+    Register_NotifyInspector("AN_SpawnSkill", make_shared<AN_SpawnSkill_Inspector>());
 }
 
 void AnimNotify_Inspector_Factory::Register_NotifyState()
 {
-    AnimNotify_Factory::Register_NotifyState("ANS_Test",
-        []() -> Shared<AnimNotifyState> { return make_shared<ANS_Test>(); });
+    
+}
+
+Unique<AnimNotify_Inspector_Factory> AnimNotify_Inspector_Factory::Create()
+{
+    auto instance = make_unique<AnimNotify_Inspector_Factory>();
+
+    instance->Initialize();
+
+    return instance;
 }

@@ -1,16 +1,21 @@
 <Project>
   <PropertyGroup>
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
+    <VcpkgTriplet>x64-windows-static-md</VcpkgTriplet>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <!-- 루트 폴더의 vcpkg_installed 참조 -->
-      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- 정적 triplet로 설치된 DirectXTK 헤더 참조 -->
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows-static-md\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug_Unity'">MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Release'">MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <!-- 루트 폴더의 vcpkg_installed 참조 -->
-      <AdditionalLibraryDirectories Condition="'$(Configuration)'=='Debug'">$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories Condition="'$(Configuration)'=='Release'">$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <!-- 정적 triplet로 설치된 DirectXTK 라이브러리 참조 -->
+      <AdditionalLibraryDirectories Condition="'$(Configuration)'=='Debug'">$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows-static-md\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)'=='Debug_Unity'">$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows-static-md\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)'=='Release'">$(MSBuildThisFileDirectory)vcpkg_installed\x64-windows-static-md\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

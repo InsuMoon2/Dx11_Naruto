@@ -105,6 +105,80 @@ public:
 NS_END
 ```
 
+### 1-1. [변경] SkillObject.h (메시를 버리고 Collider 반영)
+
+```cpp
+// Client/Public/SkillObject.h
+#pragma once
+
+#include "GameObject.h"
+#include "Collider.h"
+#include "Bounding_Sphere.h"
+#include "Bounding_AABB.h"
+#include "Bounding_OBB.h"
+
+NS_BEGIN(Client)
+
+// 스킬 오브젝트 기반. 
+// 기존 메시 렌더링 구조를 걷어내고, 충돌체(Collider)만을 부착하여
+// 투사체 이동 및 디버그 선형 렌더링을 띄우는 용도입니다.
+class SkillObject : public GameObject
+{
+    GENERATED_BODY(SkillObject)
+
+public:
+    struct FSkillObjectDesc : public FGameObjectDesc
+    {
+        Protocol::ComponentID colliderType = Protocol::COMPONENT_TYPE_COLLIDER_SPHERE; // 소환할 충돌체 모양
+        float   colliderRadius = 1.f;                       // 구체형(Sphere)일 때의 반지름
+        Vec3    colliderExtents = Vec3(0.5f, 0.5f, 0.5f);   // 박스형(AABB, OBB)일 때의 크기(절반)
+
+        Vec3    spawnPosition = Vec3::Zero; // 소환 위치 (월드)
+        Vec3    spawnRotation = Vec3::Zero; // 소환 회전 (오일러)
+        Vec3    scale         = Vec3::One;  // 충돌체 스케일
+        float   lifetime      = 2.f;        // 수명(초). 0이면 수동 파괴 시까지 유지
+        int32   ownerSkillId  = 0;          // 소환한 스킬 ID (디버그/판별용)
+    };
+
+public:
+    explicit SkillObject(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    explicit SkillObject(const SkillObject& rhs);
+    virtual ~SkillObject() = default;
+
+public:
+    HRESULT Initialize_Prototype() override;
+    HRESULT Initialize(void* arg) override;
+    void    Priority_Update(float timeDelta) override;
+    void    Update(float timeDelta) override;
+    void    Late_Update(float timeDelta) override;
+    // HRESULT Render() override; // ❌ 더 이상 메시 연산하지 않으므로 무시
+
+// public:
+    // bool    Is_Expired() const { return _isExpired; }      // ❌ GameObject의 Is_Destroy 활용
+    // void    Force_Expire();                                // ❌ GameObject의 Set_Destroy(true) 활용
+
+protected:
+    // 모델 스폰 대신 충돌체를 생성해서 붙임
+    HRESULT Ready_Components(const FSkillObjectDesc& desc);
+
+protected:
+    Shared<Collider> _collider; // 핵심: 메시(_model) 대신 _collider를 들고 있음!
+
+    float   _lifetime = 2.f;
+    float   _elapsedTime = 0.f;
+    // bool    _isExpired = false; // ❌ 삭제: 부모(GameObject)의 플래그를 그대로 사용!!
+
+    int32   _ownerSkillId = 0;
+
+public:
+    static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    Shared<GameObject> Clone(void* arg) override;
+    void Free() override;
+};
+
+NS_END
+```
+
 ### 1-2. [NEW] SkillObject.cpp
 
 ```cpp
@@ -144,7 +218,6 @@ HRESULT SkillObject::Initialize(void* arg)
     _lifetime = desc->lifetime;
     _ownerSkillId = desc->ownerSkillId;
     _elapsedTime = 0.f;
-    _isExpired = false;
 
     CHECK_FAILED(Ready_Components(desc->modelAssetTag), E_FAIL);
 
@@ -298,6 +371,156 @@ void SkillObject::Free()
 }
 ```
 
+### 1-2. [변경] SkillObject.cpp (메시 렌더링 삭제 및 Collider 연동 반영)
+
+```cpp
+// Client/Private/SkillObject.cpp
+#include "pch.h"
+#include "SkillObject.h"
+#include "Transform.h"
+#include "GameObject_Factory.h"
+#include "GameInstance.h"
+
+REGISTER_GAMEOBJECT(SkillObject, Protocol::OBJECT_TYPE_SKILL_OBJECT)
+
+SkillObject::SkillObject(ComPtr<Device> device, ComPtr<DeviceContext> context)
+    : GameObject(device, context)
+{
+}
+
+SkillObject::SkillObject(const SkillObject& rhs)
+    : GameObject(rhs)
+{
+}
+
+HRESULT SkillObject::Initialize_Prototype()
+{
+    return GameObject::Initialize_Prototype();
+}
+
+HRESULT SkillObject::Initialize(void* arg)
+{
+    CHECK_FAILED(GameObject::Initialize(arg), E_FAIL);
+
+    auto* desc = static_cast<FSkillObjectDesc*>(arg);
+    if (!desc)
+        return E_FAIL;
+
+    _lifetime = desc->lifetime;
+    _ownerSkillId = desc->ownerSkillId;
+    _elapsedTime = 0.f;
+
+    // Transform 세팅
+    if (_transformCom)
+    {
+        _transformCom->Set_LocalPosition(desc->spawnPosition);
+        _transformCom->Set_LocalRotation(desc->spawnRotation.x,
+                                          desc->spawnRotation.y,
+                                          desc->spawnRotation.z);
+        _transformCom->Set_LocalScale(desc->scale);
+    }
+
+    // 콜라이더 생성 및 초기화
+    CHECK_FAILED(Ready_Components(*desc), E_FAIL);
+
+    return S_OK;
+}
+
+void SkillObject::Priority_Update(float timeDelta)
+{
+    GameObject::Priority_Update(timeDelta);
+}
+
+void SkillObject::Update(float timeDelta)
+{
+    GameObject::Update(timeDelta);
+
+    // 수명 체크
+    if (_lifetime > 0.f)
+    {
+        _elapsedTime += timeDelta;
+        if (_elapsedTime >= _lifetime)
+        {
+            Set_Destroy(true); // 부모(_isDestroyed)를 true로 전환
+        }
+    }
+}
+
+void SkillObject::Late_Update(float timeDelta)
+{
+    GameObject::Late_Update(timeDelta);
+
+    if (!Is_Destroy() && _collider)
+    {
+        // 매 프레임 위치/회전 상태만 콜라이더에 동기화
+        _collider->Update(_transformCom->Get_WorldMatrix());
+    }
+}
+
+HRESULT SkillObject::Ready_Components(const FSkillObjectDesc& desc)
+{
+    CHECK_FAILED(Add_Component(desc.colliderType, _collider), E_FAIL);
+
+    if (desc.colliderType == Protocol::COMPONENT_TYPE_COLLIDER_SPHERE)
+    {
+        Bounding_Sphere::FBoundingSphereDesc sphereDesc;
+        sphereDesc.radius = desc.colliderRadius;
+        _collider->Initialize(&sphereDesc);
+    }
+    else if (desc.colliderType == Protocol::COMPONENT_TYPE_COLLIDER_AABB)
+    {
+        Bounding_AABB::FBoundingAABBDesc boxDesc;
+        boxDesc.extents = desc.colliderExtents;
+        _collider->Initialize(&boxDesc);
+    }
+    else if (desc.colliderType == Protocol::COMPONENT_TYPE_COLLIDER_OBB)
+    {
+        Bounding_OBB::FBoundingOBBDesc boxDesc;
+        boxDesc.extents = desc.colliderExtents;
+        boxDesc.rotation = desc.spawnRotation; // OBB는 회전 초기값도 지정 가능
+        _collider->Initialize(&boxDesc);
+    }
+
+    // 🌟 핵심: 콜라이더를 생성할 때 충돌 매니저에 단 1번만 등록합니다!
+    // (매니저가 weak_ptr로 들고 있으므로 오브젝트가 죽으면 자동으로 수거됨)
+    GAME->Add_Collider(_collider);
+
+    return S_OK;
+}
+
+Shared<GameObject> SkillObject::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+{
+    auto instance = make_shared<SkillObject>(device, context);
+
+    if (FAILED(instance->Initialize_Prototype()))
+    {
+        MSG_BOX("Failed to Create : SkillObject");
+        return nullptr;
+    }
+
+    return instance;
+}
+
+Shared<GameObject> SkillObject::Clone(void* arg)
+{
+    auto clone = make_shared<SkillObject>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
+    {
+        MSG_BOX("Failed to Clone : SkillObject");
+        return nullptr;
+    }
+
+    return clone;
+}
+
+void SkillObject::Free()
+{
+    GameObject::Free();
+}
+```
+```
+
 ---
 
 ## 2. 투사체 컴포넌트: ProjectileComponent (Engine)
@@ -370,6 +593,74 @@ private:
     float   _traveledDistance = 0.f;    // 누적 이동 거리
     float   _elapsedTime = 0.f;         // 경과 시간
     bool    _isExpired = false;         // 사거리/수명 만료 여부
+
+    Vec3    _velocity = Vec3::Zero;     // 현재 속도 벡터 (중력 포함)
+
+public:
+    static Shared<ProjectileComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    Shared<Component> Clone(void* arg) override;
+    void Free() override;
+};
+
+NS_END
+```
+
+### 2-1. [변경] ProjectileComponent.h (별도 파괴 변수 제거)
+
+```cpp
+// Engine/Public/ProjectileComponent.h  (또는 Client/Public/)
+#pragma once
+
+#include "Component.h"
+
+NS_BEGIN(Engine)
+
+// 게임 오브젝트를 직선 방향으로 이동시키는 투사체 컴포넌트.
+// 소유 오브젝트의 Transform을 매 프레임 방향 * 속도 만큼 이동시킨다.
+// 최대 사거리(maxDistance) 또는 최대 수명(maxLifetime) 도달 시
+// "소유자(owner)"를 즉시 파괴한다.
+class ENGINE_DLL ProjectileComponent : public Component
+{
+    GENERATED_COMPONENT(ProjectileComponent, Protocol::COMPONENT_TYPE_PROJECTILE)
+
+public:
+    struct FProjectileDesc
+    {
+        Vec3    direction = Vec3::Forward;  // 투사체 이동 방향 (정규화 필수)
+        float   speed = 20.f;              // 이동 속도 (units/sec)
+        float   maxDistance = 50.f;         // 최대 사거리. 0이면 무한
+        float   maxLifetime = 5.f;         // 최대 수명(초). 0이면 무한
+        bool    useGravity = false;        // 중력 영향 여부 (포물선 궤적용)
+        float   gravityScale = 9.8f;       // 중력 가속도 스케일
+    };
+
+public:
+    explicit ProjectileComponent(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    explicit ProjectileComponent(const ProjectileComponent& rhs);
+    virtual ~ProjectileComponent() = default;
+
+public:
+    HRESULT Initialize_Prototype() override;
+    HRESULT Initialize(void* arg) override;
+    void    BeginPlay() override;
+    void    Update_Projectile(float timeDelta);
+
+public:
+    // 지금까지 이동한 총 거리
+    float   Get_TraveledDistance() const { return _traveledDistance; }
+
+    // ❌ bool Is_Expired() const 삭제 (Get_Owner()->Is_Destroy() 로 체크 가능하므로 제거)
+
+    void    Set_Direction(const Vec3& dir);
+    void    Set_Speed(float speed) { _desc.speed = speed; }
+    void    Setup(const FProjectileDesc& desc);
+
+private:
+    FProjectileDesc _desc;
+
+    float   _traveledDistance = 0.f;    // 누적 이동 거리
+    float   _elapsedTime = 0.f;         // 경과 시간
+    // ❌ bool _isExpired = false; 삭제 // 사거리/수명 만료 여부
 
     Vec3    _velocity = Vec3::Zero;     // 현재 속도 벡터 (중력 포함)
 
@@ -528,6 +819,150 @@ void ProjectileComponent::Free()
 }
 ```
 
+### 2-2. [변경] ProjectileComponent.cpp (수명/거리 만료 시 부모 파괴 플래그만 세팅)
+
+```cpp
+// Engine/Private/ProjectileComponent.cpp  (또는 Client/Private/)
+#include "pch.h"
+#include "ProjectileComponent.h"
+#include "Transform.h"
+#include "GameObject.h"
+
+ProjectileComponent::ProjectileComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
+    : Component(device, context)
+{
+}
+
+ProjectileComponent::ProjectileComponent(const ProjectileComponent& rhs)
+    : Component(rhs)
+    , _desc(rhs._desc)
+{
+}
+
+HRESULT ProjectileComponent::Initialize_Prototype()
+{
+    return Component::Initialize_Prototype();
+}
+
+HRESULT ProjectileComponent::Initialize(void* arg)
+{
+    Component::Initialize(arg);
+
+    if (arg)
+    {
+        auto* desc = static_cast<FProjectileDesc*>(arg);
+        _desc = *desc;
+    }
+
+    return S_OK;
+}
+
+void ProjectileComponent::BeginPlay()
+{
+    Component::BeginPlay();
+
+    _traveledDistance = 0.f;
+    _elapsedTime = 0.f;
+    // _isExpired = false; 삭제
+
+    // 초기 속도 = 방향 * 스피드
+    Vec3 dir = _desc.direction;
+    dir.Normalize();
+    _velocity = dir * _desc.speed;
+}
+
+void ProjectileComponent::Update_Projectile(float timeDelta)
+{
+    auto owner = Get_Owner();
+    if (!owner)
+        return;
+
+    // 만료된 투사체면 이동하지 않음 (GameObject의 Is_Destroy 활용)
+    if (owner->Is_Destroy()) // 매니저에 따라 Is_Dead() 등일 수 있습니다
+        return;
+
+    auto transform = owner->Get_Transform();
+    if (!transform)
+        return;
+
+    // 중력 적용
+    if (_desc.useGravity)
+    {
+        _velocity.y -= _desc.gravityScale * timeDelta;
+    }
+
+    // 이동량 계산
+    Vec3 displacement = _velocity * timeDelta;
+    float frameDistance = displacement.Length();
+
+    // 위치 갱신
+    Vec3 currentPos = transform->Get_LocalPosition();
+    transform->Set_LocalPosition(currentPos + displacement);
+
+    // 누적
+    _traveledDistance += frameDistance;
+    _elapsedTime += timeDelta;
+
+    // 만료 체크 (부모만 Set_Destroy 시키면 끝납니다)
+    if (_desc.maxDistance > 0.f && _traveledDistance >= _desc.maxDistance)
+    {
+        owner->Set_Destroy(true);
+    }
+    else if (_desc.maxLifetime > 0.f && _elapsedTime >= _desc.maxLifetime)
+    {
+        owner->Set_Destroy(true);
+    }
+}
+
+void ProjectileComponent::Set_Direction(const Vec3& dir)
+{
+    _desc.direction = dir;
+    Vec3 normalized = dir;
+    normalized.Normalize();
+    _velocity = normalized * _desc.speed;
+}
+
+void ProjectileComponent::Setup(const FProjectileDesc& desc)
+{
+    _desc = desc;
+
+    Vec3 dir = _desc.direction;
+    dir.Normalize();
+    _velocity = dir * _desc.speed;
+}
+
+Shared<ProjectileComponent> ProjectileComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+{
+    auto instance = make_shared<ProjectileComponent>(device, context);
+
+    if (FAILED(instance->Initialize_Prototype()))
+    {
+        MSG_BOX("Failed to Create : ProjectileComponent");
+        return nullptr;
+    }
+
+    return instance;
+}
+
+Shared<Component> ProjectileComponent::Clone(void* arg)
+{
+    auto clone = make_shared<ProjectileComponent>(*this);
+
+    if (FAILED(clone->Initialize(arg)))
+    {
+        MSG_BOX("Failed to Clone : ProjectileComponent");
+        return nullptr;
+    }
+
+    return clone;
+}
+
+void ProjectileComponent::Free()
+{
+    Component::Free();
+}
+```
+
 ---
 
 ## 3. 투사체형 스킬 오브젝트: SkillObject_Projectile (Client)
@@ -621,27 +1056,16 @@ HRESULT SkillObject_Projectile::Initialize(void* arg)
     if (!desc)
         return E_FAIL;
 
-    // ProjectileComponent 생성 및 세팅
-    // 엔진에 프로토타입이 등록되어 있다면 Add_Component로,
-    // 아니면 직접 생성 후 Add_Component(id, component)로 붙인다.
-    auto device = _device;
-    auto context = _context;
-
-    _projectile = ProjectileComponent::Create(device, context);
-    if (!_projectile)
-        return E_FAIL;
-
+    // ProjectileComponent 프로토타입 클론 및 세팅
     ProjectileComponent::FProjectileDesc projDesc;
     projDesc.direction    = desc->direction;
     projDesc.speed        = desc->speed;
-    projDesc.maxDistance   = desc->maxDistance;
+    projDesc.maxDistance  = desc->maxDistance;
     projDesc.maxLifetime  = desc->lifetime;       // SkillObject의 lifetime과 공유
     projDesc.useGravity   = desc->useGravity;
 
-    _projectile->Setup(projDesc);
-
-    // 컴포넌트를 오브젝트에 등록
-    Add_Component(Protocol::COMPONENT_TYPE_PROJECTILE, _projectile);
+    // 🌟 핵심: 엔진 표준 패턴인 Add_Component로 프로토타입 복제!
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PROJECTILE, _projectile, &projDesc), E_FAIL);
 
     return S_OK;
 }
@@ -736,6 +1160,40 @@ void Spawn_InstantSkillObject(GameObject* owner, int32 skillId)
 }
 ```
 
+### A. [변경] 즉시 소환형 (모델 대신 구체 충돌체를 이용한 예시)
+
+```cpp
+// PlayerState_Skill이나 AnimNotify에서 호출
+void Spawn_InstantSkillObject(GameObject* owner, int32 skillId)
+{
+    auto transform = owner->Get_Transform();
+    Vec3 forwardPos = transform->Get_LocalPosition()
+                    + transform->Get_WorldForward() * 2.f;  // 앞 2m 위치
+
+    SkillObject::FSkillObjectDesc desc;
+    
+    // 모델 태그 대신 콜라이더 세부 설정
+    desc.colliderType   = Protocol::COMPONENT_TYPE_COLLIDER_SPHERE;
+    desc.colliderRadius = 1.0f; // 구체의 반지름
+    
+    desc.spawnPosition = forwardPos;
+    desc.spawnRotation = Vec3::Zero;
+    desc.scale         = Vec3(1.f, 1.f, 1.f);
+    desc.lifetime      = 1.5f;                   // 1.5초 후 충돌체가 자동 파괴(수거)됨
+    desc.ownerSkillId  = skillId;
+
+    uint32 levelIndex = GAME->Current_Level();
+
+    GAME->Clone_And_Add_GameObject(
+        levelIndex,                              
+        Protocol::OBJECT_TYPE_SKILL_OBJECT,      
+        levelIndex,                              
+        L"Layer_SkillObject",                    
+        &desc);
+}
+```
+```
+
 ### B. 투사체형 (라센수리검 던지기 같은)
 
 ```cpp
@@ -760,6 +1218,49 @@ void Spawn_ProjectileSkillObject(GameObject* owner, int32 skillId)
     desc.direction     = direction;                // 플레이어 정면 방향
     desc.speed         = 25.f;                     // 초속 25
     desc.maxDistance    = 40.f;                     // 최대 40m
+    desc.useGravity    = false;                    // 직선 비행
+
+    uint32 levelIndex = GAME->Current_Level();
+
+    GAME->Clone_And_Add_GameObject(
+        levelIndex,
+        Protocol::OBJECT_TYPE_SKILL_PROJECTILE,
+        levelIndex,
+        L"Layer_SkillObject",
+        &desc);
+}
+```
+
+### B. [변경] 투사체형 (메시 대신 날아가는 콜라이더 OBB 박스 예시)
+
+```cpp
+void Spawn_ProjectileSkillObject(GameObject* owner, int32 skillId)
+{
+    auto transform = owner->Get_Transform();
+    Vec3 spawnPos = transform->Get_LocalPosition()
+                  + transform->Get_WorldForward() * 1.f   // 앞 1m
+                  + Vec3(0.f, 1.f, 0.f);                  // 허리 높이
+
+    Vec3 direction = transform->Get_WorldForward();
+    direction.y = 0.f;
+    direction.Normalize();
+
+    SkillObject_Projectile::FProjectileSkillDesc desc;
+    
+    // 모델 대신 날아가는 OBB 박스를 사용해봅니다.
+    desc.colliderType    = Protocol::COMPONENT_TYPE_COLLIDER_OBB;
+    desc.colliderExtents = Vec3(0.5f, 0.5f, 1.0f); // 충돌체 폭 / 높이 / 깊이 절반 크기
+    
+    desc.spawnPosition = spawnPos;
+    // OBB의 경우 Rotation값을 주면 상자가 처음부터 회전된 상태로 투사될 수 있습니다.
+    desc.spawnRotation = Vec3::Zero;
+    desc.scale         = Vec3(1.f, 1.f, 1.f);
+    
+    desc.lifetime      = 3.f;                     // 3초 수명
+    desc.ownerSkillId  = skillId;
+    desc.direction     = direction;                // 플레이어 정면 방향
+    desc.speed         = 25.f;                     // 초속 25
+    desc.maxDistance   = 40.f;                     // 최대 40m
     desc.useGravity    = false;                    // 직선 비행
 
     uint32 levelIndex = GAME->Current_Level();

@@ -149,6 +149,7 @@ void Texture::From_Json(const json& data)
         _numSRVs = newCount;
 
         _SRVs.clear();
+
         Initialize_Prototype(_texturePath, _numSRVs);
     }
 }

@@ -5,7 +5,7 @@
             "SkillName": "Rasengan",
             "Cooldown": 8,
             "AnimStateName": "Skill_Rasengan",
-            "LoopDurationSec": 3,
+            "LoopDurationSec": 0.5,
             "IsHoldSkill": false
         },
         {
@@ -13,28 +13,28 @@
             "SkillName": "Rasen_Shuriken",
             "Cooldown": 7,
             "AnimStateName": "Skill_RasenShuriken",
-            "LoopDurationSec": 5,
+            "LoopDurationSec": 5.0,
             "IsHoldSkill": true
         },
         {
             "SkillID": 1003,
             "SkillName": "Fireball",
             "Cooldown": 5,
-            "LoopDurationSec": 1,
+            "LoopDurationSec": 1.0,
             "IsHoldSkill": false
         },
         {
             "SkillID": 1004,
             "SkillName": "Chidori",
             "Cooldown": 4,
-            "LoopDurationSec": 1,
+            "LoopDurationSec": 1.0,
             "IsHoldSkill": true
         },
         {
             "SkillID": 1005,
             "SkillName": "Big_Rasengan",
             "Cooldown": 5,
-            "LoopDurationSec": 1,
+            "LoopDurationSec": 1.0,
             "IsHoldSkill": false
         }
     ]
