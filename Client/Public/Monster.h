@@ -5,6 +5,7 @@
 NS_BEGIN(Engine)
 class BehaviorTree;
 class Model;
+class Collider;
 NS_END
 
 NS_BEGIN(Client)
@@ -34,6 +35,8 @@ public:
 
     HRESULT Bind_Lights() override;
 
+    void OnBeginOverlap(Shared<Collider> other) override;
+
 public:
     json    To_Json() const override;
     void    From_Json(const json& data) override;
@@ -50,6 +53,9 @@ private:
     Shared<AIController>            _aiController;
     Shared<BehaviorTree>            _behavior;
     Shared<AnimationStateComponent> _animState;
+
+    Shared<Collider> _collider;
+
 
     float _test = 10.f;
 

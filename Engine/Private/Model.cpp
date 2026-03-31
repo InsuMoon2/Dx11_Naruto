@@ -44,6 +44,7 @@ Model::Model(const Model& rhs)
     , _isAnimNotifyAssetLoaded(false)
     , _animNotifyAsset{}
     , _activeNotifyStates{}
+    , _enableNotifies(true)
 {
     _blendState.duration = _animationBlendDuration;
 
@@ -220,7 +221,7 @@ int32 Model::Find_AnimationIndex_ByName(const string& animName)
 
     return -1;
 }
-
+// 기존 호환용으로 냅두기
 bool Model::Play_Animation(float timeDelta)
 {
     return Play_Animation(timeDelta, true);
@@ -228,6 +229,8 @@ bool Model::Play_Animation(float timeDelta)
 
 bool Model::Play_Animation(float timeDelta, bool executeNotifies)
 {
+    executeNotifies = executeNotifies && _enableNotifies;
+
     if (!_currentClip.Is_Valid())
     {
         Stop_AllNotifyStates(executeNotifies);

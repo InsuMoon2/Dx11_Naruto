@@ -47,6 +47,7 @@
 
 #include "ComboProfile_Manager.h"
 #include "EquipmentComponent.h"
+#include "ProjectileComponent.h"
 
 #include "Collider.h"
 
@@ -162,6 +163,8 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<SkillComponent>(staticLevel);
     GAME->Register_ComponentFactory<AnimationStateComponent>(staticLevel);
     GAME->Register_ComponentFactory<EquipmentComponent>(staticLevel);
+    GAME->Register_ComponentFactory<ProjectileComponent>(staticLevel);
+
     //GAME->Register_ComponentFactory<Model>(staticLevel);
 
     auto Register_Collider = [&](Protocol::ComponentID id, EShape shape, const wstring& name)

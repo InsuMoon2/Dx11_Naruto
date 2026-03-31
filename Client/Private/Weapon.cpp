@@ -3,6 +3,8 @@
 #include "Model.h"
 #include "Shader.h"
 #include "GameObject_Factory.h"
+#include "Bounding_Capsule.h"
+#include "Collider.h"
 
 REGISTER_GAMEOBJECT(Weapon, Protocol::OBJECT_TYPE_PART_WEAPON)
 
@@ -82,6 +84,9 @@ void Weapon::Late_Update(float timeDelta)
 {
     PartObject::Late_Update(timeDelta);
 
+    if (_collider)
+        _collider->Update_Collider(_combinedWorldMatrix);
+
     GAME->Add_RenderGroup(ERenderGroup::NonBlend, this->GetSharedPtr());
 }
 
@@ -115,6 +120,15 @@ HRESULT Weapon::Ready_Components(const wstring& modelAssetTag)
         uint32 modelKey = static_cast<uint32>(std::hash<string>{}(tagStr));
         CHECK_FAILED(Add_Component(modelKey, _model), E_FAIL);
     }
+
+    // 충돌체 추가
+    Bounding_Capsule::FBoundingCapsuleDesc capsuleDesc{};
+    capsuleDesc.radius = 0.5f;
+    capsuleDesc.halfHeight = 0.3f;
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, _collider, &capsuleDesc), E_FAIL);
+    _collider->Set_CollisionPreset(Collision_Preset::Player_Attack);
+    GAME->Add_Collider(_collider);
 
     return S_OK;
 }

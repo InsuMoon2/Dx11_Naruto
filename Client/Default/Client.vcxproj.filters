@@ -204,6 +204,7 @@
     <ClInclude Include="..\Public\SkillObject_Projectile.h" />
     <ClInclude Include="..\Public\AN_SpawnSkill.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
+    <ClInclude Include="..\Public\Skill_Rasengan.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -391,6 +392,7 @@
     <ClCompile Include="..\Private\SkillObject_Projectile.cpp" />
     <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
+    <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

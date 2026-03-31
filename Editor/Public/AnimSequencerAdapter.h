@@ -7,8 +7,8 @@ NS_BEGIN(Engine)
 struct FAnimNotifyClipData;
 struct FAnimNotifyEventEntry;
 struct FAnimNotifyStateEntry;
-class AnimNotify;
-class AnimNotifyState;
+class  AnimNotifyState;
+class  AnimNotify;
 NS_END
 
 NS_BEGIN(Editor)

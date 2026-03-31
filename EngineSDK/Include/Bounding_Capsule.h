@@ -26,6 +26,11 @@ public:
 
     BoundingOrientedBox Get_ProxyOBB() const;
 
+public:
+    Vec3& Get_LocalCenter() { return _localCenter; }
+    float& Get_OriginRadius() { return _originRadius; }
+    float& Get_OriginHalfHeight() { return _originHalfHeight; }
+
 #ifdef _DEBUG
     HRESULT Render_Debug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch, Color color) override;
 #endif

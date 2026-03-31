@@ -220,9 +220,21 @@ void Animation_View::Pre_Render()
     bool wasEnableInput = GAME->Is_GameInputEnabled();
     GAME->Set_GameInputEnabled(false);
 
+    bool wasEnableNotifies = true;
+    if (_model)
+    {
+        wasEnableNotifies = _model->Is_EnableNotifies();
+        _model->Set_EnableNotifies(false);
+    }
+
     _previewOwner->Priority_Update(0.f);
     _previewOwner->Update(0.f);
     _previewOwner->Late_Update(0.f);
+
+    if (_model)
+    {
+        _model->Set_EnableNotifies(wasEnableNotifies);
+    }
 
     GAME->Set_GameInputEnabled(wasEnableInput);
 

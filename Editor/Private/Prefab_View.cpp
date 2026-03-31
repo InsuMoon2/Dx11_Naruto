@@ -245,6 +245,15 @@ void Prefab_View::Pre_Render()
     GAME->Set_Transform(ETransformState::View, _previewView);
     GAME->Set_Transform(ETransformState::Proj, _previewProj);
 
+    auto model = Find_PreviewModel();
+    bool wasEnableNotifies = true;
+
+    if (model)
+    {
+        wasEnableNotifies = model->Is_EnableNotifies();
+        model->Set_EnableNotifies(false);
+    }
+
     FLightDesc savedLight{};
     bool hasSavedLight = false;
 
@@ -271,6 +280,11 @@ void Prefab_View::Pre_Render()
     _previewObject->Priority_Update(dt);
     _previewObject->Update(dt);
     _previewObject->Late_Update(dt);
+
+    if (model)
+    {
+        model->Set_EnableNotifies(wasEnableNotifies);
+    }
 
     GAME->Set_GameInputEnabled(wasEnableInput);
 
@@ -802,11 +816,26 @@ void Prefab_View::Draw_PartObjectInspector()
 
     Inspector::Draw_Component(Transform::StaticTypeID(), transform);
 
+    for (auto& [id, comp] : part->Get_Components())
+    {
+        // Transform은 방금 위에서 고정으로 그렸으므로 스킵 처리
+        if (id == Transform::StaticTypeID() || !comp)
+            continue;
+
+        if (Inspector_Factory::GetInstance()->Get_Inspector(id) ||
+            Inspector_Factory::GetInstance()->Get_Inspector_ByType(comp))
+        {
+            ImGui::Spacing();
+            ImGui::PushID(id);  
+            Inspector::Draw_Component(id, comp);
+            ImGui::PopID();
+        }
+    }
+
     MarkDirty();
 
     ImGui::Spacing();
 
-    // 위치 초기화 버튼
     if (ImGui::Button("Reset Local Transform", ImVec2(-1.f, 28.f)))
     {
         transform->Set_LocalPosition(Vec3::Zero);

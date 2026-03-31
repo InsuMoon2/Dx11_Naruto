@@ -2,6 +2,7 @@
 #include "SkillObject_Projectile.h"
 #include "ProjectileComponent.h"
 #include "GameObject_Factory.h"
+#include "Collider.h"
 
 REGISTER_GAMEOBJECT(SkillObject_Projectile, Protocol::OBJECT_TYPE_SKILL_PROJECTILE)
 
@@ -48,6 +49,26 @@ void SkillObject_Projectile::Update(float timeDelta)
 
     // 이후 라이프타임 체크
     SkillObject::Update(timeDelta);
+}
+
+void SkillObject_Projectile::OnBeginOverlap(Shared<Collider> other)
+{
+    SkillObject::OnBeginOverlap(other);
+
+    if (!other || Is_Destroy())
+        return;
+
+    // TEMP : 바꿔야한다.
+    auto otherOwner = other->Get_Owner();
+    if (!otherOwner)
+        return;
+
+    const auto objectType = otherOwner->Get_ObjectType();
+
+    if (objectType == Protocol::OBJECT_TYPE_MONSTER)
+    {
+        Set_Destroy(true);
+    }
 }
 
 Shared<GameObject> SkillObject_Projectile::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

@@ -42,6 +42,8 @@ void Layer::Late_Update(float timeDelta)
     {
         gameObject->Late_Update(timeDelta);
     }
+
+    Cleanup_DestroyedObjects();
 }
 
 void Layer::Delete_GameObject(shared_ptr<GameObject> gameObject)
@@ -50,6 +52,17 @@ void Layer::Delete_GameObject(shared_ptr<GameObject> gameObject)
 
     if (iter != _gameObjects.end())
         _gameObjects.erase(iter);
+}
+
+void Layer::Cleanup_DestroyedObjects()
+{
+    _gameObjects.erase(
+        remove_if(_gameObjects.begin(), _gameObjects.end(),
+            [](const shared_ptr<GameObject>& gameObject)
+            {
+                return !gameObject || gameObject->Is_Destroy();
+            }),
+        _gameObjects.end());
 }
 
 shared_ptr<Layer> Layer::Create()

@@ -23,6 +23,8 @@ public:
 public:
     void Delete_GameObject(shared_ptr<GameObject> gameObject);
 
+    void Cleanup_DestroyedObjects();
+
 private:
     list<shared_ptr<GameObject>> _gameObjects;
 

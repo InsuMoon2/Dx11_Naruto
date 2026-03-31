@@ -23,6 +23,7 @@ public:
     bool    Intersect(Bounding* otherBounding) override;
 
     EShape  Get_Shape() const override { return EShape::OBB; }
+    BoundingOrientedBox& Get_OriginOBB() { return _originalOBB; }
 
     const BoundingOrientedBox& Get_OBB() const { return _obb; }
 

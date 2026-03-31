@@ -313,6 +313,12 @@
                     "time_sec": 1.0666667222976685,
                     "track_index": 0,
                     "type": "AN_SpawnSkill"
+                },
+                {
+                    "payload": {},
+                    "time_sec": 1.0333333015441895,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -324,6 +330,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         }

@@ -197,6 +197,7 @@
     <ClInclude Include="..\Public\CameraSequencerAdapter.h" />
     <ClInclude Include="..\Public\Skill_Inspector.h" />
     <ClInclude Include="..\Public\AN_SpawnSkill_Inspector.h" />
+    <ClInclude Include="..\Public\Collider_Inspector.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -347,6 +348,7 @@
     <ClCompile Include="..\Private\CameraSequencerAdapter.cpp" />
     <ClCompile Include="..\Private\Skill_Inspector.cpp" />
     <ClCompile Include="..\Private\AN_SpawnSkill_Inspector.cpp" />
+    <ClCompile Include="..\Private\Collider_Inspector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

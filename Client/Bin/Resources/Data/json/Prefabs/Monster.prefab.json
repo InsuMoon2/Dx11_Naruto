@@ -19,14 +19,15 @@
             "type": "COMPONENT_TYPE_TRANSFORM"
         },
         {
+            "type": "COMPONENT_TYPE_COLLIDER"
+        },
+        {
             "bt_guid": "ba360ec8-2caa-415f-89d8-0ddcbc10797c",
             "type": "COMPONENT_TYPE_BEHAVIOR"
         },
         {
             "animations": [
-                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop",
-                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_Loop",
-                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_End"
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop"
             ],
             "materials": [
                 {
@@ -48,7 +49,7 @@
                     }
                 }
             ],
-            "model_guid": "396d55ff-515e-41e6-9e02-2fcdd7698e57",
+            "model_guid": "6b9eee4c-928a-4015-9759-b29753246960",
             "model_type": "SkeletalMesh",
             "type": "COMPONENT_TYPE_MODEL"
         },
@@ -180,7 +181,7 @@
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
         }
     ],
-    "guid": "90810056-96e2-424e-be4d-f9c5d2c95858",
+    "guid": "7f30fb95-ef7a-4b8c-8568-657460130eac",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster",
     "static_class": "Monster"

@@ -19,6 +19,9 @@
             "type": "COMPONENT_TYPE_TRANSFORM"
         },
         {
+            "type": "COMPONENT_TYPE_COLLIDER"
+        },
+        {
             "Attack": 100.0,
             "Defense": 5.0,
             "HP": 100.0,
@@ -63,52 +66,6 @@
                 {
                     "directional": {
                         "backward": {
-                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Behind",
-                            "loop": false,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Front",
-                            "loop": false,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Run_Left",
-                            "loop": false,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Run_Right",
-                            "loop": false,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "key": "HeightLand",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_HeightLand",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
                             "animationName": "",
                             "loop": true,
                             "playRate": 1.0
@@ -143,6 +100,52 @@
                     "mode": "Single",
                     "single": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_Idle_Loop",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Behind",
+                            "loop": false,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Front",
+                            "loop": false,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Run_Left",
+                            "loop": false,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_Dodge_Run_Right",
+                            "loop": false,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "HeightLand",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_HeightLand",
                         "loop": false,
                         "playRate": 1.0
                     },
@@ -222,6 +225,52 @@
                         }
                     },
                     "end": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_End",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "key": "Dash",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_DashStep_Front",
+                        "loop": false,
+                        "playRate": 1.7999999523162842
+                    },
+                    "start": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_DashStep_Front",
+                        "loop": false,
+                        "playRate": 1.399999976158142
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_Land",
                         "loop": false,
                         "playRate": 1.0
@@ -268,26 +317,26 @@
                         }
                     },
                     "end": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_End",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Land",
                         "loop": false,
                         "playRate": 1.0
                     },
-                    "key": "Dash",
+                    "key": "DoubleJump",
                     "loopClip": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Loop",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
+                        "loop": true,
+                        "playRate": 1.5
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_DashStep_Front",
-                        "loop": false,
-                        "playRate": 1.7999999523162842
-                    },
                     "start": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_DashStep_Front",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_DoubleJump",
                         "loop": false,
-                        "playRate": 1.399999976158142
+                        "playRate": 3.0
                     }
                 },
                 {
@@ -380,52 +429,6 @@
                         "animationName": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_Start",
                         "loop": false,
                         "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Land",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "key": "DoubleJump",
-                    "loopClip": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
-                        "loop": true,
-                        "playRate": 1.5
-                    },
-                    "mode": "Sequence",
-                    "single": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_DoubleJump",
-                        "loop": false,
-                        "playRate": 3.0
                     }
                 },
                 {
@@ -636,26 +639,26 @@
                         }
                     },
                     "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "key": "Attack_Sword_03",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_TurnSlashingShoulder_UpRight",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_End",
                         "loop": false,
                         "playRate": 1.5
                     },
-                    "start": {
+                    "key": "JumpDash",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Sequence",
+                    "single": {
                         "animationName": "",
                         "loop": true,
                         "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Start",
+                        "loop": false,
+                        "playRate": 1.5
                     }
                 },
                 {
@@ -728,26 +731,26 @@
                         }
                     },
                     "end": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_End",
-                        "loop": false,
-                        "playRate": 1.5
-                    },
-                    "key": "JumpDash",
-                    "loopClip": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Loop",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Sequence",
-                    "single": {
                         "animationName": "",
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "start": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Start",
+                    "key": "Attack_Sword_03",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_TurnSlashingShoulder_UpRight",
                         "loop": false,
                         "playRate": 1.5
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
                     }
                 },
                 {
@@ -1678,20 +1681,20 @@
                     -0.0010944728273898363
                 ],
                 "rotation": [
-                    -85.1080322265625,
-                    -33.76897430419922,
-                    31.408418655395508
+                    -82.10796356201172,
+                    -33.77000045776367,
+                    19.81405258178711
                 ],
                 "scale": [
-                    0.010000272653996944,
-                    0.010000303387641907,
-                    0.010000279173254967
+                    0.010000520385801792,
+                    0.01000048778951168,
+                    0.010000369511544704
                 ],
                 "type": "COMPONENT_TYPE_TRANSFORM"
             }
         }
     },
-    "guid": "1716a2ba-8e6f-46e9-b177-757018c25d0c",
+    "guid": "656772f7-643d-4163-8c30-a712b3b5f584",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"

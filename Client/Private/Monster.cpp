@@ -11,6 +11,9 @@
 #include "AnimationStateComponent.h"
 #include "GameObject_Factory.h"
 
+#include "Bounding_Capsule.h"
+#include "Collider.h"
+
 REGISTER_GAMEOBJECT(Monster, Protocol::OBJECT_TYPE_MONSTER)
 IMPLEMENT_REFLECTION(Monster);
 
@@ -70,6 +73,9 @@ void Monster::Late_Update(float timeDelta)
 {
     Character::Late_Update(timeDelta);
 
+    if (_collider)
+        _collider->Update_Collider(_transformCom->Get_WorldMatrix());
+
     GAME->Add_RenderGroup(ERenderGroup::NonBlend, this->GetSharedPtr());
 }
 
@@ -116,6 +122,11 @@ HRESULT Monster::Bind_Lights()
     _shaderCom->Bind_RawValue("g_vLightSpecular", &lightDesc->specular, sizeof(Vec4));
 }
 
+void Monster::OnBeginOverlap(Shared<Collider> other)
+{
+    Character::OnBeginOverlap(other);
+}
+
 json Monster::To_Json() const
 {
     json j = Character::To_Json();
@@ -154,6 +165,16 @@ HRESULT Monster::Ready_Components()
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXANIMMESH, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_MONSTER, _model), E_FAIL);
+
+    // 충돌체 추가
+    Bounding_Capsule::FBoundingCapsuleDesc capsuleDesc{};
+    capsuleDesc.radius = 0.5f;
+    capsuleDesc.halfHeight = 0.3f;
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, _collider, &capsuleDesc), E_FAIL);
+    _collider->Set_CollisionPreset(Collision_Preset::Monster);
+
+    GAME->Add_Collider(_collider);
 
     return S_OK;
 }

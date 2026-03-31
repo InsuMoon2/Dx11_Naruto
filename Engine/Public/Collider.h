@@ -57,7 +57,9 @@ private:
     bool                    _isColl = false;
 
     Shared<Bounding>        _bounding;
-    uset<Shared<Collider>>  _overlapSet;
+
+    // 아무 생각없이 Shared로 만드니까, 순환참조터짐 ㅋ
+    set<Weak<Collider>, owner_less<>> _overlapSet;
 
 #ifdef _DEBUG
     Shared<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> _batch;

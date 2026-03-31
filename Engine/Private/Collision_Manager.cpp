@@ -44,6 +44,9 @@ void Collision_Manager::Update()
 
             if (!dst || !dst->Get_IsActive()) continue;
 
+            if (src->Get_Owner() == dst->Get_Owner())
+                continue;
+
             // 두 콜라이더의 채널이 서로의 마스크에 포함돼있는지 체크
             if (!Can_Collide(src->Get_Channel(), src->Get_CollisionMask(),
                              dst->Get_Channel(), dst->Get_CollisionMask()))
@@ -65,8 +68,8 @@ void Collision_Manager::Update()
                 if (!wasOverlapping)
                 {
                     // 최초 충돌
-                    src->Get_Owner()->OnBeginOverlap(src);
-                    dst->Get_Owner()->OnBeginOverlap(dst);
+                    src->Get_Owner()->OnBeginOverlap(dst);
+                    dst->Get_Owner()->OnBeginOverlap(src);
 
                     src->Add_Overlap(dst);
                     dst->Add_Overlap(src);
@@ -74,8 +77,8 @@ void Collision_Manager::Update()
                 // 충돌 중이면
                 else
                 {
-                    src->Get_Owner()->OnStayOverlap(src);
-                    dst->Get_Owner()->OnStayOverlap(dst);
+                    src->Get_Owner()->OnStayOverlap(dst);
+                    dst->Get_Owner()->OnStayOverlap(src);
                 }
             }
             else

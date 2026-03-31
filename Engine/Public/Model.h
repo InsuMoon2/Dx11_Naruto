@@ -179,6 +179,9 @@ public: /* 노티파이 */
     void    Invalidate_AnimNotifyAsset();
     const FAnimNotifyClipData* Find_CurrentNotifyClip() const;
 
+    void    Set_EnableNotifies(bool enable) { _enableNotifies = enable; }
+    bool    Is_EnableNotifies() const { return _enableNotifies; }
+
     // 노티파이 스테이트 정리
     void    Stop_AllNotifyStates(bool executeEndCheck);
 
@@ -277,6 +280,8 @@ private: /* 노티파이 */
     bool                            _isAnimNotifyAssetLoaded = false;
     FAnimNotifyAsset                _animNotifyAsset;
     vector<FActiveAnimNotifyState>  _activeNotifyStates;
+
+    bool                            _enableNotifies = true;
 
 public:
     static Shared<Model> Create(ComPtr<Device> device, ComPtr<DeviceContext> context,

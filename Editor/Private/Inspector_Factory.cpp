@@ -10,6 +10,7 @@
 #include "Model.h"
 #include "PlayerStateMachine_Inspector.h"
 #include "AnimationState_Inspector.h"
+#include "Collider_Inspector.h"
 
 IMPLEMENT_SINGLETON(Inspector_Factory)
 
@@ -25,6 +26,14 @@ void Inspector_Factory::Initialize()
     Register_Inspector(Protocol::COMPONENT_TYPE_MODEL, make_shared<Model_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_PLAYER_STATE, make_shared<PlayerStateMachine_Inspector>());
     Register_Inspector(Protocol::COMPONENT_TYPE_ANIMATION_STATE, make_shared<AnimationState_Inspector>());
+
+
+    //Register_Inspector(Protocol::COMPONENT_TYPE_COLLIDER, make_shared<Collider_Inspector>());
+    auto colliderInspector = make_shared<Collider_Inspector>();
+    Register_Inspector(Protocol::COMPONENT_TYPE_COLLIDER_AABB, colliderInspector);
+    Register_Inspector(Protocol::COMPONENT_TYPE_COLLIDER_OBB, colliderInspector);
+    Register_Inspector(Protocol::COMPONENT_TYPE_COLLIDER_SPHERE, colliderInspector);
+    Register_Inspector(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, colliderInspector);
 
 }
 

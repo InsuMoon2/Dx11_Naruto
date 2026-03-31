@@ -114,6 +114,7 @@ HRESULT SkillObject::Ready_Components(const FSkillObjectDesc& desc)
     }
 
     CHECK_NULL(_collider, E_FAIL);
+    _collider->Set_CollisionPreset(Collision_Preset::Projectile);
 
     GAME->Add_Collider(_collider);
 

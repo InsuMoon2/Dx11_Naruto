@@ -5,6 +5,7 @@
 NS_BEGIN(Engine)
 class Shader;
 class Model;
+class Collider;
 NS_END
 
 NS_BEGIN(Client)
@@ -43,6 +44,8 @@ private:
 private:
     Shared<Shader>  _shader;
     Shared<Model>   _model;
+
+    Shared<Collider> _collider;
 
 private:
     const Matrix*  _socketMatrix = nullptr;

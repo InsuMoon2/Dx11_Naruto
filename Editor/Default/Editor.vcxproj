@@ -226,6 +226,7 @@
     <ClInclude Include="..\Public\BehaviorTree_View.h" />
     <ClInclude Include="..\Public\CameraSequencerAdapter.h" />
     <ClInclude Include="..\Public\Cinematic_View.h" />
+    <ClInclude Include="..\Public\Collider_Inspector.h" />
     <ClInclude Include="..\Public\CommandHistory.h" />
     <ClInclude Include="..\Public\Editor_Camera_Free.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
@@ -285,6 +286,7 @@
     <ClCompile Include="..\Private\BehaviorTree_View.cpp" />
     <ClCompile Include="..\Private\CameraSequencerAdapter.cpp" />
     <ClCompile Include="..\Private\Cinematic_View.cpp" />
+    <ClCompile Include="..\Private\Collider_Inspector.cpp" />
     <ClCompile Include="..\Private\CommandHistory.cpp" />
     <ClCompile Include="..\Private\Editor_Camera_Free.cpp" />
     <ClCompile Include="..\Private\Editor_Helper.cpp" />

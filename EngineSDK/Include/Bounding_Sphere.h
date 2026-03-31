@@ -22,6 +22,7 @@ public:
     bool    Intersect(Bounding* otherBounding) override;
 
     EShape  Get_Shape() const override { return EShape::Sphere; }
+    BoundingSphere& Get_OriginSphere() { return _originSphere; }
 
     const BoundingSphere& Get_Sphere() const { return _sphere; }
 
