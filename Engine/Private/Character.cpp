@@ -69,6 +69,11 @@ HRESULT Character::Bind_Lights()
     return S_OK;
 }
 
+void Character::TakeDamage(const FDamageEvent& damageEvent)
+{
+    
+}
+
 HRESULT Character::Ready_Components()
 {
     _transformCom->Set_LocalPosition(0.f, 0.f, -5.f);

@@ -55,6 +55,30 @@
             "Level": "Static"
         },
         {
+            "Id": "COMPONENT_TYPE_TEXTURE_ANNOUNCE_DIGIT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_Announce_Hit_Digit_%d.png",
+            "Count": 10,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_ANNOUNCE_HIT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_Announce_Hit_Text_LOCL_0.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_ANNOUNCE_HIT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_Announce_Hit_Small_LOCL.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_ANNOUNCE_HIT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_Announce_KO_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
             "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
             "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle%d.png",
             "Count": 2,

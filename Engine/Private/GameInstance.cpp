@@ -155,6 +155,8 @@ void GameInstance::Update_Engine(float timeDelta)
 
 void GameInstance::Late_Update_Engine(float timeDelta)
 {
+    _collisionManager->Clear_Colliders();
+
     _levelManager->Late_Update(timeDelta);
     _objectManager->Late_Update(timeDelta);
     _uiManager->Late_Update(timeDelta);

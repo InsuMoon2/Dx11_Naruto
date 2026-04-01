@@ -1,5 +1,8 @@
 ﻿#include "pch.h"
 #include "CombatStat.h"
+#include "Character.h"
+#include "PlayerStateMachine.h"
+#include "PlayerState_Attack.h"
 
 IMPLEMENT_REFLECTION(CombatStat)
 
@@ -74,11 +77,54 @@ void CombatStat::Set_Mp(float mp)
     _mp = ::clamp(mp, 0.f, _maxMp);
 }
 
-void CombatStat::Take_Damage(float damage)
+void CombatStat::Take_Damage(FDamageEvent damageEvent)
 {
-    float actualDamage = max(0.f, damage - _defense);
+    float actualDamage = max(0.f, damageEvent.damage - _defense);
 
     Set_Hp(_hp - actualDamage);
+
+    if (Is_Dead())
+    {
+        // TODO : 델리게이트로 이벤트 처리 하기. 플레이어는 안 죽을거라 몬스터쪽에 해주면 될듯
+        LOG_INFO("CombatStat HP가 0이 되었습니다. (사망)");
+    }
+}
+
+bool CombatStat::Apply_Damage(Character* hitted)
+{
+    if (!hitted || Is_AlreadyHit(hitted))
+        return false; // 이미 때린 놈이면 무시
+
+    Register_Hit(hitted);
+
+    FDamageEvent eventDesc;
+    eventDesc.damageCauser = Get_Owner();
+    float baseDamage = Get_Attack();
+
+    const FComboEntry* entry = nullptr;
+    auto state = Get_Owner()->Get_Component<PlayerStateMachine>();
+    if (state)
+    {
+        auto attackState = state->Get_State<PlayerState_Attack>(EPlayerState::Attack);
+        if (attackState)
+            entry = attackState->Get_CurrentComboEntry();
+    }
+
+    if (entry)
+    {
+        eventDesc.damage = baseDamage + entry->damageMultiplier; // 나중에 곱연산으로.. 그렇게까지 해야하나?
+        eventDesc.launchPower = entry->launchPower;
+        eventDesc.launchUp = entry->launchUp;
+        eventDesc.hitSound = entry->hitSound;
+    }
+    else
+    {
+        eventDesc.damage = baseDamage;
+    }
+
+    hitted->TakeDamage(eventDesc);
+
+    return true;
 }
 
 void CombatStat::Heal(float amount)

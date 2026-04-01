@@ -108,7 +108,7 @@ public:
 
     void    Remove_Component(uint32 id);
 
-    const map<uint32, shared_ptr<class Component>>& Get_Components() const { return _components; }
+    const map<uint32, Shared<Component>>& Get_Components() const { return _components; }
 
     Shared<Component> Find_Component_ByStaticType(uint32 componentID);
 
@@ -121,10 +121,10 @@ protected:
         return static_pointer_cast<T>(shared_from_this());
     }
 
-public: /* Collision Events. SR때처럼 Stay도 유지하는게 좋을듯 */
-    virtual void OnBeginOverlap(Shared<class Collider> other) {}
-    virtual void OnStayOverlap(Shared<class Collider> other)  {}
-    virtual void OnEndOverlap(Shared<class Collider> other)   {}
+public: /* Collision Events */
+    virtual void OnBeginOverlap(Shared<Collider> other) {}
+    virtual void OnStayOverlap(Shared<Collider> other)  {}
+    virtual void OnEndOverlap(Shared<Collider> other)   {}
 
 
 protected: /* Device */

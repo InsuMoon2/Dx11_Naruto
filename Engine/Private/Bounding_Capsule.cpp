@@ -48,9 +48,27 @@ void Bounding_Capsule::Update(const Matrix& worldMatrix)
     Update_WorldCenter(_worldMatrix);
 }
 
+void Bounding_Capsule::Set_LocalEuler(const Vec3& eulerDegrees)
+{
+    // Inspector에서 변경된 Euler(degree)를 radian으로 변환 후 Quat으로 저장
+    // 이후 Get_BasisVectors / Update_WorldCenter에서 _localRotation이 자동 반영된다
+    _localEuler = eulerDegrees;
+
+    Vec3 rad(
+        XMConvertToRadians(eulerDegrees.x),
+        XMConvertToRadians(eulerDegrees.y),
+        XMConvertToRadians(eulerDegrees.z)
+    );
+
+    _localRotation = Quat::CreateFromYawPitchRoll(rad.y, rad.x, rad.z);
+}
+
 void Bounding_Capsule::Update_WorldCenter(const Matrix& worldMatrix)
 {
-    _worldCenter = Vec3::Transform(_localCenter, worldMatrix);
+    // 로컬 센터에 로컬 회전을 먼저 적용한 뒤 월드 변환
+    // 캡슐 방향이 기울어져 있을 때 중심도 올바른 위치로 이동해야 한다
+    Vec3 rotatedCenter = Vec3::Transform(_localCenter, _localRotation);
+    _worldCenter = Vec3::Transform(rotatedCenter, worldMatrix);
 }
 
 bool Bounding_Capsule::Intersect(Bounding* otherBounding)
@@ -77,17 +95,16 @@ bool Bounding_Capsule::Intersect(Bounding* otherBounding)
 BoundingOrientedBox Bounding_Capsule::Get_ProxyOBB() const
 {
     BoundingOrientedBox proxy;
-    proxy.Center = _worldCenter;
-
+    proxy.Center  = _worldCenter;
     proxy.Extents = Vec3(_radius, _halfHeight + _radius, _radius);
 
     Matrix tempMatrix = _worldMatrix;
-
     Vec3 scale, trans;
     Quat rot;
     tempMatrix.Decompose(scale, rot, trans);
 
-    proxy.Orientation = rot;
+    // 충돌 프록시에도 로컬 회전을 합성
+    proxy.Orientation = rot * _localRotation;
 
     return proxy;
 }
@@ -95,13 +112,20 @@ BoundingOrientedBox Bounding_Capsule::Get_ProxyOBB() const
 #ifdef _DEBUG
 void Bounding_Capsule::Get_BasisVectors(Vec3& right, Vec3& up, Vec3& forward) const
 {
-    right = _worldMatrix.Right();
+    Matrix tempMatrix = _worldMatrix;
+    Vec3 scale, trans;
+    Quat worldRot;
+
+    tempMatrix.Decompose(scale, worldRot, trans);
+    Quat combined = worldRot * _localRotation;
+
+    right = Vec3::Transform(Vec3::Right, combined);
     right.Normalize();
 
-    up = _worldMatrix.Up();
+    up = Vec3::Transform(Vec3::Up, combined);
     up.Normalize();
 
-    forward = _worldMatrix.Forward();
+    forward = Vec3::Transform(Vec3::Forward, combined);
     forward.Normalize();
 }
 

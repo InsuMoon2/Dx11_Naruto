@@ -23,6 +23,7 @@ namespace Client
         Idle,       BigSword_Idle,
         Run,
         Jump,
+        JumpFall,
         DoubleJump,
         JumpDash,
 
@@ -75,6 +76,16 @@ namespace Client
     {
         Hand,
         BigSwrod,
+    };
+
+    enum class EHitboxTarget : uint8
+    {
+        RightHand,
+        LeftHand,
+        RightFoot,
+        LeftFoot,
+
+        END
     };
 
     enum class EMoveInputDirection { Forward, Backward, Left, Right, END };

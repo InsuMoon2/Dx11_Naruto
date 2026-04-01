@@ -33,8 +33,12 @@ public:
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
 
+    void    OnBeginOverlap(Shared<Collider> other) override;
+    void    OnEndOverlap(Shared<Collider> other) override;
+
 public:
     void    Set_SocketMatrix(const Matrix* matrix) { _socketMatrix = matrix; }
+    void    Set_ColliderActive(bool active);
 
 private:
     HRESULT Ready_Components(const wstring& modelAssetTag);

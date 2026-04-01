@@ -45,47 +45,47 @@ void PlayerState_Skill::Enter(PlayerStateMachine* state)
 
 void PlayerState_Skill::Update(PlayerStateMachine* state, float timeDelta)
 {
-    EAnimPhase phase = state->Get_AnimPhase();
+    //EAnimPhase phase = state->Get_AnimPhase();
 
-    // 루프 진입 시
-    if (phase == EAnimPhase::Loop && !_isEnding)
-    {
-        _channelingTimer += timeDelta;
+    //// 루프 진입 시
+    //if (phase == EAnimPhase::Loop && !_isEnding)
+    //{
+    //    _channelingTimer += timeDelta;
 
-        auto skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(_mySkill_Id);
-        float maxDuration = skillData ? skillData->loopDurationSec : 0.f;
-        bool isHold = skillData ? skillData->isHoldSkill : false;
+    //    auto skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(_mySkill_Id);
+    //    float maxDuration = skillData ? skillData->loopDurationSec : 0.f;
+    //    bool isHold = skillData ? skillData->isHoldSkill : false;
 
-        bool shouldEnd = false; // 끝내야 하는가?
+    //    bool shouldEnd = false; // 끝내야 하는가?
 
-        if (isHold)
-        {
-            auto input = state->Get_Input();
-            int32 currentSlot = state->Get_ActiveSkillSlot();
+    //    if (isHold)
+    //    {
+    //        auto input = state->Get_Input();
+    //        int32 currentSlot = state->Get_ActiveSkillSlot();
 
-            if (!input->Get_Frame().useSkillPress[currentSlot] || _channelingTimer >= maxDuration)
-            {
-                shouldEnd = true;
-            }
+    //        if (!input->Get_Frame().useSkillPress[currentSlot] || _channelingTimer >= maxDuration)
+    //        {
+    //            shouldEnd = true;
+    //        }
 
-        }
-        else
-        {
-            if (_channelingTimer >= maxDuration)
-            {
-                shouldEnd = true;
-            }
-        }
+    //    }
+    //    else
+    //    {
+    //        if (_channelingTimer >= maxDuration)
+    //        {
+    //            shouldEnd = true;
+    //        }
+    //    }
 
-        if (shouldEnd)
-        {
-            state->Request_AnimStateEnd();
-            _isEnding = true;
-        }
-        
-    }
+    //    if (shouldEnd)
+    //    {
+    //        state->Request_AnimStateEnd();
+    //        _isEnding = true;
+    //    }
+    //    
+    //}
 
-    if (state->Is_AnimSequenceFinished())
+    if (state->Is_AnimStateFinished())
     {
         state->Change_State(EPlayerState::Idle);
     }

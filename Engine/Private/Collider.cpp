@@ -96,7 +96,7 @@ bool Collider::Intersect(Shared<Collider> target)
 
 bool Collider::Is_Overlapping(Shared<Collider> other) const
 {
-    return _overlapSet.find(other) != _overlapSet.end();
+    return _overlapSet.contains(other);
 }
 
 void Collider::Set_CollisionPreset(Collision_Preset preset)
@@ -107,10 +107,164 @@ void Collider::Set_CollisionPreset(Collision_Preset preset)
     _collisionMask = data.collisionMask;
 }
 
+
+json Collider::To_Json() const
+{
+    json j = Component::To_Json();
+
+    j["shape"] = magic_enum::enum_name(_shape);
+    j["channel"] = magic_enum::enum_name(_channel);
+    j["collision_mask"] = _collisionMask;
+    j["is_active"] = _isActive;
+
+    if (!_bounding)
+        return j;
+
+    json b;
+
+    switch (_shape)
+    {
+    case EShape::AABB:
+    {
+        auto pAABB = static_pointer_cast<Bounding_AABB>(_bounding);
+        BoundingBox& origin = pAABB->Get_OriginAABB();
+        b["center"] = { origin.Center.x,  origin.Center.y,  origin.Center.z };
+        b["extents"] = { origin.Extents.x, origin.Extents.y, origin.Extents.z };
+        break;
+    }
+    case EShape::OBB:
+    {
+        auto pOBB = static_pointer_cast<Bounding_OBB>(_bounding);
+        BoundingOrientedBox& origin = pOBB->Get_OriginOBB();
+        b["center"] = { origin.Center.x,  origin.Center.y,  origin.Center.z };
+        b["extents"] = { origin.Extents.x, origin.Extents.y, origin.Extents.z };
+        break;
+    }
+    case EShape::Sphere:
+    {
+        auto pSphere = static_pointer_cast<Bounding_Sphere>(_bounding);
+        BoundingSphere& origin = pSphere->Get_OriginSphere();
+        b["center"] = { origin.Center.x, origin.Center.y, origin.Center.z };
+        b["radius"] = origin.Radius;
+        break;
+    }
+    case EShape::Capsule:
+    {
+        auto pCapsule = static_pointer_cast<Bounding_Capsule>(_bounding);
+        Vec3& c = pCapsule->Get_LocalCenter();
+        Vec3& e = pCapsule->Get_LocalEuler();
+        b["local_center"] = { c.x, c.y, c.z };
+        b["origin_radius"] = pCapsule->Get_OriginRadius();
+        b["origin_half_height"] = pCapsule->Get_OriginHalfHeight();
+        b["local_euler"] = { e.x, e.y, e.z };
+        break;
+    }
+    }
+
+    j["bounding"] = b;
+    return j;
+}
+
+void Collider::From_Json(const json& data)
+{
+    Component::From_Json(data);
+    if (data.contains("is_active"))
+        _isActive = data["is_active"].get<bool>();
+    if (data.contains("collision_mask"))
+        _collisionMask = data["collision_mask"].get<uint32>();
+    if (data.contains("channel"))
+    {
+        auto result = magic_enum::enum_cast<Collision_Channel>(data["channel"].get<string>());
+        if (result.has_value())
+            _channel = result.value();
+    }
+    if (!_bounding || !data.contains("bounding"))
+        return;
+    const json& b = data["bounding"];
+    switch (_shape)
+    {
+    case EShape::AABB:
+    {
+        auto pAABB = static_pointer_cast<Bounding_AABB>(_bounding);
+        BoundingBox& origin = pAABB->Get_OriginAABB();
+        if (b.contains("center"))
+        {
+            origin.Center.x = b["center"][0].get<float>();
+            origin.Center.y = b["center"][1].get<float>();
+            origin.Center.z = b["center"][2].get<float>();
+        }
+        if (b.contains("extents"))
+        {
+            origin.Extents.x = b["extents"][0].get<float>();
+            origin.Extents.y = b["extents"][1].get<float>();
+            origin.Extents.z = b["extents"][2].get<float>();
+        }
+        break;
+    }
+    case EShape::OBB:
+    {
+        auto pOBB = static_pointer_cast<Bounding_OBB>(_bounding);
+        BoundingOrientedBox& origin = pOBB->Get_OriginOBB();
+        if (b.contains("center"))
+        {
+            origin.Center.x = b["center"][0].get<float>();
+            origin.Center.y = b["center"][1].get<float>();
+            origin.Center.z = b["center"][2].get<float>();
+        }
+        if (b.contains("extents"))
+        {
+            origin.Extents.x = b["extents"][0].get<float>();
+            origin.Extents.y = b["extents"][1].get<float>();
+            origin.Extents.z = b["extents"][2].get<float>();
+        }
+        break;
+    }
+    case EShape::Sphere:
+    {
+        auto pSphere = static_pointer_cast<Bounding_Sphere>(_bounding);
+        BoundingSphere& origin = pSphere->Get_OriginSphere();
+        if (b.contains("center"))
+        {
+            origin.Center.x = b["center"][0].get<float>();
+            origin.Center.y = b["center"][1].get<float>();
+            origin.Center.z = b["center"][2].get<float>();
+        }
+        if (b.contains("radius"))
+            origin.Radius = b["radius"].get<float>();
+        break;
+    }
+    case EShape::Capsule:
+    {
+        auto pCapsule = static_pointer_cast<Bounding_Capsule>(_bounding);
+        if (b.contains("local_center"))
+        {
+            Vec3& c = pCapsule->Get_LocalCenter();
+            c.x = b["local_center"][0].get<float>();
+            c.y = b["local_center"][1].get<float>();
+            c.z = b["local_center"][2].get<float>();
+        }
+        if (b.contains("origin_radius"))
+            pCapsule->Get_OriginRadius() = b["origin_radius"].get<float>();
+        if (b.contains("origin_half_height"))
+            pCapsule->Get_OriginHalfHeight() = b["origin_half_height"].get<float>();
+        if (b.contains("local_euler"))
+        {
+            Vec3 euler(
+                b["local_euler"][0].get<float>(),
+                b["local_euler"][1].get<float>(),
+                b["local_euler"][2].get<float>()
+            );
+            pCapsule->Set_LocalEuler(euler);
+        }
+        break;
+    }
+    }
+}
+
 #ifdef _DEBUG
 HRESULT Collider::Render_Debug()
 {
-    if (!_bounding || !_isActive)
+    if (!_bounding)
         return S_OK;
 
     _effect->SetWorld(Matrix::Identity);
@@ -123,7 +277,14 @@ HRESULT Collider::Render_Debug()
     _batch->Begin();
 
     // 충돌 안하면 초록색 -> 충돌 시 빨간색
-    Color color = _isColl ? Color(1.f, 0.f, 0.f, 1.f) : Color(0.f, 1.f, 0.f, 1.f);
+    Color color;
+
+    if (!_isActive)     // 렌더
+        color = Color(0.5f, 0.5f, 0.5f, 1.f); 
+    else if (_isColl)   // 충돌
+        color = Color(1.f, 0.f, 0.f, 1.f);     
+    else
+        color = Color(0.f, 1.f, 0.f, 1.f);     
 
     _bounding->Render_Debug(_batch.get(), color);
     _batch->End();

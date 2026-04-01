@@ -27,7 +27,7 @@ public:
     FDelegateHandle Add(const FunctionType& func)
     {
         FDelegateHandle handle{ ++_nextId };
-        _functions.emplace_back({ handle, func, nullptr, false, weak_ptr<void>() });
+        _functions.push_back({ handle, func, nullptr, false, weak_ptr<void>() });
 
         return handle;
     }

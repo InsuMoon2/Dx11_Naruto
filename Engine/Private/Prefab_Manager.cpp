@@ -200,6 +200,12 @@ json Prefab_Manager::Serialize_GameObject(shared_ptr<GameObject> gameObject)
 
     if (auto container = dynamic_pointer_cast<ContainerObject>(gameObject))
     {
+        if (root.contains("part_objects"))
+        {
+            root["custom_properties"]["part_objects"] = root["part_objects"];
+            root.erase("part_objects");
+        }
+
         if (root.contains("part_transforms"))
         {
             root["custom_properties"]["part_transforms"] = root["part_transforms"];
@@ -229,53 +235,7 @@ shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc&
         return nullptr;
     }
 
-    // 컴포넌트 데이터 적용
-    for (const auto& compData : desc.components)
-    {
-		uint32 typeId = 0;
-
-		if (compData["type"].is_string())
-		{
-			string typeName = compData["type"].get<string>();
-			auto result = magic_enum::enum_cast<Protocol::ComponentID>(typeName);
-
-			if (!result.has_value())
-			{
-				LOG_WARN("Unknown component type: '{}'. Skipping.", typeName);
-				continue;
-			}
-
-			typeId = static_cast<uint32>(result.value());
-		}
-		else
-		{
-			typeId = compData["type"].get<uint32>();
-		}
-
-        // 기존 컴포넌트들 가져오기
-        auto comp = gameObject->Find_Component_ByStaticType(typeId);
-
-        if (comp == nullptr)
-        {
-            LOG_WARN("Prefab component not found in prototype (typeId: {}). Skipping.", typeId);
-            continue;
-
-#pragma region Legacy
-            // 없으면 Factory로 생성, Id 기반
-            //comp = Component_Factory::GetInstance()->Create(typeId, _device, _context);
-            //if (comp)
-            //{
-            //    gameObject->Add_Component(typeId, comp);
-            //}
-#pragma endregion
-
-            
-        }
-
-        // 데이터 로드
-        if (comp)
-            comp->From_Json(compData);
-    }
+    Apply_ComponentDataToObject(desc.components, gameObject, false);
 
     // Override 적용
     if (!overrides.empty())
@@ -295,6 +255,8 @@ shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc&
             spoof["part_transforms"] = desc.custom_properties["part_transforms"];
             container->From_Json(spoof);
         }
+
+        Apply_PartObjectDataToContainer(desc.custom_properties, container);
     }
 
     gameObject->Set_Name(Utils::ToWString(desc.prefab_name));
@@ -321,38 +283,7 @@ void Prefab_Manager::Reapply_Prefab_ToObject(const FPrefabDesc& desc, Shared<Gam
     if (!gameObject)
         return;
 
-    for (const auto& compData : desc.components)
-    {
-        if (compData.is_null() || !compData.contains("type"))
-            continue;
-
-        uint32 typeId = 0;
-
-        if (compData["type"].is_string())
-        {
-            const auto result = magic_enum::enum_cast<Protocol::ComponentID>(
-                compData["type"].get<string>());
-
-            if (!result.has_value())
-                continue;
-
-            typeId = static_cast<uint32>(result.value());
-        }
-        else
-        {
-            typeId = compData["type"].get<uint32>();
-        }
-
-        // 씬에 배치된 위치/회전/스케일은 유지
-        if (typeId == Transform::StaticTypeID())
-            continue;
-
-        auto comp = gameObject->Find_Component_ByStaticType(typeId);
-        if (!comp)
-            continue;
-
-        comp->From_Json(compData);
-    }
+    Apply_ComponentDataToObject(desc.components, gameObject, true);
 
     if (auto container = dynamic_pointer_cast<ContainerObject>(gameObject))
     {
@@ -375,6 +306,82 @@ void Prefab_Manager::Reapply_Prefab_ToObject(const FPrefabDesc& desc, Shared<Gam
                     }
                 }
             }
+        }
+
+        Apply_PartObjectDataToContainer(desc.custom_properties, container);
+    }
+}
+
+void Prefab_Manager::Apply_ComponentDataToObject(const json& components, Shared<GameObject> gameObject, bool skipTransform)
+{
+    if (!gameObject || !components.is_array())
+        return;
+
+    for (const auto& compData : components)
+    {
+        if (compData.is_null() || !compData.contains("type"))
+            continue;
+
+        uint32 typeId = 0;
+
+        if (compData["type"].is_string())
+        {
+            const string typeName = compData["type"].get<string>();
+            const auto result = magic_enum::enum_cast<Protocol::ComponentID>(typeName);
+
+            if (!result.has_value())
+            {
+                LOG_WARN("Unknown component type: '{}'. Skipping.", typeName);
+                continue;
+            }
+
+            typeId = static_cast<uint32>(result.value());
+        }
+        else
+        {
+            typeId = compData["type"].get<uint32>();
+        }
+
+        if (skipTransform && typeId == Transform::StaticTypeID())
+            continue;
+
+        auto comp = gameObject->Find_Component_ByStaticType(typeId);
+        if (!comp)
+        {
+            LOG_WARN("Prefab component not found in prototype (typeId: {}). Skipping.", typeId);
+            continue;
+        }
+
+        comp->From_Json(compData);
+    }
+}
+
+void Prefab_Manager::Apply_PartObjectDataToContainer(const json& customProperties, Shared<ContainerObject> container)
+{
+    if (!container || !customProperties.contains("part_objects"))
+        return;
+
+    const json& partObjects = customProperties["part_objects"];
+    if (!partObjects.is_object())
+        return;
+
+    for (int32 i = 0; i < ETOI(ContainerObject::EPartSlot::END); ++i)
+    {
+        const auto slot = static_cast<ContainerObject::EPartSlot>(i);
+        const string slotName = ContainerObject::Get_PartSlotName(slot);
+        if (!partObjects.contains(slotName))
+            continue;
+
+        const auto partObject = container->Get_PartObject(slot);
+        if (!partObject)
+            continue;
+
+        const json& partJson = partObjects[slotName];
+        partObject->From_Json(partJson);
+
+        if (partJson.contains("components"))
+        {
+            Apply_ComponentDataToObject(partJson["components"], partObject, false);
         }
     }
 }

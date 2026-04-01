@@ -14,7 +14,7 @@ struct FDelegateHandle
 };
 
 template<typename... Args>
-class ENGINE_DLL Delegate
+class Delegate
 {
 public:
     using FunctionType = function<void(Args...)>;
@@ -27,7 +27,7 @@ public:
     FDelegateHandle Add(const FunctionType& func)
     {
         FDelegateHandle handle{ ++_nextId };
-        _functions.emplace_back({ handle, func, nullptr, false, weak_ptr<void>() });
+        _functions.push_back({ handle, func, nullptr, false, weak_ptr<void>() });
 
         return handle;
     }
@@ -50,7 +50,7 @@ public:
                 }
             };
 
-        _functions.emplace_back({ handle, boundFunc, nullptr, true, weakObj });
+        _functions.push_back({ handle, boundFunc, nullptr, true, weakObj });
 
         return handle;
     }

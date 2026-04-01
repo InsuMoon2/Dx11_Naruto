@@ -88,6 +88,11 @@ HRESULT ContainerObject::Change_PartObject(EPartSlot slot, uint32 objID, void* a
     _partObjects[index] = partObject;
 
     string slotName = Get_PartSlotName(slot);
+    if (_cachedPartObjects.contains(slotName) && _partObjects[index])
+    {
+        _partObjects[index]->From_Json(_cachedPartObjects[slotName]);
+    }
+
     if (_cachedPartTransforms.contains(slotName) && _partObjects[index])
     {
         auto transform = _partObjects[index]->Get_Component<Transform>();
@@ -118,17 +123,25 @@ json ContainerObject::To_Json() const
     json j = GameObject::To_Json();
 
     json partsJson = json::object();
+    json partObjectsJson = json::object();
     for (int i = 0; i  < ETOI(EPartSlot::END); ++i)
     {
         if (_partObjects[i])
         {
+            string slotName = Get_PartSlotName(static_cast<EPartSlot>(i));
+            partObjectsJson[slotName] = _partObjects[i]->To_Json();
+
             auto transform = _partObjects[i]->Get_Component<Transform>();
             if (transform)
             {
-                string slotName = Get_PartSlotName(static_cast<EPartSlot>(i));
                 partsJson[slotName] = transform->To_Json();
             }
         }
+    }
+
+    if (!partObjectsJson.empty())
+    {
+        j["part_objects"] = partObjectsJson;
     }
 
     if (!partsJson.empty())
@@ -143,6 +156,11 @@ void ContainerObject::From_Json(const json& data)
 {
     GameObject::From_Json(data);
 
+    if (data.contains("part_objects"))
+    {
+        _cachedPartObjects = data["part_objects"];
+    }
+
     if (data.contains("part_transforms"))
     {
         _cachedPartTransforms = data["part_transforms"];
@@ -152,6 +170,11 @@ void ContainerObject::From_Json(const json& data)
             if (_partObjects[i])
             {
                 string slotName = Get_PartSlotName(static_cast<EPartSlot>(i));
+                if (_cachedPartObjects.contains(slotName))
+                {
+                    _partObjects[i]->From_Json(_cachedPartObjects[slotName]);
+                }
+
                 if (_cachedPartTransforms.contains(slotName))
                 {
                     auto transform = _partObjects[i]->Get_Component<Transform>();
@@ -179,6 +202,11 @@ HRESULT ContainerObject::Add_PartObject(EPartSlot slot, uint32 objID, void* arg)
     _partObjects[ETOI(slot)] = partObject;
 
     string slotName = Get_PartSlotName(slot);
+    if (_cachedPartObjects.contains(slotName) && _partObjects[ETOI(slot)])
+    {
+        _partObjects[ETOI(slot)]->From_Json(_cachedPartObjects[slotName]);
+    }
+
     if (_cachedPartTransforms.contains(slotName) && _partObjects[ETOI(slot)])
     {
         auto transform = _partObjects[ETOI(slot)]->Get_Component<Transform>();

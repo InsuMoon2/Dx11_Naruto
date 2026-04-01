@@ -44,6 +44,10 @@ public: /* Setter */
     void Set_IsActive(bool active)  { _isActive = active; }
     void Set_IsColl(bool isColl)    { _isColl = isColl; }
 
+public:
+    json To_Json() const override;
+    void From_Json(const json& data) override;
+
 #ifdef _DEBUG
     HRESULT Render_Debug();
 #endif
@@ -58,11 +62,10 @@ private:
 
     Shared<Bounding>        _bounding;
 
-    // 아무 생각없이 Shared로 만드니까, 순환참조터짐 ㅋ
     set<Weak<Collider>, owner_less<>> _overlapSet;
 
 #ifdef _DEBUG
-    Shared<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> _batch;
+    Shared<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>  _batch;
     Shared<DirectX::BasicEffect>                                   _effect;
     ComPtr<ID3D11InputLayout>                                      _inputLayout;
 #endif

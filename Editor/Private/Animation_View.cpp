@@ -13,6 +13,7 @@
 #include "GameObject.h"
 #include "GameInstance.h"
 #include "Transform.h"
+#include "DebugDraw.h"
 
 #include "ContainerObject.h"
 #include "PartObject.h"
@@ -242,6 +243,7 @@ void Animation_View::Pre_Render()
     _previewRT->BindAsTarget();
 
     GAME->Draw();
+    Draw_PreviewGrid();
 
     GAME->BindBackBuffer();
     GAME->Clear_Lights();
@@ -521,6 +523,9 @@ void Animation_View::Draw_ToolBar()
         ImGui::SameLine(0.f, 16.f);
         ImGui::TextDisabled("FPS: %d", Get_CurrentClipFps());
     }
+
+    ImGui::SameLine(0.f, 16.f);
+    ImGui::Checkbox("Preview Grid", &_showPreviewGrid);
 }
 
 void Animation_View::Draw_TopLayout()
@@ -1414,10 +1419,113 @@ void Animation_View::Ensure_PreviewCamera()
     _previewCamera->Initialize(&desc);
 }
 
+void Animation_View::Ensure_PreviewGridResources()
+{
+    if (_previewGridBatch && _previewGridEffect && _previewGridInputLayout && _previewGridDepthDisabledState)
+        return;
+
+    _previewGridBatch = make_shared<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>(GAME->Get_Context().Get());
+    _previewGridEffect = make_shared<DirectX::BasicEffect>(GAME->Get_Device().Get());
+    _previewGridEffect->SetVertexColorEnabled(true);
+
+    const void* shaderByteCode = nullptr;
+    size_t shaderByteCodeLength = 0;
+    _previewGridEffect->GetVertexShaderBytecode(&shaderByteCode, &shaderByteCodeLength);
+
+    if (FAILED(GAME->Get_Device()->CreateInputLayout(
+        DirectX::VertexPositionColor::InputElements,
+        DirectX::VertexPositionColor::InputElementCount,
+        shaderByteCode,
+        shaderByteCodeLength,
+        &_previewGridInputLayout)))
+    {
+        _previewGridBatch.reset();
+        _previewGridEffect.reset();
+        _previewGridInputLayout.Reset();
+    }
+
+    D3D11_DEPTH_STENCIL_DESC depthDesc = {};
+    depthDesc.DepthEnable = FALSE;
+    depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    depthDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+    depthDesc.StencilEnable = FALSE;
+
+    if (FAILED(GAME->Get_Device()->CreateDepthStencilState(&depthDesc, _previewGridDepthDisabledState.GetAddressOf())))
+    {
+        _previewGridBatch.reset();
+        _previewGridEffect.reset();
+        _previewGridInputLayout.Reset();
+        _previewGridDepthDisabledState.Reset();
+    }
+}
+
+void Animation_View::Draw_PreviewGrid() const
+{
+    if (!_showPreviewGrid)
+        return;
+
+    if (!_previewGridBatch || !_previewGridEffect || !_previewGridInputLayout)
+        return;
+
+    auto context = GAME->Get_Context();
+    if (!context)
+        return;
+
+    _previewGridEffect->SetWorld(Matrix::Identity);
+    _previewGridEffect->SetView(_previewView);
+    _previewGridEffect->SetProjection(_previewProj);
+
+    context->IASetInputLayout(_previewGridInputLayout.Get());
+    context->OMSetDepthStencilState(_previewGridDepthDisabledState.Get(), 0);
+    context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+    _previewGridEffect->Apply(context.Get());
+
+    _previewGridBatch->Begin();
+
+    Vec3 gridCenter = Vec3::Zero;
+    if (_previewOwner)
+    {
+        auto transform = _previewOwner->Get_Transform();
+        if (transform)
+            gridCenter = transform->Get_WorldPosition();
+    }
+
+    const XMVECTOR origin = XMVectorSet(gridCenter.x, gridCenter.y, gridCenter.z, 1.f);
+    const XMVECTOR xAxis = XMVectorSet(20.f, 0.f, 0.f, 0.f);
+    const XMVECTOR zAxis = XMVectorSet(0.f, 0.f, 20.f, 0.f);
+
+    DX::DrawGrid(
+        _previewGridBatch.get(),
+        xAxis,
+        zAxis,
+        origin,
+        40,
+        40,
+        XMVectorSet(0.65f, 0.65f, 0.7f, 1.f));
+
+    DX::DrawRay(
+        _previewGridBatch.get(),
+        origin,
+        XMVectorSet(20.f, 0.f, 0.f, 0.f),
+        false,
+        XMVectorSet(1.f, 0.2f, 0.2f, 1.f));
+
+    DX::DrawRay(
+        _previewGridBatch.get(),
+        origin,
+        XMVectorSet(0.f, 0.f, 20.f, 0.f),
+        false,
+        XMVectorSet(0.2f, 0.7f, 1.f, 1.f));
+
+    _previewGridBatch->End();
+}
+
 void Animation_View::Fit_PreviewCamera_ToOwner()
 {
     if (!_previewCamera || !_previewOwner)
         return;
+
+    Ensure_PreviewGridResources();
 
     auto transform = _previewOwner->Get_Transform();
     if (!transform)

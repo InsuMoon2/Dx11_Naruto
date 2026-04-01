@@ -38,6 +38,9 @@ public:
 
     virtual HRESULT Bind_Lights();
 
+public:
+    virtual void TakeDamage(const FDamageEvent& damageEvent);
+
 protected:
     virtual HRESULT Ready_Components();
 

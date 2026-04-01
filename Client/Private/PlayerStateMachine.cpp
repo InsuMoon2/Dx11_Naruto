@@ -24,6 +24,8 @@
 #include "SkillDataManager.h"
 #include "EquipmentComponent.h"
 #include "PlayerState_JumpAttack.h"
+#include "PlayerState_JumpFall.h"
+#include "PlayerState_Hit.h"
 
 
 IMPLEMENT_REFLECTION(PlayerStateMachine)
@@ -62,6 +64,7 @@ HRESULT PlayerStateMachine::Initialize_Prototype()
     Register_State(EPlayerState::Run, PlayerState_Run::Create());
 
     Register_State(EPlayerState::Jump, PlayerState_Jump::Create());
+    Register_State(EPlayerState::JumpFall, PlayerState_JumpFall::Create());
     Register_State(EPlayerState::DoubleJump, PlayerState_DoubleJump::Create());
     Register_State(EPlayerState::SuperJumpCharge, PlayerState_SuperJumpCharge::Create());
     Register_State(EPlayerState::SuperJump, PlayerState_SuperJump::Create());
@@ -73,7 +76,7 @@ HRESULT PlayerStateMachine::Initialize_Prototype()
 
     Register_State(EPlayerState::Attack, PlayerState_Attack::Create());
     Register_State(EPlayerState::JumpAttack, PlayerState_JumpAttack::Create());
-
+    Register_State(EPlayerState::Hit, PlayerState_Hit::Create());
 
     return S_OK;
 }
@@ -202,6 +205,9 @@ string PlayerStateMachine::To_AnimationStateName(EPlayerState stateID)
 
 bool PlayerStateMachine::Check_WeaponToggle()
 {
+    if (Get_CurrentStateID() == EPlayerState::Attack)
+        return false;
+
     auto input = Get_Input();
     if (!input)
         return false;
@@ -268,6 +274,12 @@ void PlayerStateMachine::Change_State(EPlayerState newState)
     _currentState   = iter->second;
 
     _currentState->Enter(this);
+
+    auto player = dynamic_pointer_cast<Player>(Get_Owner());
+    if (player)
+    {
+        player->Refresh_WeaponAttachment_ByCurrentState();
+    }
 }
 
 MovementComponent::FMoveCommand PlayerStateMachine::Init_MoveCommand() const

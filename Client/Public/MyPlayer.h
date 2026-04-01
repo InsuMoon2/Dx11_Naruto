@@ -31,9 +31,26 @@ public:
 
     // 내 캐릭터는 서버 위치 무시
     void Sync(const Protocol::ObjectInfo& info) override {}
+    void Force_SendMovePacket();
 
 public:
-    void Force_SendMovePacket();
+    void Enable_Hitbox(EHitboxTarget target);
+    void Disable_Hitbox(EHitboxTarget target);
+
+    void Disable_All_Hitboxes();
+
+public:
+    void OnBeginOverlap(Shared<Collider> other) override;
+
+    void Add_ComboHit();
+
+private:
+    // 연속 콤보 히트 카운트 — DelegateHub::OnPlayerComboHit에 전달
+    uint32 _comboHitCount = 0;
+
+    // 콤보 유지 타이머 — 일정 시간 히트 없으면 리셋
+    float _comboDecayTimer = 0.f;
+    static constexpr float COMBO_DECAY_TIME = 3.f;
 
 private:
     void    Send_MovePacket(bool forceSend);
@@ -41,6 +58,7 @@ private:
     bool    Should_SendMovePacket(const Protocol::ObjectInfo& nextInfo) const;
 
     HRESULT Ready_Components() override;
+    HRESULT Ready_HitboxColliders();
 
 private:
     Shared<InputComponent>      _input;
@@ -48,6 +66,14 @@ private:
     Shared<PlayerController>    _playerController;
     Shared<PlayerStateMachine>  _stateMachine;
     Shared<SkillComponent>      _skill;
+
+    // 몸통 충돌체
+    Shared<Collider>            _collider;
+
+    // 격투형 충돌체
+    array<Shared<Collider>, ETOI(EHitboxTarget::END)> _hitboxColliders;
+    // 충돌체 붙일 뼈 세팅
+    array<string, ETOI(EHitboxTarget::END)> _hitboxBoneNames;
 
 private:
     float _syncTimer = 0.f;

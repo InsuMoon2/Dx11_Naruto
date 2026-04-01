@@ -2,6 +2,8 @@
 
 namespace Engine
 {
+    class GameObject;
+
 	typedef struct tagEngineDesc
     {
         HWND        hWnd;
@@ -110,6 +112,16 @@ namespace Engine
         vector<FAnimationLocalPose> fromPose;
         vector<FAnimationLocalPose> toPose;
 
+    };
+
+    struct FDamageEvent
+    {
+        float   damage = 0.f;
+        Shared<GameObject> damageCauser = nullptr; // 때린 놈. 플레이어 or 몬스터
+
+        float   launchPower = 0.f;
+        float   launchUp = 0.f;
+        int32   hitSound = 0;       // 이건 추후에 타격 사운드
     };
 
 }

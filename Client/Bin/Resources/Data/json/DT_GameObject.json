@@ -134,6 +134,11 @@
             "Id": "UI_WeaponType",
             "ObjectType": "OBJECT_TYPE_UI_WEAPON_TYPE",
             "Level": "Static"
+        },
+        {
+            "Id": "UI_Announce",
+            "ObjectType": "OBJECT_TYPE_UI_ANNOUNCE_COMBO",
+            "Level": "Static"
         }
     ]
 }

@@ -99,6 +99,7 @@ void PlayerSession_Manager::Begin_PlaySession()
 
     // 편집할 월드 저장
     Save_SceneSnapshot();
+    Capture_PlaySessionObjectGuids(levelIndex);
 
     // Prefab 원본 변경사항 레벨에 다시 저장
     GAME->Reapply_Prefabs_InCurrentLevel();
@@ -122,6 +123,7 @@ void PlayerSession_Manager::Begin_PlaySession()
 
 void PlayerSession_Manager::End_PlaySession()
 {
+    Merge_RuntimeSpawnedObjects_IntoSnapshot(GAME->Current_Level());
     Restore_SceneSnapshot();
 }
 
@@ -278,6 +280,66 @@ void PlayerSession_Manager::Save_SceneSnapshot()
 
     _sceneSnapshot["gameObjects"] = objectsArray;
     _hasSnapShot = true;
+}
+
+void PlayerSession_Manager::Capture_PlaySessionObjectGuids(uint32 levelIndex)
+{
+    _playSessionObjectGuids.clear();
+
+    const auto& layers = GAME->Get_Layers(levelIndex);
+
+    for (const auto& [layerTag, layer] : layers)
+    {
+        if (!layer)
+            continue;
+
+        for (const auto& obj : layer->Get_GameObjects())
+        {
+            if (!obj || obj->Is_Destroy())
+                continue;
+
+            _playSessionObjectGuids.insert(obj->Get_GUID());
+        }
+    }
+}
+
+bool PlayerSession_Manager::Can_Persist_RuntimeObject(const Shared<GameObject>& obj) const
+{
+    if (!obj || obj->Is_Destroy())
+        return false;
+
+    return obj->Get_ObjectType() == Protocol::OBJECT_TYPE_MONSTER;
+}
+
+void PlayerSession_Manager::Merge_RuntimeSpawnedObjects_IntoSnapshot(uint32 levelIndex)
+{
+    if (!_hasSnapShot)
+        return;
+
+    if (!_sceneSnapshot.contains("gameObjects") || !_sceneSnapshot["gameObjects"].is_array())
+        _sceneSnapshot["gameObjects"] = json::array();
+
+    const auto& layers = GAME->Get_Layers(levelIndex);
+
+    for (const auto& [layerTag, layer] : layers)
+    {
+        if (!layer)
+            continue;
+
+        for (const auto& obj : layer->Get_GameObjects())
+        {
+            if (!Can_Persist_RuntimeObject(obj))
+                continue;
+
+            if (_playSessionObjectGuids.contains(obj->Get_GUID()))
+                continue;
+
+            json objJson = obj->To_Json();
+            objJson["layerTag"] = Utils::ToString(layerTag);
+
+            _sceneSnapshot["gameObjects"].push_back(objJson);
+        }
+    }
 }
 
 void PlayerSession_Manager::Remove_PlaySessionPlayers(uint32 levelIndex)
@@ -494,6 +556,7 @@ void PlayerSession_Manager::Restore_SceneSnapshot()
     }
 
     _hasSnapShot = false;
+    _playSessionObjectGuids.clear();
 }
 
 unique_ptr<PlayerSession_Manager> PlayerSession_Manager::Create()

@@ -56,6 +56,10 @@ bool ComboProfile_Manager::Load_FromJson(const string& filePath)
         entry.damageMultiplier = item.value("damageMultiplier", 1.f);
         entry.canCancel = item.value("canCancel", true);
 
+        entry.launchPower = item.value("launchPower", 0.f);
+        entry.launchUp = item.value("launchUp", 0.f);
+        entry.hitSound = item.value("hitSound", 0);
+
         // 지정된 콤보 인덱스 자리에 세팅
         profile.combos[comboIndex] = entry;
     }

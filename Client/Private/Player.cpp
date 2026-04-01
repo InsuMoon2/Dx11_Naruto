@@ -10,6 +10,7 @@
 #include "Bounding_Capsule.h"
 #include "Bounding_AABB.h"
 #include "Collider.h"
+#include "PlayerStateMachine.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
@@ -52,8 +53,9 @@ void Player::BeginPlay()
 
     _weaponTypeChangedHandle = delegate.OnWeaponTypeChanged.Add(this, &Player::On_WeaponTypeChagned);
 
-    if (_equipment)
-        Change_WeaponAttachment(_equipment->Get_CurrentWeaponType());
+    //if (_equipment)
+    //    Change_WeaponAttachment(_equipment->Get_CurrentWeaponType());
+    Refresh_WeaponAttachment_ByCurrentState();
 }
 
 void Player::Priority_Update(float timeDelta)
@@ -73,8 +75,7 @@ void Player::Late_Update(float timeDelta)
 {
     Character::Late_Update(timeDelta);
 
-    if (_collider)
-        _collider->Update_Collider(_transformCom->Get_WorldMatrix());
+    
 }
 
 HRESULT Player::Render()
@@ -82,6 +83,61 @@ HRESULT Player::Render()
     //Character::Render();
 
     return S_OK;
+}
+
+void Player::TakeDamage(const FDamageEvent& damageEvent)
+{
+    Character::TakeDamage(damageEvent);
+
+    if (_combatStat && _combatStat->Is_Dead())
+        return;
+
+    if (_combatStat)
+        _combatStat->Take_Damage(damageEvent);
+
+    if (damageEvent.launchPower > 0.f || damageEvent.launchUp > 0.f)
+    {
+        // 넉백방향 기준 잡기. 몬스터가 히트되면, 플레이어쪽으로 로테이션을 돌려주면
+        // 몬스터 기준으로 방향벡터 잡아서 그 방향으로 밀면 자연스럽게 날라갈거같다.
+        Vec3 knockDir = Vec3::Zero;
+        if (damageEvent.damageCauser)
+        {
+            Vec3 causerPos = damageEvent.damageCauser->Get_Transform()->Get_WorldPosition();
+            Vec3 myPos = _transformCom->Get_WorldPosition();
+
+            knockDir = myPos - causerPos;
+            knockDir.y = 0.f;
+
+            if (knockDir.LengthSquared() > FLT_EPSILON)
+                knockDir.Normalize();
+            else
+                knockDir = Vec3(0.f, 0.f, -1.f);
+        }
+        // 구한 방향값에 데이터 적용
+        Vec3 launchVelocity = knockDir * damageEvent.launchPower;
+        launchVelocity.y = damageEvent.launchUp;
+
+        auto movement = Get_Component<MovementComponent>();
+        if (movement)
+        {
+            movement->Launch(launchVelocity, false, true);
+        }
+    }
+
+    // 피격 상태 전환
+    auto sm = Get_Component<PlayerStateMachine>();
+    if (sm)
+    {
+        if (_combatStat && _combatStat->Is_Dead())
+            sm->Force_Enter_State(EPlayerState::Dead);
+        else
+            sm->Force_Enter_State(EPlayerState::Hit);
+    }
+
+    auto& hub = GAME->Get_DelegateHub();
+
+    hub.OnDamaged.Broadcast(
+        static_pointer_cast<Character>(GetSharedPtr()), damageEvent.damage);
 }
 
 void Player::Sync(const Protocol::ObjectInfo& info)
@@ -111,7 +167,12 @@ HRESULT Player::Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetT
         if (_equipment)
             currentWeaponType = _equipment->Get_CurrentWeaponType();
 
-        weaponDesc.socketMatrix = Find_WeaponSocketMatrix(currentWeaponType);
+        EPlayerState currentState = EPlayerState::Idle;
+        auto stateMachine = Get_Component<PlayerStateMachine>();
+        if (stateMachine)
+            currentState = stateMachine->Get_CurrentStateID();
+
+        weaponDesc.socketMatrix = Find_WeaponSocketMatrix(currentWeaponType, currentState);
 
         HRESULT hr = Change_PartObject(slot, Protocol::OBJECT_TYPE_PART_WEAPON, &weaponDesc);
 
@@ -150,23 +211,6 @@ HRESULT Player::Ready_Components()
     CHECK_FAILED(Add_Component(testModelKey, _model), E_FAIL);
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_EQUIPMENT, _equipment), E_FAIL);
-
-    // 충돌체 추가
-    Bounding_Capsule::FBoundingCapsuleDesc capsuleDesc{};
-    capsuleDesc.radius = 0.5f;
-    capsuleDesc.halfHeight = 0.3f;
-
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, _collider, &capsuleDesc), E_FAIL);
-    _collider->Set_CollisionPreset(Collision_Preset::Player);
-    GAME->Add_Collider(_collider);
-
-   /* Bounding_AABB::FBoundingAABBDesc aabbDesc{};
-    aabbDesc.extents = Vec3(0.4f, 0.6f, 0.4f);
-    aabbDesc.center = Vec3(0.f, aabbDesc.extents.y, 0.f);
-
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_AABB, _collider, &aabbDesc), E_FAIL);
-    _collider->Set_CollisionPreset(Collision_Preset::Player);
-    GAME->Add_Collider(_collider);*/
 
     return S_OK;
 }
@@ -210,11 +254,9 @@ HRESULT Player::Bind_Lights()
 
 HRESULT Player::Ready_PartObjects()
 {
-    // TODO : 추가될 파츠 : Headgear, Face, Body Upper, Body Lower, Weapon
-
     // Headgear
     PartObject::FPartObjectDesc headDesc{};
-    //headDesc.parentMatrix = &_transformCom->Get_WorldMatrix();
+    //headDesc.parentMatrix = &_transformCom->Get_WorldMatrix(); 이제 그냥 Transform 넘기기
     headDesc.parentTransform = _transformCom;
     headDesc.modelAssetTag = TEXT("Model_Headgear_Man_Cap1");
     headDesc.masterPoseModel = _model;
@@ -244,7 +286,12 @@ HRESULT Player::Ready_PartObjects()
         if (_equipment)
             currentWeaponType = _equipment->Get_CurrentWeaponType();
 
-        weaponDesc.socketMatrix = Find_WeaponSocketMatrix(currentWeaponType);
+        EPlayerState currentState = EPlayerState::Idle;
+        auto stateMachine = Get_Component<PlayerStateMachine>();
+        if (stateMachine)
+            currentState = stateMachine->Get_CurrentStateID();
+
+        weaponDesc.socketMatrix = Find_WeaponSocketMatrix(currentWeaponType, currentState);
 
         CHECK_FAILED(Add_PartObject(EPartSlot::Weapon, Protocol::OBJECT_TYPE_PART_WEAPON, &weaponDesc), E_FAIL);
     }
@@ -252,23 +299,47 @@ HRESULT Player::Ready_PartObjects()
     return S_OK;
 }
 
-const Matrix* Player::Find_WeaponSocketMatrix(EWeaponType weaponType) const
+const Matrix* Player::Find_WeaponSocketMatrix(EWeaponType weaponType, EPlayerState currentState) const
 {
     if (!_model)
         return nullptr;
 
+    // 격투형은 계속 등에 유지
     if (weaponType == EWeaponType::Hand)
-        return _model->Get_SocketBoneMatrixPtr("Attach_Sword"); // Hand면 등 뒤 소켓으로
+        return _model->Get_SocketBoneMatrixPtr("Attach_Sword");
 
+    // 검술형이어도 공격 상태가 아니면 등에 유지
+    if (!Is_SwordAttackState(currentState))
+        return _model->Get_SocketBoneMatrixPtr("Attach_Sword");
+
+    // 검술 공격 상태일 때만 손 소켓 사용
     if (const Matrix* rightWeaponSocket = _model->Get_SocketBoneMatrixPtr("R_Hand_Weapon_cnt_tr"))
         return rightWeaponSocket;
 
-    // Temp : 만약, 뼈대가 없는 모델이라면 그냥 오른손에 부착해보기 -> 플레이어 모델은 존재함 
     if (const Matrix* rightHandSocket = _model->Get_SocketBoneMatrixPtr("RightHand"))
         return rightHandSocket;
 
-    // 오른손도 없다면, 등 뒤에 그대로
     return _model->Get_SocketBoneMatrixPtr("Attach_Sword");
+}
+
+bool Player::Is_SwordAttackState(EPlayerState state) const
+{
+    switch (state)
+    {
+    case EPlayerState::Attack:
+    case EPlayerState::JumpAttack:
+        return true;
+    default:
+        return false;
+    }
+}
+
+void Player::Refresh_WeaponAttachment_ByCurrentState()
+{
+    if (!_equipment)
+        return;
+
+    Change_WeaponAttachment(_equipment->Get_CurrentWeaponType());
 }
 
 void Player::Change_WeaponAttachment(EWeaponType weaponType)
@@ -281,7 +352,12 @@ void Player::Change_WeaponAttachment(EWeaponType weaponType)
     if (!weaponPart)
         return;
 
-    const Matrix* socketMatrix = Find_WeaponSocketMatrix(weaponType);
+    EPlayerState currentState = EPlayerState::Idle;
+    auto stateMachine = Get_Component<PlayerStateMachine>();
+    if (stateMachine)
+        currentState = stateMachine->Get_CurrentStateID();
+
+    const Matrix* socketMatrix = Find_WeaponSocketMatrix(weaponType, currentState);
     weaponPart->Set_SocketMatrix(socketMatrix);
 }
 

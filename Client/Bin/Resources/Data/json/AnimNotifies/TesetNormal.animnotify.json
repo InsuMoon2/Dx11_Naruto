@@ -32,35 +32,15 @@
             ]
         },
         {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Idle_Loop",
-            "display_fps": 30,
-            "notifies": [
-                {
-                    "payload": {},
-                    "time_sec": 0.8666666746139526,
-                    "track_index": 0,
-                    "type": "AN_Test"
-                }
-            ],
-            "notify_state_tracks": [
-                {
-                    "name": "Notify States"
-                }
-            ],
-            "notify_states": [],
-            "notify_tracks": [
-                {
-                    "name": "Notifies"
-                }
-            ]
-        },
-        {
             "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Hand_Punch_Left",
             "display_fps": 30,
             "notifies": [],
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
@@ -70,6 +50,19 @@
                     "start_sec": 0.46666666865348816,
                     "track_index": 0,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.13333334028720856,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": true,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 0.13333334028720856,
+                    "track_index": 1,
+                    "type": "ANS_CollisionEnable"
                 }
             ],
             "notify_tracks": [
@@ -85,15 +78,31 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
                 {
                     "duration_sec": 0.6666666865348816,
                     "payload": {},
-                    "start_sec": 1.2000000476837158,
+                    "start_sec": 0.8666666746139526,
                     "track_index": 0,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "right_foot": false,
+                        "right_hand": true,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 0.6333333253860474,
+                    "track_index": 1,
+                    "type": "ANS_CollisionEnable"
                 }
             ],
             "notify_tracks": [
@@ -109,15 +118,31 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
                 {
                     "duration_sec": 0.3333333432674408,
                     "payload": {},
-                    "start_sec": 0.46666666865348816,
+                    "start_sec": 0.4000000059604645,
                     "track_index": 0,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.2666666805744171,
+                    "payload": {
+                        "left_foot": true,
+                        "left_hand": false,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 0.23333333432674408,
+                    "track_index": 1,
+                    "type": "ANS_CollisionEnable"
                 }
             ],
             "notify_tracks": [
@@ -133,6 +158,9 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
@@ -142,6 +170,19 @@
                     "start_sec": 0.6000000238418579,
                     "track_index": 0,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.23333333432674408,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "weapon"
+                    },
+                    "start_sec": 0.5,
+                    "track_index": 1,
+                    "type": "ANS_CollisionEnable"
                 }
             ],
             "notify_tracks": [
@@ -157,6 +198,9 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
@@ -166,6 +210,19 @@
                     "start_sec": 0.6000000238418579,
                     "track_index": 0,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.2666666805744171,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "weapon"
+                    },
+                    "start_sec": 0.6333333253860474,
+                    "track_index": 1,
+                    "type": "ANS_CollisionEnable"
                 }
             ],
             "notify_tracks": [
@@ -181,15 +238,31 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
                 {
-                    "duration_sec": 1.1666666269302368,
+                    "duration_sec": 1.1333333253860474,
                     "payload": {},
                     "start_sec": 1.0666667222976685,
                     "track_index": 0,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.36666667461395264,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "weapon"
+                    },
+                    "start_sec": 1.100000023841858,
+                    "track_index": 1,
+                    "type": "ANS_CollisionEnable"
                 }
             ],
             "notify_tracks": [
@@ -205,6 +278,9 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
@@ -214,6 +290,19 @@
                     "start_sec": 0.2666666805744171,
                     "track_index": 0,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.13333334028720856,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "right_foot": false,
+                        "right_hand": true,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 0.1666666716337204,
+                    "track_index": 1,
+                    "type": "ANS_CollisionEnable"
                 }
             ],
             "notify_tracks": [
@@ -229,6 +318,9 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
@@ -238,6 +330,19 @@
                     "start_sec": 0.30000001192092896,
                     "track_index": 0,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.20000000298023224,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "right_foot": true,
+                        "right_hand": false,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 0.13333334028720856,
+                    "track_index": 1,
+                    "type": "ANS_CollisionEnable"
                 }
             ],
             "notify_tracks": [
@@ -253,6 +358,9 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
@@ -262,6 +370,32 @@
                     "start_sec": 1.6333333253860474,
                     "track_index": 0,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "right_foot": true,
+                        "right_hand": false,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 0.7333333492279053,
+                    "track_index": 1,
+                    "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": true,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 1.3666666746139526,
+                    "track_index": 1,
+                    "type": "ANS_CollisionEnable"
                 }
             ],
             "notify_tracks": [
@@ -333,6 +467,96 @@
                 },
                 {
                     "name": "Notify Track"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_Hand_TurnHeelDropKick",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "right_foot": true,
+                        "right_hand": false,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 0.800000011920929,
+                    "track_index": 0,
+                    "type": "ANS_CollisionEnable"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Sasuke_Attack_TurnKick_Right",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.23333333432674408,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "right_foot": true,
+                        "right_hand": false,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 0.3333333432674408,
+                    "track_index": 0,
+                    "type": "ANS_CollisionEnable"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_BothHandsSlashingHorizontally",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.4000000059604645,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "weapon"
+                    },
+                    "start_sec": 0.8333333134651184,
+                    "track_index": 0,
+                    "type": "ANS_CollisionEnable"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
                 }
             ]
         }

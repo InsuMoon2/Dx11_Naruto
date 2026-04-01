@@ -41,7 +41,7 @@ bool Converter::Convert(const wstring& srcPath, const wstring& dstBasePath, ECon
         if (!Build_SkeletalMeshData())
             return false;
 
-        if (!Build_AnimationData())
+        if (!Build_AnimationData(srcPath))
             return false;
     }
 
@@ -289,7 +289,7 @@ bool Converter::Build_SkeletalMeshData()
     return !_meshes.empty();
 }
 
-bool Converter::Build_AnimationData()
+bool Converter::Build_AnimationData(const wstring& srcPath)
 {
     _animations.clear();
 
@@ -311,6 +311,19 @@ bool Converter::Build_AnimationData()
             ? static_cast<float>(srcAnim->mTicksPerSecond)
             : 25.f;
 
+        const fs::path configPath = Resolve_AnimationConfigPath(srcPath, clip.name);
+        FAnimationClipConfig clipConfig{};
+        if (!configPath.empty())
+        {
+            Try_LoadAnimationConfig(configPath, clipConfig);
+        }
+
+        const fs::path propsPath = Resolve_AnimationPropsPath(srcPath, clip.name);
+        if (!propsPath.empty())
+        {
+            Try_LoadAnimationProps(propsPath, clipConfig);
+        }
+
         clip.channels.reserve(srcAnim->mNumChannels);
 
         for (uint32 channelIndex = 0; channelIndex < srcAnim->mNumChannels; ++channelIndex)
@@ -323,54 +336,66 @@ bool Converter::Build_AnimationData()
             channel.nodeName = srcChannel->mNodeName.C_Str();
             channel.boneIndex = Find_BoneIndex_ByName(channel.nodeName);
 
-            if (srcChannel->mNumRotationKeys == 0)
+            if (!Should_KeepAnimationChannel(&clipConfig, channel.boneIndex))
                 continue;
 
-            channel.keyFrames.reserve(srcChannel->mNumRotationKeys);
+            const vector<float> sampleTimes = Build_ChannelSampleTimes(srcChannel);
+            if (sampleTimes.empty())
+                continue;
+
+            Vec3 defaultScale = Vec3::One;
+            Quaternion defaultRotation = Quaternion::Identity;
+            Vec3 defaultTranslation = Vec3::Zero;
+            Get_DefaultLocalPose(channel.boneIndex, defaultScale, defaultRotation, defaultTranslation);
+
+            channel.keyFrames.reserve(sampleTimes.size());
 
             uint32 posCursor = 0;
+            uint32 rotCursor = 0;
             uint32 scaleCursor = 0;
 
-            for (uint32 rotIndex = 0; rotIndex < srcChannel->mNumRotationKeys; ++rotIndex)
+            for (float currentTime : sampleTimes)
             {
-                const aiQuatKey& rotKey = srcChannel->mRotationKeys[rotIndex];
-                const float currentTime = static_cast<float>(rotKey.mTime);
-
-                while (posCursor + 1 < srcChannel->mNumPositionKeys &&
-                    static_cast<float>(srcChannel->mPositionKeys[posCursor + 1].mTime) <= currentTime)
-                {
-                    ++posCursor;
-                }
-
-                while (scaleCursor + 1 < srcChannel->mNumScalingKeys &&
-                    static_cast<float>(srcChannel->mScalingKeys[scaleCursor + 1].mTime) <= currentTime)
-                {
-                    ++scaleCursor;
-                }
-
                 FKeyFrameBin key{};
                 key.time = currentTime;
 
-                key.rotation[0] = rotKey.mValue.x;
-                key.rotation[1] = rotKey.mValue.y;
-                key.rotation[2] = rotKey.mValue.z;
-                key.rotation[3] = rotKey.mValue.w;
+                const Vec3 scale = Sample_VectorKeys(
+                    srcChannel->mScalingKeys,
+                    srcChannel->mNumScalingKeys,
+                    currentTime,
+                    defaultScale,
+                    scaleCursor);
 
-                if (srcChannel->mNumPositionKeys > 0)
+                const Quaternion rotation = Sample_RotationKeys(
+                    srcChannel->mRotationKeys,
+                    srcChannel->mNumRotationKeys,
+                    currentTime,
+                    defaultRotation,
+                    rotCursor);
+
+                Vec3 translation = defaultTranslation;
+                if (Should_UseAnimatedTranslation(clipConfig.loaded ? &clipConfig : nullptr, channel.nodeName))
                 {
-                    const aiVectorKey& posKey = srcChannel->mPositionKeys[posCursor];
-                    key.translation[0] = posKey.mValue.x;
-                    key.translation[1] = posKey.mValue.y;
-                    key.translation[2] = posKey.mValue.z;
+                    translation = Sample_VectorKeys(
+                        srcChannel->mPositionKeys,
+                        srcChannel->mNumPositionKeys,
+                        currentTime,
+                        defaultTranslation,
+                        posCursor);
                 }
 
-                if (srcChannel->mNumScalingKeys > 0)
-                {
-                    const aiVectorKey& scaleKey = srcChannel->mScalingKeys[scaleCursor];
-                    key.scale[0] = scaleKey.mValue.x;
-                    key.scale[1] = scaleKey.mValue.y;
-                    key.scale[2] = scaleKey.mValue.z;
-                }
+                key.scale[0] = scale.x;
+                key.scale[1] = scale.y;
+                key.scale[2] = scale.z;
+
+                key.rotation[0] = rotation.x;
+                key.rotation[1] = rotation.y;
+                key.rotation[2] = rotation.z;
+                key.rotation[3] = rotation.w;
+
+                key.translation[0] = translation.x;
+                key.translation[1] = translation.y;
+                key.translation[2] = translation.z;
 
                 channel.keyFrames.push_back(key);
             }
@@ -383,6 +408,553 @@ bool Converter::Build_AnimationData()
 
     LOG_INFO("Build_AnimationData done. animationCount={}", _animations.size());
     return true;
+}
+
+fs::path Converter::Find_Path_FromAncestors(const fs::path& startPath, const fs::path& targetRelativePath)
+{
+    if (startPath.empty() || targetRelativePath.empty())
+        return {};
+
+    fs::path current = fs::absolute(startPath);
+    if (!fs::is_directory(current))
+        current = current.parent_path();
+
+    while (!current.empty())
+    {
+        const fs::path candidate = current / targetRelativePath;
+        if (fs::exists(candidate))
+            return candidate;
+
+        const fs::path parent = current.parent_path();
+        if (parent == current)
+            break;
+
+        current = parent;
+    }
+
+    return {};
+}
+
+vector<fs::path> Converter::Build_AnimationConfigSearchRoots(const wstring& srcPath) const
+{
+    vector<fs::path> roots;
+
+    const auto appendUniqueRoot = [&roots](const fs::path& candidateRoot)
+        {
+            if (candidateRoot.empty())
+                return;
+
+            error_code ec;
+            if (!fs::exists(candidateRoot, ec) || !fs::is_directory(candidateRoot, ec))
+                return;
+
+            const fs::path normalized = fs::weakly_canonical(candidateRoot, ec);
+            const fs::path storedPath = ec ? fs::absolute(candidateRoot, ec) : normalized;
+
+            if (find(roots.begin(), roots.end(), storedPath) == roots.end())
+                roots.push_back(storedPath);
+        };
+
+    const fs::path sourcePath(srcPath);
+    appendUniqueRoot(sourcePath.parent_path());
+
+    static constexpr wchar_t kAnimationConfigRelativePath[] =
+        LR"(ExportAssets\Game\Characters\Custom\Animations)";
+
+    appendUniqueRoot(Find_Path_FromAncestors(sourcePath, kAnimationConfigRelativePath));
+    appendUniqueRoot(Find_Path_FromAncestors(fs::current_path(), kAnimationConfigRelativePath));
+
+    char* userProfileValue = nullptr;
+    size_t userProfileLength = 0;
+    if (_dupenv_s(&userProfileValue, &userProfileLength, "USERPROFILE") == 0 &&
+        userProfileValue != nullptr &&
+        userProfileValue[0] != '\0')
+    {
+        const fs::path userProfileRoot = fs::path(userProfileValue);
+        appendUniqueRoot(userProfileRoot / LR"(Desktop\Dx11_Naruto\ExportAssets\Game\Characters\Custom\Animations)");
+        appendUniqueRoot(userProfileRoot / LR"(OneDrive\Desktop\Dx11_Naruto\ExportAssets\Game\Characters\Custom\Animations)");
+    }
+
+    free(userProfileValue);
+
+    return roots;
+}
+
+void Converter::Ensure_AnimationConfigIndex(const wstring& srcPath)
+{
+    if (_animationConfigIndexBuilt && _animationConfigIndexKey == srcPath)
+        return;
+
+    _animationConfigIndexBuilt = true;
+    _animationConfigIndexKey = srcPath;
+    _animationConfigIndex.clear();
+
+    const vector<fs::path> searchRoots = Build_AnimationConfigSearchRoots(srcPath);
+    for (const fs::path& searchRoot : searchRoots)
+    {
+        error_code ec;
+        for (const auto& entry : fs::recursive_directory_iterator(searchRoot,
+            fs::directory_options::skip_permission_denied, ec))
+        {
+            if (ec)
+            {
+                ec.clear();
+                continue;
+            }
+
+            if (!entry.is_regular_file())
+                continue;
+
+            const fs::path entryPath = entry.path();
+            if (!entryPath.has_extension())
+                continue;
+
+            if (ToLower_Copy(entryPath.extension().string()) != ".config")
+                continue;
+
+            const string key = ToLower_Copy(entryPath.stem().string());
+            if (key.empty())
+                continue;
+
+            _animationConfigIndex.try_emplace(key, entryPath);
+        }
+    }
+
+    LOG_INFO("Animation config index built. src={} | searchRootCount={} | configCount={}",
+        fs::path(srcPath).string(),
+        searchRoots.size(),
+        _animationConfigIndex.size());
+}
+
+void Converter::Ensure_AnimationPropsIndex(const wstring& srcPath)
+{
+    static constexpr size_t kPropsSuffixLength = sizeof(".props.txt") - 1;
+
+    if (_animationPropsIndexBuilt && _animationPropsIndexKey == srcPath)
+        return;
+
+    _animationPropsIndexBuilt = true;
+    _animationPropsIndexKey = srcPath;
+    _animationPropsIndex.clear();
+
+    const vector<fs::path> searchRoots = Build_AnimationConfigSearchRoots(srcPath);
+    for (const fs::path& searchRoot : searchRoots)
+    {
+        error_code ec;
+        for (const auto& entry : fs::recursive_directory_iterator(searchRoot,
+            fs::directory_options::skip_permission_denied, ec))
+        {
+            if (ec)
+            {
+                ec.clear();
+                continue;
+            }
+
+            if (!entry.is_regular_file())
+                continue;
+
+            const fs::path entryPath = entry.path();
+            const string fileName = ToLower_Copy(entryPath.filename().string());
+            if (!fileName.ends_with(".props.txt"))
+                continue;
+
+            string stemName = entryPath.filename().string();
+            if (stemName.size() <= kPropsSuffixLength)
+                continue;
+
+            stemName.erase(stemName.size() - kPropsSuffixLength);
+            const string key = ToLower_Copy(stemName);
+            if (key.empty())
+                continue;
+
+            _animationPropsIndex.try_emplace(key, entryPath);
+        }
+    }
+
+    LOG_INFO("Animation props index built. src={} | searchRootCount={} | propsCount={}",
+        fs::path(srcPath).string(),
+        searchRoots.size(),
+        _animationPropsIndex.size());
+}
+
+fs::path Converter::Resolve_AnimationConfigPath(const wstring& srcPath, const string& clipName)
+{
+    if (srcPath.empty() || clipName.empty())
+        return {};
+
+    const fs::path sourcePath(srcPath);
+    const fs::path sourceDir = sourcePath.parent_path();
+
+    vector<string> candidateNames;
+    candidateNames.reserve(4);
+    candidateNames.push_back(clipName);
+
+    const size_t pipePos = clipName.find_last_of('|');
+    if (pipePos != string::npos && pipePos + 1 < clipName.size())
+    {
+        candidateNames.push_back(clipName.substr(pipePos + 1));
+    }
+
+    string safeClipName = clipName;
+    for (char& ch : safeClipName)
+    {
+        if (ch == '|' || ch == ':' || ch == '*' || ch == '?' || ch == '<' || ch == '>' || ch == ' ')
+            ch = '_';
+    }
+    candidateNames.push_back(safeClipName);
+    candidateNames.push_back(sourcePath.stem().string());
+
+    for (const string& candidateName : candidateNames)
+    {
+        if (candidateName.empty())
+            continue;
+
+        const fs::path candidatePath = sourceDir / (candidateName + ".config");
+        if (fs::exists(candidatePath))
+            return candidatePath;
+    }
+
+    Ensure_AnimationConfigIndex(srcPath);
+
+    for (const string& candidateName : candidateNames)
+    {
+        if (candidateName.empty())
+            continue;
+
+        const string lowerCandidateName = ToLower_Copy(candidateName);
+        const auto it = _animationConfigIndex.find(lowerCandidateName);
+        if (it != _animationConfigIndex.end())
+            return it->second;
+    }
+
+    return {};
+}
+
+fs::path Converter::Resolve_AnimationPropsPath(const wstring& srcPath, const string& clipName)
+{
+    if (srcPath.empty() || clipName.empty())
+        return {};
+
+    const fs::path sourcePath(srcPath);
+    const fs::path sourceDir = sourcePath.parent_path();
+
+    vector<string> candidateNames;
+    candidateNames.reserve(4);
+    candidateNames.push_back(clipName);
+
+    const size_t pipePos = clipName.find_last_of('|');
+    if (pipePos != string::npos && pipePos + 1 < clipName.size())
+    {
+        candidateNames.push_back(clipName.substr(pipePos + 1));
+    }
+
+    string safeClipName = clipName;
+    for (char& ch : safeClipName)
+    {
+        if (ch == '|' || ch == ':' || ch == '*' || ch == '?' || ch == '<' || ch == '>' || ch == ' ')
+            ch = '_';
+    }
+    candidateNames.push_back(safeClipName);
+    candidateNames.push_back(sourcePath.stem().string());
+
+    for (const string& candidateName : candidateNames)
+    {
+        if (candidateName.empty())
+            continue;
+
+        const fs::path candidatePath = sourceDir / (candidateName + ".props.txt");
+        if (fs::exists(candidatePath))
+            return candidatePath;
+    }
+
+    Ensure_AnimationPropsIndex(srcPath);
+
+    for (const string& candidateName : candidateNames)
+    {
+        if (candidateName.empty())
+            continue;
+
+        const string lowerCandidateName = ToLower_Copy(candidateName);
+        const auto it = _animationPropsIndex.find(lowerCandidateName);
+        if (it != _animationPropsIndex.end())
+            return it->second;
+    }
+
+    return {};
+}
+
+bool Converter::Try_LoadAnimationConfig(const fs::path& configPath, FAnimationClipConfig& outConfig) const
+{
+    if (configPath.empty() || !fs::exists(configPath))
+        return false;
+
+    ifstream file(configPath);
+    if (!file.is_open())
+        return false;
+
+    outConfig = {};
+    string currentSection;
+    string line;
+
+    // Unreal sidecar .config를 가볍게 읽어서 translation 허용 본 목록만 복원한다.
+    while (getline(file, line))
+    {
+        line = Trim_Copy(line);
+        if (line.empty() || line.starts_with(";") || line.starts_with("#"))
+            continue;
+
+        if (line.front() == '[' && line.back() == ']')
+        {
+            currentSection = ToLower_Copy(Trim_Copy(line.substr(1, line.size() - 2)));
+            continue;
+        }
+
+        const size_t equalsPos = line.find('=');
+        if (equalsPos != string::npos)
+        {
+            const string key = Trim_Copy(line.substr(0, equalsPos));
+            const string value = Trim_Copy(line.substr(equalsPos + 1));
+
+            const string lowerKey = ToLower_Copy(key);
+
+            if (currentSection == "animset" && lowerKey == "banimrotationonly")
+            {
+                const string lowerValue = ToLower_Copy(value);
+                outConfig.animRotationOnly = (lowerValue == "1" || lowerValue == "true");
+            }
+            else if (currentSection == "usetranslationbonenames" && !key.empty())
+            {
+                const string lowerValue = ToLower_Copy(value);
+                if (value.empty() || lowerValue == "1" || lowerValue == "true")
+                    outConfig.translationBoneNames.insert(key);
+            }
+
+            continue;
+        }
+
+        if (currentSection == "usetranslationbonenames")
+        {
+            outConfig.translationBoneNames.insert(line);
+        }
+    }
+
+    outConfig.loaded = true;
+
+    LOG_INFO("Loaded animation config: {} | rotationOnly={} | translationBoneCount={}",
+        configPath.string(),
+        outConfig.animRotationOnly,
+        outConfig.translationBoneNames.size());
+
+    return true;
+}
+
+bool Converter::Try_LoadAnimationProps(const fs::path& propsPath, FAnimationClipConfig& outConfig) const
+{
+    static constexpr size_t kBoneTreeIndexPrefixLength = sizeof("BoneTreeIndex=") - 1;
+
+    if (propsPath.empty() || !fs::exists(propsPath))
+        return false;
+
+    ifstream file(propsPath);
+    if (!file.is_open())
+        return false;
+
+    string line;
+    while (getline(file, line))
+    {
+        line = Trim_Copy(line);
+        if (line.empty())
+            continue;
+
+        const size_t markerPos = line.find("BoneTreeIndex=");
+        if (markerPos == string::npos)
+            continue;
+
+        const size_t valueStart = markerPos + kBoneTreeIndexPrefixLength;
+        size_t valueEnd = valueStart;
+        while (valueEnd < line.size() && isdigit(static_cast<unsigned char>(line[valueEnd])))
+        {
+            ++valueEnd;
+        }
+
+        if (valueEnd == valueStart)
+            continue;
+
+        const string indexText = line.substr(valueStart, valueEnd - valueStart);
+        const int32 boneIndex = static_cast<int32>(stoi(indexText));
+        outConfig.animatedBoneIndices.insert(boneIndex);
+        outConfig.maxAnimatedBoneIndex = max(outConfig.maxAnimatedBoneIndex, boneIndex);
+    }
+
+    outConfig.propsLoaded = !outConfig.animatedBoneIndices.empty();
+
+    LOG_INFO("Loaded animation props: {} | animatedBoneCount={}",
+        propsPath.string(),
+        outConfig.animatedBoneIndices.size());
+
+    return outConfig.propsLoaded;
+}
+
+vector<float> Converter::Build_ChannelSampleTimes(const aiNodeAnim* srcChannel) const
+{
+    vector<float> sampleTimes;
+    if (srcChannel == nullptr)
+        return sampleTimes;
+
+    sampleTimes.reserve(srcChannel->mNumPositionKeys + srcChannel->mNumRotationKeys + srcChannel->mNumScalingKeys);
+
+    for (uint32 keyIndex = 0; keyIndex < srcChannel->mNumPositionKeys; ++keyIndex)
+    {
+        sampleTimes.push_back(static_cast<float>(srcChannel->mPositionKeys[keyIndex].mTime));
+    }
+
+    for (uint32 keyIndex = 0; keyIndex < srcChannel->mNumRotationKeys; ++keyIndex)
+    {
+        sampleTimes.push_back(static_cast<float>(srcChannel->mRotationKeys[keyIndex].mTime));
+    }
+
+    for (uint32 keyIndex = 0; keyIndex < srcChannel->mNumScalingKeys; ++keyIndex)
+    {
+        sampleTimes.push_back(static_cast<float>(srcChannel->mScalingKeys[keyIndex].mTime));
+    }
+
+    sort(sampleTimes.begin(), sampleTimes.end());
+    sampleTimes.erase(unique(sampleTimes.begin(), sampleTimes.end(),
+        [](float lhs, float rhs)
+        {
+            return fabsf(lhs - rhs) <= FLT_EPSILON;
+        }),
+        sampleTimes.end());
+
+    return sampleTimes;
+}
+
+void Converter::Get_DefaultLocalPose(int32 boneIndex, Vec3& outScale, Quaternion& outRotation, Vec3& outTranslation) const
+{
+    outScale = Vec3::One;
+    outRotation = Quaternion::Identity;
+    outTranslation = Vec3::Zero;
+
+    if (boneIndex < 0 || boneIndex >= static_cast<int32>(_bones.size()))
+        return;
+
+    Matrix nodeTransform{};
+    memcpy(&nodeTransform, _bones[boneIndex].nodeTransform.m, sizeof(Matrix));
+    nodeTransform.Decompose(outScale, outRotation, outTranslation);
+}
+
+bool Converter::Is_AnimationPropsCompatible(const FAnimationClipConfig* config) const
+{
+    if (config == nullptr || !config->propsLoaded)
+        return false;
+
+    if (config->maxAnimatedBoneIndex < 0)
+        return false;
+
+    const bool inRange = config->maxAnimatedBoneIndex < static_cast<int32>(_bones.size());
+    if (!inRange)
+    {
+        LOG_WARN("Skipping props-based channel filter. maxBoneIndex={} exceeds currentBoneCount={}",
+            config->maxAnimatedBoneIndex,
+            _bones.size());
+    }
+
+    return inRange;
+}
+
+bool Converter::Should_KeepAnimationChannel(const FAnimationClipConfig* config, int32 boneIndex) const
+{
+    if (boneIndex < 0)
+        return false;
+
+    if (!Is_AnimationPropsCompatible(config))
+        return true;
+
+    return config->animatedBoneIndices.contains(boneIndex);
+}
+
+bool Converter::Should_UseAnimatedTranslation(const FAnimationClipConfig* config, const string& boneName) const
+{
+    if (config == nullptr || !config->loaded || !config->animRotationOnly)
+        return true;
+
+    return config->translationBoneNames.contains(boneName);
+}
+
+Vec3 Converter::Sample_VectorKeys(const aiVectorKey* keys, uint32 keyCount, float time, const Vec3& defaultValue, uint32& inOutCursor) const
+{
+    if (keys == nullptr || keyCount == 0)
+        return defaultValue;
+
+    if (time <= static_cast<float>(keys[0].mTime))
+    {
+        return Vec3(keys[0].mValue.x, keys[0].mValue.y, keys[0].mValue.z);
+    }
+
+    if (keyCount == 1)
+    {
+        return Vec3(keys[0].mValue.x, keys[0].mValue.y, keys[0].mValue.z);
+    }
+
+    while (inOutCursor + 1 < keyCount &&
+        static_cast<float>(keys[inOutCursor + 1].mTime) <= time)
+    {
+        ++inOutCursor;
+    }
+
+    if (inOutCursor + 1 >= keyCount)
+    {
+        return Vec3(keys[keyCount - 1].mValue.x, keys[keyCount - 1].mValue.y, keys[keyCount - 1].mValue.z);
+    }
+
+    const aiVectorKey& currentKey = keys[inOutCursor];
+    const aiVectorKey& nextKey = keys[inOutCursor + 1];
+    const float currentTime = static_cast<float>(currentKey.mTime);
+    const float nextTime = static_cast<float>(nextKey.mTime);
+    const float delta = nextTime - currentTime;
+    const float ratio = (delta <= FLT_EPSILON) ? 0.f : (time - currentTime) / delta;
+
+    const Vec3 currentValue(currentKey.mValue.x, currentKey.mValue.y, currentKey.mValue.z);
+    const Vec3 nextValue(nextKey.mValue.x, nextKey.mValue.y, nextKey.mValue.z);
+    return Vec3::Lerp(currentValue, nextValue, ratio);
+}
+
+Quaternion Converter::Sample_RotationKeys(const aiQuatKey* keys, uint32 keyCount, float time, const Quaternion& defaultValue, uint32& inOutCursor) const
+{
+    if (keys == nullptr || keyCount == 0)
+        return defaultValue;
+
+    if (time <= static_cast<float>(keys[0].mTime))
+    {
+        return Quaternion(keys[0].mValue.x, keys[0].mValue.y, keys[0].mValue.z, keys[0].mValue.w);
+    }
+
+    if (keyCount == 1)
+    {
+        return Quaternion(keys[0].mValue.x, keys[0].mValue.y, keys[0].mValue.z, keys[0].mValue.w);
+    }
+
+    while (inOutCursor + 1 < keyCount &&
+        static_cast<float>(keys[inOutCursor + 1].mTime) <= time)
+    {
+        ++inOutCursor;
+    }
+
+    if (inOutCursor + 1 >= keyCount)
+    {
+        return Quaternion(keys[keyCount - 1].mValue.x, keys[keyCount - 1].mValue.y, keys[keyCount - 1].mValue.z, keys[keyCount - 1].mValue.w);
+    }
+
+    const aiQuatKey& currentKey = keys[inOutCursor];
+    const aiQuatKey& nextKey = keys[inOutCursor + 1];
+    const float currentTime = static_cast<float>(currentKey.mTime);
+    const float nextTime = static_cast<float>(nextKey.mTime);
+    const float delta = nextTime - currentTime;
+    const float ratio = (delta <= FLT_EPSILON) ? 0.f : (time - currentTime) / delta;
+
+    const Quaternion currentValue(currentKey.mValue.x, currentKey.mValue.y, currentKey.mValue.z, currentKey.mValue.w);
+    const Quaternion nextValue(nextKey.mValue.x, nextKey.mValue.y, nextKey.mValue.z, nextKey.mValue.w);
+    return Quaternion::Slerp(currentValue, nextValue, ratio);
 }
 
 
@@ -531,7 +1103,7 @@ bool Converter::Write_MeshBin(const wstring& outputPath)
         writer.Write(bin);
     }
 
-        // 애니메이션 처리는 Write_AnimBin으로 옮겨졌습니다.
+    // 애니메이션 처리는 Write_AnimBin으로 옮겨졌습니다.
 
     return true;
 }
@@ -1026,6 +1598,15 @@ void Converter::Clear()
 {
     _meshes.clear();
     _materials.clear();
+    _bones.clear();
+    _animations.clear();
+    _boneNameToIndex.clear();
+    _animationConfigIndexBuilt = false;
+    _animationConfigIndexKey.clear();
+    _animationConfigIndex.clear();
+    _animationPropsIndexBuilt = false;
+    _animationPropsIndexKey.clear();
+    _animationPropsIndex.clear();
 
     if (_importer)
         _importer->FreeScene();
@@ -1159,6 +1740,16 @@ string Converter::EscapeJson(const string& value)
     }
 
     return out;
+}
+
+string Converter::Trim_Copy(const string& value)
+{
+    const size_t begin = value.find_first_not_of(" \t\r\n");
+    if (begin == string::npos)
+        return "";
+
+    const size_t end = value.find_last_not_of(" \t\r\n");
+    return value.substr(begin, end - begin + 1);
 }
 
 string Converter::ToLower_Copy(string value)

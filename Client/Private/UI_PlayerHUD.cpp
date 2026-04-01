@@ -4,6 +4,7 @@
 #include "UI_PlayerStatus.h"
 #include "UI_PlayerSkill.h"
 #include "GameObject_Factory.h"
+#include "UI_AnnounceCombo.h"
 
 REGISTER_GAMEOBJECT(UI_PlayerHUD, Protocol::OBJECT_TYPE_UI_PLAYER_HUD)
 
@@ -77,6 +78,18 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
         uiRefWidth - 220.f,
         uiRefHeight - 140.f,
         _zOrder);
+
+    // 콤보 UI
+    UIObject::FUIDesc announceDesc;
+    announceDesc.posX = 0.f;
+    announceDesc.posY = 0.f;
+    announceDesc.sizeX = 1.f;
+    announceDesc.sizeY = 1.f;
+    announceDesc.zOrder = _zOrder + 0.01f;
+    announceDesc.levelIndex = _levelIndex;
+
+    _announceCombo = Create_Child<UI_AnnounceCombo>(Protocol::OBJECT_TYPE_UI_ANNOUNCE_COMBO, EUILayer::HUD, &announceDesc);
+    CHECK_NULL(_announceCombo, E_FAIL);
 
     return S_OK;
 }

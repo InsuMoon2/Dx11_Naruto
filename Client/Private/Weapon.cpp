@@ -3,8 +3,13 @@
 #include "Model.h"
 #include "Shader.h"
 #include "GameObject_Factory.h"
-#include "Bounding_Capsule.h"
+#include "Bounding_OBB.h"
 #include "Collider.h"
+#include "Character.h"
+#include "PlayerStateMachine.h"
+#include "PlayerState_Attack.h"
+#include "CombatStat.h"
+#include "MyPlayer.h"
 
 REGISTER_GAMEOBJECT(Weapon, Protocol::OBJECT_TYPE_PART_WEAPON)
 
@@ -85,7 +90,13 @@ void Weapon::Late_Update(float timeDelta)
     PartObject::Late_Update(timeDelta);
 
     if (_collider)
+    {
         _collider->Update_Collider(_combinedWorldMatrix);
+
+        // 활성화됐을 때만 추가
+        GAME->Add_Collider(_collider);
+        
+    }
 
     GAME->Add_RenderGroup(ERenderGroup::NonBlend, this->GetSharedPtr());
 }
@@ -110,6 +121,46 @@ HRESULT Weapon::Render()
     return S_OK;
 }
 
+void Weapon::OnBeginOverlap(Shared<Collider> other)
+{
+    PartObject::OnBeginOverlap(other);
+
+    Shared<Character> hitted = dynamic_pointer_cast<Character>(other->Get_Owner());
+    if (!hitted)
+        return;
+
+    Shared<GameObject> owner = nullptr;
+    if (auto parentTransform = _parentTransform.lock())
+        owner = parentTransform->Get_Owner();
+    if (!owner)
+        return;
+
+    if (hitted.get() == owner.get())
+        return;
+
+    auto combatStat = owner->Get_Component<CombatStat>();
+    if (combatStat && combatStat->Apply_Damage(hitted.get())) 
+    {
+        if (auto myPlayer = dynamic_pointer_cast<MyPlayer>(owner))
+            myPlayer->Add_ComboHit();
+    }
+}
+
+void Weapon::OnEndOverlap(Shared<Collider> other)
+{
+    PartObject::OnEndOverlap(other);
+
+
+}
+
+void Weapon::Set_ColliderActive(bool active)
+{
+    if (_collider)
+    {
+        _collider->Set_IsActive(active);
+    }
+}
+
 HRESULT Weapon::Ready_Components(const wstring& modelAssetTag)
 {
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXMESH, _shader), E_FAIL);
@@ -122,13 +173,13 @@ HRESULT Weapon::Ready_Components(const wstring& modelAssetTag)
     }
 
     // 충돌체 추가
-    Bounding_Capsule::FBoundingCapsuleDesc capsuleDesc{};
-    capsuleDesc.radius = 0.5f;
-    capsuleDesc.halfHeight = 0.3f;
+    Bounding_OBB::FBoundingOBBDesc obbDesc{};
+    obbDesc.extents = Vec3(5.f, 30.f, 5.f);
+    obbDesc.center = Vec3(0.f, obbDesc.extents.y, 0.f);
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, _collider, &capsuleDesc), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_OBB, _collider, &obbDesc), E_FAIL);
     _collider->Set_CollisionPreset(Collision_Preset::Player_Attack);
-    GAME->Add_Collider(_collider);
+    _collider->Set_IsActive(false); // 기본 비활성 -> 공격 시 활성화되도록
 
     return S_OK;
 }

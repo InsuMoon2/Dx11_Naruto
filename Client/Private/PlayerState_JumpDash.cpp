@@ -85,43 +85,16 @@ void PlayerState_JumpDash::Update(PlayerStateMachine* state, float timeDelta)
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
 
-    if (!_requestedAnimEnd && movement->Get_DashNormalizedTime() >= 1.f)
+    if (movement->Is_OnGround())
     {
-        state->Request_AnimStateEnd();
-        _requestedAnimEnd = true;
+        bool hasInput = input->Has_MoveInput();
+        state->Change_State(hasInput ? EPlayerState::Run : EPlayerState::Idle);
+        return;
     }
 
-    if (!_gravityRestored && state->Get_AnimPhase() == EAnimPhase::End)
+    if (state->Is_AnimStateFinished())
     {
-        movement->Set_GravityEnabled(true);
-
-        Vec3 velocity = movement->Get_Velocity();
-        velocity.y = 0.f;
-        movement->Set_Velocity(velocity);
-
-        _gravityRestored = true;
-    }
-
-    // 아직 End Phase 전이면 공중 유지
-    if (!_gravityRestored)
-        return;
-
-    // 아직 공중상태
-    if (!movement->Is_OnGround())
-        return;
-
-    // 착지 애니메이션 끝나면 상태 전환
-    if (state->Is_AnimSequenceFinished() || state->Is_AnimStateFinished())
-    {
-        if (input->Has_MoveInput())
-        {
-            state->Change_State(EPlayerState::Run);
-        }
-        else
-        {
-            state->Change_State(EPlayerState::Idle);
-        }
-
+        state->Change_State(EPlayerState::JumpFall);
         return;
     }
 }

@@ -16,7 +16,7 @@ HRESULT Bounding_Sphere::Initialize(const FBoundingDesc& desc)
 {
     CHECK_FAILED(Bounding::Initialize(desc), E_FAIL);
 
-    const FBoundingSphereDesc& sphereDesc = static_cast<const FBoundingSphereDesc>(desc);
+    const FBoundingSphereDesc& sphereDesc = static_cast<const FBoundingSphereDesc&>(desc);
 
     _originSphere = BoundingSphere(sphereDesc.center, sphereDesc.radius);
     _sphere = _originSphere;

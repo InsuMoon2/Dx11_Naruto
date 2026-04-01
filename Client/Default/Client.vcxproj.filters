@@ -205,6 +205,11 @@
     <ClInclude Include="..\Public\AN_SpawnSkill.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
     <ClInclude Include="..\Public\Skill_Rasengan.h" />
+    <ClInclude Include="..\Public\PlayerState_JumpFall.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_AnnounceCombo.h" />
+    <ClInclude Include="..\Public\PlayerState_Hit.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -393,6 +398,11 @@
     <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
+    <ClCompile Include="..\Private\PlayerState_JumpFall.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_AnnounceCombo.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Hit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

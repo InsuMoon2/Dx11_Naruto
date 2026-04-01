@@ -16,7 +16,7 @@
         },
         {
             "Id": "Model_TestModel",
-            "Path": "../../Client/Bin/Resources/Models/Custom/Animation/TesetNormal.meshbin",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Animation/Custom.meshbin",
             "Count": 1,
             "ModelType": "SkeletalMesh",
             "Level": "Static"

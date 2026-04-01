@@ -5,6 +5,7 @@
 NS_BEGIN(Engine)
 
 class GameObject;
+class ContainerObject;
 
 struct FPrefabDesc
 {
@@ -27,7 +28,6 @@ public:
     HRESULT Load_Prefab(const string& prefabPath);
     HRESULT Save_Prefab(const string& prefabPath, shared_ptr<GameObject> gameObject);
 
-
     // Prefab에서 GameObject 생성 (인스턴싱)
     Shared<GameObject>  Instantiate_Prefab(const string& prefabName, const json& overrides = {});
     Shared<FPrefabDesc> Get_PrefabData(const string& prefabName);
@@ -41,6 +41,10 @@ private:
     Shared<GameObject>  Deserialize_GameObject(const FPrefabDesc& desc, const json& overrides);
     string              Normalize_PrefabPath(const string& prefabPath);
 
+    // 프리팹 JSON에 들어 있는 컴포넌트 배열을 대상 오브젝트에 다시 적용한다.
+    void Apply_ComponentDataToObject(const json& components, Shared<GameObject> gameObject, bool skipTransform);
+
+    void Apply_PartObjectDataToContainer(const json& customProperties, Shared<ContainerObject> container);
     void Reapply_Prefab_ToObject(const FPrefabDesc& desc, Shared<GameObject> gameObject);
 private:
     ComPtr<Device>          _device;

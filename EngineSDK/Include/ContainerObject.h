@@ -60,6 +60,9 @@ protected:
 protected:
     array<Shared<PartObject>, ETOI(EPartSlot::END)> _partObjects;
 
+    // 프리팹 역직렬화 시 파츠 오브젝트 전체 JSON을 보관했다가 실제 파츠가 준비되면 다시 적용한다.
+    json _cachedPartObjects = json::object();
+    // 프리팹 역직렬화 시 슬롯별 파츠 transform JSON을 보관했다가 실제 파츠 transform에 다시 적용한다.
     json _cachedPartTransforms = json::object();
 
 public:

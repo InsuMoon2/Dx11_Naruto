@@ -198,6 +198,9 @@
     <ClInclude Include="..\Public\Skill_Inspector.h" />
     <ClInclude Include="..\Public\AN_SpawnSkill_Inspector.h" />
     <ClInclude Include="..\Public\Collider_Inspector.h" />
+    <ClInclude Include="..\Public\DebugDraw.h">
+      <Filter>97. Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -349,6 +352,9 @@
     <ClCompile Include="..\Private\Skill_Inspector.cpp" />
     <ClCompile Include="..\Private\AN_SpawnSkill_Inspector.cpp" />
     <ClCompile Include="..\Private\Collider_Inspector.cpp" />
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>97. Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

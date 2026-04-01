@@ -97,6 +97,10 @@ private:
 
     void Ensure_PreviewCamera();
     void Fit_PreviewCamera_ToOwner();
+
+    void Ensure_PreviewGridResources();
+    void Draw_PreviewGrid() const;
+
     void Handle_PlaybackShortcut();
     void Handle_DeleteShortcut();
 
@@ -123,6 +127,14 @@ private:
     Shared<GameObject>          _previewOwner;
     Shared<Editor_Camera_Free>  _previewCamera;
     Shared<RenderTarget>        _previewRT;
+    // 애니메이션 프리뷰 RT에 그리드를 그릴 때 사용하는 라인 배치 객체다.
+    Shared<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> _previewGridBatch;
+    // 애니메이션 프리뷰 그리드용 정점 컬러 이펙트다.
+    Shared<DirectX::BasicEffect> _previewGridEffect;
+    // 애니메이션 프리뷰 그리드 렌더링 시 필요한 입력 레이아웃이다.
+    ComPtr<ID3D11InputLayout> _previewGridInputLayout;
+    // 애니메이션 프리뷰 그리드를 항상 보이게 그리기 위한 depth off 상태다.
+    ComPtr<ID3D11DepthStencilState> _previewGridDepthDisabledState;
 
     string                      _modelGuid;
 
@@ -136,6 +148,8 @@ private:
 
     bool  _isPlaying = false;
     bool  _isPreviewHovered = false;
+    // 애니메이션 프리뷰 그리드 표시 여부를 제어한다.
+    bool  _showPreviewGrid = true;
     float _previewPlaybackTimeSec = 0.f;
 
     FSequencerUIState       _sequencerState;

@@ -9,8 +9,8 @@
             "animStateKey": "Attack_01",
             "damageMultiplier": 1.0,
             "canCancel": true,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 3,
+            "launchUp": 3,
             "hitSound": 0
         },
         {
@@ -22,8 +22,8 @@
             "animStateKey": "Attack_02",
             "damageMultiplier": 1.2,
             "canCancel": true,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 2,
+            "launchUp": 2,
             "hitSound": 0
         },
         {
@@ -35,8 +35,8 @@
             "animStateKey": "Attack_03",
             "damageMultiplier": 1.5,
             "canCancel": true,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 3,
+            "launchUp": 3,
             "hitSound": 0
         },
         {
@@ -48,8 +48,8 @@
             "animStateKey": "Attack_04",
             "damageMultiplier": 2.0,
             "canCancel": false,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 4,
+            "launchUp": 4,
             "hitSound": 0
         },
         {
@@ -113,8 +113,8 @@
             "animStateKey": "Attack_Sword_01",
             "damageMultiplier": 1.5,
             "canCancel": true,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 5,
+            "launchUp": 5,
             "hitSound": 0
         },
         {
@@ -126,8 +126,8 @@
             "animStateKey": "Attack_Sword_02",
             "damageMultiplier": 2.0,
             "canCancel": true,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 5,
+            "launchUp": 4,
             "hitSound": 0
         },
         {
@@ -139,8 +139,8 @@
             "animStateKey": "Attack_Sword_03",
             "damageMultiplier": 3.0,
             "canCancel": false,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 5,
+            "launchUp": 4,
             "hitSound": 0
         },
         {
@@ -152,8 +152,8 @@
             "animStateKey": "Attack_Sword_04",
             "damageMultiplier": 3.0,
             "canCancel": false,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 4,
+            "launchUp": 4,
             "hitSound": 0
         },
         {

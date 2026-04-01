@@ -201,6 +201,34 @@ void MovementComponent::Set_Velocity(Vec3 velocity)
 
 }
 
+void MovementComponent::Launch(const Vec3& launchVelocity, bool xyOverride, bool zOverride)
+{
+    if (xyOverride)
+    {
+        _velocity.x = launchVelocity.x;
+        _velocity.z = launchVelocity.z;
+    }
+    else
+    {
+        _velocity.x += launchVelocity.x;
+        _velocity.z += launchVelocity.z;
+    }
+    if (zOverride)
+    {
+        _velocity.y = launchVelocity.y;
+    }
+    else
+    {
+        _velocity.y += launchVelocity.y;
+    }
+
+    if (launchVelocity.y > 0.f || launchVelocity.LengthSquared() > FLT_EPSILON)
+    {
+        _onGround = false;
+        _canDoubleJump = false;
+    }
+}
+
 float MovementComponent::Get_DashNormalizedTime() const
 {
     if (!_isDashing || _dashDuration <= FLT_EPSILON)

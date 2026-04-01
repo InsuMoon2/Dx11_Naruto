@@ -35,7 +35,8 @@ public:
 
     HRESULT Bind_Lights() override;
 
-    void OnBeginOverlap(Shared<Collider> other) override;
+    void    OnBeginOverlap(Shared<Collider> other) override;
+    void    TakeDamage(const FDamageEvent& damageEvent) override;
 
 public:
     json    To_Json() const override;

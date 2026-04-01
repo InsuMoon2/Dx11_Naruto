@@ -81,6 +81,8 @@ void SkillObject::Late_Update(float timeDelta)
     if (!Is_Destroy() && _collider)
     {
         _collider->Update_Collider(_transformCom->Get_WorldMatrix());
+
+        GAME->Add_Collider(_collider);
     }
 }
 
@@ -116,7 +118,6 @@ HRESULT SkillObject::Ready_Components(const FSkillObjectDesc& desc)
     CHECK_NULL(_collider, E_FAIL);
     _collider->Set_CollisionPreset(Collision_Preset::Projectile);
 
-    GAME->Add_Collider(_collider);
 
     return S_OK;
 }

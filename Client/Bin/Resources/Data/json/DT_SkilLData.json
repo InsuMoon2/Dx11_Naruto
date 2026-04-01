@@ -13,8 +13,8 @@
             "SkillName": "Rasen_Shuriken",
             "Cooldown": 7,
             "AnimStateName": "Skill_RasenShuriken",
-            "LoopDurationSec": 5.0,
-            "IsHoldSkill": true
+            "LoopDurationSec": 0.0,
+            "IsHoldSkill": false
         },
         {
             "SkillID": 1003,

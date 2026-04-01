@@ -25,6 +25,10 @@ namespace Client
         string  animStateKey;
         float   damageMultiplier = 1.f;
         bool    canCancel = true;
+
+        float   launchPower = 0.f;
+        float   launchUp = 0.f;
+        int32   hitSound = 0;
     };
 
     struct FComboProfile

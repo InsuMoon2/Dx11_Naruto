@@ -31,6 +31,8 @@ public:
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
 
+    void    TakeDamage(const FDamageEvent& damageEvent) override;
+
 public: /* Network */
     uint64  Get_NetworkId() const { return _networkId; }
     void    Set_NetworkId(uint64 id) { _networkId = id; }
@@ -38,6 +40,8 @@ public: /* Network */
 
 public:
     HRESULT Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetTag);
+
+    void    Refresh_WeaponAttachment_ByCurrentState();
 
 protected:
     HRESULT Ready_Components() override;
@@ -47,8 +51,10 @@ protected:
     virtual HRESULT Ready_PartObjects();
 
 protected:
-    const Matrix* Find_WeaponSocketMatrix(EWeaponType weaponType) const;
+    const Matrix* Find_WeaponSocketMatrix(EWeaponType weaponType, EPlayerState currentState) const;
+    bool  Is_SwordAttackState(EPlayerState state) const;
     void  Change_WeaponAttachment(EWeaponType weaponType);
+
     void  On_WeaponTypeChagned(int32 weaponTypeIndex);
 
 protected:
@@ -56,8 +62,7 @@ protected:
     Shared<AnimationStateComponent> _animState;
     Shared<Model>                   _model;
     Shared<EquipmentComponent>      _equipment;
-
-    Shared<Collider>                _collider;
+    
 
 protected:
     uint64                          _networkId = 0;

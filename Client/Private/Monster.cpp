@@ -74,27 +74,34 @@ void Monster::Late_Update(float timeDelta)
     Character::Late_Update(timeDelta);
 
     if (_collider)
+    {
         _collider->Update_Collider(_transformCom->Get_WorldMatrix());
+        GAME->Add_Collider(_collider);
+    }
 
     GAME->Add_RenderGroup(ERenderGroup::NonBlend, this->GetSharedPtr());
 }
 
 HRESULT Monster::Render()
 {
-    Character::Render();
+    if (!_model || !_shaderCom || Is_Destroy())
+        return S_OK;
 
-    if (!_model)
-        return E_FAIL;
+    CHECK_FAILED(Character::Render(), E_FAIL);
 
-    size_t numMeshes = _model->Get_NumMeshes();
+    const size_t numMeshes = _model->Get_NumMeshes();
+    if (numMeshes == 0)
+        return S_OK;
+
+    if (FAILED(_model->Bind_BoneMatrices(_shaderCom, "g_BoneMatrices")))
+        return S_OK;
 
     for (size_t i = 0; i < numMeshes; i++)
     {
-        CHECK_FAILED(_model->Bind_BoneMatrices(_shaderCom, "g_BoneMatrices"), E_FAIL);
         _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
 
-        _shaderCom->Begin_Pass(0);
-        _model->Render(i);
+        CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
+        CHECK_FAILED(_model->Render(static_cast<uint32>(i)), E_FAIL);
     }
 
     return S_OK;
@@ -125,6 +132,59 @@ HRESULT Monster::Bind_Lights()
 void Monster::OnBeginOverlap(Shared<Collider> other)
 {
     Character::OnBeginOverlap(other);
+
+
+}
+
+void Monster::TakeDamage(const FDamageEvent& damageEvent)
+{
+    Character::TakeDamage(damageEvent);
+
+    if (_combatStat && _combatStat->Is_Dead())
+        return;
+
+    if (_combatStat)
+        _combatStat->Take_Damage(damageEvent);
+
+    if (damageEvent.launchPower > 0.f || damageEvent.launchUp > 0.f)
+    {
+        Vec3 knockDir = Vec3::Zero;
+        if (damageEvent.damageCauser)
+        {
+            Vec3 causerPos = damageEvent.damageCauser->Get_Transform()->Get_WorldForward();
+            Vec3 myPos = _transformCom->Get_WorldPosition();
+
+            knockDir = myPos - causerPos;
+            knockDir.y = 0.f;
+
+            if (knockDir.LengthSquared() > FLT_EPSILON)
+                knockDir.Normalize();
+            else
+                knockDir = Vec3(0.f, 0.f, -1.f);
+        }
+        // 구한 방향값에 데이터 적용
+        Vec3 launchVelocity = knockDir * damageEvent.launchPower;
+        launchVelocity.y = damageEvent.launchUp;
+
+        auto movement = Get_Component<MovementComponent>();
+        if (movement)
+        {
+            movement->Launch(launchVelocity, false, true);
+        }
+    }
+
+    // 피격 상태 전환 -> 몬스터는 비헤이비어 트리에서 상태값 변경해주기
+    /*auto sm = Get_Component<PlayerStateMachine>();
+    if (sm)
+    {
+        if (_combatStat && _combatStat->Is_Dead())
+            sm->Force_Enter_State(EPlayerState::Dead);
+        else
+            sm->Force_Enter_State(EPlayerState::Hit);
+    }*/
+
+    auto& hub = GAME->Get_DelegateHub();
+    hub.OnDamaged.Broadcast(static_pointer_cast<Character>(GetSharedPtr()), damageEvent.damage);
 }
 
 json Monster::To_Json() const
@@ -174,7 +234,6 @@ HRESULT Monster::Ready_Components()
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, _collider, &capsuleDesc), E_FAIL);
     _collider->Set_CollisionPreset(Collision_Preset::Monster);
 
-    GAME->Add_Collider(_collider);
 
     return S_OK;
 }

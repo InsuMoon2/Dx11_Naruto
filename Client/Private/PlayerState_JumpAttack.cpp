@@ -9,6 +9,8 @@
 #include "GameObject.h"
 #include "EquipmentComponent.h"
 #include "ComboProfile_Manager.h"
+#include "MyPlayer.h"
+#include "Weapon.h"
 
 PlayerState_JumpAttack::PlayerState_JumpAttack()
 {
@@ -88,7 +90,7 @@ void PlayerState_JumpAttack::Update(PlayerStateMachine* state, float timeDelta)
         movement->Set_GravityEnabled(true);
         _gravityRestored = true;
 
-        state->Change_State(EPlayerState::Jump);
+        state->Change_State(EPlayerState::JumpFall);
 
         return;
     }
@@ -116,6 +118,27 @@ void PlayerState_JumpAttack::Exit(PlayerStateMachine* state)
         input->Set_InputMode(EPlayerInputMode::Normal);
 
     _cachedStateMachine = nullptr;
+
+    auto owner = state->Get_Owner();
+    if (owner)
+    {
+        auto container = dynamic_pointer_cast<ContainerObject>(owner);
+        if (container)
+        {
+            auto weapon = dynamic_pointer_cast<Weapon>(container->Get_PartObject(ContainerObject::EPartSlot::Weapon));
+            if (weapon)
+                weapon->Set_ColliderActive(false);
+        }
+
+        auto myPlayer = dynamic_pointer_cast<MyPlayer>(owner);
+        if (myPlayer)
+        {
+            myPlayer->Disable_Hitbox(EHitboxTarget::RightHand);
+            myPlayer->Disable_Hitbox(EHitboxTarget::LeftHand);
+            myPlayer->Disable_Hitbox(EHitboxTarget::RightFoot);
+            myPlayer->Disable_Hitbox(EHitboxTarget::LeftFoot);
+        }
+    }
 }
 
 void PlayerState_JumpAttack::Open_ComboWindow()
@@ -148,7 +171,7 @@ void PlayerState_JumpAttack::Close_ComboWindow()
             _gravityRestored = true;
         }
 
-        _cachedStateMachine->Change_State(EPlayerState::Jump);
+        _cachedStateMachine->Change_State(EPlayerState::JumpFall);
     }
 }
 

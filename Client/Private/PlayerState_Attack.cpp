@@ -9,6 +9,9 @@
 #include "GameObject.h"
 #include "EquipmentComponent.h"
 #include "ComboProfile_Manager.h"
+#include "MyPlayer.h"
+#include "Weapon.h"
+#include "CombatStat.h"
 
 PlayerState_Attack::PlayerState_Attack()
 {
@@ -82,6 +85,31 @@ void PlayerState_Attack::Exit(PlayerStateMachine* state)
     input->Set_InputMode(EPlayerInputMode::Normal);
 
     _cachedStateMachine = nullptr;
+
+    auto owner = state->Get_Owner();
+    if (owner)
+    {
+        auto stat = owner->Get_Component<CombatStat>();
+        if (stat)
+            stat->Begin_AttackSwing();
+            
+        auto container = dynamic_pointer_cast<ContainerObject>(owner);
+        if (container)
+        {
+            auto weapon = dynamic_pointer_cast<Weapon>(container->Get_PartObject(ContainerObject::EPartSlot::Weapon));
+            if (weapon)
+                weapon->Set_ColliderActive(false);
+        }
+        
+        auto myPlayer = dynamic_pointer_cast<MyPlayer>(owner);
+        if (myPlayer)
+        {
+            myPlayer->Disable_Hitbox(EHitboxTarget::RightHand);
+            myPlayer->Disable_Hitbox(EHitboxTarget::LeftHand);
+            myPlayer->Disable_Hitbox(EHitboxTarget::RightFoot);
+            myPlayer->Disable_Hitbox(EHitboxTarget::LeftFoot);
+        }
+    }
 }
 
 void PlayerState_Attack::Open_ComboWindow()
@@ -122,6 +150,17 @@ void PlayerState_Attack::Reset_Combo()
     _hasBufferedAttack = false;
     _activeProfile = nullptr;
     _activeProfileType = EAttackProfileType::Hand_Ground;
+
+    if (_cachedStateMachine)
+    {
+        auto owner = _cachedStateMachine->Get_Owner();
+        if (owner)
+        {
+            auto stat = owner->Get_Component<CombatStat>();
+            if (stat)
+                stat->Begin_AttackSwing();
+        }
+    }
 }
 
 void PlayerState_Attack::Advance_Combo()
@@ -131,7 +170,32 @@ void PlayerState_Attack::Advance_Combo()
     _hasBufferedAttack = false;
 
     if (_cachedStateMachine)
+    {
+        auto owner = _cachedStateMachine->Get_Owner();
+        if (owner)
+        {
+            auto stat = owner->Get_Component<CombatStat>();
+            if (stat)
+                stat->Begin_AttackSwing();
+        }
+    }
+
+    if (_cachedStateMachine)
         Play_CurrentComboClip(_cachedStateMachine);
+}
+
+const FComboEntry* PlayerState_Attack::Get_CurrentComboEntry() const
+{
+    if (!_activeProfile || _activeProfile->combos.empty())
+        return nullptr;
+
+    int32 safeIdx = min(_comboIndex,
+        static_cast<int32>(_activeProfile->combos.size()) - 1);
+
+    if (safeIdx < 0)
+        return nullptr;
+
+    return &_activeProfile->combos[safeIdx];
 }
 
 void PlayerState_Attack::Select_Profile(PlayerStateMachine* state)

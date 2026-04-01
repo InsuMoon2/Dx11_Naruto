@@ -7,10 +7,15 @@ NS_BEGIN(Engine)
 
 class Transform;
 class GameObject;
+class Character;
 
 DECLARE_DELEGATE(FOnPlayerSpawned, Shared<Transform>);
 DECLARE_DELEGATE(FOnPlayerObjectSpawned, Shared<GameObject>);
 DECLARE_DELEGATE(FOnWeaponTypeChanged, int32);
+
+DECLARE_DELEGATE(FOnDamaged, Shared<Character> /*맞은놈*/, float/*데미지*/);
+DECLARE_DELEGATE(FOnPlayerComboHit, uint32/*콤보 수*/);
+
 
 // 델리게이트들을 모아놓을 허브 : 매니저 역할이긴하네..
 class ENGINE_DLL DelegateHub : public Base
@@ -29,6 +34,9 @@ public:
     FOnPlayerObjectSpawned  OnPlayerObjectSpawned;
     // 무기 변경
     FOnWeaponTypeChanged    OnWeaponTypeChanged;
+
+    FOnDamaged              OnDamaged;
+    FOnPlayerComboHit       OnPlayerComboHit;
 
     // 추후 확장 할 것들
     // LevelChanged, OnBossKill, MonsterKill .. etc

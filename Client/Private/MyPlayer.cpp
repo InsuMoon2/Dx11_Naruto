@@ -1,6 +1,11 @@
 ﻿#include "pch.h"
 #include "MyPlayer.h"
 
+#include "Bounding_Sphere.h"
+#include "Model.h"
+#include "Bounding_Capsule.h"
+#include "EquipmentComponent.h"
+#include "Collider.h"
 #include "CombatStat.h"
 #include "InputComponent.h"
 #include "MovementComponent.h"
@@ -56,6 +61,16 @@ HRESULT MyPlayer::Initialize(void* arg)
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PLAYER_CONTROLLER, _playerController), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PLAYER_STATE, _stateMachine), E_FAIL);
 
+    // 충돌체 추가
+    Bounding_Capsule::FBoundingCapsuleDesc capsuleDesc{};
+    capsuleDesc.radius = 0.5f;
+    capsuleDesc.halfHeight = 0.3f;
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, _collider, &capsuleDesc), E_FAIL);
+    _collider->Set_CollisionPreset(Collision_Preset::Player);
+
+    CHECK_FAILED(Ready_HitboxColliders(), E_FAIL);
+
     return S_OK;
 }
 
@@ -74,7 +89,15 @@ void MyPlayer::Update(float timeDelta)
 {
     Player::Update(timeDelta);
 
- 
+    if (_comboHitCount > 0)
+    {
+        _comboDecayTimer -= timeDelta;
+        if (_comboDecayTimer <= 0.f)
+        {
+            _comboHitCount = 0;
+            _comboDecayTimer = 0.f;
+        }
+    }
 }
 
 void MyPlayer::Late_Update(float timeDelta)
@@ -87,11 +110,94 @@ void MyPlayer::Late_Update(float timeDelta)
         _syncTimer = 0.f;
         Send_MovePacket(false);
     }
+
+    // 몸통 충돌체
+    if (_collider)
+    {
+        _collider->Update_Collider(_transformCom->Get_WorldMatrix());
+        GAME->Add_Collider(_collider);
+    }
+
+    // 격투형 히트박스
+    if (_equipment && _equipment->Get_CurrentWeaponType() == EWeaponType::Hand)
+    {
+        for (int i = 0; i < ETOI(EHitboxTarget::END); ++i)
+        {
+            auto& collider = _hitboxColliders[i];
+
+            if (!collider) continue;
+
+            const Matrix* boneMat = _model
+                ? _model->Get_SocketBoneMatrixPtr(_hitboxBoneNames[i])
+                : nullptr;
+
+            Matrix finalMat = boneMat
+                ? (*boneMat) * _transformCom->Get_WorldMatrix()
+                : _transformCom->Get_WorldMatrix();
+
+            const Matrix worldMat = Matrix::CreateTranslation(finalMat.Translation());
+
+            collider->Update_Collider(worldMat);
+
+            GAME->Add_Collider(collider);
+        }
+    }
 }
 
 void MyPlayer::Force_SendMovePacket()
 {
     Send_MovePacket(true);
+}
+
+void MyPlayer::Enable_Hitbox(EHitboxTarget target)
+{
+    int idx = ETOI(target);
+    if (idx < 0 || idx >= ETOI(EHitboxTarget::END))
+        return;
+
+    if (_hitboxColliders[idx])
+        _hitboxColliders[idx]->Set_IsActive(true);
+}
+
+void MyPlayer::Disable_Hitbox(EHitboxTarget target)
+{
+    int idx = ETOI(target);
+    if (idx < 0 || idx >= ETOI(EHitboxTarget::END))
+        return;
+
+    if (_hitboxColliders[idx])
+        _hitboxColliders[idx]->Set_IsActive(false);
+}
+
+void MyPlayer::Disable_All_Hitboxes()
+{
+    for (auto& col : _hitboxColliders)
+    {
+        if (col)
+            col->Set_IsActive(false);
+    }
+}
+
+void MyPlayer::OnBeginOverlap(Shared<Collider> other)
+{
+    Player::OnBeginOverlap(other);
+
+    Shared<Character> hitted = dynamic_pointer_cast<Character>(other->Get_Owner());
+    if (!hitted || hitted.get() == this)
+        return;
+
+    if (_combatStat && _combatStat->Apply_Damage(hitted.get()))
+    {
+        Add_ComboHit();
+    }
+}
+
+void MyPlayer::Add_ComboHit()
+{
+    _comboHitCount++;
+    _comboDecayTimer = COMBO_DECAY_TIME;
+
+    GAME->Get_DelegateHub().OnPlayerComboHit.Broadcast(_comboHitCount);
 }
 
 void MyPlayer::Send_MovePacket(bool forceSend)
@@ -143,6 +249,39 @@ Protocol::ObjectInfo MyPlayer::Build_NetworkInfo() const
 HRESULT MyPlayer::Ready_Components()
 {
     CHECK_FAILED(Player::Ready_Components(), E_FAIL);
+
+    return S_OK;
+}
+
+HRESULT MyPlayer::Ready_HitboxColliders()
+{
+    _hitboxBoneNames[ETOI(EHitboxTarget::RightHand)] = "R_Hand_Weapon_cnt_tr";
+    _hitboxBoneNames[ETOI(EHitboxTarget::LeftHand)] = "L_Hand_Weapon_cnt_tr";
+    _hitboxBoneNames[ETOI(EHitboxTarget::RightFoot)] = "RightFoot";
+    _hitboxBoneNames[ETOI(EHitboxTarget::LeftFoot)] = "LeftFoot";
+
+    Bounding_Sphere::FBoundingSphereDesc sphereDesc{};
+    sphereDesc.radius = 0.2f;
+
+    for (int i = 0; i < ETOI(EHitboxTarget::END); ++i)
+    {
+        Shared<Component> comp =
+            GAME->Clone_Component( Protocol::COMPONENT_TYPE_COLLIDER_SPHERE, &sphereDesc);
+
+        if (!comp)
+        {
+            LOG_ERROR("MyPlayer::Ready_HitboxColliders — Clone 실패 index={}", i);
+            return E_FAIL;
+        }
+
+        comp->Set_Owner(GetSharedPtr());
+        auto collider = static_pointer_cast<Collider>(comp);
+
+        collider->Set_CollisionPreset(Collision_Preset::Player_Attack);
+
+        collider->Set_IsActive(false);
+        _hitboxColliders[i] = collider;
+    }
 
     return S_OK;
 }
@@ -218,5 +357,4 @@ shared_ptr<GameObject> MyPlayer::Clone(void* arg)
 void MyPlayer::Free()
 {
     Player::Free();
-
 }

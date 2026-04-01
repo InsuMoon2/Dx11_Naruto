@@ -19,6 +19,24 @@
             "type": "COMPONENT_TYPE_TRANSFORM"
         },
         {
+            "bounding": {
+                "local_center": [
+                    0.0,
+                    0.800000011920929,
+                    0.0
+                ],
+                "local_euler": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "origin_half_height": 0.30000001192092896,
+                "origin_radius": 0.5
+            },
+            "channel": "Monster",
+            "collision_mask": 196,
+            "is_active": true,
+            "shape": "Capsule",
             "type": "COMPONENT_TYPE_COLLIDER"
         },
         {
@@ -27,7 +45,25 @@
         },
         {
             "animations": [
-                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop"
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_ShadowPossession_Loop",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_ElectricShock_Loop",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Fall_ChaseAttack_Behind_Loop",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff_Bound_Loop",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Down_Loop",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff_Behind",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_DownToWall",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BellyDown_Large_Start",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_D51NJ3_Start",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_Conect_toFall",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_SpinBlowOff",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Down_Sleep_Type01_Loop",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Stagger_Belly",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_UpLeft_Shoulder",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Bind_Loop",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_BellyDown_Large_Loop",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left_Head"
             ],
             "materials": [
                 {
@@ -49,7 +85,7 @@
                     }
                 }
             ],
-            "model_guid": "6b9eee4c-928a-4015-9759-b29753246960",
+            "model_guid": "396d55ff-515e-41e6-9e02-2fcdd7698e57",
             "model_type": "SkeletalMesh",
             "type": "COMPONENT_TYPE_MODEL"
         },
@@ -59,7 +95,7 @@
         {
             "Attack": 10.0,
             "Defense": 5.0,
-            "HP": 100.0,
+            "HP": 10000.0,
             "MP": 100.0,
             "Max HP": 104.0999984741211,
             "Max MP": 100.0,
@@ -175,13 +211,105 @@
                         "loop": true,
                         "playRate": 1.0
                     }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_04",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
                 }
             ],
             "current_state": "",
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
         }
     ],
-    "guid": "7f30fb95-ef7a-4b8c-8568-657460130eac",
+    "guid": "9ad1f960-462a-42fd-a705-3726e589da43",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster",
     "static_class": "Monster"

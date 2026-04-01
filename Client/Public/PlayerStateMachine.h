@@ -42,13 +42,13 @@ public:
     Shared<AnimationStateComponent> Get_AnimationState() const { return _animationState; }
 
 public:
-    bool    Play_AnimState(EPlayerState stateID);
-    bool    Play_DirectionalAnimState(EPlayerState stateID, EMoveInputDirection dir);
-    bool    Play_AnimStateLoopOnly(EPlayerState stateID);
+    bool            Play_AnimState(EPlayerState stateID);
+    bool            Play_DirectionalAnimState(EPlayerState stateID, EMoveInputDirection dir);
+    bool            Play_AnimStateLoopOnly(EPlayerState stateID);
 
-    void    Request_AnimStateEnd();
-    bool    Is_AnimStateFinished() const;
-    bool    Is_AnimSequenceFinished() const;
+    void            Request_AnimStateEnd();
+    bool            Is_AnimStateFinished() const;
+    bool            Is_AnimSequenceFinished() const;
 
     const FStateAnimationDesc* Find_AnimStateDesc(EPlayerState stateID);
 
@@ -57,6 +57,16 @@ public:
     float           Get_AnimDurationTicks() const;
     float           Get_AnimTrackPositionSec() const;
     float           Get_AnimDurationSec() const;
+
+    template<typename T>
+    Shared<T> Get_State(EPlayerState stateID) const
+    {
+        auto it = _states.find(stateID);
+
+        if (it == _states.end())
+            return nullptr;
+        return dynamic_pointer_cast<T>(it->second);
+    }
 
 public:
     // 플레이어 강제 상태 변경

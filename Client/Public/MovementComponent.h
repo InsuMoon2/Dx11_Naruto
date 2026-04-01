@@ -83,6 +83,8 @@ public:
     void Set_Velocity(Vec3 velocity);
     Vec3 Get_Velocity() { return _velocity; }
 
+    void Launch(const Vec3& launchVelocity, bool xyOverride = false, bool zOverride = false);
+
 public:
     bool Get_OrientRotationToMovement() const { return _bOrientRotationToMovement; }
     void Set_OrientRotationToMovement(bool check) { _bOrientRotationToMovement = check; }

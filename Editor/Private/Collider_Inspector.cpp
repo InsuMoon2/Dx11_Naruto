@@ -108,25 +108,37 @@ void Collider_Inspector::Draw_Inspector(shared_ptr<Engine::Component> component)
         Vec3& center = pCapsule->Get_LocalCenter();
         float& radius = pCapsule->Get_OriginRadius();
         float& halfHeight = pCapsule->Get_OriginHalfHeight();
+        Vec3& euler = pCapsule->Get_LocalEuler();
 
-        // 편의를 위해 임시 변수에 담아서 컨트롤
-        Vec3 tempCenter = center;
+        Vec3  tempCenter = center;
         float tempRadius = radius;
         float tempHalfHeight = halfHeight;
+        Vec3  tempEuler = euler;
 
-        bool changed = false;
-        if (ImGui::DragFloat3("Local Center##Cap", (float*)&tempCenter, 0.01f)) changed = true;
-        if (ImGui::DragFloat("Radius##Cap", &tempRadius, 0.01f, 0.01f, FLT_MAX)) changed = true;
-        if (ImGui::DragFloat("Half Height##Cap", &tempHalfHeight, 0.01f, 0.01f, FLT_MAX)) changed = true;
+        bool centerChanged = false;
+        bool radiusChanged = false;
+        bool heightChanged = false;
+        bool rotationChanged = false;
 
-        if (changed)
+        if (ImGui::DragFloat3("Local Center##Cap", (float*)&tempCenter, 0.01f))           centerChanged = true;
+        if (ImGui::DragFloat("Radius##Cap", &tempRadius, 0.01f, 0.01f, FLT_MAX)) radiusChanged = true;
+        if (ImGui::DragFloat("Half Height##Cap", &tempHalfHeight, 0.01f, 0.01f, FLT_MAX)) heightChanged = true;
+        if (ImGui::DragFloat3("Local Rotation##Cap", (float*)&tempEuler, 0.5f))            rotationChanged = true;
+
+        if (centerChanged || radiusChanged || heightChanged || rotationChanged)
         {
             center = tempCenter;
             radius = tempRadius;
             halfHeight = tempHalfHeight;
+
+            if (radiusChanged || heightChanged)
+                center.y = tempHalfHeight + tempRadius;
+
+            pCapsule->Set_LocalEuler(tempEuler);
         }
         break;
     }
+
     }
 
     EndEdit(component);

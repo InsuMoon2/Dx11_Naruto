@@ -281,6 +281,8 @@ void Prefab_View::Pre_Render()
     _previewObject->Update(dt);
     _previewObject->Late_Update(dt);
 
+    //GAME->Clear_Colliders();
+
     if (model)
     {
         model->Set_EnableNotifies(wasEnableNotifies);
@@ -292,6 +294,7 @@ void Prefab_View::Pre_Render()
     _prevRT->BindAsTarget();
 
     GAME->Draw();
+    Draw_PreviewGrid();
     //_previewObject->Render();
 
     GAME->BindBackBuffer();
@@ -558,6 +561,10 @@ void Prefab_View::Draw_Buttons()
 
     ImGui::SameLine();
 
+    ImGui::Checkbox("Preview Grid", &_showPreviewGrid);
+
+    ImGui::SameLine();
+
     if (ImGui::Button(ICON_FA_CAMERA " Capture Thumbnail", ImVec2(150.f, 0)))
     {
         if (_prevRT)
@@ -585,6 +592,107 @@ void Prefab_View::Draw_Buttons()
             EDITOR->Get_Notification()->Add_Notification("Capture Thumbnail: {}", _prefabName);
         }
     }
+}
+
+void Prefab_View::Ensure_PreviewGridResources()
+{
+    if (_previewGridBatch && _previewGridEffect && _previewGridInputLayout && _previewGridDepthDisabledState)
+        return;
+
+    _previewGridBatch = make_shared<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>(GAME->Get_Context().Get());
+    _previewGridEffect = make_shared<DirectX::BasicEffect>(GAME->Get_Device().Get());
+    _previewGridEffect->SetVertexColorEnabled(true);
+
+    const void* shaderByteCode = nullptr;
+    size_t shaderByteCodeLength = 0;
+    _previewGridEffect->GetVertexShaderBytecode(&shaderByteCode, &shaderByteCodeLength);
+
+    if (FAILED(GAME->Get_Device()->CreateInputLayout(
+        DirectX::VertexPositionColor::InputElements,
+        DirectX::VertexPositionColor::InputElementCount,
+        shaderByteCode,
+        shaderByteCodeLength,
+        &_previewGridInputLayout)))
+    {
+        _previewGridBatch.reset();
+        _previewGridEffect.reset();
+        _previewGridInputLayout.Reset();
+    }
+
+    D3D11_DEPTH_STENCIL_DESC depthDesc = {};
+    depthDesc.DepthEnable = FALSE;
+    depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    depthDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+    depthDesc.StencilEnable = FALSE;
+
+    if (FAILED(GAME->Get_Device()->CreateDepthStencilState(&depthDesc, _previewGridDepthDisabledState.GetAddressOf())))
+    {
+        _previewGridBatch.reset();
+        _previewGridEffect.reset();
+        _previewGridInputLayout.Reset();
+        _previewGridDepthDisabledState.Reset();
+    }
+}
+
+void Prefab_View::Draw_PreviewGrid() const
+{
+    if (!_showPreviewGrid)
+        return;
+
+    if (!_previewGridBatch || !_previewGridEffect || !_previewGridInputLayout)
+        return;
+
+    auto context = GAME->Get_Context();
+    if (!context)
+        return;
+
+    _previewGridEffect->SetWorld(Matrix::Identity);
+    _previewGridEffect->SetView(_previewView);
+    _previewGridEffect->SetProjection(_previewProj);
+
+    context->IASetInputLayout(_previewGridInputLayout.Get());
+    context->OMSetDepthStencilState(_previewGridDepthDisabledState.Get(), 0);
+    context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+    _previewGridEffect->Apply(context.Get());
+
+    _previewGridBatch->Begin();
+
+    Vec3 gridCenter = Vec3::Zero;
+    if (_previewObject)
+    {
+        auto transform = _previewObject->Get_Transform();
+        if (transform)
+            gridCenter = transform->Get_WorldPosition();
+    }
+
+    const XMVECTOR origin = XMVectorSet(gridCenter.x, gridCenter.y, gridCenter.z, 1.f);
+    const XMVECTOR xAxis = XMVectorSet(20.f, 0.f, 0.f, 0.f);
+    const XMVECTOR zAxis = XMVectorSet(0.f, 0.f, 20.f, 0.f);
+
+    DX::DrawGrid(
+        _previewGridBatch.get(),
+        xAxis,
+        zAxis,
+        origin,
+        40,
+        40,
+        XMVectorSet(0.65f, 0.65f, 0.7f, 1.f));
+
+    DX::DrawRay(
+        _previewGridBatch.get(),
+        origin,
+        XMVectorSet(20.f, 0.f, 0.f, 0.f),
+        false,
+        XMVectorSet(1.f, 0.2f, 0.2f, 1.f));
+
+    DX::DrawRay(
+        _previewGridBatch.get(),
+        origin,
+        XMVectorSet(0.f, 0.f, 20.f, 0.f),
+        false,
+        XMVectorSet(0.2f, 0.7f, 1.f, 1.f));
+
+    _previewGridBatch->End();
 }
 
 void Prefab_View::Update_ImGuizmo()
@@ -672,6 +780,8 @@ void Prefab_View::Preview_BeginPlay()
 {
     if (!_previewObject || _previewHasBegunPlay)
         return;
+
+    Ensure_PreviewGridResources();
 
     _previewObject->BeginPlay();
     _previewHasBegunPlay = true;

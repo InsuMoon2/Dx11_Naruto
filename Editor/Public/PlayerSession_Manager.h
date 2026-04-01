@@ -21,6 +21,17 @@ public:
     void    Save_SceneSnapshot();
 
 private:
+    // Play 진입 직전 월드에 존재하던 오브젝트 GUID를 기록한다.
+    // Stop 시 새로 생성된 런타임 오브젝트만 골라내기 위해 Begin_PlaySession에서 호출된다.
+    void    Capture_PlaySessionObjectGuids(uint32 levelIndex);
+    // Play 중 새로 생성된 오브젝트를 편집 월드 스냅샷에 병합한다.
+    // End_PlaySession에서 Restore_SceneSnapshot 직전에 호출된다.
+    void    Merge_RuntimeSpawnedObjects_IntoSnapshot(uint32 levelIndex);
+    // 런타임 오브젝트 중 Stop 후 편집 월드에 유지할 대상을 판별한다.
+    // 현재는 플레이 중 생성된 몬스터만 유지 대상으로 사용한다.
+    bool    Can_Persist_RuntimeObject(const Shared<GameObject>& obj) const;
+
+private:
     // 레벨에 있는 플레이어 제거
     void    Remove_PlaySessionPlayers(uint32 levelIndex);
     // Player Start 기준으로 스폰 위치, 회전값 세팅
@@ -44,6 +55,9 @@ private:
 private:
     json                        _sceneSnapshot;
     bool                        _hasSnapShot = false;
+    // Play 진입 시점에 이미 존재하던 오브젝트 GUID 집합이다.
+    // Stop 시 이 집합에 없는 오브젝트만 런타임 생성 대상으로 본다.
+    unordered_set<string>       _playSessionObjectGuids;
 
 public:
     static Unique<PlayerSession_Manager> Create();

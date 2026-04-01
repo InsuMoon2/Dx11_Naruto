@@ -14,14 +14,6 @@ HRESULT Collision_Manager::Initialize()
 
 void Collision_Manager::Update()
 {
-    // 삭제된 콜라이더가 있으면, 정리하고 루프 준비
-    auto iter = ::remove_if(_colliders.begin(), _colliders.end(), [](const Weak<Collider>& collider)
-        {
-            return collider.expired();
-        });
-
-    _colliders.erase(iter, _colliders.end());
-
     size_t colCount = _colliders.size();
 
     // 렌더 색 복구를 위해 한번 끄기
@@ -124,7 +116,7 @@ void Collision_Manager::Render_Debug()
 
 void Collision_Manager::Add_Collider(Shared<Collider> collider)
 {
-    if (collider == nullptr || !collider->Get_IsActive())
+    if (collider == nullptr)
         return;
 
     _colliders.push_back(collider);

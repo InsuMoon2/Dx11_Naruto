@@ -26,40 +26,39 @@ static const FCollision_Preset_Data g_CollisionPresets[ETOI(
     // Custom — 빈 값, 직접 설정
     {Collision_Channel::CHANNEL_NONE, ETOI(Collision_Channel::CHANNEL_NONE)},
 
-    // Player — 플레이어 몸체: 몬스터 공격, 아이템, 트리거, 환경물, 투사체와
-    // 충돌
+    // Player — 플레이어 몸체
     {Collision_Channel::Player, ETOI(Collision_Channel::Monster_Attack) |
                                     ETOI(Collision_Channel::Item) |
                                     ETOI(Collision_Channel::Trigger) |
                                     ETOI(Collision_Channel::Enviroment) |
                                     ETOI(Collision_Channel::Projectile)},
 
-    // Player_Attack — 플레이어 공격: 몬스터 몸체와 충돌
+    // Player_Attack
     {Collision_Channel::Player_Attack,
      ETOI(Collision_Channel::Monster) | ETOI(Collision_Channel::Monster_Body)},
 
-    // Monster — 몬스터 몸체: 플레이어 공격, 무기, 투사체와 충돌
+    // Monster — 몬스터 몸체
     {Collision_Channel::Monster, ETOI(Collision_Channel::Player_Attack) |
                                      ETOI(Collision_Channel::Weapon) |
                                      ETOI(Collision_Channel::Projectile)},
 
-    // Monster_Attack — 몬스터 공격: 플레이어와 충돌
+    // Monster_Attack — 몬스터 공격
     {Collision_Channel::Monster_Attack,
      ETOI(Collision_Channel::Player) | ETOI(Collision_Channel::Player_Body)},
 
-    // Weapon — 무기: 몬스터와 충돌
+    // Weapon — 무기
     {Collision_Channel::Weapon,
      ETOI(Collision_Channel::Monster) | ETOI(Collision_Channel::Monster_Body)},
 
-    // Projectile — 투사체: 몬스터, 환경물, 플레이어와 충돌
+    // Projectile — 투사체
     {Collision_Channel::Projectile, ETOI(Collision_Channel::Monster) |
                                         ETOI(Collision_Channel::Enviroment) |
                                         ETOI(Collision_Channel::Player)},
 
-    // Item — 아이템: 플레이어와만 충돌
+    // Item — 아이템
     {Collision_Channel::Item, ETOI(Collision_Channel::Player)},
 
-    // Trigger — 트리거: 플레이어와만 충돌
+    // Trigger — 트리거
     {Collision_Channel::Trigger, ETOI(Collision_Channel::Player)},
 
     // Enviroment — 환경물: 플레이어, 투사체와 충돌
