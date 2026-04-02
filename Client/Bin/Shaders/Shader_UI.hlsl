@@ -218,6 +218,23 @@ PS_OUT PS_MASKED_COOLDOWN_OVERLAY(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_BLACKKEY_UI(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 sampled = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float brightness = max(sampled.r, max(sampled.g, sampled.b));
+
+    // 검정색 투명취급하게
+    if (brightness < 0.05f)
+        discard;
+
+    Out.vColor = sampled * g_BaseColor;
+    Out.vColor.a = saturate(brightness) * g_Alpha * g_BaseColor.a;
+
+    return Out;
+}
+
 RasterizerState CullNone
 {
     CullMode = None;
@@ -281,6 +298,15 @@ technique11 DefaultTechnique
 
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MASKED_COOLDOWN_OVERLAY();
+    }
+
+    // 7
+    pass BlackKeyUIPass
+    {
+        SetRasterizerState(CullNone);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_BLACKKEY_UI();
     }
 }
 

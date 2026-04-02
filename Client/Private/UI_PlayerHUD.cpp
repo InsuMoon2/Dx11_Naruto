@@ -5,6 +5,9 @@
 #include "UI_PlayerSkill.h"
 #include "GameObject_Factory.h"
 #include "UI_AnnounceCombo.h"
+#include "Player.h"
+#include "TargetComponent.h"
+#include "UI_Targeting.h"
 
 REGISTER_GAMEOBJECT(UI_PlayerHUD, Protocol::OBJECT_TYPE_UI_PLAYER_HUD)
 
@@ -43,6 +46,15 @@ void UI_PlayerHUD::Update(float timeDelta)
 void UI_PlayerHUD::Bind_Player(Shared<Player> player)
 {
     OnHUDPlayerBound.Broadcast(player);
+
+    CHECK_NULL(player);
+
+    auto targetCom = player->Get_Component<TargetComponent>();
+    CHECK_NULL(targetCom);
+
+    if (_targeting)
+        _targeting->Set_TargetComponent(targetCom);
+
 }
 
 HRESULT UI_PlayerHUD::Ready_UI(void* arg)
@@ -90,6 +102,18 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
 
     _announceCombo = Create_Child<UI_AnnounceCombo>(Protocol::OBJECT_TYPE_UI_ANNOUNCE_COMBO, EUILayer::HUD, &announceDesc);
     CHECK_NULL(_announceCombo, E_FAIL);
+
+    // 타겟팅 UI
+    UIObject::FUIDesc targetDesc;
+    targetDesc.posX = 0.f;
+    targetDesc.posY = 0.f;
+    targetDesc.sizeX = 1.f;
+    targetDesc.sizeY = 1.f;
+    targetDesc.zOrder = _zOrder + 0.01f;
+    targetDesc.levelIndex = _levelIndex;
+
+    _targeting = Create_Child<UI_Targeting>(Protocol::OBJECT_TYPE_UI_TARGETING, EUILayer::Overlay, &targetDesc);
+    CHECK_NULL(_targeting, E_FAIL);
 
     return S_OK;
 }

@@ -121,9 +121,9 @@ HRESULT Weapon::Render()
     return S_OK;
 }
 
-void Weapon::OnBeginOverlap(Shared<Collider> other)
+void Weapon::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
 {
-    PartObject::OnBeginOverlap(other);
+    PartObject::OnBeginOverlap(self, other);
 
     Shared<Character> hitted = dynamic_pointer_cast<Character>(other->Get_Owner());
     if (!hitted)
@@ -144,13 +144,6 @@ void Weapon::OnBeginOverlap(Shared<Collider> other)
         if (auto myPlayer = dynamic_pointer_cast<MyPlayer>(owner))
             myPlayer->Add_ComboHit();
     }
-}
-
-void Weapon::OnEndOverlap(Shared<Collider> other)
-{
-    PartObject::OnEndOverlap(other);
-
-
 }
 
 void Weapon::Set_ColliderActive(bool active)

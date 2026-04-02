@@ -16,6 +16,8 @@
 #include "SkillComponent.h"
 #include "AnimationStateComponent.h"
 #include "GameObject_Factory.h"
+#include "Debug_Manager.h"
+#include "TargetComponent.h"
 
 REGISTER_GAMEOBJECT(MyPlayer, Protocol::OBJECT_TYPE_PLAYER)
 
@@ -89,15 +91,7 @@ void MyPlayer::Update(float timeDelta)
 {
     Player::Update(timeDelta);
 
-    if (_comboHitCount > 0)
-    {
-        _comboDecayTimer -= timeDelta;
-        if (_comboDecayTimer <= 0.f)
-        {
-            _comboHitCount = 0;
-            _comboDecayTimer = 0.f;
-        }
-    }
+    Update_Combo(timeDelta);
 }
 
 void MyPlayer::Late_Update(float timeDelta)
@@ -142,6 +136,8 @@ void MyPlayer::Late_Update(float timeDelta)
             GAME->Add_Collider(collider);
         }
     }
+
+    Update_Targetting(timeDelta);
 }
 
 void MyPlayer::Force_SendMovePacket()
@@ -178,10 +174,14 @@ void MyPlayer::Disable_All_Hitboxes()
     }
 }
 
-void MyPlayer::OnBeginOverlap(Shared<Collider> other)
+void MyPlayer::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
 {
-    Player::OnBeginOverlap(other);
+    Player::OnBeginOverlap(self, other);
 
+    if (self->Get_Channel() == Collision_Channel::Player_Target)
+        return;
+
+    // 격투형은 플레이어한테 충돌체가 달려있음
     Shared<Character> hitted = dynamic_pointer_cast<Character>(other->Get_Owner());
     if (!hitted || hitted.get() == this)
         return;
@@ -198,6 +198,26 @@ void MyPlayer::Add_ComboHit()
     _comboDecayTimer = COMBO_DECAY_TIME;
 
     GAME->Get_DelegateHub().OnPlayerComboHit.Broadcast(_comboHitCount);
+}
+
+void MyPlayer::Update_Combo(float timeDelta)
+{
+    if (_comboHitCount > 0)
+    {
+        _comboDecayTimer -= timeDelta;
+        if (_comboDecayTimer <= 0.f)
+        {
+            _comboHitCount = 0;
+            _comboDecayTimer = 0.f;
+        }
+    }
+}
+
+void MyPlayer::Update_Targetting(float timeDelta)
+{
+    if (_target)
+        _target->Update_Targeting(timeDelta);
+
 }
 
 void MyPlayer::Send_MovePacket(bool forceSend)
@@ -249,6 +269,9 @@ Protocol::ObjectInfo MyPlayer::Build_NetworkInfo() const
 HRESULT MyPlayer::Ready_Components()
 {
     CHECK_FAILED(Player::Ready_Components(), E_FAIL);
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TARGET, _target), E_FAIL);
+   
 
     return S_OK;
 }

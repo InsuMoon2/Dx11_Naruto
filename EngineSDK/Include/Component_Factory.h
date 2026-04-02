@@ -34,10 +34,7 @@ public:
 
         if (!_creators.contains(id))
         {
-            _creators[id] = [](auto device, auto context)
-                {
-                    return T::Create(device, context);
-                };
+            _creators[id] = [](auto device, auto context) { return T::Create(device, context); };
             _classNames[id] = T::StaticClassName();
         }
 

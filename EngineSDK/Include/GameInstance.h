@@ -25,6 +25,7 @@ class Text_Renderer;
 class Animation_Manager;
 class Sound_Manager;
 class Collision_Manager;
+class Debug_Manager;
 
 class Renderer;
 class PipeLine;
@@ -43,6 +44,9 @@ class UIObject;
 class Animation;
 
 class Collider;
+struct FDebugBoxDesc;
+struct FDebugSphereDesc;
+struct FDebugLineDesc;
 
 /* Component */
 class Transform;
@@ -326,6 +330,18 @@ public: /* Collision */
     void                    Render_Colliders();
 #endif
 
+public: /* Debug */
+    void                    Draw_DebugBox(const FDebugBoxDesc& desc);
+    void                    Draw_DebugSphere(const FDebugSphereDesc& desc);
+    void                    Draw_DebugLine(const FDebugLineDesc& desc);
+    void                    Clear_DebugDraws();
+    void                    Set_DebugRenderEnabled(bool enabled);
+
+    bool                    Is_DebugRenderEnabled() const;
+
+    HRESULT                 Render_DebugDepth();
+    HRESULT                 Render_DebugOverlay();
+
 
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};
@@ -342,6 +358,7 @@ private: /* Manager */
     Unique<Animation_Manager>       _animationManager{};
     Unique<Sound_Manager>           _soundManager   {};
     Unique<Collision_Manager>       _collisionManager{};
+    Unique<Debug_Manager>           _debugManager{}; // 충돌 여부와 무관한 디버그 도형 요청을 모아 렌더하는 매니저
 
     Unique<Renderer>                _renderer {};
     Unique<PipeLine>                _pipeLine {};

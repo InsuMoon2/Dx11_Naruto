@@ -31,6 +31,8 @@ public:
 
     EAttackProfileType Get_ActiveProfileType() const { return _activeProfileType; }
 
+    const FComboEntry* Get_CurrentComboEntry() const;
+
 private:
     void    Select_Profile(PlayerStateMachine* state);
     void    Play_CurrentComboClip(PlayerStateMachine* state);

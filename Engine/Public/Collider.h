@@ -32,6 +32,9 @@ public:
     bool    Is_Overlapping(Shared<Collider> other) const;
     void    Clear_Overlap() { _overlapSet.clear(); }
 
+    set<Weak<Collider>, owner_less<>> Get_OverlapSet() { return _overlapSet; }
+
+
 public: /* Getter */
     Shared<Bounding>    Get_Bounding()      const { return _bounding; }
     EShape              Get_Shape()         const { return _shape; }
@@ -41,7 +44,7 @@ public: /* Getter */
 
 public: /* Setter */
     void Set_CollisionPreset(Collision_Preset preset);
-    void Set_IsActive(bool active)  { _isActive = active; }
+    void Set_IsActive(bool active);
     void Set_IsColl(bool isColl)    { _isColl = isColl; }
 
 public:
@@ -53,7 +56,7 @@ public:
 #endif
 
 private:
-    EShape                  _shape = EShape::AABB;
+    EShape                  _shape   = EShape::AABB;
     Collision_Channel       _channel = Collision_Channel::CHANNEL_NONE;
     uint32                  _collisionMask = 0;
 
@@ -61,6 +64,8 @@ private:
     bool                    _isColl = false;
 
     Shared<Bounding>        _bounding;
+
+    Collision_Preset        _preset = Collision_Preset::Custom;
 
     set<Weak<Collider>, owner_less<>> _overlapSet;
 

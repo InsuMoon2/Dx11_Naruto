@@ -54,6 +54,7 @@ HRESULT Monster::Initialize(void* arg)
 void Monster::BeginPlay()
 {
     Character::BeginPlay();
+
 }
 
 void Monster::Priority_Update(float timeDelta)
@@ -129,9 +130,9 @@ HRESULT Monster::Bind_Lights()
     _shaderCom->Bind_RawValue("g_vLightSpecular", &lightDesc->specular, sizeof(Vec4));
 }
 
-void Monster::OnBeginOverlap(Shared<Collider> other)
+void Monster::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
 {
-    Character::OnBeginOverlap(other);
+    Character::OnBeginOverlap(self, other);
 
 
 }
@@ -151,7 +152,7 @@ void Monster::TakeDamage(const FDamageEvent& damageEvent)
         Vec3 knockDir = Vec3::Zero;
         if (damageEvent.damageCauser)
         {
-            Vec3 causerPos = damageEvent.damageCauser->Get_Transform()->Get_WorldForward();
+            Vec3 causerPos = damageEvent.damageCauser->Get_Transform()->Get_WorldPosition();
             Vec3 myPos = _transformCom->Get_WorldPosition();
 
             knockDir = myPos - causerPos;
@@ -197,6 +198,7 @@ json Monster::To_Json() const
 void Monster::From_Json(const json& data)
 {
     Character::From_Json(data);
+
 }
 
 HRESULT Monster::Ready_Components()

@@ -200,6 +200,20 @@ void PlayerState_JumpAttack::Advance_Combo()
         Play_CurrentComboClip(_cachedStateMachine);
 }
 
+const FComboEntry* PlayerState_JumpAttack::Get_CurrentComboEntry() const
+{
+    if (!_activeProfile || _activeProfile->combos.empty())
+        return nullptr;
+
+    int32 safeIndex = min(_comboIndex,
+        static_cast<int32>(_activeProfile->combos.size()) - 1);
+
+    if (safeIndex < 0)
+        return nullptr;
+
+    return &_activeProfile->combos[safeIndex];
+}
+
 void PlayerState_JumpAttack::Select_Profile(PlayerStateMachine* state)
 {
     // EquipmentComponent에서 무기타입 가져오기

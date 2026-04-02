@@ -20,8 +20,11 @@ void UI_Manager::Priority_Update(float timeDelta)
     {
         for (auto& ui : _uiLayers[i])
         {
-            if (ui->Is_Visibility())
-                ui->Priority_Update(timeDelta);
+            if (!ui)
+                continue;
+
+            // 숨김 상태의 UI도 스스로 표시 여부를 판단할 수 있게 항상 상태를 갱신한다.
+            ui->Priority_Update(timeDelta);
         }
     }
 }
@@ -32,8 +35,11 @@ void UI_Manager::Update(float timeDelta)
     {
         for (auto& ui : _uiLayers[i])
         {
-            if (ui->Is_Visibility())
-                ui->Update(timeDelta);
+            if (!ui)
+                continue;
+
+            // 렌더링 여부와 무관하게 UI 로직은 계속 흘러가야 조건부 표시 UI가 살아난다.
+            ui->Update(timeDelta);
         }
     }
 
@@ -46,12 +52,16 @@ void UI_Manager::Late_Update(float timeDelta)
     {
         for (auto& ui : _uiLayers[i])
         {
-            if (ui->Is_Visibility())
-            {
-                ui->Late_Update(timeDelta);
+            if (!ui)
+                continue;
 
-                GAME->Add_RenderGroup(ui->Get_RenderGroup(), ui);
-            }
+            // Late_Update와 렌더 등록은 실제로 보이는 UI만 수행한다.
+            if (!ui->Is_Visibility())
+                continue;
+
+            ui->Late_Update(timeDelta);
+
+            GAME->Add_RenderGroup(ui->Get_RenderGroup(), ui);
         }
     }
 }

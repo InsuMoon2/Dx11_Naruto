@@ -139,6 +139,11 @@
             "Id": "UI_Announce",
             "ObjectType": "OBJECT_TYPE_UI_ANNOUNCE_COMBO",
             "Level": "Static"
+        },
+        {
+            "Id": "UI_Targeting",
+            "ObjectType": "OBJECT_TYPE_UI_TARGETING",
+            "Level": "Static"
         }
     ]
 }

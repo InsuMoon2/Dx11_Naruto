@@ -51,9 +51,9 @@ void SkillObject_Projectile::Update(float timeDelta)
     SkillObject::Update(timeDelta);
 }
 
-void SkillObject_Projectile::OnBeginOverlap(Shared<Collider> other)
+void SkillObject_Projectile::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
 {
-    SkillObject::OnBeginOverlap(other);
+    SkillObject::OnBeginOverlap(self, other);
 
     if (!other || Is_Destroy())
         return;

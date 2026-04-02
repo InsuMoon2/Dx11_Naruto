@@ -31,7 +31,7 @@ public:
     HRESULT Initialize(void* arg) override;
     void    Update(float timeDelta) override;
 
-    void    OnBeginOverlap(Shared<Collider> other) override;
+    void    OnBeginOverlap(Shared<Collider> self, Shared<Collider> other) override;
 
 private:
     Shared<ProjectileComponent> _projectile;

@@ -76,6 +76,9 @@ HRESULT UI_PlayerHP::Render()
         Vec4 hpColor = { 0.8f, 0.2f, 0.f, 1.f };
         CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColor", &hpColor, sizeof(Vec4)), E_FAIL);
 
+        float alpha = 1.f;
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &alpha, sizeof(float)), E_FAIL);
+
         CHECK_FAILED(_shaderCom->Begin_Pass(1), E_FAIL);
         CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
         CHECK_FAILED(_bufferCom->Render(), E_FAIL);
@@ -84,6 +87,9 @@ HRESULT UI_PlayerHP::Render()
     // HP Bar
     {
         CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 1), E_FAIL);
+
+        float alpha = 1.f;
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &alpha, sizeof(float)), E_FAIL);
 
         Vec4 hpColor = { 0.3f, 1.f, 0.f, 1.f };
         CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColor", &hpColor, sizeof(Vec4)), E_FAIL);

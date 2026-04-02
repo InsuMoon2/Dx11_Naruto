@@ -60,8 +60,8 @@ void Collision_Manager::Update()
                 if (!wasOverlapping)
                 {
                     // 최초 충돌
-                    src->Get_Owner()->OnBeginOverlap(dst);
-                    dst->Get_Owner()->OnBeginOverlap(src);
+                    src->Get_Owner()->OnBeginOverlap(src, dst);
+                    dst->Get_Owner()->OnBeginOverlap(dst, src);
 
                     src->Add_Overlap(dst);
                     dst->Add_Overlap(src);
@@ -69,16 +69,16 @@ void Collision_Manager::Update()
                 // 충돌 중이면
                 else
                 {
-                    src->Get_Owner()->OnStayOverlap(dst);
-                    dst->Get_Owner()->OnStayOverlap(src);
+                    src->Get_Owner()->OnStayOverlap(src, dst);
+                    dst->Get_Owner()->OnStayOverlap(dst, src);
                 }
             }
             else
             {
                 if (wasOverlapping)
                 {
-                    src->Get_Owner()->OnEndOverlap(dst);
-                    dst->Get_Owner()->OnEndOverlap(src);
+                    src->Get_Owner()->OnEndOverlap(src, dst);
+                    dst->Get_Owner()->OnEndOverlap(dst, src);
 
                     src->Remove_Overlap(dst);
                     dst->Remove_Overlap(src);

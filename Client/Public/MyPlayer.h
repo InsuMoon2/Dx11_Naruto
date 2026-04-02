@@ -11,6 +11,7 @@ class InputComponent;
 class MovementComponent;
 class SkillComponent;
 class AnimationStateComponent;
+class TargetComponent;
 
 class MyPlayer final : public Player
 {
@@ -30,19 +31,23 @@ public:
     void    Late_Update(float timeDelta) override;
 
     // 내 캐릭터는 서버 위치 무시
-    void Sync(const Protocol::ObjectInfo& info) override {}
-    void Force_SendMovePacket();
+    void    Sync(const Protocol::ObjectInfo& info) override {}
+    void    Force_SendMovePacket();
 
 public:
-    void Enable_Hitbox(EHitboxTarget target);
-    void Disable_Hitbox(EHitboxTarget target);
+    void    Enable_Hitbox(EHitboxTarget target);
+    void    Disable_Hitbox(EHitboxTarget target);
 
-    void Disable_All_Hitboxes();
+    void    Disable_All_Hitboxes();
 
 public:
-    void OnBeginOverlap(Shared<Collider> other) override;
+    void    OnBeginOverlap(Shared<Collider> self, Shared<Collider> other) override;
 
-    void Add_ComboHit();
+    void    Add_ComboHit();
+
+private:
+    void    Update_Combo(float timeDelta);
+    void    Update_Targetting(float timeDelta);
 
 private:
     // 연속 콤보 히트 카운트 — DelegateHub::OnPlayerComboHit에 전달
@@ -66,6 +71,9 @@ private:
     Shared<PlayerController>    _playerController;
     Shared<PlayerStateMachine>  _stateMachine;
     Shared<SkillComponent>      _skill;
+
+    Shared<TargetComponent>     _target;
+    Shared<Collider>            _targetCollider;
 
     // 몸통 충돌체
     Shared<Collider>            _collider;

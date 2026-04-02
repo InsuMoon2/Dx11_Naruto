@@ -122,9 +122,9 @@ protected:
     }
 
 public: /* Collision Events */
-    virtual void OnBeginOverlap(Shared<Collider> other) {}
-    virtual void OnStayOverlap(Shared<Collider> other)  {}
-    virtual void OnEndOverlap(Shared<Collider> other)   {}
+    virtual void OnBeginOverlap(Shared<Collider> self, Shared<Collider> other) {}
+    virtual void OnStayOverlap(Shared<Collider> self, Shared<Collider> other)  {}
+    virtual void OnEndOverlap(Shared<Collider> self, Shared<Collider> other)   {}
 
 
 protected: /* Device */

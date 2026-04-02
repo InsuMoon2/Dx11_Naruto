@@ -89,10 +89,6 @@ void PlayerState_Attack::Exit(PlayerStateMachine* state)
     auto owner = state->Get_Owner();
     if (owner)
     {
-        auto stat = owner->Get_Component<CombatStat>();
-        if (stat)
-            stat->Begin_AttackSwing();
-            
         auto container = dynamic_pointer_cast<ContainerObject>(owner);
         if (container)
         {
@@ -151,16 +147,6 @@ void PlayerState_Attack::Reset_Combo()
     _activeProfile = nullptr;
     _activeProfileType = EAttackProfileType::Hand_Ground;
 
-    if (_cachedStateMachine)
-    {
-        auto owner = _cachedStateMachine->Get_Owner();
-        if (owner)
-        {
-            auto stat = owner->Get_Component<CombatStat>();
-            if (stat)
-                stat->Begin_AttackSwing();
-        }
-    }
 }
 
 void PlayerState_Attack::Advance_Combo()
@@ -168,17 +154,6 @@ void PlayerState_Attack::Advance_Combo()
     _comboIndex++;
     _comboWindowOpen = false;
     _hasBufferedAttack = false;
-
-    if (_cachedStateMachine)
-    {
-        auto owner = _cachedStateMachine->Get_Owner();
-        if (owner)
-        {
-            auto stat = owner->Get_Component<CombatStat>();
-            if (stat)
-                stat->Begin_AttackSwing();
-        }
-    }
 
     if (_cachedStateMachine)
         Play_CurrentComboClip(_cachedStateMachine);

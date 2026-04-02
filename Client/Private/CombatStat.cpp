@@ -3,6 +3,7 @@
 #include "Character.h"
 #include "PlayerStateMachine.h"
 #include "PlayerState_Attack.h"
+#include "PlayerState_JumpAttack.h"
 
 IMPLEMENT_REFLECTION(CombatStat)
 
@@ -108,6 +109,13 @@ bool CombatStat::Apply_Damage(Character* hitted)
         auto attackState = state->Get_State<PlayerState_Attack>(EPlayerState::Attack);
         if (attackState)
             entry = attackState->Get_CurrentComboEntry();
+
+        if (entry == nullptr)
+        {
+            auto jumpAttackState = state->Get_State<PlayerState_JumpAttack>(EPlayerState::JumpAttack);
+            if (jumpAttackState)
+                entry = jumpAttackState->Get_CurrentComboEntry();
+        }
     }
 
     if (entry)

@@ -36,6 +36,7 @@
 #undef new
 #include "Camera.h"
 #include "Collision_Manager.h"
+#include "Debug_Manager.h"
 #include "imgui.h"
 #include "Sound_Manager.h"
 #pragma pop_macro("new")
@@ -131,11 +132,17 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     _collisionManager = Collision_Manager::Create();
     CHECK_NULL(_collisionManager, E_FAIL);
 
+    _debugManager = Debug_Manager::Create(Get_Device(), Get_Context());
+    CHECK_NULL(_debugManager, E_FAIL);
+
     return S_OK;
 }
 
 void GameInstance::Priority_Update_Engine(float timeDelta)
 {
+    if (_debugManager)
+        _debugManager->Tick(timeDelta);
+
     _objectManager->Priority_Update(timeDelta);
     _cameraManager->Update(timeDelta);
 
@@ -190,6 +197,9 @@ void GameInstance::Clear_Resources(uint32 levelIndex)
     _objectManager->Clear_Layers(levelIndex);
     _protoManager->Clear_Prototype(levelIndex);
     _uiManager->Clear_UI_ByLevel(levelIndex);
+
+    if (_debugManager)
+        _debugManager->Clear();
 
     _cameraManager->Clear_InvalidCameras();
 }
@@ -842,6 +852,58 @@ void GameInstance::Clear_Colliders()
 {
     return _collisionManager->Clear_Colliders();
 }
+
+void GameInstance::Draw_DebugBox(const FDebugBoxDesc& desc)
+{
+    if (_debugManager)
+        _debugManager->Draw_Box(desc);
+}
+
+void GameInstance::Draw_DebugSphere(const FDebugSphereDesc& desc)
+{
+    if (_debugManager)
+        _debugManager->Draw_Sphere(desc);
+}
+
+void GameInstance::Draw_DebugLine(const FDebugLineDesc& desc)
+{
+    if (_debugManager)
+        _debugManager->Draw_Line(desc);
+}
+
+void GameInstance::Clear_DebugDraws()
+{
+    if (_debugManager)
+        _debugManager->Clear();
+}
+
+void GameInstance::Set_DebugRenderEnabled(bool enabled)
+{
+    if (_debugManager)
+        _debugManager->Set_Enabled(enabled);
+}
+
+bool GameInstance::Is_DebugRenderEnabled() const
+{
+    return _debugManager ? _debugManager->Is_Enabled() : false;
+}
+
+HRESULT GameInstance::Render_DebugDepth()
+{
+    if (_debugManager == nullptr)
+        return S_OK;
+
+    return _debugManager->Render_Depth();
+}
+
+HRESULT GameInstance::Render_DebugOverlay()
+{
+    if (_debugManager == nullptr)
+        return S_OK;
+
+    return _debugManager->Render_Overlay();
+}
+
 #ifdef _DEBUG
 void GameInstance::Render_Colliders()
 {
@@ -878,6 +940,7 @@ void GameInstance::Free()
     _lightManager.reset();
     _soundManager.reset();
     _collisionManager.reset();
+    _debugManager.reset();
 
     _prefabManager.reset();
     _objectManager.reset(); 

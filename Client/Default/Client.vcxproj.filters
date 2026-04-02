@@ -210,6 +210,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_AnnounceCombo.h" />
     <ClInclude Include="..\Public\PlayerState_Hit.h" />
+    <ClInclude Include="..\Public\TargetComponent.h" />
+    <ClInclude Include="..\Public\UI_Targeting.h" />
+    <ClInclude Include="..\Public\AN_ChangeState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -403,6 +406,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_AnnounceCombo.cpp" />
     <ClCompile Include="..\Private\PlayerState_Hit.cpp" />
+    <ClCompile Include="..\Private\TargetComponent.cpp" />
+    <ClCompile Include="..\Private\UI_Targeting.cpp" />
+    <ClCompile Include="..\Private\AN_ChangeState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

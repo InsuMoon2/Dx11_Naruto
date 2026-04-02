@@ -8,6 +8,7 @@ class Player;
 class UI_PlayerStatus;
 class UI_PlayerSkill;
 class UI_AnnounceCombo;
+class UI_Targeting;
 
 DECLARE_DELEGATE(FOnHUDPlayerBound, Shared<Player>);
 
@@ -34,9 +35,10 @@ public:
     FOnHUDPlayerBound OnHUDPlayerBound;
 
 private:
-    Shared<UI_PlayerStatus> _status;
-    Shared<UI_PlayerSkill>  _skillPanel;
-    Shared<UI_AnnounceCombo> _announceCombo;
+    Shared<UI_PlayerStatus>     _status;
+    Shared<UI_PlayerSkill>      _skillPanel;
+    Shared<UI_AnnounceCombo>    _announceCombo;
+    Shared<UI_Targeting>        _targeting;
 
 public:
     static Shared<UI_PlayerHUD> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

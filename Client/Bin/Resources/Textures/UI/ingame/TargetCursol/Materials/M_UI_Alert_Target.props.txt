@@ -1,0 +1,102 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/UI/ingame/ETC/TargetCursol/Textures/T_UI_Alert_Target_M.T_UI_Alert_Target_M'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineResources/DefaultTexture.DefaultTexture'
+    ReferencedTextures[2] = Texture2D'/Game/UI/ingame/ETC/TargetCursol/Textures/T_UI_Alert_Target_Flare.T_UI_Alert_Target_Flare'
+}
+Expressions[50] =
+{
+    Expressions[0] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionTextureSample_69'
+    Expressions[5] = MaterialExpressionStaticBoolParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionStaticBoolParameter_15'
+    Expressions[6] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionScalarParameter_143'
+    Expressions[7] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionScalarParameter_144'
+    Expressions[15] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionScalarParameter_145'
+    Expressions[16] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionScalarParameter_146'
+    Expressions[17] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionScalarParameter_147'
+    Expressions[20] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionTextureSample_70'
+    Expressions[34] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionScalarParameter_148'
+    Expressions[35] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionScalarParameter_149'
+    Expressions[37] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionScalarParameter_150'
+    Expressions[44] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionScalarParameter_151'
+    Expressions[47] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_Alert_Target.MaterialExpressionTextureSample_72'
+}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] = { ParameterInfos[0]={} }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[0] = {}
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[0] = {}
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 1
+        Name = 22_UVDistortion_Tiling_V
+        Group = UVDistortion
+    }
+    CollectedScalarParameters[1] =
+    {
+        Value = 1
+        Name = 21_UVDistortion_Tiling_U
+        Group = UVDistortion
+    }
+    CollectedScalarParameters[2] = { Value=0.2, Name=0, Group=UVDistortion }
+    CollectedScalarParameters[3] =
+    {
+        Value = 0.2
+        Name = 32_UVDistortion_Speed_V
+        Group = UVDistortion
+    }
+    CollectedScalarParameters[4] =
+    {
+        Value = 1
+        Name = 11_UVDistortion_Value_U
+        Group = UVDistortion
+    }
+    CollectedScalarParameters[5] =
+    {
+        Value = 1
+        Name = 21_UVDistortionMask_Power
+        Group = UVDistortion_Mask
+    }
+    CollectedScalarParameters[6] =
+    {
+        Value = 1
+        Name = 22_UVDistortionMask_Multiply
+        Group = UVDistortion_Mask
+    }
+    CollectedScalarParameters[7] =
+    {
+        Value = 1
+        Name = 11_UVDistortion_Value_V
+        Group = UVDistortion
+    }
+    CollectedScalarParameters[8] = { Value=0.01, Name=Speed_1, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

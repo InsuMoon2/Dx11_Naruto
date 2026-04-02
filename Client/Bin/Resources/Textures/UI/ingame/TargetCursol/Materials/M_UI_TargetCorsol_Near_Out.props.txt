@@ -1,0 +1,64 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/UI/Common_Textures/Roll_Icon/roll_sha.roll_sha'
+    ReferencedTextures[1] = Texture2D'/Game/UI/ingame/ETC/TargetCursol/Textures/T_UI_TargetCursol_Lock_Effect.T_UI_TargetCursol_Lock_Effect'
+    ReferencedTextures[2] = Texture2D'/Game/UI/ingame/ETC/TargetCursol/Textures/T_UI_TargetCursol_Lock3.T_UI_TargetCursol_Lock3'
+}
+Expressions[142] =
+{
+    Expressions[6] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionTextureSample_94'
+    Expressions[19] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionScalarParameter_163'
+    Expressions[40] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionTextureSample_95'
+    Expressions[55] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionScalarParameter_164'
+    Expressions[67] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionScalarParameter_165'
+    Expressions[82] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionTextureSample_96'
+    Expressions[88] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionScalarParameter_166'
+    Expressions[92] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionTextureSample_5'
+    Expressions[129] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionScalarParameter_3'
+    Expressions[130] = MaterialExpressionTextureSample'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionTextureSample_0'
+    Expressions[136] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionScalarParameter_0'
+    Expressions[139] = MaterialExpressionScalarParameter'/Game/UI/ingame/ETC/TargetCursol/Materials/M_UI_TargetCorsol_Near_Out.MaterialExpressionScalarParameter_4'
+}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] = { ParameterInfos[0]={} }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[0] = {}
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[0] = {}
+}
+BlendMode = BLEND_AlphaComposite (5)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[7] =
+{
+    CollectedScalarParameters[0] = { Value=2, Name=AnimationTime, Group=None }
+    CollectedScalarParameters[1] = { Value=0.1, Name=DelayTime_1, Group=None }
+    CollectedScalarParameters[2] = { Value=0.7, Name=Min_1, Group=None }
+    CollectedScalarParameters[3] = { Value=0.1, Name=Speed, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Opacity, Group=None }
+    CollectedScalarParameters[5] = { Value=-0.1, Name=Speed_1, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Color_Switch, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

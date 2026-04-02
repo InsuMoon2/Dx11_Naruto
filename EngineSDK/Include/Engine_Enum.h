@@ -69,43 +69,5 @@ namespace Engine
     // 충돌 종류
     enum class EShape { AABB, OBB, Sphere, Capsule, END };
 
-    // 충돌 채널
-    enum class Collision_Channel : uint32
-    {
-        Player          = (1 << 0),   
-        Player_Body     = (1 << 1),
-        Player_Attack   = (1 << 2),
-        Monster         = (1 << 3),     
-        Monster_Body    = (1 << 4),
-        Monster_Attack  = (1 << 5),
-        Weapon          = (1 << 6),
-        Projectile      = (1 << 7),
-        Item            = (1 << 8),     
-        Trigger         = (1 << 9),   
-        Enviroment     = (1 << 10),
-
-
-        CHANNEL_ALL = 0xFFFFFFFF,   // 모든 충돌 OK
-        CHANNEL_NONE = 0x00000000,  // 모든 충돌 ㄴㄴ
-    };
-
-    // 충돌 프리셋
-    enum class Collision_Preset
-    {
-        Custom,     // 직접 세팅
-
-        Player, Player_Attack,
-        Monster, Monster_Attack,
-
-        Weapon,
-        Projectile, // 투사체
-
-        Item,
-        Trigger,
-        Enviroment,
-
-        END
-    };
-
 }
 

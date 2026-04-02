@@ -86,6 +86,7 @@ enum ComponentID : int {
   COMPONENT_TYPE_TEXTURE_WEAPON_TYPE = 212,
   COMPONENT_TYPE_TEXTURE_ANNOUNCE_HIT = 213,
   COMPONENT_TYPE_TEXTURE_ANNOUNCE_DIGIT = 214,
+  COMPONENT_TYPE_TEXTURE_TARGET = 215,
   COMPONENT_TYPE_MESH = 299,
   COMPONENT_TYPE_MODEL_START = 300,
   COMPONENT_TYPE_MODEL_PLAYER = 301,
@@ -109,6 +110,7 @@ enum ComponentID : int {
   COMPONENT_TYPE_SKILL = 1008,
   COMPONENT_TYPE_ANIMATION_STATE = 1009,
   COMPONENT_TYPE_EQUIPMENT = 1010,
+  COMPONENT_TYPE_TARGET = 1011,
   ComponentID_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   ComponentID_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -118,8 +120,8 @@ enum ComponentID : int {
 bool ComponentID_IsValid(int value);
 extern const uint32_t ComponentID_internal_data_[];
 constexpr ComponentID ComponentID_MIN = static_cast<ComponentID>(0);
-constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1010);
-constexpr int ComponentID_ARRAYSIZE = 1010 + 1;
+constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1011);
+constexpr int ComponentID_ARRAYSIZE = 1011 + 1;
 const ::google::protobuf::EnumDescriptor*
 ComponentID_descriptor();
 template <typename T>
@@ -164,6 +166,7 @@ enum OBJECT_TYPE : int {
   OBJECT_TYPE_UI_TAB = 109,
   OBJECT_TYPE_UI_WEAPON_TYPE = 110,
   OBJECT_TYPE_UI_ANNOUNCE_COMBO = 111,
+  OBJECT_TYPE_UI_TARGETING = 112,
   OBJECT_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   OBJECT_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -173,8 +176,8 @@ enum OBJECT_TYPE : int {
 bool OBJECT_TYPE_IsValid(int value);
 extern const uint32_t OBJECT_TYPE_internal_data_[];
 constexpr OBJECT_TYPE OBJECT_TYPE_MIN = static_cast<OBJECT_TYPE>(0);
-constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(111);
-constexpr int OBJECT_TYPE_ARRAYSIZE = 111 + 1;
+constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(112);
+constexpr int OBJECT_TYPE_ARRAYSIZE = 112 + 1;
 const ::google::protobuf::EnumDescriptor*
 OBJECT_TYPE_descriptor();
 template <typename T>

@@ -83,15 +83,20 @@ void Renderer::Draw()
 
     Render_Blend();
 
+    Apply_Default3DState();
+    GAME->Render_DebugDepth();
+
+    Apply_UIState();
+
 #ifdef _DEBUG
-    Apply_UIState(); 
     GAME->Render_Colliders();
-    Apply_Default3DState(); 
 #endif
 
+    GAME->Render_DebugOverlay();
+
+    Apply_Default3DState();
+
     Render_UI();
-
-
 }
 
 void Renderer::Render_BackgroundUI()

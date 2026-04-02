@@ -48,6 +48,7 @@
 #include "ComboProfile_Manager.h"
 #include "EquipmentComponent.h"
 #include "ProjectileComponent.h"
+#include "TargetComponent.h"
 
 #include "Collider.h"
 
@@ -164,6 +165,7 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<AnimationStateComponent>(staticLevel);
     GAME->Register_ComponentFactory<EquipmentComponent>(staticLevel);
     GAME->Register_ComponentFactory<ProjectileComponent>(staticLevel);
+    GAME->Register_ComponentFactory<TargetComponent>(staticLevel);
 
     //GAME->Register_ComponentFactory<Model>(staticLevel);
 
@@ -455,7 +457,9 @@ HRESULT Loader::Loading_For_GamePlay()
             "../../Client/Bin/Resources/Data/json/DT_ComboProfile.json");
     }
 
-    // 맵
+    CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+        TEXT("../../Client/Bin/Resources/Data/json/DT_GameObject.json"), jobs), E_FAIL);
+
     auto pushChunk = [&](const char* fileName)
         {
             FLoadJob job{};
@@ -470,11 +474,10 @@ HRESULT Loader::Loading_For_GamePlay()
     //pushChunk("BM_KonohaVillage03_Environments_BackdropBuildings");
     //pushChunk("BM_KonohaVillage03_Environments_Props");
     //pushChunk("BM_KonohaVillage03_Environments_Terrain");
-    pushChunk("BM_ExamStadium_Env_Terrain");
-    pushChunk("BM_ExamStadium_p");
+    //pushChunk("BM_ExamStadium_Env_Terrain");
+    //pushChunk("BM_ExamStadium_p");
 
-    CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
-        TEXT("../../Client/Bin/Resources/Data/json/DT_GameObject.json"), jobs), E_FAIL);
+    pushChunk("[20260402]Tutorial");
 
     {
         scoped_lock lock(_jobMutex);

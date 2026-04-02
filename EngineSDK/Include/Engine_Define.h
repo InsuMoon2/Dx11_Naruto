@@ -64,6 +64,7 @@ namespace fs = std::filesystem;
 #include "UI_AnimTypes.h"
 #include "ModelBin_Types.h"
 #include "Camera_Types.h"
+#include "Collision_Define.h"
 
 // Win
 #include <Windows.h>

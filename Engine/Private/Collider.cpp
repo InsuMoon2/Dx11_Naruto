@@ -78,6 +78,7 @@ HRESULT Collider::Initialize(void* arg)
     return S_OK;
 }
 
+
 void Collider::Update_Collider(const Matrix& worldMatrix)
 {
     if (_bounding)
@@ -99,14 +100,46 @@ bool Collider::Is_Overlapping(Shared<Collider> other) const
     return _overlapSet.contains(other);
 }
 
+void Collider::Set_IsActive(bool active)
+{
+    if (_isActive == active)
+        return;
+
+    if (active == false)
+    {
+        auto myShared = static_pointer_cast<Collider>(GetSharedPtr());
+
+        vector<Shared<Collider>> overlappedColliders;
+        overlappedColliders.reserve(_overlapSet.size());
+
+        for (const auto& weakOther : _overlapSet)
+        {
+            auto other = weakOther.lock();
+            if (other)
+                overlappedColliders.push_back(other);
+        }
+
+        for (auto other : overlappedColliders)
+        {
+            other->Remove_Overlap(myShared);
+            Remove_Overlap(other);
+        }
+
+        _isColl = false;
+    }
+
+    _isActive = active;
+}
+
 void Collider::Set_CollisionPreset(Collision_Preset preset)
 {
+    _preset = preset;
+
     const FCollision_Preset_Data& data = Get_PresetData(preset);
 
     _channel = data.channel;
     _collisionMask = data.collisionMask;
 }
-
 
 json Collider::To_Json() const
 {
@@ -114,7 +147,8 @@ json Collider::To_Json() const
 
     j["shape"] = magic_enum::enum_name(_shape);
     j["channel"] = magic_enum::enum_name(_channel);
-    j["collision_mask"] = _collisionMask;
+    j["collision_preset"] = magic_enum::enum_name(_preset);
+
     j["is_active"] = _isActive;
 
     if (!_bounding)
@@ -170,8 +204,20 @@ void Collider::From_Json(const json& data)
     Component::From_Json(data);
     if (data.contains("is_active"))
         _isActive = data["is_active"].get<bool>();
-    if (data.contains("collision_mask"))
+
+    if (data.contains("collision_preset"))
+    {
+        auto result
+            = magic_enum::enum_cast<Collision_Preset>(data["collision_preset"].get<string>());
+
+        if (result.has_value())
+            Set_CollisionPreset(result.value()); 
+    }
+    else
+    {
         _collisionMask = data["collision_mask"].get<uint32>();
+    }
+
     if (data.contains("channel"))
     {
         auto result = magic_enum::enum_cast<Collision_Channel>(data["channel"].get<string>());
@@ -181,6 +227,7 @@ void Collider::From_Json(const json& data)
     if (!_bounding || !data.contains("bounding"))
         return;
     const json& b = data["bounding"];
+
     switch (_shape)
     {
     case EShape::AABB:
