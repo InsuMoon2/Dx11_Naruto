@@ -7,6 +7,8 @@ NS_BEGIN(Engine)
 class RenderTarget;
 class CameraTrack_Player;
 class Camera_Cinematic;
+class GameObject;
+class Transform;
 NS_END
 
 NS_BEGIN(Editor)
@@ -60,6 +62,12 @@ private:
 
     void Sort_Keys();
 
+    Shared<GameObject> Get_SelectedAnchorObject() const;
+    Shared<Transform>  Get_SelectedAnchorTransform() const;
+
+    void Sync_PreviewAnchor();
+    bool Can_CaptureOwnerRelativeKey() const;
+
 private:
     FCameraSequenceAsset        _asset;
     Shared<CameraTrack_Player>  _player;
@@ -84,6 +92,9 @@ private:
 
     Matrix  _previewView = Matrix::Identity;
     Matrix  _previewProj = Matrix::Identity;
+
+    ECinemaAnchorSpace _captureAnchorSpace = ECinemaAnchorSpace::WorldAbsolute;
+    Weak<GameObject> _previewAnchorObject;
 
 public:
     static Shared<Cinematic_View> Create();

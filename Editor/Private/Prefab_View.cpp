@@ -49,18 +49,6 @@ void Prefab_View::OnGui()
     if (!_isOpen)
         return;
 
-    ImVec2 windowSize(1600, 1000);
-    ImVec2 viewportSize = ImGui::GetMainViewport()->Size;
-
-    ImVec2 windowPos(
-        (viewportSize.x - windowSize.x) * 0.5f,
-        (viewportSize.y - windowSize.y) * 0.5f
-    );
-
-    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-    ImGui::SetNextWindowSize(windowSize, ImGuiCond_Appearing);
-
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
     if (_isGizmoUsing || (_isPreviewHovered && ImGui::IsMouseDown(ImGuiMouseButton_Left)))
         flags |= ImGuiWindowFlags_NoMove;

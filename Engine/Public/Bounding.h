@@ -23,6 +23,8 @@ public:
 
     virtual bool    Intersect(Bounding* otherBounding) = 0;
 
+    virtual bool    Intersect_WithDepth(Bounding* otherBounding, Vec3& outNormal, float& outDepth) = 0;
+
 #ifdef _DEBUG
     virtual HRESULT Render_Debug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch, Color color) = 0;
 #endif

@@ -232,8 +232,10 @@
     <ClInclude Include="..\Public\AnimationStateComponent.h" />
     <ClInclude Include="..\Public\ANS_CollisionEnable.h" />
     <ClInclude Include="..\Public\ANS_ComboWindow.h" />
+    <ClInclude Include="..\Public\ANS_Move.h" />
     <ClInclude Include="..\Public\ANS_Test.h" />
     <ClInclude Include="..\Public\AN_ChangeState.h" />
+    <ClInclude Include="..\Public\AN_PlayCinematic.h" />
     <ClInclude Include="..\Public\AN_SpawnSkill.h" />
     <ClInclude Include="..\Public\AN_Test.h" />
     <ClInclude Include="..\Public\Background.h" />
@@ -346,8 +348,10 @@
     <ClCompile Include="..\Private\AnimationStateComponent.cpp" />
     <ClCompile Include="..\Private\ANS_CollisionEnable.cpp" />
     <ClCompile Include="..\Private\ANS_ComboWindow.cpp" />
+    <ClCompile Include="..\Private\ANS_Move.cpp" />
     <ClCompile Include="..\Private\ANS_Test.cpp" />
     <ClCompile Include="..\Private\AN_ChangeState.cpp" />
+    <ClCompile Include="..\Private\AN_PlayCinematic.cpp" />
     <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
     <ClCompile Include="..\Private\AN_Test.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />

@@ -26,6 +26,8 @@ public:
 
     const BoundingBox& Get_AABB() const { return _aabb; }
 
+    bool Intersect_WithDepth(Bounding* otherBounding, Vec3& outNormal, float& outDepth) override;
+
 #ifdef _DEBUG
     HRESULT Render_Debug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch, Color color) override;
 #endif

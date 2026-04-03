@@ -228,7 +228,14 @@ public: /* Camera */
 
     /* 시네마틱 */
     bool                            Play_Cinematic(const wstring& sequenceName);
+    bool                            Play_Cinematic(
+                                        const wstring& sequenceName,
+                                        Shared<Transform> anchorTransform,
+                                        bool blockGameInput);
+
     void                            Stop_Cinematic();
+
+
 
 public: /* DelegateHub */
     DelegateHub&                    Get_DelegateHub() { return _delegateHub; }

@@ -95,6 +95,14 @@ bool Collider::Intersect(Shared<Collider> target)
     return _bounding->Intersect(target->Get_Bounding().get());
 }
 
+bool Collider::Intersect_WithDepth(Shared<Collider> target, Vec3& outNormal, float& outDepth)
+{
+    if (target == nullptr || _bounding == nullptr || target->Get_Bounding() == nullptr)
+        return false;
+
+    return _bounding->Intersect_WithDepth(target->Get_Bounding().get(), outNormal, outDepth);
+}
+
 bool Collider::Is_Overlapping(Shared<Collider> other) const
 {
     return _overlapSet.contains(other);

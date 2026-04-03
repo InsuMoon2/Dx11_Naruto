@@ -24,6 +24,7 @@ json CameraTrack_Serializer::To_Json(const FCameraSequenceAsset& asset)
         kj["rotation"] = Utils::Quat_ToJson(key.rotation);
         kj["fov_y"] = key.fovY;
         kj["ease_type"] = string(magic_enum::enum_name(key.easeType));
+        kj["anchor_space"] = string(magic_enum::enum_name(key.anchorSpace));
 
         // Target / LookAt 전용
         kj["target_tag"] = key.targetTag;
@@ -80,6 +81,12 @@ bool CameraTrack_Serializer::From_Json(const json& root, FCameraSequenceAsset& o
 
             key.pitch = kj.value("pitch", 0.f);
             key.yaw = kj.value("yaw", 0.f);
+
+            auto anchorOpt = magic_enum::enum_cast<ECinemaAnchorSpace>(
+                kj.value("anchor_space", "WorldAbsolute"));
+
+            key.anchorSpace = anchorOpt.value_or(ECinemaAnchorSpace::WorldAbsolute);
+
             outAsset.track.keys.push_back(key);
         }
     }

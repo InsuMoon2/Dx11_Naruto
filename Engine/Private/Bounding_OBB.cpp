@@ -60,6 +60,12 @@ bool Bounding_OBB::Intersect(Bounding* otherBounding)
     return false;
 }
 
+bool Bounding_OBB::Intersect_WithDepth(Bounding* otherBounding, Vec3& outNormal, float& outDepth)
+{
+
+    return true;
+}
+
 #ifdef _DEBUG
 HRESULT Bounding_OBB::Render_Debug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch, Color color)
 {

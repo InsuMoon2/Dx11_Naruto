@@ -82,11 +82,21 @@ private:
     void Draw_CreateNotifySection();
     void Draw_CreateStateSection();
 
+    // 시퀀서 우클릭 시 열리는 컨텍스트 메뉴를 그린다.
+    void Handle_SequencerContextMenu();
     void Handle_CreateNotifyPopup();
     void Handle_CreateStatePopup();
 
+    // 시퀀서 우클릭 메뉴를 열 때 클릭 위치의 프레임/트랙 문맥을 저장한다.
+    void Begin_SequencerContextMenu(int32 frame, bool hasTrackContext, bool isStateTrack, int32 trackIndex);
     void Begin_CreateNotifyPopup(int32 frame);
     void Begin_CreateStatePopup(int32 startFrame, int32 endFrame);
+    // 시퀀서 우클릭 시 현재 문맥에 맞는 Notify 생성 팝업을 연다.
+    void Open_CreateNotifyFromContext();
+    // 시퀀서 우클릭 시 현재 문맥에 맞는 Notify State 생성 팝업을 연다.
+    void Open_CreateStateFromContext();
+    // 시퀀서 우클릭 메뉴에서 선택된 트랙 종류에 맞는 트랙을 즉시 추가한다.
+    void Add_Track_FromContext(bool isStateTrack);
 
     void Load_NotifyAsset();
     void Save_NotifyAsset();
@@ -110,6 +120,12 @@ private:
     bool Has_SelectedState() const;
     bool Has_SelectedNotifyTrack() const;
     bool Has_SelectedNotifyStateTrack() const;
+    // 시퀀서 우클릭 좌표가 어느 트랙 row 위인지 계산한다.
+    bool Try_GetSequencerTrackContext(
+        const ImVec2& sequencerCanvasPos,
+        const ImVec2& mousePos,
+        bool& outIsStateTrack,
+        int32& outTrackIndex) const;
     void Clear_SelectedEntries();
     void Select_NotifyTrack(int32 trackIndex);
     void Select_NotifyStateTrack(int32 trackIndex);
@@ -167,9 +183,19 @@ private:
     bool _showAllClips = false;
 
 private:
+    // 시퀀서 우클릭 컨텍스트 메뉴를 다음 프레임에 열기 위한 플래그다.
+    bool _openSequencerContextPopup = false;
     bool _openCreateNotifyPopup = false;
     bool _openCreateStatePopup = false;
 
+    // 시퀀서 우클릭 메뉴가 참조하는 기준 프레임이다.
+    int32 _sequencerContextFrame = 0;
+    // 시퀀서 우클릭이 특정 트랙 row 위에서 발생했는지 여부다.
+    bool _sequencerContextHasTrack = false;
+    // 시퀀서 우클릭이 Notify State 트랙 위였는지 기록한다.
+    bool _sequencerContextIsStateTrack = false;
+    // 시퀀서 우클릭이 발생한 실제 트랙 인덱스다.
+    int32 _sequencerContextTrackIndex = -1;
     int32 _requestedCreateNotifyFrame = 0;
     int32 _requestedCreateStateStartFrame = 0;
     int32 _requestedCreateStateEndFrame = 0;

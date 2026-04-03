@@ -109,6 +109,12 @@ BoundingOrientedBox Bounding_Capsule::Get_ProxyOBB() const
     return proxy;
 }
 
+bool Bounding_Capsule::Intersect_WithDepth(Bounding* otherBounding, Vec3& outNormal, float& outDepth)
+{
+
+    return true;
+}
+
 #ifdef _DEBUG
 void Bounding_Capsule::Get_BasisVectors(Vec3& right, Vec3& up, Vec3& forward) const
 {

@@ -925,6 +925,11 @@ bool GameInstance::Play_Cinematic(const wstring& sequenceName)
     return _cameraManager->Play_Cinematic(sequenceName);
 }
 
+bool GameInstance::Play_Cinematic(const wstring& sequenceName, Shared<Transform> anchorTransform, bool blockGameInput)
+{
+    return _cameraManager->Play_Cinematic(sequenceName, anchorTransform, blockGameInput);
+}
+
 void GameInstance::Stop_Cinematic()
 {
     return _cameraManager->Stop_Cinematic();

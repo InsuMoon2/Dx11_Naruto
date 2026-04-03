@@ -64,16 +64,23 @@ HRESULT MyPlayer::Initialize(void* arg)
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PLAYER_STATE, _stateMachine), E_FAIL);
 
     // 충돌체 추가
-    Bounding_Capsule::FBoundingCapsuleDesc capsuleDesc{};
-    capsuleDesc.radius = 0.5f;
-    capsuleDesc.halfHeight = 0.3f;
+    Bounding_Sphere::FBoundingSphereDesc sphereDesc{};
+    sphereDesc.radius = 1.5f;
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, _collider, &capsuleDesc), E_FAIL);
-    _collider->Set_CollisionPreset(Collision_Preset::Player);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_SPHERE, _collider, &sphereDesc), E_FAIL);
+    _collider->Set_CollisionPreset(Collision_Preset::Player_Body);
+	_collider->Set_IsActive(true);
 
+    // 주먹, 발 충돌체 추가
     CHECK_FAILED(Ready_HitboxColliders(), E_FAIL);
 
     return S_OK;
+}
+
+void MyPlayer::BeginPlay()
+{
+    Player::BeginPlay();
+
 }
 
 void MyPlayer::Priority_Update(float timeDelta)
@@ -97,6 +104,9 @@ void MyPlayer::Update(float timeDelta)
 void MyPlayer::Late_Update(float timeDelta)
 {
     Player::Late_Update(timeDelta);
+
+    if (_target)
+        _target->Late_Update(timeDelta);
 
     _syncTimer += timeDelta;
     if (_syncTimer >= _syncInterval)
@@ -153,6 +163,7 @@ void MyPlayer::Enable_Hitbox(EHitboxTarget target)
 
     if (_hitboxColliders[idx])
         _hitboxColliders[idx]->Set_IsActive(true);
+
 }
 
 void MyPlayer::Disable_Hitbox(EHitboxTarget target)
@@ -284,7 +295,7 @@ HRESULT MyPlayer::Ready_HitboxColliders()
     _hitboxBoneNames[ETOI(EHitboxTarget::LeftFoot)] = "LeftFoot";
 
     Bounding_Sphere::FBoundingSphereDesc sphereDesc{};
-    sphereDesc.radius = 0.2f;
+    sphereDesc.radius = 0.35f;
 
     for (int i = 0; i < ETOI(EHitboxTarget::END); ++i)
     {

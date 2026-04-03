@@ -10,6 +10,9 @@
                 },
                 {
                     "name": "Notify State Track"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
@@ -32,6 +35,18 @@
                     "start_sec": 0.30000001192092896,
                     "track_index": 1,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.10000000149011612,
+                    "payload": {
+                        "direction_source": "TargetDirection",
+                        "move_speed": 5.0,
+                        "rotate_to_target": true,
+                        "rotation_speed": 0.0
+                    },
+                    "start_sec": 0.06666667014360428,
+                    "track_index": 2,
+                    "type": "ANS_Move"
                 }
             ],
             "notify_tracks": [
@@ -47,6 +62,9 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 },
                 {
                     "name": "Notify State Track"
@@ -72,6 +90,18 @@
                     "start_sec": 0.7333333492279053,
                     "track_index": 1,
                     "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.20000000298023224,
+                    "payload": {
+                        "direction_source": "OwnerForward",
+                        "move_speed": 3.0,
+                        "rotate_to_target": true,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.6000000238418579,
+                    "track_index": 2,
+                    "type": "ANS_Move"
                 }
             ],
             "notify_tracks": [
@@ -560,6 +590,122 @@
                 }
             ],
             "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_DashStep_Front",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.6000000238418579,
+                    "payload": {
+                        "direction_source": "DashInputDirection",
+                        "move_speed": 13.0,
+                        "rotate_to_target": false,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_DashStep_Behind",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.6000000238418579,
+                    "payload": {
+                        "direction_source": "DashInputDirection",
+                        "move_speed": 13.0,
+                        "rotate_to_target": false,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_DashStep_Left",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.4333333373069763,
+                    "payload": {
+                        "direction_source": "DashInputDirection",
+                        "move_speed": 13.0,
+                        "rotate_to_target": false,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_DashStep_Right",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.4333333373069763,
+                    "payload": {
+                        "direction_source": "DashInputDirection",
+                        "move_speed": 13.0,
+                        "rotate_to_target": false,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
             "notify_tracks": [
                 {
                     "name": "Notifies"

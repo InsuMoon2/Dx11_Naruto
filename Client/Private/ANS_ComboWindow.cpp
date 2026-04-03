@@ -46,8 +46,8 @@ void ANS_ComboWindow::On_Begin(const FAnimNotifyContext& context)
             jumpAttackState->Open_ComboWindow();
     }
 
-    LOG_INFO("ComboWindow On Begin! clip={}, prev_sec={}, cur_sec={}, delta={}",
-        context.clipName, context.previousTimeSec, context.currentTimeSec, context.deltaTime);
+    //LOG_INFO("ComboWindow On Begin! clip={}, prev_sec={}, cur_sec={}, delta={}",
+    //    context.clipName, context.previousTimeSec, context.currentTimeSec, context.deltaTime);
 }
 
 void ANS_ComboWindow::On_Tick(const FAnimNotifyContext& context)
@@ -84,6 +84,6 @@ void ANS_ComboWindow::On_End(const FAnimNotifyContext& context)
             jumpAttackState->Close_ComboWindow();
     }
 
-    LOG_INFO("ComboWindow On End! clip={}, cur_sec={}, delta={}",
-        context.clipName, context.currentTimeSec, context.deltaTime);
+    //LOG_INFO("ComboWindow On End! clip={}, cur_sec={}, delta={}",
+    //    context.clipName, context.currentTimeSec, context.deltaTime);
 }

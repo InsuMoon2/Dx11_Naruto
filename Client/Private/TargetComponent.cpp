@@ -59,7 +59,9 @@ void TargetComponent::Update_Targeting(float timeDelta)
     {
         Matrix matrix = Matrix::CreateTranslation(owner->Get_Transform()->Get_WorldPosition());
         _targetCollider->Update_Collider(matrix);
+
         GAME->Add_Collider(_targetCollider);
+
     }
 
     // 매 프레임 몬스터 갱신
@@ -153,6 +155,14 @@ void TargetComponent::LockOn_NearestTarget()
         _isLocked = true;
     }
 
+}
+
+void TargetComponent::Late_Update(float timeDelta)
+{
+    if (_targetCollider)
+    {
+        GAME->Add_Collider(_targetCollider);
+    }
 }
 
 void TargetComponent::Update_Candiates()

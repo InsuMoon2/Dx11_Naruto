@@ -39,34 +39,60 @@ void Collision_Manager::Update()
             if (src->Get_Owner() == dst->Get_Owner())
                 continue;
 
-            // 두 콜라이더의 채널이 서로의 마스크에 포함돼있는지 체크
-            if (!Can_Collide(src->Get_Channel(), src->Get_CollisionMask(),
-                             dst->Get_Channel(), dst->Get_CollisionMask()))
+            const auto srcCh = src->Get_Channel();
+            const auto dstCh = dst->Get_Channel();
+
+            if (!Can_Collide(srcCh, src->Get_CollisionMask(), dstCh, dst->Get_CollisionMask()))
             {
                 continue;
             }
 
-            // 충돌 검사
-            bool isIntersecting = src->Intersect(dst);
-            // 이전 프레임에서 src, dst가 서로 충돌했는지?
-            bool wasOverlapping = src->Is_Overlapping(dst);
+            // 충돌 검사 및 블로킹 세팅
+            bool isIntersecting = false;
 
+            Vec3 normal = Vec3::Zero; // 밀어낼 방향 src-> dst 기준
+            float depth = 0.f;        // 얼마나 겹쳤는지
+
+            if (Is_Blocking(src->Get_Channel(), dst->Get_Channel()))
+            {
+                isIntersecting = src->Intersect_WithDepth(dst, normal, depth);
+
+                if (isIntersecting && depth > 0.0001)
+                {
+                    if (src->Get_Channel() == Collision_Channel::Player_Body)
+                    {
+                        if (auto ownerTransform = src->Get_Owner()->Get_Transform())
+                            ownerTransform->Add_WorldOffset(-normal * depth);
+                    }
+                    else if (dst->Get_Channel() == Collision_Channel::Player_Body)
+                    {
+                        if (auto ownerTransform = dst->Get_Owner()->Get_Transform())
+                            ownerTransform->Add_WorldOffset(normal * depth);
+                    }
+                }
+                else
+                {
+                    // 일반적인 충돌 판정
+                    isIntersecting = src->Intersect(dst);
+                }
+            }
+            else
+            {
+                isIntersecting = src->Intersect(dst);
+            }
+
+            bool wasOverlapping = src->Is_Overlapping(dst);
             if (isIntersecting)
             {
                 src->Set_IsColl(true);
                 dst->Set_IsColl(true);
-
-                // 이전 프레임에서 충돌 안됐었다면,
                 if (!wasOverlapping)
                 {
-                    // 최초 충돌
                     src->Get_Owner()->OnBeginOverlap(src, dst);
                     dst->Get_Owner()->OnBeginOverlap(dst, src);
-
                     src->Add_Overlap(dst);
                     dst->Add_Overlap(src);
                 }
-                // 충돌 중이면
                 else
                 {
                     src->Get_Owner()->OnStayOverlap(src, dst);
@@ -79,11 +105,11 @@ void Collision_Manager::Update()
                 {
                     src->Get_Owner()->OnEndOverlap(src, dst);
                     dst->Get_Owner()->OnEndOverlap(dst, src);
-
                     src->Remove_Overlap(dst);
                     dst->Remove_Overlap(src);
                 }
             }
+
         }
     }
 

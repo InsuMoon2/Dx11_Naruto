@@ -1,10 +1,22 @@
 ﻿#include "pch.h"
 #include "CameraTrack_Player.h"
 
+#include "Transform.h"
+
 void CameraTrack_Player::Bind(const FCameraTrack* track)
 {
     _track = track;
     Stop();
+}
+
+void CameraTrack_Player::Set_AnchorTransform(Shared<Transform> anchorTransform)
+{
+    _anchorTransform = anchorTransform;
+}
+
+void CameraTrack_Player::Clear_AnchorTransform()
+{
+    _anchorTransform.reset();
 }
 
 void CameraTrack_Player::Play()
@@ -182,6 +194,40 @@ bool CameraTrack_Player::Find_KeySegment(int32 frame, int32& prevIdx, int32& nex
     return false;
 }
 
+Vec3 CameraTrack_Player::Resolve_KeyWorldPosition(const FCameraKey& key) const
+{
+    if (key.anchorSpace == ECinemaAnchorSpace::WorldAbsolute)
+        return key.position;
+
+    auto anchor = _anchorTransform.lock();
+    if (!anchor)
+        return key.position;
+
+    return Vec3::Transform(key.position, anchor->Get_WorldMatrix());
+}
+
+Quat CameraTrack_Player::Resolve_KeyWorldRotation(const FCameraKey& key) const
+{
+    if (key.anchorSpace == ECinemaAnchorSpace::WorldAbsolute)
+        return key.rotation;
+
+    auto anchor = _anchorTransform.lock();
+    if (!anchor)
+        return key.rotation;
+
+    return key.rotation * anchor->Get_WorldRotation();
+}
+
+bool CameraTrack_Player::Can_OwnerRelative(const FCameraKey& key) const
+{
+    if (key.anchorSpace != ECinemaAnchorSpace::OwnerRelative)
+    {
+        return false;
+    }
+
+    return !_anchorTransform.expired();
+}
+
 void CameraTrack_Player::Evaluate(int32 frame)
 {
     if (!_track || _track->keys.empty()) return;
@@ -204,16 +250,31 @@ void CameraTrack_Player::Evaluate(int32 frame)
     // 이징 적용
     float easedT = Apply_Ease(t, nextKey.easeType);
 
-    // Position 보간 (Catmull-Rom)
-    _currentPos = Lerp_Position(prevKey, nextKey, easedT);
+    if (prevKey.anchorSpace == ECinemaAnchorSpace::OwnerRelative &&
+        nextKey.anchorSpace == ECinemaAnchorSpace::OwnerRelative &&
+        !_anchorTransform.expired())
+    {
+        auto anchor = _anchorTransform.lock();
 
-    // Rotation 보간 (Slerp)
-    _currentRot = Lerp_Rotation(prevKey, nextKey, easedT);
+        const Vec3 localPos = Lerp_Position(prevKey, nextKey, easedT);
+        const Quat localRot = Lerp_Rotation(prevKey, nextKey, easedT);
 
-    // FoV 보간 (선형)
+        _currentPos = Vec3::Transform(localPos, anchor->Get_WorldMatrix());
+        _currentRot = localRot * anchor->Get_WorldRotation();
+    }
+    else
+    {
+        const Vec3 prevWorldPos = Resolve_KeyWorldPosition(prevKey);
+        const Vec3 nextWorldPos = Resolve_KeyWorldPosition(nextKey);
+
+        const Quat prevWorldRot = Resolve_KeyWorldRotation(prevKey);
+        const Quat nextWorldRot = Resolve_KeyWorldRotation(nextKey);
+
+        _currentPos = prevWorldPos + (nextWorldPos - prevWorldPos) * easedT;
+        _currentRot = Quat::Slerp(prevWorldRot, nextWorldRot, easedT);
+    }
+
     _currentFovY = Lerp_FovY(prevKey, nextKey, easedT);
-
-    // 모드는 prevKey 기준 (전환점은 키프레임에서 결정)
     _currentMode = (t < 1.f) ? prevKey.cameraMode : nextKey.cameraMode;
 }
 
@@ -225,6 +286,7 @@ Shared<CameraTrack_Player> CameraTrack_Player::Create()
 void CameraTrack_Player::Free()
 {
     _track = nullptr;
+    _anchorTransform.reset();
     OnFinished = nullptr;
 
     Base::Free();

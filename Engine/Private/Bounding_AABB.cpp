@@ -69,6 +69,12 @@ bool Bounding_AABB::Intersect(Bounding* otherBounding)
     return false;
 }
 
+bool Bounding_AABB::Intersect_WithDepth(Bounding* otherBounding, Vec3& outNormal, float& outDepth)
+{
+
+    return true;
+}
+
 #ifdef _DEBUG
 HRESULT Bounding_AABB::Render_Debug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch, Color color)
 {

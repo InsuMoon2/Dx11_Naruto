@@ -11,7 +11,7 @@
 #include "AnimationStateComponent.h"
 #include "GameObject_Factory.h"
 
-#include "Bounding_Capsule.h"
+#include "Bounding_Sphere.h"
 #include "Collider.h"
 
 REGISTER_GAMEOBJECT(Monster, Protocol::OBJECT_TYPE_MONSTER)
@@ -229,13 +229,11 @@ HRESULT Monster::Ready_Components()
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_MONSTER, _model), E_FAIL);
 
     // 충돌체 추가
-    Bounding_Capsule::FBoundingCapsuleDesc capsuleDesc{};
-    capsuleDesc.radius = 0.5f;
-    capsuleDesc.halfHeight = 0.3f;
+    Bounding_Sphere::FBoundingSphereDesc sphereDesc{};
+    sphereDesc.radius = 1.5f;
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, _collider, &capsuleDesc), E_FAIL);
-    _collider->Set_CollisionPreset(Collision_Preset::Monster);
-
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_SPHERE, _collider, &sphereDesc), E_FAIL);
+    _collider->Set_CollisionPreset(Collision_Preset::Monster_Body);
 
     return S_OK;
 }

@@ -24,6 +24,27 @@ void Collider_Inspector::Draw_Inspector(shared_ptr<Engine::Component> component)
         collider->Set_IsActive(isActive);
     }
 
+    int currentPresetIdx = static_cast<int>(collider->Get_CollisionPreset());
+    constexpr auto presetValues = magic_enum::enum_values<Engine::Collision_Preset>();
+    constexpr auto presetNames = magic_enum::enum_names<Engine::Collision_Preset>();
+    if (ImGui::BeginCombo("Collision Preset", string(presetNames[currentPresetIdx]).c_str()))
+    {
+        // END 제외
+        for (int i = 0; i < presetValues.size() - 1; ++i)
+        {
+            bool isSelected = (currentPresetIdx == i);
+            if (ImGui::Selectable(string(presetNames[i]).c_str(), isSelected))
+            {
+                collider->Set_CollisionPreset(presetValues[i]);
+            }
+            if (isSelected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+    ImGui::TextDisabled("Channel: %s", string(magic_enum::enum_name(collider->Get_Channel())).c_str());
+
     auto bounding = collider->Get_Bounding();
     if (!bounding)
     {
@@ -140,6 +161,9 @@ void Collider_Inspector::Draw_Inspector(shared_ptr<Engine::Component> component)
     }
 
     }
+
+
+
 
     EndEdit(component);
 }
