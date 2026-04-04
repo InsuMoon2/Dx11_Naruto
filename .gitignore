@@ -442,3 +442,6 @@ FodyWeavers.xsd
 Client/Bin/Resources/Models/Saske/Saske.fbx
 Client/Bin/Resources/Models/WhiteZetsu/WhiteZetsu.fbx
 Client/Bin/Resources/Models/Custom/Animation/TesetNormal.fbx
+Client/Bin/Client.lib
+Client/Bin/Engine.dll
+Client/Bin/Resources/Models/Custom/Animation/Custom.fbx

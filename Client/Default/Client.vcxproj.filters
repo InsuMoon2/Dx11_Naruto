@@ -213,6 +213,7 @@
     <ClInclude Include="..\Public\TargetComponent.h" />
     <ClInclude Include="..\Public\UI_Targeting.h" />
     <ClInclude Include="..\Public\AN_ChangeState.h" />
+    <ClInclude Include="..\Public\ANS_Move.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -409,6 +410,7 @@
     <ClCompile Include="..\Private\TargetComponent.cpp" />
     <ClCompile Include="..\Private\UI_Targeting.cpp" />
     <ClCompile Include="..\Private\AN_ChangeState.cpp" />
+    <ClCompile Include="..\Private\ANS_Move.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
