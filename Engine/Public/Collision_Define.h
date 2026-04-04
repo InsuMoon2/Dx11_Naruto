@@ -31,8 +31,8 @@ enum class Collision_Preset
 {
     Custom,     // 직접 세팅
 
-    Player, Player_Attack,
-    Monster, Monster_Attack,
+    Player,  Player_Body,  Player_Attack,
+    Monster, Monster_Body, Monster_Attack,
 
     Weapon,
     Projectile, // 투사체
@@ -57,6 +57,18 @@ inline bool Can_Collide(Collision_Channel src, uint32 srcMask,
     return (srcMask & dstIndex) && (dstMask & srcIndex);
 }
 
+inline bool Is_Blocking(Collision_Channel a, Collision_Channel b)
+{
+    if ((a == Collision_Channel::Player_Body && b == Collision_Channel::Monster_Body) ||
+        (a == Collision_Channel::Monster_Body && b == Collision_Channel::Player_Body))
+    {
+        return true;
+    }
+
+    // 필요 시 여기에 Player_Body <-> Enviroment 등 조건 추가해야함
+    return false;
+}
+
 struct FCollision_Preset_Data
 {
     Collision_Channel channel; // 자기 채널
@@ -77,6 +89,14 @@ static const FCollision_Preset_Data g_CollisionPresets[ETOI(
                                         ETOI(Collision_Channel::Enviroment) |
                                         ETOI(Collision_Channel::Projectile)},
 
+    {Collision_Channel::Player_Body,
+                                        ETOI(Collision_Channel::Monster_Attack) |
+                                        ETOI(Collision_Channel::Item) |
+                                        ETOI(Collision_Channel::Trigger) |
+                                        ETOI(Collision_Channel::Enviroment) |
+                                        ETOI(Collision_Channel::Projectile) |
+                                        ETOI(Collision_Channel::Monster_Body)},
+
     // Player_Attack
     {Collision_Channel::Player_Attack,
                                         ETOI(Collision_Channel::Monster) |
@@ -88,6 +108,13 @@ static const FCollision_Preset_Data g_CollisionPresets[ETOI(
                                         ETOI(Collision_Channel::Weapon) |
                                         ETOI(Collision_Channel::Projectile) |
                                         ETOI(Collision_Channel::Player_Target)},
+
+    {Collision_Channel::Monster_Body,
+                                       ETOI(Collision_Channel::Player_Attack) |
+                                        ETOI(Collision_Channel::Weapon) |
+                                        ETOI(Collision_Channel::Projectile) |
+                                        ETOI(Collision_Channel::Player_Target) |
+                                        ETOI(Collision_Channel::Player_Body)},
 
     // Monster_Attack — 몬스터 공격
     {Collision_Channel::Monster_Attack,

@@ -5,10 +5,32 @@
 #include "Camera_Cinematic.h"
 #include "RenderTarget.h"
 #include "GameInstance.h"
+#include "Hierarchy.h"
 #include "Transform.h"
 #include "Notification_Manager.h"
 #include "Scene_View.h"
 #include "magic_enum/magic_enum.hpp"
+
+static Vec3 Convert_WorldPosition_ToAnchorLocal(const Vec3& worldPos, Shared<Transform> anchorTransform)
+{
+    if (!anchorTransform)
+        return worldPos;
+
+    Matrix inverseWorld = anchorTransform->Get_WorldMatrix().Invert();
+    return Vec3::Transform(worldPos, inverseWorld);
+}
+
+static Quat Convert_WorldRotation_ToAnchorLocal(const Quat& worldRot, Shared<Transform> anchorTransform)
+{
+    if (!anchorTransform)
+        return worldRot;
+
+    Quat anchorWorldRot = anchorTransform->Get_WorldRotation();
+    Quat anchorInverse = anchorWorldRot;
+    anchorInverse.Inverse(anchorInverse);
+
+    return worldRot * anchorInverse;
+}
 
 Cinematic_View::Cinematic_View()
     : EditorWindow(TEXT("Cinematic View"))
@@ -34,6 +56,8 @@ void Cinematic_View::Initialize()
 void Cinematic_View::Update(float timeDelta)
 {
     EditorWindow::Update(timeDelta);
+
+    Sync_PreviewAnchor();
 
     if (_previewCamera)
     {
@@ -179,20 +203,43 @@ void Cinematic_View::Save_Sequence(const string& path)
 
 void Cinematic_View::Capture_KeyAtCurrentFrame()
 {
-    if (!_previewCamera) return;
-    FCameraKey newKey;
+    if (!_previewCamera)
+        return;
 
+    FCameraKey newKey;
     newKey.frame = _sequencerState.currentFrame;
-    newKey.position = _previewCamera->Get_Transform()->Get_WorldPosition();
-    newKey.rotation = _previewCamera->Get_Transform()->Get_WorldRotation();
     newKey.fovY = _previewCamera->Get_FovY();
     newKey.cameraMode = _previewCamera->Get_Mode();
+    newKey.easeType = ECameraEaseType::Linear;
+    newKey.anchorSpace = _captureAnchorSpace;
+
+    auto anchorTransform = Get_SelectedAnchorTransform();
+
+    if (newKey.anchorSpace == ECinemaAnchorSpace::OwnerRelative)
+    {
+        if (!anchorTransform)
+        {
+            NOTIFY("OwnerRelative 키는 선택 오브젝트가 필요합니다.");
+            return;
+        }
+
+        newKey.position = Convert_WorldPosition_ToAnchorLocal(
+            _previewCamera->Get_Transform()->Get_WorldPosition(),
+            anchorTransform);
+
+        newKey.rotation = Convert_WorldRotation_ToAnchorLocal(
+            _previewCamera->Get_Transform()->Get_WorldRotation(),
+            anchorTransform);
+    }
+    else
+    {
+        newKey.position = _previewCamera->Get_Transform()->Get_WorldPosition();
+        newKey.rotation = _previewCamera->Get_Transform()->Get_WorldRotation();
+    }
 
     _asset.track.keys.push_back(newKey);
-
     Sort_Keys();
 
-    // 방금 추가한 키를 선택
     for (int32 i = 0; i < static_cast<int32>(_asset.track.keys.size()); ++i)
     {
         if (_asset.track.keys[i].frame == newKey.frame)
@@ -203,7 +250,6 @@ void Cinematic_View::Capture_KeyAtCurrentFrame()
     }
 
     MarkDirty();
-
     NOTIFY("키프레임 추가: F" + to_string(newKey.frame));
 }
 
@@ -243,6 +289,7 @@ void Cinematic_View::Draw_PlayBar()
         }
         else
         {
+            Sync_PreviewAnchor();
             _player->Bind(&_asset.track);
             _player->Seek(_sequencerState.currentFrame);
             _player->Play();
@@ -255,6 +302,7 @@ void Cinematic_View::Draw_PlayBar()
     if (ImGui::Button("Stop"))
     {
         _isPlaying = false;
+        Sync_PreviewAnchor();
         _player->Stop();
         _sequencerState.currentFrame = 0;
         Apply_CurrentFrame();
@@ -271,35 +319,26 @@ void Cinematic_View::Draw_PlayBar()
 
     // 현재 정보 표시
     ImGui::SameLine(0.f, 20.f);
-    ImGui::TextDisabled("Frame: %d /", _sequencerState.currentFrame);
 
-    ImGui::SameLine();
-    ImGui::PushItemWidth(125.f);
-
-    // FPS (재생 속도) 수정
-    ImGui::SameLine(0.f, 20.f);
-    if (ImGui::InputInt("FPS", &_asset.track.fps, 10, 30))
+    if (ImGui::BeginCombo("New Key Space",
+        string(magic_enum::enum_name(_captureAnchorSpace)).c_str()))
     {
-        _asset.track.fps = max(1, _asset.track.fps);
-        MarkDirty();
+        for (auto space : magic_enum::enum_values<ECinemaAnchorSpace>())
+        {
+            if (space == ECinemaAnchorSpace::END)
+                continue;
+
+            const bool selected = (_captureAnchorSpace == space);
+            if (ImGui::Selectable(string(magic_enum::enum_name(space)).c_str(), selected))
+                _captureAnchorSpace = space;
+        }
+        ImGui::EndCombo();
     }
 
-    ImGui::SameLine();
-
-    // 타임라인 전체 길이 수정
-    if (ImGui::InputInt("Max Frame", &_asset.track.totalFrame, 10, 100))
+    if (_captureAnchorSpace == ECinemaAnchorSpace::OwnerRelative && !Can_CaptureOwnerRelativeKey())
     {
-        _asset.track.totalFrame = max(10, _asset.track.totalFrame);
-        MarkDirty();
-    }
-
-    ImGui::PopItemWidth();
-
-    if (_previewCamera)
-    {
-        ImGui::SameLine(0.f, 20.f);
-        ImGui::TextColored(ImVec4(1, 1, 0, 1), "Current Mode: %s",
-            magic_enum::enum_name(_previewCamera->Get_Mode()).data());
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1.f, 0.8f, 0.2f, 1.f), "선택 오브젝트 필요");
     }
 }
 
@@ -380,8 +419,9 @@ void Cinematic_View::Draw_KeyList(float height)
         for (int32 i = 0; i < static_cast<int32>(_asset.track.keys.size()); ++i)
         {
             const auto& key = _asset.track.keys[i];
-            // 모드 약자 + 프레임
             string label = string(magic_enum::enum_name(key.cameraMode))
+                + " / "
+                + string(magic_enum::enum_name(key.anchorSpace))
                 + " [F" + to_string(key.frame) + "]";
             if (ImGui::Selectable(label.c_str(), _selectedKeyIndex == i))
                 _selectedKeyIndex = i;
@@ -393,6 +433,15 @@ void Cinematic_View::Draw_KeyList(float height)
 void Cinematic_View::Draw_PreviewPanel(float height)
 {
     ImGui::Text("Preview");
+
+    if (auto anchor = _previewAnchorObject.lock())
+    {
+        ImGui::TextDisabled("Anchor: %s", Utils::ToString(anchor->Get_Name()).c_str());
+    }
+    else
+    {
+        ImGui::TextDisabled("Anchor: None (World Fallback)");
+    }
 
     float childHeight = height - ImGui::GetCursorPosY() - 5.f;
     ImVec2 avail = ImGui::GetContentRegionAvail();
@@ -455,10 +504,43 @@ void Cinematic_View::Draw_KeyInspector(float height)
             return;
         }
         auto& key = _asset.track.keys[_selectedKeyIndex];
+        bool isDirty = false;
+        bool needResort = false;
+
+        if (ImGui::BeginCombo("Anchor Space", string(magic_enum::enum_name(key.anchorSpace)).c_str()))
+        {
+            for (auto space : magic_enum::enum_values<ECinemaAnchorSpace>())
+            {
+                if (space == ECinemaAnchorSpace::END)
+                    continue;
+
+                const bool selected = (key.anchorSpace == space);
+                if (ImGui::Selectable(string(magic_enum::enum_name(space)).c_str(), selected))
+                {
+                    key.anchorSpace = space;
+                    isDirty = true;
+                }
+            }
+            ImGui::EndCombo();
+        }
+
+        if (key.anchorSpace == ECinemaAnchorSpace::OwnerRelative && !_previewAnchorObject.lock())
+        {
+            ImGui::TextColored(ImVec4(1.f, 0.8f, 0.2f, 1.f),
+                "Anchor 없음: 현재 프리뷰는 World Fallback으로 표시됩니다.");
+        }
 
         // 프레임
-        ImGui::InputInt("Frame", &key.frame);
-        key.frame = std::clamp(key.frame, 0, _asset.track.totalFrame);
+        const int32 prevFrame = key.frame;
+        if (ImGui::InputInt("Frame", &key.frame))
+        {
+            key.frame = std::clamp(key.frame, 0, _asset.track.totalFrame);
+            if (prevFrame != key.frame)
+            {
+                needResort = true;
+                isDirty = true;
+            }
+        }
 
         // 카메라 모드 콤보
         if (ImGui::BeginCombo("Mode", string(magic_enum::enum_name(key.cameraMode)).c_str()))
@@ -471,7 +553,10 @@ void Cinematic_View::Draw_KeyInspector(float height)
                 bool selected = (key.cameraMode == mode);
 
                 if (ImGui::Selectable(string(magic_enum::enum_name(mode)).c_str(), selected))
+                {
                     key.cameraMode = mode;
+                    isDirty = true;
+                }
             }
             ImGui::EndCombo();
         }
@@ -479,23 +564,33 @@ void Cinematic_View::Draw_KeyInspector(float height)
         ImGui::Separator();
 
         // 공통 속성
-        ImGui::DragFloat3("Position", &key.position.x, 0.1f);
+        const bool isOwnerRelative = (key.anchorSpace == ECinemaAnchorSpace::OwnerRelative);
+        const char* positionLabel = isOwnerRelative ? "Local Offset" : "Position";
+        const char* rotationLabel = isOwnerRelative ? "Local Rotation (deg)" : "Rotation (deg)";
+
+        if (ImGui::DragFloat3(positionLabel, &key.position.x, 0.1f))
+            isDirty = true;
+
         Vec3 euler = key.rotation.ToEuler();
         euler.x = XMConvertToDegrees(euler.x);
         euler.y = XMConvertToDegrees(euler.y);
         euler.z = XMConvertToDegrees(euler.z);
 
-        if (ImGui::DragFloat3("Rotation (deg)", &euler.x, 0.5f))
+        if (ImGui::DragFloat3(rotationLabel, &euler.x, 0.5f))
         {
             key.rotation = Quat::CreateFromYawPitchRoll(
                 XMConvertToRadians(euler.y),
                 XMConvertToRadians(euler.x),
                 XMConvertToRadians(euler.z));
+            isDirty = true;
         }
 
         float fovDeg = XMConvertToDegrees(key.fovY);
         if (ImGui::SliderFloat("FoV", &fovDeg, 10.f, 120.f))
+        {
             key.fovY = XMConvertToRadians(fovDeg);
+            isDirty = true;
+        }
 
         // 이징
         if (ImGui::BeginCombo("Ease", string(magic_enum::enum_name(key.easeType)).c_str()))
@@ -505,7 +600,10 @@ void Cinematic_View::Draw_KeyInspector(float height)
                 if (ease == ECameraEaseType::END) continue;
                 bool selected = (key.easeType == ease);
                 if (ImGui::Selectable(string(magic_enum::enum_name(ease)).c_str(), selected))
+                {
                     key.easeType = ease;
+                    isDirty = true;
+                }
             }
             ImGui::EndCombo();
         }
@@ -521,22 +619,53 @@ void Cinematic_View::Draw_KeyInspector(float height)
             strcpy_s(tagBuf, key.targetTag.c_str());
 
             if (ImGui::InputText("Target Tag", tagBuf, sizeof(tagBuf)))
+            {
                 key.targetTag = tagBuf;
+                isDirty = true;
+            }
 
-            ImGui::DragFloat3("Target Offset", &key.targetOffset.x, 0.1f);
+            if (ImGui::DragFloat3("Target Offset", &key.targetOffset.x, 0.1f))
+                isDirty = true;
         }
 
         if (key.cameraMode == ECineCameraMode::Target)
         {
-            ImGui::DragFloat("Distance", &key.distance, 0.1f, 1.f, 50.f);
-            ImGui::DragFloat("Pitch", &key.pitch, 0.5f, -80.f, 80.f);
-            ImGui::DragFloat("Yaw", &key.yaw, 0.5f);
+            if (ImGui::DragFloat("Distance", &key.distance, 0.1f, 1.f, 50.f))
+                isDirty = true;
+            if (ImGui::DragFloat("Pitch", &key.pitch, 0.5f, -80.f, 80.f))
+                isDirty = true;
+            if (ImGui::DragFloat("Yaw", &key.yaw, 0.5f))
+                isDirty = true;
         }
 
         ImGui::Separator();
 
         if (ImGui::Button("Delete Key"))
             Delete_SelectedKey();
+
+        if (needResort)
+        {
+            const int32 targetFrame = key.frame;
+            const ECineCameraMode targetMode = key.cameraMode;
+            const ECinemaAnchorSpace targetSpace = key.anchorSpace;
+
+            Sort_Keys();
+
+            for (int32 i = 0; i < static_cast<int32>(_asset.track.keys.size()); ++i)
+            {
+                const auto& sortedKey = _asset.track.keys[i];
+                if (sortedKey.frame == targetFrame &&
+                    sortedKey.cameraMode == targetMode &&
+                    sortedKey.anchorSpace == targetSpace)
+                {
+                    _selectedKeyIndex = i;
+                    break;
+                }
+            }
+        }
+
+        if (isDirty)
+            MarkDirty();
     }
     ImGui::EndChild();
 }
@@ -609,6 +738,7 @@ void Cinematic_View::Handle_PlaybackShortcut()
         }
         else
         {
+            Sync_PreviewAnchor();
             _player->Bind(&_asset.track);
             _player->Seek(_sequencerState.currentFrame);
             _player->Play();
@@ -664,6 +794,7 @@ void Cinematic_View::Apply_CurrentFrame()
 {
     if (!_previewCamera || _asset.track.keys.empty()) return;
 
+    Sync_PreviewAnchor();
     _player->Bind(&_asset.track);
     _player->Seek(_sequencerState.currentFrame);
 
@@ -714,6 +845,49 @@ void Cinematic_View::Sort_Keys()
 {
     sort(_asset.track.keys.begin(), _asset.track.keys.end(),
         [](const FCameraKey& a, const FCameraKey& b) { return a.frame < b.frame; });
+}
+
+Shared<GameObject> Cinematic_View::Get_SelectedAnchorObject() const
+{
+    auto hierarchy = dynamic_pointer_cast<Hierarchy>(
+        EDITOR->Get_Window(TEXT("Hierarchy")));
+
+    if (!hierarchy)
+        return nullptr;
+
+    const auto& selected = hierarchy->Get_SelectedObject();
+    if (selected.empty())
+        return nullptr;
+
+    return selected.front();
+}
+
+Shared<Transform> Cinematic_View::Get_SelectedAnchorTransform() const
+{
+    auto selectedObject = Get_SelectedAnchorObject();
+    if (!selectedObject)
+        return nullptr;
+
+    return selectedObject->Get_Transform();
+}
+
+void Cinematic_View::Sync_PreviewAnchor()
+{
+    auto selectedObject = Get_SelectedAnchorObject();
+    _previewAnchorObject = selectedObject;
+
+    if (_player)
+    {
+        if (selectedObject)
+            _player->Set_AnchorTransform(selectedObject->Get_Transform());
+        else
+            _player->Clear_AnchorTransform();
+    }
+}
+
+bool Cinematic_View::Can_CaptureOwnerRelativeKey() const
+{
+    return Get_SelectedAnchorTransform() != nullptr;
 }
 
 Shared<Cinematic_View> Cinematic_View::Create()

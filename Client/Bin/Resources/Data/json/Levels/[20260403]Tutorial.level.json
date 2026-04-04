@@ -1,0 +1,3363 @@
+{
+    "gameObjects": [
+        {
+            "components": [
+                {
+                    "position": [
+                        -32.86117172241211,
+                        -0.20498040318489075,
+                        -22.544410705566406
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "816c0f10-ab00-417c-a295-654259b3a8c5",
+                            "material_name": "MI_ENV_TCHEXA_LeafMasked_A",
+                            "texture_overrides": {
+                                "base_color_0": "c211c533-96f5-4b96-8c1b-92fcb35031bd"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "bdca738f-494b-4767-83af-acfb020cef05",
+                            "material_name": "MI_ENV_TCHEXA_Leaf_A_01",
+                            "texture_overrides": {
+                                "base_color_0": "bb68356d-507d-41e9-acf2-9d67dcb617df",
+                                "normal_0": "9c47d841-fd3e-4a55-9e3d-83157a25835b"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "0deda11b-3025-4a8c-a302-60dd11a1fd8c",
+                            "material_name": "MI_ENV_TCHEXA_Tree_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "3bac7673-1aeb-4e48-95b4-fe82c74de146",
+                                "normal_0": "cc3d62ea-fa6d-4bf7-8b9f-ebc00b2b1422"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "ed4aadd6-16dc-48c3-ae06-0e9a9d8ba4a4",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_LKNVLD_Tree_A"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -18.577224731445313,
+                        -0.015455319546163082,
+                        52.323055267333984
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "816c0f10-ab00-417c-a295-654259b3a8c5",
+                            "material_name": "MI_ENV_TCHEXA_LeafMasked_A",
+                            "texture_overrides": {
+                                "base_color_0": "c211c533-96f5-4b96-8c1b-92fcb35031bd"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "bdca738f-494b-4767-83af-acfb020cef05",
+                            "material_name": "MI_ENV_TCHEXA_Leaf_A_01",
+                            "texture_overrides": {
+                                "base_color_0": "bb68356d-507d-41e9-acf2-9d67dcb617df",
+                                "normal_0": "9c47d841-fd3e-4a55-9e3d-83157a25835b"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "0deda11b-3025-4a8c-a302-60dd11a1fd8c",
+                            "material_name": "MI_ENV_TCHEXA_Tree_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "3bac7673-1aeb-4e48-95b4-fe82c74de146",
+                                "normal_0": "cc3d62ea-fa6d-4bf7-8b9f-ebc00b2b1422"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "3632f4d6-c271-4d8f-bad7-8ddb526099b3",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_LKNVLD_Tree_A2"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        17.462787628173828,
+                        -0.16794586181640625,
+                        -33.573387145996094
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "816c0f10-ab00-417c-a295-654259b3a8c5",
+                            "material_name": "MI_ENV_TCHEXA_LeafMasked_A",
+                            "texture_overrides": {
+                                "base_color_0": "c211c533-96f5-4b96-8c1b-92fcb35031bd"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "bdca738f-494b-4767-83af-acfb020cef05",
+                            "material_name": "MI_ENV_TCHEXA_Leaf_A_01",
+                            "texture_overrides": {
+                                "base_color_0": "bb68356d-507d-41e9-acf2-9d67dcb617df",
+                                "normal_0": "9c47d841-fd3e-4a55-9e3d-83157a25835b"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "0deda11b-3025-4a8c-a302-60dd11a1fd8c",
+                            "material_name": "MI_ENV_TCHEXA_Tree_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "3bac7673-1aeb-4e48-95b4-fe82c74de146",
+                                "normal_0": "cc3d62ea-fa6d-4bf7-8b9f-ebc00b2b1422"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "94ec1bd5-231e-4ced-8e75-4813b492a296",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_LKNVLD_Tree_A3_3"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        42.43214416503906,
+                        -0.015455319546163082,
+                        26.975900650024414
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "816c0f10-ab00-417c-a295-654259b3a8c5",
+                            "material_name": "MI_ENV_TCHEXA_LeafMasked_A",
+                            "texture_overrides": {
+                                "base_color_0": "c211c533-96f5-4b96-8c1b-92fcb35031bd"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "bdca738f-494b-4767-83af-acfb020cef05",
+                            "material_name": "MI_ENV_TCHEXA_Leaf_A_01",
+                            "texture_overrides": {
+                                "base_color_0": "bb68356d-507d-41e9-acf2-9d67dcb617df",
+                                "normal_0": "9c47d841-fd3e-4a55-9e3d-83157a25835b"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "0deda11b-3025-4a8c-a302-60dd11a1fd8c",
+                            "material_name": "MI_ENV_TCHEXA_Tree_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "3bac7673-1aeb-4e48-95b4-fe82c74de146",
+                                "normal_0": "cc3d62ea-fa6d-4bf7-8b9f-ebc00b2b1422"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "c1c87694-4385-448e-8e30-742b558e5dd5",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_LKNVLD_Tree_A4"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -42.1179084777832,
+                        -0.286864310503006,
+                        18.02690887451172
+                    ],
+                    "rotation": [
+                        0.0,
+                        -68.66087341308594,
+                        0.0
+                    ],
+                    "scale": [
+                        1.206829309463501,
+                        1.206829309463501,
+                        1.206829309463501
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "816c0f10-ab00-417c-a295-654259b3a8c5",
+                            "material_name": "MI_ENV_TCHEXA_LeafMasked_A",
+                            "texture_overrides": {
+                                "base_color_0": "c211c533-96f5-4b96-8c1b-92fcb35031bd"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "bdca738f-494b-4767-83af-acfb020cef05",
+                            "material_name": "MI_ENV_TCHEXA_Leaf_A_01",
+                            "texture_overrides": {
+                                "base_color_0": "bb68356d-507d-41e9-acf2-9d67dcb617df",
+                                "normal_0": "9c47d841-fd3e-4a55-9e3d-83157a25835b"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "0deda11b-3025-4a8c-a302-60dd11a1fd8c",
+                            "material_name": "MI_ENV_TCHEXA_Tree_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "3bac7673-1aeb-4e48-95b4-fe82c74de146",
+                                "normal_0": "cc3d62ea-fa6d-4bf7-8b9f-ebc00b2b1422"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "20306d35-9159-406d-bbe3-d53afdfb0307",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_LKNVLD_Tree_A5"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        16.51966094970703,
+                        -0.015455319546163082,
+                        48.64102554321289
+                    ],
+                    "rotation": [
+                        -0.0,
+                        170.4340362548828,
+                        0.0
+                    ],
+                    "scale": [
+                        1.1192750930786133,
+                        1.1192750930786133,
+                        1.1192750930786133
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "816c0f10-ab00-417c-a295-654259b3a8c5",
+                            "material_name": "MI_ENV_TCHEXA_LeafMasked_A",
+                            "texture_overrides": {
+                                "base_color_0": "c211c533-96f5-4b96-8c1b-92fcb35031bd"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "bdca738f-494b-4767-83af-acfb020cef05",
+                            "material_name": "MI_ENV_TCHEXA_Leaf_A_01",
+                            "texture_overrides": {
+                                "base_color_0": "bb68356d-507d-41e9-acf2-9d67dcb617df",
+                                "normal_0": "9c47d841-fd3e-4a55-9e3d-83157a25835b"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "0deda11b-3025-4a8c-a302-60dd11a1fd8c",
+                            "material_name": "MI_ENV_TCHEXA_Tree_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "3bac7673-1aeb-4e48-95b4-fe82c74de146",
+                                "normal_0": "cc3d62ea-fa6d-4bf7-8b9f-ebc00b2b1422"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "f09a9231-2825-4ea2-9839-953edd4c2212",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "a17f78d1-c619-4721-be14-ef22aeeb5900",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_LKNVLD_Tree_A6"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "150eabf4-cbc5-49ad-9027-45e1443fa181",
+                            "material_name": "MI_ENV_TCHEXA_GroundSoil_A",
+                            "texture_overrides": {
+                                "base_color_0": "1df5956e-3b99-47bf-a751-da0d1f676f65",
+                                "normal_0": "14fa0d4d-32ad-4fb5-b982-05910fc918b5"
+                            }
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "9c5d7730-7eec-4b72-ac27-d4cc2ecaaeb1",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "2b3e122f-97e7-48d1-ab96-0fbb4b31b1cd",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "9c5d7730-7eec-4b72-ac27-d4cc2ecaaeb1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaGround_Aa"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "150eabf4-cbc5-49ad-9027-45e1443fa181",
+                            "material_name": "MI_ENV_TCHEXA_GroundSoil_A",
+                            "texture_overrides": {
+                                "base_color_0": "1df5956e-3b99-47bf-a751-da0d1f676f65",
+                                "normal_0": "14fa0d4d-32ad-4fb5-b982-05910fc918b5"
+                            }
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "c41c849d-ad77-4a29-b370-295f6e0239e2",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "81d54735-4014-441a-9003-e7b3af8d6673",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "c41c849d-ad77-4a29-b370-295f6e0239e2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaGround_Ab"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.9996337890625,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "8d2cdba5-8a0e-4ff2-bb4a-5e1b39be4df3",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "d6dcda2d-3766-4ab4-a750-249e9953f08a",
+                                "normal_0": "df129ac3-d3d2-4dde-b47b-bf4242076226"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "8d2cdba5-8a0e-4ff2-bb4a-5e1b39be4df3",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "d6dcda2d-3766-4ab4-a750-249e9953f08a",
+                                "normal_0": "df129ac3-d3d2-4dde-b47b-bf4242076226"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "99980cfa-b839-4966-a8c5-ad309ff8e145",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "49f9ac3c-9375-462f-8f73-b81ddcaa81b8",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "99980cfa-b839-4966-a8c5-ad309ff8e145",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_A1"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        120.00031280517578,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "8d2cdba5-8a0e-4ff2-bb4a-5e1b39be4df3",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "d6dcda2d-3766-4ab4-a750-249e9953f08a",
+                                "normal_0": "df129ac3-d3d2-4dde-b47b-bf4242076226"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "8d2cdba5-8a0e-4ff2-bb4a-5e1b39be4df3",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "d6dcda2d-3766-4ab4-a750-249e9953f08a",
+                                "normal_0": "df129ac3-d3d2-4dde-b47b-bf4242076226"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "99980cfa-b839-4966-a8c5-ad309ff8e145",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "e230d038-77f4-47f9-85ff-c1239738d3b4",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "99980cfa-b839-4966-a8c5-ad309ff8e145",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_A2"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        60.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "8d2cdba5-8a0e-4ff2-bb4a-5e1b39be4df3",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "d6dcda2d-3766-4ab4-a750-249e9953f08a",
+                                "normal_0": "df129ac3-d3d2-4dde-b47b-bf4242076226"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "8d2cdba5-8a0e-4ff2-bb4a-5e1b39be4df3",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "d6dcda2d-3766-4ab4-a750-249e9953f08a",
+                                "normal_0": "df129ac3-d3d2-4dde-b47b-bf4242076226"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "99980cfa-b839-4966-a8c5-ad309ff8e145",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "64484281-55f5-4eaf-ac93-d91c2ac2301e",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "99980cfa-b839-4966-a8c5-ad309ff8e145",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_A3"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        0.0,
+                        -59.999568939208984,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "8d2cdba5-8a0e-4ff2-bb4a-5e1b39be4df3",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "d6dcda2d-3766-4ab4-a750-249e9953f08a",
+                                "normal_0": "df129ac3-d3d2-4dde-b47b-bf4242076226"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "8d2cdba5-8a0e-4ff2-bb4a-5e1b39be4df3",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "d6dcda2d-3766-4ab4-a750-249e9953f08a",
+                                "normal_0": "df129ac3-d3d2-4dde-b47b-bf4242076226"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "99980cfa-b839-4966-a8c5-ad309ff8e145",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "259de9d8-ae6b-41d9-b09e-3ad41410597f",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "99980cfa-b839-4966-a8c5-ad309ff8e145",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_A4"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        0.0,
+                        -30.000001907348633,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "da3fcf92-04ce-4fad-a21d-0759475d8d71",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Aa1"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.99989318847656,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "5212df41-a406-4a1a-9ff0-c34d6a715864",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Aa10"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        149.9999542236328,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "eb87893f-30f9-4a95-bf1e-af5955134f33",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Aa2"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        120.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "7dd0d9a2-0c5a-4a4b-87bd-61fbbc4cef4d",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Aa3"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        90.00000762939453,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "cac1acc9-86c1-4662-8490-fadcc75704f2",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Aa4"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        30.000001907348633,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "61ed2b53-0160-49ac-bec4-70e30ffbfe3a",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Aa5"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        0.0,
+                        -60.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "cc99517d-e9b2-4b97-9e75-c1d177d5de7d",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Aa6"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.00000762939453,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "1ca85471-e7b7-4087-b178-10c615def6d0",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Aa7"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        0.0,
+                        -120.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "e0223233-ba80-4897-a871-b75ef2b8d0f5",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Aa8"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        0.0,
+                        -149.9999542236328,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "d3f2f7f4-b92c-4d26-8eef-0d5c76e01879",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Aa9"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c2d000ec-5764-410f-ac41-9d10bdc080df",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "1ebf4b35-1ade-46fa-857f-43c842b20f46",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7d3c6d29-3ec9-43e5-b048-1dfdb0e2ada7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Aa_11"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        59.999534606933594,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "8d2cdba5-8a0e-4ff2-bb4a-5e1b39be4df3",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "d6dcda2d-3766-4ab4-a750-249e9953f08a",
+                                "normal_0": "df129ac3-d3d2-4dde-b47b-bf4242076226"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_name": "Material_2"
+                        }
+                    ],
+                    "model_guid": "e31df7fc-7f22-4eb8-b9c0-39ef3be4b932",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "8687d68c-2b2f-491d-a59c-42f02007530e",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "e31df7fc-7f22-4eb8-b9c0-39ef3be4b932",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_B"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        59.999534606933594,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "59f1c873-d177-4b49-a8d6-1baebee3ff7d",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "5a8421db-f25a-46d2-844f-322e71ffb083"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "8fc8fb23-4659-4cb3-ad5e-0c5ada8f8074",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_White_Masked_CameraTrans"
+                        },
+                        {
+                            "material_instance_guid": "68d4a35a-4419-42d0-a1c5-5674d5ba55e9",
+                            "material_name": "MI_ENV_TCHEXA_MetalRoof_White"
+                        },
+                        {
+                            "material_instance_guid": "8c5b1379-76fb-414f-8ae5-4ebe9dd2996f",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_Light"
+                        },
+                        {
+                            "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright"
+                        },
+                        {
+                            "material_name": "Material_6"
+                        }
+                    ],
+                    "model_guid": "30193214-8eab-4265-aaa9-cb44ea082678",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "a40247f3-3972-46bc-9620-2b9d6ccc44e8",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "30193214-8eab-4265-aaa9-cb44ea082678",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_Ba_3"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "126ff86a-b5f6-4255-8d4e-25fc13e72039",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Light_01",
+                            "texture_overrides": {
+                                "base_color_0": "e7810532-cfa8-47ca-8669-e7bc0c99c886"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "58b13c2b-bd27-4f51-94b4-c196833e9edf",
+                            "material_name": "MI_ENV_TCHEXA_MetalRoof_Dark"
+                        },
+                        {
+                            "material_instance_guid": "c5d6ad04-50a4-4136-be98-7351bf969d30",
+                            "material_name": "T_ENV_TCHEXA_Pipe_Brown",
+                            "texture_overrides": {
+                                "base_color_0": "72baa804-fe55-4e49-b95b-e50ca47a88ab"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "8d2cdba5-8a0e-4ff2-bb4a-5e1b39be4df3",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_A_Masked_CameraTrans",
+                            "texture_overrides": {
+                                "base_color_0": "d6dcda2d-3766-4ab4-a750-249e9953f08a",
+                                "normal_0": "df129ac3-d3d2-4dde-b47b-bf4242076226"
+                            }
+                        },
+                        {
+                            "material_name": "Material_4"
+                        }
+                    ],
+                    "model_guid": "0ea825ed-9bb1-4b75-a750-f84f0816e244",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "1c54f6e6-fac4-47cb-b3eb-0279b73d0f48",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "0ea825ed-9bb1-4b75-a750-f84f0816e244",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_C"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.00000762939453,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "d6beb54e-e928-4923-9051-64fd62eb53ae",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Red",
+                            "texture_overrides": {
+                                "base_color_0": "5a8421db-f25a-46d2-844f-322e71ffb083"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright"
+                        },
+                        {
+                            "material_instance_guid": "940030e1-af29-49d5-8ac4-3fc6fce7c877",
+                            "material_name": "T_ENV_TCHEXA_WallBoards_01",
+                            "texture_overrides": {
+                                "base_color_0": "58190877-a171-44e5-8f2e-d337621142eb",
+                                "normal_0": "d46079f3-5f1c-4c77-baa4-562d07b24069"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "5a70de4b-d10f-420d-853d-e61b93464695",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "852bf18d-ecba-4506-8111-ae926e696de5",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "5a70de4b-d10f-420d-853d-e61b93464695",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_D2"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        90.00000762939453,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "d6beb54e-e928-4923-9051-64fd62eb53ae",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Red",
+                            "texture_overrides": {
+                                "base_color_0": "5a8421db-f25a-46d2-844f-322e71ffb083"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright"
+                        },
+                        {
+                            "material_instance_guid": "940030e1-af29-49d5-8ac4-3fc6fce7c877",
+                            "material_name": "T_ENV_TCHEXA_WallBoards_01",
+                            "texture_overrides": {
+                                "base_color_0": "58190877-a171-44e5-8f2e-d337621142eb",
+                                "normal_0": "d46079f3-5f1c-4c77-baa4-562d07b24069"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "5a70de4b-d10f-420d-853d-e61b93464695",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "d0ebdcb5-aafd-47db-87c8-52c5a59ae97d",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "5a70de4b-d10f-420d-853d-e61b93464695",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_D3"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.99989318847656,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "d6beb54e-e928-4923-9051-64fd62eb53ae",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Red",
+                            "texture_overrides": {
+                                "base_color_0": "5a8421db-f25a-46d2-844f-322e71ffb083"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright"
+                        },
+                        {
+                            "material_instance_guid": "940030e1-af29-49d5-8ac4-3fc6fce7c877",
+                            "material_name": "T_ENV_TCHEXA_WallBoards_01",
+                            "texture_overrides": {
+                                "base_color_0": "58190877-a171-44e5-8f2e-d337621142eb",
+                                "normal_0": "d46079f3-5f1c-4c77-baa4-562d07b24069"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "5a70de4b-d10f-420d-853d-e61b93464695",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "2c21596b-112d-4654-bc3b-e254c7859379",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "5a70de4b-d10f-420d-853d-e61b93464695",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_D4"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.113991737365723
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "d6beb54e-e928-4923-9051-64fd62eb53ae",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Red",
+                            "texture_overrides": {
+                                "base_color_0": "5a8421db-f25a-46d2-844f-322e71ffb083"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright"
+                        },
+                        {
+                            "material_instance_guid": "940030e1-af29-49d5-8ac4-3fc6fce7c877",
+                            "material_name": "T_ENV_TCHEXA_WallBoards_01",
+                            "texture_overrides": {
+                                "base_color_0": "58190877-a171-44e5-8f2e-d337621142eb",
+                                "normal_0": "d46079f3-5f1c-4c77-baa4-562d07b24069"
+                            }
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "5a70de4b-d10f-420d-853d-e61b93464695",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "9b530548-97d5-466d-b0cb-8e9621412312",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "5a70de4b-d10f-420d-853d-e61b93464695",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_ArenaWall_D_2"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -1.220703097715159e-06,
+                        -1.4648438082076609e-05,
+                        10.185481071472168
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "fb7a0648-cce8-441b-adb7-c13a91600cef",
+                            "material_name": "MI_ENV_TCHEXA_RoofTile_White",
+                            "texture_overrides": {
+                                "base_color_0": "176bc015-9782-476d-af60-9bc5b348662b",
+                                "normal_0": "2ea06cd0-607b-487d-aea9-3a6a090dc4e6"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "5d5189b2-b4ec-4238-bfa3-7b87876f2638",
+                            "material_name": "MI_ENV_TCHEXA_BuildingMisc_02",
+                            "texture_overrides": {
+                                "base_color_0": "2f0cc6a4-dd34-411c-9034-e64b98406918"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "3860a41f-2fdb-460b-98f0-ce6a31771a8c",
+                            "material_name": "MI_ENV_TCHEXA_BuildingMisc_01",
+                            "texture_overrides": {
+                                "base_color_0": "a1eb5cb2-85d3-4643-a91f-a98017191d5c"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "7757eb06-3ca7-4ba9-8332-adae3ba85cd5",
+                            "material_name": "T_ENV_TCHEXA_BoltedPlates_03"
+                        },
+                        {
+                            "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright"
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "86d1b857-07cd-4f4b-838e-f7aaded27c42",
+                            "material_name": "MI_ENV_TCHEXA_RoofTile_Orange",
+                            "texture_overrides": {
+                                "base_color_0": "176bc015-9782-476d-af60-9bc5b348662b",
+                                "normal_0": "2ea06cd0-607b-487d-aea9-3a6a090dc4e6"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "c5d6ad04-50a4-4136-be98-7351bf969d30",
+                            "material_name": "T_ENV_TCHEXA_Pipe_Brown",
+                            "texture_overrides": {
+                                "base_color_0": "72baa804-fe55-4e49-b95b-e50ca47a88ab"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "5b8fe905-a17b-4799-a9d4-a3040a13c84f",
+                            "material_name": "MI_ENV_TCHEXA_WoodBoard_Natural_Lighter"
+                        },
+                        {
+                            "material_name": "Material_9"
+                        }
+                    ],
+                    "model_guid": "7cef07fd-bf41-486c-b999-58ca6b38310c",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "7342e7de-0bce-4d54-8614-b9fff3c66c8b",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7cef07fd-bf41-486c-b999-58ca6b38310c",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_Building_A_18"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -1.220703097715159e-06,
+                        -1.4648438082076609e-05,
+                        8.081525802612305
+                    ],
+                    "rotation": [
+                        0.0,
+                        -30.999996185302734,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright"
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "3860a41f-2fdb-460b-98f0-ce6a31771a8c",
+                            "material_name": "MI_ENV_TCHEXA_BuildingMisc_01",
+                            "texture_overrides": {
+                                "base_color_0": "a1eb5cb2-85d3-4643-a91f-a98017191d5c"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "5d5189b2-b4ec-4238-bfa3-7b87876f2638",
+                            "material_name": "MI_ENV_TCHEXA_BuildingMisc_02",
+                            "texture_overrides": {
+                                "base_color_0": "2f0cc6a4-dd34-411c-9034-e64b98406918"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "86d1b857-07cd-4f4b-838e-f7aaded27c42",
+                            "material_name": "MI_ENV_TCHEXA_RoofTile_Orange",
+                            "texture_overrides": {
+                                "base_color_0": "176bc015-9782-476d-af60-9bc5b348662b",
+                                "normal_0": "2ea06cd0-607b-487d-aea9-3a6a090dc4e6"
+                            }
+                        },
+                        {
+                            "material_name": "Material_5"
+                        }
+                    ],
+                    "model_guid": "1bea3bb6-e093-4576-a54e-1f82ec90f02a",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "094f4bc1-d1be-4232-b99f-33c4f5b16075",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "1bea3bb6-e093-4576-a54e-1f82ec90f02a",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_Building_B2"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -1.220703097715159e-06,
+                        -1.4648438082076609e-05,
+                        8.081525802612305
+                    ],
+                    "rotation": [
+                        -0.0,
+                        30.999996185302734,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright"
+                        },
+                        {
+                            "material_instance_guid": "7f97586a-13bf-4796-aa14-e5b1e3fc6332",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Dark"
+                        },
+                        {
+                            "material_instance_guid": "3860a41f-2fdb-460b-98f0-ce6a31771a8c",
+                            "material_name": "MI_ENV_TCHEXA_BuildingMisc_01",
+                            "texture_overrides": {
+                                "base_color_0": "a1eb5cb2-85d3-4643-a91f-a98017191d5c"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "5d5189b2-b4ec-4238-bfa3-7b87876f2638",
+                            "material_name": "MI_ENV_TCHEXA_BuildingMisc_02",
+                            "texture_overrides": {
+                                "base_color_0": "2f0cc6a4-dd34-411c-9034-e64b98406918"
+                            }
+                        },
+                        {
+                            "material_instance_guid": "86d1b857-07cd-4f4b-838e-f7aaded27c42",
+                            "material_name": "MI_ENV_TCHEXA_RoofTile_Orange",
+                            "texture_overrides": {
+                                "base_color_0": "176bc015-9782-476d-af60-9bc5b348662b",
+                                "normal_0": "2ea06cd0-607b-487d-aea9-3a6a090dc4e6"
+                            }
+                        },
+                        {
+                            "material_name": "Material_5"
+                        }
+                    ],
+                    "model_guid": "1bea3bb6-e093-4576-a54e-1f82ec90f02a",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "1eacf807-bb15-4219-a4b5-4d8229619b8d",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "1bea3bb6-e093-4576-a54e-1f82ec90f02a",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_Building_B4"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -1.220703097715159e-06,
+                        -1.4648438082076609e-05,
+                        8.081525802612305
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "8c5b1379-76fb-414f-8ae5-4ebe9dd2996f",
+                            "material_name": "MI_ENV_TCHEXA_Plaster_Light"
+                        },
+                        {
+                            "material_instance_guid": "480e753d-2e9d-48ad-9330-38b20767b673",
+                            "material_name": "MI_ENV_TCHEXA_MetalRoof_Orange"
+                        },
+                        {
+                            "material_instance_guid": "5b8fe905-a17b-4799-a9d4-a3040a13c84f",
+                            "material_name": "MI_ENV_TCHEXA_WoodBoard_Natural_Lighter"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "407e6c7e-f6f0-48c7-9585-a7af143bb903",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "0b359436-fd3f-4c17-9880-37d0e5f953e8",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "407e6c7e-f6f0-48c7-9585-a7af143bb903",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_Building_C_8"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -1.2199999446238508e-06,
+                        -12.444999694824219,
+                        8.081525802612305
+                    ],
+                    "rotation": [
+                        -0.0,
+                        30.999996185302734,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "ee536575-4d82-4b53-a7b6-e57e25789199",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "026a5b19-88c4-4e89-87ba-36c897f4a9a4",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "ee536575-4d82-4b53-a7b6-e57e25789199",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_Building_D2"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -1.2199999446238508e-06,
+                        -12.444999694824219,
+                        8.081525802612305
+                    ],
+                    "rotation": [
+                        0.0,
+                        -30.999996185302734,
+                        0.0
+                    ],
+                    "scale": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "a9824566-4235-4fd2-84ab-4f79d9f5f66d",
+                            "material_name": "MI_ENV_TCHEXA_ConcreteSlabs_Bright"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "ee536575-4d82-4b53-a7b6-e57e25789199",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "1d8238d0-191f-4530-8db9-11c3bb6d48a0",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "ee536575-4d82-4b53-a7b6-e57e25789199",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_Building_D_5"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -234.048095703125,
+                        -70.16776275634766,
+                        287.78497314453125
+                    ],
+                    "rotation": [
+                        0.0,
+                        -176.58145141601563,
+                        0.0
+                    ],
+                    "scale": [
+                        2.162033796310425,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_ENV_LKNVLD_Wall_A_BG"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "af8e9fa8-4534-4cf3-a72a-df61f2ef1f6e",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "ba0db2aa-693d-46ed-b1d7-12870d0d07b6",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "af8e9fa8-4534-4cf3-a72a-df61f2ef1f6e",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_FaceRock_BG_01_1"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -256.73394775390625,
+                        -81.0130844116211,
+                        101.19631958007813
+                    ],
+                    "rotation": [
+                        0.0,
+                        -78.02393341064453,
+                        0.0
+                    ],
+                    "scale": [
+                        2.0654056072235107,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_ENV_LKNVLD_Wall_A_BG"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "af8e9fa8-4534-4cf3-a72a-df61f2ef1f6e",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "2742376a-56a9-4128-888b-e87841e1991d",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "af8e9fa8-4534-4cf3-a72a-df61f2ef1f6e",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_FaceRock_BG_01_17"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        566.0443725585938,
+                        -103.12129211425781,
+                        38.16535186767578
+                    ],
+                    "rotation": [
+                        -0.0,
+                        71.1854476928711,
+                        0.0
+                    ],
+                    "scale": [
+                        2.23642635345459,
+                        1.0,
+                        1.375
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_ENV_LKNVLD_Wall_A_BG"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "af8e9fa8-4534-4cf3-a72a-df61f2ef1f6e",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "1336ec38-d676-4ae6-95ff-30d2fb71498f",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "af8e9fa8-4534-4cf3-a72a-df61f2ef1f6e",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_FaceRock_BG_01_2"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -104.48274993896484,
+                        -117.54740142822266,
+                        72.60847473144531
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_ENV_LKNVLD_Wall_A_BG"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "af8e9fa8-4534-4cf3-a72a-df61f2ef1f6e",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "bc0839dd-d46e-4782-9767-5109248449ec",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "af8e9fa8-4534-4cf3-a72a-df61f2ef1f6e",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_FaceRock_BG_01_3"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -234.60806274414063,
+                        -62.101951599121094,
+                        94.3778076171875
+                    ],
+                    "rotation": [
+                        0.0,
+                        -30.000083923339844,
+                        0.0
+                    ],
+                    "scale": [
+                        1.5190520286560059,
+                        1.3195863962173462,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_ENV_LKNVLD_Wall_A_BG"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "da56d41d-6bdb-4f28-add6-9cdd4c35cfcc",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "2cff589c-0334-499f-af40-92dd28fe5850",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "da56d41d-6bdb-4f28-add6-9cdd4c35cfcc",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_FaceRock_BG_02"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -178.8185272216797,
+                        -46.22386169433594,
+                        -382.782470703125
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.5625,
+                        1.116583228111267,
+                        1.1281126737594604
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_ENV_LKNVLD_Wall_A_BG"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "bb7c14bb-a7da-4163-a82c-a0b0292c270f",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "8a80d303-f61b-4571-9904-b284d9f54db0",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "bb7c14bb-a7da-4163-a82c-a0b0292c270f",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_FaceRock_BG_A_03"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        126.5999984741211,
+                        -44.4362907409668,
+                        -237.25
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.5625,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_ENV_LKNVLD_Wall_A_BG"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7075ead3-49e2-4546-9e2d-a38cdaf97e8c",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "68ed464b-8af8-41e2-933c-714e5678100e",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7075ead3-49e2-4546-9e2d-a38cdaf97e8c",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_FaceRock_BG_A_04_1"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        175.00657653808594,
+                        -44.470062255859375,
+                        -195.4453125
+                    ],
+                    "rotation": [
+                        0.0,
+                        -43.835384368896484,
+                        0.0
+                    ],
+                    "scale": [
+                        1.5625,
+                        1.375,
+                        1.3786813020706177
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_ENV_LKNVLD_Wall_A_BG"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7075ead3-49e2-4546-9e2d-a38cdaf97e8c",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "guid": "69238664-e9c4-462c-b55f-5e607ab5059a",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7075ead3-49e2-4546-9e2d-a38cdaf97e8c",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "static_class": "SM_ENV_TCHEXA_FaceRock_BG_A_04_16"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -15.581110000610352,
+                        0.0,
+                        -11.497495651245117
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "bounding": {
+                        "center": [
+                            0.0,
+                            0.75,
+                            0.0
+                        ],
+                        "radius": 0.75
+                    },
+                    "channel": "Monster_Body",
+                    "collision_preset": "Monster_Body",
+                    "is_active": true,
+                    "shape": "Sphere",
+                    "type": "COMPONENT_TYPE_COLLIDER"
+                },
+                {
+                    "bt_guid": "ba360ec8-2caa-415f-89d8-0ddcbc10797c",
+                    "type": "COMPONENT_TYPE_BEHAVIOR"
+                },
+                {
+                    "animations": [
+                        "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop",
+                        "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left"
+                    ],
+                    "materials": [
+                        {
+                            "material_name": "MI_CHR_WhiteZetsuCrowdForm",
+                            "texture_overrides": {
+                                "base_color_0": "6a7b9584-36c8-407d-b27c-a2c27aba822e"
+                            }
+                        },
+                        {
+                            "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeL",
+                            "texture_overrides": {
+                                "base_color_0": "ac547e4d-d260-4b9c-a83a-69d6ebca2d9c"
+                            }
+                        },
+                        {
+                            "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeR",
+                            "texture_overrides": {
+                                "base_color_0": "ac547e4d-d260-4b9c-a83a-69d6ebca2d9c"
+                            }
+                        }
+                    ],
+                    "model_guid": "6b9eee4c-928a-4015-9759-b29753246960",
+                    "model_type": "SkeletalMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "Attack": 10.0,
+                    "Defense": 5.0,
+                    "HP": 10000.0,
+                    "MP": 100.0,
+                    "Max HP": 104.0999984741211,
+                    "Max MP": 100.0,
+                    "Speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_AI_CONTROLLER"
+                },
+                {
+                    "Acceleration": 20.0,
+                    "Dash Distance": 6.0,
+                    "Dash Duration": 0.18000000715255737,
+                    "Deceleration": 24.0,
+                    "Gravity": -20.0,
+                    "Ground Y": 0.0,
+                    "Jump Velocity": 8.0,
+                    "Max Sprint Speed": 4.0,
+                    "Max Walk Speed": 2.0,
+                    "Yaw Speed": 0.20000000298023224,
+                    "type": "COMPONENT_TYPE_MOVEMENT"
+                },
+                {
+                    "animation_states": [
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "key": "Idle",
+                            "loopClip": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Single",
+                            "single": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        },
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_End",
+                                "loop": false,
+                                "playRate": 1.0
+                            },
+                            "key": "Run",
+                            "loopClip": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_Loop",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Sequence",
+                            "single": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Dodge_Run_Left",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        },
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "key": "Attack_04",
+                            "loopClip": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Single",
+                            "single": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        },
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "key": "Hit",
+                            "loopClip": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Single",
+                            "single": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left",
+                                "loop": false,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        }
+                    ],
+                    "current_state": "",
+                    "type": "COMPONENT_TYPE_ANIMATION_STATE"
+                }
+            ],
+            "guid": "56397ede-2402-4406-ad77-403658c170c6",
+            "layerTag": "Layer_GameObject",
+            "object_type": "OBJECT_TYPE_MONSTER",
+            "prefab_name": "Monster",
+            "static_class": "Monster"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -14.020389556884766,
+                        0.0,
+                        -6.878232955932617
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "bounding": {
+                        "center": [
+                            0.0,
+                            0.75,
+                            0.0
+                        ],
+                        "radius": 0.75
+                    },
+                    "channel": "Monster_Body",
+                    "collision_preset": "Monster_Body",
+                    "is_active": true,
+                    "shape": "Sphere",
+                    "type": "COMPONENT_TYPE_COLLIDER"
+                },
+                {
+                    "bt_guid": "ba360ec8-2caa-415f-89d8-0ddcbc10797c",
+                    "type": "COMPONENT_TYPE_BEHAVIOR"
+                },
+                {
+                    "animations": [
+                        "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop",
+                        "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left"
+                    ],
+                    "materials": [
+                        {
+                            "material_name": "MI_CHR_WhiteZetsuCrowdForm",
+                            "texture_overrides": {
+                                "base_color_0": "6a7b9584-36c8-407d-b27c-a2c27aba822e"
+                            }
+                        },
+                        {
+                            "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeL",
+                            "texture_overrides": {
+                                "base_color_0": "ac547e4d-d260-4b9c-a83a-69d6ebca2d9c"
+                            }
+                        },
+                        {
+                            "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeR",
+                            "texture_overrides": {
+                                "base_color_0": "ac547e4d-d260-4b9c-a83a-69d6ebca2d9c"
+                            }
+                        }
+                    ],
+                    "model_guid": "6b9eee4c-928a-4015-9759-b29753246960",
+                    "model_type": "SkeletalMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "Attack": 10.0,
+                    "Defense": 5.0,
+                    "HP": 10000.0,
+                    "MP": 100.0,
+                    "Max HP": 104.0999984741211,
+                    "Max MP": 100.0,
+                    "Speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_AI_CONTROLLER"
+                },
+                {
+                    "Acceleration": 20.0,
+                    "Dash Distance": 6.0,
+                    "Dash Duration": 0.18000000715255737,
+                    "Deceleration": 24.0,
+                    "Gravity": -20.0,
+                    "Ground Y": 0.0,
+                    "Jump Velocity": 8.0,
+                    "Max Sprint Speed": 4.0,
+                    "Max Walk Speed": 2.0,
+                    "Yaw Speed": 0.20000000298023224,
+                    "type": "COMPONENT_TYPE_MOVEMENT"
+                },
+                {
+                    "animation_states": [
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "key": "Idle",
+                            "loopClip": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Single",
+                            "single": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        },
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_End",
+                                "loop": false,
+                                "playRate": 1.0
+                            },
+                            "key": "Run",
+                            "loopClip": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_Loop",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Sequence",
+                            "single": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Dodge_Run_Left",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        },
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "key": "Attack_04",
+                            "loopClip": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Single",
+                            "single": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        },
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "key": "Hit",
+                            "loopClip": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Single",
+                            "single": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left",
+                                "loop": false,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        }
+                    ],
+                    "current_state": "",
+                    "type": "COMPONENT_TYPE_ANIMATION_STATE"
+                }
+            ],
+            "guid": "56917f1c-6296-47cc-9d97-36ce29c3afd1",
+            "layerTag": "Layer_GameObject",
+            "object_type": "OBJECT_TYPE_MONSTER",
+            "prefab_name": "Monster",
+            "static_class": "Monster"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -20.551584243774414,
+                        0.0,
+                        -9.300142288208008
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "bounding": {
+                        "center": [
+                            0.0,
+                            0.75,
+                            0.0
+                        ],
+                        "radius": 0.75
+                    },
+                    "channel": "Monster_Body",
+                    "collision_preset": "Monster_Body",
+                    "is_active": true,
+                    "shape": "Sphere",
+                    "type": "COMPONENT_TYPE_COLLIDER"
+                },
+                {
+                    "bt_guid": "ba360ec8-2caa-415f-89d8-0ddcbc10797c",
+                    "type": "COMPONENT_TYPE_BEHAVIOR"
+                },
+                {
+                    "animations": [
+                        "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop",
+                        "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left"
+                    ],
+                    "materials": [
+                        {
+                            "material_name": "MI_CHR_WhiteZetsuCrowdForm",
+                            "texture_overrides": {
+                                "base_color_0": "6a7b9584-36c8-407d-b27c-a2c27aba822e"
+                            }
+                        },
+                        {
+                            "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeL",
+                            "texture_overrides": {
+                                "base_color_0": "ac547e4d-d260-4b9c-a83a-69d6ebca2d9c"
+                            }
+                        },
+                        {
+                            "material_name": "MI_CHR_WhiteZetsuCrowdForm_EyeR",
+                            "texture_overrides": {
+                                "base_color_0": "ac547e4d-d260-4b9c-a83a-69d6ebca2d9c"
+                            }
+                        }
+                    ],
+                    "model_guid": "6b9eee4c-928a-4015-9759-b29753246960",
+                    "model_type": "SkeletalMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                },
+                {
+                    "type": "COMPONENT_TYPE_SHADER"
+                },
+                {
+                    "Attack": 10.0,
+                    "Defense": 5.0,
+                    "HP": 10000.0,
+                    "MP": 100.0,
+                    "Max HP": 104.0999984741211,
+                    "Max MP": 100.0,
+                    "Speed": 5.0,
+                    "type": "COMPONENT_TYPE_COMBAT_STAT"
+                },
+                {
+                    "type": "COMPONENT_TYPE_AI_CONTROLLER"
+                },
+                {
+                    "Acceleration": 20.0,
+                    "Dash Distance": 6.0,
+                    "Dash Duration": 0.18000000715255737,
+                    "Deceleration": 24.0,
+                    "Gravity": -20.0,
+                    "Ground Y": 0.0,
+                    "Jump Velocity": 8.0,
+                    "Max Sprint Speed": 4.0,
+                    "Max Walk Speed": 2.0,
+                    "Yaw Speed": 0.20000000298023224,
+                    "type": "COMPONENT_TYPE_MOVEMENT"
+                },
+                {
+                    "animation_states": [
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "key": "Idle",
+                            "loopClip": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Single",
+                            "single": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        },
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_End",
+                                "loop": false,
+                                "playRate": 1.0
+                            },
+                            "key": "Run",
+                            "loopClip": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_Loop",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Sequence",
+                            "single": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Dodge_Run_Left",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        },
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "key": "Attack_04",
+                            "loopClip": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Single",
+                            "single": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        },
+                        {
+                            "directional": {
+                                "backward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "forward": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "left": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                },
+                                "right": {
+                                    "animationName": "",
+                                    "loop": true,
+                                    "playRate": 1.0
+                                }
+                            },
+                            "end": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "key": "Hit",
+                            "loopClip": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            },
+                            "mode": "Single",
+                            "single": {
+                                "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left",
+                                "loop": false,
+                                "playRate": 1.0
+                            },
+                            "start": {
+                                "animationName": "",
+                                "loop": true,
+                                "playRate": 1.0
+                            }
+                        }
+                    ],
+                    "current_state": "",
+                    "type": "COMPONENT_TYPE_ANIMATION_STATE"
+                }
+            ],
+            "guid": "1d229492-13cf-437e-8d8c-b0fdb4274272",
+            "layerTag": "Layer_GameObject",
+            "object_type": "OBJECT_TYPE_MONSTER",
+            "prefab_name": "Monster",
+            "static_class": "Monster"
+        }
+    ],
+    "levelIndex": 5,
+    "levelName": "[20260403]Tutorial"
+}

@@ -59,6 +59,46 @@ bool Bounding_Sphere::Intersect(Bounding* otherBounding)
     return false;
 }
 
+bool Bounding_Sphere::Intersect_WithDepth(Bounding* otherBounding, Vec3& outNormal, float& outDepth)
+{
+    if (otherBounding->Get_Shape() == EShape::Sphere)
+    {
+        auto otherSphere = static_cast<Bounding_Sphere*>(otherBounding);
+
+        Vec3 centerA = this->_sphere.Center;
+        Vec3 centerB = otherSphere->_sphere.Center;
+
+        float dist = Vec3::Distance(centerA, centerB);
+        float radiusSum = this->_sphere.Radius + otherSphere->_sphere.Radius;
+
+        // 겹침
+        if (dist < radiusSum)
+        {
+            outDepth = radiusSum - dist;
+
+            if (dist > 0.0001f)
+            {
+                outNormal = centerB - centerA;
+                outNormal.Normalize();
+            }
+
+            else
+            {
+                // 중심이 똑같을 경우 임의 방향으로 밀어냄
+                outNormal = Vec3::Forward;
+            }
+            return true;
+        }
+    }
+
+    else if (otherBounding->Get_Shape() == EShape::Capsule)
+    {
+        return false;
+    }
+
+    return false;
+}
+
 #ifdef _DEBUG
 HRESULT Bounding_Sphere::Render_Debug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch, Color color)
 {

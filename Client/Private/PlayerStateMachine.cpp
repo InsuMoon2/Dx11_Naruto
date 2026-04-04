@@ -196,6 +196,76 @@ bool PlayerStateMachine::Check_HitReaction()
     return false;
 }
 
+bool PlayerStateMachine::Set_CameraRelativeMoveDirection(const Vec2& moveAxis, EMoveInputDirection& outDir,
+    Vec3& outWorldDir) const
+{
+    auto cmd = Init_MoveCommand();
+
+    Vec2 axis = moveAxis;
+    if (axis.LengthSquared() > 1.f)
+        axis.Normalize();
+
+    // 입력없을 때 Forward로 세팅
+    if (axis.LengthSquared() <= FLT_EPSILON)
+    {
+        outDir = EMoveInputDirection::Forward;
+        outWorldDir = cmd.moveBasisForward;
+        outWorldDir.y = 0.f;
+
+        if (outWorldDir.LengthSquared() <= FLT_EPSILON)
+            outWorldDir = Vec3::Forward;
+        else
+            outWorldDir.Normalize();
+
+        return false;
+    }
+
+    if (fabsf(axis.y) >= fabsf(axis.x))
+    {
+        outDir = (axis.y >= 0.f)
+            ? EMoveInputDirection::Forward
+            : EMoveInputDirection::Backward;
+    }
+    else
+    {
+        outDir = (axis.x >= 0.f)
+            ? EMoveInputDirection::Right
+            : EMoveInputDirection::Left;
+    }
+
+    Vec3 worldDir = cmd.moveBasisRight * axis.x + cmd.moveBasisForward * axis.y;
+    worldDir.y = 0.f;
+
+    if (worldDir.LengthSquared() <= FLT_EPSILON)
+    {
+        switch (outDir)
+        {
+        case EMoveInputDirection::Backward:
+            worldDir = -cmd.moveBasisForward;
+            break;
+        case EMoveInputDirection::Left:
+            worldDir = -cmd.moveBasisRight;
+            break;
+        case EMoveInputDirection::Right:
+            worldDir = cmd.moveBasisRight;
+            break;
+        case EMoveInputDirection::Forward:
+        default:
+            worldDir = cmd.moveBasisForward;
+            break;
+        }
+    }
+
+    if (worldDir.LengthSquared() <= FLT_EPSILON)
+        worldDir = Vec3::Forward;
+    else
+        worldDir.Normalize();
+
+    outWorldDir = worldDir;
+
+    return true;
+}
+
 string PlayerStateMachine::To_AnimationStateName(EPlayerState stateID)
 {
     const auto name = magic_enum::enum_name(stateID);

@@ -14,6 +14,17 @@ enum class ECameraEaseType : uint8
     Linear, EaseIn, EaseOut, EaseInOut, END
 };
 
+// 카메라 키가 어떤 기준 공간에서 세팅되는지
+// World -> 맵 시네마틱
+// Owner -> 시전자 기준 로컷 오프셋/회전
+enum class ECinemaAnchorSpace : uint8
+{
+    WorldAbsolute,
+    OwnerRelative,
+
+    END
+};
+
 // 단일 키프레임
 struct FCameraKey
 {
@@ -24,6 +35,8 @@ struct FCameraKey
     Quat            rotation = Quat::Identity;
     float           fovY  = XM_PIDIV4; // 기본 45도
     ECameraEaseType easeType = ECameraEaseType::Linear;
+
+    ECinemaAnchorSpace anchorSpace = ECinemaAnchorSpace::WorldAbsolute;
 
     // Target / LookAt 모드 전용
     string          targetTag;      // 레벨에서 찾을 오브젝트 태그

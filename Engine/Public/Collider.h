@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Component.h"
 #include <DirectXTK/Effects.h>
@@ -25,6 +25,8 @@ public:
     void    Update_Collider(const Matrix& worldMatrix);
     bool    Intersect(Shared<Collider> target);
 
+    bool    Intersect_WithDepth(Shared<Collider> target, Vec3& outNormal, float& outDepth);
+
 public:
     void    Add_Overlap(Shared<Collider> other) { _overlapSet.insert(other); }
     void    Remove_Overlap(Shared<Collider> other) { _overlapSet.erase(other); }
@@ -41,6 +43,7 @@ public: /* Getter */
     Collision_Channel   Get_Channel()       const { return _channel; }
     uint32              Get_CollisionMask() const { return _collisionMask; }
     bool                Get_IsActive()      const { return _isActive; }
+    Collision_Preset    Get_CollisionPreset() const { return _preset; }
 
 public: /* Setter */
     void Set_CollisionPreset(Collision_Preset preset);

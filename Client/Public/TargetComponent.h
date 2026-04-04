@@ -19,6 +19,7 @@ public:
     HRESULT Initialize_Prototype() override;
     HRESULT Initialize(void* arg) override;
     void    BeginPlay() override;
+    void    Late_Update(float timeDelta);
 
     void    Update_Targeting(float timeDelta);
 
@@ -30,11 +31,11 @@ public:
     void                         Set_TargetCollider(Shared<Collider> targetCollider) { _targetCollider = targetCollider; }
 
 private:
-    void    LockOn_NearestTarget();
-    void    Update_Candiates();
+    void                         LockOn_NearestTarget();
+    void                         Update_Candiates();
 
 private:
-    Shared<Collider>          _targetCollider;
+    Shared<Collider>         _targetCollider;
     Weak<Monster>            _lockedTarget; // V 키로 타겟팅할 놈
 
     bool                     _isLocked = false;

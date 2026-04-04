@@ -665,6 +665,8 @@ void Animation_View::Draw_Sequencer()
 
     ImGui::BeginChild("AnimationSequencerChild", size, false);
     {
+        const ImVec2 sequencerCanvasPos = ImGui::GetCursorScreenPos();
+
         //  빈 공간 클릭 해제 판정은 프레임마다 초기화
         _sequencerContext.clickedOnNotify = false;
 
@@ -687,7 +689,7 @@ void Animation_View::Draw_Sequencer()
             Clear_SelectedEntries();
         }
 
-        // Notify 생성은 adapter가 아니라 Animation_View가 우클릭 팝업으로 처리
+        // 시퀀서 우클릭은 클릭 지점의 프레임을 기억한 뒤 컨텍스트 메뉴로 처리한다.
         if (ImGui::IsWindowHovered() &&
             !ImGui::GetIO().KeyShift &&
             ImGui::IsMouseClicked(ImGuiMouseButton_Right))
@@ -699,8 +701,16 @@ void Animation_View::Draw_Sequencer()
 
             const float trackMinX = winPos.x + contentMin.x;
             const float trackMaxX = winPos.x + contentMax.x;
+            bool isStateTrack = false;
+            int32 trackIndex = -1;
+            const bool hasTrackContext =
+                Try_GetSequencerTrackContext(sequencerCanvasPos, mousePos, isStateTrack, trackIndex);
 
-            Begin_CreateNotifyPopup(Pixel_ToFrame_InSequencer(mousePos.x, trackMinX, trackMaxX));
+            Begin_SequencerContextMenu(
+                Pixel_ToFrame_InSequencer(mousePos.x, trackMinX, trackMaxX),
+                hasTrackContext,
+                isStateTrack,
+                trackIndex);
         }
 
         if (!_sequencerContext.isMarkingState &&
@@ -717,6 +727,8 @@ void Animation_View::Draw_Sequencer()
         }
     }
     ImGui::EndChild();
+
+    Handle_SequencerContextMenu();
 
     if (!_isPlaying)
         Apply_CurrentFrame_ToPreview();
@@ -1187,6 +1199,68 @@ void Animation_View::Draw_CreateStateSection()
     if (ImGui::Button("Add Notify State"))
         Add_State_ByFrameRange(_requestedCreateStateStartFrame, _requestedCreateStateEndFrame, typeNames[_createStateTypeIndex]);
 }
+
+void Animation_View::Handle_SequencerContextMenu()
+{
+    if (_openSequencerContextPopup)
+    {
+        _openSequencerContextPopup = false;
+        ImGui::OpenPopup("AnimationSequencerContextMenu");
+    }
+
+    if (!ImGui::BeginPopup("AnimationSequencerContextMenu"))
+        return;
+
+    ImGui::TextDisabled("Frame: %d", _sequencerContextFrame);
+    if (_sequencerContextHasTrack)
+    {
+        ImGui::SameLine();
+        ImGui::TextDisabled(
+            "| Track: %s %d",
+            _sequencerContextIsStateTrack ? "State" : "Notify",
+            _sequencerContextTrackIndex);
+    }
+    ImGui::Separator();
+
+    const bool canAddNotify = _sequencerContextHasTrack
+        ? !_sequencerContextIsStateTrack
+        : true;
+    const bool canAddState = _sequencerContextHasTrack
+        ? _sequencerContextIsStateTrack
+        : true;
+
+    if (ImGui::MenuItem("Notify Add", nullptr, false, canAddNotify))
+    {
+        Open_CreateNotifyFromContext();
+        ImGui::CloseCurrentPopup();
+    }
+
+    if (ImGui::MenuItem("Notify State Add", nullptr, false, canAddState))
+    {
+        Open_CreateStateFromContext();
+        ImGui::CloseCurrentPopup();
+    }
+
+    if (ImGui::BeginMenu("Track Add"))
+    {
+        if (ImGui::MenuItem("Notify"))
+        {
+            Add_Track_FromContext(false);
+            ImGui::CloseCurrentPopup();
+        }
+
+        if (ImGui::MenuItem("Notify State"))
+        {
+            Add_Track_FromContext(true);
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndMenu();
+    }
+
+    ImGui::EndPopup();
+}
+
 void Animation_View::Handle_CreateNotifyPopup()
 {
     if (_openCreateNotifyPopup)
@@ -1293,6 +1367,16 @@ void Animation_View::Begin_CreateNotifyPopup(int32 frame)
     _openCreateNotifyPopup = true;
 }
 
+void Animation_View::Begin_SequencerContextMenu(int32 frame, bool hasTrackContext, bool isStateTrack, int32 trackIndex)
+{
+    // 시퀀서 우클릭 시 메뉴가 사용할 기준 프레임을 저장한다.
+    _sequencerContextFrame = std::clamp(frame, Get_FrameMin(), Get_FrameMax());
+    _sequencerContextHasTrack = hasTrackContext;
+    _sequencerContextIsStateTrack = isStateTrack;
+    _sequencerContextTrackIndex = hasTrackContext ? trackIndex : -1;
+    _openSequencerContextPopup = true;
+}
+
 void Animation_View::Begin_CreateStatePopup(int32 startFrame, int32 endFrame)
 {
     const int32 frameMin = Get_FrameMin();
@@ -1302,6 +1386,93 @@ void Animation_View::Begin_CreateStatePopup(int32 startFrame, int32 endFrame)
     _requestedCreateStateStartFrame = std::clamp(startFrame, frameMin, safeStateStartMax);
     _requestedCreateStateEndFrame = std::clamp(endFrame, _requestedCreateStateStartFrame + 1, frameMax);
     _openCreateStatePopup = true;
+}
+
+void Animation_View::Open_CreateNotifyFromContext()
+{
+    // 우클릭한 프레임 기준으로 Notify 생성 팝업을 연다.
+    if (_sequencerContextHasTrack && !_sequencerContextIsStateTrack)
+        Select_NotifyTrack(_sequencerContextTrackIndex);
+
+    Begin_CreateNotifyPopup(_sequencerContextFrame);
+}
+
+void Animation_View::Open_CreateStateFromContext()
+{
+    if (_sequencerContextHasTrack && _sequencerContextIsStateTrack)
+        Select_NotifyStateTrack(_sequencerContextTrackIndex);
+
+    // 범위 마킹이 남아 있으면 그 범위를 우선하고, 없으면 클릭 프레임 기준 최소 구간을 만든다.
+    if (_sequencerContext.pendingMarkStartFrame >= 0 &&
+        _sequencerContext.pendingMarkEndFrame >= 0 &&
+        _sequencerContext.pendingMarkStartFrame != _sequencerContext.pendingMarkEndFrame)
+    {
+        Begin_CreateStatePopup(
+            min(_sequencerContext.pendingMarkStartFrame, _sequencerContext.pendingMarkEndFrame),
+            max(_sequencerContext.pendingMarkStartFrame, _sequencerContext.pendingMarkEndFrame));
+        return;
+    }
+
+    const int32 frameMin = Get_FrameMin();
+    const int32 frameMax = Get_FrameMax();
+    const int32 safeStartFrame = std::clamp(_sequencerContextFrame, frameMin, max(frameMin, frameMax - 1));
+    const int32 safeEndFrame = std::clamp(safeStartFrame + 1, safeStartFrame + 1, frameMax);
+
+    Begin_CreateStatePopup(safeStartFrame, safeEndFrame);
+}
+
+void Animation_View::Add_Track_FromContext(bool isStateTrack)
+{
+    // 우클릭 메뉴에서 생성한 트랙은 현재 선택 문맥도 함께 갱신해 바로 이어서 작업할 수 있게 한다.
+    if (isStateTrack)
+    {
+        Add_NotifyStateTrack(_newNotifyStateTrackName);
+        Select_NotifyStateTrack(_selectedNotifyStateTrackIndex);
+        return;
+    }
+
+    Add_NotifyTrack(_newNotifyTrackName);
+    Select_NotifyTrack(_selectedNotifyTrackIndex);
+}
+
+bool Animation_View::Try_GetSequencerTrackContext(
+    const ImVec2& sequencerCanvasPos,
+    const ImVec2& mousePos,
+    bool& outIsStateTrack,
+    int32& outTrackIndex) const
+{
+    const auto* clip = Get_CurrentClip();
+    if (!clip)
+        return false;
+
+    constexpr float SequencerHeaderHeight = 20.f;
+    constexpr float SequencerTrackCustomHeight = 24.f;
+    const float rowHeight = SequencerHeaderHeight + SequencerTrackCustomHeight;
+    if (rowHeight <= 0.f)
+        return false;
+
+    const float localY = mousePos.y - (sequencerCanvasPos.y + SequencerHeaderHeight);
+    if (localY < 0.f)
+        return false;
+
+    const int32 rowIndex = static_cast<int32>(localY / rowHeight);
+    const int32 notifyTrackCount = static_cast<int32>(clip->notifyTracks.size());
+    const int32 notifyStateTrackCount = static_cast<int32>(clip->notifyStateTracks.size());
+
+    if (rowIndex < notifyTrackCount)
+    {
+        outIsStateTrack = false;
+        outTrackIndex = rowIndex;
+        return true;
+    }
+
+    const int32 stateRowIndex = rowIndex - notifyTrackCount;
+    if (stateRowIndex < 0 || stateRowIndex >= notifyStateTrackCount)
+        return false;
+
+    outIsStateTrack = true;
+    outTrackIndex = stateRowIndex;
+    return true;
 }
 
 void Animation_View::Load_NotifyAsset()

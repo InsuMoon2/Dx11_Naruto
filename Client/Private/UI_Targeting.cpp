@@ -151,7 +151,7 @@ HRESULT UI_Targeting::Render()
 
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", ETOI(ETargetingTexture::TargetBase)), E_FAIL);
 
-    Vec4 targetColor = { 1.f, 0.2f, 0.1f, 1.f };
+    Vec4 targetColor = { 0.f, 1.f, 0.f, 1.f };
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColor", &targetColor, sizeof(Vec4)), E_FAIL);
 
     CHECK_FAILED(_shaderCom->Begin_Pass(7), E_FAIL);

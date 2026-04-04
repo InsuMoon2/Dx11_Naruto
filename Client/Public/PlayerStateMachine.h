@@ -81,8 +81,16 @@ public:
     void                        Set_PendingMoveInputDirection(EMoveInputDirection dir) { _pendingMoveInputDirection = dir; }
     EMoveInputDirection         Get_PendingMoveInputDirection() const { return _pendingMoveInputDirection; }
 
+    void                        Set_PendingDashWorldDirection(const Vec3& dir) { _pendingDashWorldDirection = dir; }
+    Vec3                        Get_PendingDashWorldDirection() const { return _pendingDashWorldDirection; }
+
     void                        Set_ActiveSkillSlot(int32 slot) { _activeSkillSlot = slot; }
     int32                       Get_ActiveSkillSlot() const { return _activeSkillSlot; }
+
+    bool                        Set_CameraRelativeMoveDirection(
+                                    const Vec2& moveAxis,
+                                    EMoveInputDirection& outDir,
+                                    Vec3& outWorldDir) const;
 
 private:
     static string               To_AnimationStateName(EPlayerState stateID);
@@ -98,7 +106,7 @@ private:
     bool                        Check_Cinematic();
     bool                        Check_HitReaction(); // 슈퍼아머 아닐 때
 
-
+    
 
 private:
     Shared<InputComponent>                      _input;
@@ -116,8 +124,10 @@ private:
     Vec3                                        _pendingLandDirection = Vec3::Zero;
 
     EMoveInputDirection                         _pendingMoveInputDirection = EMoveInputDirection::Forward;
+    Vec3                                        _pendingDashWorldDirection = Vec3::Forward;
 
     int32                                       _activeSkillSlot = -1;
+
 
 protected:
     json To_Json() const override;

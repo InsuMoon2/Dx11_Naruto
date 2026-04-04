@@ -4,6 +4,8 @@
 
 NS_BEGIN(Engine)
 
+class Transform;
+
 class ENGINE_DLL CameraTrack_Player : public Base
 {
 public:
@@ -13,6 +15,9 @@ public:
 public:
     // 트랙 바인딩
     void            Bind(const FCameraTrack* track);
+
+    void            Set_AnchorTransform(Shared<Transform> anchorTransform);
+    void            Clear_AnchorTransform();
 
     void            Play();
     void            Pause();
@@ -47,6 +52,14 @@ private:
     // prevIdx: 현재 프레임 직전 키, nextIdx: 직후 키
     bool Find_KeySegment(int32 frame, int32& prevIdx, int32& nextIdx) const;
 
+    // 단일 키의 위치를 현재 anchor 기준 월드 위치로 해석한다.
+    Vec3 Resolve_KeyWorldPosition(const FCameraKey& key) const;
+    // 단일 키의 회전을 현재 anchor 기준 월드 회전으로 해석한다.
+    Quat Resolve_KeyWorldRotation(const FCameraKey& key) const;
+
+    // 현재 키가 owner-relative로 해석 가능한지 확인한다.
+    bool Can_OwnerRelative(const FCameraKey& key) const;
+
     // 보간 결과를 _current 멤버에 저장
     void Evaluate(int32 frame);
 
@@ -56,6 +69,8 @@ private:
     bool                _isPlaying = false;
     float               _playbackTimeSec = 0.f;
     int32               _currentFrame = 0;
+
+    Weak<Transform>     _anchorTransform;
 
     // 보간 캐싱
     Vec3                _currentPos = Vec3::Zero;

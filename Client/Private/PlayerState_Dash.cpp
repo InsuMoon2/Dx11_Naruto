@@ -26,29 +26,39 @@ void PlayerState_Dash::Enter(PlayerStateMachine* state)
     if (!input || !movement || !owner)
         return;
 
-    auto transform = owner->Get_Component<Transform>();
-    if (!transform)
-        return;
+    EMoveInputDirection resolvedDir = EMoveInputDirection::Forward;
+    Vec3 resolvedWorldDir = Vec3::Forward;
 
-    _dashDir = EMoveInputDirection::Forward;
+    const auto& frame = input->Get_Frame();
+
+    state->Set_CameraRelativeMoveDirection(
+        Vec2(frame.moveX, frame.moveY),
+        resolvedDir,
+        resolvedWorldDir);
+
+    _dashDir = resolvedDir;
+
+    auto cmd = state->Init_MoveCommand();
+
+    Vec3 faceDir = cmd.moveBasisForward;
+    faceDir.y = 0.f;
+
+    if (faceDir.LengthSquared() > FLT_EPSILON)
+    {
+        faceDir.Normalize();
+
+        Quat faceRot = Quat::FromToRotation(Vec3::Backward, faceDir);
+        owner->Get_Transform()->Set_WorldRotation(faceRot);
+    }
+
     state->Set_PendingMoveInputDirection(_dashDir);
+    state->Set_PendingDashWorldDirection(resolvedWorldDir);
 
-    // 대쉬 도중 입력막기, 프리셋 세팅 -> 나중에 충돌체쪽도 프리셋 만들기
     input->Set_InputMode(EPlayerInputMode::LookOnly);
     movement->Set_OrientRotationToMovement(false);
 
-    Vec3 dashWorldDir = transform->Get_WorldForward();
-    dashWorldDir.y = 0.f;
-
-    if (dashWorldDir.LengthSquared() <= FLT_EPSILON)
-        dashWorldDir = Vec3::Forward;
-
-    dashWorldDir.Normalize();
-
-    const auto& moveDesc = movement->Get_MoveDesc();
-    movement->Start_Dash(dashWorldDir, moveDesc.dashDistance, moveDesc.dashDuration);
-
-    state->Play_AnimState(EPlayerState::Dash);
+    // 실제 이동은 ANS_Move로 세팅
+    state->Play_DirectionalAnimState(EPlayerState::Dash, _dashDir);
 }
 
 void PlayerState_Dash::Update(PlayerStateMachine* state, float timeDelta)
