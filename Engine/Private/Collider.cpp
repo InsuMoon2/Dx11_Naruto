@@ -146,7 +146,8 @@ void Collider::Set_CollisionPreset(Collision_Preset preset)
     const FCollision_Preset_Data& data = Get_PresetData(preset);
 
     _channel = data.channel;
-    _collisionMask = data.collisionMask;
+    _overlapMask = data.overlapMask;
+    _blockMask = data.blockMask;
 }
 
 json Collider::To_Json() const
@@ -156,6 +157,12 @@ json Collider::To_Json() const
     j["shape"] = magic_enum::enum_name(_shape);
     j["channel"] = magic_enum::enum_name(_channel);
     j["collision_preset"] = magic_enum::enum_name(_preset);
+
+    if (_preset == Collision_Preset::Custom)
+    {
+        j["overlap_mask"] = _overlapMask;
+        j["block_mask"] = _blockMask;
+    }
 
     j["is_active"] = _isActive;
 
@@ -223,7 +230,15 @@ void Collider::From_Json(const json& data)
     }
     else
     {
-        _collisionMask = data["collision_mask"].get<uint32>();
+        // 레거시 코드 호환용
+        if (data.contains("collision_mask"))
+            _overlapMask = data["collision_mask"].get<uint32>();
+
+        if (data.contains("overlap_mask"))
+            _overlapMask = data["overlap_mask"].get<uint32>();
+
+        if (data.contains("block_mask"))
+            _blockMask = data["block_mask"].get<uint32>();
     }
 
     if (data.contains("channel"))

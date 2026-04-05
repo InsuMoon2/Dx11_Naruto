@@ -64,3 +64,22 @@ Quat Utils::Quat_FromJson(const json& j)
     return Quat(j[0].get<float>(), j[1].get<float>(),
         j[2].get<float>(), j[3].get<float>());
 }
+
+Vec3 Utils::Safe_Normalize(const Vec3& value, const Vec3& fallback)
+{
+    Vec3 result = value;
+
+    if (result.LengthSquared() <= FLT_EPSILON)
+        return fallback;
+
+    result.Normalize();
+
+    return result;
+}
+
+Vec3 Utils::Project_OnPlane(const Vec3& value, const Vec3& planeNormal)
+{
+    Vec3 normal = Safe_Normalize(planeNormal, Vec3::Up);
+
+    return value - normal * value.Dot(normal);
+}

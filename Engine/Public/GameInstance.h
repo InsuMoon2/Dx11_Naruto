@@ -47,6 +47,8 @@ class Collider;
 struct FDebugBoxDesc;
 struct FDebugSphereDesc;
 struct FDebugLineDesc;
+struct FDebugMeshDesc;
+
 
 /* Component */
 class Transform;
@@ -341,6 +343,8 @@ public: /* Debug */
     void                    Draw_DebugBox(const FDebugBoxDesc& desc);
     void                    Draw_DebugSphere(const FDebugSphereDesc& desc);
     void                    Draw_DebugLine(const FDebugLineDesc& desc);
+    void                    Draw_DebugMesh(const FDebugMeshDesc& desc);
+
     void                    Clear_DebugDraws();
     void                    Set_DebugRenderEnabled(bool enabled);
 

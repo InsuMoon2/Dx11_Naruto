@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Level_Gameplay.h"
-
+#include "Model.h"
 #include "Camera_Free.h"
 #include "Camera_Target.h"
 #include "Client_PacketHandler.h"
@@ -8,10 +8,12 @@
 #include "Loader.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "MovementComponent.h"
 #include "NetworkManager.h"
 #include "Spawn_Helper.h"
 #include "PlayerStart.h"
-
+#include "GameInstance.h"
+#include "Debug_Manager.h"
 #include "Player.h"
 #include "UI_PlayerHUD.h"
 
@@ -31,6 +33,9 @@ HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
     CHECK_FAILED(Ready_Lights(), E_FAIL);
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
     CHECK_FAILED(Ready_UI(), E_FAIL);
+    CHECK_FAILED(Ready_GroundColliison(), E_FAIL);
+
+    CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
 
     if (_spawnMode == EGameplaySpawnMode::LocalOnly)
     {
@@ -76,6 +81,34 @@ HRESULT Level_Gameplay::Render()
 {
     #ifdef _DEBUG
     SetWindowText(g_hWnd, TEXT("현재 레벨 : GamePlay"));
+
+    if (INPUT->KeyDown(KEY_TYPE::F3))
+    {
+        for (const auto& colModel : _groundCollisionModels)
+        {
+            FDebugMeshDesc desc{};
+            desc.model = colModel;
+
+            //desc.style.depthEnabled = false;
+            desc.worldMatrix = Matrix::CreateTranslation(0.f, 0.05f, 0.f);
+            desc.style.color = Color(0.f, 0.5f, 1.f, 1.f); // 파란 테두리로
+            desc.style.duration = 10.0f;
+            GAME->Draw_DebugMesh(desc);
+        }
+
+        for (const auto& colModel : _wallCollisionModels)
+        {
+            FDebugMeshDesc desc{};
+            desc.model = colModel;
+
+            //desc.style.depthEnabled = false;
+            desc.worldMatrix = Matrix::CreateTranslation(0.f, 0.05f, 0.f);
+            desc.style.color = Color(1.f, 0.5f, 0.f, 1.f); // 빨간 테두리로
+            desc.style.duration = 10.0f;
+            GAME->Draw_DebugMesh(desc);
+        }
+    }
+
     #endif
     
     return S_OK;
@@ -197,6 +230,49 @@ HRESULT Level_Gameplay::Ready_UI()
     return S_OK;
 }
 
+HRESULT Level_Gameplay::Ready_GroundColliison()
+{
+    string colDir = "../../Client/Bin/Resources/StaticMesh/ExamStadium/Meshes/";
+
+    if (fs::exists(colDir))
+    {
+        for (const auto& entry : fs::directory_iterator(colDir))
+        {
+            if (entry.path().extension() == ".meshbin")
+            {
+                string filename = entry.path().filename().string();
+
+                if (filename.find("_COL") != string::npos)
+                {
+                    Matrix preTransform = Matrix::CreateScale(0.01f);
+
+                    Shared<Model> colModel = Model::Create(_device, _context,
+                        EMeshVertexType::StaticMesh,
+                        entry.path().string(),
+                        /*preTransform*/Matrix::Identity,
+                        true);
+
+                    if (!colModel)
+                        continue;
+
+                    // 파일명에 Wall이 들어가면 wall collision으로 분리한다.
+                    if (filename.find("Wall") != string::npos || filename.find("WALL") != string::npos)
+                        _wallCollisionModels.push_back(colModel);
+                    else
+                        _groundCollisionModels.push_back(colModel);
+                }
+            }
+        }
+
+        LOG_INFO(
+            "[Level GamePlay] Loaded Ground COL = {}, Wall COL = {}",
+            _groundCollisionModels.size(),
+            _wallCollisionModels.size());
+    }
+
+    return S_OK;
+}
+
 void Level_Gameplay::Spawn_LocalPlayer()
 {
     auto gameObjects = GAME->Get_GameObjects(ETOI(ELevelType::GamePlay));
@@ -249,6 +325,21 @@ void Level_Gameplay::On_PlayerObjectSpawned(Shared<GameObject> obj)
         return;
 
     _playerHUD->Bind_Player(player);
+
+    auto moveCom = obj->Get_Component<MovementComponent>();
+    if (!moveCom)
+        return;
+
+    if (!_groundCollisionModels.empty())
+    {
+        moveCom->Set_GroundCollisionModels(_groundCollisionModels);
+    }
+
+    if (!_wallCollisionModels.empty())
+    {
+        moveCom->Set_WallCollisionModels(_wallCollisionModels);
+    }
+
 }
 
 void Level_Gameplay::Try_SendEnterGamePacket()

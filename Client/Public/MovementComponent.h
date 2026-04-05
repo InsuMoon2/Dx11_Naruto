@@ -4,6 +4,7 @@
 
 NS_BEGIN(Engine)
 class Transform;
+class Model;
 NS_END
 
 NS_BEGIN(Client)
@@ -13,6 +14,24 @@ class MovementComponent final : public Component
     GENERATED_COMPONENT(MovementComponent, Protocol::COMPONENT_TYPE_MOVEMENT)
 
 public:
+    enum class ESurfaceMoveMode
+    {
+        Ground,
+        Air,
+        WallRun,
+        END
+    };
+
+    struct FSurfaceHit
+    {
+        Shared<Model> hitModel; // 어떤 CollisionModel에 맞았는지.
+        Vec3 hitPoint = Vec3::Zero;
+        Vec3 hitNormal = Vec3::Up;
+
+        float hitDistance = FLT_MAX;
+        bool  isValid = false;
+    };
+
     struct FMovementDesc
     {
         float maxWalkSpeed = 4.f;
@@ -32,6 +51,20 @@ public:
 
         float gravity = -20.f;      // 인스팩터에서 조절해야한다.
         float groundY = 5.f;        // Temp값. 일단 5로 조절
+
+        // 벽타기 추가
+        float groundTraceStartOffsetY = 0.5f;
+        float groundSnapTolerance = 0.1f;
+
+        float wallTraceStartOffsetY = 1.0f;
+        float wallDetectDistance = 1.0f; // 전방 벽 감지 거리
+        float wallAttachOffset = 0.15f;
+
+        // 벽으로 인정할 수 있는 표면의 최대 Up dot 절댓값
+        float wallRunnableMaxUpDot = 0.35f;
+        float wallJumpUpVelocity = 8.f;
+        float wallJumpOutVelocity = 6.f;
+
     };
 
     struct FMoveCommand
@@ -80,6 +113,11 @@ public:
     void Set_GravityEnabled(bool flag) { _gravityEnabled = flag; }
     bool Is_GravityEnabled() const     { return _gravityEnabled; }
 
+    bool Is_WallRunning() const { return _isWallRunning; }
+    void Start_WallJump();
+    void Set_WallCollisionModels(const vector<Shared<Model>>& models) { _wallCollisionModels = models; }
+    Vec3 Get_currentWallNormal() const { return _currentWallNormal; }
+
     void Set_Velocity(Vec3 velocity);
     Vec3 Get_Velocity() { return _velocity; }
 
@@ -93,12 +131,30 @@ public:
 
     void Reset_DoubleJumpCount() { _canDoubleJump = true; }
 
+    // 바닥 충돌 모델 리스트 세팅
+    void Set_GroundCollisionModels(const vector<Shared<Model>> models) { _groundCollisionModels = models; }
+
 private:
     void Update_Rotation(float timeDelta, Shared<Transform> transform);
     void Update_Velocity(float timeDelta, Shared<Transform> transform);
     void Apply_Movement(float timeDelta, Shared<Transform> transform);
 
     Vec3 Build_DesiredMoveDirection() const;
+
+private: /* 벽타기 */
+    Vec3 Build_WallRunMoveDirection() const;
+    bool Detect_GroundSurface(const Vec3& currentPos, FSurfaceHit& outHit) const;
+    bool Detect_WallSurface(const Vec3& currentPos, const Vec3& castDir, FSurfaceHit& outHit) const;
+
+    bool Can_EnterWallRun(const FSurfaceHit& wallHit, const Vec3& desiredMoveDir) const;
+
+    void Enter_WallRun(const FSurfaceHit& wallHit);
+    void Exit_WallRun();
+
+    void Apply_WallRunPosition(Shared<Transform> transform, const FSurfaceHit& wallHit);
+    void Apply_WallRunRotation(float timeDelta, Shared<Transform> transform);
+
+    void Restore_DefaultUpRotation(Shared<Transform> transform);
 
 private:
     FMovementDesc _moveDesc;
@@ -124,10 +180,21 @@ private:
     // 중력
     bool _gravityEnabled = true;
 
+    vector<Shared<Model>> _groundCollisionModels;
+    vector<Shared<Model>> _wallCollisionModels;
+
+    bool    _isWallRunning = false;
+
+    Vec3 _currentWallNormal = Vec3::Up;
+    Vec3 _currentWallHitPoint = Vec3::Zero;
+
+    float _wallJumpCooldown = 0.f;
+
 public:
     static Shared<MovementComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     Shared<Component> Clone(void* arg) override;
     void Free() override;
 };
+
 
 NS_END

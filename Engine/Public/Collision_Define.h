@@ -8,18 +8,18 @@ NS_BEGIN(Engine)
 // 충돌 채널
 enum class Collision_Channel : uint32
 {
-    Player                  = (1 << 0),
-    Player_Body             = (1 << 1),
-    Player_Attack           = (1 << 2),
-    Monster                 = (1 << 3),
-    Monster_Body            = (1 << 4),
-    Monster_Attack          = (1 << 5),
-    Weapon                  = (1 << 6),
-    Projectile              = (1 << 7),
-    Item                    = (1 << 8),
-    Trigger                 = (1 << 9),
-    Enviroment              = (1 << 10),
-    Player_Target           = (1 << 11),
+    Player = (1 << 0),
+    Player_Body = (1 << 1),
+    Player_Attack = (1 << 2),
+    Monster = (1 << 3),
+    Monster_Body = (1 << 4),
+    Monster_Attack = (1 << 5),
+    Weapon = (1 << 6),
+    Projectile = (1 << 7),
+    Item = (1 << 8),
+    Trigger = (1 << 9),
+    Enviroment = (1 << 10),
+    Player_Target = (1 << 11),
 
 
     CHANNEL_ALL = 0xFFFFFFFF,   // 모든 충돌 OK
@@ -31,7 +31,7 @@ enum class Collision_Preset
 {
     Custom,     // 직접 세팅
 
-    Player,  Player_Body,  Player_Attack,
+    Player, Player_Body, Player_Attack,
     Monster, Monster_Body, Monster_Attack,
 
     Weapon,
@@ -46,33 +46,55 @@ enum class Collision_Preset
     END
 };
 
-// src 채널이 dst 마스크에 포함되고, dst 채널이 src 마스크에 포함되면 충돌이
-// 가능하도록
-inline bool Can_Collide(Collision_Channel src, uint32 srcMask,
-    Collision_Channel dst, uint32 dstMask)
+enum class ECollisionResponse
 {
-    uint32 srcIndex = ETOI(src);
-    uint32 dstIndex = ETOI(dst);
+    Ignore = 0,     // 충돌 무시
+    Overlap = 1,    // 충돌 시 겹쳐짐, 이벤트만 발생
+    Block = 2,      // 충돌 시 서로 밀어냄
 
-    return (srcMask & dstIndex) && (dstMask & srcIndex);
+    END
+};
+
+// blockMask에 있으면 Block, overlapMask에 있으면 overlap 둘다 아니면 Ignore 판정
+inline ECollisionResponse Get_Collision_Response(uint32 selfOverlapMask, uint32 selfBlockMask, Collision_Channel targetChannel)
+{
+    uint32 targetBit = ETOI(targetChannel);
+
+    if (selfBlockMask & targetBit)
+        return ECollisionResponse::Block;
+
+    if (selfOverlapMask & targetBit)
+        return ECollisionResponse::Overlap;
+
+    return ECollisionResponse::Ignore;
 }
 
-inline bool Is_Blocking(Collision_Channel a, Collision_Channel b)
+// 둘 중 하나라도 Ignore -> Ignore
+// Ignore가 아니고 둘 중 하나라도 Overlap이면 Overlap,
+// 둘 다 Block이면 최종적으로 Block 판정이 되도록
+inline ECollisionResponse Calculate_ResponseResult(
+    Collision_Channel selfType, uint32 selfOverlap, uint32 selfBlock,
+    Collision_Channel otherType, uint32 otherOverlap, uint32 otherBlock)
 {
-    if ((a == Collision_Channel::Player_Body && b == Collision_Channel::Monster_Body) ||
-        (a == Collision_Channel::Monster_Body && b == Collision_Channel::Player_Body))
-    {
-        return true;
-    }
+    ECollisionResponse selfResponse = Get_Collision_Response(selfOverlap, selfBlock, otherType);
+    ECollisionResponse otherResponse = Get_Collision_Response(otherOverlap, otherBlock, selfType);
 
-    // 필요 시 여기에 Player_Body <-> Enviroment 등 조건 추가해야함
-    return false;
+    if (selfResponse == ECollisionResponse::Ignore || otherResponse == ECollisionResponse::Ignore)
+        return ECollisionResponse::Ignore;
+
+    if (selfResponse == ECollisionResponse::Overlap || otherResponse == ECollisionResponse::Overlap)
+        return ECollisionResponse::Overlap;
+
+    return ECollisionResponse::Block;
 }
 
 struct FCollision_Preset_Data
 {
     Collision_Channel channel; // 자기 채널
-    uint32 collisionMask;      // 충돌 대상 마스크
+
+    uint32 overlapMask;
+    uint32 blockMask;
+
 };
 
 // 프리셋 테이블
@@ -80,74 +102,92 @@ static const FCollision_Preset_Data g_CollisionPresets[ETOI(
     Collision_Preset::END)] =
 {
     // Custom — 빈 값, 직접 설정
-    {Collision_Channel::CHANNEL_NONE,   ETOI(Collision_Channel::CHANNEL_NONE)},
+    { Collision_Channel::CHANNEL_NONE, 0, 0 },
 
-    // Player — 플레이어 몸체
-    {Collision_Channel::Player,         ETOI(Collision_Channel::Monster_Attack) |
-                                        ETOI(Collision_Channel::Item) |
-                                        ETOI(Collision_Channel::Trigger) |
-                                        ETOI(Collision_Channel::Enviroment) |
-                                        ETOI(Collision_Channel::Projectile)},
+    // ── Player ──
+    { Collision_Channel::Player,
+    /* overlapMask */ ETOI(Collision_Channel::Monster_Attack) |
+                      ETOI(Collision_Channel::Item) |
+                      ETOI(Collision_Channel::Trigger) |
+                      ETOI(Collision_Channel::Projectile),
+    /* blockMask   */ ETOI(Collision_Channel::Enviroment)
+    },
 
-    {Collision_Channel::Player_Body,
-                                        ETOI(Collision_Channel::Monster_Attack) |
-                                        ETOI(Collision_Channel::Item) |
-                                        ETOI(Collision_Channel::Trigger) |
-                                        ETOI(Collision_Channel::Enviroment) |
-                                        ETOI(Collision_Channel::Projectile) |
-                                        ETOI(Collision_Channel::Monster_Body)},
-
-    // Player_Attack
-    {Collision_Channel::Player_Attack,
-                                        ETOI(Collision_Channel::Monster) |
-                                        ETOI(Collision_Channel::Monster_Body)},
-
-    // Monster — 몬스터 몸체
-    {Collision_Channel::Monster,
-                                        ETOI(Collision_Channel::Player_Attack) |
-                                        ETOI(Collision_Channel::Weapon) |
-                                        ETOI(Collision_Channel::Projectile) |
-                                        ETOI(Collision_Channel::Player_Target)},
-
-    {Collision_Channel::Monster_Body,
-                                       ETOI(Collision_Channel::Player_Attack) |
-                                        ETOI(Collision_Channel::Weapon) |
-                                        ETOI(Collision_Channel::Projectile) |
-                                        ETOI(Collision_Channel::Player_Target) |
-                                        ETOI(Collision_Channel::Player_Body)},
-
-    // Monster_Attack — 몬스터 공격
-    {Collision_Channel::Monster_Attack,
-                                        ETOI(Collision_Channel::Player) |
-                                        ETOI(Collision_Channel::Player_Body)},
-
-    // Weapon — 무기
-    {Collision_Channel::Weapon,
-                                        ETOI(Collision_Channel::Monster) |
-                                        ETOI(Collision_Channel::Monster_Body)},
-
-    // Projectile — 투사체
-    {Collision_Channel::Projectile,
-                                        ETOI(Collision_Channel::Monster) |
-                                        ETOI(Collision_Channel::Enviroment) |
-                                        ETOI(Collision_Channel::Player)},
-
-    // Item — 아이템
-    {Collision_Channel::Item,
-                                        ETOI(Collision_Channel::Player)},
-
-    // Trigger — 트리거
-    {Collision_Channel::Trigger,
-                                        ETOI(Collision_Channel::Player)},
-
-    // Enviroment — 환경물: 플레이어, 투사체와 충돌
-    {Collision_Channel::Enviroment,
-                                        ETOI(Collision_Channel::Player) |
-                                        ETOI(Collision_Channel::Projectile)},
-
-    {Collision_Channel::Player_Target,
-                                        ETOI(Collision_Channel::Monster) |
-                                        ETOI(Collision_Channel::Monster_Body)},
+    { Collision_Channel::Player_Body,
+    /* overlapMask */ ETOI(Collision_Channel::Monster_Attack) |
+                      ETOI(Collision_Channel::Item) |
+                      ETOI(Collision_Channel::Trigger) |
+                      ETOI(Collision_Channel::Projectile),
+    /* blockMask   */ ETOI(Collision_Channel::Monster_Body) |
+                          ETOI(Collision_Channel::Enviroment)
+    },
+    
+    { Collision_Channel::Player_Attack,
+    /* overlapMask */ ETOI(Collision_Channel::Monster) |
+                      ETOI(Collision_Channel::Monster_Body),
+    /* blockMask   */ 0
+    },
+    
+    { Collision_Channel::Monster,
+    /* overlapMask */ ETOI(Collision_Channel::Player_Attack) |
+                      ETOI(Collision_Channel::Weapon) |
+                      ETOI(Collision_Channel::Projectile) |
+                      ETOI(Collision_Channel::Player_Target),
+    /* blockMask   */ 0
+    },
+    
+    { Collision_Channel::Monster_Body,
+    /* overlapMask */ ETOI(Collision_Channel::Player_Attack) |
+                      ETOI(Collision_Channel::Weapon) |
+                      ETOI(Collision_Channel::Projectile) |
+                      ETOI(Collision_Channel::Player_Target),
+    /* blockMask   */ ETOI(Collision_Channel::Player_Body) |
+                      ETOI(Collision_Channel::Enviroment)
+    },
+    
+    { Collision_Channel::Monster_Attack,
+    /* overlapMask */ ETOI(Collision_Channel::Player) |
+                      ETOI(Collision_Channel::Player_Body),
+    /* blockMask   */ 0
+    },
+    
+    { Collision_Channel::Weapon,
+    /* overlapMask */ ETOI(Collision_Channel::Monster) |
+                      ETOI(Collision_Channel::Monster_Body),
+    /* blockMask   */ 0
+    },
+    
+    { Collision_Channel::Projectile,
+    /* overlapMask */ ETOI(Collision_Channel::Monster) |
+                      ETOI(Collision_Channel::Player),
+    /* blockMask   */ ETOI(Collision_Channel::Enviroment)
+    },
+    
+    { Collision_Channel::Item,
+    /* overlapMask */ ETOI(Collision_Channel::Player),
+    /* blockMask   */ 0
+    },
+    
+    { Collision_Channel::Trigger,
+    /* overlapMask */ ETOI(Collision_Channel::Player),
+    /* blockMask   */ 0
+    },
+    
+    // Enviroment — 환경물. 플레이어/투사체를 Block
+    { Collision_Channel::Enviroment,
+    /* overlapMask */ 0,
+    /* blockMask   */ ETOI(Collision_Channel::Player) |
+                      ETOI(Collision_Channel::Player_Body) |
+                      ETOI(Collision_Channel::Projectile) |
+                      ETOI(Collision_Channel::Monster_Body)
+    },
+    
+    // Player_Target — 타겟팅용. 몬스터/몬스터 몸체에 Overlap
+    { Collision_Channel::Player_Target,
+    /* overlapMask */ ETOI(Collision_Channel::Monster) |
+                      ETOI(Collision_Channel::Monster_Body),
+    /* blockMask   */ 0
+    },
 };
 
 inline const FCollision_Preset_Data& Get_PresetData(Collision_Preset preset)

@@ -16,7 +16,7 @@ void Collision_Manager::Update()
 {
     size_t colCount = _colliders.size();
 
-    // 렌더 색 복구를 위해 한번 끄기
+    // 디버그 색상 리셋
     for (size_t i = 0; i < colCount; ++i)
     {
         auto collider = _colliders[i].lock();
@@ -27,143 +27,175 @@ void Collision_Manager::Update()
     for (size_t i = 0; i < colCount; i++)
     {
         auto src = _colliders[i].lock();
-
         if (!src || !src->Get_IsActive()) continue;
 
         for (size_t j = i + 1; j < colCount; ++j)
         {
             auto dst = _colliders[j].lock();
-
             if (!dst || !dst->Get_IsActive()) continue;
 
+            // 같은 오브젝트 소속이면 스킵
             if (src->Get_Owner() == dst->Get_Owner())
                 continue;
 
-            const auto srcCh = src->Get_Channel();
-            const auto dstCh = dst->Get_Channel();
+            ECollisionResponse response = Calculate_ResponseResult(
+                src->Get_Channel(), src->Get_OverlapMask(), src->Get_BlockMask(),
+                dst->Get_Channel(), dst->Get_OverlapMask(), dst->Get_BlockMask());
 
-            if (!Can_Collide(srcCh, src->Get_CollisionMask(), dstCh, dst->Get_CollisionMask()))
-            {
+            // Ignore면 무시
+            if (response == ECollisionResponse::Ignore)
                 continue;
-            }
 
-            // 충돌 검사 및 블로킹 세팅
             bool isIntersecting = false;
 
-            Vec3 normal = Vec3::Zero; // 밀어낼 방향 src-> dst 기준
-            float depth = 0.f;        // 얼마나 겹쳤는지
-
-            if (Is_Blocking(src->Get_Channel(), dst->Get_Channel()))
+            if (response == ECollisionResponse::Block)
             {
+                Vec3 normal = Vec3::Zero;
+                float depth = 0.f;
                 isIntersecting = src->Intersect_WithDepth(dst, normal, depth);
 
-                if (isIntersecting && depth > 0.0001)
+                if (isIntersecting && depth > 0.0001f)
                 {
-                    if (src->Get_Channel() == Collision_Channel::Player_Body)
+                    auto srcOwner = src->Get_Owner();
+                    auto dstOwner = dst->Get_Owner();
+
+                    float srcRatio = 0.5f;
+                    float dstRatio = 0.5f;
+
+                    // Enviroment 채널이면 고정으로 간주
+                    bool srcStatic = (src->Get_Channel() == Collision_Channel::Enviroment);
+                    bool dstStatic = (dst->Get_Channel() == Collision_Channel::Enviroment);
+
+                    if (srcStatic && !dstStatic)
                     {
-                        if (auto ownerTransform = src->Get_Owner()->Get_Transform())
-                            ownerTransform->Add_WorldOffset(-normal * depth);
+                        srcRatio = 0.f;
+                        dstRatio = 1.f;
                     }
-                    else if (dst->Get_Channel() == Collision_Channel::Player_Body)
+                    else if (!srcStatic && dstStatic)
                     {
-                        if (auto ownerTransform = dst->Get_Owner()->Get_Transform())
-                            ownerTransform->Add_WorldOffset(normal * depth);
+                        srcRatio = 1.f;
+                        dstRatio = 0.f;
                     }
-                }
-                else
-                {
-                    // 일반적인 충돌 판정
-                    isIntersecting = src->Intersect(dst);
+
+                    if (srcRatio > 0.f)
+                    {
+                        if (auto t = srcOwner->Get_Transform())
+                            t->Add_WorldOffset(-normal * depth * srcRatio);
+                    }
+                    if (dstRatio > 0.f)
+                    {
+                        if (auto t = dstOwner->Get_Transform())
+                            t->Add_WorldOffset(normal * depth * dstRatio);
+                    }
                 }
             }
-            else
+            else // Overlap
             {
                 isIntersecting = src->Intersect(dst);
             }
 
             bool wasOverlapping = src->Is_Overlapping(dst);
+
             if (isIntersecting)
             {
                 src->Set_IsColl(true);
                 dst->Set_IsColl(true);
+
                 if (!wasOverlapping)
                 {
-                    src->Get_Owner()->OnBeginOverlap(src, dst);
-                    dst->Get_Owner()->OnBeginOverlap(dst, src);
+                    // Block / Overlap 구분하여 콜백 호출
+                    if (response == ECollisionResponse::Block)
+                    {
+                        src->Get_Owner()->OnBlockBegin(src, dst);
+                        dst->Get_Owner()->OnBlockBegin(dst, src);
+                    }
+                    else
+                    {
+                        src->Get_Owner()->OnBeginOverlap(src, dst);
+                        dst->Get_Owner()->OnBeginOverlap(dst, src);
+                    }
+
                     src->Add_Overlap(dst);
                     dst->Add_Overlap(src);
                 }
                 else
                 {
-                    src->Get_Owner()->OnStayOverlap(src, dst);
-                    dst->Get_Owner()->OnStayOverlap(dst, src);
+                    // Stay
+                    if (response == ECollisionResponse::Block)
+                    {
+                        src->Get_Owner()->OnBlockStay(src, dst);
+                        dst->Get_Owner()->OnBlockStay(dst, src);
+                    }
+                    else
+                    {
+                        src->Get_Owner()->OnStayOverlap(src, dst);
+                        dst->Get_Owner()->OnStayOverlap(dst, src);
+                    }
                 }
             }
             else
             {
                 if (wasOverlapping)
                 {
+                    // End
                     src->Get_Owner()->OnEndOverlap(src, dst);
                     dst->Get_Owner()->OnEndOverlap(dst, src);
+
                     src->Remove_Overlap(dst);
                     dst->Remove_Overlap(src);
                 }
             }
-
         }
     }
 
 #ifdef _DEBUG
     if (INPUT->KeyDown(KEY_TYPE::F1))
-    {
         _isDebug = !_isDebug;
-    }
 #endif
-
 }
 
 #ifdef _DEBUG
-void Collision_Manager::Render_Debug()
-{
-    if (!_isDebug)
-        return;
-
-    for (const auto& colliderWeak : _colliders)
+    void Collision_Manager::Render_Debug()
     {
-        auto collider = colliderWeak.lock();
+        if (!_isDebug)
+            return;
 
-        if (collider)
+        for (const auto& colliderWeak : _colliders)
         {
-            collider->Render_Debug();
+            auto collider = colliderWeak.lock();
+
+            if (collider)
+            {
+                collider->Render_Debug();
+            }
         }
     }
-}
 #endif
 
-void Collision_Manager::Add_Collider(Shared<Collider> collider)
-{
-    if (collider == nullptr)
-        return;
+    void Collision_Manager::Add_Collider(Shared<Collider> collider)
+    {
+        if (collider == nullptr)
+            return;
 
-    _colliders.push_back(collider);
-}
+        _colliders.push_back(collider);
+    }
 
-void Collision_Manager::Clear_Colliders()
-{
-    _colliders.clear();
-}
+    void Collision_Manager::Clear_Colliders()
+    {
+        _colliders.clear();
+    }
 
-Unique<Collision_Manager> Collision_Manager::Create()
-{
-    auto collMgr = make_unique<Collision_Manager>();
-    collMgr->Initialize();
+    Unique<Collision_Manager> Collision_Manager::Create()
+    {
+        auto collMgr = make_unique<Collision_Manager>();
+        collMgr->Initialize();
 
-    return collMgr;
-}
+        return collMgr;
+    }
 
-void Collision_Manager::Free()
-{
-    Base::Free();
+    void Collision_Manager::Free()
+    {
+        Base::Free();
 
-    _colliders.clear();
-}
+        _colliders.clear();
+    }

@@ -17,9 +17,9 @@ class ENGINE_DLL Model : public Component
 
 public:
     explicit Model(ComPtr<Device> device, ComPtr<DeviceContext> context);
-    explicit Model(const Model& rhs);
+
+        explicit Model(const Model& rhs);
     virtual ~Model() = default;
-    
 public:
     virtual HRESULT Initialize_Prototype(EMeshVertexType type, const string& modelFilePath, const Matrix& preLocalTransformMatrix);
     virtual HRESULT Initialize(void* arg) override;
@@ -102,6 +102,20 @@ public:
 
     // 소켓 가져오기
     const Matrix* Get_SocketBoneMatrixPtr(const string& boneName) const;
+
+public: /* 지형타기 */
+    void    Set_KeepCPUData(bool keep) { _keepCPUData = keep; }
+    bool    Get_KeepCPUData() const    { return _keepCPUData; }
+
+    bool    Raycast(const Ray& ray, float& outDist, Vec3& outHitPoint);
+
+    bool    Raycast(
+        const Ray& ray,
+        float& outDist,
+        Vec3& outHitPoint,
+        Vec3& outNormal) const;
+
+    const vector<Shared<Mesh>>& Get_Meshes() const { return _meshes; }
 
 private:
     // .meshbin 확장자일 때 들어오는 초기화 경로
@@ -283,9 +297,12 @@ private: /* 노티파이 */
 
     bool                            _enableNotifies = true;
 
+private: /* 지형타기 */
+    bool _keepCPUData = false;
+
 public:
     static Shared<Model> Create(ComPtr<Device> device, ComPtr<DeviceContext> context,
-           EMeshVertexType type, const string& modelFilePath, const Matrix& preLocalTransformMatrix);
+           EMeshVertexType type, const string& modelFilePath, const Matrix& preLocalTransformMatrix, bool keepCPUData = false);
 
     virtual Shared<Component> Clone(void* arg) override;
     virtual void Free() override;

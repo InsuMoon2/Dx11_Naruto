@@ -92,8 +92,8 @@ public:
                                     EMoveInputDirection& outDir,
                                     Vec3& outWorldDir) const;
 
-private:
     static string               To_AnimationStateName(EPlayerState stateID);
+private:
 
 
     bool                        Check_Global_Transitions();

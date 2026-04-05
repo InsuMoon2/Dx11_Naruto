@@ -279,6 +279,8 @@
     <ClInclude Include="..\Public\PlayerState_Skill.h" />
     <ClInclude Include="..\Public\PlayerState_SuperJump.h" />
     <ClInclude Include="..\Public\PlayerState_SuperJumpCharge.h" />
+    <ClInclude Include="..\Public\PlayerState_WallRun.h" />
+    <ClInclude Include="..\Public\PlayerState_Wall_Idle.h" />
     <ClInclude Include="..\Public\Player_CustomPart.h" />
     <ClInclude Include="..\Public\PreviewPlayer.h" />
     <ClInclude Include="..\Public\RemotePlayer.h" />
@@ -389,6 +391,8 @@
     <ClCompile Include="..\Private\PlayerState_Skill.cpp" />
     <ClCompile Include="..\Private\PlayerState_SuperJump.cpp" />
     <ClCompile Include="..\Private\PlayerState_SuperJumpCharge.cpp" />
+    <ClCompile Include="..\Private\PlayerState_WallRun.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Wall_Idle.cpp" />
     <ClCompile Include="..\Private\Player_CustomPart.cpp" />
     <ClCompile Include="..\Private\PreviewPlayer.cpp" />
     <ClCompile Include="..\Private\RemotePlayer.cpp" />

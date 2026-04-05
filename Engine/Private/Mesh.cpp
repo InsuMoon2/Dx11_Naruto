@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Mesh.h"
 
 Mesh::Mesh(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -11,15 +11,19 @@ Mesh::Mesh(const Mesh& rhs)
     , _materialIndex(rhs._materialIndex)
     , _meshName(rhs._meshName)
     , _vertexType(rhs._vertexType)
+    , _keepCPUData(rhs._keepCPUData)   
+    , _cpuPositions(rhs._cpuPositions)      
+    , _cpuIndices(rhs._cpuIndices)          
 {
 }
 
 HRESULT Mesh::Initialize_Prototype(const string& meshName, uint32 materialIndex, const vector<VTXMESH>& vertices,
-    const vector<uint32>& indices)
+    const vector<uint32>& indices, bool keepCPUData)
 {
     _meshName = meshName;
     _materialIndex = materialIndex;
     _vertexType = EMeshVertexType::StaticMesh;
+    _keepCPUData = keepCPUData;
 
     return Create_Buffers(vertices, indices);
 }
@@ -72,6 +76,19 @@ HRESULT Mesh::Create_Buffers(const vector<VTXMESH>& vertices, const vector<uint3
     CHECK_FAILED(_device->CreateBuffer(
         &indexBufferDesc, &indexInitialData, _indexBuffer.GetAddressOf()), E_FAIL);
 
+    // CPU 데이터 캐싱 - 레이캐스트용으로 위치 복사
+    if (_keepCPUData)
+    {
+        _cpuPositions.resize(vertices.size());
+
+        for (size_t i = 0; i < vertices.size(); ++i)
+        {
+            _cpuPositions[i] = vertices[i].position;
+        }
+
+        _cpuIndices = indices;
+    }
+
     return S_OK;
 }
 
@@ -108,15 +125,24 @@ HRESULT Mesh::Create_Buffers(const vector<VTXANIM>& vertices, const vector<uint3
     CHECK_FAILED(_device->CreateBuffer(
         &indexBufferDesc, &indexInitialData, _indexBuffer.GetAddressOf()), E_FAIL);
 
+    if (_keepCPUData)
+    {
+        _cpuPositions.resize(vertices.size());
+        for (size_t i = 0; i < vertices.size(); ++i)
+            _cpuPositions[i] = vertices[i].position;
+
+        _cpuIndices = indices;
+    }
+
     return S_OK;
 }
 
 Shared<Mesh> Mesh::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, const string& meshName,
-                          uint32 materialIndex, const vector<VTXMESH>& vertices, const vector<uint32>& indices)
+                          uint32 materialIndex, const vector<VTXMESH>& vertices, const vector<uint32>& indices, bool keepCPUData)
 {
     auto instance = make_shared<Mesh>(device, context);
 
-    if (FAILED(instance->Initialize_Prototype(meshName, materialIndex, vertices, indices)))
+    if (FAILED(instance->Initialize_Prototype(meshName, materialIndex, vertices, indices, keepCPUData)))
     {
         MSG_BOX("Failed to Create : Mesh");
         instance->Free();
@@ -159,4 +185,11 @@ Shared<Component> Mesh::Clone(void* arg)
 void Mesh::Free()
 {
     VIBuffer::Free();
+
+    _cpuPositions.clear();
+    _cpuPositions.shrink_to_fit();
+
+    _cpuIndices.clear();
+    _cpuIndices.shrink_to_fit();
 }
+

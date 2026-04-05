@@ -3,7 +3,7 @@
 #include "Level.h"
 
 NS_BEGIN(Engine)
-
+class Model;
 NS_END
 
 NS_BEGIN(Client)
@@ -32,6 +32,8 @@ private:
 
     HRESULT         Ready_UI();
 
+    HRESULT         Ready_GroundColliison();
+
 private:
     void            Spawn_LocalPlayer();
     void            On_PlayerObjectSpawned(Shared<GameObject> obj);
@@ -45,6 +47,9 @@ private:
 
     EGameplaySpawnMode  _spawnMode = EGameplaySpawnMode::END;
     bool                _enterGameSent = false;
+
+    vector<Shared<Model>> _groundCollisionModels;
+    vector<Shared<Model>> _wallCollisionModels;
 
 public:
     static Shared<Level_Gameplay> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode);

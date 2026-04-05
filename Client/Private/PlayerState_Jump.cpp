@@ -59,6 +59,12 @@ void PlayerState_Jump::Update(PlayerStateMachine* state, float timeDelta)
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
 
+    if (movement->Is_WallRunning())
+    {
+        state->Change_State(EPlayerState::Wall_Run);
+        return;
+    }
+
     // 아직 공중이면 점프상태 유지
     if (!movement->Is_OnGround())
         return;

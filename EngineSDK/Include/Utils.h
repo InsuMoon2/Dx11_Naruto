@@ -24,6 +24,11 @@ public:
     static json Quat_ToJson(const Quat& quat);
     // json 배열 -> Quat
     static Quat Quat_FromJson(const json& j);
+    
+    static Vec3 Safe_Normalize(const Vec3& value, const Vec3& fallback = Vec3::Zero);
+
+    // 입력/속도를 표면 평면에 투영할 때 사용
+    static Vec3 Project_OnPlane(const Vec3& value, const Vec3& planeNormal);
 
 public:
     template <typename T>

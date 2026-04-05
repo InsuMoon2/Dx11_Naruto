@@ -215,6 +215,12 @@
     <ClInclude Include="..\Public\AN_ChangeState.h" />
     <ClInclude Include="..\Public\ANS_Move.h" />
     <ClInclude Include="..\Public\AN_PlayCinematic.h" />
+    <ClInclude Include="..\Public\PlayerState_WallRun.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Wall_Idle.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -413,6 +419,12 @@
     <ClCompile Include="..\Private\AN_ChangeState.cpp" />
     <ClCompile Include="..\Private\ANS_Move.cpp" />
     <ClCompile Include="..\Private\AN_PlayCinematic.cpp" />
+    <ClCompile Include="..\Private\PlayerState_WallRun.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Wall_Idle.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

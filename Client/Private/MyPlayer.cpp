@@ -24,6 +24,7 @@ REGISTER_GAMEOBJECT(MyPlayer, Protocol::OBJECT_TYPE_PLAYER)
 MyPlayer::MyPlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Player(device, context)
 {
+
 }
 
 MyPlayer::MyPlayer(const MyPlayer& rhs)

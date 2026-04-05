@@ -26,6 +26,8 @@
 #include "PlayerState_JumpAttack.h"
 #include "PlayerState_JumpFall.h"
 #include "PlayerState_Hit.h"
+#include "PlayerState_WallRun.h"
+#include "PlayerState_Wall_Idle.h"
 
 
 IMPLEMENT_REFLECTION(PlayerStateMachine)
@@ -61,7 +63,9 @@ HRESULT PlayerStateMachine::Initialize_Prototype()
     Component::Initialize_Prototype();
 
     Register_State(EPlayerState::Idle, PlayerState_Idle::Create());
+    Register_State(EPlayerState::Wall_Idle, PlayerState_Wall_Idle::Create());
     Register_State(EPlayerState::Run, PlayerState_Run::Create());
+    Register_State(EPlayerState::Wall_Run, PlayerState_WallRun::Create());
 
     Register_State(EPlayerState::Jump, PlayerState_Jump::Create());
     Register_State(EPlayerState::JumpFall, PlayerState_JumpFall::Create());

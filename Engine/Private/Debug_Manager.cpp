@@ -3,10 +3,11 @@
 
 #include "DebugDraw.h"
 #include "GameInstance.h"
+#include "Mesh.h"
+#include "Model.h"
 
 NS_BEGIN(Engine)
-
-Debug_Manager::Debug_Manager(ComPtr<Device> device, ComPtr<DeviceContext> context)
+    Debug_Manager::Debug_Manager(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device)
     , _context(context)
 {
@@ -61,6 +62,9 @@ void Debug_Manager::Tick(float timeDelta)
     updateEntries(_overlayBoxes);
     updateEntries(_overlaySpheres);
     updateEntries(_overlayLines);
+
+    updateEntries(_depthMeshes);
+    updateEntries(_overlayMeshes);
 }
 
 HRESULT Debug_Manager::Prepare_RenderState()
@@ -82,8 +86,13 @@ HRESULT Debug_Manager::Render_Depth()
     if (!_isEnabled)
         return S_OK;
 
-    if (_depthBoxes.empty() && _depthSpheres.empty() && _depthLines.empty())
+    if (_depthBoxes.empty() &&
+        _depthSpheres.empty() &&
+        _depthLines.empty() &&
+        _depthMeshes.empty())
+    {
         return S_OK;
+    }
 
     CHECK_FAILED(Prepare_RenderState(), E_FAIL);
 
@@ -92,6 +101,7 @@ HRESULT Debug_Manager::Render_Depth()
     Render_BoxEntries(_depthBoxes);
     Render_SphereEntries(_depthSpheres);
     Render_LineEntries(_depthLines);
+    Render_MeshEntries(_depthMeshes);
 
     _batch->End();
 
@@ -103,8 +113,13 @@ HRESULT Debug_Manager::Render_Overlay()
     if (!_isEnabled)
         return S_OK;
 
-    if (_overlayBoxes.empty() && _overlaySpheres.empty() && _overlayLines.empty())
+    if (_overlayBoxes.empty() &&
+        _overlaySpheres.empty() &&
+        _overlayLines.empty() &&
+        _overlayMeshes.empty())
+    {
         return S_OK;
+    }
 
     CHECK_FAILED(Prepare_RenderState(), E_FAIL);
 
@@ -113,6 +128,7 @@ HRESULT Debug_Manager::Render_Overlay()
     Render_BoxEntries(_overlayBoxes);
     Render_SphereEntries(_overlaySpheres);
     Render_LineEntries(_overlayLines);
+    Render_MeshEntries(_overlayMeshes);
 
     _batch->End();
 
@@ -162,6 +178,23 @@ void Debug_Manager::Draw_Line(const FDebugLineDesc& desc)
         _overlayLines.push_back(entry);
 }
 
+void Debug_Manager::Draw_Mesh(const FDebugMeshDesc& desc)
+{
+    if (!desc.model) return;
+
+    FDebugMeshEntry entry{};
+    entry.model = desc.model;
+    entry.worldMatrix = desc.worldMatrix;
+    entry.color = desc.style.color;
+    entry.lifetime.isOneFrame = (desc.style.duration <= 0.f);
+    entry.lifetime.remainingTime = max(0.f, desc.style.duration);
+
+    if (desc.style.depthEnabled)
+        _depthMeshes.push_back(entry);
+    else
+        _overlayMeshes.push_back(entry);
+}
+
 void Debug_Manager::Render_BoxEntries(const vector<FDebugBoxEntry>& entries)
 {
     for (const FDebugBoxEntry& entry : entries)
@@ -188,15 +221,47 @@ void Debug_Manager::Render_LineEntries(const vector<FDebugLineEntry>& entries)
     }
 }
 
+void Debug_Manager::Render_MeshEntries(const vector<FDebugMeshEntry>& entries)
+{
+    for (const FDebugMeshEntry& entry : entries)
+    {
+        XMMATRIX world = XMLoadFloat4x4(&entry.worldMatrix);
+        XMVECTOR color = XMLoadFloat4(&entry.color);
+
+        for (const auto& mesh : entry.model->Get_Meshes())
+        {
+            const auto& pos = mesh->Get_CPUPositions();
+            const auto& idx = mesh->Get_CPUIndices();
+            if (pos.empty() || idx.empty()) continue;
+            for (size_t i = 0; i + 2 < idx.size(); i += 3)
+            {
+                XMVECTOR v0 = XMVector3Transform(XMLoadFloat3(&pos[idx[i]]), world);
+                XMVECTOR v1 = XMVector3Transform(XMLoadFloat3(&pos[idx[i + 1]]), world);
+                XMVECTOR v2 = XMVector3Transform(XMLoadFloat3(&pos[idx[i + 2]]), world);
+
+                DirectX::VertexPositionColor vpc0(v0, color);
+                DirectX::VertexPositionColor vpc1(v1, color);
+                DirectX::VertexPositionColor vpc2(v2, color);
+                _batch->DrawLine(vpc0, vpc1);
+                _batch->DrawLine(vpc1, vpc2);
+                _batch->DrawLine(vpc2, vpc0);
+            }
+        }
+    }
+}
+
 void Debug_Manager::Clear()
 {
     _depthBoxes.clear();
     _depthSpheres.clear();
     _depthLines.clear();
+    _depthMeshes.clear();
 
     _overlayBoxes.clear();
     _overlaySpheres.clear();
     _overlayLines.clear();
+    _overlayMeshes.clear();
+
 }
 
 Unique<Debug_Manager> Debug_Manager::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

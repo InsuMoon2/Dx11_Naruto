@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "PlayerState_Run.h"
 #include "PlayerStateMachine.h"
 #include "InputComponent.h"
@@ -65,6 +65,12 @@ void PlayerState_Run::Update(PlayerStateMachine* state, float timeDelta)
 
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
+
+    if (movement->Is_WallRunning())
+    {
+        state->Change_State(EPlayerState::Wall_Run);
+        return;
+    }
 
     const auto* desc = state->Find_AnimStateDesc(EPlayerState::Run);
     if (!desc)

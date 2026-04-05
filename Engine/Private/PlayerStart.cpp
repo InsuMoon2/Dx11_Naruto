@@ -27,13 +27,13 @@ HRESULT PlayerStart::Initialize_Prototype()
 
 HRESULT PlayerStart::Initialize(void* arg)
 {
-    if (arg == nullptr)
-        return S_OK;
-
     CHECK_FAILED(GameObject::Initialize(arg), E_FAIL);
 
-    FPlayerStartDesc* desc = static_cast<FPlayerStartDesc*>(arg);
-    _spawnIndex = desc->spawnIndex;
+    if (arg != nullptr)
+    {
+        FPlayerStartDesc* desc = static_cast<FPlayerStartDesc*>(arg);
+        _spawnIndex = desc->spawnIndex;
+    }
 
     return S_OK;
 }

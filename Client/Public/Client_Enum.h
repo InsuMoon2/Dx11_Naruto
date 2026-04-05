@@ -20,8 +20,8 @@ namespace Client
 
     enum class EPlayerState
     {
-        Idle,       BigSword_Idle,
-        Run,
+        Idle,       BigSword_Idle,  Wall_Idle,
+        Run,        Wall_Run,
         Jump,
         JumpFall,
         DoubleJump,

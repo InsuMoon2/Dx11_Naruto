@@ -52,14 +52,11 @@ void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
         return;
     }
 
-
-    if (Vec2(frame.moveX, frame.moveY).LengthSquared() > FLT_EPSILON)
+    if (input->Has_MoveInput())
     {
         state->Change_State(EPlayerState::Run);
         return;
     }
-
-    
 
     // 감속 처리용
     auto cmd = state->Init_MoveCommand();

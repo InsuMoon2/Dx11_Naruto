@@ -489,10 +489,14 @@ Client/Bin/Resources/
 
 | 파일 | 설명 |
 |---|---|
-| `StaticMesh 1차 확장안.md` | 스태틱 메쉬 시스템 확장 설계 문서 |
-| `level_character_setup_guideline.md` | Level_CharacterSetup 구현 가이드라인 |
+| `BTSkillmd.md` | BT 시스템 관련 스킬 설정 가이드 |
+| `JumpDash 잔상.md` | 점프 대시 시 잔상 효과 구현 관련 |
+| `PlayerSkill_BTSkill_가이드라인md.md` | 플레이어 스킬 및 BT 스킬 가이드라인 |
 | `monster_bt_animation_guide.md` | 몬스터 BT + 애니메이션 통합 가이드 |
-| `CollisionManager_비트마스크_가이드라인.md` | 비트마스크 기반 충돌 시스템 가이드라인 |
+| `player_name_input_guide.md` | 플레이어 이름 입력 구현 가이드 |
+| `skill_object_guideline.md` | 스킬 오브젝트 시스템 설계 문서 |
+| `에디터_노티파이_비활성화_가이드.md` | 에디터 노티파이 비활성화 관련 가이드 |
+| `지형타기_네비메시_하이브리드_가이드라인.md` | 충돌 메시 레이캐스트 + NavMesh 하이브리드 지형타기 설계 가이드 |
 
 ---
 

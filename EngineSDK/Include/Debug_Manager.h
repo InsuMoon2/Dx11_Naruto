@@ -36,6 +36,13 @@ struct ENGINE_DLL FDebugLineDesc
     FDebugRenderStyle style;                 // 선 공통 렌더 옵션
 };
 
+struct ENGINE_DLL FDebugMeshDesc
+{
+    Shared<class Model> model;              
+    Matrix worldMatrix = Matrix::Identity;  
+    FDebugRenderStyle style;                
+};
+
 class ENGINE_DLL Debug_Manager final : public Base
 {
 public:
@@ -64,6 +71,8 @@ public:
 
     // 월드 기준 디버그 선을 큐에 등록할 때 호출한다.
     void Draw_Line(const FDebugLineDesc& desc);
+
+    void Draw_Mesh(const FDebugMeshDesc& desc);
 
 public:
     // 누적된 모든 디버그 요청을 즉시 비울 때 호출한다.
@@ -104,6 +113,14 @@ private:
         FDebugLifetime lifetime;               // 선 유지 시간 정보
     };
 
+    struct FDebugMeshEntry
+    {
+        Shared<Model> model;
+        Matrix worldMatrix;
+        Color color = Color(1.f, 1.f, 1.f, 1.f);
+        FDebugLifetime lifetime;
+    };
+
 private:
     // BasicEffect의 view/proj와 input layout을 바인딩하기 직전에 호출한다.
     HRESULT Prepare_RenderState();
@@ -117,21 +134,26 @@ private:
     // 선 큐를 실제 draw call로 풀어낼 때 호출한다.
     void Render_LineEntries(const vector<FDebugLineEntry>& entries);
 
+    void Render_MeshEntries(const vector<FDebugMeshEntry>& entries);
+
 private:
-    ComPtr<Device> _device;                    // 디버그 렌더 리소스 생성을 위한 디바이스
-    ComPtr<DeviceContext> _context;            // 디버그 렌더 draw 호출에 사용할 컨텍스트
+    ComPtr<Device> _device;                   
+    ComPtr<DeviceContext> _context;           
 
-    Shared<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> _batch; // 라인 기반 디버그 도형을 모아 그릴 배치
-    Shared<DirectX::BasicEffect> _effect;      // 디버그 라인 렌더용 기본 이펙트
-    ComPtr<ID3D11InputLayout> _inputLayout;    // VertexPositionColor용 입력 레이아웃
+    Shared<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> _batch; 
+    Shared<DirectX::BasicEffect> _effect;     
+    ComPtr<ID3D11InputLayout> _inputLayout;   
 
-    vector<FDebugBoxEntry> _depthBoxes;        // depth가 켜진 박스 요청 큐
-    vector<FDebugSphereEntry> _depthSpheres;   // depth가 켜진 구 요청 큐
-    vector<FDebugLineEntry> _depthLines;       // depth가 켜진 선 요청 큐
+    vector<FDebugBoxEntry> _depthBoxes;       
+    vector<FDebugSphereEntry> _depthSpheres;  
+    vector<FDebugLineEntry> _depthLines;      
 
-    vector<FDebugBoxEntry> _overlayBoxes;      // depth가 꺼진 박스 요청 큐
-    vector<FDebugSphereEntry> _overlaySpheres; // depth가 꺼진 구 요청 큐
-    vector<FDebugLineEntry> _overlayLines;     // depth가 꺼진 선 요청 큐
+    vector<FDebugBoxEntry> _overlayBoxes;     
+    vector<FDebugSphereEntry> _overlaySpheres;
+    vector<FDebugLineEntry> _overlayLines;    
+
+    vector<FDebugMeshEntry> _depthMeshes;
+    vector<FDebugMeshEntry> _overlayMeshes;
 
     bool _isEnabled = true;                    // 전체 디버그 렌더 출력을 허용할지 여부
 

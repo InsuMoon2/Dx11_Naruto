@@ -126,6 +126,8 @@ public: /* Collision Events */
     virtual void OnStayOverlap(Shared<Collider> self, Shared<Collider> other)  {}
     virtual void OnEndOverlap(Shared<Collider> self, Shared<Collider> other)   {}
 
+    virtual void OnBlockBegin(Shared<Collider> self, Shared<Collider> other) {}
+    virtual void OnBlockStay(Shared<Collider> self, Shared<Collider> other) {}
 
 protected: /* Device */
     ComPtr<Device>          _device = { nullptr };

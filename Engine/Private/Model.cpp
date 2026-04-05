@@ -11,7 +11,8 @@
 
 #include "AnimNotify_Serializer.h"  
 #include "AnimNotify.h"             
-#include "AnimNotifyState.h"        
+#include "AnimNotifyState.h"
+#include <DirectXCollision.h>
 
 Model::Model(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -1617,6 +1618,70 @@ const Matrix* Model::Get_SocketBoneMatrixPtr(const string& boneName) const
     return &(_bones[index]->Get_CombinedTransform());
 }
 
+bool Model::Raycast(const Ray& ray, float& outDist, Vec3& outHitPoint)
+{
+    Vec3 dummyNormal = Vec3::Up;
+
+    return Raycast(ray, outDist, outHitPoint, dummyNormal);
+}
+
+bool Model::Raycast(const Ray& ray, float& outDist, Vec3& outHitPoint, Vec3& outNormal) const
+{
+    // 모든 메시 삼각형을 순회하며 Ray-Triangle 교차검사 SimpleMath의 Ray 사용
+    float closestDist = FLT_MAX;
+    Vec3 bestNormal = Vec3::Up;
+    bool hit = false;
+
+    for (const auto& mesh : _meshes)
+    {
+        const auto& positions = mesh->Get_CPUPositions();
+        const auto& indices = mesh->Get_CPUIndices();
+
+        // CPU에 저장된 데이터가 없으면 스킵하기
+        if (positions.empty() || indices.empty())
+            continue;
+
+        // 삼각형 단위로 순회 (인덱스 3개 = 삼각형 1개다.)
+        for (size_t i = 0; i + 2 < indices.size(); i += 3)
+        {
+            const Vec3& v0 = positions[indices[i]];
+            const Vec3& v1 = positions[indices[i + 1]];
+            const Vec3& v2 = positions[indices[i + 2]];
+
+            float dist = 0.f;
+
+            if (ray.Intersects(v0, v1, v2, dist) || ray.Intersects(v0, v2, v1, dist))
+            {
+                if (dist >= 0.f && dist < closestDist)
+                {
+                    closestDist = dist;
+                    hit = true;
+
+                    Vec3 edge1 = v1 - v0;
+                    Vec3 edge2 = v2 - v0;
+                    bestNormal = edge1.Cross(edge2);
+
+                    if (bestNormal.LengthSquared() > FLT_EPSILON)
+                        bestNormal.Normalize();
+                    else
+                        bestNormal = Vec3::Up;
+                }
+            }
+        }
+    }
+
+    if (hit)
+    {
+        outDist = closestDist;
+
+        // Hit Position = Ray 원점 + Ray 방향 * 거리
+        outHitPoint = ray.position + ray.direction * closestDist;
+        outNormal = bestNormal;
+    }
+
+    return hit;
+}
+
 HRESULT Model::Initialize_FromMeshBin(const string& modelFilePath)
 {
     CHECK_FAILED(Ready_FromBinary(modelFilePath), E_FAIL);
@@ -1683,8 +1748,10 @@ HRESULT Model::Ready_StaticMeshes(const FModelBinaryData& data)
         }
 
         Shared<Mesh> mesh = Mesh::Create(_device, _context,
-            srcMesh.name, srcMesh.materialIndex, vertices, srcMesh.indices);
+            srcMesh.name, srcMesh.materialIndex, vertices, srcMesh.indices, _keepCPUData);
+
         CHECK_NULL(mesh, E_FAIL);
+
         _meshes.push_back(mesh);
     }
 
@@ -1774,9 +1841,10 @@ HRESULT Model::Ready_Animations(const FModelBinaryData& data)
     return S_OK;
 }
 
-Shared<Model> Model::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EMeshVertexType type, const string& modelFilePath, const Matrix& preLocalTransformMatrix)
+Shared<Model> Model::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EMeshVertexType type, const string& modelFilePath, const Matrix& preLocalTransformMatrix, bool keepCPUData)
 {
     auto instance = make_shared<Model>(device, context);
+    instance->_keepCPUData = keepCPUData;
 
     if (FAILED(instance->Initialize_Prototype(type, modelFilePath, preLocalTransformMatrix)))
     {

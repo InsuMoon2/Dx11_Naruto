@@ -1,7 +1,11 @@
 ﻿#include "pch.h"
 #include "MovementComponent.h"
+
+#include "Camera.h"
+
 #include "GameObject.h"
 #include "Transform.h"
+#include "Model.h"
 
 IMPLEMENT_REFLECTION(MovementComponent)
 
@@ -21,6 +25,13 @@ bool MovementComponent::Register_Properties()
 
     PROPERTY_FLOAT("Dash Distance", _moveDesc.dashDistance, 0.f, 30.f);
     PROPERTY_FLOAT("Dash Duration", _moveDesc.dashDuration, 0.01f, 1.f);
+
+    PROPERTY_FLOAT("Wall Trace Start Offset Y", _moveDesc.wallTraceStartOffsetY, 0.f, 3.f);
+    PROPERTY_FLOAT("Wall Detect Distance", _moveDesc.wallDetectDistance, 0.1f, 3.f);
+    PROPERTY_FLOAT("Wall Attach Offset", _moveDesc.wallAttachOffset, 0.01f, 1.f);
+    PROPERTY_FLOAT("Wall Runnable Max Up Dot", _moveDesc.wallRunnableMaxUpDot, 0.f, 1.f);
+    PROPERTY_FLOAT("Wall Jump Up Velocity", _moveDesc.wallJumpUpVelocity, 0.f, 30.f);
+    PROPERTY_FLOAT("Wall Jump Out Velocity", _moveDesc.wallJumpOutVelocity, 0.f, 30.f);
 
     return true;
 }
@@ -58,10 +69,11 @@ HRESULT MovementComponent::Initialize(void* arg)
     }
 
     _velocity = Vec3::Zero;
+    _isWallRunning = false;
+    _currentWallNormal = Vec3::Up;
+    _currentWallHitPoint = Vec3::Zero;
 
     Component::Initialize(arg);
-
-
 
     return S_OK;
 }
@@ -83,10 +95,23 @@ void MovementComponent::Apply_Command(const FMoveCommand& cmd)
 
 void MovementComponent::Update(float timeDelta)
 {
-    Update_Rotation(timeDelta, _transform);
+    if (_wallJumpCooldown > 0.f)
+    {
+        _wallJumpCooldown -= timeDelta;
+    }
+
+    if (!_isWallRunning)
+    {
+        Update_Rotation(timeDelta, _transform);
+    }
+
     Update_Velocity(timeDelta, _transform);
     Apply_Movement(timeDelta, _transform);
 
+    if (_isWallRunning)
+    {
+        Apply_WallRunRotation(timeDelta, _transform);
+    }
 }
 
 void MovementComponent::Start_Jump()
@@ -96,6 +121,9 @@ void MovementComponent::Start_Jump()
 
     _velocity.y = _moveDesc.jumpVelocity;
     _onGround = false;
+
+    _isWallRunning = false; // 일반 점프 시 wall run 해제
+
     _canDoubleJump = true;
 }
 
@@ -104,6 +132,7 @@ void MovementComponent::Start_DoubleJump()
     if (_onGround || !_canDoubleJump)
         return;
 
+    _isWallRunning = false;
     _velocity.y = _moveDesc.doubleJumpVelocity;
     _canDoubleJump = false;
 }
@@ -116,7 +145,7 @@ void MovementComponent::Start_SuperJump(float velocity)
     _velocity.y = Utils::Max(velocity, _moveDesc.superJumpMinVelocity);
     _onGround = false;
 
-    // 슈퍼점프 이후 더블점프 가능하게할지?
+    _isWallRunning = false;
     _canDoubleJump = true;
 }
 
@@ -138,52 +167,6 @@ void MovementComponent::Start_Dash(const Vec3& worldDir, float distance, float d
     _dashSpeed = distance / _dashDuration;
 }
 
-//void MovementComponent::Start_Dash(EMoveInputDirection inputDir, float distance, float duration)
-//{
-//
-//    Vec3 forward    = _transform->Get_WorldForward();
-//    Vec3 right      = _transform->Get_WorldRight();
-//
-//    // y값 제거
-//    forward.y = 0;
-//    right.y = 0;
-//    // 정규화
-//    if (forward.LengthSquared() > FLT_EPSILON)
-//        forward.Normalize();
-//
-//    if (right.LengthSquared() > FLT_EPSILON)
-//        right.Normalize();
-//
-//    Vec3 dashDir = forward;
-//
-//    switch (inputDir)
-//    {
-//    case EMoveInputDirection::Forward:
-//        dashDir = forward;
-//        break;
-//    case EMoveInputDirection::Backward:
-//        dashDir = -forward;
-//        break;
-//    case EMoveInputDirection::Left:
-//        dashDir = -right;
-//        break;
-//    case EMoveInputDirection::Right:
-//        dashDir = right;
-//        break;
-//    // 기본값은 forward로
-//    default: dashDir = forward; break;
-//    }
-//
-//    _isDashing = true;
-//    _dashInputDirection = inputDir;
-//    _dashWorldDirection = dashDir;
-//    _dashElapsed = 0.f;
-//    _dashDuration = Utils::Max(duration, 0.01f);
-//
-//    // 거리 / 시간 기반으로 속도 세팅
-//    _dashSpeed = distance / _dashDuration;
-//}
-
 void MovementComponent::Stop_Dash()
 {
     _isDashing = false;
@@ -192,6 +175,24 @@ void MovementComponent::Stop_Dash()
     _dashElapsed = 0.f;
     _dashDuration = 0.f;
     _dashSpeed = 0.f;
+}
+
+void MovementComponent::Start_WallJump()
+{
+    if (!_isWallRunning)
+        return;
+
+    // 벽 바깥 방향 + 위 방향 섞어서 벽차기 속도 세팅
+    Vec3 launchVelocity = _currentWallNormal * _moveDesc.wallJumpOutVelocity;
+    launchVelocity += Vec3::Up * _moveDesc.wallJumpUpVelocity;
+
+    _velocity = launchVelocity;
+    _onGround = false;
+    _canDoubleJump = true;
+
+    Exit_WallRun();
+
+    _wallJumpCooldown = 0.35f;
 }
 
 void MovementComponent::Set_Velocity(Vec3 velocity)
@@ -294,6 +295,29 @@ void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> trans
         return;
     }
 
+    if (_isWallRunning)
+    {
+        Vec3 wallMoveDir = Build_WallRunMoveDirection();
+        float targetSpeed = _commandDesc.sprint ? _moveDesc.maxSprintSpeed : _moveDesc.maxWalkSpeed;
+
+        Vec3 targetVelocity = wallMoveDir * targetSpeed;
+
+        if (_commandDesc.moveAxis.LengthSquared() <= FLT_EPSILON)
+        {
+            targetVelocity = Vec3::Zero;
+        }
+
+        float hasInput = (_commandDesc.moveAxis.LengthSquared() > FLT_EPSILON) ? 1.f : 0.f;
+        float accel = hasInput > 0.f ? _moveDesc.acceleration : _moveDesc.deceleration;
+        float alpha = ::clamp(accel * timeDelta, 0.f, 1.f);
+
+        _velocity.x = ::lerp(_velocity.x, targetVelocity.x, alpha);
+        _velocity.y = ::lerp(_velocity.y, targetVelocity.y, alpha);
+        _velocity.z = ::lerp(_velocity.z, targetVelocity.z, alpha);
+
+        return;
+    }
+
     float targetSpeed = _commandDesc.sprint ? _moveDesc.maxSprintSpeed : _moveDesc.maxWalkSpeed;
 
     Vec3 targetVelocity = desiredDir * targetSpeed;
@@ -318,24 +342,68 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
 {
     transform->Add_WorldOffset(_velocity * timeDelta);
 
-    // TODO : Temp 바닥 충돌처리, 나중에는 충돌체 기준으로
     Vec3 currentPos = transform->Get_WorldPosition();
 
-    if (currentPos.y <= _moveDesc.groundY && _velocity.y <= 0.f)
+    if (_isWallRunning)
     {
-        currentPos.y = _moveDesc.groundY;
-        transform->Set_LocalPosition(currentPos);
+        FSurfaceHit wallHit{};
 
-        _velocity.y = 0.f; // 떨어지는 속도 초기화
-        _onGround = true;
-        _canDoubleJump = false;
+        if (Detect_WallSurface(currentPos, -_currentWallNormal, wallHit))
+        {
+            _currentWallNormal = wallHit.hitNormal;
+            _currentWallHitPoint = wallHit.hitPoint;
+
+            Apply_WallRunPosition(transform, wallHit);
+            return;
+        }
+
+        Exit_WallRun();
     }
-    else
+
+    if (_velocity.y <= 0.f)
     {
-        _onGround = false;
+        FSurfaceHit groundHit{};
+        bool foundGround = Detect_GroundSurface(currentPos, groundHit);
+
+        if (foundGround && currentPos.y <= groundHit.hitPoint.y + _moveDesc.groundSnapTolerance)
+        {
+            currentPos.y = groundHit.hitPoint.y;
+            transform->Set_WorldPosition(currentPos);
+
+            _velocity.y = 0.f;
+            _onGround = true;
+            _canDoubleJump = false;
+
+            return;
+        }
+
+        if (!foundGround && currentPos.y <= _moveDesc.groundY)
+        {
+            currentPos.y = _moveDesc.groundY;
+            transform->Set_WorldPosition(currentPos);
+
+            _velocity.y = 0.f;
+            _onGround = true;
+            _canDoubleJump = false;
+
+            return;
+        }
     }
 
+    _onGround = false;
+
+    Vec3 desiredDir = Build_DesiredMoveDirection();
+    FSurfaceHit wallHit{};
+
+    if //(_wallJumpCooldown <= 0.f &&
+        (Detect_WallSurface(transform->Get_WorldPosition(), desiredDir, wallHit) &&
+        Can_EnterWallRun(wallHit, desiredDir))
+    {
+        Enter_WallRun(wallHit);
+        Apply_WallRunPosition(transform, wallHit);
+    }
 }
+
 
 Vec3 MovementComponent::Build_DesiredMoveDirection() const
 {
@@ -361,6 +429,242 @@ Vec3 MovementComponent::Build_DesiredMoveDirection() const
         desiredDir.Normalize();
 
     return desiredDir;
+}
+
+Vec3 MovementComponent::Build_WallRunMoveDirection() const
+{
+    Vec2 input = _commandDesc.moveAxis;
+    if (input.LengthSquared() > 1.f)
+        input.Normalize();
+
+    Vec3 camForward = Vec3::Forward;
+    Vec3 camRight = Vec3::Right;
+
+    auto activeCamera = GAME->Get_ActiveCamera();
+    if (activeCamera)
+    {
+        auto camTransform = activeCamera->Get_Component<Transform>();
+        if (camTransform)
+        {
+            camForward = camTransform->Get_WorldForward();
+            camRight = camTransform->Get_WorldRight();
+        }
+    }
+
+    Vec3 desiredDir = camRight * input.x + camForward * input.y;
+
+    desiredDir = Utils::Project_OnPlane(desiredDir, _currentWallNormal);
+
+    if (desiredDir.LengthSquared() <= FLT_EPSILON)
+    {
+        desiredDir = Utils::Project_OnPlane(_transform->Get_WorldForward(), _currentWallNormal);
+    }
+
+    if (desiredDir.LengthSquared() <= FLT_EPSILON)
+        desiredDir = Utils::Project_OnPlane(Vec3::Up, _currentWallNormal);
+
+    return Utils::Safe_Normalize(desiredDir, Vec3::Forward);
+}
+
+bool MovementComponent::Detect_GroundSurface(const Vec3& currentPos, FSurfaceHit& outHit) const
+{
+    Vec3 rayOrigin = currentPos + Vec3(0.f, _moveDesc.groundTraceStartOffsetY, 0.f);
+    Ray downRay(rayOrigin, Vec3(0.f, -1.f, 0.f));
+
+    FSurfaceHit bestHit{};
+    float bestHeight = -FLT_MAX;
+
+    for (const auto& colModel : _groundCollisionModels)
+    {
+        if (!colModel)
+            continue;
+
+        float hitDist = 0.f;
+        Vec3 hitPoint = Vec3::Zero;
+        Vec3 hitNormal = Vec3::Up;
+
+        if (!colModel->Raycast(downRay, hitDist, hitPoint, hitNormal))
+            continue;
+
+        if (hitPoint.y > bestHeight)
+        {
+            bestHeight = hitPoint.y;
+            bestHit.hitModel = colModel;
+            bestHit.hitPoint = hitPoint;
+            bestHit.hitNormal = hitNormal;
+            bestHit.hitDistance = hitDist;
+            bestHit.isValid = true;
+        }
+    }
+
+    outHit = bestHit;
+
+    return bestHit.isValid;
+}
+
+bool MovementComponent::Detect_WallSurface(const Vec3& currentPos, const Vec3& castDir,
+    FSurfaceHit& outHit) const
+{
+    Vec3 dir = castDir;
+    if (dir.LengthSquared() <= FLT_EPSILON)
+    {
+        if (_transform)
+            dir = _transform->Get_WorldForward();
+        else
+            dir = Vec3::Forward;
+    }
+
+    dir = Utils::Safe_Normalize(dir, Vec3::Forward);
+
+    Vec3 rayOrigin = currentPos + Vec3(0.f, _moveDesc.wallTraceStartOffsetY, 0.f);
+    Ray wallRay(rayOrigin, dir);
+
+    FSurfaceHit bestHit{};
+
+
+    for (const auto& colModel : _wallCollisionModels)
+    {
+        if (!colModel)
+            continue;
+
+        float hitDist = 0.f;
+        Vec3 hitPoint = Vec3::Zero;
+        Vec3 hitNormal = Vec3::Up;
+
+        if (!colModel->Raycast(wallRay, hitDist, hitPoint, hitNormal))
+            continue;
+
+        if (hitDist > _moveDesc.wallDetectDistance)
+            continue;
+
+       // Up과 너무 비슷하면 바닥 / 경사로 보고 wall에서 제외
+        const float upDotAbs = fabsf(hitNormal.Dot(Vec3::Up));
+        if (upDotAbs > _moveDesc.wallRunnableMaxUpDot)
+            continue;
+
+        if (!bestHit.isValid || hitDist < bestHit.hitDistance)
+        {
+            bestHit.hitModel = colModel;
+            bestHit.hitPoint = hitPoint;
+            bestHit.hitNormal = hitNormal;
+            bestHit.hitDistance = hitDist;
+            bestHit.isValid = true;
+        }
+    }
+
+    outHit = bestHit;
+    return bestHit.isValid;
+}
+
+bool MovementComponent::Can_EnterWallRun(const FSurfaceHit& wallHit, const Vec3& desiredMoveDir) const
+{
+    if (!wallHit.isValid)
+        return false;
+
+    Vec3 moveDir = desiredMoveDir;
+    if (moveDir.LengthSquared() <= FLT_EPSILON)
+    {
+        moveDir = _velocity;
+        moveDir.y = 0.f;
+    }
+
+    if (moveDir.LengthSquared() <= FLT_EPSILON)
+        return false;
+
+    moveDir.Normalize();
+
+    const float intoWall = moveDir.Dot(-wallHit.hitNormal);
+
+    return intoWall > 0.15f;
+}
+
+void MovementComponent::Enter_WallRun(const FSurfaceHit& wallHit)
+{
+    _isWallRunning = true;
+    _currentWallNormal = wallHit.hitNormal;
+    _currentWallHitPoint = wallHit.hitPoint;
+    _onGround = false;
+
+    // 벽에 붙는 순간 낙하 속도를 제거
+    _velocity.y = 0.f;
+}
+
+void MovementComponent::Exit_WallRun()
+{
+    if (!_isWallRunning)
+        return;
+
+    Restore_DefaultUpRotation(_transform);
+
+    _isWallRunning = false;
+    _currentWallNormal = Vec3::Up;
+    _currentWallHitPoint = Vec3::Zero;
+}
+
+void MovementComponent::Apply_WallRunPosition(Shared<Transform> transform, const FSurfaceHit& wallHit)
+{
+    if (!transform || !wallHit.isValid)
+        return;
+
+    Vec3 currentPos = _transform->Get_WorldPosition();
+
+    const float signedDistance = (currentPos - wallHit.hitPoint).Dot(wallHit.hitNormal);
+    const float correction = _moveDesc.wallAttachOffset - signedDistance;
+
+    currentPos += wallHit.hitNormal * correction;
+    transform->Set_WorldPosition(currentPos);
+}
+
+void MovementComponent::Apply_WallRunRotation(float timeDelta, Shared<Transform> transform)
+{
+    if (!transform)
+        return;
+
+    Vec3 forwardDir = Build_WallRunMoveDirection();
+
+    // 입력이 없을 때는 현재 바라보는 방향을 유지
+    if (forwardDir.LengthSquared() <= FLT_EPSILON)
+    {
+        forwardDir = Utils::Project_OnPlane(transform->Get_WorldForward(), _currentWallNormal);
+        forwardDir = Utils::Safe_Normalize(forwardDir, Vec3::Forward);
+    }
+
+    // 캐릭터의 Up벡터를 wall normal로 맞춰서 발이 벽에 붙는 느낌 주도록
+    Matrix lookAtMatrix = XMMatrixLookAtLH(Vec3::Zero, forwardDir, _currentWallNormal);
+    lookAtMatrix = lookAtMatrix.Invert();
+
+    Quat targetRot = Quat::CreateFromRotationMatrix(lookAtMatrix);
+    Quat currentRot = transform->Get_WorldRotation();
+
+    const float alpha = ::clamp(12.f * timeDelta, 0.f, 1.f);
+
+    transform->Set_WorldRotation(Quat::Slerp(currentRot, targetRot, alpha));
+}
+
+void MovementComponent::Restore_DefaultUpRotation(Shared<Transform> transform)
+{
+    if (!transform)
+        return;
+
+    Vec3 flattedForward = _transform->Get_WorldForward();
+    flattedForward.y = 0;
+
+    if (flattedForward.LengthSquared() <= FLT_EPSILON)
+    {
+        flattedForward = Build_DesiredMoveDirection();
+
+        if (flattedForward.LengthSquared() <= FLT_EPSILON)
+            flattedForward = Vec3::Forward;
+    }
+
+    flattedForward.Normalize();
+
+    // 월드 Up을 기준으로 다시 회전 쿼터니언을 만들어 pitch, roll 값을 제거
+    Matrix lookAtMatrix = XMMatrixLookAtLH(Vec3::Zero, flattedForward, Vec3::Up);
+    lookAtMatrix = lookAtMatrix.Invert();
+
+    Quat targetRot = Quat::CreateFromRotationMatrix(lookAtMatrix);
+    transform->Set_WorldRotation(targetRot);
 }
 
 Shared<MovementComponent> MovementComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

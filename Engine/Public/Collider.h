@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Component.h"
 #include <DirectXTK/Effects.h>
@@ -41,7 +41,10 @@ public: /* Getter */
     Shared<Bounding>    Get_Bounding()      const { return _bounding; }
     EShape              Get_Shape()         const { return _shape; }
     Collision_Channel   Get_Channel()       const { return _channel; }
-    uint32              Get_CollisionMask() const { return _collisionMask; }
+
+    uint32              Get_OverlapMask()  const { return _overlapMask; }
+    uint32              Get_BlockMask()    const { return _blockMask; }
+
     bool                Get_IsActive()      const { return _isActive; }
     Collision_Preset    Get_CollisionPreset() const { return _preset; }
 
@@ -60,15 +63,18 @@ public:
 
 private:
     EShape                  _shape   = EShape::AABB;
+
     Collision_Channel       _channel = Collision_Channel::CHANNEL_NONE;
-    uint32                  _collisionMask = 0;
+    uint32                  _overlapMask = 0;
+    uint32                  _blockMask = 0;
+
+    Collision_Preset        _preset = Collision_Preset::Custom;
 
     bool                    _isActive = true;
     bool                    _isColl = false;
 
     Shared<Bounding>        _bounding;
 
-    Collision_Preset        _preset = Collision_Preset::Custom;
 
     set<Weak<Collider>, owner_less<>> _overlapSet;
 
