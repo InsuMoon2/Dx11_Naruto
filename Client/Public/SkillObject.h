@@ -23,7 +23,9 @@ public:
         Vec3    scale         = Vec3::One;  
         float   lifetime      = 2.f;
 
-        int32   ownerSkillId  = 0;          
+        int32   ownerSkillId  = 0;
+
+        Collision_Preset collisionPreset = Collision_Preset::Projectile;
     };
 
 public:
@@ -47,7 +49,9 @@ protected:
     float   _lifetime = 2.f;        // 수명 시간     
     float   _elapsedTime = 0.f;     // 스폰 후 경과 시간
 
-    int32   _ownerSkillId = 0;      
+    int32   _ownerSkillId = 0;
+
+    Collision_Preset   _collisionPreset = Collision_Preset::Projectile;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

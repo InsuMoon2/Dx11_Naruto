@@ -47,7 +47,7 @@ protected:
 
 protected:
     // 발사 여부
-    bool    _isMoving = true;
+    bool    _isMoving = false;
 
     float   _speed = 20.f;              
     float   _maxDistance = 50.f;

@@ -6,6 +6,28 @@
 #include "Animation.h"
 #include "Editor_Helper.h"
 
+// 모델 선택 팝업에서 같은 stem 이름을 가진 자산도 경로/GUID로 구분해서 확인하기 위한 표시 문자열을 만든다.
+static string Build_ModelPickerLabel(const FAssetMeta& meta)
+{
+    const fs::path fullPath(meta.fullPath);
+    const string assetName = fullPath.stem().string();
+    const string relativePath = Utils::ToString(meta.relativePath);
+    const string shortGuid = meta.guid.size() > 8 ? meta.guid.substr(0, 8) : meta.guid;
+
+    string label = assetName;
+
+    if (!meta.modelType.empty())
+        label += "  [" + meta.modelType + "]";
+
+    if (!relativePath.empty())
+        label += "  {" + relativePath + "}";
+
+    if (!shortGuid.empty())
+        label += "  <" + shortGuid + ">";
+
+    return label;
+}
+
 static const struct
 {
     EMaterialTextureSlot type; 
@@ -125,12 +147,8 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
 
             hasSelectableModel = true;
 
-            string name = fs::path(meta->fullPath).stem().string();
             bool isSelected = (meta->guid == modelGuid);
-
-            string label = name;
-            if (!meta->modelType.empty())
-                label += "  [" + meta->modelType + "]";
+            const string label = Build_ModelPickerLabel(*meta);
 
             if (isSelected)
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 0.8f, 0.3f, 1.f));

@@ -18,6 +18,10 @@ SkillObject::SkillObject(ComPtr<Device> device, ComPtr<DeviceContext> context)
 
 SkillObject::SkillObject(const SkillObject& rhs)
     : GameObject(rhs)
+    , _lifetime(rhs._lifetime)                 
+    , _elapsedTime(0.f)                        
+    , _ownerSkillId(rhs._ownerSkillId)         
+    , _collisionPreset(rhs._collisionPreset)   
 {
 }
 
@@ -31,25 +35,35 @@ HRESULT SkillObject::Initialize(void* arg)
     CHECK_FAILED(GameObject::Initialize(arg), E_FAIL);
 
     auto* desc = static_cast<FSkillObjectDesc*>(arg);
-    if (!desc)
-        return E_FAIL;
 
-    _lifetime = desc->lifetime;
-    _ownerSkillId = desc->ownerSkillId;
     _elapsedTime = 0.f;
 
-    if (_transformCom)
+    if (desc)
     {
-        _transformCom->Set_LocalPosition(desc->spawnPosition);
-        _transformCom->Set_LocalRotation(
-            desc->spawnRotation.x,
-            desc->spawnRotation.y,
-            desc->spawnRotation.z);
+        if (desc->lifetime > 0.f)
+            _lifetime = desc->lifetime;
 
-        _transformCom->Set_LocalScale(desc->scale);
+        _ownerSkillId = desc->ownerSkillId;
+
+        if (_transformCom)
+        {
+            _transformCom->Set_LocalPosition(desc->spawnPosition);
+            _transformCom->Set_LocalRotation(desc->spawnRotation.x, desc->spawnRotation.y, desc->spawnRotation.z);
+            _transformCom->Set_LocalScale(desc->scale);
+        }
+
+        CHECK_FAILED(Ready_Components(*desc), E_FAIL);
     }
 
-    CHECK_FAILED(Ready_Components(*desc), E_FAIL);
+    else
+    {
+        LOG_INFO("음.. 이거 없이 넘기면 안되는데");
+    }
+
+    if (_collider)
+    {
+        _collider->Set_CollisionPreset(_collisionPreset);
+    }
 
     return S_OK;
 }
@@ -116,8 +130,8 @@ HRESULT SkillObject::Ready_Components(const FSkillObjectDesc& desc)
     }
 
     CHECK_NULL(_collider, E_FAIL);
-    _collider->Set_CollisionPreset(Collision_Preset::Projectile);
 
+    //_collider->Set_CollisionPreset(Collision_Preset::Projectile);
 
     return S_OK;
 }

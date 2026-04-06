@@ -15,6 +15,14 @@ SkillObject_Projectile::SkillObject_Projectile(ComPtr<Device> device, ComPtr<Dev
 
 SkillObject_Projectile::SkillObject_Projectile(const SkillObject_Projectile& rhs)
     : SkillObject(rhs)
+    , _isMoving(rhs._isMoving)             
+    , _speed(rhs._speed)                   
+    , _maxDistance(rhs._maxDistance)       
+    , _hitCount(rhs._hitCount)             
+    , _maxHitCount(rhs._maxHitCount)       
+    , _hitInterval(rhs._hitInterval)       
+    , _hitLaunchForce(rhs._hitLaunchForce) 
+    , _colliderRadius(rhs._colliderRadius) 
 {
 }
 
@@ -25,26 +33,49 @@ HRESULT SkillObject_Projectile::Initialize_Prototype()
 
 HRESULT SkillObject_Projectile::Initialize(void* arg)
 {
+	CHECK_FAILED(SkillObject::Initialize(arg), E_FAIL);
+
     auto* desc = static_cast<FProjectileSkillDesc*>(arg);
-    if (!desc) return E_FAIL;
 
-    _speed = desc->speed;
-    _maxDistance = desc->maxDistance;
-    _isMoving = !desc->startAttached;
-    _colliderRadius = desc->colliderRadius;
+	if (desc)
+	{
+		if (desc->speed > 0.f)
+			_speed = desc->speed;
 
-    CHECK_FAILED(SkillObject::Initialize(arg), E_FAIL);
+		if (desc->maxDistance > 0.f)
+			_maxDistance = desc->maxDistance;
 
-    ProjectileComponent::FProjectileDesc projDesc;
-    projDesc.direction = desc->direction;
-    projDesc.speed = _speed;
-    projDesc.maxDistance = _maxDistance;
-    projDesc.maxLifetime = _lifetime;
-    projDesc.useGravity = desc->useGravity;
+		if (desc->colliderRadius > 0.f)
+			_colliderRadius = desc->colliderRadius;
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PROJECTILE, _projectile, &projDesc), E_FAIL);
+		_collisionPreset = desc->collisionPreset;
 
-    return S_OK;
+		_isMoving = !desc->startAttached;
+	}
+	else
+	{
+		// 프로토타입 상태 유지
+	}
+
+	ProjectileComponent::FProjectileDesc projDesc;
+	if (desc)
+	{
+		projDesc.direction = desc->direction;
+		projDesc.useGravity = desc->useGravity;
+	}
+	else
+	{
+		projDesc.direction = Vec3::Forward;
+		projDesc.useGravity = false;
+	}
+
+	projDesc.speed = _speed;
+	projDesc.maxDistance = _maxDistance;
+	projDesc.maxLifetime = _lifetime;
+
+	CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PROJECTILE, _projectile, &projDesc), E_FAIL);
+
+	return S_OK;
 }
 
 void SkillObject_Projectile::Update(float timeDelta)
@@ -53,8 +84,11 @@ void SkillObject_Projectile::Update(float timeDelta)
     if (_isMoving && _projectile)
         _projectile->Update_Projectile(timeDelta);
 
-    // 이후 라이프타임 체크
-    SkillObject::Update(timeDelta);
+    // 움직일 때에만 LifeTime이 소비되도록
+	if (_isMoving)
+		SkillObject::Update(timeDelta);
+	else
+		GameObject::Update(timeDelta);
 
     // 히트 쿨타임 관리
     for (auto& pair : _hitCooldowns)

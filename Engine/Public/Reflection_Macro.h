@@ -157,8 +157,11 @@
     _prop.jsonKey = JsonKey;                                                 \
     _prop.type = Engine::EPropertyType::Enum;                                \
     _prop.offset = offsetof(SelfType, Member);                               \
-    auto _names = magic_enum::enum_names<EnumType>();                        \
-    for (auto& _n : _names) _prop.enumNames.push_back(string(_n));           \
+    auto _entries = magic_enum::enum_entries<EnumType>();                    \
+    for (auto& _e : _entries) {                                              \
+        _prop.enumNames.push_back(string(_e.second));                        \
+        _prop.enumValues.push_back(static_cast<int>(_e.first));              \
+    }                                                                        \
     info.properties.push_back(_prop);                                        \
 }
 

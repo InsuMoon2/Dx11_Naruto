@@ -16,30 +16,26 @@ Skill_RasenShuriken::Skill_RasenShuriken(const Skill_RasenShuriken& rhs)
 
 HRESULT Skill_RasenShuriken::Initialize_Prototype()
 {
+    _speed = 28.f;
+    _maxDistance = 35.f;
+    _lifetime = 5.5f;
+    _maxHitCount = 5;
+    _hitInterval = 0.12f;
+    _hitLaunchForce = 250.f;
+    _colliderRadius = 1.35f;
+
+    _collisionPreset = Collision_Preset::Player_Attack;
+
+    _isMoving = false;
+
     return SkillObject_Projectile::Initialize_Prototype();
 }
 
 HRESULT Skill_RasenShuriken::Initialize(void* arg)
 {
-    auto* srcDesc = static_cast<SkillObject_Projectile::FProjectileSkillDesc*>(arg);
-    if (!srcDesc)
-        return E_FAIL;
+    CHECK_FAILED(SkillObject_Projectile::Initialize(arg), E_FAIL);
 
-    _speed = 28.f;
-    _maxDistance = 35.f;
-    _lifetime = 2.5f;
-    _maxHitCount = 5;             // 콤보 5번 되는지 확인해보기
-    _hitInterval = 0.12f;
-    _hitLaunchForce = 250.f;      // 적당히 공중에 띄움
-    _colliderRadius = 1.35f;
-
-    srcDesc->speed = _speed;
-    srcDesc->maxDistance = _maxDistance;
-    srcDesc->lifetime = _lifetime;
-    srcDesc->colliderRadius = _colliderRadius;
-    srcDesc->startAttached = true; 
-    
-    CHECK_FAILED(SkillObject_Projectile::Initialize(srcDesc), E_FAIL);
+    _isMoving = false;
 
     return S_OK;
 }
@@ -51,6 +47,11 @@ void Skill_RasenShuriken::Update(float timeDelta)
     if (Is_Destroy())
         return;
 
+}
+
+void Skill_RasenShuriken::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
+{
+    SkillObject_Projectile::OnBeginOverlap(self, other);
 }
 
 Shared<GameObject> Skill_RasenShuriken::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

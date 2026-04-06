@@ -17,6 +17,7 @@ bool ANS_AttachSkill::Register_Properties()
 
     PROPERTY_STRING_JSON("장착 뼈", "bone_name", _boneName);
     PROPERTY_ENUM_JSON("스킬 타입", "spawn_type", _spawnObjectType, Protocol::OBJECT_TYPE);
+    PROPERTY_ENUM_JSON("충돌 프리셋", "collision_preset", _collisionPreset, Collision_Preset);
 
     return true;
 }
@@ -31,11 +32,21 @@ void ANS_AttachSkill::On_Begin(const FAnimNotifyContext& context)
     if (context.isPreview || !context.owner)
         return;
 
+    auto ownerTransform = context.owner->Get_Component<Transform>();
+    if (!ownerTransform)
+        return;
+
+    SkillObject_Projectile::FProjectileSkillDesc desc{};
+    desc.collisionPreset = _collisionPreset;
+    desc.startAttached = true;
+    desc.spawnPosition = ownerTransform->Get_WorldPosition();
+    desc.direction = ownerTransform->Get_WorldForward();
+
     auto spawned = GAME->Clone_And_Add_GameObject(
         ETOI(ELevelType::Static),
         _spawnObjectType,
         GAME->Current_Level(),
-        TEXT("Layer_Skill"));
+        TEXT("Layer_Skill"), &desc);
 
     auto skill = dynamic_pointer_cast<SkillObject_Projectile>(spawned);
     CHECK_NULL(skill);

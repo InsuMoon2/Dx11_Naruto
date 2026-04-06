@@ -43,6 +43,52 @@
 
 IMPLEMENT_SINGLETON(GameInstance)
 
+// 에디터/런타임 시작 직후 특정 모델 이름이 어떤 경로/GUID로 등록됐는지 빠르게 확인하기 위한 진단 로그를 남긴다.
+static void Log_SkeletalModelRegistrationState(GameInstance* gameInstance, const string& targetStemName)
+{
+    if (!gameInstance || targetStemName.empty())
+        return;
+
+    auto assets = gameInstance->Get_AssetByType("model");
+    if (assets.empty())
+        assets = gameInstance->Get_AssetByType("Model");
+
+    vector<const FAssetMeta*> matchedAssets;
+    for (const FAssetMeta* meta : assets)
+    {
+        if (!meta)
+            continue;
+
+        if (meta->modelType != "SkeletalMesh")
+            continue;
+
+        const fs::path assetPath(meta->fullPath);
+        if (Utils::ToLowerCopy(assetPath.stem().string()) != Utils::ToLowerCopy(targetStemName))
+            continue;
+
+        matchedAssets.push_back(meta);
+    }
+
+    if (matchedAssets.empty())
+    {
+        LOG_INFO("Skeletal model registration check - '{}' not found", targetStemName);
+        return;
+    }
+
+    LOG_INFO("Skeletal model registration check - '{}' count = {}", targetStemName, matchedAssets.size());
+
+    for (const FAssetMeta* meta : matchedAssets)
+    {
+        if (!meta)
+            continue;
+
+        LOG_INFO("  guid={} relativePath={} fullPath={}",
+            meta->guid,
+            Utils::ToString(meta->relativePath),
+            Utils::ToString(meta->fullPath));
+    }
+}
+
 GameInstance::GameInstance()
 {
     
@@ -112,6 +158,7 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _assetManager = Asset_Manager::Create(TEXT("../../Client/Bin/Resources"));
     CHECK_NULL(_assetManager, E_FAIL);
+    Log_SkeletalModelRegistrationState(this, "WhiteZetsu");
 
     _uiManager = UI_Manager::Create();
     CHECK_NULL(_uiManager, E_FAIL);

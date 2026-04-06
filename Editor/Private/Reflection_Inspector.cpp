@@ -160,31 +160,31 @@ void Reflection_Inspector::Draw_Property(void* basePtr, const Engine::FPropertyI
     case EPropertyType::Enum:
     {
         int* val = static_cast<int*>(memberPtr);
-        ImGui::Text("%s", prop.name.c_str());
-        ImGui::SameLine(120.f);
-        ImGui::PushItemWidth(-1);
 
-        // prop.enumNames는 PROPERTY_ENUM 매크로가 magic_enum으로 자동 채워둔 값
-        const char* preview = (*val >= 0 && *val < (int)prop.enumNames.size())
-            ? prop.enumNames[*val].c_str() : "???";
-
+        int currentIndex = -1;
+        for (int i = 0; i < (int)prop.enumValues.size(); ++i)
+        {
+            if (prop.enumValues[i] == *val) {
+                currentIndex = i;
+                break;
+            }
+        }
+        const char* preview = (currentIndex != -1) ? prop.enumNames[currentIndex].c_str() : "???";
         if (ImGui::BeginCombo(label.c_str(), preview))
         {
             for (int i = 0; i < (int)prop.enumNames.size(); ++i)
             {
-                bool isSelected = (*val == i);
+                bool isSelected = (currentIndex == i);
                 if (ImGui::Selectable(prop.enumNames[i].c_str(), isSelected))
                 {
                     int oldVal = *val;
-                    *val = i;
+                    int newVal = prop.enumValues[i]; 
+                    *val = newVal;
 
                     auto cmd = Property_Command::Create(
-                        memberPtr, prop.type, json(oldVal), json(i));
-
+                        memberPtr, prop.type, json(oldVal), json(newVal));
                     EDITOR->ExecuteCommand(cmd);
                 }
-                    
-                if (isSelected) ImGui::SetItemDefaultFocus();
             }
             ImGui::EndCombo();
         }
@@ -249,23 +249,43 @@ void Reflection_Inspector::Draw_Property_Simple(void* basePtr, const FPropertyIn
         ImGui::SameLine(120.f);
         ImGui::PushItemWidth(-1);
 
-        const char* preview = (*val >= 0 && *val < (int)prop.enumNames.size())
-            ? prop.enumNames[*val].c_str() : "???";
+        int currentIndex = -1;
+        for (int i = 0; i < static_cast<int>(prop.enumValues.size()); ++i)
+        {
+            if (prop.enumValues[i] == *val)
+            {
+                currentIndex = i;
+                break;
+            }
+        }
+
+        const char* preview =
+            (currentIndex >= 0 && currentIndex < static_cast<int>(prop.enumNames.size()))
+            ? prop.enumNames[currentIndex].c_str()
+            : "???";
 
         if (ImGui::BeginCombo(label.c_str(), preview))
         {
-            for (int i = 0; i < (int)prop.enumNames.size(); ++i)
+            for (int i = 0; i < static_cast<int>(prop.enumNames.size()); ++i)
             {
-                bool isSelected = (*val == i);
+                const bool isSelected = (currentIndex == i);
+
                 if (ImGui::Selectable(prop.enumNames[i].c_str(), isSelected))
-                    *val = i;
-                if (isSelected) ImGui::SetItemDefaultFocus();
+                {
+                    *val = prop.enumValues[i];
+                    currentIndex = i;
+                }
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
             }
             ImGui::EndCombo();
         }
+
         ImGui::PopItemWidth();
         break;
     }
+
     default:
         break;
     }

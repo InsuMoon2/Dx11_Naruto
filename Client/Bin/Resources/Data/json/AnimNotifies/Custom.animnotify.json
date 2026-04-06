@@ -569,9 +569,9 @@
             "notifies": [
                 {
                     "payload": {
-                        "launch_type": 17
+                        "launch_type": 19
                     },
-                    "time_sec": 2.933333396911621,
+                    "time_sec": 2.9666666984558105,
                     "track_index": 0,
                     "type": "AN_LaunchSkill"
                 }
@@ -583,10 +583,11 @@
             ],
             "notify_states": [
                 {
-                    "duration_sec": 2.5,
+                    "duration_sec": 3.4000000953674316,
                     "payload": {
                         "bone_name": "R_Hand_Weapon_cnt_tr",
-                        "spawn_type": 17
+                        "collision_preset": 3,
+                        "spawn_type": 19
                     },
                     "start_sec": 0.6000000238418579,
                     "track_index": 0,

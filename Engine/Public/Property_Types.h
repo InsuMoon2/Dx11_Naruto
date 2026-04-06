@@ -29,7 +29,7 @@ struct FPropertyInfo
 
     // Enum용
     vector<string>  enumNames;
-
+    vector<int>     enumValues; // 실제 Enum 정수 값 저장용
 };
 
 struct FClassReflectionInfo

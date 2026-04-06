@@ -18,6 +18,7 @@ public:
     HRESULT Initialize(void* arg) override;
     void    Update(float timeDelta) override;
 
+    void OnBeginOverlap(Shared<Collider> self, Shared<Collider> other) override;
 
 private:
     float   _rotationSpeed = 720.f; // 회전시킬지?
