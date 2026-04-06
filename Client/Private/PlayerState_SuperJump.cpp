@@ -46,6 +46,13 @@ void PlayerState_SuperJump::Update(PlayerStateMachine* state, float timeDelta)
     auto transform = owner->Get_Transform();
     CHECK_NULL(transform);
 
+
+    if (movement->Is_WallRunning())
+    {
+        state->Change_State(EPlayerState::Wall_Run);
+        return;
+    }
+
     // 착지 후 HeightLand에서 사용할 방향 미리 세팅하기
     Vec3 launchDir = transform->Get_WorldForward();
     launchDir.y = 0.f;
