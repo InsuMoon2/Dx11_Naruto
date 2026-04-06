@@ -569,19 +569,11 @@
             "notifies": [
                 {
                     "payload": {
-                        "layer_tag": "Layer_SkillObject",
-                        "local_offset": [
-                            0.0,
-                            1.2000000476837158,
-                            1.7999999523162842
-                        ],
-                        "skill_id": 1002,
-                        "spawn_object_type": "OBJECT_TYPE_SKILL_RASENSHURIKEN",
-                        "use_owner_forward": true
+                        "launch_type": 17
                     },
-                    "time_sec": 0.6000000238418579,
+                    "time_sec": 2.933333396911621,
                     "track_index": 0,
-                    "type": "AN_SpawnSkill"
+                    "type": "AN_LaunchSkill"
                 }
             ],
             "notify_state_tracks": [
@@ -589,7 +581,18 @@
                     "name": "Notify States"
                 }
             ],
-            "notify_states": [],
+            "notify_states": [
+                {
+                    "duration_sec": 2.5,
+                    "payload": {
+                        "bone_name": "R_Hand_Weapon_cnt_tr",
+                        "spawn_type": 17
+                    },
+                    "start_sec": 0.6000000238418579,
+                    "track_index": 0,
+                    "type": "ANS_AttachSkill"
+                }
+            ],
             "notify_tracks": [
                 {
                     "name": "Notifies"
@@ -704,6 +707,46 @@
                     "start_sec": 0.03333333507180214,
                     "track_index": 0,
                     "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Start",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "base_color": [
+                            0.05000000074505806,
+                            0.07999999821186066,
+                            0.25,
+                            1.0
+                        ],
+                        "edge_color": [
+                            0.44999998807907104,
+                            0.6499999761581421,
+                            1.0,
+                            1.0
+                        ],
+                        "interval": 0.019999999552965164,
+                        "lifespan": 0.14000000059604645,
+                        "smear_length": 1.399999976158142
+                    },
+                    "start_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "ANS_SmearEffect"
                 }
             ],
             "notify_tracks": [

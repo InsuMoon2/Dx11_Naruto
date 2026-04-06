@@ -489,6 +489,9 @@
     <Filter Include="01. Utility\10. Bouding">
       <UniqueIdentifier>{4080c360-bf9d-4d93-ae71-dde584ab6947}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\07. ShaderFiles">
+      <UniqueIdentifier>{279ac248-de5e-47cb-9466-9bacfc23845d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -753,6 +756,9 @@
     </None>
     <None Include="..\..\UpdateLib.bat">
       <Filter>98. Default</Filter>
+    </None>
+    <None Include="..\Bin\Shaders\Engine_Shader_Defines.hlsli">
+      <Filter>01. Utility\07. ShaderFiles</Filter>
     </None>
   </ItemGroup>
 </Project>

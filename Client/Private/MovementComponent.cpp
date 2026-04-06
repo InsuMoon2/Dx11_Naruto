@@ -96,9 +96,7 @@ void MovementComponent::Apply_Command(const FMoveCommand& cmd)
 void MovementComponent::Update(float timeDelta)
 {
     if (_wallJumpCooldown > 0.f)
-    {
         _wallJumpCooldown -= timeDelta;
-    }
 
     if (!_isWallRunning)
     {
@@ -236,6 +234,51 @@ float MovementComponent::Get_DashNormalizedTime() const
         return 1.f;
 
     return ::clamp(_dashElapsed / _dashDuration, 0.f, 1.f);
+}
+
+bool MovementComponent::Try_WireDash_WallTrace(const Vec3& traceStart, const Vec3& traceDir, FSurfaceHit& outHit) const
+{
+    Vec3 dir = traceDir;
+    if (dir.LengthSquared() <= FLT_EPSILON)
+        dir = Vec3::Forward;
+
+    dir = Utils::Safe_Normalize(dir, Vec3::Forward);
+
+    Ray wallRay(traceStart, dir);
+
+    FSurfaceHit bestHit{};
+
+    for (const auto& colModel : _wallCollisionModels)
+    {
+        if (!colModel)
+            continue;
+
+        float hitDist = 0.f;
+        Vec3 hitPoint = Vec3::Zero;
+        Vec3 hitNormal = Vec3::Up;
+
+        if (!colModel->Raycast(wallRay, hitDist, hitPoint, hitNormal))
+            continue;
+
+        if (hitDist > _wireDashDesc.maxDistance)
+            continue;
+
+        const float upDotAbs = fabsf(hitNormal.Dot(Vec3::Up));
+        if (upDotAbs > _moveDesc.wallRunnableMaxUpDot)
+            continue;
+
+        if (!bestHit.isValid || hitDist < bestHit.hitDistance)
+        {
+            bestHit.hitModel = colModel;
+            bestHit.hitPoint = hitPoint;
+            bestHit.hitNormal = hitNormal;
+            bestHit.hitDistance = hitDist;
+            bestHit.isValid = true;
+        }
+    }
+
+    outHit = bestHit;
+    return bestHit.isValid;
 }
 
 void MovementComponent::Update_Rotation(float timeDelta, Shared<Transform> transform)
@@ -395,15 +438,37 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
     Vec3 desiredDir = Build_DesiredMoveDirection();
     FSurfaceHit wallHit{};
 
-    if //(_wallJumpCooldown <= 0.f &&
+    if (_wallJumpCooldown <= 0.f &&
         (Detect_WallSurface(transform->Get_WorldPosition(), desiredDir, wallHit) &&
-        Can_EnterWallRun(wallHit, desiredDir))
+        Can_EnterWallRun(wallHit, desiredDir)))
     {
         Enter_WallRun(wallHit);
         Apply_WallRunPosition(transform, wallHit);
+
+        return;
+    }
+
+    // 공중이고, 벽타기 상태가 아닐 때
+    if (!_onGround && !_isWallRunning)
+    {
+        FSurfaceHit slideHit{};
+
+        // 현재 위치에서 이동하려는 velocity를 향해 레이를 쏴서 벽이 있는지 체크해보기
+        if (Detect_WallSurface(transform->Get_WorldPosition(), _velocity, slideHit))
+        {
+            Vec3 moveDir = _velocity;
+            moveDir.Normalize();
+
+            // 내적했을 때 음수면 바깥방향
+            if (moveDir.Dot(slideHit.hitNormal) < 0.f)
+            {
+                // 벽으로 파고들어가는 힘 제거
+                _velocity = Utils::Project_OnPlane(_velocity, slideHit.hitNormal);
+
+            }
+        }
     }
 }
-
 
 Vec3 MovementComponent::Build_DesiredMoveDirection() const
 {
@@ -673,8 +738,8 @@ Shared<MovementComponent> MovementComponent::Create(ComPtr<Device> device, ComPt
 
     if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Create: MovementComponent");
-        instance.reset();
+        MSG_BOX("Failed to Created : MovementComponent");
+        return nullptr;
     }
 
     return instance;
@@ -686,8 +751,8 @@ Shared<Component> MovementComponent::Clone(void* arg)
 
     if (FAILED(clone->Initialize(arg)))
     {
-        MSG_BOX("Failed to Clone: MovementComponent");
-        clone.reset();
+        MSG_BOX("Failed to Cloned : MovementComponent");
+        return nullptr;
     }
 
     return clone;

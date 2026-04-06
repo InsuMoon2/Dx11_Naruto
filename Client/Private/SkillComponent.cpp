@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "CombatStat.h"
 #include "SkillDataManager.h"
+#include "SkillObject_Projectile.h"
 
 SkillComponent::SkillComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -105,6 +106,77 @@ float SkillComponent::Get_CooldownRatio(int slot) const
         return 0.f;
 
     return ::clamp(_cooldownRemain[slot] / skillDataPtr->coolDown, 0.f, 1.f);
+}
+
+void SkillComponent::Set_PendingSkill(Protocol::OBJECT_TYPE type, Shared<SkillObject_Projectile> skill)
+{
+    auto iter = _pendingSkills.find(type);
+    if (iter != _pendingSkills.end())
+    {
+        if (!iter->second.expired())
+        {
+            LOG_WARN("SkillComponent::Set_PendingSkill - 타입({})으로 이미 PendingSkill이 등록되어 있습니다. 덮어씁니다.", ETOI(type));
+        }
+    }
+
+    _pendingSkills[type] = skill;
+}
+
+bool SkillComponent::Launch_PendingSkill(Protocol::OBJECT_TYPE type, const Vec3& direction)
+{
+    auto iter = _pendingSkills.find(type);
+    if (iter == _pendingSkills.end())
+    {
+        LOG_WARN("SkillComponent::Launch_PendingSkill - 타입({})의 PendingSkill이 없습니다.", ETOI(type));
+        return false;
+    }
+
+    auto skill = iter->second.lock();
+    if (!skill)
+    {
+        // 이미 파괴된 경우 슬롯 정리만 하고 종료
+        _pendingSkills.erase(iter);
+        LOG_WARN("SkillComponent::Launch_PendingSkill - 타입({})의 PendingSkill이 이미 파괴되었습니다.", ETOI(type));
+        return false;
+    }
+
+    if (skill->IsLaunched())
+    {
+        // 이미 발사된 경우 슬롯 정리만 하고 종료
+        _pendingSkills.erase(iter);
+        return false;
+    }
+
+    // 발사 후 슬롯에서 제거 (이미 날아가는 스킬은 SkillObject가 스스로 생명주기 관리)
+    skill->Launch(direction);
+    _pendingSkills.erase(iter);
+
+    return true;
+}
+
+void SkillComponent::Clear_PendingSkill(Protocol::OBJECT_TYPE type)
+{
+    auto it = _pendingSkills.find(type);
+    if (it == _pendingSkills.end())
+        return;
+
+    // 아직 살아있고 발사도 안 된 경우 -> 즉시 파괴
+    auto skill = it->second.lock();
+
+    if (skill && !skill->IsLaunched())
+        skill->Set_Destroy(true);
+
+    _pendingSkills.erase(it);
+}
+
+Weak<SkillObject_Projectile> SkillComponent::Get_PendingSkill(Protocol::OBJECT_TYPE type) const
+{
+    auto it = _pendingSkills.find(type);
+
+    if (it == _pendingSkills.end())
+        return {};
+
+    return it->second;
 }
 
 json SkillComponent::To_Json() const

@@ -23,11 +23,13 @@
 #include "SkillComponent.h"
 #include "SkillDataManager.h"
 #include "EquipmentComponent.h"
+#include "PlayerState_AirApproach.h"
 #include "PlayerState_JumpAttack.h"
 #include "PlayerState_JumpFall.h"
 #include "PlayerState_Hit.h"
 #include "PlayerState_WallRun.h"
 #include "PlayerState_Wall_Idle.h"
+#include "PlayerState_WireDash.h"
 
 
 IMPLEMENT_REFLECTION(PlayerStateMachine)
@@ -81,6 +83,9 @@ HRESULT PlayerStateMachine::Initialize_Prototype()
     Register_State(EPlayerState::Attack, PlayerState_Attack::Create());
     Register_State(EPlayerState::JumpAttack, PlayerState_JumpAttack::Create());
     Register_State(EPlayerState::Hit, PlayerState_Hit::Create());
+
+    Register_State(EPlayerState::WireDash, PlayerState_WireDash::Create());
+    Register_State(EPlayerState::AirApproach, PlayerState_AirApproach::Create());
 
     return S_OK;
 }

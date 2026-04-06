@@ -37,6 +37,9 @@ public:
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
 
+public:
+    const Matrix& Get_CombinedWorldMatrix() const { return _combinedWorldMatrix; }
+
 protected:
     void Update_CombinedWorldMatrix(const Matrix& childMatrix)
     {

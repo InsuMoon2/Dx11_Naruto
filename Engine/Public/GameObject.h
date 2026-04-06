@@ -114,7 +114,7 @@ public:
 
     Shared<Transform> Get_Transform() const { return _transformCom; }
 
-protected:
+public:
     template<typename T = GameObject>
     shared_ptr<T> GetSharedPtr()
     {
@@ -129,6 +129,10 @@ public: /* Collision Events */
     virtual void OnBlockBegin(Shared<Collider> self, Shared<Collider> other) {}
     virtual void OnBlockStay(Shared<Collider> self, Shared<Collider> other) {}
 
+public:
+    void Set_Owner(Shared<GameObject> owner) { _owner = owner; }
+    Shared<GameObject> Get_Owner() { return _owner.lock(); }
+
 protected: /* Device */
     ComPtr<Device>          _device = { nullptr };
     ComPtr<DeviceContext>   _context = { nullptr };
@@ -136,7 +140,7 @@ protected: /* Device */
 protected: /* Component */
     map<uint32, shared_ptr<Component>> _components;
 
-    shared_ptr<Transform>   _transformCom;
+    Shared<Transform>   _transformCom;
 
 protected: /* Values */
     Protocol::OBJECT_TYPE _objectType = Protocol::OBJECT_TYPE::OBJECT_TYPE_NONE;
@@ -149,8 +153,10 @@ protected: /* Values */
 
     string _sourcePrefabName = "";
 
+    Weak<GameObject> _owner;
+
 public:
-    virtual shared_ptr<GameObject> Clone(void* arg) abstract;
+    virtual Shared<GameObject> Clone(void* arg) abstract;
     virtual void Free() override;
 };
 

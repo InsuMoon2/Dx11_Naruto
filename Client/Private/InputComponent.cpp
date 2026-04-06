@@ -70,6 +70,7 @@ void InputComponent::Update_Input(float timeDelta)
     const bool rawSkill1Press = INPUT->KeyPress(KEY_TYPE::KEY_1);
     const bool rawSkill2Press = INPUT->KeyPress(KEY_TYPE::KEY_2);
 
+    const bool rawCtrlDown = INPUT->KeyDown(KEY_TYPE::LCTRL);
     const bool rawCtrlPress = INPUT->KeyPress(KEY_TYPE::LCTRL);
     const bool rawCtrlUp = INPUT->KeyUp(KEY_TYPE::LCTRL);
 
@@ -82,6 +83,7 @@ void InputComponent::Update_Input(float timeDelta)
 
     Vec2 rawMouseDelta = INPUT->GetMouseDelta();
 
+    // 슈퍼 점프
     if (_inputGate.allowSuperJump && rawCtrlPress)
     {
         _superJumpCharge = ::clamp(_superJumpCharge + timeDelta, 0.f, MAX_JUMP_CHARGE);
@@ -139,6 +141,8 @@ void InputComponent::Update_Input(float timeDelta)
         _frame.superJumpUp = false;
         _frame.superJumpCharge = 0.f;
     }
+
+    _frame.wireDash = rawCtrlDown;
 
     if (_inputGate.allowJumpDash)
     {

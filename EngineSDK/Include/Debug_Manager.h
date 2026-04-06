@@ -36,6 +36,27 @@ struct ENGINE_DLL FDebugLineDesc
     FDebugRenderStyle style;                 // 선 공통 렌더 옵션
 };
 
+struct ENGINE_DLL FDebugTraceLineDesc
+{
+    Vec3 start = Vec3::Zero;                         // 월드 기준 trace 시작점
+    Vec3 end = Vec3::Zero;                           // 월드 기준 trace 원래 끝점
+    bool isHit = false;                              // true면 hit 정보를 기준으로 색상과 보조 도형을 다르게 그린다
+    Vec3 hitPoint = Vec3::Zero;                      // isHit가 true일 때 사용할 히트 위치
+    Vec3 hitNormal = Vec3::Up;                       // isHit가 true일 때 사용할 히트 노멀
+    Color missColor = Color(1.f, 0.f, 0.f, 1.f);    // miss일 때 trace 선에 사용할 색상
+    Color hitColor = Color(0.f, 1.f, 0.f, 1.f);     // hit일 때 start -> hitPoint 구간에 사용할 색상
+    Color remainderColor = Color(1.f, 0.f, 0.f, 1.f); // hit 이후 남은 구간을 표시할 때 사용할 색상
+    Color hitPointColor = Color(1.f, 1.f, 0.f, 1.f);  // hitPoint 구를 그릴 때 사용할 색상
+    Color hitNormalColor = Color(0.f, 1.f, 1.f, 1.f); // hitNormal 선을 그릴 때 사용할 색상
+    float duration = 0.f;                            // trace 디버그 전체 유지 시간
+    bool depthEnabled = true;                        // trace 디버그 전체 depth test 적용 여부
+    bool drawHitPoint = true;                        // true면 hitPoint 위치에 디버그 구를 그린다
+    bool drawHitNormal = true;                       // true면 hitPoint에서 hitNormal 방향 보조선을 그린다
+    bool drawRemainderOnHit = false;                 // true면 hit 이후 남은 구간도 별도 색상으로 그린다
+    float hitPointRadius = 0.08f;                    // hitPoint 구 반지름
+    float hitNormalLength = 0.5f;                    // hitNormal 선 길이
+};
+
 struct ENGINE_DLL FDebugMeshDesc
 {
     Shared<class Model> model;              
@@ -71,6 +92,9 @@ public:
 
     // 월드 기준 디버그 선을 큐에 등록할 때 호출한다.
     void Draw_Line(const FDebugLineDesc& desc);
+
+    // trace hit/miss 결과를 언리얼식으로 보기 쉽게 선/구/노멀로 풀어낼 때 호출한다.
+    void Draw_TraceLine(const FDebugTraceLineDesc& desc);
 
     void Draw_Mesh(const FDebugMeshDesc& desc);
 

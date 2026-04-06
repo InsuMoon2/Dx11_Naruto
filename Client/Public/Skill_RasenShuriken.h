@@ -18,12 +18,9 @@ public:
     HRESULT Initialize(void* arg) override;
     void    Update(float timeDelta) override;
 
-private:
-    float _speed = 28.f;
-    float _maxDistance = 35.f;
-    float _lifetime = 2.5f;
 
-    float _colliderRadius = 1.35f;
+private:
+    float   _rotationSpeed = 720.f; // 회전시킬지?
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

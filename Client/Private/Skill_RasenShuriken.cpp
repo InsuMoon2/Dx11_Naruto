@@ -25,18 +25,21 @@ HRESULT Skill_RasenShuriken::Initialize(void* arg)
     if (!srcDesc)
         return E_FAIL;
 
-    SkillObject_Projectile::FProjectileSkillDesc desc = *srcDesc;
+    _speed = 28.f;
+    _maxDistance = 35.f;
+    _lifetime = 2.5f;
+    _maxHitCount = 5;             // 콤보 5번 되는지 확인해보기
+    _hitInterval = 0.12f;
+    _hitLaunchForce = 250.f;      // 적당히 공중에 띄움
+    _colliderRadius = 1.35f;
 
-    desc.colliderType = Protocol::COMPONENT_TYPE_COLLIDER_SPHERE;
-    desc.colliderRadius = _colliderRadius;
-    desc.speed = _speed;
-    desc.maxDistance = _maxDistance;
-    desc.lifetime = _lifetime;
-
-    desc.useGravity = false;
-    desc.scale = Vec3(1.f, 1.f, 1.f);
-
-    CHECK_FAILED(SkillObject_Projectile::Initialize(&desc), E_FAIL);
+    srcDesc->speed = _speed;
+    srcDesc->maxDistance = _maxDistance;
+    srcDesc->lifetime = _lifetime;
+    srcDesc->colliderRadius = _colliderRadius;
+    srcDesc->startAttached = true; 
+    
+    CHECK_FAILED(SkillObject_Projectile::Initialize(srcDesc), E_FAIL);
 
     return S_OK;
 }
@@ -47,8 +50,6 @@ void Skill_RasenShuriken::Update(float timeDelta)
 
     if (Is_Destroy())
         return;
-
-
 
 }
 

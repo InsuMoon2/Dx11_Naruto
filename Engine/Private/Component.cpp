@@ -31,32 +31,44 @@ json Component::Reflect_ToJson() const
 
     for (const auto& prop : info.properties)
     {
+        const string key = prop.jsonKey.empty() ? prop.name : prop.jsonKey;
         const void* memberPtr = basePtr + prop.offset;
 
         switch (prop.type)
         {
         case EPropertyType::Float:
         case EPropertyType::ReadOnly:
-            root[prop.name] = *static_cast<const float*>(memberPtr);
+            root[key] = *static_cast<const float*>(memberPtr);
             break;
         case EPropertyType::Int:
         case EPropertyType::Enum:
-            root[prop.name] = *static_cast<const int*>(memberPtr);
+            root[key] = *static_cast<const int*>(memberPtr);
             break;
         case EPropertyType::Bool:
-            root[prop.name] = *static_cast<const bool*>(memberPtr);
+            root[key] = *static_cast<const bool*>(memberPtr);
             break;
+        case EPropertyType::Vec2:
+        {
+            const float* v = static_cast<const float*>(memberPtr);
+            root[key] = { v[0], v[1] };
+            break;
+        }
         case EPropertyType::Vec3:
         {
             const float* v = static_cast<const float*>(memberPtr);
-            root[prop.name] = { v[0], v[1], v[2] };
+            root[key] = { v[0], v[1], v[2] };
             break;
         }
         case EPropertyType::Vec4:
         case EPropertyType::Color:
         {
             const float* v = static_cast<const float*>(memberPtr);
-            root[prop.name] = { v[0], v[1], v[2], v[3] };
+            root[key] = { v[0], v[1], v[2], v[3] };
+            break;
+        }
+        case EPropertyType::String:
+        {
+            root[key] = *static_cast<const string*>(memberPtr);
             break;
         }
         }
@@ -72,25 +84,33 @@ void Component::Reflect_FromJson(const json& data)
 
     for (const auto& prop : info.properties)
     {
-        if (!data.contains(prop.name)) continue;
+        const string key = prop.jsonKey.empty() ? prop.name : prop.jsonKey;
+        if (!data.contains(key)) continue;
         void* memberPtr = basePtr + prop.offset;
 
         switch (prop.type)
         {
         case EPropertyType::Float:
         case EPropertyType::ReadOnly:
-            *static_cast<float*>(memberPtr) = data[prop.name].get<float>();
+            *static_cast<float*>(memberPtr) = data[key].get<float>();
             break;
         case EPropertyType::Int:
         case EPropertyType::Enum:
-            *static_cast<int*>(memberPtr) = data[prop.name].get<int>();
+            *static_cast<int*>(memberPtr) = data[key].get<int>();
             break;
         case EPropertyType::Bool:
-            *static_cast<bool*>(memberPtr) = data[prop.name].get<bool>();
+            *static_cast<bool*>(memberPtr) = data[key].get<bool>();
             break;
+        case EPropertyType::Vec2:
+        {
+            auto arr = data[key];
+            float* v = static_cast<float*>(memberPtr);
+            v[0] = arr[0]; v[1] = arr[1];
+            break;
+        }
         case EPropertyType::Vec3:
         {
-            auto arr = data[prop.name];
+            auto arr = data[key];
             float* v = static_cast<float*>(memberPtr);
             v[0] = arr[0]; v[1] = arr[1]; v[2] = arr[2];
             break;
@@ -98,11 +118,14 @@ void Component::Reflect_FromJson(const json& data)
         case EPropertyType::Vec4:
         case EPropertyType::Color:
         {
-            auto arr = data[prop.name];
+            auto arr = data[key];
             float* v = static_cast<float*>(memberPtr);
             v[0] = arr[0]; v[1] = arr[1]; v[2] = arr[2]; v[3] = arr[3];
             break;
         }
+        case EPropertyType::String:
+            *static_cast<string*>(memberPtr) = data[key].get<string>();
+            break;
         }
     }
 }

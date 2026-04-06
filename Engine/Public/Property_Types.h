@@ -19,6 +19,7 @@ enum class EPropertyType : uint8
 struct FPropertyInfo
 {
     string          name;
+    string          jsonKey;
     EPropertyType   type;
     size_t          offset;
 

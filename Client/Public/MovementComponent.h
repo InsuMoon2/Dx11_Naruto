@@ -32,6 +32,15 @@ public:
         bool  isValid = false;
     };
 
+    struct FWireDashDesc
+    {
+        float maxDistance = 10.f;
+        float approachSpeed = 28.f;
+        float stopDistance = 0.4f;
+        float traceStartOffsetY = 1.f;
+        float fanAngleDegree = 8.f; // 정면 단일 ray 보강용 좌우 fan 각도
+    };
+
     struct FMovementDesc
     {
         float maxWalkSpeed = 4.f;
@@ -134,6 +143,10 @@ public:
     // 바닥 충돌 모델 리스트 세팅
     void Set_GroundCollisionModels(const vector<Shared<Model>> models) { _groundCollisionModels = models; }
 
+    const FWireDashDesc& Get_WireDashDesc() const { return _wireDashDesc; }
+
+    bool Try_WireDash_WallTrace(const Vec3& traceStart, const Vec3& traceDir, FSurfaceHit& outHit) const;
+
 private:
     void Update_Rotation(float timeDelta, Shared<Transform> transform);
     void Update_Velocity(float timeDelta, Shared<Transform> transform);
@@ -189,6 +202,9 @@ private:
     Vec3 _currentWallHitPoint = Vec3::Zero;
 
     float _wallJumpCooldown = 0.f;
+
+    // Wire Dash
+    FWireDashDesc _wireDashDesc;
 
 public:
     static Shared<MovementComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

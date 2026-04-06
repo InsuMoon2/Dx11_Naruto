@@ -14,4 +14,8 @@ xcopy /y "Client\Bin\Client.pdb" "Editor\Bin\"
 xcopy /y "Engine\Bin\Engine.lib" "EngineSDK\Lib\"
 xcopy /y /s "Engine\Public\*.*" "EngineSDK\Include\"
 xcopy /y "Server\Protobuf\Bin\*.pb.h" "EngineSDK\Include\"
+
+xcopy /y "Engine\Bin\Shaders\*.hlsli" "Client\Bin\Shaders\"
+xcopy /y "Engine\Bin\Shaders\*.hlsli" "Editor\Bin\Shaders\"
+
 popd

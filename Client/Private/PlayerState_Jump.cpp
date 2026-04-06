@@ -50,6 +50,12 @@ void PlayerState_Jump::Update(PlayerStateMachine* state, float timeDelta)
         return;
     }
 
+    if (frame.wireDash)
+    {
+        state->Change_State(EPlayerState::WireDash);
+        return;
+    }
+
     if (frame.attackDown && !movement->Is_OnGround())
     {
         state->Change_State(EPlayerState::JumpAttack);

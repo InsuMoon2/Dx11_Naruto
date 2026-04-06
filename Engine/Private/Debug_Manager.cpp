@@ -6,7 +6,6 @@
 #include "Mesh.h"
 #include "Model.h"
 
-NS_BEGIN(Engine)
     Debug_Manager::Debug_Manager(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device)
     , _context(context)
@@ -178,6 +177,75 @@ void Debug_Manager::Draw_Line(const FDebugLineDesc& desc)
         _overlayLines.push_back(entry);
 }
 
+void Debug_Manager::Draw_TraceLine(const FDebugTraceLineDesc& desc)
+{
+    // [추가] 공통 렌더 옵션을 한 번만 맞춰서 trace 전체 표현에 재사용한다.
+    FDebugRenderStyle sharedStyle{};
+    sharedStyle.duration = desc.duration;
+    sharedStyle.depthEnabled = desc.depthEnabled;
+
+    if (!desc.isHit)
+    {
+        // [추가] miss일 때는 전체 구간을 missColor 선 하나로 표시한다.
+        FDebugLineDesc lineDesc{};
+        lineDesc.start = desc.start;
+        lineDesc.end = desc.end;
+        lineDesc.style = sharedStyle;
+        lineDesc.style.color = desc.missColor;
+
+        Draw_Line(lineDesc);
+        return;
+    }
+
+    // [추가] hit일 때는 start -> hitPoint를 hitColor로 표시한다.
+    FDebugLineDesc hitLineDesc{};
+    hitLineDesc.start = desc.start;
+    hitLineDesc.end = desc.hitPoint;
+    hitLineDesc.style = sharedStyle;
+    hitLineDesc.style.color = desc.hitColor;
+    Draw_Line(hitLineDesc);
+
+    if (desc.drawRemainderOnHit)
+    {
+        // [추가] 필요하면 hit 뒤 남은 구간도 remainderColor로 표시해서 막힌 위치를 더 쉽게 본다.
+        FDebugLineDesc remainderDesc{};
+        remainderDesc.start = desc.hitPoint;
+        remainderDesc.end = desc.end;
+        remainderDesc.style = sharedStyle;
+        remainderDesc.style.color = desc.remainderColor;
+        Draw_Line(remainderDesc);
+    }
+
+    if (desc.drawHitPoint)
+    {
+        // [추가] 히트 지점을 구로 표시해서 벽에 실제로 맞은 위치를 한눈에 보이게 한다.
+        FDebugSphereDesc sphereDesc{};
+        sphereDesc.center = desc.hitPoint;
+        sphereDesc.radius = desc.hitPointRadius;
+        sphereDesc.style = sharedStyle;
+        sphereDesc.style.color = desc.hitPointColor;
+        Draw_Sphere(sphereDesc);
+    }
+
+    if (desc.drawHitNormal)
+    {
+        // [추가] 히트 노멀 방향을 짧은 보조선으로 그려서 부착/반사/정면 여부를 바로 확인한다.
+        Vec3 safeNormal = desc.hitNormal;
+        if (safeNormal.LengthSquared() <= FLT_EPSILON)
+            safeNormal = Vec3::Up;
+
+        safeNormal = safeNormal;
+        safeNormal.Normalize();
+
+        FDebugLineDesc normalDesc{};
+        normalDesc.start = desc.hitPoint;
+        normalDesc.end = desc.hitPoint + safeNormal * desc.hitNormalLength;
+        normalDesc.style = sharedStyle;
+        normalDesc.style.color = desc.hitNormalColor;
+        Draw_Line(normalDesc);
+    }
+}
+
 void Debug_Manager::Draw_Mesh(const FDebugMeshDesc& desc)
 {
     if (!desc.model) return;
@@ -287,5 +355,3 @@ void Debug_Manager::Free()
     _effect.reset();
     _inputLayout.Reset();
 }
-
-NS_END

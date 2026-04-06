@@ -26,6 +26,8 @@ public:
         bool  jumpDash = false;
         bool  attackDown = false;
 
+        bool  wireDash = false;
+
         bool  toggleWeaponDown = false;
 
         bool  useSkillDown[2] = { false, false };

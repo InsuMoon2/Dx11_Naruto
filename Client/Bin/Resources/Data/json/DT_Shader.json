@@ -35,6 +35,18 @@
             "Path": "../../Client/Bin/Shaders/Shader_VtxAnimMesh.hlsl",
             "Level": "Static",
             "Extra": "VtxAnim"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_GHOST_EFFECT",
+            "Path": "../../Client/Bin/Shaders/Shader_GhostAfterImage.hlsl",
+            "Level": "Static",
+            "Extra": "VtxAnim"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_SMEAR_EFFECT",
+            "Path": "../../Client/Bin/Shaders/Shader_SmearSkeletal.hlsl",
+            "Level": "Static",
+            "Extra": "VtxAnim"
         }
     ]
 }

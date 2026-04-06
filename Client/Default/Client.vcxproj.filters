@@ -221,6 +221,18 @@
     <ClInclude Include="..\Public\PlayerState_Wall_Idle.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_WireDash.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_AirApproach.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GhostEffect_Component.h" />
+    <ClInclude Include="..\Public\ANS_GhostEffect.h" />
+    <ClInclude Include="..\Public\SmearEffect_Component.h" />
+    <ClInclude Include="..\Public\ANS_SmearEffect.h" />
+    <ClInclude Include="..\Public\ANS_AttachSkill.h" />
+    <ClInclude Include="..\Public\AN_LaunchSkill.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -425,6 +437,18 @@
     <ClCompile Include="..\Private\PlayerState_Wall_Idle.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_WireDash.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_AirApproach.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GhostEffect_Component.cpp" />
+    <ClCompile Include="..\Private\ANS_GhostEffect.cpp" />
+    <ClCompile Include="..\Private\SmearEffect_Component.cpp" />
+    <ClCompile Include="..\Private\ANS_SmearEffect.cpp" />
+    <ClCompile Include="..\Private\ANS_AttachSkill.cpp" />
+    <ClCompile Include="..\Private\AN_LaunchSkill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -576,6 +600,12 @@
       <Filter>94. Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_VtxAnimMesh.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_GhostAfterImage.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_SmearSkeletal.hlsl">
       <Filter>94. Shaders</Filter>
     </FxCompile>
   </ItemGroup>

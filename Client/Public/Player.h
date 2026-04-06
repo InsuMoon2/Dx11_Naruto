@@ -12,6 +12,7 @@ NS_BEGIN(Client)
 class AnimationStateComponent;
 class CombatStat;
 class EquipmentComponent;
+class SmearEffect_Component;
 
 class Player : public Character
 {
@@ -62,7 +63,7 @@ protected:
     Shared<AnimationStateComponent> _animState;
     Shared<Model>                   _model;
     Shared<EquipmentComponent>      _equipment;
-    
+    Shared<SmearEffect_Component>      _smearEffect;
 
 protected:
     uint64                          _networkId = 0;

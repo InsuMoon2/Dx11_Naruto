@@ -49,6 +49,8 @@
 #include "EquipmentComponent.h"
 #include "ProjectileComponent.h"
 #include "TargetComponent.h"
+#include "GhostEffect_Component.h"
+#include "SmearEffect_Component.h"  
 
 #include "Collider.h"
 
@@ -166,6 +168,8 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<EquipmentComponent>(staticLevel);
     GAME->Register_ComponentFactory<ProjectileComponent>(staticLevel);
     GAME->Register_ComponentFactory<TargetComponent>(staticLevel);
+    GAME->Register_ComponentFactory<GhostEffect_Component>(staticLevel);
+    GAME->Register_ComponentFactory<SmearEffect_Component>(staticLevel);
 
     //GAME->Register_ComponentFactory<Model>(staticLevel);
 

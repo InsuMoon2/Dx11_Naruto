@@ -103,6 +103,8 @@ public:
     // 소켓 가져오기
     const Matrix* Get_SocketBoneMatrixPtr(const string& boneName) const;
 
+    const vector<Matrix>& Get_BoneMatrices() const { return _boneMatrices; }
+
 public: /* 지형타기 */
     void    Set_KeepCPUData(bool keep) { _keepCPUData = keep; }
     bool    Get_KeepCPUData() const    { return _keepCPUData; }

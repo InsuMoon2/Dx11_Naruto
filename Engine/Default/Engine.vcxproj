@@ -440,6 +440,7 @@
   <ItemGroup>
     <None Include="..\..\UpdateLib.bat" />
     <None Include="..\..\vkpkg.json" />
+    <None Include="..\Bin\Shaders\Engine_Shader_Defines.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -31,6 +31,9 @@ namespace Client
         SuperJump,
         HeightLand,
 
+        WireDash,
+        AirApproach,
+
         // Attack 진입 판별용
         Attack, JumpAttack,
 

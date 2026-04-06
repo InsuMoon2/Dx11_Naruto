@@ -5,11 +5,12 @@
 NS_BEGIN(Client)
 
 class CombatStat;
+class SkillObject_Projectile;
 
 enum class ESkillType
 {
-    Rasengan = 1001,
-    Rasen_Shuriken,
+    Rasengan        = 1001,
+    Rasen_Shuriken  = 1002,
     Fireball,
     Chidori,
     Big_Rasengan,
@@ -43,6 +44,14 @@ public:
     int     Get_EquippedSkillID(int slot) const;
     float   Get_CooldownRatio(int slot) const;
 
+public:
+    void    Set_PendingSkill(Protocol::OBJECT_TYPE type, Shared<SkillObject_Projectile> skill);
+    bool    Launch_PendingSkill(Protocol::OBJECT_TYPE type, const Vec3& direction);
+    void    Clear_PendingSkill(Protocol::OBJECT_TYPE type);
+
+    // On_Tick에서 위치 동기화할 때 사용
+    Weak<SkillObject_Projectile> Get_PendingSkill(Protocol::OBJECT_TYPE type) const;
+
 protected:
     json    To_Json() const override;
     void    From_Json(const json& data) override;
@@ -54,6 +63,8 @@ private:
     float   _cooldownRemain[SLOT_COUNT] = {};
 
     Weak<CombatStat> _combatStat;
+
+    umap<Protocol::OBJECT_TYPE, Weak<SkillObject_Projectile>> _pendingSkills;
 
 public:
     static Shared<SkillComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

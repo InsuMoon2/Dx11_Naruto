@@ -46,7 +46,6 @@ void PlayerState_SuperJump::Update(PlayerStateMachine* state, float timeDelta)
     auto transform = owner->Get_Transform();
     CHECK_NULL(transform);
 
-
     if (movement->Is_WallRunning())
     {
         state->Change_State(EPlayerState::Wall_Run);

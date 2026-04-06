@@ -230,11 +230,15 @@
   <ItemGroup>
     <ClInclude Include="..\Public\AIController.h" />
     <ClInclude Include="..\Public\AnimationStateComponent.h" />
+    <ClInclude Include="..\Public\ANS_AttachSkill.h" />
     <ClInclude Include="..\Public\ANS_CollisionEnable.h" />
     <ClInclude Include="..\Public\ANS_ComboWindow.h" />
+    <ClInclude Include="..\Public\ANS_GhostEffect.h" />
     <ClInclude Include="..\Public\ANS_Move.h" />
+    <ClInclude Include="..\Public\ANS_SmearEffect.h" />
     <ClInclude Include="..\Public\ANS_Test.h" />
     <ClInclude Include="..\Public\AN_ChangeState.h" />
+    <ClInclude Include="..\Public\AN_LaunchSkill.h" />
     <ClInclude Include="..\Public\AN_PlayCinematic.h" />
     <ClInclude Include="..\Public\AN_SpawnSkill.h" />
     <ClInclude Include="..\Public\AN_Test.h" />
@@ -248,6 +252,7 @@
     <ClInclude Include="..\Public\ComboProfile_Manager.h" />
     <ClInclude Include="..\Public\Customizer_Manager.h" />
     <ClInclude Include="..\Public\EquipmentComponent.h" />
+    <ClInclude Include="..\Public\GhostEffect_Component.h" />
     <!-- <ClInclude Include="..\Public\Client_PacketHandler.h" /> -->
     <ClInclude Include="..\Public\IconsFontAwesome6.h" />
     <ClInclude Include="..\Public\InputComponent.h" />
@@ -265,6 +270,7 @@
     <ClInclude Include="..\Public\NetworkManager.h" />
     <ClInclude Include="..\Public\PlayerController.h" />
     <ClInclude Include="..\Public\PlayerStateMachine.h" />
+    <ClInclude Include="..\Public\PlayerState_AirApproach.h" />
     <ClInclude Include="..\Public\PlayerState_Attack.h" />
     <ClInclude Include="..\Public\PlayerState_Dash.h" />
     <ClInclude Include="..\Public\PlayerState_DoubleJump.h" />
@@ -281,6 +287,7 @@
     <ClInclude Include="..\Public\PlayerState_SuperJumpCharge.h" />
     <ClInclude Include="..\Public\PlayerState_WallRun.h" />
     <ClInclude Include="..\Public\PlayerState_Wall_Idle.h" />
+    <ClInclude Include="..\Public\PlayerState_WireDash.h" />
     <ClInclude Include="..\Public\Player_CustomPart.h" />
     <ClInclude Include="..\Public\PreviewPlayer.h" />
     <ClInclude Include="..\Public\RemotePlayer.h" />
@@ -298,6 +305,7 @@
     <ClInclude Include="..\Public\SkillObject_Projectile.h" />
     <ClInclude Include="..\Public\Skill_Rasengan.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
+    <ClInclude Include="..\Public\SmearEffect_Component.h" />
     <ClInclude Include="..\Public\Spawn_Helper.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\StaticMeshActor.h" />
@@ -348,11 +356,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\AIController.cpp" />
     <ClCompile Include="..\Private\AnimationStateComponent.cpp" />
+    <ClCompile Include="..\Private\ANS_AttachSkill.cpp" />
     <ClCompile Include="..\Private\ANS_CollisionEnable.cpp" />
     <ClCompile Include="..\Private\ANS_ComboWindow.cpp" />
+    <ClCompile Include="..\Private\ANS_GhostEffect.cpp" />
     <ClCompile Include="..\Private\ANS_Move.cpp" />
+    <ClCompile Include="..\Private\ANS_SmearEffect.cpp" />
     <ClCompile Include="..\Private\ANS_Test.cpp" />
     <ClCompile Include="..\Private\AN_ChangeState.cpp" />
+    <ClCompile Include="..\Private\AN_LaunchSkill.cpp" />
     <ClCompile Include="..\Private\AN_PlayCinematic.cpp" />
     <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
     <ClCompile Include="..\Private\AN_Test.cpp" />
@@ -363,6 +375,7 @@
     <ClCompile Include="..\Private\ComboProfile_Manager.cpp" />
     <ClCompile Include="..\Private\Customizer_Manager.cpp" />
     <ClCompile Include="..\Private\EquipmentComponent.cpp" />
+    <ClCompile Include="..\Private\GhostEffect_Component.cpp" />
     <ClCompile Include="..\Private\InputComponent.cpp" />
     <ClCompile Include="..\Private\IPlayerState.cpp" />
     <ClCompile Include="..\Private\Level_CharacterSetup.cpp" />
@@ -377,6 +390,7 @@
     <ClCompile Include="..\Private\NetworkManager.cpp" />
     <ClCompile Include="..\Private\PlayerController.cpp" />
     <ClCompile Include="..\Private\PlayerStateMachine.cpp" />
+    <ClCompile Include="..\Private\PlayerState_AirApproach.cpp" />
     <ClCompile Include="..\Private\PlayerState_Attack.cpp" />
     <ClCompile Include="..\Private\PlayerState_Dash.cpp" />
     <ClCompile Include="..\Private\PlayerState_DoubleJump.cpp" />
@@ -393,6 +407,7 @@
     <ClCompile Include="..\Private\PlayerState_SuperJumpCharge.cpp" />
     <ClCompile Include="..\Private\PlayerState_WallRun.cpp" />
     <ClCompile Include="..\Private\PlayerState_Wall_Idle.cpp" />
+    <ClCompile Include="..\Private\PlayerState_WireDash.cpp" />
     <ClCompile Include="..\Private\Player_CustomPart.cpp" />
     <ClCompile Include="..\Private\PreviewPlayer.cpp" />
     <ClCompile Include="..\Private\RemotePlayer.cpp" />
@@ -409,6 +424,7 @@
     <ClCompile Include="..\Private\SkillObject_Projectile.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
+    <ClCompile Include="..\Private\SmearEffect_Component.cpp" />
     <ClCompile Include="..\Private\Spawn_Helper.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\StaticMeshActor.cpp" />
@@ -438,6 +454,14 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Shaders\Shader_GhostAfterImage.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_SmearSkeletal.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_UI.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

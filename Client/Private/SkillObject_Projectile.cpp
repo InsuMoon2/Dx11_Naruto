@@ -3,6 +3,8 @@
 #include "ProjectileComponent.h"
 #include "GameObject_Factory.h"
 #include "Collider.h"
+#include "Character.h"
+#include "MovementComponent.h"
 
 REGISTER_GAMEOBJECT(SkillObject_Projectile, Protocol::OBJECT_TYPE_SKILL_PROJECTILE)
 
@@ -23,17 +25,21 @@ HRESULT SkillObject_Projectile::Initialize_Prototype()
 
 HRESULT SkillObject_Projectile::Initialize(void* arg)
 {
-    CHECK_FAILED(SkillObject::Initialize(arg), E_FAIL);
-
     auto* desc = static_cast<FProjectileSkillDesc*>(arg);
-    if (!desc)
-        return E_FAIL;
+    if (!desc) return E_FAIL;
+
+    _speed = desc->speed;
+    _maxDistance = desc->maxDistance;
+    _isMoving = !desc->startAttached;
+    _colliderRadius = desc->colliderRadius;
+
+    CHECK_FAILED(SkillObject::Initialize(arg), E_FAIL);
 
     ProjectileComponent::FProjectileDesc projDesc;
     projDesc.direction = desc->direction;
-    projDesc.speed = desc->speed;
-    projDesc.maxDistance = desc->maxDistance;
-    projDesc.maxLifetime = desc->lifetime; 
+    projDesc.speed = _speed;
+    projDesc.maxDistance = _maxDistance;
+    projDesc.maxLifetime = _lifetime;
     projDesc.useGravity = desc->useGravity;
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PROJECTILE, _projectile, &projDesc), E_FAIL);
@@ -44,11 +50,20 @@ HRESULT SkillObject_Projectile::Initialize(void* arg)
 void SkillObject_Projectile::Update(float timeDelta)
 {
     // 위치 갱신
-    if (_projectile)
+    if (_isMoving && _projectile)
         _projectile->Update_Projectile(timeDelta);
 
     // 이후 라이프타임 체크
     SkillObject::Update(timeDelta);
+
+    // 히트 쿨타임 관리
+    for (auto& pair : _hitCooldowns)
+    {
+        if (pair.second > 0.f)
+        {
+            pair.second -= timeDelta;
+        }
+    }
 }
 
 void SkillObject_Projectile::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
@@ -58,16 +73,65 @@ void SkillObject_Projectile::OnBeginOverlap(Shared<Collider> self, Shared<Collid
     if (!other || Is_Destroy())
         return;
 
-    // TEMP : 바꿔야한다.
     auto otherOwner = other->Get_Owner();
-    if (!otherOwner)
+    if (!otherOwner || otherOwner == Get_Owner())
         return;
 
-    const auto objectType = otherOwner->Get_ObjectType();
+    // 히트 쿨타임 처리
+    if (_hitCooldowns[otherOwner.get()] > 0.f)
+        return;
 
-    if (objectType == Protocol::OBJECT_TYPE_MONSTER)
+    _hitCount++;
+    _hitCooldowns[otherOwner.get()] = _hitInterval;
+
+    // 데미지 처리
+    auto character = dynamic_cast<Character*>(otherOwner.get());
+    if (character)
+    {
+        character->TakeDamage(FDamageEvent{ 10.f, nullptr });
+
+        if (_hitLaunchForce > 0.f)
+        {
+            auto moveComp = character->Get_Component<MovementComponent>();
+            if (moveComp)
+                moveComp->Launch(Vec3(0, 1, 0) * _hitLaunchForce, false, true);
+        }
+    }
+
+    // 최대 카운트 도달 or LifeTime으로 처리
+    if (_hitCount >= _maxHitCount)
     {
         Set_Destroy(true);
+    }
+}
+
+void SkillObject_Projectile::Launch(const Vec3& direction)
+{
+    if (_isMoving)
+        return;
+
+    if (_projectile)
+        _projectile->Set_Direction(direction);
+
+    if (_collider)
+        _collider->Set_IsActive(true); // 발사 시 콜라이더 활성화
+    _isMoving = true;
+}
+
+void SkillObject_Projectile::Sync_AttachedTransform(const Matrix& boneWorldMatrix)
+{
+    if (IsLaunched() || !_transformCom)
+        return;
+
+    Matrix tempMatrix = boneWorldMatrix;
+
+    Vec3 worldPos, worldScale;
+    Quat worldQuat;
+
+    if (tempMatrix.Decompose(worldScale, worldQuat, worldPos))
+    {
+        _transformCom->Set_WorldPosition(worldPos);
+        _transformCom->Set_WorldRotation(worldQuat);
     }
 }
 

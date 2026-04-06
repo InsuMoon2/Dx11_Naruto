@@ -10,7 +10,9 @@
 #include "Bounding_Capsule.h"
 #include "Bounding_AABB.h"
 #include "Collider.h"
+#include "GhostEffect_Component.h"
 #include "PlayerStateMachine.h"
+#include "SmearEffect_Component.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
@@ -69,18 +71,31 @@ void Player::Update(float timeDelta)
 
     if (_model)
         _model->Play_Animation(timeDelta, true);
+
+    if (_smearEffect)
+        _smearEffect->Update_Smear(timeDelta);
+
 }
 
 void Player::Late_Update(float timeDelta)
 {
     Character::Late_Update(timeDelta);
 
-    
+    if (_smearEffect && _smearEffect->Has_ActiveSmear())
+    {
+        GAME->Add_RenderGroup(ERenderGroup::Blend, this->GetSharedPtr());
+    }
+
 }
 
 HRESULT Player::Render()
 {
     //Character::Render();
+
+    if (_smearEffect)
+    {
+        CHECK_FAILED(_smearEffect->Render(), E_FAIL);
+    }
 
     return S_OK;
 }
@@ -211,6 +226,9 @@ HRESULT Player::Ready_Components()
     CHECK_FAILED(Add_Component(testModelKey, _model), E_FAIL);
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_EQUIPMENT, _equipment), E_FAIL);
+
+    // 대쉬 잔상
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SMEAR_EFFECT, _smearEffect), E_FAIL);
 
     return S_OK;
 }

@@ -871,6 +871,12 @@ void GameInstance::Draw_DebugLine(const FDebugLineDesc& desc)
         _debugManager->Draw_Line(desc);
 }
 
+void GameInstance::Draw_DebugTraceLine(const FDebugTraceLineDesc& desc)
+{
+    if (_debugManager)
+        _debugManager->Draw_TraceLine(desc);
+}
+
 void GameInstance::Draw_DebugMesh(const FDebugMeshDesc& desc)
 {
     if (_debugManager)
