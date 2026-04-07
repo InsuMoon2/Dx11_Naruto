@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Base.h"
 #include "Component_Factory.h"
@@ -176,6 +176,8 @@ public: /* Object Manager */
 public: /* Renderer */
     void                    Add_RenderGroup(ERenderGroup renderType, Shared<GameObject> gameObject);
     int32                   Get_DrawCallCount();
+    void                    Backup_RenderGroup();
+    void                    Restore_RenderGroup();
 
 public: /* Prefeb */
     Shared<GameObject>      Instantiate_Prefab(const string& prefabName, const json& overrides = {});

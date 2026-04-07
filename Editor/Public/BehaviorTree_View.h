@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "EditorWindow.h"
 #include "Editor_Struct.h"
@@ -61,6 +61,10 @@ private:
     void Desirialize_FromJson(const json& json);
 
     ImColor Get_NodeColor(const string& nodeType) const;
+
+    bool    Is_InputPin(ed::PinId pinId) const;
+    bool    Is_OutputPin(ed::PinId pinId) const;
+    ed::NodeId Find_NodeIdByPin(ed::PinId pinId) const;
 
     int     Find_NodeIdByInputPin(ed::PinId pinId) const;
     void    Recreate_EditorContext();

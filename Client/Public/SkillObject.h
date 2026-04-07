@@ -26,6 +26,8 @@ public:
         Vec3    scale         = Vec3::One;  
         float   lifetime      = 2.f;
 
+        Vec3    direction = Vec3::Forward;
+
         int32   ownerSkillId  = 0;
 
         Collision_Preset collisionPreset = Collision_Preset::Projectile;

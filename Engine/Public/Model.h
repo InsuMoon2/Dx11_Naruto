@@ -141,6 +141,10 @@ private:
     HRESULT Reload_ModelFromGuid(const string& guid, EMeshVertexType modelType);
 
 private:
+    // Edit 모드에서 현재 클립이 비어 있을 때 기본 0번 애니메이션 포즈를 다시 고정하기 위해 호출한다.
+    // 플레이 세션 종료 후 남아 있는 마지막 포즈가 에디터 씬에 그대로 보이는 것을 막는 용도다.
+    bool    Try_ApplyEditModeDefaultPose(bool executeNotifies);
+
     void    Apply_AnimationClip(uint32 animIndex, bool isLoop, float playRate);
     bool    Find_AnimationIndex(const string& animName, uint32& outIndex) const;
     bool    Has_AnimationName(const string& animName) const;

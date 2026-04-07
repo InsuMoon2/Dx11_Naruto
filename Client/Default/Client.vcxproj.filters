@@ -256,6 +256,8 @@
     </ClInclude>
     <ClInclude Include="..\Public\BTTask_FindClosestTarget.h" />
     <ClInclude Include="..\Public\BTTask_Attack.h" />
+    <ClInclude Include="..\Public\AN_SpawnAttack.h" />
+    <ClInclude Include="..\Public\SkillObject_MonsterAttack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -495,6 +497,8 @@
     </ClCompile>
     <ClCompile Include="..\Private\BTTask_FindClosestTarget.cpp" />
     <ClCompile Include="..\Private\BTTask_Attack.cpp" />
+    <ClCompile Include="..\Private\AN_SpawnAttack.cpp" />
+    <ClCompile Include="..\Private\SkillObject_MonsterAttack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

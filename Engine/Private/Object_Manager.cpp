@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Object_Manager.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -25,10 +25,14 @@ HRESULT Object_Manager::Initialize(uint32 numLevels)
     return S_OK;
 }
 
-void Object_Manager::Priority_Update(float timeDelta)
+void Object_Manager::Priority_Update(float timeDelta, uint32 currentLevelIndex)
 {
-    for (uint32 i = 0; i < _numLevels; i++)
+    uint32 levelsToUpdate[] = { 0, currentLevelIndex };
+
+    for (uint32 i : levelsToUpdate)
     {
+        if (i >= _numLevels) continue;
+
         for (auto& [tag, layer] : _layers[i])
         {
             if (layer)
@@ -37,10 +41,14 @@ void Object_Manager::Priority_Update(float timeDelta)
     }
 }
 
-void Object_Manager::Update(float timeDelta)
+void Object_Manager::Update(float timeDelta, uint32 currentLevelIndex)
 {
-    for (uint32 i = 0; i < _numLevels; i++)
+    uint32 levelsToUpdate[] = { 0, currentLevelIndex };
+
+    for (uint32 i : levelsToUpdate)
     {
+        if (i >= _numLevels) continue;
+
         for (auto& [tag, layer] : _layers[i])
         {
             if (layer)
@@ -49,10 +57,14 @@ void Object_Manager::Update(float timeDelta)
     }
 }
 
-void Object_Manager::Late_Update(float timeDelta)
+void Object_Manager::Late_Update(float timeDelta, uint32 currentLevelIndex)
 {
-    for (uint32 i = 0; i < _numLevels; i++)
+    uint32 levelsToUpdate[] = { 0, currentLevelIndex };
+
+    for (uint32 i : levelsToUpdate)
     {
+        if (i >= _numLevels) continue;
+
         for (auto& [tag, layer] : _layers[i])
         {
             if (layer)
@@ -88,6 +100,7 @@ HRESULT Object_Manager::Add_GameObject(uint32 protoLevelIndex, uint32 objID, uin
     }
 
     // 레이어가 있으면, 추가
+    gameObject->Set_LevelIndex(layerLevelIndex);
     layer->Add_GameObject(gameObject);
     gameObject->BeginPlay();
 
@@ -113,6 +126,7 @@ Shared<GameObject> Object_Manager::Clone_And_Add_GameObject(uint32 protoIndex, u
         _layers[levelIndex].emplace(layerTag, layer);
     }
 
+    gameObject->Set_LevelIndex(levelIndex);
     layer->Add_GameObject(gameObject);
 
     gameObject->BeginPlay();
@@ -136,6 +150,8 @@ HRESULT Object_Manager::Add_GameObject(uint32 levelIndex, const wstring& layerTa
 
         _layers[levelIndex].emplace(layerTag, layer);
     }
+
+    gameObject->Set_LevelIndex(levelIndex);
 
     HRESULT hr = layer->Add_GameObject(gameObject);
 
@@ -256,6 +272,7 @@ void Object_Manager::OnCreateEvent(shared_ptr<FEvent> event)
 
         if (targetLayer)
         {
+            newObj->Set_LevelIndex(targetObj->Get_LevelIndex());
             targetLayer->Add_GameObject(newObj);
 
             // 이름 변경 어떻게 할지 ?

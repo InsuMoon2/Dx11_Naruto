@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Prefab_View.h"
 #include "Model.h"
 #include "Content_Browser.h"
@@ -173,6 +173,9 @@ void Prefab_View::Open_Prefab(const string& prefabName, const string& prefabPath
     {
         _isOpen = true;
 
+        uint32 prefabLevelIndex = static_cast<uint32>(ELevelType::Prefab);
+        GAME->Add_GameObject(prefabLevelIndex, TEXT("Layer_Preview"), _previewObject);
+
         if (_prevRT == nullptr)
         {
             auto device = GAME->Get_Device();
@@ -205,6 +208,8 @@ void Prefab_View::Close_Prefab()
 {
     _isOpen = false;
     _previewHasBegunPlay = false;
+
+    GAME->Clear_Layers(ETOI(ELevelType::Prefab));
 
     _previewCamera.reset();
     _previewObject.reset();
@@ -267,6 +272,10 @@ void Prefab_View::Pre_Render()
 
     _previewObject->Priority_Update(dt);
     _previewObject->Update(dt);
+
+    // 메인 게임 렌더 큐 비우기 (일시 백업)
+    GAME->Backup_RenderGroup();
+
     _previewObject->Late_Update(dt);
 
     //GAME->Clear_Colliders();
@@ -286,6 +295,9 @@ void Prefab_View::Pre_Render()
     //_previewObject->Render();
 
     GAME->BindBackBuffer();
+
+    // 메인 게임 렌더 큐 복구
+    GAME->Restore_RenderGroup();
 
     GAME->Clear_Lights();
 

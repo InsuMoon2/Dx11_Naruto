@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "GameInstance.h"
 
 #include "Asset_Manager.h"
@@ -190,7 +190,7 @@ void GameInstance::Priority_Update_Engine(float timeDelta)
     if (_debugManager)
         _debugManager->Tick(timeDelta);
 
-    _objectManager->Priority_Update(timeDelta);
+    _objectManager->Priority_Update(timeDelta, _levelManager->Get_CurrentLevel());
     _cameraManager->Update(timeDelta);
 
     _pipeLine->Update();
@@ -202,7 +202,9 @@ void GameInstance::Update_Engine(float timeDelta)
 {
     //INPUT->Update(timeDelta);
     _levelManager->Update(timeDelta);
-    _objectManager->Update(timeDelta);
+
+    // 현재 레벨만 업데이트
+    _objectManager->Update(timeDelta, _levelManager->Get_CurrentLevel());
     _uiManager->Update(timeDelta);
 
 }
@@ -212,7 +214,7 @@ void GameInstance::Late_Update_Engine(float timeDelta)
     _collisionManager->Clear_Colliders();
 
     _levelManager->Late_Update(timeDelta);
-    _objectManager->Late_Update(timeDelta);
+    _objectManager->Late_Update(timeDelta, _levelManager->Get_CurrentLevel());
     _uiManager->Late_Update(timeDelta);
 
     _collisionManager->Update();
@@ -490,6 +492,16 @@ void GameInstance::Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObjec
 int32 GameInstance::Get_DrawCallCount()
 {
     return _renderer->Get_DrawCallCount();
+}
+
+void GameInstance::Backup_RenderGroup()
+{
+    _renderer->Backup_RenderGroup();
+}
+
+void GameInstance::Restore_RenderGroup()
+{
+    _renderer->Restore_RenderGroup();
 }
 
 Shared<GameObject> GameInstance::Instantiate_Prefab(const string& prefabName, const json& overrides)

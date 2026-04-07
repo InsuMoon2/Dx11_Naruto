@@ -2,7 +2,7 @@
     "Model": [
         {
             "Id": "COMPONENT_TYPE_MODEL_MONSTER",
-            "Path": "../../Client/Bin/Resources/Models/Boruto/Boruto.meshbin",
+            "Path": "../../Client/Bin/Resources/Models/WhiteZetsu/WhiteZetsu.meshbin",
             "Count": 1,
             "ModelType": "SkeletalMesh",
             "Level": "Static"

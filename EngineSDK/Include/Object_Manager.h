@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Base.h"
 
@@ -16,9 +16,9 @@ public:
 
 public:
     HRESULT Initialize(uint32 numLevels);
-    void    Priority_Update(float timeDelta);
-    void    Update(float timeDelta);
-    void    Late_Update(float timeDelta);
+    void    Priority_Update(float timeDelta, uint32 currentLevelIndex);
+    void    Update(float timeDelta, uint32 currentLevelIndex);
+    void    Late_Update(float timeDelta, uint32 currentLevelIndex);
 
     void    Clear_Layers(uint32 levelIndex);
 

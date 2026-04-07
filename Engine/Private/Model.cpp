@@ -234,6 +234,9 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
 
     if (!_currentClip.Is_Valid())
     {
+        if (Try_ApplyEditModeDefaultPose(executeNotifies))
+            return false;
+
         Stop_AllNotifyStates(executeNotifies);
 
         if (!_lastAppliedPose.empty())
@@ -254,7 +257,6 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
 
     bool currentFinished = false;
 
-    // 이번 프레임 Notify 판정용 track 위치는 내부 샘플링 단위인 tick으로 유지한다.
     const float previousTrackTicks = _currentClip.trackPosition;
 
     if (_currentClip.animIndex >= 0 &&
@@ -275,7 +277,7 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
     {
         _isCurrentAnimationFinished = false;
 
-        // 블렌드 target clip도 내부적으로는 tick 단위로 진행한다.
+        // 블렌드 target clip도 내부적으로는 tick 단위로 진행
         const float previousNextTrackTicks = _blendState.next.trackPosition;
 
         if (_blendState.next.animIndex >= 0 &&
@@ -431,31 +433,6 @@ bool Model::Play_Animation(float timeDelta, bool executeNotifies)
 
 HRESULT Model::Bind_BoneMatrices(Shared<Shader> shader, const char* constantName)
 {
-    //if (_masterPoseModel != nullptr && !_boneRetargetIndices.empty())
-    //{
-    //    // 리타겟팅 된 마스터 뼈 배열 가져오기
-    //    const vector<Matrix>& masterMatrices = _masterPoseModel->_boneMatrices;
-
-    //    vector<Matrix> retargetMatrices(_boneMatrices.size(), Matrix::Identity);
-
-    //    for (size_t i = 0; i < _boneMatrices.size(); ++i)
-    //    {
-    //        int32 masterIndex = _boneRetargetIndices[i];
-
-
-    //        int32 size = static_cast<int32>(masterMatrices.size());
-    //        if (masterIndex != -1 && masterIndex < size)
-    //        {
-    //            retargetMatrices[i] = masterMatrices[masterIndex];
-    //        }
-    //        else
-    //        {
-    //            retargetMatrices[i] = _boneMatrices[i];
-    //        }
-    //    }
-    //    return shader->Bind_RawValue(constantName, retargetMatrices.data(), sizeof(Matrix) * retargetMatrices.size());
-    //}
-
     return shader->Bind_RawValue(constantName, _boneMatrices.data(), sizeof(Matrix) * _boneMatrices.size());
 }
 
@@ -540,6 +517,26 @@ string Model::Build_MaterialJsonPath(const string& modelFilePath) const
     path.replace_extension(".material.json");
 
     return path.string();
+}
+
+bool Model::Try_ApplyEditModeDefaultPose(bool executeNotifies)
+{
+    if (GAME->Get_GameState() != EGameState::Edit)
+        return false;
+    if (_animations.empty())
+        return false;
+
+    if (_currentClip.Is_Valid() && !_boneMatrices.empty() && _boneMatrices[0] != Matrix::Identity)
+        return false;
+    Set_Animation(0, true);
+    if (!_currentClip.Is_Valid())
+        return false;
+
+    Sample_ClipPose(_currentClip, _currentSamplePose);
+    Apply_LocalPoses_ToBones(_currentSamplePose);
+    Update_BoneMatrices_FromBones();
+
+    return true;
 }
 
 void Model::Apply_AnimationClip(uint32 animIndex, bool isLoop, float playRate)
@@ -1374,12 +1371,6 @@ void Model::From_Json(const json& data)
             }
 
             _animations = std::move(uniqueAnimations);
-        }
-
-        if (!_animations.empty() && !_currentClip.Is_Valid())
-        {
-            Set_Animation(0, true);
-            Play_Animation(0.f);
         }
 
         return;

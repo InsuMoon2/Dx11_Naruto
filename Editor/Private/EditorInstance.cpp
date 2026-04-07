@@ -97,11 +97,12 @@ void EditorInstance::Pause()
 
 void EditorInstance::Stop()
 {
+    GAME->Set_GameState(EGameState::Edit);
+
     _playerSessionManager->End_PlaySession();
 
     Clear_CommandHistory();  // 커맨드도 초기화
 
-    GAME->Set_GameState(EGameState::Edit);
 
     ImGui::SetWindowFocus("Scene");
 

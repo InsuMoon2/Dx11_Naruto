@@ -261,8 +261,18 @@ bool Asset_Manager::Load_Meta(const wstring& metaPath)
         const wstring absPath = fs::absolute(assetPath).wstring();
         const wstring pathKey = Normalize_PathKey(absPath);
 
+        // 이미 캐시에 등록된 경로라면 기존 GUID를 유지한다.
+        // 일부 meshbin.meta는 에셋 레지스트리용 GUID가 아니라 import 메타 GUID를 들고 있어서
+        // 시작 시마다 같은 자산이 다른 GUID로 흔들리면 prefab/model_guid resolve가 깨질 수 있다.
+        const auto existingPathGuidIter = _pathToGuid.find(pathKey);
+        const string existingGuid = (existingPathGuidIter != _pathToGuid.end())
+            ? existingPathGuidIter->second
+            : string{};
+
         FAssetMeta meta;
-        meta.guid = root["guid"].get<string>();
+        meta.guid = !existingGuid.empty()
+            ? existingGuid
+            : root["guid"].get<string>();
         meta.type = root.value("type", "");
         meta.modelType = root.value("modelType", "");
         meta.fullPath = absPath;
@@ -272,6 +282,13 @@ bool Asset_Manager::Load_Meta(const wstring& metaPath)
 
         _guidToMeta[meta.guid] = meta;
         _pathToGuid[pathKey] = meta.guid;
+
+        const string metaGuid = root["guid"].get<string>();
+        if (!existingGuid.empty() && existingGuid != metaGuid)
+        {
+            // 같은 자산 경로에 대해 import 메타 GUID가 따로 있더라도 런타임에서는 기존 GUID만 유지한다.
+            _guidToMeta.erase(metaGuid);
+        }
 
         return true;
     }

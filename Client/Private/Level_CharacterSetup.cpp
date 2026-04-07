@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Level_CharacterSetup.h"
 #include "UI_Text.h"
 #include "Background.h"
@@ -818,9 +818,11 @@ void Level_CharacterSetup::Finish_CharacterSetup()
         }
     }
 
-    // 에디터면 싱글, 서버가 켜져있다면 멀티플레이 판정
+    // 에디터면 싱글, 서버가 실제 연결되어 있으면 멀티플레이 판정
+    const bool isServerConnected = NetworkManager::GetInstance()->IsConnected();
     EGameplaySpawnMode spawnMode =
-        GAME->Is_EditorRuntime() ? EGameplaySpawnMode::LocalOnly : EGameplaySpawnMode::Server;
+        (GAME->Is_EditorRuntime() || !isServerConnected) ? EGameplaySpawnMode::LocalOnly
+                                                         : EGameplaySpawnMode::Server;
 
     if (spawnMode == EGameplaySpawnMode::Server)
     {

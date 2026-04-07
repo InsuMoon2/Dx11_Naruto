@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "BehaviorTree_View.h"
 #include <fstream>
 #include <commdlg.h>
@@ -970,6 +970,13 @@ void BehaviorTree_View::Delete_Node(ed::NodeId nodeId)
 
 void BehaviorTree_View::Create_Link(ed::PinId startPin, ed::PinId endPin)
 {
+    // 트리의 정합성(Single Parent)을 위해 이미 목적지 핀에 연결된 링크가 있다면 제거
+    auto it = remove_if(_links.begin(), _links.end(),
+        [endPin](const FBTEditorLink& link) { return link.endPinId == endPin; });
+    
+    if (it != _links.end())
+        _links.erase(it, _links.end());
+
     FBTEditorLink newLink;
     newLink.id = ed::LinkId(_nextId++);
     newLink.startPinId = startPin;
@@ -993,23 +1000,53 @@ void BehaviorTree_View::Delete_Link(ed::LinkId linkId)
 
 void BehaviorTree_View::Handle_LinkCreation()
 {
-    ed::BeginCreate();
+    if (ed::BeginCreate(ImColor(255, 255, 255), 2.0f))
     {
         ed::PinId startPinId, endPinId;
-
         if (ed::QueryNewLink(&startPinId, &endPinId))
         {
-            // Ouput -> Input 방향인지 검증
             if (startPinId && endPinId)
             {
-                if (ed::AcceptNewItem())
+                // 1. 방향성 및 타입 검증 (Output -> Input)
+                bool startIsOutput = Is_OutputPin(startPinId);
+                bool endIsInput = Is_InputPin(endPinId);
+
+                // 반대 방향인 경우 스왑하여 지원 (유연한 조작감)
+                if (Is_InputPin(startPinId) && Is_OutputPin(endPinId))
                 {
-                    Create_Link(startPinId, endPinId);
+                    std::swap(startPinId, endPinId);
+                    startIsOutput = true;
+                    endIsInput = true;
+                }
+
+                auto startNodeId = Find_NodeIdByPin(startPinId);
+                auto endNodeId = Find_NodeIdByPin(endPinId);
+
+                if (!startIsOutput || !endIsInput)
+                {
+                    ed::RejectNewItem(ImColor(255, 0, 0), 2.0f);
+                    if (ImGui::IsMouseDown(0))
+                        ImGui::SetTooltip("Invalid connection: Must be Output to Input");
+                }
+                // 2. 자기 자신 연결(Self-loop) 방지
+                else if (startNodeId == endNodeId)
+                {
+                    ed::RejectNewItem(ImColor(255, 0, 0), 2.0f);
+                    if (ImGui::IsMouseDown(0))
+                        ImGui::SetTooltip("Cannot connect to self!");
+                }
+                // 3. 통과 시 시각적 피드백 제공
+                else
+                {
+                    if (ed::AcceptNewItem(ImColor(128, 255, 128), 4.0f))
+                    {
+                        Create_Link(startPinId, endPinId);
+                    }
                 }
             }
         }
-        ed::EndCreate();
     }
+    ed::EndCreate();
 }
 
 void BehaviorTree_View::Handle_Deletion()
@@ -1272,6 +1309,45 @@ ImColor BehaviorTree_View::Get_NodeColor(const string& nodeType) const
     {
         return ImColor(120, 70, 180);   // 보라 (Task)
     }
+}
+
+bool BehaviorTree_View::Is_InputPin(ed::PinId pinId) const
+{
+    for (const auto& node : _nodes)
+    {
+        if (node.inputPin == pinId)
+            return true;
+    }
+    return false;
+}
+
+bool BehaviorTree_View::Is_OutputPin(ed::PinId pinId) const
+{
+    for (const auto& node : _nodes)
+    {
+        for (const auto& outPin : node.outputPins)
+        {
+            if (outPin == pinId)
+                return true;
+        }
+    }
+    return false;
+}
+
+ed::NodeId BehaviorTree_View::Find_NodeIdByPin(ed::PinId pinId) const
+{
+    for (const auto& node : _nodes)
+    {
+        if (node.inputPin == pinId)
+            return node.id;
+
+        for (const auto& outPin : node.outputPins)
+        {
+            if (outPin == pinId)
+                return node.id;
+        }
+    }
+    return ed::NodeId();
 }
 
 int BehaviorTree_View::Find_NodeIdByInputPin(ed::PinId pinId) const

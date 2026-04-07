@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Renderer.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -67,6 +67,23 @@ void Renderer::Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> g
     CHECK_NULL(gameObject);
 
     _renderObjects[ETOI(renderType)].emplace_back(gameObject);
+}
+
+void Renderer::Backup_RenderGroup()
+{
+    for (int i = 0; i < ETOI(ERenderGroup::END); ++i)
+    {
+        _backupRenderObjects[i] = _renderObjects[i];
+        _renderObjects[i].clear();
+    }
+}
+
+void Renderer::Restore_RenderGroup()
+{
+    for (int i = 0; i < ETOI(ERenderGroup::END); ++i)
+    {
+        _renderObjects[i] = _backupRenderObjects[i];
+    }
 }
 
 void Renderer::Draw()

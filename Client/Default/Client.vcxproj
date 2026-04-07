@@ -242,6 +242,7 @@
     <ClInclude Include="..\Public\AN_Gravity.h" />
     <ClInclude Include="..\Public\AN_LaunchSkill.h" />
     <ClInclude Include="..\Public\AN_PlayCinematic.h" />
+    <ClInclude Include="..\Public\AN_SpawnAttack.h" />
     <ClInclude Include="..\Public\AN_SpawnSkill.h" />
     <ClInclude Include="..\Public\AN_Test.h" />
     <ClInclude Include="..\Public\Background.h" />
@@ -305,6 +306,7 @@
     <ClInclude Include="..\Public\SkillComponent.h" />
     <ClInclude Include="..\Public\SkillDataManager.h" />
     <ClInclude Include="..\Public\SkillObject.h" />
+    <ClInclude Include="..\Public\SkillObject_MonsterAttack.h" />
     <ClInclude Include="..\Public\SkillObject_Projectile.h" />
     <ClInclude Include="..\Public\Skill_Rasengan.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
@@ -371,6 +373,7 @@
     <ClCompile Include="..\Private\AN_Gravity.cpp" />
     <ClCompile Include="..\Private\AN_LaunchSkill.cpp" />
     <ClCompile Include="..\Private\AN_PlayCinematic.cpp" />
+    <ClCompile Include="..\Private\AN_SpawnAttack.cpp" />
     <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
     <ClCompile Include="..\Private\AN_Test.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
@@ -427,6 +430,7 @@
     <ClCompile Include="..\Private\SkillComponent.cpp" />
     <ClCompile Include="..\Private\SkillDataManager.cpp" />
     <ClCompile Include="..\Private\SkillObject.cpp" />
+    <ClCompile Include="..\Private\SkillObject_MonsterAttack.cpp" />
     <ClCompile Include="..\Private\SkillObject_Projectile.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />

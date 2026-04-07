@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Base.h"
 
@@ -16,6 +16,9 @@ public:
     HRESULT Initialize();
     void    Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject);
     void    Draw();
+
+    void    Backup_RenderGroup();
+    void    Restore_RenderGroup();
 
 private:
     void    Render_BackgroundUI();
@@ -42,6 +45,7 @@ private:
     ComPtr<ID3D11DepthStencilState> _uiDepthDisabledState;
 
     list<shared_ptr<GameObject>> _renderObjects[ETOI(ERenderGroup::END)];
+    list<shared_ptr<GameObject>> _backupRenderObjects[ETOI(ERenderGroup::END)];
 
 public:
     static unique_ptr<Renderer> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

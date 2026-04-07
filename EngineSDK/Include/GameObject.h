@@ -133,6 +133,9 @@ public:
     void Set_Owner(Shared<GameObject> owner) { _owner = owner; }
     Shared<GameObject> Get_Owner() { return _owner.lock(); }
 
+    void Set_LevelIndex(uint32 index) { _levelIndex = index; }
+    uint32 Get_LevelIndex() const { return _levelIndex; }
+
 protected: /* Device */
     ComPtr<Device>          _device = { nullptr };
     ComPtr<DeviceContext>   _context = { nullptr };
@@ -154,6 +157,8 @@ protected: /* Values */
     string _sourcePrefabName = "";
 
     Weak<GameObject> _owner;
+
+    uint32 _levelIndex = 0;
 
 public:
     virtual Shared<GameObject> Clone(void* arg) abstract;

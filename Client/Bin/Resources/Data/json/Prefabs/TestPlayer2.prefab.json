@@ -118,7 +118,7 @@
                     "mode": "Single",
                     "single": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_Idle_Loop",
-                        "loop": true,
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "start": {
@@ -335,52 +335,6 @@
                         }
                     },
                     "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "key": "WireDash",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_WireJump_Ready",
-                        "loop": false,
-                        "playRate": 1.2999999523162842
-                    },
-                    "start": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_Land",
                         "loop": false,
                         "playRate": 1.0
@@ -431,7 +385,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Attack_Air_01",
+                    "key": "WireDash",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -439,9 +393,9 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_cmb01",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_WireJump_Ready",
                         "loop": false,
-                        "playRate": 1.0
+                        "playRate": 1.2999999523162842
                     },
                     "start": {
                         "animationName": "",
@@ -492,6 +446,52 @@
                     "start": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_Start",
                         "loop": false,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_Air_01",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_cmb01",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
                         "playRate": 1.0
                     }
                 },
@@ -1828,6 +1828,52 @@
                         "loop": true,
                         "playRate": 1.0
                     }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Left",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
                 }
             ],
             "current_state": "Idle",
@@ -1893,7 +1939,8 @@
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Attack_Lv1_End",
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Charge_Lv2toLv3_Conect_toRun",
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Run_Lv1_Loop",
-                "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_TrueRasenShuriken"
+                "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_TrueRasenShuriken",
+                "SK_CHR_NormalModel|CustomMan_Beaten_Left"
             ],
             "materials": [
                 {
@@ -2183,7 +2230,7 @@
             }
         }
     },
-    "guid": "1d20a9b7-56fb-4111-8268-b2bdc6ae4a92",
+    "guid": "a14d29d9-4ad8-40c8-b98f-a081725f3431",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"
