@@ -5,37 +5,67 @@
             "SkillName": "Rasengan",
             "Cooldown": 8,
             "AnimStateName": "Skill_Rasengan",
-            "LoopDurationSec": 0.5,
-            "IsHoldSkill": false
+            "LoopDurationSec": 5,
+            "IsHoldSkill": true,
+            "hasDashPhase": true,
+            "dashSpeed": 14,
+            "maxDashDistance": 8,
+            "targetStopDistance": 1.5,
+            "attackEndAnimStateName": "Skill_Rasengan_End",
+            "airAnimStateName": "Skill_Rasengan_Air",
+            "airGravityOff": false
         },
         {
             "SkillID": 1002,
             "SkillName": "Rasen_Shuriken",
             "Cooldown": 7,
             "AnimStateName": "Skill_RasenShuriken",
-            "LoopDurationSec": 0.0,
-            "IsHoldSkill": false
+            "LoopDurationSec": 0,
+            "IsHoldSkill": false,
+            "hasDashPhase": false,
+            "dashSpeed": 5,
+            "maxDashDistance": 20,
+            "targetStopDistance": 1.5,
+            "airAnimStateName": "Skill_RasenShuriken_Air",
+            "airGravityOff": true
         },
         {
             "SkillID": 1003,
-            "SkillName": "Fireball",
+            "SkillName": "Chidori",
             "Cooldown": 5,
-            "LoopDurationSec": 1.0,
-            "IsHoldSkill": false
+            "AnimStateName": "Skill_Chidori",
+            "LoopDurationSec": 4,
+            "IsHoldSkill": true,
+            "hasDashPhase": true,
+            "dashSpeed": 5,
+            "maxDashDistance": 20,
+            "targetStopDistance": 1.5,
+            "airGravityOff": false
         },
         {
             "SkillID": 1004,
-            "SkillName": "Chidori",
+            "SkillName": "BlastboomDance",
             "Cooldown": 4,
-            "LoopDurationSec": 1.0,
-            "IsHoldSkill": true
+            "AnimStateName": "Skill_BlastBoomDance",
+            "LoopDurationSec": 0,
+            "IsHoldSkill": false,
+            "hasDashPhase": false,
+            "dashSpeed": 5,
+            "maxDashDistance": 20,
+            "targetStopDistance": 1.5,
+            "airGravityOff": true
         },
         {
             "SkillID": 1005,
             "SkillName": "Big_Rasengan",
             "Cooldown": 5,
-            "LoopDurationSec": 1.0,
-            "IsHoldSkill": false
+            "LoopDurationSec": 1,
+            "IsHoldSkill": false,
+            "hasDashPhase": false,
+            "dashSpeed": 5,
+            "maxDashDistance": 20,
+            "targetStopDistance": 1.5,
+            "airGravityOff": true
         }
     ]
 }

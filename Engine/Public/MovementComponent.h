@@ -5,11 +5,8 @@
 NS_BEGIN(Engine)
 class Transform;
 class Model;
-NS_END
 
-NS_BEGIN(Client)
-
-class MovementComponent final : public Component
+class ENGINE_DLL MovementComponent final : public Component
 {
     GENERATED_COMPONENT(MovementComponent, Protocol::COMPONENT_TYPE_MOVEMENT)
 
@@ -198,10 +195,10 @@ private:
 
     bool    _isWallRunning = false;
 
-    Vec3 _currentWallNormal = Vec3::Up;
-    Vec3 _currentWallHitPoint = Vec3::Zero;
+    Vec3    _currentWallNormal = Vec3::Up;
+    Vec3    _currentWallHitPoint = Vec3::Zero;
 
-    float _wallJumpCooldown = 0.f;
+    float   _wallJumpCooldown = 0.f;
 
     // Wire Dash
     FWireDashDesc _wireDashDesc;
@@ -211,6 +208,5 @@ public:
     Shared<Component> Clone(void* arg) override;
     void Free() override;
 };
-
 
 NS_END

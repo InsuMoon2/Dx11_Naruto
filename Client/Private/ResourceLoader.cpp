@@ -371,7 +371,6 @@ HRESULT ResourceLoader::Build_SkillJobs(const wstring& tablePath, vector<FLoadJo
     return S_OK;
 }
 
-
 HRESULT ResourceLoader::Build_AllResourceJobs(const wstring& tablePath, vector<FLoadJob>& outJobs)
 {
     ifstream file(tablePath);
@@ -526,13 +525,37 @@ HRESULT ResourceLoader::Build_AllResourceJobs(const wstring& tablePath, vector<F
                     job.skillData.isHoldSkill = (holdValue.get<float>() != 0.f);
             }
 
+			if (item.contains("hasDashPhase"))
+			{
+				const auto& dashValue = item["hasDashPhase"];
+				if (dashValue.is_boolean())
+					job.skillData.hasDashPhase = dashValue.get<bool>();
+				else if (dashValue.is_number())
+					job.skillData.hasDashPhase = (dashValue.get<float>() != 0.f);
+			}
+
+			job.skillData.dashSpeed = item.value("dashSpeed", 15.f);
+			job.skillData.maxDashDistance = item.value("maxDashDistance", 20.f);
+			job.skillData.targetStopDistance = item.value("targetStopDistance", 1.5f);
+			job.skillData.attackEndAnimStateName = item.value("attackEndAnimStateName", string{});
+
+            job.skillData.airAnimStateName = item.value("airAnimStateName", string{});
+
+            if (item.contains("airGravityOff"))
+            {
+                const auto& gravityValue = item["airGravityOff"];
+                if (gravityValue.is_boolean())
+                    job.skillData.airGravityOff = gravityValue.get<bool>();
+                else if (gravityValue.is_number())
+                    job.skillData.airGravityOff = (gravityValue.get<float>() != 0.f);
+            }
+
             job.skillIconSrvIndex = iconSrvIndex;
 
             outJobs.push_back(job);
             ++iconSrvIndex;
         }
     }
-
 
 	string jsonKey = "";
 	if (root.contains("DT_GameObject")) jsonKey = "DT_GameObject";

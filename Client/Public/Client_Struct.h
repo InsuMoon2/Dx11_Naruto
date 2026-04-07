@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Client_Enum.h"
+#include "Engine_Enum.h"
 
 NS_BEGIN(Engine)
 struct FAnimationClipSetting;
@@ -15,9 +16,24 @@ namespace Client
         float   coolDown = 0.f;
 
         string  animStateName = "";
-        float   loopDurationSec = 0.f;
 
+        // 차징
+        float   loopDurationSec = 0.f;
         bool    isHoldSkill = false;
+
+        // 대쉬 루프
+        bool    hasDashPhase = false;
+        float   dashSpeed = 15.f;
+
+        float   maxDashDistance = 20.f;     // 이 거리 넘으면 강제로 Attack End로 세팅
+        float   targetStopDistance = 1.5f;  // 타겟 근처로 가면 멈출 값
+
+        // 대쉬 루프 이후 애니메이션 -> 나선환, 치도리 말고 또 있나 쓸 데가
+        string  attackEndAnimStateName = "";
+
+        // 공중 스킬
+        string  airAnimStateName = "";
+        bool    airGravityOff = false;
     };
 
     struct FComboEntry
@@ -70,7 +86,7 @@ namespace Client
         FAnimationClipSetting right;
         FAnimationClipSetting left;
 
-        // 뭐라도 있나
+        // 뭐라도 있나 확인
         bool Has_Any() const
         {
             return !forward.animationName.empty()

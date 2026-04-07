@@ -42,7 +42,10 @@ private:
 
     EMoveDirectionSource _directionSource = EMoveDirectionSource::OwnerForward;
 
-    Vec3  _moveDir = Vec3::Zero; 
+    Vec3  _moveDir = Vec3::Zero;
+
+    // Y축 무시할지?
+    bool _ignoreY = true;
 };
 
 NS_END

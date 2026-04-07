@@ -3,11 +3,13 @@
 #include "Model.h"
 #include "Shader.h"
 #include "Transform.h"
+#include "GameObject.h"
 #include "GameObject_Factory.h"
 #include "Collider.h"
 #include "Bounding_AABB.h"
 #include "Bounding_OBB.h"
 #include "Bounding_Sphere.h"
+#include "MyPlayer.h"
 
 REGISTER_GAMEOBJECT(SkillObject, Protocol::OBJECT_TYPE_SKILL_OBJECT)
 
@@ -21,7 +23,12 @@ SkillObject::SkillObject(const SkillObject& rhs)
     , _lifetime(rhs._lifetime)                 
     , _elapsedTime(0.f)                        
     , _ownerSkillId(rhs._ownerSkillId)         
-    , _collisionPreset(rhs._collisionPreset)   
+    , _collisionPreset(rhs._collisionPreset)
+    , _hitCount(rhs._hitCount) 
+    , _maxHitCount(rhs._maxHitCount)
+    , _hitInterval(rhs._hitInterval)
+    , _hitLaunchForce(rhs._hitLaunchForce)
+    , _colliderRadius(rhs._colliderRadius)
 {
 }
 
@@ -86,6 +93,15 @@ void SkillObject::Update(float timeDelta)
             Set_Destroy(true);
         }
     }
+
+    // 히트 쿨타임 관리
+    for (auto& pair : _hitCooldowns)
+    {
+        if (pair.second > 0.f)
+        {
+            pair.second -= timeDelta;
+        }
+    }
 }
 
 void SkillObject::Late_Update(float timeDelta)
@@ -97,6 +113,22 @@ void SkillObject::Late_Update(float timeDelta)
         _collider->Update_Collider(_transformCom->Get_WorldMatrix());
 
         GAME->Add_Collider(_collider);
+    }
+}
+
+void SkillObject::Sync_AttachedTransform(const Matrix& boneWorldMatrix)
+{
+    if (!_transformCom)
+        return;
+
+    Matrix tempMatrix = boneWorldMatrix;
+    Vec3 worldPos, worldScale;
+    Quat worldQuat;
+
+    if (tempMatrix.Decompose(worldScale, worldQuat, worldPos))
+    {
+        _transformCom->Set_WorldPosition(worldPos);
+        _transformCom->Set_WorldRotation(worldQuat);
     }
 }
 
@@ -136,6 +168,30 @@ HRESULT SkillObject::Ready_Components(const FSkillObjectDesc& desc)
     return S_OK;
 }
 
+bool SkillObject::Apply_Skill_Hit(Character* hitted, float damage, float launchForce, float launchUp)
+{
+    CHECK_NULL(hitted, false);
+
+    auto owner = Get_Owner();
+    if (!owner)
+        return false;
+
+    if (hitted == owner.get())
+        return false;
+
+    FDamageEvent damageEvent{};
+    damageEvent.damage = damage;
+    damageEvent.damageCauser = owner;
+    damageEvent.launchPower = launchForce;
+    damageEvent.launchUp = launchUp;
+
+    hitted->TakeDamage(damageEvent);
+
+    if (auto myPlayer = dynamic_pointer_cast<MyPlayer>(owner))
+        myPlayer->Add_ComboHit();
+
+    return true;
+}
 
 Shared<GameObject> SkillObject::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {

@@ -3,7 +3,9 @@
 #include "GameObject.h"
 #include "CombatStat.h"
 #include "SkillDataManager.h"
+#include "SkillObject.h"
 #include "SkillObject_Projectile.h"
+#include "Model.h"
 
 SkillComponent::SkillComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -60,6 +62,25 @@ void SkillComponent::Update(float timeDelta)
         if (_cooldownRemain[i] < 0.f)
             _cooldownRemain[i] = 0.f;
     }
+
+    auto meleeSkill = _attachedMeleeSkill.lock();
+    if (meleeSkill && !meleeSkill->Is_Destroy())
+    {
+        auto model = Get_Owner()->Get_Component<Model>();
+        if (model)
+        {
+            const Matrix* boneMatrix = model->Get_SocketBoneMatrixPtr(_attachedBoneName);
+            if (boneMatrix)
+            {
+                Matrix boneWorld = (*boneMatrix) * Get_Owner()->Get_Transform()->Get_WorldMatrix();
+                meleeSkill->Sync_AttachedTransform(boneWorld);
+            }
+        }
+    }
+    else if (!_attachedMeleeSkill.expired())
+    {
+        Clear_MeleeSkill();
+    }
 }
 
 bool SkillComponent::Try_Activate(int slot)
@@ -106,6 +127,26 @@ float SkillComponent::Get_CooldownRatio(int slot) const
         return 0.f;
 
     return ::clamp(_cooldownRemain[slot] / skillDataPtr->coolDown, 0.f, 1.f);
+}
+
+void SkillComponent::Equip_MeleeSkill(Protocol::OBJECT_TYPE type, Shared<SkillObject> skill, const string& boneName)
+{
+    Clear_MeleeSkill();
+
+    _attachedMeleeSkill = skill;
+    _attachedBoneName = boneName;
+}
+
+void SkillComponent::Clear_MeleeSkill()
+{
+    auto skill = _attachedMeleeSkill.lock();
+
+    if (skill && !skill->Is_Destroy())
+    {
+        skill->Set_Destroy(true);
+    }
+
+    _attachedMeleeSkill.reset();
 }
 
 void SkillComponent::Set_PendingSkill(Protocol::OBJECT_TYPE type, Shared<SkillObject_Projectile> skill)

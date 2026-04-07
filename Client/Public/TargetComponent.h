@@ -24,8 +24,8 @@ public:
     void    Update_Targeting(float timeDelta);
 
 public:
-    const vector<Weak<Monster>>& Get_Candiates() const { return _candidates; }
-    Weak<Monster>                Get_LockedTarget() const { return _lockedTarget; }
+    const vector<Weak<Character>>& Get_Candiates() const { return _candidates; }
+    Weak<Character>                Get_LockedTarget() const { return _lockedTarget; }
 
     bool                         IsLockOn() const { return _isLocked; }
     void                         Set_TargetCollider(Shared<Collider> targetCollider) { _targetCollider = targetCollider; }
@@ -36,10 +36,10 @@ private:
 
 private:
     Shared<Collider>         _targetCollider;
-    Weak<Monster>            _lockedTarget; // V 키로 타겟팅할 놈
+    Weak<Character>            _lockedTarget; // V 키로 타겟팅할 놈
 
     bool                     _isLocked = false;
-    vector<Weak<Monster>>    _candidates;   // 타겟팅된 몬스터 목록들
+    vector<Weak<Character>>    _candidates;   // 타겟팅된 몬스터 목록들
     
 
 public:

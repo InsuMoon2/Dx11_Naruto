@@ -43,6 +43,8 @@
 #include "UI_PlayerStatus.h"
 #include "UI_SkillSlot.h"
 #include "AnimationStateComponent.h"
+#include "BTTask_Attack.h"
+#include "BTTask_FindClosestTarget.h"
 #include "Player_CustomPart.h"
 
 #include "ComboProfile_Manager.h"
@@ -194,9 +196,11 @@ void Loader::Register_Components()
 void Loader::Initialize_BT_Nodes()
 {
     // 엔진 노드는 Initialize_Engine에서 호출
+    GAME->Register_BTNode("Task", "Task_FindClosestTarget",
+        []() { return BTTask_FindClosestTarget::Create(); });
 
-    // TODO : 클라이언트 노드 여기에 추가하기
-    // Patrol, Attack, Skill 이런거
+    GAME->Register_BTNode("Task", "Task_Attack",
+        []() { return BTTask_Attack::Create(); });
 }
 
 float Loader::Get_ProgressRatio() const
@@ -481,7 +485,7 @@ HRESULT Loader::Loading_For_GamePlay()
     //pushChunk("BM_ExamStadium_Env_Terrain");
     //pushChunk("BM_ExamStadium_p");
 
-    pushChunk("[20260405]Tutorial");
+    pushChunk("[20260407]Tutorial");
 
     {
         scoped_lock lock(_jobMutex);

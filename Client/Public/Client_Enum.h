@@ -47,8 +47,13 @@ namespace Client
         Dash,
 
         // 스킬 string으로 가능하긴 한데, 안전하게 Enum처리하기
-        Skill_Rasengan,
-        Skill_RasenShuriken,
+        Skill_Rasengan,         Skill_Rasengan_Air,     Skill_Rasengan_End, 
+        Skill_RasenShuriken,    Skill_RasenShuriken_Air,
+
+        Skill_Chidori,          Skill_Chidori_Air,      Skill_Chidori_End,
+        Skill_BlastBoomDance,   Skill_BlastBoomDance_Air,
+
+        // 스킬 두개 정도만 더 추가할까
 
         Dead,
         END
@@ -90,8 +95,6 @@ namespace Client
 
         END
     };
-
-    enum class EMoveInputDirection { Forward, Backward, Left, Right, END };
 
     // 애니메이션이 하나인지, Start -> Loop -> End로 세팅될건지
     enum class EStateAnimationMode { Single, Sequence, DirectionalSingle, END };

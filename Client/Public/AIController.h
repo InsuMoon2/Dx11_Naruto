@@ -5,10 +5,10 @@
 NS_BEGIN(Engine)
 class BehaviorTree;
 class Blackboard;
+class MovementComponent;
 NS_END
 
 NS_BEGIN(Client)
-class MovementComponent;
 class AnimationStateComponent;
 
 class AIController : public Controller

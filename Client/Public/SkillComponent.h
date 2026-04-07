@@ -5,6 +5,7 @@
 NS_BEGIN(Client)
 
 class CombatStat;
+class SkillObject;
 class SkillObject_Projectile;
 
 enum class ESkillType
@@ -44,6 +45,9 @@ public:
     int     Get_EquippedSkillID(int slot) const;
     float   Get_CooldownRatio(int slot) const;
 
+    void    Equip_MeleeSkill(Protocol::OBJECT_TYPE type, Shared<SkillObject> skill, const string& boneName);
+    void    Clear_MeleeSkill();
+
 public:
     void    Set_PendingSkill(Protocol::OBJECT_TYPE type, Shared<SkillObject_Projectile> skill);
     bool    Launch_PendingSkill(Protocol::OBJECT_TYPE type, const Vec3& direction);
@@ -65,6 +69,10 @@ private:
     Weak<CombatStat> _combatStat;
 
     umap<Protocol::OBJECT_TYPE, Weak<SkillObject_Projectile>> _pendingSkills;
+
+    // 장착된 스킬
+    Weak<SkillObject> _attachedMeleeSkill;
+    string            _attachedBoneName = "";
 
 public:
     static Shared<SkillComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

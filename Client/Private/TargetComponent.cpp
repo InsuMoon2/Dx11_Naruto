@@ -127,14 +127,14 @@ void TargetComponent::LockOn_NearestTarget()
     Vec3 ownerPos = ownerTransform->Get_WorldPosition();
 
     float minDistance = FLT_MAX;
-    Shared<Monster> nearestTarget {};
+    Shared<Character> nearestTarget {};
 
     for (const auto& weakTarget : _candidates)
     {
         if (weakTarget.expired())
             continue;
 
-        Shared<Monster> targetPtr = weakTarget.lock();
+        Shared<Character> targetPtr = weakTarget.lock();
         auto targetTransform = targetPtr->Get_Transform();
         CHECK_NULL(targetTransform);
 
@@ -182,13 +182,13 @@ void TargetComponent::Update_Candiates()
         if (otherObj == nullptr || otherObj->Is_Destroy())
             continue;
 
-        Shared<Monster> monsterObj = dynamic_pointer_cast<Monster>(otherObj);
+        Shared<Character> monsterObj = dynamic_pointer_cast<Monster>(otherObj);
 
         if (monsterObj)
         {
             // 중복 방지 
             auto iter = find_if(_candidates.begin(), _candidates.end(),
-                [&monsterObj](const Weak<Monster> a)
+                [&monsterObj](const Weak<Character> a)
                 {
                     return !a.expired() && a.lock() == monsterObj;
                 });

@@ -18,12 +18,15 @@ public:
     HRESULT Initialize(void* arg) override;
     void    Update(float timeDelta) override;
 
-private:
-    float _speed = 28.f;
-    float _maxDistance = 35.f;
-    float _lifetime = 2.5f;
+    void    OnBeginOverlap(Shared<Collider> self, Shared<Collider> other) override;
+    void    OnStayOverlap(Shared<Collider> self, Shared<Collider> other) override;
+    void    OnEndOverlap(Shared<Collider> self, Shared<Collider> other) override;
 
-    float _colliderRadius = 1.35f;
+private:
+    class Character* Find_HitCharacter(Shared<Collider> other);
+    void             Process_MultiHit(class Character* hitted, GameObject* targetKey);
+
+
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

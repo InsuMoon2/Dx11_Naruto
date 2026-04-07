@@ -2,13 +2,16 @@
 
 #include "Player.h"
 
+NS_BEGIN(Engine)
+class MovementComponent;
+NS_END
+
 NS_BEGIN(Client)
 
 class CombatStat;
 class PlayerStateMachine;
 class PlayerController;
 class InputComponent;
-class MovementComponent;
 class SkillComponent;
 class AnimationStateComponent;
 class TargetComponent;

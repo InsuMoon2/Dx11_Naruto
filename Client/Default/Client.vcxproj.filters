@@ -70,9 +70,6 @@
     <ClInclude Include="..\Public\Camera_Free.h">
       <Filter>02. GameObject\04. Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MovementComponent.h">
-      <Filter>03. Component\02. Movement</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02. GameObject\00. Player</Filter>
     </ClInclude>
@@ -190,8 +187,6 @@
     <ClInclude Include="..\Public\ANS_Test.h">
       <Filter>04. Notify\01. AnimNotifyState</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ANS_ComboWindow.h" />
-    <ClInclude Include="..\Public\ANS_CollisionEnable.h" />
     <ClInclude Include="..\Public\UI_WeaponType.h">
       <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClInclude>
@@ -202,7 +197,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\SkillObject.h" />
     <ClInclude Include="..\Public\SkillObject_Projectile.h" />
-    <ClInclude Include="..\Public\AN_SpawnSkill.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
     <ClInclude Include="..\Public\Skill_Rasengan.h" />
     <ClInclude Include="..\Public\PlayerState_JumpFall.h">
@@ -212,9 +206,6 @@
     <ClInclude Include="..\Public\PlayerState_Hit.h" />
     <ClInclude Include="..\Public\TargetComponent.h" />
     <ClInclude Include="..\Public\UI_Targeting.h" />
-    <ClInclude Include="..\Public\AN_ChangeState.h" />
-    <ClInclude Include="..\Public\ANS_Move.h" />
-    <ClInclude Include="..\Public\AN_PlayCinematic.h" />
     <ClInclude Include="..\Public\PlayerState_WallRun.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClInclude>
@@ -228,11 +219,43 @@
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\GhostEffect_Component.h" />
-    <ClInclude Include="..\Public\ANS_GhostEffect.h" />
     <ClInclude Include="..\Public\SmearEffect_Component.h" />
-    <ClInclude Include="..\Public\ANS_SmearEffect.h" />
-    <ClInclude Include="..\Public\ANS_AttachSkill.h" />
-    <ClInclude Include="..\Public\AN_LaunchSkill.h" />
+    <ClInclude Include="..\Public\AN_ChangeState.h">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AN_LaunchSkill.h">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AN_PlayCinematic.h">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AN_SpawnSkill.h">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ANS_AttachSkill.h">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ANS_CollisionEnable.h">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ANS_ComboWindow.h">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ANS_GhostEffect.h">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ANS_Move.h">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ANS_SmearEffect.h">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AN_Gravity.h" />
+    <ClInclude Include="..\Public\AN_EquipMeleeSkill.h">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BTTask_FindClosestTarget.h" />
+    <ClInclude Include="..\Public\BTTask_Attack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -288,9 +311,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Free.cpp">
       <Filter>02. GameObject\04. Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MovementComponent.cpp">
-      <Filter>03. Component\02. Movement</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02. GameObject\00. Player</Filter>
@@ -406,8 +426,6 @@
     <ClCompile Include="..\Private\ANS_Test.cpp">
       <Filter>04. Notify\01. AnimNotifyState</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ANS_ComboWindow.cpp" />
-    <ClCompile Include="..\Private\ANS_CollisionEnable.cpp" />
     <ClCompile Include="..\Private\UI_WeaponType.cpp">
       <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClCompile>
@@ -418,7 +436,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\SkillObject.cpp" />
     <ClCompile Include="..\Private\SkillObject_Projectile.cpp" />
-    <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
     <ClCompile Include="..\Private\PlayerState_JumpFall.cpp">
@@ -428,9 +445,6 @@
     <ClCompile Include="..\Private\PlayerState_Hit.cpp" />
     <ClCompile Include="..\Private\TargetComponent.cpp" />
     <ClCompile Include="..\Private\UI_Targeting.cpp" />
-    <ClCompile Include="..\Private\AN_ChangeState.cpp" />
-    <ClCompile Include="..\Private\ANS_Move.cpp" />
-    <ClCompile Include="..\Private\AN_PlayCinematic.cpp" />
     <ClCompile Include="..\Private\PlayerState_WallRun.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClCompile>
@@ -444,11 +458,43 @@
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\GhostEffect_Component.cpp" />
-    <ClCompile Include="..\Private\ANS_GhostEffect.cpp" />
     <ClCompile Include="..\Private\SmearEffect_Component.cpp" />
-    <ClCompile Include="..\Private\ANS_SmearEffect.cpp" />
-    <ClCompile Include="..\Private\ANS_AttachSkill.cpp" />
-    <ClCompile Include="..\Private\AN_LaunchSkill.cpp" />
+    <ClCompile Include="..\Private\AN_ChangeState.cpp">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AN_LaunchSkill.cpp">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AN_PlayCinematic.cpp">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AN_SpawnSkill.cpp">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ANS_AttachSkill.cpp">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ANS_CollisionEnable.cpp">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ANS_ComboWindow.cpp">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ANS_GhostEffect.cpp">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ANS_Move.cpp">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ANS_SmearEffect.cpp">
+      <Filter>04. Notify\01. AnimNotifyState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AN_Gravity.cpp" />
+    <ClCompile Include="..\Private\AN_EquipMeleeSkill.cpp">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BTTask_FindClosestTarget.cpp" />
+    <ClCompile Include="..\Private\BTTask_Attack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -498,9 +544,6 @@
     </Filter>
     <Filter Include="03. Component\01. Input">
       <UniqueIdentifier>{3538dc33-7726-469e-9faf-5ce0cf6988cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Component\02. Movement">
-      <UniqueIdentifier>{2c2afcac-3899-4bf5-a77e-096e9b48e67e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\00. Player">
       <UniqueIdentifier>{5fd4480e-ee6a-4cec-8fca-07b61b0c938d}</UniqueIdentifier>

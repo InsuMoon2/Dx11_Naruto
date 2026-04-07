@@ -304,6 +304,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Collision_Manager.h" />
     <ClInclude Include="..\Public\ProjectileComponent.h" />
+    <ClInclude Include="..\Public\MovementComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -749,6 +750,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collision_Manager.cpp" />
     <ClCompile Include="..\Private\ProjectileComponent.cpp" />
+    <ClCompile Include="..\Private\MovementComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

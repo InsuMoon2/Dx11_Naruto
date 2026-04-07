@@ -119,6 +119,9 @@ namespace Engine
         float   damage = 0.f;
         Shared<GameObject> damageCauser = nullptr; // 때린 놈. 플레이어 or 몬스터
 
+        Vec3    damageDir = Vec3::Zero; // 데미지가 들어가는 방향
+        bool    hasCustomDir = false;
+
         float   launchPower = 0.f;
         float   launchUp = 0.f;
         int32   hitSound = 0;       // 이건 추후에 타격 사운드

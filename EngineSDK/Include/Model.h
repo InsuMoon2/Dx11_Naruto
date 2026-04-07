@@ -144,6 +144,9 @@ private:
     void    Apply_AnimationClip(uint32 animIndex, bool isLoop, float playRate);
     bool    Find_AnimationIndex(const string& animName, uint32& outIndex) const;
     bool    Has_AnimationName(const string& animName) const;
+    // 외부에서 가져온 애니메이션을 현재 모델 본 구조에 맞는 clone으로 붙일 때 호출한다.
+    // 공유 애니메이션 원본은 건드리지 않고 모델 전용 인스턴스로 재바인딩한다.
+    Shared<Animation> Clone_RebindAnimation(Shared<Animation> animation) const;
     void    Add_Animation_Unique(vector<Shared<Animation>>& targetAnimations, Shared<Animation> animation) const;
 
     

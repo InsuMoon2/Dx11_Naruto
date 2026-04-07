@@ -894,7 +894,7 @@ void BehaviorTree_View::Create_Node(const string& nodeType, ImVec2 position)
     }
     else if (nodeType == "Sequence" || nodeType == "Selector" || nodeType == "Parallel")
     {
-        outputCount = 3;
+        outputCount = 10;
     }
     else if (nodeType == "Inverter" || nodeType == "Repeater")
     {

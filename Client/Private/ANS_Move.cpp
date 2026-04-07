@@ -22,6 +22,8 @@ bool ANS_Move::Register_Properties()
     PROPERTY_FLOAT("Rotation Speed", _rotationSpeed, 0.f, 1800.f);
     PROPERTY_ENUM("Direction Source", _directionSource, ANS_Move::EMoveDirectionSource);
 
+    PROPERTY_BOOL_JSON("스킬 Y축 무시(지상용)", "ignore_y", _ignoreY);
+
     return true;
 }
 
@@ -45,7 +47,7 @@ void ANS_Move::On_Begin(const FAnimNotifyContext& context)
     if (!Set_MoveDirection(context, resolvedDir))
     {
         resolvedDir = transform->Get_WorldForward();
-        resolvedDir.y = 0.f;
+        if (_ignoreY) resolvedDir.y = 0.f;
 
         if (resolvedDir.LengthSquared() <= FLT_EPSILON)
             resolvedDir = Vec3::Forward;
@@ -173,7 +175,7 @@ bool ANS_Move::Set_MoveDirection(const FAnimNotifyContext& context, Vec3& outDir
         break;
     }
 
-    outDir.y = 0.f;
+    if (_ignoreY) outDir.y = 0.f;
 
     if (outDir.LengthSquared() <= FLT_EPSILON)
         return false;
@@ -211,7 +213,7 @@ bool ANS_Move::Set_TargetDirection(const FAnimNotifyContext& context, Vec3& outD
         return false;
 
     Vec3 toTarget = targetTransform->Get_WorldPosition() - ownerPos;
-    toTarget.y = 0.f;
+    if (_ignoreY) toTarget.y = 0.f;
 
     if (toTarget.LengthSquared() <= 0.0001f)
         return false;

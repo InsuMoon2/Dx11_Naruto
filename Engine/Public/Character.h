@@ -41,6 +41,10 @@ public:
 public:
     virtual void TakeDamage(const FDamageEvent& damageEvent);
 
+    // 피격 처리 후 캐릭터별 반응 -> 예를 들면 몬스터 비헤이비어 상태변화, 플레이어 Hit 처리
+    virtual void OnDamaged(const FDamageEvent& damageEvent);
+    virtual void OnDead(const FDamageEvent& damageEvent);
+
 protected:
     virtual HRESULT Ready_Components();
 

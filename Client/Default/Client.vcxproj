@@ -238,11 +238,15 @@
     <ClInclude Include="..\Public\ANS_SmearEffect.h" />
     <ClInclude Include="..\Public\ANS_Test.h" />
     <ClInclude Include="..\Public\AN_ChangeState.h" />
+    <ClInclude Include="..\Public\AN_EquipMeleeSkill.h" />
+    <ClInclude Include="..\Public\AN_Gravity.h" />
     <ClInclude Include="..\Public\AN_LaunchSkill.h" />
     <ClInclude Include="..\Public\AN_PlayCinematic.h" />
     <ClInclude Include="..\Public\AN_SpawnSkill.h" />
     <ClInclude Include="..\Public\AN_Test.h" />
     <ClInclude Include="..\Public\Background.h" />
+    <ClInclude Include="..\Public\BTTask_Attack.h" />
+    <ClInclude Include="..\Public\BTTask_FindClosestTarget.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
     <ClInclude Include="..\Public\Camera_Target.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
@@ -265,7 +269,6 @@
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\Monster.h" />
-    <ClInclude Include="..\Public\MovementComponent.h" />
     <ClInclude Include="..\Public\MyPlayer.h" />
     <ClInclude Include="..\Public\NetworkManager.h" />
     <ClInclude Include="..\Public\PlayerController.h" />
@@ -364,11 +367,15 @@
     <ClCompile Include="..\Private\ANS_SmearEffect.cpp" />
     <ClCompile Include="..\Private\ANS_Test.cpp" />
     <ClCompile Include="..\Private\AN_ChangeState.cpp" />
+    <ClCompile Include="..\Private\AN_EquipMeleeSkill.cpp" />
+    <ClCompile Include="..\Private\AN_Gravity.cpp" />
     <ClCompile Include="..\Private\AN_LaunchSkill.cpp" />
     <ClCompile Include="..\Private\AN_PlayCinematic.cpp" />
     <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
     <ClCompile Include="..\Private\AN_Test.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
+    <ClCompile Include="..\Private\BTTask_Attack.cpp" />
+    <ClCompile Include="..\Private\BTTask_FindClosestTarget.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Target.cpp" />
     <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
@@ -385,7 +392,6 @@
     <ClCompile Include="..\Private\Level_MainTitle.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
-    <ClCompile Include="..\Private\MovementComponent.cpp" />
     <ClCompile Include="..\Private\MyPlayer.cpp" />
     <ClCompile Include="..\Private\NetworkManager.cpp" />
     <ClCompile Include="..\Private\PlayerController.cpp" />

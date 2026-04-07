@@ -6,11 +6,11 @@
 
 NS_BEGIN(Engine)
 class Model;
+class MovementComponent;
 NS_END
 
 NS_BEGIN(Client)
 class InputComponent;
-class MovementComponent;
 class AnimationStateComponent;
 
 class PlayerStateMachine final : public Component
@@ -31,14 +31,14 @@ public:
 public:
     void                        Register_State(EPlayerState stateID, Shared<IPlayerState> state);
     void                        Change_State(EPlayerState newState);
-    [[nodiscard]]               MovementComponent::FMoveCommand Init_MoveCommand() const;
+    [[nodiscard]]               Engine::MovementComponent::FMoveCommand Init_MoveCommand() const;
 
 public:
     EPlayerState                    Get_CurrentStateID() const { return _currentStateID; }
     Shared<IPlayerState>            Get_CurrentState()   const { return _currentState; }
     EPlayerState                    Get_PrevStateID()    const { return _prevStateID; }
     Shared<InputComponent>          Get_Input()          const { return _input; }
-    Shared<MovementComponent>       Get_Movement()       const { return _movement; }
+    Shared<Engine::MovementComponent>       Get_Movement()       const { return _movement; }
     Shared<AnimationStateComponent> Get_AnimationState() const { return _animationState; }
 
 public:
@@ -110,7 +110,7 @@ private:
 
 private:
     Shared<InputComponent>                      _input;
-    Shared<MovementComponent>                   _movement;
+    Shared<Engine::MovementComponent>                   _movement;
     Shared<AnimationStateComponent>             _animationState;
 
 private:

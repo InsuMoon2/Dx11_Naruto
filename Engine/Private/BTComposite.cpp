@@ -57,6 +57,19 @@ void BTComposite::Gather_NodeResults(map<int, EBTNodeResult>& outResults)
     }
 }
 
+void BTComposite::Set_Owner(Shared<GameObject> owner)
+{
+    BTNode::Set_Owner(owner);
+
+    for (auto& child : _children)
+    {
+        if (child)
+        {
+            child->Set_Owner(owner);
+        }
+    }
+}
+
 BTSelector::BTSelector(const BTSelector& rhs)
     : BTComposite(rhs)
 {
@@ -73,7 +86,8 @@ EBTNodeResult BTSelector::Update(float timeDelta)
         return _lastResult;
     }
 
-    for (int i = _runningChildIndex; i < _children.size(); i++)
+    // 매 프레임 0번부터 다시 우선순위 평가
+    for (int i = 0; i < _children.size(); i++)
     {
         EBTNodeResult result = _children[i]->Update(timeDelta);
 

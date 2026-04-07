@@ -605,7 +605,25 @@ void Model::Add_Animation_Unique(vector<Shared<Animation>>& targetAnimations, Sh
             return;
     }
 
-    targetAnimations.push_back(animation);
+    Shared<Animation> reboundAnimation = Clone_RebindAnimation(animation);
+    if (!reboundAnimation)
+        return;
+
+    targetAnimations.push_back(reboundAnimation);
+}
+
+Shared<Animation> Model::Clone_RebindAnimation(Shared<Animation> animation) const
+{
+    if (!animation)
+        return nullptr;
+
+    Shared<Animation> clone = animation->Clone();
+    if (!clone)
+        return nullptr;
+
+    // 현재 모델의 bone name 기준으로 channel bone index를 다시 맞춘다.
+    clone->Rebind_BoneIndices(_bones);
+    return clone;
 }
 
 void Model::Reset_AnimationSequenceState()
@@ -1592,7 +1610,11 @@ void Model::Add_Animation(Shared<Animation> animation)
     if (Has_AnimationName(animName))
         return;
 
-    _animations.push_back(animation);
+    Shared<Animation> reboundAnimation = Clone_RebindAnimation(animation);
+    if (!reboundAnimation)
+        return;
+
+    _animations.push_back(reboundAnimation);
 }
 
 void Model::Set_Animations(const vector<Shared<Animation>>& animations)
@@ -1835,6 +1857,9 @@ HRESULT Model::Ready_Animations(const FModelBinaryData& data)
     {
         Shared<Animation> animation = Animation::Create(animRaw);
         CHECK_NULL(animation, E_FAIL);
+
+        // meshbin 내부 애니메이션도 현재 모델 본 구조 기준으로 한 번 더 재바인딩한다.
+        animation->Rebind_BoneIndices(_bones);
         _animations.push_back(animation);
     }
 

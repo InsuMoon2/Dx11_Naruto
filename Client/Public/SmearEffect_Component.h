@@ -4,11 +4,11 @@
 
 NS_BEGIN(Engine)
 class Model;
+class MovementComponent;
 NS_END
 
 NS_BEGIN(Client)
 
-class MovementComponent;
 
 class SmearEffect_Component : public Component
 {

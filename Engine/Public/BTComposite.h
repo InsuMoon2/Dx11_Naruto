@@ -19,6 +19,8 @@ public:
     virtual void    Set_Blackboard(Shared<Blackboard> blackboard) override;
     virtual void    Gather_NodeResults(map<int, EBTNodeResult>& outResults) override;
 
+    virtual void    Set_Owner(Shared<GameObject> owner) override;
+
 protected:
     vector<Shared<BTNode>> _children;
     int32 _runningChildIndex = 0;

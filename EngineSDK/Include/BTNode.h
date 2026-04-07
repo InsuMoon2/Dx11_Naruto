@@ -32,7 +32,7 @@ public:
 
     // 블랙보드 세팅
     virtual void  Set_Blackboard(Shared<Blackboard> blackboard) { _blackboard = blackboard; }
-    void          Set_Owner(Shared<GameObject> owner) { _owner = owner; }
+    virtual void  Set_Owner(Shared<GameObject> owner) { _owner = owner; }
 
     EBTNodeResult Get_LastResult() const { return _lastResult; }
     int           Get_DebugId() const { return _debugId; }
@@ -42,8 +42,8 @@ public:
     void          Set_Name(const string& name) { _name = name; }
 
     virtual void  OnDraw_Inspector() {};
-    virtual json  Serialize_ToJson() { return json::object(); }
-    virtual void  Deserialize_FromJson(const json& data) {};
+    virtual json  Serialize_ToJson();
+    virtual void  Deserialize_FromJson(const json& data);
 
     virtual void  Gather_NodeResults(map<int, EBTNodeResult>& outResults);
 

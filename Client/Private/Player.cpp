@@ -110,49 +110,32 @@ void Player::TakeDamage(const FDamageEvent& damageEvent)
     if (_combatStat)
         _combatStat->Take_Damage(damageEvent);
 
-    if (damageEvent.launchPower > 0.f || damageEvent.launchUp > 0.f)
-    {
-        // 넉백방향 기준 잡기. 몬스터가 히트되면, 플레이어쪽으로 로테이션을 돌려주면
-        // 몬스터 기준으로 방향벡터 잡아서 그 방향으로 밀면 자연스럽게 날라갈거같다.
-        Vec3 knockDir = Vec3::Zero;
-        if (damageEvent.damageCauser)
-        {
-            Vec3 causerPos = damageEvent.damageCauser->Get_Transform()->Get_WorldPosition();
-            Vec3 myPos = _transformCom->Get_WorldPosition();
+}
 
-            knockDir = myPos - causerPos;
-            knockDir.y = 0.f;
-
-            if (knockDir.LengthSquared() > FLT_EPSILON)
-                knockDir.Normalize();
-            else
-                knockDir = Vec3(0.f, 0.f, -1.f);
-        }
-        // 구한 방향값에 데이터 적용
-        Vec3 launchVelocity = knockDir * damageEvent.launchPower;
-        launchVelocity.y = damageEvent.launchUp;
-
-        auto movement = Get_Component<MovementComponent>();
-        if (movement)
-        {
-            movement->Launch(launchVelocity, false, true);
-        }
-    }
+void Player::OnDamaged(const FDamageEvent& damageEvent)
+{
+    Character::OnDamaged(damageEvent);
 
     // 피격 상태 전환
     auto sm = Get_Component<PlayerStateMachine>();
+    if (sm && _combatStat && !_combatStat->Is_Dead())
+    {
+        sm->Force_Enter_State(EPlayerState::Hit);
+    }
+}
+
+void Player::OnDead(const FDamageEvent& damageEvent)
+{
+    Character::OnDead(damageEvent);
+
+    auto sm = Get_Component<PlayerStateMachine>();
     if (sm)
     {
-        if (_combatStat && _combatStat->Is_Dead())
-            sm->Force_Enter_State(EPlayerState::Dead);
-        else
-            sm->Force_Enter_State(EPlayerState::Hit);
+        sm->Force_Enter_State(EPlayerState::Dead);
     }
 
-    auto& hub = GAME->Get_DelegateHub();
-
-    hub.OnDamaged.Broadcast(
-        static_pointer_cast<Character>(GetSharedPtr()), damageEvent.damage);
+    // 애니메이션 끝나고 죽이기
+    //Set_Destroy(true);
 }
 
 void Player::Sync(const Protocol::ObjectInfo& info)

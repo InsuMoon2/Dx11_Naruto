@@ -18,11 +18,6 @@ SkillObject_Projectile::SkillObject_Projectile(const SkillObject_Projectile& rhs
     , _isMoving(rhs._isMoving)             
     , _speed(rhs._speed)                   
     , _maxDistance(rhs._maxDistance)       
-    , _hitCount(rhs._hitCount)             
-    , _maxHitCount(rhs._maxHitCount)       
-    , _hitInterval(rhs._hitInterval)       
-    , _hitLaunchForce(rhs._hitLaunchForce) 
-    , _colliderRadius(rhs._colliderRadius) 
 {
 }
 
@@ -86,18 +81,22 @@ void SkillObject_Projectile::Update(float timeDelta)
 
     // 움직일 때에만 LifeTime이 소비되도록
 	if (_isMoving)
+	{
 		SkillObject::Update(timeDelta);
+	}
 	else
+	{
 		GameObject::Update(timeDelta);
 
-    // 히트 쿨타임 관리
-    for (auto& pair : _hitCooldowns)
-    {
-        if (pair.second > 0.f)
+        for (auto& pair : _hitCooldowns)
         {
-            pair.second -= timeDelta;
+            if (pair.second > 0.f)
+            {
+                pair.second -= timeDelta;
+            }
         }
-    }
+	}
+
 }
 
 void SkillObject_Projectile::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
@@ -115,28 +114,20 @@ void SkillObject_Projectile::OnBeginOverlap(Shared<Collider> self, Shared<Collid
     if (_hitCooldowns[otherOwner.get()] > 0.f)
         return;
 
-    _hitCount++;
+    auto character = dynamic_cast<Character*>(otherOwner.get());
+    CHECK_NULL(character);
+
     _hitCooldowns[otherOwner.get()] = _hitInterval;
 
-    // 데미지 처리
-    auto character = dynamic_cast<Character*>(otherOwner.get());
-    if (character)
-    {
-        character->TakeDamage(FDamageEvent{ 10.f, nullptr });
+    if (!Apply_Skill_Hit(character, 10.f, _hitLaunchForce, 0.f))
+        return;
 
-        if (_hitLaunchForce > 0.f)
-        {
-            auto moveComp = character->Get_Component<MovementComponent>();
-            if (moveComp)
-                moveComp->Launch(Vec3(0, 1, 0) * _hitLaunchForce, false, true);
-        }
-    }
+    _hitCount++;
 
     // 최대 카운트 도달 or LifeTime으로 처리
     if (_hitCount >= _maxHitCount)
-    {
         Set_Destroy(true);
-    }
+
 }
 
 void SkillObject_Projectile::Launch(const Vec3& direction)
@@ -150,23 +141,6 @@ void SkillObject_Projectile::Launch(const Vec3& direction)
     if (_collider)
         _collider->Set_IsActive(true); // 발사 시 콜라이더 활성화
     _isMoving = true;
-}
-
-void SkillObject_Projectile::Sync_AttachedTransform(const Matrix& boneWorldMatrix)
-{
-    if (IsLaunched() || !_transformCom)
-        return;
-
-    Matrix tempMatrix = boneWorldMatrix;
-
-    Vec3 worldPos, worldScale;
-    Quat worldQuat;
-
-    if (tempMatrix.Decompose(worldScale, worldQuat, worldPos))
-    {
-        _transformCom->Set_WorldPosition(worldPos);
-        _transformCom->Set_WorldRotation(worldQuat);
-    }
 }
 
 Shared<GameObject> SkillObject_Projectile::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

@@ -58,7 +58,7 @@ void UI_Targeting::Update(float timeDelta)
 
     if (targetCom->IsLockOn() && !targetCom->Get_LockedTarget().expired())
     {
-        Shared<Monster> lockedMonster = targetCom->Get_LockedTarget().lock();
+        Shared<Character> lockedMonster = targetCom->Get_LockedTarget().lock();
         auto targetTransform = lockedMonster->Get_Transform();
 
         auto modelCom = lockedMonster->Get_Component<Model>();

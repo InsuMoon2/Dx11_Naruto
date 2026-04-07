@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Character.h"
 #include "Controller.h"
+#include "MovementComponent.h"
 
 Character::Character(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : ContainerObject(device, context)
@@ -71,7 +72,54 @@ HRESULT Character::Bind_Lights()
 
 void Character::TakeDamage(const FDamageEvent& damageEvent)
 {
-    
+    if (damageEvent.launchPower > 0.f || damageEvent.launchUp > 0.f)
+    {
+        Vec3 knockDir = Vec3::Zero;
+
+        if (damageEvent.hasCustomDir)
+        {
+            knockDir = damageEvent.damageDir;
+            knockDir.y = 0.f;
+            knockDir = Utils::Safe_Normalize(knockDir);
+        }
+        else if (damageEvent.damageCauser)
+        {
+            Vec3 causerPos = damageEvent.damageCauser->Get_Transform()->Get_WorldPosition();
+            Vec3 myPos = _transformCom->Get_WorldPosition();
+
+            knockDir = myPos - causerPos;
+            knockDir.y = 0.f;
+            knockDir = Utils::Safe_Normalize(knockDir, Vec3::Forward);
+        }
+
+        // 구한 방향값에 데이터 적용
+        Vec3 launchVelocity = knockDir * damageEvent.launchPower;
+        launchVelocity.y = damageEvent.launchUp;
+
+        auto movement = Get_Component<MovementComponent>();
+        if (movement)
+        {
+            movement->Launch(launchVelocity, false, true);
+        }
+    }
+
+    auto& hub = GAME->Get_DelegateHub();
+
+    hub.OnDamaged.Broadcast(
+        static_pointer_cast<Character>(GetSharedPtr()), damageEvent.damage);
+
+    // 자식 클래스별 전용 처리 (FSM 상태처리)
+    OnDamaged(damageEvent);
+}
+
+void Character::OnDamaged(const FDamageEvent& damageEvent)
+{
+}
+
+void Character::OnDead(const FDamageEvent& damageEvent)
+{
+    auto& hub = GAME->Get_DelegateHub();
+    hub.OnDead.Broadcast(static_pointer_cast<Character>(GetSharedPtr()), damageEvent.damageCauser);
 }
 
 HRESULT Character::Ready_Components()

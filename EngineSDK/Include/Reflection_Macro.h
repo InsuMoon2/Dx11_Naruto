@@ -67,15 +67,19 @@
         offsetof(SelfType, Member), 0.f, 0.f, 0.f, {}                       \
     });
 
-#define PROPERTY_ENUM(DisplayName, Member, EnumType)                       \
+#define PROPERTY_ENUM(DisplayName, Member, EnumType)                         \
 {                                                                            \
     Engine::FPropertyInfo _prop;                                             \
     _prop.name   = DisplayName;                                              \
-    _prop.jsonKey = "";                                                     \
+    _prop.jsonKey = "";                                                      \
     _prop.type   = Engine::EPropertyType::Enum;                              \
     _prop.offset = offsetof(SelfType, Member);                               \
-    auto _names  = magic_enum::enum_names<EnumType>();                       \
-    for (auto& _n : _names) _prop.enumNames.push_back(string(_n));           \
+    auto _entries = magic_enum::enum_entries<EnumType>();                    \
+    for (auto& [_value, _name] : _entries)                                   \
+    {                                                                        \
+        _prop.enumNames.push_back(string(_name));                            \
+        _prop.enumValues.push_back(static_cast<int>(_value));                \
+    }                                                                        \
     info.properties.push_back(_prop);                                        \
 }
 

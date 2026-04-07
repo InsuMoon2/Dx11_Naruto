@@ -4,7 +4,10 @@
 
 NS_BEGIN(Engine)
 class Collider;
+class Character;
 NS_END
+
+NS_BEGIN(Client)
 
 class SkillObject : public GameObject
 {
@@ -40,8 +43,12 @@ public:
     void    Update(float timeDelta) override;
     void    Late_Update(float timeDelta) override;
 
+    virtual void Sync_AttachedTransform(const Matrix& boneWorldMatrix);
+
 protected:
     HRESULT Ready_Components(const FSkillObjectDesc& desc);
+
+    bool    Apply_Skill_Hit(Character* hitted, float damage, float launchForce = 0.f, float launchUp = 0.f);
 
 protected:
     Shared<Collider> _collider;
@@ -53,6 +60,18 @@ protected:
 
     Collision_Preset   _collisionPreset = Collision_Preset::Projectile;
 
+protected:
+    // 다단히트
+    int32   _hitCount = 0;
+    int32   _maxHitCount = 1;
+    float   _hitInterval = 0.1f;
+    float   _hitLaunchForce = 0.f;
+
+    float   _colliderRadius = 1.0f;
+
+    // 동일 대상 충돌 처리
+    umap<GameObject*, float> _hitCooldowns;
+
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     Shared<GameObject> Clone(void* arg) override;
@@ -60,3 +79,4 @@ public:
     
 };
 
+NS_END

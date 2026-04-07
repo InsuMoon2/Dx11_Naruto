@@ -2,9 +2,12 @@
 
 #include "Controller.h"
 
+NS_BEGIN(Engine)
+class MovementComponent;
+NS_END;
+
 NS_BEGIN(Client)
 class InputComponent;
-class MovementComponent;
 class PlayerStateMachine;
 class SkillComponent;
 

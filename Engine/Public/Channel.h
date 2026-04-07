@@ -21,6 +21,11 @@ public:
 
     void    Sample_LocalPose(float trackPosition, FAnimationLocalPose& outPose) const;
     int32   Get_BoneIndex() const { return _boneIndex; }
+    const string& Get_NodeName() const { return _nodeName; }
+
+    // 애니메이션 채널을 현재 모델의 본 트리에 다시 맞출 때 호출한다.
+    // loose animbin을 다른 skeleton에 붙일 때 bone index를 재설정하기 위해 사용한다.
+    void    Set_BoneIndex(int32 boneIndex) { _boneIndex = boneIndex; }
 
 private:
     void    Apply_KeyFrame(const FKeyFrame& key, const Shared<Bone>& bone);

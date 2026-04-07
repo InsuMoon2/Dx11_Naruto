@@ -42,6 +42,10 @@ HRESULT BehaviorTree::Initialize(void* arg)
 void BehaviorTree::BeginPlay()
 {
     Component::BeginPlay();
+
+    auto owner = Get_Owner();
+    if (_rootNode && owner)
+        _rootNode->Set_Owner(owner);
 }
 
 void BehaviorTree::Update(float timeDelta)
@@ -111,9 +115,12 @@ void BehaviorTree::Set_RootNode(Shared<BTNode> rootNode)
     _rootNode = rootNode;
 
     if (_rootNode && _blackboard)
-    {
         _rootNode->Set_Blackboard(_blackboard);
-    }
+
+    auto owner = Get_Owner();
+    if (_rootNode && owner)
+        _rootNode->Set_Owner(owner);
+    
 }
 
 void BehaviorTree::Set_Blackboard(Shared<Blackboard> blackboard)

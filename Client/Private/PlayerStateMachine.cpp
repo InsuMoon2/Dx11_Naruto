@@ -112,8 +112,30 @@ void PlayerStateMachine::BeginPlay()
 
     auto Register_Skill = [&](int32 skill_Id)
         {
-            auto skillState = PlayerState_Skill::Create(skill_Id);
-            Register_State(skillState->Get_StateID(), skillState);
+            auto skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(skill_Id);
+            CHECK_NULL(skillData);
+
+            // 지상 스킬 등록
+            if (!skillData->animStateName.empty())
+            {
+                auto enumVal = magic_enum::enum_cast<EPlayerState>(skillData->animStateName);
+                if (enumVal.has_value())
+                {
+                    auto skillState = PlayerState_Skill::Create(skill_Id, enumVal.value());
+                    Register_State(enumVal.value(), skillState);
+                }
+            }
+            // 공중 스킬 등록
+            if (!skillData->airAnimStateName.empty())
+            {
+                auto enumAirVal = magic_enum::enum_cast<EPlayerState>(skillData->airAnimStateName);
+                if (enumAirVal.has_value())
+                {
+                    auto skillStateAir = PlayerState_Skill::Create(skill_Id, enumAirVal.value());
+                    Register_State(enumAirVal.value(), skillStateAir);
+                }
+            }
+
         };
 
     // Skill 등록
@@ -156,7 +178,11 @@ bool PlayerStateMachine::Check_Skill_Input()
     auto input = Get_Input();
     const auto& frame = input->Get_Frame();
 
-    // 나중에, 바꿔치기도 스킬로 세팅해줄지.
+    auto movement = Get_Movement();
+
+    bool isAir = movement && !movement->Is_OnGround();
+
+    // 나중에, 바꿔치기도 스킬로 세팅해줄지. 우클릭, 바꿔치기도 넣을거면 여기서 슬롯을 늘려야 할듯?
     for (int slot = 0; slot < 2; ++slot)
     {
         if (frame.useSkillDown[slot])
@@ -171,16 +197,31 @@ bool PlayerStateMachine::Check_Skill_Input()
 
                 if (skill_Data)
                 {
-                    auto enumValue = magic_enum::enum_cast<EPlayerState>(skill_Data->animStateName);
+                    string targetStateName = isAir
+                        ? skill_Data->airAnimStateName
+                        : skill_Data->animStateName;
+
+                    if (targetStateName.empty())
+                    {
+                        LOG_WARN("[SKILL] 적용할 애니메이션 상태명이 비어있습니다. (isAir: %d)", isAir);
+                        continue;
+                    }
+
+                    auto enumValue = magic_enum::enum_cast<EPlayerState>(targetStateName);
                     if (enumValue.has_value())
                     {
-                        string msg = "[SKILL] ID: " + to_string(skill_Id) + " / 애니메이션 : " + skill_Data->animStateName;
+                        string msg = "[SKILL] ID: " + to_string(skill_Id) + " / 애니메이션 : " + targetStateName;
+
                         LOG_WARN(msg.c_str());
 
                         Set_ActiveSkillSlot(slot);
                         Change_State(enumValue.value());
 
                         return true;
+                    }
+                    else
+                    {
+                        LOG_WARN("[SKILL] 등록되지 않은 EPlayerState 이름입니다: %s", targetStateName.c_str());
                     }
                 }
             }

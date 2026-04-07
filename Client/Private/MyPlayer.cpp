@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "MyPlayer.h"
-
+#include "MovementComponent.h"
 #include "Bounding_Sphere.h"
 #include "Model.h"
 #include "Bounding_Capsule.h"

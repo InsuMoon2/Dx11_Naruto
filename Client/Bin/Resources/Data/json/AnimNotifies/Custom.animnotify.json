@@ -569,6 +569,7 @@
             "notifies": [
                 {
                     "payload": {
+                        "aim_at_target": true,
                         "launch_type": 19
                     },
                     "time_sec": 2.9666666984558105,
@@ -579,19 +580,34 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
                 {
-                    "duration_sec": 3.4000000953674316,
+                    "duration_sec": 3.700000047683716,
                     "payload": {
                         "bone_name": "R_Hand_Weapon_cnt_tr",
                         "collision_preset": 3,
                         "spawn_type": 19
                     },
-                    "start_sec": 0.6000000238418579,
+                    "start_sec": 0.30000001192092896,
                     "track_index": 0,
                     "type": "ANS_AttachSkill"
+                },
+                {
+                    "duration_sec": 2.7666666507720947,
+                    "payload": {
+                        "direction_source": "TargetDirection",
+                        "move_speed": 0.0,
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.4000000059604645,
+                    "track_index": 1,
+                    "type": "ANS_Move"
                 }
             ],
             "notify_tracks": [
@@ -750,6 +766,97 @@
                     "type": "ANS_SmearEffect"
                 }
             ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_TrueRasenShuriken",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "check_gravity": true
+                    },
+                    "time_sec": 3.8333332538604736,
+                    "track_index": 0,
+                    "type": "AN_Gravity"
+                },
+                {
+                    "payload": {
+                        "aim_at_target": true,
+                        "launch_type": 19
+                    },
+                    "time_sec": 2.933333396911621,
+                    "track_index": 1,
+                    "type": "AN_LaunchSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 2.9000000953674316,
+                    "payload": {
+                        "direction_source": "TargetDirection",
+                        "move_speed": 0.0,
+                        "rotate_to_target": true,
+                        "rotation_speed": 1700.0
+                    },
+                    "start_sec": 0.36666667461395264,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                },
+                {
+                    "duration_sec": 3.0,
+                    "payload": {
+                        "bone_name": "R_Hand_Weapon_cnt_tr",
+                        "collision_preset": 3,
+                        "spawn_type": 19
+                    },
+                    "start_sec": 0.3333333432674408,
+                    "track_index": 1,
+                    "type": "ANS_AttachSkill"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Charge_Lv1",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "R_Hand_Weapon_cnt_tr",
+                        "collision_preset": 3,
+                        "spawn_type": 18
+                    },
+                    "time_sec": 0.13333334028720856,
+                    "track_index": 0,
+                    "type": "AN_EquipMeleeSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
             "notify_tracks": [
                 {
                     "name": "Notifies"

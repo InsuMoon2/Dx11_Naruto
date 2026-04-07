@@ -34,6 +34,9 @@ public:
 
     void    TakeDamage(const FDamageEvent& damageEvent) override;
 
+	void OnDamaged(const FDamageEvent& damageEvent) override;
+	void OnDead(const FDamageEvent& damageEvent) override;
+
 public: /* Network */
     uint64  Get_NetworkId() const { return _networkId; }
     void    Set_NetworkId(uint64 id) { _networkId = id; }
@@ -57,6 +60,8 @@ protected:
     void  Change_WeaponAttachment(EWeaponType weaponType);
 
     void  On_WeaponTypeChagned(int32 weaponTypeIndex);
+
+
 
 protected:
     Shared<CombatStat>              _combatStat;

@@ -40,7 +40,6 @@ public:
     virtual void Launch(const Vec3& direction);
     bool    IsLaunched() const { return _isMoving; }
 
-    virtual void Sync_AttachedTransform(const Matrix& boneWorldMatrix);
 
 protected:
     Shared<ProjectileComponent> _projectile;
@@ -51,17 +50,6 @@ protected:
 
     float   _speed = 20.f;              
     float   _maxDistance = 50.f;
-
-    // 다단히트
-    int32   _hitCount = 0;
-    int32   _maxHitCount = 1;
-    float   _hitInterval = 0.1f;
-    float   _hitLaunchForce = 0.f;
-
-    float   _colliderRadius = 1.0f;
-
-    // 동일 대상 충돌 처리
-    umap<GameObject*, float> _hitCooldowns;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

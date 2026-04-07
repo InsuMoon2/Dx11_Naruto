@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Blackboard.h"
 #include "GameObject.h"
 
@@ -12,6 +12,7 @@ void Blackboard::Initialize()
     _floatValues.clear();
     _boolValues.clear();
     _vecValues.clear();
+    _stringValues.clear();
     _objectValues.clear();
 }
 
@@ -31,6 +32,8 @@ vector<FBlackboardKeyInfo> Blackboard::Get_AllKeys() const
     for (const auto& [key, _] : _vecValues)
         keys.push_back({ key, EBlackboardValueType::Vector3 });
 
+    for (const auto& [key, _] : _stringValues)
+        keys.push_back({ key, EBlackboardValueType::String });
 
     return keys;
 }
@@ -129,7 +132,8 @@ bool Blackboard::HasKey(const string& key) const
     if (_floatValues.contains(key))     return true;
     if (_vecValues.contains(key))       return true;
     if (_objectValues.contains(key))    return true;
-    if (_boolValues.contains(key))    return true;
+    if (_boolValues.contains(key))      return true;
+    if (_stringValues.contains(key))    return true;
 
     return false;
 }
@@ -173,6 +177,13 @@ json Blackboard::Serialize_ToJson() const
     }
     root["vectors"] = vectors;
 
+    // String
+    json strings = json::object();
+    for (const auto& [key, value] : _stringValues)
+        strings[key] = value;
+    
+    root["strings"] = strings;
+
     // Object는 런타임 참조
 
     return root;
@@ -210,6 +221,12 @@ void Blackboard::Deserialize_FromJson(const json& data)
             vec.z = value["z"].get<float>();
             _vecValues[key] = vec;
         }
+    }
+
+    if (data.contains("strings"))
+    {
+        for (auto& [key, value] : data["strings"].items())
+            _stringValues[key] = value.get<string>();
     }
 }
 

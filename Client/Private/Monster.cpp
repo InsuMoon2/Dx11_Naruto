@@ -147,45 +147,21 @@ void Monster::TakeDamage(const FDamageEvent& damageEvent)
     if (_combatStat)
         _combatStat->Take_Damage(damageEvent);
 
-    if (damageEvent.launchPower > 0.f || damageEvent.launchUp > 0.f)
-    {
-        Vec3 knockDir = Vec3::Zero;
-        if (damageEvent.damageCauser)
-        {
-            Vec3 causerPos = damageEvent.damageCauser->Get_Transform()->Get_WorldPosition();
-            Vec3 myPos = _transformCom->Get_WorldPosition();
 
-            knockDir = myPos - causerPos;
-            knockDir.y = 0.f;
+}
 
-            if (knockDir.LengthSquared() > FLT_EPSILON)
-                knockDir.Normalize();
-            else
-                knockDir = Vec3(0.f, 0.f, -1.f);
-        }
-        // 구한 방향값에 데이터 적용
-        Vec3 launchVelocity = knockDir * damageEvent.launchPower;
-        launchVelocity.y = damageEvent.launchUp;
+void Monster::OnDamaged(const FDamageEvent& damageEvent)
+{
+    Character::OnDamaged(damageEvent);
 
-        auto movement = Get_Component<MovementComponent>();
-        if (movement)
-        {
-            movement->Launch(launchVelocity, false, true);
-        }
-    }
+    // TODO : 피격 상태 전환 -> 몬스터는 비헤이비어 트리에서 상태값 변경해주기
+}
 
-    // 피격 상태 전환 -> 몬스터는 비헤이비어 트리에서 상태값 변경해주기
-    /*auto sm = Get_Component<PlayerStateMachine>();
-    if (sm)
-    {
-        if (_combatStat && _combatStat->Is_Dead())
-            sm->Force_Enter_State(EPlayerState::Dead);
-        else
-            sm->Force_Enter_State(EPlayerState::Hit);
-    }*/
+void Monster::OnDead(const FDamageEvent& damageEvent)
+{
+    Character::OnDead(damageEvent);
 
-    auto& hub = GAME->Get_DelegateHub();
-    hub.OnDamaged.Broadcast(static_pointer_cast<Character>(GetSharedPtr()), damageEvent.damage);
+    // TODO : 상태 전환 -> 몬스터는 비헤이비어 트리에서 상태값 변경해주기
 }
 
 json Monster::To_Json() const

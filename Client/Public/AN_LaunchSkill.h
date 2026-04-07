@@ -15,6 +15,8 @@ public:
 
 private:
     Protocol::OBJECT_TYPE _launchObjectType = Protocol::OBJECT_TYPE_SKILL_RASENSHURIKEN;
+
+    bool _aimAtTarget = false;
 };
 
 NS_END

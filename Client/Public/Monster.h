@@ -6,12 +6,12 @@ NS_BEGIN(Engine)
 class BehaviorTree;
 class Model;
 class Collider;
+class MovementComponent;
 NS_END
 
 NS_BEGIN(Client)
 
 class CombatStat;
-class MovementComponent;
 class AIController;
 class AnimationStateComponent;
 
@@ -38,6 +38,9 @@ public:
     void    OnBeginOverlap(Shared<Collider> self, Shared<Collider> other) override;
     void    TakeDamage(const FDamageEvent& damageEvent) override;
 
+    void    OnDamaged(const FDamageEvent& damageEvent) override;
+    void    OnDead(const FDamageEvent& damageEvent) override;
+
 public:
     json    To_Json() const override;
     void    From_Json(const json& data) override;
@@ -45,6 +48,8 @@ public:
 protected:
     HRESULT Ready_Components() override;
     HRESULT Bind_ShaderResources() override;
+
+    
 
 private:
     Shared<Model>                   _model;

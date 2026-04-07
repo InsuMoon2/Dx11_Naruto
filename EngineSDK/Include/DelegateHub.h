@@ -14,7 +14,10 @@ DECLARE_DELEGATE(FOnPlayerObjectSpawned, Shared<GameObject>);
 DECLARE_DELEGATE(FOnWeaponTypeChanged, int32);
 
 DECLARE_DELEGATE(FOnDamaged, Shared<Character> /*맞은놈*/, float/*데미지*/);
+DECLARE_DELEGATE(FOnDead, Shared<Character> /*죽은놈*/, Shared<GameObject> /*죽인놈*/);
+
 DECLARE_DELEGATE(FOnPlayerComboHit, uint32/*콤보 수*/);
+
 
 
 // 델리게이트들을 모아놓을 허브 : 매니저 역할이긴하네..
@@ -36,6 +39,8 @@ public:
     FOnWeaponTypeChanged    OnWeaponTypeChanged;
 
     FOnDamaged              OnDamaged;
+    FOnDead                 OnDead;
+
     FOnPlayerComboHit       OnPlayerComboHit;
 
     // 추후 확장 할 것들

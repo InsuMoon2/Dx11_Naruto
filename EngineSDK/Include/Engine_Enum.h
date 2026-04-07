@@ -22,6 +22,8 @@ namespace Engine
 
     enum class ELightType { Directional, Point, END };
 
+    enum class EMoveInputDirection { Forward, Backward, Left, Right, END };
+
     enum class EUILayer
     {
         HUD,        /* 항상 표시되는 것들 (체력바, 스킬) */
