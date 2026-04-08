@@ -84,8 +84,8 @@ EBTNodeResult BTTask_MoveTo::Update(float timeDelta)
     direction.y = 0.f;
 
     float distance = direction.Length();
-
-    // 목표 지점 도착  
+    
+    // 목표 지점 도착
     if (distance < _acceptanceRadius)
     {
         blackboard->Set_ValueAsFloat("MoveAxisX", 0.f);

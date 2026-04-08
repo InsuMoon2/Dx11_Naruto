@@ -243,6 +243,8 @@ void Animation_View::Pre_Render()
     _previewRT->BindAsTarget();
 
     GAME->Draw();
+
+    _previewRT->BindAsTarget();
     Draw_PreviewGrid();
 
     GAME->BindBackBuffer();
@@ -1616,9 +1618,9 @@ void Animation_View::Ensure_PreviewGridResources()
     }
 
     D3D11_DEPTH_STENCIL_DESC depthDesc = {};
-    depthDesc.DepthEnable = FALSE;
-    depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-    depthDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+	depthDesc.DepthEnable = TRUE;
+	depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
     depthDesc.StencilEnable = FALSE;
 
     if (FAILED(GAME->Get_Device()->CreateDepthStencilState(&depthDesc, _previewGridDepthDisabledState.GetAddressOf())))

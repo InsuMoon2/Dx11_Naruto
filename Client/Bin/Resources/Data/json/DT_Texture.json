@@ -91,6 +91,24 @@
             "Level": "Static"
         },
         {
+            "Id": "COMPONENT_TYPE_TEXTURE_PARTICLE_SNOW",
+            "Path": "../../Client/Bin/Resources/Textures/Snow/Snow.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_PARTICLE_EXPLOSION",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_Announce_Hit_FX2.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_PARTICLE_HIT",
+            "Path": "../../Client/Bin/Resources/Effects/Textures/Hit/T_EFF_Hit_02_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
             "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
             "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle%d.png",
             "Count": 2,
@@ -238,6 +256,24 @@
         {
             "Id": "COMPONENT_TYPE_TEXTURE_SKILL_SUB",
             "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_Clone_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "T_EFF_Rasengan_02_M",
+            "Path": "../../Client/Bin/Resources/Skills/Rasengan/Textures/T_EFF_Rasengan_02_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "T_EFF_Rasengan_04_M",
+            "Path": "../../Client/Bin/Resources/Skills/Rasengan/Textures/T_EFF_Rasengan_04_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "T_EFF_Rasengan_05_M",
+            "Path": "../../Client/Bin/Resources/Skills/Rasengan/Textures/T_EFF_Rasengan_05_M.png",
             "Count": 1,
             "Level": "Static"
         }

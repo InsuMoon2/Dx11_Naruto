@@ -305,6 +305,12 @@
     <ClInclude Include="..\Public\Collision_Manager.h" />
     <ClInclude Include="..\Public\ProjectileComponent.h" />
     <ClInclude Include="..\Public\MovementComponent.h" />
+    <ClInclude Include="..\Public\VIBuffer_Instance.h" />
+    <ClInclude Include="..\Public\VIBuffer_Particle_Point.h" />
+    <ClInclude Include="..\Public\EffectMeshObject.h" />
+    <ClInclude Include="..\Public\EffectAsset_Types.h" />
+    <ClInclude Include="..\Public\EffectAsset_Serializer.h" />
+    <ClInclude Include="..\Public\EffectComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -751,6 +757,11 @@
     <ClCompile Include="..\Private\Collision_Manager.cpp" />
     <ClCompile Include="..\Private\ProjectileComponent.cpp" />
     <ClCompile Include="..\Private\MovementComponent.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Instance.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Particle_Point.cpp" />
+    <ClCompile Include="..\Private\EffectMeshObject.cpp" />
+    <ClCompile Include="..\Private\EffectAsset_Serializer.cpp" />
+    <ClCompile Include="..\Private\EffectComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

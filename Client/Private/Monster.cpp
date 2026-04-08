@@ -124,10 +124,10 @@ HRESULT Monster::Bind_Lights()
 
     CHECK_NULL(lightDesc, E_FAIL);
 
-    _shaderCom->Bind_RawValue("g_vLightDir", &lightDesc->direction, sizeof(Vec4));
-    _shaderCom->Bind_RawValue("g_vLightDiffuse", &lightDesc->diffuse, sizeof(Vec4));
-    _shaderCom->Bind_RawValue("g_vLightAmbient", &lightDesc->ambient, sizeof(Vec4));
-    _shaderCom->Bind_RawValue("g_vLightSpecular", &lightDesc->specular, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Vec4));
+    _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Vec4));
 }
 
 void Monster::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
@@ -221,7 +221,7 @@ HRESULT Monster::Bind_ShaderResources()
     _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
     _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
 
-    GAME->Bind_CamPosition(_shaderCom, "g_vCamPosition");
+    GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
 
     CHECK_FAILED(Bind_Lights(), E_FAIL);
 

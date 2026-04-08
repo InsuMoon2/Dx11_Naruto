@@ -6,6 +6,7 @@
 #include "SkillObject.h"
 #include "SkillObject_Projectile.h"
 #include "Model.h"
+#include "EquipmentComponent.h"
 
 SkillComponent::SkillComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -47,7 +48,13 @@ void SkillComponent::BeginPlay()
     if (!owner)
         return;
 
+    _equipment = owner->Get_Component<EquipmentComponent>();
+    CHECK_NULL(_equipment.lock());
+
+    Apply_WeaponSkillSet(_equipment.lock()->Get_CurrentWeaponType());
+
     _combatStat = owner->Get_Component<CombatStat>();
+    CHECK_NULL(_equipment.lock());
 }
 
 void SkillComponent::Update(float timeDelta)
@@ -218,6 +225,33 @@ Weak<SkillObject_Projectile> SkillComponent::Get_PendingSkill(Protocol::OBJECT_T
         return {};
 
     return it->second;
+}
+
+void SkillComponent::Apply_WeaponSkillSet(EWeaponType weaponType)
+{
+    // 무기 타입별 기본 스킬 슬롯 세팅
+    switch (weaponType)
+    {
+    case EWeaponType::BigSwrod:
+        Set_EquippedSkill_ID(0, ETOI(ESkillType::Fireball));
+        Set_EquippedSkill_ID(1, ETOI(ESkillType::Chidori));
+        break;
+
+    case EWeaponType::Hand:
+    default:
+        Set_EquippedSkill_ID(0, ETOI(ESkillType::Rasengan));
+        Set_EquippedSkill_ID(1, ETOI(ESkillType::Rasen_Shuriken));
+        break;
+    }
+}
+
+void SkillComponent::Set_EquippedSkill_ID(int slot, int skill_Id)
+{
+    if (slot < 0 || slot >= SLOT_COUNT)
+        return;
+
+    _slotSkill_Id[slot] = skill_Id;
+    _cooldownRemain[slot] = 0.f;
 }
 
 json SkillComponent::To_Json() const

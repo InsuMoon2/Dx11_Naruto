@@ -49,7 +49,7 @@ public:
 // ==========================================
 //              Sequence (AND)
 // ==========================================
-// 자식들이 모두 성공해야 성공. 하나라도 실패하면 실패(Faield) 반환
+// 자식들이 모두 성공해야 성공. 하나라도 실패하면 실패(Failed) 반환
 class ENGINE_DLL BTSequence : public BTComposite
 {
 public:

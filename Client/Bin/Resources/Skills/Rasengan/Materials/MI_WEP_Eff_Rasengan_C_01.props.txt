@@ -1,0 +1,86 @@
+Parent = Material3'/Game/Effects/BaseMaterials/Materials/M_EFF_GradationMap.M_EFF_GradationMap'
+ScalarParameterValues[4] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1
+        ParameterName = 21_EmissiveMap_Power
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1
+        ParameterName = 22_EmissiveMap_Multi
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = 23_EmissiveMap_Contrast
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = RefractionDepthBias
+    }
+}
+TextureParameterValues[5] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/Common/T_EFF_Sphere_02_M.T_EFF_Sphere_02_M'
+        ParameterName = 05_OpacityMap
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/Smoke/T_EFF_Smoke_19_M.T_EFF_Smoke_19_M'
+        ParameterName = 05_OpacityMap_SubUV
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/GradationMap/T_EFF_GMO_03_M.T_EFF_GMO_03_M'
+        ParameterName = 35_OpacityMap_GradationMap
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/Common/T_EFF_Sphere_04_M.T_EFF_Sphere_04_M'
+        ParameterName = 05_EmissiveMap
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/GradationMap/T_EFF_GMT_Wind_01_BC.T_EFF_GMT_Wind_01_BC'
+        ParameterName = 35_EmissiveMap_GradationMap
+    }
+}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = true
+    BlendMode = BLEND_Additive (3)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

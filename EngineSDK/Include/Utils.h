@@ -30,6 +30,10 @@ public:
     // 입력/속도를 표면 평면에 투영할 때 사용
     static Vec3 Project_OnPlane(const Vec3& value, const Vec3& planeNormal);
 
+    // 랜덤
+    static float RandomRange(float minValue, float maxValue);
+    static Vec3  RandomDirection();
+
 public:
     template <typename T>
     static T Max(const T& a, const T& b)

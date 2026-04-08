@@ -40,11 +40,9 @@
         {
             "animations": [
                 "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Idle_Type02_Loop",
-                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Attack_Punch",
-                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Attack_JumpTurnKick",
-                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left",
                 "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_Loop",
-                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_End"
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_End",
+                "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Attack_Punch"
             ],
             "materials": [
                 {
@@ -66,7 +64,7 @@
                     }
                 }
             ],
-            "model_guid": "6b9eee4c-928a-4015-9759-b29753246960",
+            "model_guid": "d5afa3e3-33d8-4b70-8472-7764588c471d",
             "model_type": "SkeletalMesh",
             "type": "COMPONENT_TYPE_MODEL"
         },
@@ -177,20 +175,20 @@
                         }
                     },
                     "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "key": "Hit",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left",
+                        "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Attack_Punch",
                         "loop": false,
+                        "playRate": 1.0
+                    },
+                    "key": "Run",
+                    "loopClip": {
+                        "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Dodge_Run_Left",
+                        "loop": true,
                         "playRate": 1.0
                     },
                     "start": {
@@ -269,20 +267,20 @@
                         }
                     },
                     "end": {
-                        "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Attack_Punch",
-                        "loop": false,
+                        "animationName": "",
+                        "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Run",
+                    "key": "Hit",
                     "loopClip": {
-                        "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Run_Loop",
+                        "animationName": "",
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "mode": "Sequence",
+                    "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Dodge_Run_Left",
-                        "loop": true,
+                        "animationName": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left",
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "start": {
@@ -296,7 +294,7 @@
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
         }
     ],
-    "guid": "51b8b3ba-e672-4a95-8380-2bf03dff11fa",
+    "guid": "676fecaa-6217-43d6-b475-7378cffb0985",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster",
     "static_class": "Monster"

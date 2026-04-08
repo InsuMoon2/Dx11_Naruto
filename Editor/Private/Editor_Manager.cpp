@@ -10,6 +10,7 @@
 #include "Hierarchy.h"
 #include "Console_View.h"
 #include "Content_Browser.h"
+#include "Effect_View.h"
 #include "Inspector.h"
 #include "Level_Serializer.h"
 #include "PlayerSession_Manager.h"
@@ -46,6 +47,7 @@ void Editor_Manager::Initialize()
     Add_Window(TEXT("Animation View"), Animation_View::Create());
 
     Add_Window(TEXT("Cinematic View"), Cinematic_View::Create());
+    Add_Window(TEXT("Effect View"), Effect_View::Create());
 }
 
 void Editor_Manager::Update(float timeDelta)

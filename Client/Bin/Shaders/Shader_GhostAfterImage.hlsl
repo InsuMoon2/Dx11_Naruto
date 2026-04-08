@@ -69,7 +69,6 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
 
-    // 카메라 방향 (g_CamPosition 이름이 전역 셰이더와 같은지 확인하세요! 보통 g_vCamPosition을 많이 씁니다)
     float3 viewDir = normalize(g_CamPosition.xyz - In.vWorldPos);
 
     // 림라이트 (외곽일수록 1, 정면일수록 0)

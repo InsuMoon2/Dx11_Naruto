@@ -345,11 +345,18 @@ bool PlayerStateMachine::Check_WeaponToggle()
     if (!equipment)
         return false;
 
+    auto skillCom = player->Get_Component<SkillComponent>();
+    if (!skillCom)
+        return false;
+
     auto currentWeapon = equipment->Get_CurrentWeaponType();
 
     if (currentWeapon == EWeaponType::Hand)
     {
         equipment->Toggle_WeaponMode();
+
+        skillCom->Apply_WeaponSkillSet(equipment->Get_CurrentWeaponType());
+
         LOG_INFO("무기 변경: 격투 -> 대검");
 
         GAME->Get_DelegateHub().OnWeaponTypeChanged.Broadcast(
@@ -358,6 +365,9 @@ bool PlayerStateMachine::Check_WeaponToggle()
     else
     {
         equipment->Toggle_WeaponMode();
+
+        skillCom->Apply_WeaponSkillSet(equipment->Get_CurrentWeaponType());
+
         LOG_INFO("무기 변경: 대검 -> 격투");
 
         GAME->Get_DelegateHub().OnWeaponTypeChanged.Broadcast(
@@ -366,6 +376,8 @@ bool PlayerStateMachine::Check_WeaponToggle()
 
     EPlayerState currentState = Get_CurrentStateID();
     Play_AnimState(currentState);
+
+
 
     return false;
 }

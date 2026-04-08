@@ -1,0 +1,6 @@
+Diffuse=DefaultTexture
+Opacity=T_EFF_Sphere_02_M
+Emissive=T_EFF_Sphere_04_M
+Other[0]=T_EFF_Smoke_19_M
+Other[1]=T_EFF_GMO_03_M
+Other[2]=T_EFF_GMT_Wind_01_BC

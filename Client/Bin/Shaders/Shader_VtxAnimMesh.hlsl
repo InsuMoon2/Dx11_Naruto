@@ -1,23 +1,7 @@
-float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+#include "Engine_Shader_Defines.hlsli"
 
-vector g_vLightDir;
-vector g_vLightDiffuse;
-vector g_vLightAmbient;
-vector g_vLightSpecular;
-
-Texture2D g_DiffuseTexture;
-vector g_vMtrlAmbient = vector(0.3f, 0.3f, 0.3f, 1.f);
-vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vCamPosition;
 
 row_major matrix g_BoneMatrices[512];
-
-SamplerState DefaultSampler
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
 
 struct VS_IN
 {
@@ -94,19 +78,19 @@ PS_OUT PS_MAIN(PS_IN In)
         discard;
 
     vector vShade = saturate(
-        max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) +
-        (g_vLightAmbient * g_vMtrlAmbient));
+        max(dot(normalize(g_LightDir) * -1.f, In.vNormal), 0.f) +
+        (g_LightAmbient * g_MtrlAmbient));
 
-    vector vLook = In.vWorldPos - g_vCamPosition;
-    vector vReflect = reflect(normalize(g_vLightDir), In.vNormal);
+    vector vLook = In.vWorldPos - g_CamPosition;
+    vector vReflect = reflect(normalize(g_LightDir), In.vNormal);
 
     float fSpecular = pow(
         max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f),
         50.f);
 
-    vector vSpecularColor = g_vLightSpecular * g_vMtrlSpecular * fSpecular;
+    vector vSpecularColor = g_LightSpecular * g_MtrlSpecular * fSpecular;
 
-    Out.vColor = g_vLightDiffuse * vMtrlDiffuse * vShade + vSpecularColor;
+    Out.vColor = g_LightDiffuse * vMtrlDiffuse * vShade + vSpecularColor;
 
     return Out;
 }
@@ -115,7 +99,12 @@ technique11 DefaultTechnique
 {
     pass DefaultPass
     {
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetRasterizerState(RS_Default);
+
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 }

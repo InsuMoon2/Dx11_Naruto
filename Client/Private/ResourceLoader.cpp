@@ -880,6 +880,11 @@ ResourceLoader::FInputLayoutInfo ResourceLoader::Get_InputLayout(const string& n
         return { FVertexAnimationMesh::Elements, FVertexAnimationMesh::numElements };
     }
 
+    if (name == "VtxParticlePoint")
+    {
+        return { VTXPARTICLE_POINT_INSTANCE_DESC::Elements, VTXPARTICLE_POINT_INSTANCE_DESC::numElements };
+    }
+
     return { nullptr, 0 };
 }
 

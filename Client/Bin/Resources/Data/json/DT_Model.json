@@ -55,6 +55,27 @@
             "Count": 1,
             "ModelType": "StaticMesh",
             "Level": "Static"
+        },
+        {
+            "Id": "Rasengan_A",
+            "Path": "../../Client/Bin/Resources/Skills/Rasengan/Meshes/SM_WEP_Eff_Rasengan_A.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Rasengan_C",
+            "Path": "../../Client/Bin/Resources/Skills/Rasengan/Meshes/SM_WEP_Eff_Rasengan_C_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Rasengan_E",
+            "Path": "../../Client/Bin/Resources/Skills/Rasengan/Meshes/SM_WEP_Eff_Rasengan_E_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
         }
     ]
 }

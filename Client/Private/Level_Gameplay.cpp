@@ -14,6 +14,7 @@
 #include "PlayerStart.h"
 #include "GameInstance.h"
 #include "Debug_Manager.h"
+#include "Particle_Point.h"
 #include "Player.h"
 #include "UI_PlayerHUD.h"
 
@@ -36,6 +37,7 @@ HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
     CHECK_FAILED(Ready_GroundColliison(), E_FAIL);
 
     CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
+    //CHECK_FAILED(Ready_Effect(), E_FAIL);
 
     if (_spawnMode == EGameplaySpawnMode::LocalOnly)
     {
@@ -49,6 +51,7 @@ HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
 
         Try_SendEnterGamePacket();
     }
+
 
    
 
@@ -68,6 +71,9 @@ void Level_Gameplay::Update(float timeDelta)
     {
         GAME->Play_Cinematic(TEXT("Test1"));
     }
+
+    
+
 }
 
 void Level_Gameplay::Late_Update(float timeDelta)
@@ -226,6 +232,34 @@ HRESULT Level_Gameplay::Ready_UI()
 
     _playerObjectSpawnedHandle = GAME->Get_DelegateHub().OnPlayerObjectSpawned.Add(
         this, &Level_Gameplay::On_PlayerObjectSpawned);
+
+    return S_OK;
+}
+
+HRESULT Level_Gameplay::Ready_Effect()
+{
+    Particle_Point::FParticlePointDesc snowDesc{};
+    snowDesc.name = L"Particle_Snow";
+    snowDesc.position = Vec3(64.f, 30.f, 64.f);
+    snowDesc.shaderType = Protocol::COMPONENT_TYPE_SHADER_PARTICLE_POINT;
+    snowDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_PARTICLE_SNOW;
+    snowDesc.textureIndex = 0;
+    snowDesc.bufferDesc.numInstances = 5000;
+    snowDesc.bufferDesc.center = Vec3::Zero;
+    snowDesc.bufferDesc.range = Vec3(129.f, 1.f, 129.f);
+    snowDesc.bufferDesc.scale = Vec2(0.2f, 0.5f);
+    snowDesc.bufferDesc.speed = Vec2(3.f, 7.f);
+    snowDesc.bufferDesc.lifeTime = Vec2(3.f, 5.f);
+    snowDesc.bufferDesc.isLoop = true;
+    snowDesc.bufferDesc.moveMode = VIBuffer_Particle_Point::EMoveMode::Drop;
+
+    CHECK_FAILED(
+        GAME->Add_GameObject(
+            ETOI(ELevelType::GamePlay),
+            Protocol::OBJECT_TYPE_INSTANCED_PARTICLE_POINT,
+            TEXT("Layer_Effect"),
+            &snowDesc),
+        E_FAIL);
 
     return S_OK;
 }

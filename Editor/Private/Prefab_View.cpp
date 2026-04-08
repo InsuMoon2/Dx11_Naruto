@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Prefab_View.h"
 #include "Model.h"
 #include "Content_Browser.h"
@@ -288,9 +288,11 @@ void Prefab_View::Pre_Render()
     GAME->Set_GameInputEnabled(wasEnableInput);
 
     _prevRT->Clear(Color(0.15f, 0.15f, 0.15f, 1.f));
+
+    _prevRT->BindAsTarget();
+    GAME->Draw();
     _prevRT->BindAsTarget();
 
-    GAME->Draw();
     Draw_PreviewGrid();
     //_previewObject->Render();
 
@@ -620,9 +622,9 @@ void Prefab_View::Ensure_PreviewGridResources()
     }
 
     D3D11_DEPTH_STENCIL_DESC depthDesc = {};
-    depthDesc.DepthEnable = FALSE;
+    depthDesc.DepthEnable = TRUE;
     depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-    depthDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+    depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
     depthDesc.StencilEnable = FALSE;
 
     if (FAILED(GAME->Get_Device()->CreateDepthStencilState(&depthDesc, _previewGridDepthDisabledState.GetAddressOf())))

@@ -61,8 +61,8 @@
             "animStateKey": "Attack_Air_01",
             "damageMultiplier": 1.0,
             "canCancel": true,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 1,
+            "launchUp": 2,
             "hitSound": 0
         },
         {
@@ -74,8 +74,8 @@
             "animStateKey": "Attack_Air_02",
             "damageMultiplier": 1.3,
             "canCancel": true,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 2,
+            "launchUp": 3,
             "hitSound": 0
         },
         {
@@ -87,8 +87,8 @@
             "animStateKey": "Attack_Air_03",
             "damageMultiplier": 1.8,
             "canCancel": false,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 1,
+            "launchUp": 3,
             "hitSound": 0
         },
         {
@@ -100,8 +100,8 @@
             "animStateKey": "Attack_Air_04",
             "damageMultiplier": 2.0,
             "canCancel": false,
-            "launchPower": 0,
-            "launchUp": 0,
+            "launchPower": 3,
+            "launchUp": 3,
             "hitSound": 0
         },
         {

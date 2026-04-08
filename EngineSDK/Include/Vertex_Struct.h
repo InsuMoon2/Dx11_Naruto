@@ -77,4 +77,42 @@ namespace Engine
 
     } VTXANIM;
 
+    typedef struct FVertexPos
+    {
+        Vec3 position;
+
+        static const uint32 numElements = { 1 };
+
+
+        static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        };
+    } VTXPOS;
+
+    typedef struct FVertexParticleInstnace
+    {
+        Vec4 right;
+        Vec4 up;
+        Vec4 look;
+        Vec4 translation;
+        Vec2 lifetime;      // x = 최대 수명, y = 현재 누적된 시간으로 사용
+    } VTXPARTICLE_INSTANCE;
+
+    typedef struct FVertexParticlePointInstanceDesc
+    {
+        static const uint32 numElements = { 6 };
+
+        static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+
+            { "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0,  D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+            { "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+            { "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+            { "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+        };
+    } VTXPARTICLE_POINT_INSTANCE_DESC;
+
 }

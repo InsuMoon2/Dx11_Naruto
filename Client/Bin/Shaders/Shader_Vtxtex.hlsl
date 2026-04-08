@@ -1,10 +1,6 @@
-float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-Texture2D g_Texture;
+#include "Engine_Shader_Defines.hlsli"
 
-sampler DefaultSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_LINEAR;    
-};
+Texture2D g_Texture;
 
 struct VS_IN
 {
@@ -64,18 +60,16 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
-RasterizerState CullNone
-{
-    CullMode = None;
-};
-
 technique11 DefaultTechnique
 {
     pass DefaultPass
     {
-        SetRasterizerState(CullNone);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetRasterizerState(RS_Default);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 }

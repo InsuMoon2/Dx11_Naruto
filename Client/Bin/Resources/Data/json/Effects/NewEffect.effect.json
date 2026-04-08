@@ -1,0 +1,58 @@
+{
+    "autoPlay": true,
+    "effectName": "NewEffect",
+    "layers": [
+        {
+            "blendMode": 0,
+            "colorTint": [
+                0.11780425906181335,
+                0.9125757217407227,
+                0.939068078994751,
+                1.0
+            ],
+            "diffuseTextureGuid": "T_EFF_Rasengan_02_M",
+            "duration": -1.0,
+            "enabled": true,
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "NewMeshEmt",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "Rasengan_A",
+            "opacity": 1.0,
+            "rotationAxis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "rotationSpeed": 0.0,
+            "startDelay": 0.0,
+            "twoSided": false,
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "totalDuration": -1.0
+}

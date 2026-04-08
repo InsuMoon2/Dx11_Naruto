@@ -56,6 +56,11 @@
             "Level": "Static"
         },
         {
+            "Id": "Particle_Instance",
+            "ObjectType": "OBJECT_TYPE_INSTANCED_PARTICLE_POINT",
+            "Level": "Static"
+        },
+        {
             "Id": "Skill_Object",
             "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
             "Level": "Static"

@@ -274,12 +274,14 @@ void Scene_View::Update_WindowState()
     _isFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
     _isHovered = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
 
+    const bool canControlSceneCamera = _isFocused && _isHovered;
+
     auto freeCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_FREE);
     if (freeCam)
     {
         auto camFree = dynamic_pointer_cast<Camera_Free>(freeCam);
         if (camFree)
-            camFree->Set_InputEnabled(true);
+            camFree->Set_InputEnabled(canControlSceneCamera);
 
     }
 }

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "GameInstance.h"
 
 #include "Asset_Manager.h"
@@ -196,7 +196,7 @@ void GameInstance::Priority_Update_Engine(float timeDelta)
     _pipeLine->Update();
 
     _uiManager->Priority_Update(timeDelta);
-}
+ }
 
 void GameInstance::Update_Engine(float timeDelta)
 {

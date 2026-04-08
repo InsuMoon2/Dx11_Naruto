@@ -1,22 +1,4 @@
-
-float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-
-vector g_LightDir;
-vector g_LightDiffuse;
-vector g_LightAmbient;
-vector g_LightSpecular;
-
-Texture2D g_DiffuseTexture;
-vector g_MtrlAmbiment = vector(0.3f, 0.3f, 0.3, 1.f);
-vector g_MtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
-vector g_CamPosition;
-
-sampler DefaultSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = wrap;
-    AddressV = wrap;
-};
+#include "Engine_Shader_Defines.hlsli"
 
 struct VS_IN
 {
@@ -76,7 +58,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
     vector mtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
 
-    vector shade = saturate(max(dot(normalize(g_LightDir) * -1.f, In.vNormal), 0.f) + (g_LightAmbient * g_MtrlAmbiment));
+    vector shade = saturate(max(dot(normalize(g_LightDir) * -1.f, In.vNormal), 0.f) + (g_LightAmbient * g_MtrlAmbient));
 
     vector lookDir = In.vWorldPos - g_CamPosition;
     vector refelctDir = reflect(normalize(g_LightDir), In.vNormal);
@@ -98,8 +80,12 @@ technique11 DefaultTechnique
 {
     pass DefaultPass
     {
-        SetBlendState(OpaqueBlend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetRasterizerState(RS_Default);
+
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 }

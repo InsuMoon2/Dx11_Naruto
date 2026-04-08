@@ -47,6 +47,18 @@
             "Path": "../../Client/Bin/Shaders/Shader_SmearSkeletal.hlsl",
             "Level": "Static",
             "Extra": "VtxAnim"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_PARTICLE_POINT",
+            "Path": "../../Client/Bin/Shaders/Shader_VtxParticlePoint.hlsl",
+            "Level": "Static",
+            "Extra": "VtxParticlePoint"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_EFFECT_MESH",
+            "Path": "../../Client/Bin/Shaders/Shader_VtxEffectMesh.hlsl",
+            "Level": "Static",
+            "Extra": "VtxMesh"
         }
     ]
 }

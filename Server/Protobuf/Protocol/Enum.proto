@@ -4,15 +4,17 @@ package Protocol;
 enum ComponentID
 {
     // Engine ComponentID
-    COMPONENT_TPYE_ENGINE_START          = 0;
-    COMPONENT_TYPE_TRANSFORM             = 1;
-    COMPONENT_TYPE_TEXTURE               = 2;
-    COMPONENT_TYPE_COLLIDER              = 3;
-    COMPONENT_TYPE_RECT                  = 4;
-    COMPONENT_TYPE_SHADER                = 5;
-    COMPONENT_TYPE_TERRAIN               = 6;
-    COMPONENT_TYPE_MODEL                 = 7;
-    COMPONENT_TYPE_PROJECTILE            = 8;
+    COMPONENT_TPYE_ENGINE_START             = 0;
+    COMPONENT_TYPE_TRANSFORM                = 1;
+    COMPONENT_TYPE_TEXTURE                  = 2;
+    COMPONENT_TYPE_COLLIDER                 = 3;
+    COMPONENT_TYPE_RECT                     = 4;
+    COMPONENT_TYPE_SHADER                   = 5;
+    COMPONENT_TYPE_TERRAIN                  = 6;
+    COMPONENT_TYPE_MODEL                    = 7;
+    COMPONENT_TYPE_PROJECTILE               = 8;
+    COMPONENT_TYPE_VIBUFFER_PARTICLE_POINT  = 9;
+    COMPONENT_TYPE_EFFECT                   = 10;  
 
     COMPONENT_TYPE_COLLIDER_AABB         = 21;
     COMPONENT_TYPE_COLLIDER_OBB          = 22;
@@ -41,7 +43,11 @@ enum ComponentID
     COMPONENT_TYPE_TEXTURE_ANNOUNCE_HIT   = 213;
     COMPONENT_TYPE_TEXTURE_ANNOUNCE_DIGIT = 214;
     COMPONENT_TYPE_TEXTURE_TARGET         = 215;
-   
+    COMPONENT_TYPE_TEXTURE_PARTICLE_SNOW  = 216;   
+    COMPONENT_TYPE_TEXTURE_PARTICLE_EXPLOSION = 217;
+
+    COMPONENT_TYPE_TEXTURE_PARTICLE_HIT = 218;
+
     // Mesh
     COMPONENT_TYPE_MESH                 = 299;
 
@@ -61,6 +67,8 @@ enum ComponentID
     COMPONENT_TYPE_SHADER_STATIC_MESH   = 406;
     COMPONENT_TYPE_SHADER_GHOST_EFFECT  = 407;
     COMPONENT_TYPE_SHADER_SMEAR_EFFECT  = 408;
+    COMPONENT_TYPE_SHADER_PARTICLE_POINT = 409;
+    COMPONENT_TYPE_SHADER_EFFECT_MESH    = 410;  
 
     // Client ComponentID
     COMPONENT_TYPE_CLIENT_START         = 1000;
@@ -77,6 +85,7 @@ enum ComponentID
     COMPONENT_TYPE_TARGET               = 1011;
     COMPONENT_TYPE_GHOST_EFFECT         = 1012;
     COMPONENT_TYPE_SMEAR_EFFECT         = 1013;
+    
 }
 
 enum OBJECT_TYPE
@@ -102,11 +111,17 @@ enum OBJECT_TYPE
     OBJECT_TYPE_SKILL_OBJECT            = 16;
     OBJECT_TYPE_SKILL_PROJECTILE        = 17;
 
+
     // 실제 사용 스킬
     OBJECT_TYPE_SKILL_RASENGAN          = 18;
     OBJECT_TYPE_SKILL_RASENSHURIKEN     = 19;
 
     OBJECT_TYPE_SKILL_MONSTER_ATTACK    = 40;
+
+    // 인스턴스 포인트
+    OBJECT_TYPE_INSTANCED_PARTICLE_POINT = 60;
+    OBJECT_TYPE_EFFECT_MESH              = 61;  // [추가] EffectMeshObject 오브젝트 타입
+
 
     // UI : 100+
     OBJECT_TYPE_UI_TEXT                 = 100;

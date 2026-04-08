@@ -32,6 +32,8 @@ private:
 
     HRESULT         Ready_UI();
 
+    HRESULT         Ready_Effect();
+
     HRESULT         Ready_GroundColliison();
 
 private:

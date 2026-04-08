@@ -53,8 +53,12 @@
 #include "TargetComponent.h"
 #include "GhostEffect_Component.h"
 #include "SmearEffect_Component.h"  
+#include "EffectComponent.h"
 
 #include "Collider.h"
+
+#include "VIBuffer_Particle_Point.h"
+#include "Particle_Point.h"
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -158,7 +162,10 @@ void Loader::Register_Components()
     /* Component */
     GAME->Register_ComponentFactory<CombatStat>(staticLevel);
     GAME->Register_ComponentFactory<Replicator>(staticLevel);
+
     GAME->Register_ComponentFactory<VIBuffer_Rect>(staticLevel);
+    GAME->Register_ComponentFactory<VIBuffer_Particle_Point>(staticLevel);
+
     GAME->Register_ComponentFactory<MovementComponent>(staticLevel);
     GAME->Register_ComponentFactory<InputComponent>(staticLevel);
     GAME->Register_ComponentFactory<BehaviorTree>(staticLevel);
@@ -172,6 +179,10 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<TargetComponent>(staticLevel);
     GAME->Register_ComponentFactory<GhostEffect_Component>(staticLevel);
     GAME->Register_ComponentFactory<SmearEffect_Component>(staticLevel);
+
+    GAME->Register_ComponentFactory<EffectComponent>(staticLevel);
+
+    
 
     //GAME->Register_ComponentFactory<Model>(staticLevel);
 

@@ -201,6 +201,8 @@
     <ClInclude Include="..\Public\DebugDraw.h">
       <Filter>97. Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Effect_View.h" />
+    <ClInclude Include="..\Public\EffectPreviewRoot.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -355,6 +357,8 @@
     <ClCompile Include="..\Private\DebugDraw.cpp">
       <Filter>97. Utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Effect_View.cpp" />
+    <ClCompile Include="..\Private\EffectPreviewRoot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

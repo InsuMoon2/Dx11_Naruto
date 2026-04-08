@@ -18,11 +18,11 @@ public:
     EBTNodeResult   Update(float timeDelta) override;
 
 public:
-    void Set_TargetKey(const string& key) { _targetLocationKey = key; }
-    void Set_AcceptanceRadius(float radius) { _acceptanceRadius = radius; }
+    void Set_TargetKey(const string& key)    { _targetLocationKey = key; }
+    void Set_AcceptanceRadius(float radius)  { _acceptanceRadius  = radius; }
 
 private:
-    string  _targetObjectKey = "TargetObjectKey";
+    string  _targetObjectKey   = "TargetObjectKey";
     string  _targetLocationKey = "TargetLocationKey";
 
     float   _acceptanceRadius = 1.f;

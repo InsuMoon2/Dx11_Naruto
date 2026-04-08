@@ -83,3 +83,28 @@ Vec3 Utils::Project_OnPlane(const Vec3& value, const Vec3& planeNormal)
 
     return value - normal * value.Dot(normal);
 }
+
+float Utils::RandomRange(float minValue, float maxValue)
+{
+    if (minValue > maxValue)
+        std::swap(minValue, maxValue);
+
+    const float ratio = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+
+    return minValue + (maxValue - minValue) * ratio;
+}
+
+Vec3 Utils::RandomDirection()
+{
+    Vec3 dir(
+        RandomRange(-1.f, 1.f),
+        RandomRange(-1.f, 1.f),
+        RandomRange(-1.f, 1.f));
+
+    if (dir.LengthSquared() < 0.0001f)
+        dir = Vec3(0.f, 1.f, 0.f);
+
+    dir.Normalize();
+
+    return dir;
+}

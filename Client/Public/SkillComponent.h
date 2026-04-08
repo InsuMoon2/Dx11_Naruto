@@ -7,6 +7,7 @@ NS_BEGIN(Client)
 class CombatStat;
 class SkillObject;
 class SkillObject_Projectile;
+class EquipmentComponent;
 
 enum class ESkillType
 {
@@ -56,6 +57,10 @@ public:
     // On_Tick에서 위치 동기화할 때 사용
     Weak<SkillObject_Projectile> Get_PendingSkill(Protocol::OBJECT_TYPE type) const;
 
+public:
+    void Apply_WeaponSkillSet(EWeaponType weaponType);
+    void Set_EquippedSkill_ID(int slot, int skill_Id);
+
 protected:
     json    To_Json() const override;
     void    From_Json(const json& data) override;
@@ -67,6 +72,7 @@ private:
     float   _cooldownRemain[SLOT_COUNT] = {};
 
     Weak<CombatStat> _combatStat;
+    Weak<EquipmentComponent> _equipment;
 
     umap<Protocol::OBJECT_TYPE, Weak<SkillObject_Projectile>> _pendingSkills;
 

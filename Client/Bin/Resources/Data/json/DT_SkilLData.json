@@ -40,7 +40,9 @@
             "dashSpeed": 5,
             "maxDashDistance": 20,
             "targetStopDistance": 1.5,
-            "airGravityOff": false
+            "attackEndAnimStateName": "Skill_Chidori_End",
+            "airAnimStateName": "Skill_Chidori_Air",
+            "airGravityOff": true
         },
         {
             "SkillID": 1004,

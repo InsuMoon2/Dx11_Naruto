@@ -285,6 +285,10 @@
     <ClInclude Include="..\Public\DebugDraw.h" />
     <ClInclude Include="..\Public\Debug_Manager.h" />
     <ClInclude Include="..\Public\Delegate.h" />
+    <ClInclude Include="..\Public\EffectAsset_Serializer.h" />
+    <ClInclude Include="..\Public\EffectAsset_Types.h" />
+    <ClInclude Include="..\Public\EffectComponent.h" />
+    <ClInclude Include="..\Public\EffectMeshObject.h" />
     <ClInclude Include="..\Public\Event_Manager.h" />
     <ClInclude Include="..\Public\DelegateHub.h" />
     <ClInclude Include="..\Public\GameInstance.h" />
@@ -341,6 +345,8 @@
     <ClInclude Include="..\Public\Utils.h" />
     <ClInclude Include="..\Public\Vertex_Struct.h" />
     <ClInclude Include="..\Public\VIBuffer.h" />
+    <ClInclude Include="..\Public\VIBuffer_Instance.h" />
+    <ClInclude Include="..\Public\VIBuffer_Particle_Point.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
     <ClInclude Include="framework.h" />
@@ -388,6 +394,9 @@
     <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\Private\Debug_Manager.cpp" />
     <ClCompile Include="..\Private\Delegate.cpp" />
+    <ClCompile Include="..\Private\EffectAsset_Serializer.cpp" />
+    <ClCompile Include="..\Private\EffectComponent.cpp" />
+    <ClCompile Include="..\Private\EffectMeshObject.cpp" />
     <ClCompile Include="..\Private\Event_Manager.cpp" />
     <ClCompile Include="..\Private\DelegateHub.cpp" />
     <ClCompile Include="..\Private\GameInstance.cpp" />
@@ -432,6 +441,8 @@
     <ClCompile Include="..\Private\UI_Text.cpp" />
     <ClCompile Include="..\Private\Utils.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Instance.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Particle_Point.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
     <ClCompile Include="pch.cpp">

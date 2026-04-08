@@ -1,6 +1,6 @@
-float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+#include "Engine_Shader_Defines.hlsli"
+
 Texture2D g_Texture;
-Texture2D g_MaskTexture;
 
 float g_Alpha = 1.0f;
 
@@ -10,20 +10,13 @@ float g_CooldownOverlayAlpha = 0.55f;
 
 // 체력바 Fill
 float g_FillRatio   = 1.0f;
-float g_FillStartU = 0.0f;
-float g_FillEndU = 1.0f;
+float g_FillStartU  = 0.0f;
+float g_FillEndU    = 1.0f;
 
 // 기본 하얀색
 float4 g_BaseColor = float4(1.f, 1.f, 1.f, 1.f);
 
 float g_RotationAngle = 0.0f;
-
-sampler DefaultSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = wrap;
-    AddressV = wrap;
-};
 
 struct VS_IN
 {
@@ -235,77 +228,79 @@ PS_OUT PS_BLACKKEY_UI(PS_IN In)
     return Out;
 }
 
-RasterizerState CullNone
-{
-    CullMode = None;
-};
-
-
 technique11 DefaultTechnique
 {
     // 0
     pass DefaultPass
     {
-        SetRasterizerState(CullNone);
+        SetDepthStencilState(DSS_None, 0);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
     // 1
     pass ColorPass
     {
-        SetRasterizerState(CullNone);
+        SetDepthStencilState(DSS_None, 0);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_COLOR();
     }
     // 2
     pass CoolDownOverlayPass
     {
-        SetRasterizerState(CullNone);
+        SetDepthStencilState(DSS_None, 0);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_COOLDOWN_OVERLAY();
     }
     // 3
     pass HorizontalFillColorPass
     {
-        SetRasterizerState(CullNone);
+        SetDepthStencilState(DSS_None, 0);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_HORIZONTAL_FILL_COLOR();
     }
     // 4
     pass RotationDefaultPass
     {
-        SetRasterizerState(CullNone);
+        SetDepthStencilState(DSS_None, 0);
 
         VertexShader = compile vs_5_0 VS_ROTATE_UI();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
     // 5
     pass MaskedDefaultPass
     {
-        SetRasterizerState(CullNone);
+        SetDepthStencilState(DSS_None, 0);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MASKED_UI();
     }
     // 6
     pass MaskedCoolDownOverlayPass
     {
-        SetRasterizerState(CullNone);
+        SetDepthStencilState(DSS_None, 0);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MASKED_COOLDOWN_OVERLAY();
     }
 
     // 7
     pass BlackKeyUIPass
     {
-        SetRasterizerState(CullNone);
+        SetDepthStencilState(DSS_None, 0);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLACKKEY_UI();
     }
 }

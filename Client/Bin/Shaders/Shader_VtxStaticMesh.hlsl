@@ -1,29 +1,11 @@
-float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-
-vector g_LightDir;
-vector g_LightDiffuse;
-vector g_LightAmbient;
-vector g_LightSpecular;
-
-Texture2D g_DiffuseTexture;
+#include "Engine_Shader_Defines.hlsli"
 
 float4 g_BaseColorFactor = float4(1.f, 1.f, 1.f, 1.f);
 int g_HasDiffuseTexture = 1;
 
-vector g_MtrlAmbiment = vector(0.3f, 0.3f, 0.3f, 1.f);
-vector g_MtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
-vector g_CamPosition;
-
 float4 g_OutlineColor = float4(0.1f, 1.f, 0.1f, 1.f);
 float g_OutlineThickness = 0.0035f;
 int g_IsOutlineEnabled = 0;
-
-sampler DefaultSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = wrap;
-    AddressV = wrap;
-};
 
 struct VS_IN
 {
@@ -103,7 +85,7 @@ PS_OUT PS_MAIN(PS_IN In)
     }
 
     vector shade = saturate(
-        max(dot(normalize(g_LightDir) * -1.f, In.vNormal), 0.f) + (g_LightAmbient * g_MtrlAmbiment));
+        max(dot(normalize(g_LightDir) * -1.f, In.vNormal), 0.f) + (g_LightAmbient * g_MtrlAmbient));
 
     vector lookDir = In.vWorldPos - g_CamPosition;
     vector reflectDir = reflect(normalize(g_LightDir), In.vNormal);
@@ -125,40 +107,28 @@ PS_OUT PS_OUTLINE(PS_IN In)
     return Out;
 }
 
-BlendState OpaqueBlend
-{
-    BlendEnable[0] = False;
-};
-
-RasterizerState CullBack
-{
-    FillMode = Solid;
-    CullMode = Back;
-};
-
-RasterizerState CullFront
-{
-    FillMode = Solid;
-    CullMode = Front;
-};
 
 technique11 DefaultTechnique
 {
     pass DefaultPass
     {
-        SetBlendState(OpaqueBlend, float4(0.f, 0.f, 0.f, 0.f), 0xFFFFFFFF);
-        SetRasterizerState(CullBack);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetRasterizerState(RS_Default);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
     pass OutlinePass
     {
-        SetBlendState(OpaqueBlend, float4(0.f, 0.f, 0.f, 0.f), 0xFFFFFFFF);
-        SetRasterizerState(CullFront);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetRasterizerState(RS_Default);
 
         VertexShader = compile vs_5_0 VS_OUTLINE();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_OUTLINE();
     }
 }
