@@ -5,6 +5,7 @@
 #include "Collider.h"
 #include "Character.h"
 #include "MyPlayer.h"
+#include "EffectComponent.h"
 
 REGISTER_GAMEOBJECT_CATEGORY(Skill_Rasengan, Protocol::OBJECT_TYPE_SKILL_RASENGAN, "SkillSpawn");
 
@@ -35,7 +36,11 @@ HRESULT Skill_Rasengan::Initialize(void* arg)
 {
     CHECK_FAILED(SkillObject::Initialize(arg), E_FAIL);
 
+    EffectComponent::FPlayDesc playDesc{};
+    playDesc.effectAssetName = "RasenganTest";
+    playDesc.loopOverride = true;
 
+    CHECK_FAILED(_effectCom->Play_Effect(playDesc), E_FAIL);
 
     return S_OK;
 }

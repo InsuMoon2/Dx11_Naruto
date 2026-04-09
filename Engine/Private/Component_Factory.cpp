@@ -28,12 +28,19 @@ void Component_Factory::Register_Prototype(uint32 typeId, uint32 levelIndex, Com
         return;
     }
 
+	const wstring className = _classNames.contains(typeId)
+		? _classNames[typeId]
+		: L"<unknown>";
+
     // Creator로 프로토타입 인스턴스 생성
     auto prototype = iter->second(device, context);
     if (!prototype)
     {
-        LOG_ERROR("Failed to create prototype (typeId: {})", typeId);
-        return;
+        LOG_ERROR(
+            "Failed to create prototype (typeId: {}, className: '{}', levelIndex: {})",
+            typeId,
+            Utils::ToString(className),
+            levelIndex);
     }
 
     // 만든 후 프로토타입 등록

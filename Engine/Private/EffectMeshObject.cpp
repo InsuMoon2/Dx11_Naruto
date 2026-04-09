@@ -152,6 +152,17 @@ HRESULT EffectMeshObject::Resolve_Resources()
         if (FAILED(Add_Component(modelKey, _modelCom)))
         {
             wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.modelGuid);
+
+            if (resolvedPath.empty())
+            {
+                LOG_ERROR(
+                    "EffectMeshObject model resolve failed. layer='{}', modelGuid='{}'",
+                    _layerDesc.base.layerName,
+                    _layerDesc.mesh.modelGuid);
+
+                return E_FAIL;
+            }
+
             if (!resolvedPath.empty())
             {
 				Matrix scaleMatrix = Matrix::CreateScale(0.001f);
@@ -176,6 +187,17 @@ HRESULT EffectMeshObject::Resolve_Resources()
         if (FAILED(Add_Component(texKey, _diffuseTexture)))
         {
             wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.diffuseTextureGuid);
+
+            if (resolvedPath.empty())
+            {
+                LOG_ERROR(
+                    "EffectMeshObject diffuse resolve failed. layer='{}', diffuseGuid='{}'",
+                    _layerDesc.base.layerName,
+                    _layerDesc.mesh.diffuseTextureGuid);
+
+                return E_FAIL;
+            }
+
             if (!resolvedPath.empty())
             {
                 auto proto = Texture::Create(_device, _context, resolvedPath, 1);
@@ -202,6 +224,17 @@ HRESULT EffectMeshObject::Resolve_Resources()
         if (FAILED(Add_Component(texKey, _maskTexture)))
         {
             wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.maskTextureGuid);
+
+            if (resolvedPath.empty())
+            {
+                LOG_ERROR(
+                    "EffectMeshObject mask resolve failed. layer='{}', maskGuid='{}'",
+                    _layerDesc.base.layerName,
+                    _layerDesc.mesh.maskTextureGuid);
+
+                return E_FAIL;
+            }
+
             if (!resolvedPath.empty())
             {
                 auto proto = Texture::Create(_device, _context, resolvedPath, 1);
@@ -234,8 +267,30 @@ void EffectMeshObject::Update_Rotation(float timeDelta)
 
 HRESULT EffectMeshObject::Ready_Components()
 {
-    CHECK_FAILED(Resolve_Resources(), E_FAIL);
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_EFFECT_MESH, _shaderCom), E_FAIL);
+    // 메쉬 이펙트 레이어 리소스(model/texture) 해석 실패 지점을 구분하기 위한 로그
+    if (FAILED(Resolve_Resources()))
+    {
+        LOG_ERROR(
+            "EffectMeshObject::Resolve_Resources failed. layer='{}', modelGuid='{}', diffuseGuid='{}', maskGuid='{}'",
+            _layerDesc.base.layerName,
+            _layerDesc.mesh.modelGuid,
+            _layerDesc.mesh.diffuseTextureGuid,
+            _layerDesc.mesh.maskTextureGuid);
+
+        return E_FAIL;
+    }
+
+    // 메쉬 이펙트 전용 셰이더 프로토타입이 없거나 생성 실패했는지 확인하기 위한 로그
+    if (FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_EFFECT_MESH, _shaderCom)))
+    {
+        LOG_ERROR(
+            "EffectMeshObject failed to add shader component. layer='{}', shaderTypeId={}",
+            _layerDesc.base.layerName,
+            static_cast<uint32>(Protocol::COMPONENT_TYPE_SHADER_EFFECT_MESH));
+
+        return E_FAIL;
+    }
+
     return S_OK;
 }
 

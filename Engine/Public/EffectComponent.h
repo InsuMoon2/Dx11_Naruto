@@ -12,7 +12,7 @@ class ENGINE_DLL EffectComponent : public Component
 public:
     struct FPlayDesc
     {
-        string  effectAssetGuid;
+        string  effectAssetName;
         Vec3    localPosition = Vec3::Zero;
         Vec3    localRotation = Vec3::Zero;
         Vec3    localScale = Vec3(1.f, 1.f, 1.f);
@@ -57,8 +57,10 @@ private:
 
     void    Apply_LayerTransformInternal(FActiveLayer& layer);
 
+    string  Resolve_EffectAssetPathByName(const string& effectAssetName);
+
 private:
-    string                  _assetGuid;
+    string                  _assetName;
     FEffectAssetDesc        _asset;
     vector<FActiveLayer>    _layers;
 

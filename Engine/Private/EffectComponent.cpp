@@ -1,9 +1,6 @@
 ﻿#include "pch.h"
 #include "EffectComponent.h"
-
 #include "EffectAsset_Serializer.h"
-
-
 
 EffectComponent::EffectComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -131,15 +128,21 @@ HRESULT EffectComponent::Play_Effect(const FPlayDesc& desc)
     Stop_Effect();
 
     _desc = desc;
-    _assetGuid = desc.effectAssetGuid;
+    _assetName = desc.effectAssetName;
 
-    string path = Utils::ToString(GAME->Resolve_AssetPath(_assetGuid));
+    string path = Resolve_EffectAssetPathByName(_assetName);
     if (path.empty())
+    {
+        LOG_ERROR("EffectComponent::Play_Effect failed to resolve effect asset. name='{}'", _assetName);
         return E_FAIL;
+    }
 
     FEffectAssetDesc loadedAsset{};
     if (FAILED(EffectAsset_Serializer::Load_EffectAsset(path, loadedAsset)))
+    {
+        LOG_ERROR("EffectComponent::Play_Effect failed to load effect asset. path='{}'", path);
         return E_FAIL;
+    }
 
     return Play_EffectAsset(loadedAsset);
 }
@@ -327,6 +330,44 @@ void EffectComponent::Apply_LayerTransformInternal(FActiveLayer& layer)
         layer.desc.base.localRotation.z);
 
     childTransform->Set_LocalScale(layer.desc.base.localScale);
+}
+
+string EffectComponent::Resolve_EffectAssetPathByName(const string& effectAssetName)
+{
+    if (effectAssetName.empty())
+        return "";
+
+    fs::path effectFolder = EffectAsset_Serializer::Get_EffectFolderPath();
+
+    if(effectFolder.empty() || !fs::exists(effectFolder))
+        return "";
+
+    fs::path directPath = effectFolder / effectAssetName;
+    if (fs::exists(directPath) && fs::is_regular_file(directPath))
+        return directPath.string();
+
+    fs::path effectJsonPath = effectFolder / (effectAssetName + ".effect.json");
+    if (fs::exists(effectJsonPath) && fs::is_regular_file(effectJsonPath))
+        return effectJsonPath.string();
+
+    for (const auto& entry : fs::directory_iterator(effectFolder))
+    {
+        if (!entry.is_regular_file())
+            continue;
+
+        const fs::path path = entry.path();
+        const string fileName = path.filename().string();
+        const string stemName = path.stem().stem().string();
+
+        if (Utils::ToLowerCopy(fileName) == Utils::ToLowerCopy(effectAssetName))
+            return path.string();
+
+        if (Utils::ToLowerCopy(stemName) == Utils::ToLowerCopy(effectAssetName))
+            return path.string();
+    }
+
+    return "";
+
 }
 
 Shared<EffectComponent> EffectComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

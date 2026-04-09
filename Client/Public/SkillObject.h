@@ -31,6 +31,7 @@ public:
 
         int32   ownerSkillId  = 0;
 
+        string  effectAssetName = "";
         Collision_Preset collisionPreset = Collision_Preset::Projectile;
     };
 
@@ -72,6 +73,8 @@ protected:
     float   _hitLaunchForce = 0.f;
 
     float   _colliderRadius = 1.0f;
+
+    string  _effectAssetName = "";
 
     // 동일 대상 충돌 처리
     umap<GameObject*, float> _hitCooldowns;

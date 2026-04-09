@@ -10,6 +10,7 @@
 #include "Bounding_OBB.h"
 #include "Bounding_Sphere.h"
 #include "MyPlayer.h"
+#include "EffectComponent.h"
 
 REGISTER_GAMEOBJECT(SkillObject, Protocol::OBJECT_TYPE_SKILL_OBJECT)
 
@@ -29,6 +30,7 @@ SkillObject::SkillObject(const SkillObject& rhs)
     , _hitInterval(rhs._hitInterval)
     , _hitLaunchForce(rhs._hitLaunchForce)
     , _colliderRadius(rhs._colliderRadius)
+    , _effectAssetName(rhs._effectAssetName)
 {
 }
 
@@ -51,8 +53,8 @@ HRESULT SkillObject::Initialize(void* arg)
             _lifetime = desc->lifetime;
 
         _ownerSkillId = desc->ownerSkillId;
-
         _collisionPreset = desc->collisionPreset;
+        _effectAssetName = desc->effectAssetName;
 
         if (_transformCom)
         {
@@ -76,9 +78,7 @@ HRESULT SkillObject::Initialize(void* arg)
     }
 
     if (_collider)
-    {
         _collider->Set_CollisionPreset(_collisionPreset);
-    }
 
     return S_OK;
 }
@@ -91,6 +91,9 @@ void SkillObject::Priority_Update(float timeDelta)
 void SkillObject::Update(float timeDelta)
 {
     GameObject::Update(timeDelta);
+
+    if (_effectCom)
+        _effectCom->Update(timeDelta);
 
     if (_lifetime > 0.f)
     {
@@ -115,6 +118,9 @@ void SkillObject::Update(float timeDelta)
 void SkillObject::Late_Update(float timeDelta)
 {
     GameObject::Late_Update(timeDelta);
+
+    if (_effectCom)
+        _effectCom->Late_Update(timeDelta);
 
     if (!Is_Destroy() && _collider)
     {
@@ -171,9 +177,8 @@ HRESULT SkillObject::Ready_Components(const FSkillObjectDesc& desc)
 
     CHECK_NULL(_collider, E_FAIL);
 
-    //_collider->Set_CollisionPreset(Collision_Preset::Projectile);
-
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_EFFECT, _effectCom), E_FAIL);
+
 
     return S_OK;
 }

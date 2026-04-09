@@ -30,42 +30,82 @@ HRESULT Shader::Initialize_Prototype(const wstring& shaderFilePath,
     hlslFlag |= D3DCOMPILE_OPTIMIZATION_LEVEL0;
 #endif
 
-    // ComPtr<ID3DBlob> blob;
-    CHECK_FAILED(D3DX11CompileEffectFromFile(shaderFilePath.c_str(), nullptr,
+    // 셰이더 effect 컴파일 단계가 실패했는지 확인하기 위한 에러 버퍼
+    ComPtr<ID3DBlob> errorBlob;
+
+    const HRESULT compileHr = D3DX11CompileEffectFromFile(
+        shaderFilePath.c_str(),
+        nullptr,
         D3D_COMPILE_STANDARD_FILE_INCLUDE,
-        hlslFlag, 0, _device.Get(), &_effect,
-        nullptr),
-        E_FAIL);
+        hlslFlag,
+        0,
+        _device.Get(),
+        &_effect,
+        errorBlob.GetAddressOf());
+
+    if (FAILED(compileHr))
+    {
+        string errorText = "(no compiler error text)";
+        if (errorBlob && errorBlob->GetBufferPointer())
+        {
+            errorText.assign(
+                static_cast<const char*>(errorBlob->GetBufferPointer()),
+                errorBlob->GetBufferSize());
+        }
+
+        LOG_ERROR(
+            "Shader effect compile failed. path='{}', hr=0x{:08X}, inputElements={}, error={}",
+            Utils::ToString(shaderFilePath),
+            static_cast<uint32>(compileHr),
+            numElements,
+            errorText);
+
+        return E_FAIL;
+    }
 
     ComPtr<ID3DX11EffectTechnique> technique = _effect->GetTechniqueByIndex(0);
     CHECK_NULL(technique, E_FAIL);
 
     D3DX11_TECHNIQUE_DESC techniqueDesc{};
-
     technique->GetDesc(&techniqueDesc);
 
     _numPasses = techniqueDesc.Passes;
 
-    for (size_t i = 0; i < _numPasses; i++)
+    for (size_t i = 0; i < _numPasses; ++i)
     {
         ComPtr<ID3D11InputLayout> inputLayout;
-
         ComPtr<ID3DX11EffectPass> pass = technique->GetPassByIndex(i);
         CHECK_NULL(pass, E_FAIL);
 
         D3DX11_PASS_DESC passDesc{};
         pass->GetDesc(&passDesc);
 
-        CHECK_FAILED(_device->CreateInputLayout(
-            desc, numElements, passDesc.pIAInputSignature,
-            passDesc.IAInputSignatureSize, &inputLayout),
-            E_FAIL);
+        // 어느 pass의 input layout 생성이 실패하는지 보기 위한 진단 로그
+        const HRESULT layoutHr = _device->CreateInputLayout(
+            desc,
+            numElements,
+            passDesc.pIAInputSignature,
+            passDesc.IAInputSignatureSize,
+            &inputLayout);
+
+        if (FAILED(layoutHr))
+        {
+            LOG_ERROR(
+                "Shader input layout create failed. path='{}', passIndex={}, hr=0x{:08X}, inputElements={}",
+                Utils::ToString(shaderFilePath),
+                static_cast<uint32>(i),
+                static_cast<uint32>(layoutHr),
+                numElements);
+
+            return E_FAIL;
+        }
 
         _inputLayouts.push_back(inputLayout);
     }
 
     return S_OK;
 }
+
 
 HRESULT Shader::Initialize(void* arg)
 {
