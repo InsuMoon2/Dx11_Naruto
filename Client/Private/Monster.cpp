@@ -10,7 +10,7 @@
 #include "Model.h"
 #include "AnimationStateComponent.h"
 #include "GameObject_Factory.h"
-
+#include "Blackboard.h"
 #include "Bounding_Sphere.h"
 #include "Collider.h"
 
@@ -55,6 +55,15 @@ void Monster::BeginPlay()
 {
     Character::BeginPlay();
 
+    auto animState = Get_Component<AnimationStateComponent>();
+    if (animState)
+    {
+        animState->Play_State("Idle");
+
+        auto model = Get_Component<Model>();
+        if (model)
+            model->Play_Animation(0.f); 
+    }
 }
 
 void Monster::Priority_Update(float timeDelta)
@@ -154,7 +163,14 @@ void Monster::OnDamaged(const FDamageEvent& damageEvent)
 {
     Character::OnDamaged(damageEvent);
 
-    // TODO : 피격 상태 전환 -> 몬스터는 비헤이비어 트리에서 상태값 변경해주기
+    if (_behavior)
+    {
+        auto blackboard = _behavior->Get_Blackboard();
+        if (blackboard)
+        {
+            blackboard->Set_ValueAsBool("IsHit", true);
+        }
+    }
 }
 
 void Monster::OnDead(const FDamageEvent& damageEvent)

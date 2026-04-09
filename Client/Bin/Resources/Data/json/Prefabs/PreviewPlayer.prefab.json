@@ -42,7 +42,7 @@
         },
         {
             "animations": [
-                "SK_CHR_NormalModel|CustomMan_Idle_Loop"
+                "SK_CHR_NormalModel|CustomMan_CharaSelect_Idle"
             ],
             "materials": [
                 {
@@ -253,7 +253,7 @@
             }
         }
     },
-    "guid": "197f5437-1d9d-422d-a068-5fe8b3a1c472",
+    "guid": "f89e0ae3-5a32-4486-9740-28b7ccd596b4",
     "object_type": "OBJECT_TYPE_PREVIEW_PLAYER",
     "prefab_name": "PreviewPlayer",
     "static_class": "PreviewPlayer"

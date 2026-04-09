@@ -248,6 +248,7 @@
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\BTTask_Attack.h" />
     <ClInclude Include="..\Public\BTTask_FindClosestTarget.h" />
+    <ClInclude Include="..\Public\BTTask_Hit.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
     <ClInclude Include="..\Public\Camera_Target.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
@@ -309,6 +310,7 @@
     <ClInclude Include="..\Public\SkillObject.h" />
     <ClInclude Include="..\Public\SkillObject_MonsterAttack.h" />
     <ClInclude Include="..\Public\SkillObject_Projectile.h" />
+    <ClInclude Include="..\Public\Skill_FireBall.h" />
     <ClInclude Include="..\Public\Skill_Rasengan.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
     <ClInclude Include="..\Public\SmearEffect_Component.h" />
@@ -380,6 +382,7 @@
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\BTTask_Attack.cpp" />
     <ClCompile Include="..\Private\BTTask_FindClosestTarget.cpp" />
+    <ClCompile Include="..\Private\BTTask_Hit.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Target.cpp" />
     <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
@@ -434,6 +437,7 @@
     <ClCompile Include="..\Private\SkillObject.cpp" />
     <ClCompile Include="..\Private\SkillObject_MonsterAttack.cpp" />
     <ClCompile Include="..\Private\SkillObject_Projectile.cpp" />
+    <ClCompile Include="..\Private\Skill_FireBall.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
     <ClCompile Include="..\Private\SmearEffect_Component.cpp" />

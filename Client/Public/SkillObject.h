@@ -5,6 +5,7 @@
 NS_BEGIN(Engine)
 class Collider;
 class Character;
+class EffectComponent;
 NS_END
 
 NS_BEGIN(Client)
@@ -54,6 +55,7 @@ protected:
 
 protected:
     Shared<Collider> _collider;
+    Shared<EffectComponent> _effectCom;
 
     float   _lifetime = 2.f;        // 수명 시간     
     float   _elapsedTime = 0.f;     // 스폰 후 경과 시간

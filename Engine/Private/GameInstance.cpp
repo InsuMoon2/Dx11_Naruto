@@ -233,9 +233,9 @@ void GameInstance::Update_CameraOnly(float timeDelta)
     _pipeLine->Update();
 }
 
-HRESULT GameInstance::Draw()
+HRESULT GameInstance::Draw(bool renderDebugPrimitives, bool renderColliders)
 {
-    _renderer->Draw();
+    _renderer->Draw(renderDebugPrimitives, renderColliders);
     _levelManager->Render();
 
     return S_OK;

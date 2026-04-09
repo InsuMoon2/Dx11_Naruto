@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "BTNode_Factory.h"
-
+#include "BTDecorator_Blackboard.h"
 #include "BTComposite.h"
 #include "BTRoot.h"
 #include "BTTask_MoveTo.h"
@@ -35,6 +35,7 @@ void BTNode_Factory::Register_EngineNodes()
     Register("Composite", "Selector", []() {return BTSelector::Create(); });
 
     // TODO : Decorator (Invertor, Repeater) 추가 예정
+    Register("Decorator", "Decorator_Blackboard", []() { return BTDecorator_Blackboard::Create(); });
 
     /* Task */
     Register("Task", "Task_Wait", []() {return BTTask_Wait::Create(); });

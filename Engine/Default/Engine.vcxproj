@@ -260,6 +260,8 @@
     <ClInclude Include="..\Public\Bounding_OBB.h" />
     <ClInclude Include="..\Public\Bounding_Sphere.h" />
     <ClInclude Include="..\Public\BTComposite.h" />
+    <ClInclude Include="..\Public\BTDecorator.h" />
+    <ClInclude Include="..\Public\BTDecorator_Blackboard.h" />
     <ClInclude Include="..\Public\BTNode.h" />
     <ClInclude Include="..\Public\BTNode_Factory.h" />
     <ClInclude Include="..\Public\BTRoot.h" />
@@ -371,6 +373,8 @@
     <ClCompile Include="..\Private\Bounding_OBB.cpp" />
     <ClCompile Include="..\Private\Bounding_Sphere.cpp" />
     <ClCompile Include="..\Private\BTComposite.cpp" />
+    <ClCompile Include="..\Private\BTDecorator.cpp" />
+    <ClCompile Include="..\Private\BTDecorator_Blackboard.cpp" />
     <ClCompile Include="..\Private\BTNode.cpp" />
     <ClCompile Include="..\Private\BTNode_Factory.cpp" />
     <ClCompile Include="..\Private\BTRoot.cpp" />

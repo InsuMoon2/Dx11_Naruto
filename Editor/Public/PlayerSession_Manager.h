@@ -21,14 +21,8 @@ public:
     void    Save_SceneSnapshot();
 
 private:
-    // Play 진입 직전 월드에 존재하던 오브젝트 GUID를 기록한다.
-    // Stop 시 새로 생성된 런타임 오브젝트만 골라내기 위해 Begin_PlaySession에서 호출된다.
     void    Capture_PlaySessionObjectGuids(uint32 levelIndex);
-    // Play 중 새로 생성된 오브젝트를 편집 월드 스냅샷에 병합한다.
-    // End_PlaySession에서 Restore_SceneSnapshot 직전에 호출된다.
     void    Merge_RuntimeSpawnedObjects_IntoSnapshot(uint32 levelIndex);
-    // 런타임 오브젝트 중 Stop 후 편집 월드에 유지할 대상을 판별한다.
-    // 현재는 플레이 중 생성된 몬스터만 유지 대상으로 사용한다.
     bool    Can_Persist_RuntimeObject(const Shared<GameObject>& obj) const;
 
 private:

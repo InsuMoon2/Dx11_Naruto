@@ -61,6 +61,11 @@
             "Level": "Static"
         },
         {
+            "Id": "Effect_Mesh",
+            "ObjectType": "OBJECT_TYPE_EFFECT_MESH",
+            "Level": "Static"
+        },
+        {
             "Id": "Skill_Object",
             "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
             "Level": "Static"
@@ -78,6 +83,16 @@
         {
             "Id": "Skill_RasenShuriken",
             "ObjectType": "OBJECT_TYPE_SKILL_RASENSHURIKEN",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_FireBall",
+            "ObjectType": "OBJECT_TYPE_SKILL_FIREBALL",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_Chidori",
+            "ObjectType": "OBJECT_TYPE_SKILL_CHIDORI",
             "Level": "Static"
         },
         {

@@ -9,11 +9,11 @@
             "IsHoldSkill": true,
             "hasDashPhase": true,
             "dashSpeed": 14,
-            "maxDashDistance": 8,
+            "maxDashDistance": 12,
             "targetStopDistance": 1.5,
             "attackEndAnimStateName": "Skill_Rasengan_End",
             "airAnimStateName": "Skill_Rasengan_Air",
-            "airGravityOff": false
+            "airGravityOff": true
         },
         {
             "SkillID": 1002,
@@ -31,30 +31,31 @@
         },
         {
             "SkillID": 1003,
-            "SkillName": "Chidori",
-            "Cooldown": 5,
-            "AnimStateName": "Skill_Chidori",
-            "LoopDurationSec": 4,
-            "IsHoldSkill": true,
-            "hasDashPhase": true,
-            "dashSpeed": 5,
-            "maxDashDistance": 20,
-            "targetStopDistance": 1.5,
-            "attackEndAnimStateName": "Skill_Chidori_End",
-            "airAnimStateName": "Skill_Chidori_Air",
-            "airGravityOff": true
-        },
-        {
-            "SkillID": 1004,
-            "SkillName": "BlastboomDance",
+            "SkillName": "FireBall",
             "Cooldown": 4,
-            "AnimStateName": "Skill_BlastBoomDance",
+            "AnimStateName": "Skill_FireBall",
             "LoopDurationSec": 0,
             "IsHoldSkill": false,
             "hasDashPhase": false,
             "dashSpeed": 5,
             "maxDashDistance": 20,
             "targetStopDistance": 1.5,
+            "airAnimStateName": "Skill_FireBall_Air",
+            "airGravityOff": true
+        },
+        {
+            "SkillID": 1004,
+            "SkillName": "Chidori",
+            "Cooldown": 5,
+            "AnimStateName": "Skill_Chidori",
+            "LoopDurationSec": 4,
+            "IsHoldSkill": true,
+            "hasDashPhase": true,
+            "dashSpeed": 14,
+            "maxDashDistance": 12,
+            "targetStopDistance": 1.5,
+            "attackEndAnimStateName": "Skill_Chidori_End",
+            "airAnimStateName": "Skill_Chidori_Air",
             "airGravityOff": true
         },
         {

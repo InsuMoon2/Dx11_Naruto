@@ -311,6 +311,8 @@
     <ClInclude Include="..\Public\EffectAsset_Types.h" />
     <ClInclude Include="..\Public\EffectAsset_Serializer.h" />
     <ClInclude Include="..\Public\EffectComponent.h" />
+    <ClInclude Include="..\Public\BTDecorator.h" />
+    <ClInclude Include="..\Public\BTDecorator_Blackboard.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -762,6 +764,8 @@
     <ClCompile Include="..\Private\EffectMeshObject.cpp" />
     <ClCompile Include="..\Private\EffectAsset_Serializer.cpp" />
     <ClCompile Include="..\Private\EffectComponent.cpp" />
+    <ClCompile Include="..\Private\BTDecorator.cpp" />
+    <ClCompile Include="..\Private\BTDecorator_Blackboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

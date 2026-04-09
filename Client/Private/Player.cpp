@@ -75,6 +75,12 @@ void Player::Update(float timeDelta)
     if (_smearEffect)
         _smearEffect->Update_Smear(timeDelta);
 
+    // 스킬 연출 재생
+    //if (INPUT->KeyDown(KEY_TYPE::KEY_1))
+    //{
+    //    GAME->Play_Cinematic(TEXT("PlayerCamTest2"), _transformCom, true);
+    //}
+
 }
 
 void Player::Late_Update(float timeDelta)
@@ -116,11 +122,10 @@ void Player::OnDamaged(const FDamageEvent& damageEvent)
 {
     Character::OnDamaged(damageEvent);
 
-    // 피격 상태 전환
     auto sm = Get_Component<PlayerStateMachine>();
     if (sm && _combatStat && !_combatStat->Is_Dead())
     {
-        sm->Force_Enter_State(EPlayerState::Hit);
+        sm->Trigger_HitReaction(); // 스테이트 머신에서 슈퍼아머인지 판단하고 상태 변환
     }
 }
 

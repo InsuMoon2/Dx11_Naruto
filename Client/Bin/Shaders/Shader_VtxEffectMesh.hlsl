@@ -12,6 +12,7 @@ float2 g_UVTiling;
 
 float4 g_ColorTint;
 float  g_Opacity;
+int    g_ForceVisiblePreview;
 
 /* 프레넬 강도 (가운데 투명정도) */
 float  g_FresnelPower;
@@ -64,6 +65,11 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
+    if (g_ForceVisiblePreview != 0)
+    {
+        Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+        return Out;
+    }
 
     /* 1. UV 스크롤 적용 — uvScrollSpeed * time이 g_UVOffset으로 들어온다 */
     float2 scrolledUV = In.vTexcoord * g_UVTiling + g_UVOffset;
@@ -95,6 +101,11 @@ PS_OUT PS_MAIN(PS_IN In)
 PS_OUT PS_MAIN_NO_MASK(PS_IN In)
 {
     PS_OUT Out;
+    if (g_ForceVisiblePreview != 0)
+    {
+        Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+        return Out;
+    }
 
     float2 scrolledUV = In.vTexcoord * g_UVTiling + g_UVOffset;
     float4 diffuse = g_DiffuseTexture.Sample(DefaultSampler, scrolledUV);
@@ -110,67 +121,112 @@ PS_OUT PS_MAIN_NO_MASK(PS_IN In)
     Out.vColor.rgb = diffuse.rgb * g_ColorTint.rgb;
     Out.vColor.a   = diffuse.a * g_Opacity * fresnel * g_ColorTint.a;
 
-    if (Out.vColor.a < 0.01f)
-        discard;
+    // 왜안나오냐고 지금
+    //if (Out.vColor.a < 0.01f)
+    //    discard;
 
     return Out;
 }
 
-
 technique11 DefaultTechnique
 {
-    /* Pass 0 : Translucent — 일반 알파 블렌딩 (나선환 A, B, D, G 레이어) */
     pass TranslucentPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_ZTest_NoWrite, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass AdditivePass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_ZTest_NoWrite, 0);
+        SetBlendState(BS_Additive, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass OpaquePass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass TranslucentNoMaskPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_ZTest_NoWrite, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_NO_MASK();
+    }
+
+    pass AdditiveNoMaskPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_ZTest_NoWrite, 0);
+        SetBlendState(BS_Additive, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_NO_MASK();
+    }
+
+    pass TranslucentTwoSidedPass
     {
         SetRasterizerState(RS_CullNone);
         SetDepthStencilState(DSS_ZTest_NoWrite, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        PixelShader  = compile ps_5_0 PS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    /* Pass 1 : Additive — 가산 블렌딩 (나선환 C 레이어 등) */
-    pass AdditivePass
+    pass AdditiveTwoSidedPass
     {
         SetRasterizerState(RS_CullNone);
         SetDepthStencilState(DSS_ZTest_NoWrite, 0);
         SetBlendState(BS_Additive, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        PixelShader  = compile ps_5_0 PS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    /* Pass 2 : Opaque — 불투명 (나선환 E, F 레이어 등) */
-    pass OpaquePass
+    pass OpaqueTwoSidedPass
     {
         SetRasterizerState(RS_CullNone);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        PixelShader  = compile ps_5_0 PS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    /* Pass 3 : Translucent (마스크 없음) — Diffuse만으로 알파 블렌딩 */
-    pass TranslucentNoMaskPass
+    pass TranslucentNoMaskTwoSidedPass
     {
         SetRasterizerState(RS_CullNone);
         SetDepthStencilState(DSS_ZTest_NoWrite, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        PixelShader  = compile ps_5_0 PS_MAIN_NO_MASK();
+        PixelShader = compile ps_5_0 PS_MAIN_NO_MASK();
     }
 
-    /* Pass 4 : Additive (마스크 없음) — Diffuse만으로 가산 블렌딩 */
-    pass AdditiveNoMaskPass
+    pass AdditiveNoMaskTwoSidedPass
     {
         SetRasterizerState(RS_CullNone);
         SetDepthStencilState(DSS_ZTest_NoWrite, 0);
         SetBlendState(BS_Additive, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        PixelShader  = compile ps_5_0 PS_MAIN_NO_MASK();
+        PixelShader = compile ps_5_0 PS_MAIN_NO_MASK();
     }
 }

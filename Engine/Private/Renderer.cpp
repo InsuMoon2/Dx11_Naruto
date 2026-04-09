@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Renderer.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -86,7 +86,7 @@ void Renderer::Restore_RenderGroup()
     }
 }
 
-void Renderer::Draw()
+void Renderer::Draw(bool renderDebugPrimitives, bool renderColliders)
 {
     _drawCallCount = 0;
 
@@ -101,15 +101,21 @@ void Renderer::Draw()
     Render_Blend();
 
     Apply_Default3DState();
-    GAME->Render_DebugDepth();
+
+    if (renderDebugPrimitives)
+        GAME->Render_DebugDepth();
 
     Apply_UIState();
 
 #ifdef _DEBUG
-    GAME->Render_Colliders();
+
+    if (renderColliders)
+        GAME->Render_Colliders();
+    
 #endif
 
-    GAME->Render_DebugOverlay();
+    if (renderDebugPrimitives)
+        GAME->Render_DebugOverlay();
 
     Apply_Default3DState();
 

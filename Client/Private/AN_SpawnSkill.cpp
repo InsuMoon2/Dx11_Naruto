@@ -7,8 +7,12 @@
 #include "Utils.h"
 #include "SkillObject_Projectile.h"
 #include "Client_Defines.h"
+#include "MyPlayer.h"
+#include "SkillComponent.h"
+#include "TargetComponent.h"
 
 REGISTER_ANIM_NOTIFY(AN_SpawnSkill)
+
 IMPLEMENT_REFLECTION(AN_SpawnSkill)
 
 bool AN_SpawnSkill::Register_Properties()
@@ -17,10 +21,11 @@ bool AN_SpawnSkill::Register_Properties()
     info.className = "AN_SpawnSkill";
     info.properties.clear();
 
-    PROPERTY_INT("스킬 ID", _skill_Id, 0, 9999);
-    PROPERTY_VEC3("로컬 오프셋", _localOffset, 0.1f);
-    PROPERTY_STRING("레이어 태그", _layerTag);
-    PROPERTY_BOOL("Forward 사용", _useOwnerForward);
+    PROPERTY_ENUM_JSON("스킬 타입", "spawn_type", _spawnObjectType, Protocol::OBJECT_TYPE);
+    PROPERTY_ENUM_JSON("충돌 프리셋", "collision_preset", _collisionPreset, Collision_Preset);
+    PROPERTY_VEC3_JSON("로컬 오프셋", "local_offset", _localOffset, 0.1f);
+    PROPERTY_BOOL_JSON("Forward 사용", "use_owner_forward", _useOwnerForward);
+    PROPERTY_BOOL_JSON("타겟을 향해 던질지", "aim_at_target", _aimAtTarget);
 
     return true;
 }
@@ -46,59 +51,53 @@ void AN_SpawnSkill::Execute(const FAnimNotifyContext& context)
         return;
 
     SkillObject_Projectile::FProjectileSkillDesc desc;
-    desc.ownerSkillId = _skill_Id;
+    desc.collisionPreset = _collisionPreset; 
+    desc.startAttached = true;
     desc.spawnPosition = Calculate_WorldSpawnPosition(ownerTransform, _localOffset);
     desc.spawnRotation = Vec3::Zero;
     desc.scale = Vec3::One;
 
-    if (_useOwnerForward)
-        desc.direction = ownerTransform->Get_WorldForward();
-    else
-        desc.direction = Vec3::Forward;
+    Vec3 launchDir = (_useOwnerForward) ? ownerTransform->Get_WorldForward() : Vec3::Forward;
 
-    const uint32 currentLevel = GAME->Current_Level();
-    const wstring layerTag = Utils::ToWString(_layerTag);
+    if (_aimAtTarget)
+    {
+        auto myPlayer = dynamic_cast<MyPlayer*>(context.owner);
+        if (myPlayer)
+        {
+            auto targetCom = myPlayer->Get_Component<TargetComponent>();
+            if (targetCom && targetCom->IsLockOn())
+            {
+                auto lockedTarget = targetCom->Get_LockedTarget().lock();
+                if (lockedTarget)
+                {
+                    Vec3 targetPos = lockedTarget->Get_Transform()->Get_WorldPosition();
+                    targetPos.y += 0.5f; //
+                    launchDir = targetPos - desc.spawnPosition;
+                    launchDir.Normalize();
+                }
+            }
+        }
+    }
+
+    desc.direction = launchDir;
 
     auto spawned = GAME->Clone_And_Add_GameObject(
         ETOI(ELevelType::Static),
         _spawnObjectType,
-        currentLevel,
-        layerTag,
+        GAME->Current_Level(),
+        TEXT("Layer_Skill"),
         &desc);
 
-    if (!spawned)
+    auto skill = dynamic_pointer_cast<SkillObject_Projectile>(spawned);
+    if (skill)
     {
-        LOG_WARN("AN_SpawnSkill : failed to spawn. type={}, skillId={}",
-            static_cast<int32>(_spawnObjectType), _skill_Id);
-        return;
+        skill->Set_Owner(context.owner->GetSharedPtr<GameObject>());
+
+        auto projTransform = skill->Get_Transform();
+        projTransform->LookAt(projTransform->Get_WorldPosition() + launchDir);
+
+        skill->Launch(launchDir);
     }
-
-}
-
-json AN_SpawnSkill::Serialize_Payload() const
-{
-    json j;
-    j["spawn_object_type"] = string(magic_enum::enum_name(_spawnObjectType));
-    j["skill_id"] = _skill_Id;
-    j["local_offset"] = Utils::Vec3_ToJson(_localOffset);
-    j["layer_tag"] = _layerTag;
-    j["use_owner_forward"] = _useOwnerForward;
-
-    return j;
-}
-
-void AN_SpawnSkill::Deserialize_Payload(const json& payload)
-{
-    const string typeName = payload.value("spawn_object_type", string{});
-
-    auto objectType = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(typeName);
-    if (objectType.has_value())
-        _spawnObjectType = objectType.value();
-
-    _skill_Id = payload.value("skill_id", 0);
-    _localOffset = Utils::Vec3_FromJson(payload.value("local_offset", json::array()), Vec3(0.f, 1.2f, 1.8f));
-    _layerTag = payload.value("layer_tag", string("Layer_SkillObject"));
-    _useOwnerForward = payload.value("use_owner_forward", true);
 }
 
 Vec3 AN_SpawnSkill::Calculate_WorldSpawnPosition(Shared<Transform> transform, const Vec3& localOffset)

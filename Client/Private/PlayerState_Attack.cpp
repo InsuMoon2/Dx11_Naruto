@@ -85,6 +85,7 @@ void PlayerState_Attack::Exit(PlayerStateMachine* state)
     input->Set_InputMode(EPlayerInputMode::Normal);
 
     _cachedStateMachine = nullptr;
+    _comboIndex = 0;
 
     auto owner = state->Get_Owner();
     if (owner)

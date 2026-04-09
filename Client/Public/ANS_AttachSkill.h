@@ -22,7 +22,7 @@ private:
 
     Protocol::OBJECT_TYPE _spawnObjectType = Protocol::OBJECT_TYPE_SKILL_RASENSHURIKEN;
 
-    string _boneName = "R_Hand_Weapon_cnt_tr"; // 에디터에서 세팅해야함
+    string _boneName = "R_Hand_Weapon_cnt_tr"; // 에디터에서 세팅 가능
 
     Collision_Preset _collisionPreset = Collision_Preset::Projectile;
 };

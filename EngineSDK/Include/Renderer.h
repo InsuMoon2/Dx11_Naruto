@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Base.h"
 
@@ -15,7 +15,7 @@ public:
 public:
     HRESULT Initialize();
     void    Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject);
-    void    Draw();
+    void    Draw(bool renderDebugPrimitives = true, bool renderColliders = true);
 
     void    Backup_RenderGroup();
     void    Restore_RenderGroup();

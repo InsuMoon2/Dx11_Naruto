@@ -1,6 +1,8 @@
 {
     "blackboard": {
-        "bools": {},
+        "bools": {
+            "IsHit": false
+        },
         "floats": {},
         "ints": {
             "TestInt": 3
@@ -30,24 +32,9 @@
             "start": 28
         },
         {
-            "end": 60,
-            "id": 61,
-            "start": 49
-        },
-        {
-            "end": 63,
-            "id": 64,
-            "start": 53
-        },
-        {
             "end": 83,
             "id": 88,
             "start": 72
-        },
-        {
-            "end": 47,
-            "id": 102,
-            "start": 96
         },
         {
             "end": 75,
@@ -55,19 +42,9 @@
             "start": 99
         },
         {
-            "end": 47,
-            "id": 117,
-            "start": 109
-        },
-        {
             "end": 75,
             "id": 118,
             "start": 110
-        },
-        {
-            "end": 47,
-            "id": 137,
-            "start": 129
         },
         {
             "end": 75,
@@ -80,24 +57,49 @@
             "start": 2
         },
         {
-            "end": 47,
-            "id": 164,
-            "start": 155
+            "end": 171,
+            "id": 186,
+            "start": 50
+        },
+        {
+            "end": 69,
+            "id": 187,
+            "start": 52
         },
         {
             "end": 72,
-            "id": 166,
-            "start": 57
-        },
-        {
-            "end": 55,
-            "id": 169,
-            "start": 69
-        },
-        {
-            "end": 171,
-            "id": 172,
+            "id": 188,
             "start": 54
+        },
+        {
+            "end": 60,
+            "id": 189,
+            "start": 180
+        },
+        {
+            "end": 63,
+            "id": 190,
+            "start": 183
+        },
+        {
+            "end": 211,
+            "id": 212,
+            "start": 209
+        },
+        {
+            "end": 208,
+            "id": 213,
+            "start": 156
+        },
+        {
+            "end": 47,
+            "id": 214,
+            "start": 157
+        },
+        {
+            "end": 174,
+            "id": 215,
+            "start": 160
         }
     ],
     "nodes": [
@@ -130,8 +132,8 @@
                 57
             ],
             "parameters": {},
-            "pos_x": 157.0,
-            "pos_y": 492.0,
+            "pos_x": 185.0,
+            "pos_y": 566.0,
             "type": "Sequence"
         },
         {
@@ -140,7 +142,7 @@
             "name": "Task_FindClosestTarget",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": -238.0,
+            "pos_x": 536.0,
             "pos_y": 764.0,
             "type": "Task_FindClosestTarget"
         },
@@ -153,7 +155,7 @@
             "name": "Task_Move",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": -30.0,
+            "pos_x": 728.0,
             "pos_y": 764.0,
             "target_location": "TargetLocationKey",
             "target_object": "TargetObjectKey",
@@ -169,22 +171,22 @@
             "name": "Task_SetAnimState",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 386.0,
+            "pos_x": 136.0,
             "pos_y": 764.0,
             "state_name": "Idle",
             "type": "Task_SetAnimState"
         },
         {
-            "Wiat Time": 0.699999988079071,
+            "Wiat Time": 1.2000000476837158,
             "id": 71,
             "input_pin_id": 72,
             "name": "Task_Wait",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 594.0,
+            "pos_x": 312.0,
             "pos_y": 764.0,
             "type": "Task_Wait",
-            "wait_time": 0.699999988079071
+            "wait_time": 1.2000000476837158
         },
         {
             "id": 151,
@@ -204,7 +206,7 @@
             ],
             "parameters": {},
             "pos_x": 139.0,
-            "pos_y": 332.0,
+            "pos_y": 342.0,
             "type": "Selector"
         },
         {
@@ -216,11 +218,59 @@
             "name": "Task_Attack",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 178.0,
+            "pos_x": -40.0,
             "pos_y": 764.0,
             "request_anim_end": false,
             "target_object_key": "TargetObjectKey",
             "type": "Task_Attack"
+        },
+        {
+            "id": 173,
+            "input_pin_id": 174,
+            "name": "Sequence",
+            "output_pin_ids": [
+                175,
+                176,
+                177,
+                178,
+                179,
+                180,
+                181,
+                182,
+                183,
+                184
+            ],
+            "parameters": {},
+            "pos_x": 565.0,
+            "pos_y": 572.0,
+            "type": "Sequence"
+        },
+        {
+            "expected_value": true,
+            "id": 207,
+            "input_pin_id": 208,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                209
+            ],
+            "parameters": {},
+            "pos_x": -126.0,
+            "pos_y": 476.0,
+            "target_bb_key": "IsHit",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "hit_anim_state": "Hit",
+            "hit_flag_key": "IsHit",
+            "id": 210,
+            "input_pin_id": 211,
+            "name": "Task_Hit",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -142.0,
+            "pos_y": 610.0,
+            "request_anim_end": false,
+            "type": "Task_Hit"
         }
     ],
     "root_node_id": 1

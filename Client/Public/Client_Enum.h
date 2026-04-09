@@ -51,7 +51,7 @@ namespace Client
         Skill_RasenShuriken,    Skill_RasenShuriken_Air,
 
         Skill_Chidori,          Skill_Chidori_Air,      Skill_Chidori_End,
-        Skill_BlastBoomDance,   Skill_BlastBoomDance_Air,
+        Skill_FireBall,         Skill_FireBall_Air,
 
         // 스킬 두개 정도만 더 추가할까
 

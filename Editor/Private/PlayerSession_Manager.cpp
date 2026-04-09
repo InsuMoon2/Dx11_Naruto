@@ -6,6 +6,8 @@
 #include "Player.h"
 #include "Spawn_Helper.h"
 #include "Customizer_Manager.h"
+#include "EditorInstance.h"
+#include "Level_Serializer.h"
 
 static bool Is_CameraObject(const Shared<GameObject>& obj)
 {
@@ -92,34 +94,23 @@ void PlayerSession_Manager::Stop_AllSession()
         SetForegroundWindow(_editorMainWindow);
     }
 }
-
 void PlayerSession_Manager::Begin_PlaySession()
 {
     const uint32 levelIndex = GAME->Current_Level();
-
-    // 편집할 월드 저장
+    // 원래 엔진의 정상적인 메모리 스냅샷 백업 시스템
     Save_SceneSnapshot();
     Capture_PlaySessionObjectGuids(levelIndex);
-
-    // Prefab 원본 변경사항 레벨에 다시 저장
-    GAME->Reapply_Prefabs_InCurrentLevel();
-
-    // 추후에 레벨 GamePlay, 뭐 마을, 등등.. 추가되면 추가?
     if (levelIndex != ETOI(ELevelType::GamePlay))
         return;
-
-    // 이전 플레이어 제거
     Remove_PlaySessionPlayers(levelIndex);
-
-    // 새 플레이어 생성
     auto playerObj = Spawn_PlaySessionPlayer(levelIndex);
-
     if (!playerObj)
     {
         LOG_WARN("플레이어 생성 안됐음. 왜?");
     }
-
 }
+
+
 
 void PlayerSession_Manager::End_PlaySession()
 {
@@ -543,7 +534,7 @@ void PlayerSession_Manager::Restore_SceneSnapshot()
                 else
                     typeId = compData["type"].get<uint32>();
 
-                auto comp = gameObject->Get_Component(typeId);
+                auto comp = gameObject->Find_Component_ByStaticType(typeId);
                 if (comp) comp->From_Json(compData);
             }
         }

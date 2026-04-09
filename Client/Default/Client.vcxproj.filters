@@ -121,7 +121,6 @@
     <ClInclude Include="..\Public\SkillDataManager.h">
       <Filter>00. Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\SkillComponent.h" />
     <ClInclude Include="..\Public\UI_SkillSlot.h">
       <Filter>02. GameObject\02. UI\02. Player\01. Skill</Filter>
     </ClInclude>
@@ -131,7 +130,6 @@
     <ClInclude Include="..\Public\UI_LoadingSpinner.h">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UI_MainTitleMenuButton.h" />
     <ClInclude Include="..\Public\Background.h">
       <Filter>02. GameObject\02. UI\01. Background</Filter>
     </ClInclude>
@@ -162,7 +160,6 @@
     <ClInclude Include="..\Public\PlayerState_Dash.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AnimationStateComponent.h" />
     <ClInclude Include="..\Public\AN_Test.h">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClInclude>
@@ -172,9 +169,6 @@
     <ClInclude Include="..\Public\UI_TabButton.h">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PreviewPlayer.h" />
-    <ClInclude Include="..\Public\Customizer_Manager.h" />
-    <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="..\Public\PlayerState_Skill.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClInclude>
@@ -190,22 +184,12 @@
     <ClInclude Include="..\Public\UI_WeaponType.h">
       <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\EquipmentComponent.h" />
-    <ClInclude Include="..\Public\ComboProfile_Manager.h" />
     <ClInclude Include="..\Public\PlayerState_JumpAttack.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\SkillObject.h" />
-    <ClInclude Include="..\Public\SkillObject_Projectile.h" />
-    <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
-    <ClInclude Include="..\Public\Skill_Rasengan.h" />
     <ClInclude Include="..\Public\PlayerState_JumpFall.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UI_AnnounceCombo.h" />
-    <ClInclude Include="..\Public\PlayerState_Hit.h" />
-    <ClInclude Include="..\Public\TargetComponent.h" />
-    <ClInclude Include="..\Public\UI_Targeting.h" />
     <ClInclude Include="..\Public\PlayerState_WallRun.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClInclude>
@@ -218,8 +202,6 @@
     <ClInclude Include="..\Public\PlayerState_AirApproach.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\GhostEffect_Component.h" />
-    <ClInclude Include="..\Public\SmearEffect_Component.h" />
     <ClInclude Include="..\Public\AN_ChangeState.h">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClInclude>
@@ -250,15 +232,87 @@
     <ClInclude Include="..\Public\ANS_SmearEffect.h">
       <Filter>04. Notify\01. AnimNotifyState</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AN_Gravity.h" />
     <ClInclude Include="..\Public\AN_EquipMeleeSkill.h">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BTTask_FindClosestTarget.h" />
-    <ClInclude Include="..\Public\BTTask_Attack.h" />
-    <ClInclude Include="..\Public\AN_SpawnAttack.h" />
-    <ClInclude Include="..\Public\SkillObject_MonsterAttack.h" />
-    <ClInclude Include="..\Public\Particle_Point.h" />
+    <ClInclude Include="..\Public\ComboProfile_Manager.h">
+      <Filter>00. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AN_SpawnAttack.h">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AN_Gravity.h">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimationStateComponent.h">
+      <Filter>03. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BTTask_Attack.h">
+      <Filter>06. Behavior\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BTTask_FindClosestTarget.h">
+      <Filter>06. Behavior\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BTTask_Hit.h">
+      <Filter>06. Behavior\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Customizer_Manager.h">
+      <Filter>00. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EquipmentComponent.h">
+      <Filter>03. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GhostEffect_Component.h">
+      <Filter>03. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle_Point.h">
+      <Filter>05. Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Hit.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Targeting.h">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_AnnounceCombo.h">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_MainTitleMenuButton.h">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillObject_Projectile.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_Rasengan.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_RasenShuriken.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillComponent.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillObject.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillObject_MonsterAttack.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SmearEffect_Component.h">
+      <Filter>03. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TargetComponent.h">
+      <Filter>03. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PreviewPlayer.h">
+      <Filter>02. GameObject\00. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_FireBall.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -363,7 +417,6 @@
     <ClCompile Include="..\Private\SkillDataManager.cpp">
       <Filter>00. Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\SkillComponent.cpp" />
     <ClCompile Include="..\Private\UI_SkillSlot.cpp">
       <Filter>02. GameObject\02. UI\02. Player\01. Skill</Filter>
     </ClCompile>
@@ -373,7 +426,6 @@
     <ClCompile Include="..\Private\UI_LoadingSpinner.cpp">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UI_MainTitleMenuButton.cpp" />
     <ClCompile Include="..\Private\Background.cpp">
       <Filter>02. GameObject\02. UI\01. Background</Filter>
     </ClCompile>
@@ -404,7 +456,6 @@
     <ClCompile Include="..\Private\PlayerState_Dash.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AnimationStateComponent.cpp" />
     <ClCompile Include="..\Private\AN_Test.cpp">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClCompile>
@@ -414,9 +465,6 @@
     <ClCompile Include="..\Private\UI_TabButton.cpp">
       <Filter>02. GameObject\02. UI\00. Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PreviewPlayer.cpp" />
-    <ClCompile Include="..\Private\Customizer_Manager.cpp" />
-    <ClCompile Include="..\Private\Weapon.cpp" />
     <ClCompile Include="..\Private\PlayerState_Skill.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClCompile>
@@ -432,22 +480,12 @@
     <ClCompile Include="..\Private\UI_WeaponType.cpp">
       <Filter>02. GameObject\02. UI\02. Player\00. PlayerStat</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\EquipmentComponent.cpp" />
-    <ClCompile Include="..\Private\ComboProfile_Manager.cpp" />
     <ClCompile Include="..\Private\PlayerState_JumpAttack.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\SkillObject.cpp" />
-    <ClCompile Include="..\Private\SkillObject_Projectile.cpp" />
-    <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
-    <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
     <ClCompile Include="..\Private\PlayerState_JumpFall.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UI_AnnounceCombo.cpp" />
-    <ClCompile Include="..\Private\PlayerState_Hit.cpp" />
-    <ClCompile Include="..\Private\TargetComponent.cpp" />
-    <ClCompile Include="..\Private\UI_Targeting.cpp" />
     <ClCompile Include="..\Private\PlayerState_WallRun.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClCompile>
@@ -460,8 +498,6 @@
     <ClCompile Include="..\Private\PlayerState_AirApproach.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\GhostEffect_Component.cpp" />
-    <ClCompile Include="..\Private\SmearEffect_Component.cpp" />
     <ClCompile Include="..\Private\AN_ChangeState.cpp">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClCompile>
@@ -492,15 +528,87 @@
     <ClCompile Include="..\Private\ANS_SmearEffect.cpp">
       <Filter>04. Notify\01. AnimNotifyState</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AN_Gravity.cpp" />
     <ClCompile Include="..\Private\AN_EquipMeleeSkill.cpp">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\BTTask_FindClosestTarget.cpp" />
-    <ClCompile Include="..\Private\BTTask_Attack.cpp" />
-    <ClCompile Include="..\Private\AN_SpawnAttack.cpp" />
-    <ClCompile Include="..\Private\SkillObject_MonsterAttack.cpp" />
-    <ClCompile Include="..\Private\Particle_Point.cpp" />
+    <ClCompile Include="..\Private\ComboProfile_Manager.cpp">
+      <Filter>00. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AN_Gravity.cpp">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AN_SpawnAttack.cpp">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimationStateComponent.cpp">
+      <Filter>03. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BTTask_Attack.cpp">
+      <Filter>06. Behavior\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BTTask_FindClosestTarget.cpp">
+      <Filter>06. Behavior\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BTTask_Hit.cpp">
+      <Filter>06. Behavior\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Customizer_Manager.cpp">
+      <Filter>00. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EquipmentComponent.cpp">
+      <Filter>03. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GhostEffect_Component.cpp">
+      <Filter>03. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle_Point.cpp">
+      <Filter>05. Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Hit.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_AnnounceCombo.cpp">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MainTitleMenuButton.cpp">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Targeting.cpp">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_Rasengan.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_RasenShuriken.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillComponent.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillObject.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillObject_MonsterAttack.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillObject_Projectile.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SmearEffect_Component.cpp">
+      <Filter>03. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TargetComponent.cpp">
+      <Filter>03. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PreviewPlayer.cpp">
+      <Filter>02. GameObject\00. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_FireBall.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -628,6 +736,15 @@
     </Filter>
     <Filter Include="05. Particle">
       <UniqueIdentifier>{9afe1168-4a78-40c9-b702-e16d6ccfe0cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Skill">
+      <UniqueIdentifier>{5a08bb8e-61d8-4a7e-8ca8-475e89478025}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Behavior">
+      <UniqueIdentifier>{708dbe49-19ac-4756-a8f7-07efac43e01a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Behavior\Task">
+      <UniqueIdentifier>{6f724b98-d1cd-49eb-aa92-aea4c03e5e27}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

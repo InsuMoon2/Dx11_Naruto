@@ -1,0 +1,109 @@
+{
+    "autoPlay": true,
+    "effectName": "NewEffect",
+    "layers": [
+        {
+            "blendMode": 1,
+            "colorTint": [
+                0.0,
+                1.0,
+                0.9892473220825195,
+                1.0
+            ],
+            "diffuseTextureGuid": "04b7d0c6-c2c1-47e2-8f0a-126ebb61397e",
+            "duration": -1.0,
+            "enabled": true,
+            "fresnelMultiplier": 0.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "CoreA",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "loop": true,
+            "maskTextureGuid": "04b7d0c6-c2c1-47e2-8f0a-126ebb61397e",
+            "modelGuid": "101f93bb-685c-4520-b5c1-a6b5ec4e6cae",
+            "opacity": 1.0,
+            "rotationAxis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "rotationSpeed": 0.6000000238418579,
+            "startDelay": 0.0,
+            "twoSided": true,
+            "uvScrollSpeed": [
+                0.019999999552965164,
+                0.10000000149011612
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "blendMode": 0,
+            "colorTint": [
+                0.09677422046661377,
+                1.0,
+                0.9320151209831238,
+                1.0
+            ],
+            "diffuseTextureGuid": "04b7d0c6-c2c1-47e2-8f0a-126ebb61397e",
+            "duration": -1.0,
+            "enabled": true,
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "CoreB",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                180.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "loop": true,
+            "maskTextureGuid": "04b7d0c6-c2c1-47e2-8f0a-126ebb61397e",
+            "modelGuid": "101f93bb-685c-4520-b5c1-a6b5ec4e6cae",
+            "opacity": 1.0,
+            "rotationAxis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "rotationSpeed": 0.0,
+            "startDelay": 0.0,
+            "twoSided": true,
+            "uvScrollSpeed": [
+                -0.1599999964237213,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "totalDuration": -1.0
+}

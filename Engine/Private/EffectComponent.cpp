@@ -3,6 +3,8 @@
 
 #include "EffectAsset_Serializer.h"
 
+
+
 EffectComponent::EffectComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
@@ -35,8 +37,17 @@ void EffectComponent::Update(float timeDelta)
 
     for (auto& layer : _layers)
     {
+        if (!layer.desc.base.enabled)
+            continue;
+
         if (layer.finished)
             continue;
+
+        if (!layer.obj)
+        {
+            layer.finished = true;
+            continue;
+        }
 
         // 레이어가 살아있음
         allDone = false;
@@ -99,9 +110,14 @@ void EffectComponent::Update(float timeDelta)
 
 void EffectComponent::Late_Update(float timeDelta)
 {
-    if (!_isPlaying) return;
+    if (!_isPlaying)
+        return;
+
     for (auto& layer : _layers)
     {
+        if (!layer.desc.base.enabled)
+            continue;
+
         if (layer.started && !layer.finished && layer.obj)
         {
             layer.obj->Late_Update(timeDelta);
@@ -121,8 +137,7 @@ HRESULT EffectComponent::Play_Effect(const FPlayDesc& desc)
     if (path.empty())
         return E_FAIL;
 
-    FEffectAssetDesc loadedAsset;
-
+    FEffectAssetDesc loadedAsset{};
     if (FAILED(EffectAsset_Serializer::Load_EffectAsset(path, loadedAsset)))
         return E_FAIL;
 
@@ -134,54 +149,20 @@ HRESULT EffectComponent::Play_EffectAsset(const FEffectAssetDesc& assetDesc)
     Stop_Effect();
 
     _asset = assetDesc;
+    _layers.clear();
+    _layers.resize(_asset.layers.size());
 
-    for (const auto& layerDesc : _asset.layers)
+    for (size_t i = 0; i < _asset.layers.size(); ++i)
     {
-        if (!layerDesc.base.enabled)
-            continue;
+        _layers[i].desc = _asset.layers[i];
+        _layers[i].elapsed = 0.f;
+        _layers[i].started = false;
+        _layers[i].finished = false;
 
-        FActiveLayer newLayer{};
-        newLayer.desc = layerDesc;
-
-        if (layerDesc.base.kind == EEffectLayerKind::Mesh)
+        if (_layers[i].desc.base.enabled)
         {
-            EffectMeshObject::FEffectMeshDesc meshDesc{};
-            meshDesc.name = Utils::ToWString(layerDesc.base.layerName);
-            meshDesc.layerDesc = layerDesc.mesh;                    
-            meshDesc.position = Vec3::Zero;                         
-            meshDesc.scale = layerDesc.base.localScale;
-
-            newLayer.obj = GAME->Clone_GameObject(
-                0,
-                Protocol::OBJECT_TYPE_EFFECT_MESH,
-                &meshDesc);
-
-            if (newLayer.obj)
-            {
-                auto childTransform = newLayer.obj->Get_Transform();
-                auto owner = Get_Owner();
-
-                if (childTransform && owner && owner->Get_Transform())
-                {
-                    childTransform->Set_Parent(owner->Get_Transform());
-                    childTransform->Set_LocalPosition(layerDesc.base.localPosition);
-
-                    childTransform->Set_LocalEulerAngles(
-                        layerDesc.base.localRotation.x,
-                        layerDesc.base.localRotation.y,
-                        layerDesc.base.localRotation.z);
-
-                    childTransform->Set_LocalScale(layerDesc.base.localScale);
-                }
-            }
+            Create_LayerObject(_layers[i]);
         }
-        else if (layerDesc.base.kind == EEffectLayerKind::Point)
-        {
-            /* [추가] Point 레이어는 1차에서는 아직 미구현 상태를 명시한다.
-               이후 Particle_Point 연결이 들어오면 이 분기를 채운다. */
-        }
-
-        _layers.push_back(newLayer);
     }
 
     _lifeSpan = 0.f;
@@ -200,8 +181,152 @@ void EffectComponent::Stop_Effect()
     }
 
     _layers.clear();
-
     _isPlaying = false;
+}
+
+// 에디터 프리뷰 토글이 바뀌었을 때 이미 생성된 메시 레이어에도 즉시 같은 가시화 상태를 반영한다.
+void EffectComponent::Set_ForceVisiblePreview(bool enabled)
+{
+    _forceVisiblePreview = enabled;
+
+    for (auto& layer : _layers)
+    {
+        if (layer.desc.base.kind != EEffectLayerKind::Mesh || !layer.obj)
+            continue;
+
+        auto meshObj = dynamic_pointer_cast<EffectMeshObject>(layer.obj);
+        if (meshObj)
+            meshObj->Set_ForceVisiblePreview(_forceVisiblePreview);
+    }
+}
+
+bool EffectComponent::Apply_LayerDesc(int32 layerIndex, const FEffectLayerDesc& layerDesc, bool rebuildObject)
+{
+    if (layerIndex < 0 || layerIndex >= static_cast<int32>(_layers.size()))
+        return false;
+
+    if (layerIndex < static_cast<int32>(_asset.layers.size()))
+        _asset.layers[layerIndex] = layerDesc;
+
+    auto& layer = _layers[layerIndex];
+    const bool kindChanged = (layer.desc.base.kind != layerDesc.base.kind);
+
+    layer.desc = layerDesc;
+
+    if (!layer.desc.base.enabled)
+    {
+        if (layer.obj)
+        {
+            layer.obj->Set_Destroy(true);
+            layer.obj.reset();
+        }
+
+        layer.started = false;
+        layer.finished = false;
+        layer.elapsed = 0.f;
+        return true;
+    }
+
+    if (rebuildObject || kindChanged || !layer.obj)
+    {
+        if (layer.obj)
+        {
+            layer.obj->Set_Destroy(true);
+            layer.obj.reset();
+        }
+
+        layer.started = false;
+        layer.finished = false;
+        layer.elapsed = 0.f;
+
+        return SUCCEEDED(Create_LayerObject(layer));
+    }
+
+    if (layer.desc.base.kind == EEffectLayerKind::Mesh)
+    {
+        auto meshObj = dynamic_pointer_cast<EffectMeshObject>(layer.obj);
+        if (meshObj)
+        {
+            meshObj->Apply_LayerDesc(layer.desc);
+            meshObj->Set_ForceVisiblePreview(_forceVisiblePreview);
+        }
+    }
+
+    Apply_LayerTransformInternal(layer);
+
+    return true;
+}
+
+bool EffectComponent::Apply_LayerTransform(int32 layerIndex, const FEffectLayerBase& baseDesc)
+{
+    if (layerIndex < 0 || layerIndex >= static_cast<int32>(_layers.size()))
+        return false;
+
+    if (layerIndex < static_cast<int32>(_asset.layers.size()))
+        _asset.layers[layerIndex].base = baseDesc;
+
+    auto& layer = _layers[layerIndex];
+    layer.desc.base = baseDesc;
+
+    Apply_LayerTransformInternal(layer);
+
+    return true;
+}
+
+HRESULT EffectComponent::Create_LayerObject(FActiveLayer& layer)
+{
+    if (!layer.desc.base.enabled)
+        return S_FALSE; // 스킵
+
+    if (layer.desc.base.kind == EEffectLayerKind::Mesh)
+    {
+        EffectMeshObject::FEffectMeshDesc meshDesc{};
+        meshDesc.name = Utils::ToWString(layer.desc.base.layerName);
+        meshDesc.layerDesc = layer.desc;
+
+        layer.obj = GAME->Clone_GameObject(
+            0,
+            Protocol::OBJECT_TYPE_EFFECT_MESH,
+            &meshDesc);
+
+        if (!layer.obj)
+            return E_FAIL;
+
+        Apply_LayerTransformInternal(layer);
+
+        auto meshObj = dynamic_pointer_cast<EffectMeshObject>(layer.obj);
+        if (meshObj)
+            meshObj->Set_ForceVisiblePreview(_forceVisiblePreview);
+
+        return S_OK;
+    }
+
+    // Point는 이번 단계에서 아직 미구현
+    layer.obj.reset();
+    layer.finished = true;
+
+    return S_FALSE;
+}
+
+void EffectComponent::Apply_LayerTransformInternal(FActiveLayer& layer)
+{
+    if (!layer.obj)
+        return;
+
+    auto owner = Get_Owner();
+    auto childTransform = layer.obj->Get_Transform();
+
+    if (!owner || !owner->Get_Transform() || !childTransform)
+        return;
+
+    childTransform->Set_Parent(owner->Get_Transform());
+    childTransform->Set_LocalPosition(layer.desc.base.localPosition);
+    childTransform->Set_LocalEulerAngles(
+        layer.desc.base.localRotation.x,
+        layer.desc.base.localRotation.y,
+        layer.desc.base.localRotation.z);
+
+    childTransform->Set_LocalScale(layer.desc.base.localScale);
 }
 
 Shared<EffectComponent> EffectComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

@@ -134,6 +134,11 @@ shared_ptr<EditorWindow> EditorInstance::Get_Window(const wstring& key)
     return _editorManager->Get_Window(key);
 }
 
+wstring EditorInstance::Get_LastLevelPath()
+{
+    return _editorManager->Get_LastLevelPath();
+}
+
 void EditorInstance::Start_SinglePlayer()
 {
     return _playerSessionManager->Start_SinglePlayer();

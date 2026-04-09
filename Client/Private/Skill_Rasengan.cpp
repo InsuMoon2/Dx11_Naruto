@@ -35,6 +35,8 @@ HRESULT Skill_Rasengan::Initialize(void* arg)
 {
     CHECK_FAILED(SkillObject::Initialize(arg), E_FAIL);
 
+
+
     return S_OK;
 }
 

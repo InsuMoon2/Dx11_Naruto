@@ -340,8 +340,22 @@ void Cinematic_View::Draw_PlayBar()
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1.f, 0.8f, 0.2f, 1.f), "선택 오브젝트 필요");
     }
-}
 
+    ImGui::SameLine(0.f, 20.f);
+    ImGui::SetNextItemWidth(60.f);
+    if (ImGui::InputInt("FPS", &_asset.track.fps, 0, 0))
+    {
+        _asset.track.fps = std::clamp(_asset.track.fps, 1, 120);
+        MarkDirty();
+    }
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(80.f);
+    if (ImGui::InputInt("Total Frames", &_asset.track.totalFrame, 0, 0))
+    {
+        _asset.track.totalFrame = std::max(1, _asset.track.totalFrame);
+        MarkDirty();
+    }
+}
 
 void Cinematic_View::Draw_TopLayout()
 {
@@ -874,6 +888,9 @@ Shared<Transform> Cinematic_View::Get_SelectedAnchorTransform() const
 void Cinematic_View::Sync_PreviewAnchor()
 {
     auto selectedObject = Get_SelectedAnchorObject();
+
+    bool anchorChanged = (selectedObject != _previewAnchorObject.lock());
+
     _previewAnchorObject = selectedObject;
 
     if (_player)
@@ -882,6 +899,21 @@ void Cinematic_View::Sync_PreviewAnchor()
             _player->Set_AnchorTransform(selectedObject->Get_Transform());
         else
             _player->Clear_AnchorTransform();
+    }
+
+    // 앵커가 새로 세팅됐고, 키 프레임이 없는 초기 상태면 위치 근처로 이동
+    if (anchorChanged && selectedObject && _previewCamera && _asset.track.keys.empty())
+    {
+        auto anchorTransform = selectedObject->Get_Transform();
+        if (anchorTransform)
+        {
+            Vec3 anchorPos = anchorTransform->Get_WorldPosition();
+            Vec3 camPos = anchorPos + Vec3(0.f, 3.f, -8.f);
+
+            Vec3 lookTarget = anchorPos + Vec3(0.f, 1.5f, 0.f); 
+            _previewCamera->Get_Transform()->Set_LocalPosition(camPos);
+            _previewCamera->Get_Transform()->LookAt(lookTarget);
+        }
     }
 }
 

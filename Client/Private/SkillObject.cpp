@@ -173,6 +173,8 @@ HRESULT SkillObject::Ready_Components(const FSkillObjectDesc& desc)
 
     //_collider->Set_CollisionPreset(Collision_Preset::Projectile);
 
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_EFFECT, _effectCom), E_FAIL);
+
     return S_OK;
 }
 

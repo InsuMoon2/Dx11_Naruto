@@ -242,7 +242,7 @@ void Animation_View::Pre_Render()
     _previewRT->Clear(Color(0.12f, 0.12f, 0.12f, 1.f));
     _previewRT->BindAsTarget();
 
-    GAME->Draw();
+    GAME->Draw(false, false);
 
     _previewRT->BindAsTarget();
     Draw_PreviewGrid();

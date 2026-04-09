@@ -79,7 +79,7 @@ public:
     // 에디터용 Camera Free만 업데이트
     void                    Update_CameraOnly(float timeDelta);
 
-	HRESULT                 Draw();
+	HRESULT                 Draw(bool renderDebugPrimitives = true, bool renderColliders = true);
 	void	                Clear_Resources(uint32 levelIndex);
 
 public: /* Game State */

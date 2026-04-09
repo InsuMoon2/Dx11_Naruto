@@ -32,6 +32,8 @@ public:
 
     EPlayerState Get_StateID() const override { return _myStateId; }
 
+    virtual bool Has_SuperArmor() const override { return true; }
+
 private:
     void Update_Charging(PlayerStateMachine* state, float timeDelta);
     void Update_Dashing(PlayerStateMachine* state, float timeDelta);
@@ -45,6 +47,7 @@ private:
 
     // 대쉬 중 타겟 세팅
     void Find_DashTarget(PlayerStateMachine* state);
+
 
 private:
     EPlayerState _myStateId = EPlayerState::END; // 스킬별로 ID 타입 세팅해주기

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Level_Gameplay.h"
 #include "Model.h"
 #include "Camera_Free.h"

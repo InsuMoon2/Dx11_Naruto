@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Component.h"
 
@@ -47,7 +47,7 @@ private:
     string _btFilePath = "(None)";
     string _btGuid;
 
-    bool _pendingInitialize = false;
+    bool _pendingInitialize = true;
     map<int, EBTNodeResult> _cachedNodeResults;
 
 public:

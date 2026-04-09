@@ -10,6 +10,9 @@ class MovementComponent;
 NS_END
 
 NS_BEGIN(Client)
+
+DECLARE_DELEGATE(FOnPlayerStateChanged, EPlayerState /* Prev */, EPlayerState /* next */);
+
 class InputComponent;
 class AnimationStateComponent;
 
@@ -31,14 +34,14 @@ public:
 public:
     void                        Register_State(EPlayerState stateID, Shared<IPlayerState> state);
     void                        Change_State(EPlayerState newState);
-    [[nodiscard]]               Engine::MovementComponent::FMoveCommand Init_MoveCommand() const;
+    [[nodiscard]]               MovementComponent::FMoveCommand Init_MoveCommand() const;
 
 public:
     EPlayerState                    Get_CurrentStateID() const { return _currentStateID; }
     Shared<IPlayerState>            Get_CurrentState()   const { return _currentState; }
     EPlayerState                    Get_PrevStateID()    const { return _prevStateID; }
     Shared<InputComponent>          Get_Input()          const { return _input; }
-    Shared<Engine::MovementComponent>       Get_Movement()       const { return _movement; }
+    Shared<MovementComponent>       Get_Movement()       const { return _movement; }
     Shared<AnimationStateComponent> Get_AnimationState() const { return _animationState; }
 
 public:
@@ -93,6 +96,11 @@ public:
                                     Vec3& outWorldDir) const;
 
     static string               To_AnimationStateName(EPlayerState stateID);
+
+    void                        Trigger_HitReaction() { _pendingHitReaction = true; }
+
+    FOnPlayerStateChanged       OnStateChanged;
+
 private:
 
 
@@ -110,7 +118,7 @@ private:
 
 private:
     Shared<InputComponent>                      _input;
-    Shared<Engine::MovementComponent>                   _movement;
+    Shared<MovementComponent>                   _movement;
     Shared<AnimationStateComponent>             _animationState;
 
 private:
@@ -122,6 +130,8 @@ private:
 
     float                                       _pendingSuperJumpVelocity = 0.f;
     Vec3                                        _pendingLandDirection = Vec3::Zero;
+
+    bool                                        _pendingHitReaction = false;
 
     EMoveInputDirection                         _pendingMoveInputDirection = EMoveInputDirection::Forward;
     Vec3                                        _pendingDashWorldDirection = Vec3::Forward;

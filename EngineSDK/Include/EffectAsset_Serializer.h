@@ -10,6 +10,9 @@ public:
     static HRESULT Save_EffectAsset(const string& filePath, const FEffectAssetDesc& assetDesc);
     static HRESULT Load_EffectAsset(const string& filePath, FEffectAssetDesc& outAssetDesc);
 
+    static fs::path Get_EffectFolderPath();
+    static vector<fs::path> Get_EffectFiles();
+
 private:
     static json Serialize_Layer(const FEffectLayerDesc& layerDesc);
     static FEffectLayerDesc Deserialize_Layer(const json& j);

@@ -142,6 +142,9 @@ void PlayerStateMachine::BeginPlay()
     Register_Skill(ETOI(ESkillType::Rasengan));
     Register_Skill(ETOI(ESkillType::Rasen_Shuriken));
 
+    Register_Skill(ETOI(ESkillType::Chidori));
+    Register_Skill(ETOI(ESkillType::FireBall));
+
     Change_State(EPlayerState::Idle);
 }
 
@@ -221,7 +224,7 @@ bool PlayerStateMachine::Check_Skill_Input()
                     }
                     else
                     {
-                        LOG_WARN("[SKILL] 등록되지 않은 EPlayerState 이름입니다: %s", targetStateName.c_str());
+                        LOG_WARN("[SKILL] 등록되지 않은 EPlayerState 이름입니다: {}", targetStateName.c_str());
                     }
                 }
             }
@@ -243,6 +246,18 @@ bool PlayerStateMachine::Check_Cinematic()
 
 bool PlayerStateMachine::Check_HitReaction()
 {
+    if (_pendingHitReaction)
+    {
+        _pendingHitReaction = false;
+
+        // 상태가 없거나 슈퍼아머 아닐 때에만
+        if (!_currentState || !_currentState->Has_SuperArmor())
+        {
+            Change_State(EPlayerState::Hit);
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -401,6 +416,8 @@ void PlayerStateMachine::Change_State(EPlayerState newState)
         _currentState->Exit(this);
 
     // 전환
+    EPlayerState prevState = _currentStateID;
+
     _prevStateID    = _currentStateID;
     _currentStateID = newState;
     _currentState   = iter->second;
@@ -412,6 +429,9 @@ void PlayerStateMachine::Change_State(EPlayerState newState)
     {
         player->Refresh_WeaponAttachment_ByCurrentState();
     }
+
+    if (OnStateChanged.IsBound())
+        OnStateChanged.Broadcast(prevState, newState);
 }
 
 MovementComponent::FMoveCommand PlayerStateMachine::Init_MoveCommand() const

@@ -41,6 +41,8 @@ HRESULT UI_PlayerHUD::Initialize(void* arg)
 void UI_PlayerHUD::Update(float timeDelta)
 {
     HUD::Update(timeDelta);
+
+
 }
 
 void UI_PlayerHUD::Bind_Player(Shared<Player> player)

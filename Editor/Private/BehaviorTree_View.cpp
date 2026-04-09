@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "BehaviorTree_View.h"
 #include <fstream>
 #include <commdlg.h>
@@ -896,7 +896,7 @@ void BehaviorTree_View::Create_Node(const string& nodeType, ImVec2 position)
     {
         outputCount = 10;
     }
-    else if (nodeType == "Inverter" || nodeType == "Repeater")
+    else if (nodeType == "Inverter" || nodeType == "Repeater" || nodeType.find("Decorator") != string::npos)
     {
         outputCount = 1;
     }

@@ -3,6 +3,7 @@
 #include <fstream>
 #include "Blackboard.h"
 #include "BTComposite.h"
+#include "BTDecorator.h"
 #include "BTNode.h"
 #include "BTTask_Wait.h"
 #include "GameInstance.h"
@@ -222,11 +223,16 @@ HRESULT BehaviorTree::Load_FromJson(const wstring& filePath)
             if (parent && child)
             {
                 auto composite = dynamic_pointer_cast<BTComposite>(parent);
+                auto decorator = dynamic_pointer_cast<BTDecorator>(parent);
 
                 if (composite)
                 {
                     int order = outputPinOrder.count(startPin) ? outputPinOrder[startPin] : 0;
                     compositeChildren[parentNodeId].push_back({ order, child });
+                }
+                else if (decorator)
+                {
+                    decorator->Set_Child(child);
                 }
             }
         }

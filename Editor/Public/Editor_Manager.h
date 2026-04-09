@@ -33,6 +33,8 @@ public:
 
     void    Sync_RuntimeViewportForGame();
 
+    wstring Get_LastLevelPath() const { return _lastLevelPath; }
+
 private:
     void    Begin_DockSpace();
     void    Show_MenuBar();

@@ -48,6 +48,40 @@ HRESULT EffectAsset_Serializer::Load_EffectAsset(const string& filePath, FEffect
     return S_OK;
 }
 
+fs::path EffectAsset_Serializer::Get_EffectFolderPath()
+{
+    return fs::path("../../Client/Bin/Resources/Data/json/Effects");
+}
+
+vector<fs::path> EffectAsset_Serializer::Get_EffectFiles()
+{
+    vector <fs::path> files;
+    fs::path folder = Get_EffectFolderPath();
+
+    // 폴더 없으면 생성
+    if (!fs::exists(folder))
+    {
+        fs::create_directories(folder);
+        return files;
+    }
+
+    for (const auto& entry : fs::directory_iterator(folder))
+    {
+        if (!entry.is_regular_file()) // 폴더가 아닌 파일인지?
+            continue;
+
+        string fileName = Utils::ToLowerCopy(entry.path().filename().string()); // 이름 소문자 처리
+        if (fileName.ends_with(".effect.json"))
+        {
+            files.push_back(entry.path());
+        }
+    }
+
+    sort(files.begin(), files.end());
+
+    return files;
+}
+
 json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
 {
     json j;

@@ -50,6 +50,8 @@ public:
 public: /* Editor Manager */
     shared_ptr<EditorWindow> Get_Window(const wstring& key);
 
+    wstring Get_LastLevelPath();
+
 public: /* PlayerSession Manager */
     void    Start_SinglePlayer();
     void    Start_MultiPlayer(int32 playerCount);

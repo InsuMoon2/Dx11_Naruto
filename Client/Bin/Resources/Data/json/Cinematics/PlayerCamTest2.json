@@ -1,0 +1,64 @@
+{
+    "name": "PlayerCamTest2",
+    "track": {
+        "fps": 30,
+        "keys": [
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "Target",
+                "distance": 6.699999809265137,
+                "ease_type": "Linear",
+                "fov_y": 1.1053693294525146,
+                "frame": 0,
+                "pitch": -28.5,
+                "position": [
+                    0.6000000238418579,
+                    2.0999999046325684,
+                    -2.0999999046325684
+                ],
+                "rotation": [
+                    0.20244096219539642,
+                    -0.07432481646537781,
+                    0.023611105978488922,
+                    0.9761843681335449
+                ],
+                "target_offset": [
+                    8.899999618530273,
+                    11.899999618530273,
+                    5.300000190734863
+                ],
+                "target_tag": "TestPlayer2",
+                "yaw": -14.5
+            },
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "Target",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 1.1053693294525146,
+                "frame": 22,
+                "pitch": 0.0,
+                "position": [
+                    1.399999976158142,
+                    2.299999952316284,
+                    -2.0999999046325684
+                ],
+                "rotation": [
+                    0.2024409919977188,
+                    -0.07432481646537781,
+                    0.023611105978488922,
+                    0.9761844277381897
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            }
+        ],
+        "total_frames": 24,
+        "track_name": "Camera"
+    }
+}

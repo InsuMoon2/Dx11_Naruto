@@ -1436,11 +1436,11 @@ void Model::From_Json(const json& data)
 
         _animations = std::move(uniqueAnimations);
 
-        if (!_animations.empty() && !_currentClip.Is_Valid())
+        /*    if (!_animations.empty() && !_currentClip.Is_Valid())
         {
             Set_Animation(0, true);
             Play_Animation(0.f);
-        }
+        }*/
     }
 }
 

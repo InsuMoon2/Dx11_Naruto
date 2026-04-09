@@ -88,7 +88,7 @@ struct FEffectLayerDesc
 {
     FEffectLayerBase base;          
     FEffectPointLayerDesc point;             
-    FEffectMeshLayerDesc  mesh;              
+    FEffectMeshLayerDesc  mesh;
 };
 
 struct FEffectAssetDesc

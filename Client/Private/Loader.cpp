@@ -45,6 +45,7 @@
 #include "AnimationStateComponent.h"
 #include "BTTask_Attack.h"
 #include "BTTask_FindClosestTarget.h"
+#include "BTTask_Hit.h"
 #include "Player_CustomPart.h"
 
 #include "ComboProfile_Manager.h"
@@ -212,6 +213,9 @@ void Loader::Initialize_BT_Nodes()
 
     GAME->Register_BTNode("Task", "Task_Attack",
         []() { return BTTask_Attack::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_Hit",
+        []() { return BTTask_Hit::Create(); });
 }
 
 float Loader::Get_ProgressRatio() const
@@ -496,7 +500,7 @@ HRESULT Loader::Loading_For_GamePlay()
     //pushChunk("BM_ExamStadium_Env_Terrain");
     //pushChunk("BM_ExamStadium_p");
 
-    pushChunk("[20260407]Tutorial");
+    pushChunk("[20260409]Tutorial");
 
     {
         scoped_lock lock(_jobMutex);

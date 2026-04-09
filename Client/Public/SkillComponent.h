@@ -13,8 +13,8 @@ enum class ESkillType
 {
     Rasengan        = 1001,
     Rasen_Shuriken  = 1002,
-    Fireball,
-    Chidori,
+    FireBall        = 1003,
+    Chidori         = 1004,
     Big_Rasengan,
 
     END

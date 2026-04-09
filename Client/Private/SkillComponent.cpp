@@ -233,8 +233,8 @@ void SkillComponent::Apply_WeaponSkillSet(EWeaponType weaponType)
     switch (weaponType)
     {
     case EWeaponType::BigSwrod:
-        Set_EquippedSkill_ID(0, ETOI(ESkillType::Fireball));
-        Set_EquippedSkill_ID(1, ETOI(ESkillType::Chidori));
+        Set_EquippedSkill_ID(0, ETOI(ESkillType::Chidori));
+        Set_EquippedSkill_ID(1, ETOI(ESkillType::FireBall));
         break;
 
     case EWeaponType::Hand:

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Level_Serializer.h"
 #include "GameObject.h"
 #include <fstream>

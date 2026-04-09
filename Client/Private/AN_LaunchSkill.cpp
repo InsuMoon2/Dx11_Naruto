@@ -49,7 +49,7 @@ void AN_LaunchSkill::Execute(const FAnimNotifyContext& context)
                 if (lockedTarget)
                 {
                     Vec3 targetPos = lockedTarget->Get_Transform()->Get_WorldPosition();
-                    targetPos.y += 0.01f;
+                    targetPos.y += 0.5f;
 
                     Vec3 startPos = projectileObj->Get_Transform()->Get_WorldPosition();
 
