@@ -150,7 +150,7 @@ void MovementComponent::Start_SuperJump(float velocity)
 void MovementComponent::Start_Dash(const Vec3& worldDir, float distance, float duration)
 {
     Vec3 dashDir = worldDir;
-    dashDir.y = 0.f;
+    //dashDir.y = 0.f;
 
     if (dashDir.LengthSquared() <= FLT_EPSILON)
         return;
@@ -325,6 +325,14 @@ void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> trans
         _velocity.x = _dashWorldDirection.x * _dashSpeed;
         _velocity.z = _dashWorldDirection.z * _dashSpeed;
 
+        if (abs(_dashWorldDirection.y) > 0.001f) 
+        {
+             _velocity.y = _dashWorldDirection.y * _dashSpeed;
+        }
+        else if (_gravityEnabled && !_onGround) 
+        {
+            _velocity.y += _moveDesc.gravity * timeDelta;
+        }
         if (_dashElapsed >= _dashDuration)
         {
             Stop_Dash();

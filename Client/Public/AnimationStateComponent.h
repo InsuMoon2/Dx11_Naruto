@@ -17,7 +17,10 @@ class AnimationStateComponent : public Component
 public:
     struct FAnimReplicatedState final
     {
-        EPlayerState        state = EPlayerState::Idle;
+        //EPlayerState        state = EPlayerState::Idle;
+        Protocol::OBJECT_STATE_TYPE state = Protocol::OBJECT_STATE_TYPE_IDLE;
+
+        // 방향도 프로토버프 쪽으로 바꿔줄지
         EMoveInputDirection dir = EMoveInputDirection::Forward;
 
         EAnimPhase          phase = EAnimPhase::Start;
@@ -97,16 +100,15 @@ private:
 
     static bool Requires_ForceRestart(EPlayerState state);
 
-    static Protocol::OBJECT_STATE_TYPE      To_ProtoState(EPlayerState state);
-    static Protocol::MOVE_INPUT_DIR_TYPE    To_ProtoDir(EMoveInputDirection dir);
+    static Protocol::OBJECT_STATE_TYPE      To_ReplicatedState(EPlayerState state);
 
+    static Protocol::MOVE_INPUT_DIR_TYPE    To_ProtoDir(EMoveInputDirection dir);
     static Protocol::ANIM_PHASE_TYPE        To_ProtoAnimPhase(EAnimPhase phase);
     static Protocol::ATTACK_PROFILE_TYPE    To_ProtoAttackProfile(EAttackProfileType profileType);
 
-    static EPlayerState                     From_ProtoState(Protocol::OBJECT_STATE_TYPE state);
+    static EPlayerState                     To_LocalState(Protocol::OBJECT_STATE_TYPE state);
     static EMoveInputDirection              From_ProtoDir(Protocol::MOVE_INPUT_DIR_TYPE dir);
     static EAnimPhase                       From_ProtoAnimPhase(Protocol::ANIM_PHASE_TYPE phase);
-
     static EAttackProfileType               From_ProtoAttackProfile(Protocol::ATTACK_PROFILE_TYPE profileType);
 
     Shared<Model>                           Resolve_Model();

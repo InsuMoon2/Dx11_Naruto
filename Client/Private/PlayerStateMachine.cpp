@@ -422,7 +422,19 @@ void PlayerStateMachine::Change_State(EPlayerState newState)
     _currentStateID = newState;
     _currentState   = iter->second;
 
-    _currentState->Enter(this);
+    if (_currentState)
+    {
+        // 새로 바뀔 상태가 스킬이 아니라면, 장착한 스킬 파괴
+         if (!dynamic_pointer_cast<PlayerState_Skill>(_currentState))
+        {
+            auto skillCom = Get_Owner()->Get_Component<SkillComponent>();
+            if (skillCom)
+            {
+                skillCom->Clear_MeleeSkill(); // 손에 묻어있던 스킬 이펙트 일괄 파괴
+            }
+        }
+        _currentState->Enter(this);
+    }
 
     auto player = dynamic_pointer_cast<Player>(Get_Owner());
     if (player)

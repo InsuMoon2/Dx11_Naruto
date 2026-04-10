@@ -55,6 +55,7 @@ HRESULT SkillObject::Initialize(void* arg)
         _ownerSkillId = desc->ownerSkillId;
         _collisionPreset = desc->collisionPreset;
         _effectAssetName = desc->effectAssetName;
+        _attachOffset = desc->attachOffset;
 
         if (_transformCom)
         {
@@ -141,7 +142,10 @@ void SkillObject::Sync_AttachedTransform(const Matrix& boneWorldMatrix)
 
     if (tempMatrix.Decompose(worldScale, worldQuat, worldPos))
     {
-        _transformCom->Set_WorldPosition(worldPos);
+        const Matrix rotationMat = Matrix::CreateFromQuaternion(worldQuat);
+        const Vec3 worldOffset = Vec3::TransformNormal(_attachOffset, rotationMat);
+
+        _transformCom->Set_WorldPosition(worldPos + worldOffset);
         _transformCom->Set_WorldRotation(worldQuat);
     }
 }

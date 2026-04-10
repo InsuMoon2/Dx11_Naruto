@@ -107,6 +107,12 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         layerDesc.base.localScale.y,
         layerDesc.base.localScale.z
     };
+    j["useScaleOverTime"] = layerDesc.base.useScaleOverTime;
+    j["endScale"] = {
+        layerDesc.base.endScale.x,
+        layerDesc.base.endScale.y,
+        layerDesc.base.endScale.z
+    };
 
     if (layerDesc.base.kind == EEffectLayerKind::Mesh)
     {
@@ -114,6 +120,8 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["modelGuid"] = mesh.modelGuid;
         j["diffuseTextureGuid"] = mesh.diffuseTextureGuid;
         j["maskTextureGuid"] = mesh.maskTextureGuid;
+        j["emissiveTextureGuid"] = mesh.emissiveTextureGuid;
+        j["opacityTextureGuid"] = mesh.opacityTextureGuid;
         j["blendMode"] = (int)mesh.blendMode;
 
         j["uvScrollSpeed"] = { mesh.uvScrollSpeed.x, mesh.uvScrollSpeed.y };
@@ -127,9 +135,36 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["fresnelMultiplier"] = mesh.fresnelMultiplier;
         j["twoSided"] = mesh.twoSided;
     }
-
-    /* [추가] Point 레이어 직렬화는 2차에서 추가한다.
-       현재 Effect View는 Mesh Effect 1차 제작/프리뷰를 우선 지원한다. */
+    else if (layerDesc.base.kind == EEffectLayerKind::Point)
+    {
+        const auto& point = layerDesc.point;
+        j["textureGuid"] = point.textureGuid;
+        j["numInstances"] = point.numInstances;
+        j["center"] = { point.center.x, point.center.y, point.center.z };
+        j["range"] = { point.range.x, point.range.y, point.range.z };
+        j["scale"] = { point.scale.x, point.scale.y };
+        j["speed"] = { point.speed.x, point.speed.y };
+        j["lifeTime"] = { point.lifeTime.x, point.lifeTime.y };
+        j["pivot"] = { point.pivot.x, point.pivot.y, point.pivot.z };
+        j["isLoop"] = point.isLoop;
+        j["blendMode"] = static_cast<int>(point.blendMode);
+        j["colorTint"] = { point.colorTint.x, point.colorTint.y, point.colorTint.z, point.colorTint.w };
+        j["opacity"] = point.opacity;
+        j["moveMode"] = point.moveMode;
+    }
+    else if (layerDesc.base.kind == EEffectLayerKind::BillboardRect)
+    {
+        const auto& billboard = layerDesc.billboard;
+        j["baseTextureGuid"] = billboard.baseTextureGuid;
+        j["ringTextureGuid"] = billboard.ringTextureGuid;
+        j["blendMode"] = static_cast<int>(billboard.blendMode);
+        j["baseTint"] = { billboard.baseTint.x, billboard.baseTint.y, billboard.baseTint.z, billboard.baseTint.w };
+        j["ringTint"] = { billboard.ringTint.x, billboard.ringTint.y, billboard.ringTint.z, billboard.ringTint.w };
+        j["baseOpacity"] = billboard.baseOpacity;
+        j["ringOpacity"] = billboard.ringOpacity;
+        j["useRing"] = billboard.useRing;
+        j["billboardToCamera"] = billboard.billboardToCamera;
+    }
 
     return j;
 }
@@ -148,6 +183,8 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
     if (j.contains("localPosition")) layer.base.localPosition = Vec3(j["localPosition"][0], j["localPosition"][1], j["localPosition"][2]);
     if (j.contains("localRotation")) layer.base.localRotation = Vec3(j["localRotation"][0], j["localRotation"][1], j["localRotation"][2]);
     if (j.contains("localScale")) layer.base.localScale = Vec3(j["localScale"][0], j["localScale"][1], j["localScale"][2]);
+    if (j.contains("useScaleOverTime")) layer.base.useScaleOverTime = j["useScaleOverTime"];
+    if (j.contains("endScale")) layer.base.endScale = Vec3(j["endScale"][0], j["endScale"][1], j["endScale"][2]);
 
     if (layer.base.kind == EEffectLayerKind::Mesh)
     {
@@ -155,6 +192,8 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("modelGuid")) mesh.modelGuid = j["modelGuid"];
         if (j.contains("diffuseTextureGuid")) mesh.diffuseTextureGuid = j["diffuseTextureGuid"];
         if (j.contains("maskTextureGuid")) mesh.maskTextureGuid = j["maskTextureGuid"];
+        if (j.contains("emissiveTextureGuid")) mesh.emissiveTextureGuid = j["emissiveTextureGuid"];
+        if (j.contains("opacityTextureGuid")) mesh.opacityTextureGuid = j["opacityTextureGuid"];
         if (j.contains("blendMode")) mesh.blendMode = (EEffectBlendMode)j["blendMode"].get<int>();
 
         if (j.contains("uvScrollSpeed")) mesh.uvScrollSpeed = Vec2(j["uvScrollSpeed"][0], j["uvScrollSpeed"][1]);
@@ -167,6 +206,36 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("fresnelPower")) mesh.fresnelPower = j["fresnelPower"];
         if (j.contains("fresnelMultiplier")) mesh.fresnelMultiplier = j["fresnelMultiplier"];
         if (j.contains("twoSided")) mesh.twoSided = j["twoSided"];
+    }
+    else if (layer.base.kind == EEffectLayerKind::Point)
+    {
+        auto& point = layer.point;
+        if (j.contains("textureGuid")) point.textureGuid = j["textureGuid"];
+        if (j.contains("numInstances")) point.numInstances = j["numInstances"];
+        if (j.contains("center")) point.center = Vec3(j["center"][0], j["center"][1], j["center"][2]);
+        if (j.contains("range")) point.range = Vec3(j["range"][0], j["range"][1], j["range"][2]);
+        if (j.contains("scale")) point.scale = Vec2(j["scale"][0], j["scale"][1]);
+        if (j.contains("speed")) point.speed = Vec2(j["speed"][0], j["speed"][1]);
+        if (j.contains("lifeTime")) point.lifeTime = Vec2(j["lifeTime"][0], j["lifeTime"][1]);
+        if (j.contains("pivot")) point.pivot = Vec3(j["pivot"][0], j["pivot"][1], j["pivot"][2]);
+        if (j.contains("isLoop")) point.isLoop = j["isLoop"];
+        if (j.contains("blendMode")) point.blendMode = static_cast<EEffectBlendMode>(j["blendMode"].get<int>());
+        if (j.contains("colorTint")) point.colorTint = Vec4(j["colorTint"][0], j["colorTint"][1], j["colorTint"][2], j["colorTint"][3]);
+        if (j.contains("opacity")) point.opacity = j["opacity"];
+        if (j.contains("moveMode")) point.moveMode = j["moveMode"];
+    }
+    else if (layer.base.kind == EEffectLayerKind::BillboardRect)
+    {
+        auto& billboard = layer.billboard;
+        if (j.contains("baseTextureGuid")) billboard.baseTextureGuid = j["baseTextureGuid"];
+        if (j.contains("ringTextureGuid")) billboard.ringTextureGuid = j["ringTextureGuid"];
+        if (j.contains("blendMode")) billboard.blendMode = static_cast<EEffectBlendMode>(j["blendMode"].get<int>());
+        if (j.contains("baseTint")) billboard.baseTint = Vec4(j["baseTint"][0], j["baseTint"][1], j["baseTint"][2], j["baseTint"][3]);
+        if (j.contains("ringTint")) billboard.ringTint = Vec4(j["ringTint"][0], j["ringTint"][1], j["ringTint"][2], j["ringTint"][3]);
+        if (j.contains("baseOpacity")) billboard.baseOpacity = j["baseOpacity"];
+        if (j.contains("ringOpacity")) billboard.ringOpacity = j["ringOpacity"];
+        if (j.contains("useRing")) billboard.useRing = j["useRing"];
+        if (j.contains("billboardToCamera")) billboard.billboardToCamera = j["billboardToCamera"];
     }
     return layer;
 }

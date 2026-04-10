@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "VIBuffer_Particle_Point.h"
+#include "GameInstance.h"
 #include "GameObject_Factory.h"
 
 REGISTER_GAMEOBJECT(Particle_Point, Protocol::OBJECT_TYPE_INSTANCED_PARTICLE_POINT)
@@ -17,6 +18,10 @@ Particle_Point::Particle_Point(const Particle_Point& rhs)
     : GameObject(rhs)
     , _textureIndex(rhs._textureIndex)
     , _addToBlendGroup(rhs._addToBlendGroup)
+    , _blendMode(rhs._blendMode)
+    , _colorTint(rhs._colorTint)
+    , _opacity(rhs._opacity)
+    , _useLifetimeFade(rhs._useLifetimeFade)
 {
 }
 
@@ -34,6 +39,10 @@ HRESULT Particle_Point::Initialize(void* arg)
 
     _textureIndex = desc->textureIndex;
     _addToBlendGroup = desc->addToBlendGroup;
+    _blendMode = desc->blendMode;
+    _colorTint = desc->colorTint;
+    _opacity = desc->opacity;
+    _useLifetimeFade = (desc->bufferDesc.moveMode != VIBuffer_Particle_Point::EMoveMode::Static);
 
     CHECK_FAILED(Ready_Components(*desc), E_FAIL);
 
@@ -75,7 +84,7 @@ HRESULT Particle_Point::Render()
     CHECK_NULL(_shaderCom, E_FAIL);
     CHECK_NULL(_bufferCom, E_FAIL);
 
-    CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
+    CHECK_FAILED(_shaderCom->Begin_Pass(Resolve_PassIndex()), E_FAIL);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
     CHECK_FAILED(_bufferCom->Render(), E_FAIL);
 
@@ -97,6 +106,12 @@ HRESULT Particle_Point::Bind_ShaderResources()
     CHECK_FAILED(GAME->Bind_CamPosition(_shaderCom, "g_CamPosition"), E_FAIL);
 
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_DiffuseTexture", _textureIndex), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_ColorTint", &_colorTint, sizeof(Vec4)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_Opacity", &_opacity, sizeof(float)), E_FAIL);
+
+    // Static Point는 데칼처럼 계속 유지돼야 하므로 lifetime fade를 끈다.
+    const int useLifetimeFade = _useLifetimeFade ? 1 : 0;
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_UseLifetimeFade", &useLifetimeFade, sizeof(int)), E_FAIL);
 
     return S_OK;
 }
@@ -104,12 +119,52 @@ HRESULT Particle_Point::Bind_ShaderResources()
 HRESULT Particle_Point::Ready_Components(const FParticlePointDesc& desc)
 {
     CHECK_FAILED(Add_Component(desc.shaderType, _shaderCom), E_FAIL);
-    CHECK_FAILED(Add_Component(desc.textureType, _textureCom), E_FAIL);
+    CHECK_FAILED(Resolve_TextureComponent(desc), E_FAIL);
 
     auto bufferDesc = desc.bufferDesc;
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_VIBUFFER_PARTICLE_POINT, _bufferCom, &bufferDesc), E_FAIL);
 
     return S_OK;
+}
+
+HRESULT Particle_Point::Resolve_TextureComponent(const FParticlePointDesc& desc)
+{
+    if (!desc.textureGuid.empty())
+    {
+        const uint32 texKey = static_cast<uint32>(hash<string>{}(desc.textureGuid));
+        if (SUCCEEDED(Add_Component(texKey, _textureCom)))
+            return S_OK;
+
+        const wstring resolvedPath = GAME->Resolve_AssetPath(desc.textureGuid);
+        if (resolvedPath.empty())
+            return E_FAIL;
+
+        auto proto = Texture::Create(_device, _context, resolvedPath, 1);
+        CHECK_NULL(proto, E_FAIL);
+
+        GAME->Add_Component_Prototype(0, texKey, proto);
+        return Add_Component(0, texKey, _textureCom);
+    }
+
+    return Add_Component(desc.textureType, _textureCom);
+}
+
+uint32 Particle_Point::Resolve_PassIndex() const
+{
+    switch (_blendMode)
+    {
+    case EEffectBlendMode::Translucent:
+        return 0;
+
+    case EEffectBlendMode::Additive:
+        return 1;
+
+    case EEffectBlendMode::Opaque:
+        return 2;
+
+    default:
+        return 1;
+    }
 }
 
 Shared<GameObject> Particle_Point::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

@@ -3,20 +3,26 @@
     "effectName": "NewEffect",
     "layers": [
         {
-            "blendMode": 0,
+            "blendMode": 1,
             "colorTint": [
-                0.11780425906181335,
-                0.9125757217407227,
-                0.939068078994751,
+                1.0,
+                0.0,
+                0.0,
                 1.0
             ],
-            "diffuseTextureGuid": "T_EFF_Rasengan_02_M",
-            "duration": -1.0,
+            "diffuseTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "duration": 1.2000000476837158,
+            "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
             "enabled": true,
+            "endScale": [
+                10.0,
+                10.0,
+                10.0
+            ],
             "fresnelMultiplier": 1.0,
             "fresnelPower": 0.0,
             "kind": 1,
-            "layerName": "NewMeshEmt",
+            "layerName": "Rasengan_Start",
             "localPosition": [
                 0.0,
                 0.0,
@@ -28,22 +34,24 @@
                 0.0
             ],
             "localScale": [
-                1.0,
-                1.0,
-                1.0
+                40.0,
+                40.0,
+                40.0
             ],
-            "loop": false,
+            "loop": true,
             "maskTextureGuid": "",
-            "modelGuid": "Rasengan_A",
+            "modelGuid": "46850340-344d-432d-86c0-58ccf6de8c37",
             "opacity": 1.0,
+            "opacityTextureGuid": "6f67b946-6275-4daf-95e5-a3b7c0005768",
             "rotationAxis": [
-                0.0,
                 1.0,
+                0.0,
                 0.0
             ],
-            "rotationSpeed": 0.0,
+            "rotationSpeed": 260.0,
             "startDelay": 0.0,
-            "twoSided": false,
+            "twoSided": true,
+            "useScaleOverTime": true,
             "uvScrollSpeed": [
                 0.0,
                 0.0

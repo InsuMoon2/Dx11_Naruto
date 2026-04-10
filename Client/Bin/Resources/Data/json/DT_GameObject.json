@@ -66,6 +66,16 @@
             "Level": "Static"
         },
         {
+            "Id": "Effect_Billboard",
+            "ObjectType": "OBJECT_TYPE_EFFECT_BILLBOARD",
+            "Level": "Static"
+        },
+        {
+            "Id": "Attach_Effect",
+            "ObjectType": "OBJECT_TYPE_ATTACHED_EFFECT",
+            "Level": "Static"
+        },
+        {
             "Id": "Skill_Object",
             "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
             "Level": "Static"

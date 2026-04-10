@@ -550,6 +550,9 @@ HRESULT ResourceLoader::Build_AllResourceJobs(const wstring& tablePath, vector<F
                     job.skillData.airGravityOff = (gravityValue.get<float>() != 0.f);
             }
 
+            job.skillData.airLandedAnimStateName = item.value("airLandedAnimStateName", string{});
+            job.skillData.airAttackEndAnimStateName = item.value("airAttackEndAnimStateName", string{});
+
             job.skillIconSrvIndex = iconSrvIndex;
 
             outJobs.push_back(job);

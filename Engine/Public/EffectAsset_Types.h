@@ -6,16 +6,17 @@ NS_BEGIN(Engine)
 
 enum class EEffectBlendMode : uint8
 {
-    Translucent = 0, // 일반 알파 블렌딩 (SrcAlpha * Inv_SrcAlpha) — Pass 0
-    Additive,        // 가산 혼합: 검은 배경 투명, 빛 합산 — Pass 1
-    Opaque,          // 불투명: 뒤쪽 완전 가림 — Pass 2
+    Translucent = 0,                             // 일반 알파 블렌딩 (SrcAlpha * Inv_SrcAlpha) — Pass 0
+    Additive,                                    // 가산 혼합: 검은 배경 투명, 빛 합산 — Pass 1
+    Opaque,                                      // 불투명: 뒤쪽 완전 가림 — Pass 2
     END
 };
 
 enum class EEffectLayerKind : uint8
 {
-    Point = 0, // VIBuffer_Particle_Point 기반 빌보드 파티클
-    Mesh,      // 3D 메쉬 기반 이펙트 (나선환 등)
+    Point = 0,                                  // VIBuffer_Particle_Point 기반 빌보드 파티클
+    Mesh,                                       // 3D 메쉬 기반 이펙트 (나선환 등)
+    BillboardRect,
     END
 };
 
@@ -34,6 +35,10 @@ struct FEffectLayerBase
     Vec3 localPosition = Vec3::Zero;           // 오너 기준 위치 오프셋
     Vec3 localRotation = Vec3::Zero;           // 오너 기준 회전 오프셋 (Euler, degree)
     Vec3 localScale = Vec3(1.f, 1.f, 1.f);     // 오너 기준 스케일
+    bool useScaleOverTime = false;
+    Vec3 endScale = Vec3(1.f, 1.f, 1.f);
+
+    float scaleDuration = 1.f;
 };
 
 struct FEffectPointLayerDesc
@@ -55,7 +60,10 @@ struct FEffectPointLayerDesc
     /* --- 블렌드 모드 --- */
     EEffectBlendMode blendMode = EEffectBlendMode::Additive; // 파티클 블렌드 모드
 
-    uint8 moveMode = 1;                        // 0=Drop(낙하), 1=Spread(방사)
+    Vec4 colorTint = Vec4(1.f, 1.f, 1.f, 1.f); // 포인트 파티클 전체에 곱해질 틴트/알파 값이다.
+    float opacity = 1.f;                       // Point shader 최종 알파 강도 보정값이다.
+
+    uint8 moveMode = 2;                        // 0=Drop(낙하), 1=Spread(방사), 2=Static(정지)
 };
 
 struct FEffectMeshLayerDesc
@@ -63,7 +71,9 @@ struct FEffectMeshLayerDesc
     string modelGuid;                          // Asset_Manager GUID로 메쉬 참조
 
     string diffuseTextureGuid;                
-    string maskTextureGuid;                   
+    string maskTextureGuid;
+    string emissiveTextureGuid;
+    string opacityTextureGuid;
 
     EEffectBlendMode blendMode = EEffectBlendMode::Translucent; 
 
@@ -84,11 +94,29 @@ struct FEffectMeshLayerDesc
     bool twoSided = false;                     // CullNone 적용 여부
 };
 
+struct FEffectBillboardLayerDesc
+{
+    string baseTextureGuid;                    // 중심 소용돌이 문양 텍스처 GUID
+    string ringTextureGuid;                    // 외곽 링/보조 문양 텍스처 GUID
+
+    EEffectBlendMode blendMode = EEffectBlendMode::Additive; // 라센간 코어는 Additive를 기본으로 사용한다.
+
+    Vec4 baseTint = Vec4(0.55f, 0.92f, 1.f, 1.f);            // 중심 문양에 곱해질 하늘색 계열 틴트다.
+    Vec4 ringTint = Vec4(0.85f, 1.f, 1.f, 1.f);              // 외곽 링에 곱해질 더 밝은 틴트다.
+
+    float baseOpacity = 1.f;                                 // 중심 문양 알파 강도다.
+    float ringOpacity = 0.45f;                               // 외곽 링 알파 강도다.
+
+    bool useRing = true;                                     // 외곽 보조 레이어를 함께 그릴지 여부다.
+    bool billboardToCamera = true;                           // 매 프레임 카메라를 보게 만들지 여부다.
+};
+
 struct FEffectLayerDesc
 {
     FEffectLayerBase base;          
     FEffectPointLayerDesc point;             
     FEffectMeshLayerDesc  mesh;
+    FEffectBillboardLayerDesc billboard; // 나선환처럼 2D 문양 billdboard 세팅할 때
 };
 
 struct FEffectAssetDesc
@@ -98,5 +126,7 @@ struct FEffectAssetDesc
     float totalDuration = -1.f;                // 전체 이펙트 지속 시간. -1이면 모든 레이어 종료 시 자동 종료
     vector<FEffectLayerDesc> layers;           // 레이어 목록
 };
+
+
 
 NS_END

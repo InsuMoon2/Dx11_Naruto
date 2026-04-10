@@ -16,6 +16,8 @@ private:
     string _boneName = "R_Hand_Weapon_cnt_tr";
     Protocol::OBJECT_TYPE _spawnObjectType = Protocol::OBJECT_TYPE_SKILL_RASENGAN;
     Collision_Preset _collisionPreset = Collision_Preset::Player_Attack;
+
+    Vec3 _attachOffset = Vec3::Zero;
 };
 
 NS_END

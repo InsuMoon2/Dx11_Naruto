@@ -1,0 +1,55 @@
+{
+    "autoPlay": true,
+    "effectName": "BillboardTest",
+    "layers": [
+        {
+            "baseOpacity": 1.0,
+            "baseTextureGuid": "e6edb6f1-819e-43df-a4db-fec8d888c45c",
+            "baseTint": [
+                0.2675197124481201,
+                0.9171198010444641,
+                0.9820788502693176,
+                1.0
+            ],
+            "billboardToCamera": true,
+            "blendMode": 1,
+            "duration": -1.0,
+            "enabled": true,
+            "endScale": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "kind": 2,
+            "layerName": "Core",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                0.20000000298023224,
+                0.20000000298023224,
+                0.20000000298023224
+            ],
+            "loop": false,
+            "ringOpacity": 0.6520000100135803,
+            "ringTextureGuid": "e6edb6f1-819e-43df-a4db-fec8d888c45c",
+            "ringTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "startDelay": 0.0,
+            "useRing": true,
+            "useScaleOverTime": true
+        }
+    ],
+    "totalDuration": -1.0
+}

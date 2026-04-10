@@ -25,9 +25,10 @@ public:
         Vec3    spawnPosition = Vec3::Zero; 
         Vec3    spawnRotation = Vec3::Zero; 
         Vec3    scale         = Vec3::One;  
-        float   lifetime      = 2.f;
+        float   lifetime      = 0.f;
 
         Vec3    direction = Vec3::Forward;
+        Vec3    attachOffset = Vec3::Zero;
 
         int32   ownerSkillId  = 0;
 
@@ -64,6 +65,8 @@ protected:
     int32   _ownerSkillId = 0;
 
     Collision_Preset   _collisionPreset = Collision_Preset::Projectile;
+
+    Vec3    _attachOffset = Vec3::Zero;
 
 protected:
     // 다단히트

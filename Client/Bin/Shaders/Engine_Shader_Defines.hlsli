@@ -70,6 +70,15 @@ BlendState BS_AlphaBlend
     BlendOp = Add;
 };
 
+BlendState BS_Additive
+{
+    BlendEnable[0] = true;
+
+    SrcBlend  = Src_Alpha;
+    DestBlend = One;
+    BlendOp   = Add;
+};
+
 // --- Depth Stencil States ---
 DepthStencilState DSS_Default
 {

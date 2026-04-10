@@ -265,9 +265,6 @@
     <ClInclude Include="..\Public\GhostEffect_Component.h">
       <Filter>03. Component</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Particle_Point.h">
-      <Filter>05. Particle</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Hit.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClInclude>
@@ -313,6 +310,9 @@
     <ClInclude Include="..\Public\Skill_FireBall.h">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AN_ClearMeleeSkill.h" />
+    <ClInclude Include="..\Public\ANS_SpawnParticle.h" />
+    <ClInclude Include="..\Public\AttachedEffectObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -561,9 +561,6 @@
     <ClCompile Include="..\Private\GhostEffect_Component.cpp">
       <Filter>03. Component</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Particle_Point.cpp">
-      <Filter>05. Particle</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Hit.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\00. Base</Filter>
     </ClCompile>
@@ -609,6 +606,9 @@
     <ClCompile Include="..\Private\Skill_FireBall.cpp">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\AN_ClearMeleeSkill.cpp" />
+    <ClCompile Include="..\Private\ANS_SpawnParticle.cpp" />
+    <ClCompile Include="..\Private\AttachedEffectObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -781,6 +781,9 @@
       <Filter>94. Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_VtxEffectMesh.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_VtxEffectBillboard.hlsl">
       <Filter>94. Shaders</Filter>
     </FxCompile>
   </ItemGroup>

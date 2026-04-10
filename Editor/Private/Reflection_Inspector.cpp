@@ -242,6 +242,18 @@ void Reflection_Inspector::Draw_Property_Simple(void* basePtr, const FPropertyIn
         ImGui::PopItemWidth();
         break;
     }
+
+    case EPropertyType::Vec3:
+{
+    float* val = static_cast<float*>(memberPtr);
+    ImGui::Text("%s", prop.name.c_str());
+    ImGui::SameLine(120.f);
+    ImGui::PushItemWidth(-1);
+    ImGui::DragFloat3(label.c_str(), val, prop.dragSpeed);
+    ImGui::PopItemWidth();
+    break;
+}
+
     case EPropertyType::Enum:
     {
         int* val = static_cast<int*>(memberPtr);

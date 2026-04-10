@@ -59,6 +59,12 @@
             "Path": "../../Client/Bin/Shaders/Shader_VtxEffectMesh.hlsl",
             "Level": "Static",
             "Extra": "VtxMesh"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_BILLBOARD",
+            "Path": "../../Client/Bin/Shaders/Shader_VtxEffectBillboard.hlsl",
+            "Level": "Static",
+            "Extra": "VtxTex"
         }
     ]
 }

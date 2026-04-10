@@ -628,7 +628,7 @@
                         "playRate": 1.0
                     },
                     "start": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Charge_Lv1",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Charge_Lv2toLv3",
                         "loop": false,
                         "playRate": 1.0
                     }
@@ -722,6 +722,52 @@
                     "start": {
                         "animationName": "",
                         "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Skill_Rasengan_Air",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv2toLv3_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv1",
+                        "loop": false,
                         "playRate": 1.0
                     }
                 },
@@ -1765,6 +1811,52 @@
                         "loop": true,
                         "playRate": 1.0
                     },
+                    "key": "Skill_Rasengan_Air_End",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_End",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
                     "key": "Wall_Idle",
                     "loopClip": {
                         "animationName": "",
@@ -1945,14 +2037,14 @@
                         }
                     },
                     "end": {
-                        "animationName": "",
-                        "loop": true,
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_End",
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "key": "Skill_RasenShuriken_Air",
                     "loopClip": {
-                        "animationName": "",
-                        "loop": true,
+                        "animationName": "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_Start",
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "mode": "Single",
@@ -1962,8 +2054,8 @@
                         "playRate": 1.2999999523162842
                     },
                     "start": {
-                        "animationName": "",
-                        "loop": true,
+                        "animationName": "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_Start",
+                        "loop": false,
                         "playRate": 1.0
                     }
                 },
@@ -2104,6 +2196,52 @@
                         "loop": true,
                         "playRate": 1.0
                     }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Skill_Rasengan_Landed",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Run_Lv1_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Land_toRasengunCharge",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Land_toRasengunCharge",
+                        "loop": false,
+                        "playRate": 1.0
+                    }
                 }
             ],
             "current_state": "Idle",
@@ -2188,7 +2326,15 @@
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_End",
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_Loop",
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_Fireball_Lv3",
-                "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Fireball_Lv3"
+                "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Fireball_Lv3",
+                "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_End",
+                "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_Start",
+                "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_Loop",
+                "SK_CHR_NormalModel|CustomMan_Ninjutsu_D54NJ3_RasenganStart",
+                "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv1",
+                "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv2toLv3_Loop",
+                "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv2toLv3",
+                "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv2toLv3"
             ],
             "materials": [
                 {
@@ -2478,7 +2624,7 @@
             }
         }
     },
-    "guid": "6b8aaef5-9c4e-4a4a-ac00-acceaccb538f",
+    "guid": "6861d2fe-ab8c-473e-af02-23fe5e342e2a",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"

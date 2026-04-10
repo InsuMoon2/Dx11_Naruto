@@ -34,6 +34,9 @@ namespace Client
         // 공중 스킬
         string  airAnimStateName = "";
         bool    airGravityOff = false;
+
+        string  airLandedAnimStateName = "";
+        string  airAttackEndAnimStateName = "";
     };
 
     struct FComboEntry

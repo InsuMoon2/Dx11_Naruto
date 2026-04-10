@@ -289,6 +289,7 @@
     <ClInclude Include="..\Public\Delegate.h" />
     <ClInclude Include="..\Public\EffectAsset_Serializer.h" />
     <ClInclude Include="..\Public\EffectAsset_Types.h" />
+    <ClInclude Include="..\Public\EffectBilldboardObject.h" />
     <ClInclude Include="..\Public\EffectComponent.h" />
     <ClInclude Include="..\Public\EffectMeshObject.h" />
     <ClInclude Include="..\Public\Event_Manager.h" />
@@ -313,6 +314,7 @@
     <ClInclude Include="..\Public\MovementComponent.h" />
     <ClInclude Include="..\Public\Object_Manager.h" />
     <ClInclude Include="..\Public\Panel.h" />
+    <ClInclude Include="..\Public\Particle_Point.h" />
     <ClInclude Include="..\Public\PartObject.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\PlayerStart.h" />
@@ -399,6 +401,7 @@
     <ClCompile Include="..\Private\Debug_Manager.cpp" />
     <ClCompile Include="..\Private\Delegate.cpp" />
     <ClCompile Include="..\Private\EffectAsset_Serializer.cpp" />
+    <ClCompile Include="..\Private\EffectBilldboardObject.cpp" />
     <ClCompile Include="..\Private\EffectComponent.cpp" />
     <ClCompile Include="..\Private\EffectMeshObject.cpp" />
     <ClCompile Include="..\Private\Event_Manager.cpp" />
@@ -422,6 +425,7 @@
     <ClCompile Include="..\Private\MovementComponent.cpp" />
     <ClCompile Include="..\Private\Object_Manager.cpp" />
     <ClCompile Include="..\Private\Panel.cpp" />
+    <ClCompile Include="..\Private\Particle_Point.cpp" />
     <ClCompile Include="..\Private\PartObject.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\PlayerStart.cpp" />

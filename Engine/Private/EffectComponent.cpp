@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "EffectComponent.h"
 #include "EffectAsset_Serializer.h"
+#include "EffectBilldboardObject.h"
+#include "Particle_Point.h"
 
 EffectComponent::EffectComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -73,6 +75,8 @@ void EffectComponent::Update(float timeDelta)
                 continue;
             }
         }
+
+        Apply_LayerScaleInternal(layer);
 
         if (layer.obj)
         {
@@ -187,7 +191,6 @@ void EffectComponent::Stop_Effect()
     _isPlaying = false;
 }
 
-// 에디터 프리뷰 토글이 바뀌었을 때 이미 생성된 메시 레이어에도 즉시 같은 가시화 상태를 반영한다.
 void EffectComponent::Set_ForceVisiblePreview(bool enabled)
 {
     _forceVisiblePreview = enabled;
@@ -200,6 +203,40 @@ void EffectComponent::Set_ForceVisiblePreview(bool enabled)
         auto meshObj = dynamic_pointer_cast<EffectMeshObject>(layer.obj);
         if (meshObj)
             meshObj->Set_ForceVisiblePreview(_forceVisiblePreview);
+    }
+}
+
+void EffectComponent::Set_RuntimeLocalTransform(const Vec3& localPosition, const Vec3& localRotation,
+    const Vec3& localScale)
+{
+    _useRuntimeLocalTransform = true;
+    _runtimeLocalPosition = localPosition;
+    _runtimeLocalRotation = localRotation;
+    _runtimeLocalScale = localScale;
+
+    for (auto& layer : _layers)
+    {
+        if (!layer.obj)
+            continue;
+
+        Apply_LayerTransformInternal(layer);
+    }
+
+}
+
+void EffectComponent::Clear_RuntimeLocalTransform()
+{
+    _useRuntimeLocalTransform = false;
+    _runtimeLocalPosition = Vec3::Zero;
+    _runtimeLocalRotation = Vec3::Zero;
+    _runtimeLocalScale = Vec3(1.f, 1.f, 1.f);
+
+    for (auto& layer : _layers)
+    {
+        if (!layer.obj)
+            continue;
+
+        Apply_LayerTransformInternal(layer);
     }
 }
 
@@ -254,6 +291,12 @@ bool EffectComponent::Apply_LayerDesc(int32 layerIndex, const FEffectLayerDesc& 
             meshObj->Set_ForceVisiblePreview(_forceVisiblePreview);
         }
     }
+    else if (layer.desc.base.kind == EEffectLayerKind::BillboardRect)
+    {
+        auto billboardObj = dynamic_pointer_cast<EffectBillboardObject>(layer.obj);
+        if (billboardObj)
+            billboardObj->Apply_LayerDesc(layer.desc);
+    }
 
     Apply_LayerTransformInternal(layer);
 
@@ -304,7 +347,56 @@ HRESULT EffectComponent::Create_LayerObject(FActiveLayer& layer)
         return S_OK;
     }
 
-    // Point는 이번 단계에서 아직 미구현
+    if (layer.desc.base.kind == EEffectLayerKind::Point)
+    {
+        Particle_Point::FParticlePointDesc pointDesc{};
+        pointDesc.name = Utils::ToWString(layer.desc.base.layerName);
+        pointDesc.textureGuid = layer.desc.point.textureGuid;
+        pointDesc.blendMode = layer.desc.point.blendMode;
+        pointDesc.colorTint = layer.desc.point.colorTint;
+        pointDesc.opacity = layer.desc.point.opacity;
+        pointDesc.addToBlendGroup = (layer.desc.point.blendMode != EEffectBlendMode::Opaque);
+
+        pointDesc.bufferDesc.numInstances = layer.desc.point.numInstances;
+        pointDesc.bufferDesc.center = layer.desc.point.center;
+        pointDesc.bufferDesc.range = layer.desc.point.range;
+        pointDesc.bufferDesc.scale = layer.desc.point.scale;
+        pointDesc.bufferDesc.speed = layer.desc.point.speed;
+        pointDesc.bufferDesc.lifeTime = layer.desc.point.lifeTime;
+        pointDesc.bufferDesc.pivot = layer.desc.point.pivot;
+        pointDesc.bufferDesc.isLoop = layer.desc.point.isLoop;
+        pointDesc.bufferDesc.moveMode = static_cast<VIBuffer_Particle_Point::EMoveMode>(layer.desc.point.moveMode);
+
+        layer.obj = GAME->Clone_GameObject(
+            0,
+            Protocol::OBJECT_TYPE_INSTANCED_PARTICLE_POINT,
+            &pointDesc);
+
+        if (!layer.obj)
+            return E_FAIL;
+
+        Apply_LayerTransformInternal(layer);
+        return S_OK;
+    }
+
+    if (layer.desc.base.kind == EEffectLayerKind::BillboardRect)
+    {
+        EffectBillboardObject::FEffectBillboardDesc billboardDesc{};
+        billboardDesc.name = Utils::ToWString(layer.desc.base.layerName);
+        billboardDesc.layerDesc = layer.desc;
+
+        layer.obj = GAME->Clone_GameObject(
+            0,
+            Protocol::OBJECT_TYPE_EFFECT_BILLBOARD,
+            &billboardDesc);
+
+        if (!layer.obj)
+            return E_FAIL;
+
+        Apply_LayerTransformInternal(layer);
+        return S_OK;
+    }
+
     layer.obj.reset();
     layer.finished = true;
 
@@ -323,13 +415,90 @@ void EffectComponent::Apply_LayerTransformInternal(FActiveLayer& layer)
         return;
 
     childTransform->Set_Parent(owner->Get_Transform());
-    childTransform->Set_LocalPosition(layer.desc.base.localPosition);
-    childTransform->Set_LocalEulerAngles(
-        layer.desc.base.localRotation.x,
-        layer.desc.base.localRotation.y,
-        layer.desc.base.localRotation.z);
 
-    childTransform->Set_LocalScale(layer.desc.base.localScale);
+    Vec3 runtimePosition = Vec3::Zero;
+    Vec3 runtimeRotation = Vec3::Zero;
+    Vec3 runtimeScale = Vec3::One;
+
+    if (_useRuntimeLocalTransform)
+    {
+        runtimePosition = _runtimeLocalPosition;
+        runtimeRotation = _runtimeLocalRotation;
+        runtimeScale = _runtimeLocalScale;
+    }
+
+    const Vec3 finalLocalPosition =
+        runtimePosition +
+        _desc.localPosition +
+        layer.desc.base.localPosition;
+
+    const Vec3 finalLocalRotation =
+        runtimeRotation +
+        _desc.localRotation +
+        layer.desc.base.localRotation;
+
+    Vec3 layerScale = Resolve_LayerScale(layer);
+    Vec3 finalLocalScale(
+        layerScale.x * _desc.localScale.x * runtimeScale.x,
+        layerScale.y * _desc.localScale.y * runtimeScale.y,
+        layerScale.z * _desc.localScale.z * runtimeScale.z);
+
+    childTransform->Set_LocalPosition(finalLocalPosition);
+    childTransform->Set_LocalEulerAngles(
+        finalLocalRotation.x,
+        finalLocalRotation.y,
+        finalLocalRotation.z);
+    childTransform->Set_LocalScale(finalLocalScale);
+}
+
+void EffectComponent::Apply_LayerScaleInternal(FActiveLayer& layer)
+{
+    if (!layer.obj)
+        return;
+
+    auto childTransform = layer.obj->Get_Transform();
+    if (!childTransform)
+        return;
+
+    Vec3 runtimeScale = Vec3(1.f, 1.f, 1.f);
+
+    if (_useRuntimeLocalTransform)
+        runtimeScale = _runtimeLocalScale;
+
+    Vec3 layerScale = Resolve_LayerScale(layer);
+
+    Vec3 finalLocalScale(
+        layerScale.x * _desc.localScale.x * runtimeScale.x,
+        layerScale.y * _desc.localScale.y * runtimeScale.y,
+        layerScale.z * _desc.localScale.z * runtimeScale.z);
+
+    childTransform->Set_LocalScale(finalLocalScale);
+}
+
+Vec3 EffectComponent::Resolve_LayerScale(const FActiveLayer& layer) const
+{
+    if (!layer.desc.base.useScaleOverTime)
+        return layer.desc.base.localScale;
+
+    const float duration = layer.desc.base.scaleDuration;
+
+    // 끝나면, endScale로 유지
+    if (duration <= 0.f)
+        return layer.desc.base.endScale;
+
+    const float t = std::clamp(layer.elapsed / duration, 0.f, 1.f);
+    return Vec3::Lerp(layer.desc.base.localScale, layer.desc.base.endScale, t);
+}
+
+float EffectComponent::Resolve_LayerDuration(const FActiveLayer& layer) const
+{
+    if (layer.desc.base.duration > 0.f)
+        return layer.desc.base.duration;
+
+    if (_asset.totalDuration > 0.f)
+        return (std::max)(0.f, _asset.totalDuration - layer.desc.base.startDelay);
+
+    return 0.f;
 }
 
 string EffectComponent::Resolve_EffectAssetPathByName(const string& effectAssetName)

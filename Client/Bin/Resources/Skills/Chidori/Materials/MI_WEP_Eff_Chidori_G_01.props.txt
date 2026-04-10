@@ -1,0 +1,76 @@
+Parent = MaterialInstanceConstant'/Game/Effects/BaseMaterials/Instance_Base/MacroUV/MI_EFF_GMT_3_MUB_Uds.MI_EFF_GMT_3_MUB_Uds'
+ScalarParameterValues[1] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = RefractionDepthBias
+    }
+}
+TextureParameterValues[4] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/Gradient/T_EFF_Wave_01_M.T_EFF_Wave_01_M'
+        ParameterName = 05_OpacityMap
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/GradationMap/T_EFF_GMO_B_04_M.T_EFF_GMO_B_04_M'
+        ParameterName = 35_OpacityMap_GradationMap
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/BaseMaterials/Textures/T_EFF_Default_02_M.T_EFF_Default_02_M'
+        ParameterName = 05_EmissiveMap
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/GradationMap/T_EFF_GMT_Lightning_01_BC.T_EFF_GMT_Lightning_01_BC'
+        ParameterName = 35_EmissiveMap_GradationMap
+    }
+}
+VectorParameterValues[2] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=0.3, G=0.3, B=1, A=1 }
+        ParameterName = 11_UVDistortion_Value
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=1, G=1, B=0, A=1 }
+        ParameterName = 20_UVDistortion_Animation
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = true
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = true
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

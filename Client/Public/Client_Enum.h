@@ -34,6 +34,12 @@ namespace Client
         WireDash,
         AirApproach,
 
+        // 바꿔치기
+        Replacement,
+
+        // 쿠나이
+        Kunai,
+
         // Attack 진입 판별용
         Attack, JumpAttack,
 
@@ -47,13 +53,13 @@ namespace Client
         Dash,
 
         // 스킬 string으로 가능하긴 한데, 안전하게 Enum처리하기
-        Skill_Rasengan,         Skill_Rasengan_Air,     Skill_Rasengan_End, 
-        Skill_RasenShuriken,    Skill_RasenShuriken_Air,
+        Skill_Rasengan,         Skill_Rasengan_Air,     Skill_Rasengan_End, Skill_Rasengan_Landed, Skill_Rasengan_Air_End,
+        Skill_RasenShuriken,    Skill_RasenShuriken_Air, 
 
-        Skill_Chidori,          Skill_Chidori_Air,      Skill_Chidori_End,
+        Skill_Chidori,          Skill_Chidori_Air,      Skill_Chidori_End, Skill_Chidori_Landed, Skill_Chidori_Air_End,
         Skill_FireBall,         Skill_FireBall_Air,
 
-        // 스킬 두개 정도만 더 추가할까
+        // 스킬 수둔 or 목둔 추가 예정.
 
         Dead,
         END

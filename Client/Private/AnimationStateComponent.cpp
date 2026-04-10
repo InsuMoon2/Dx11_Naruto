@@ -475,20 +475,23 @@ void AnimationStateComponent::Capture_FromStateMachine(const Shared<PlayerStateM
     if (!stateMachine)
         return;
 
-    const EPlayerState nextState = stateMachine->Get_CurrentStateID();
+    // 현재 FSM 기준 먼저 읽기
+    const EPlayerState localState = stateMachine->Get_CurrentStateID();
+    const Protocol::OBJECT_STATE_TYPE replicatedState = To_ReplicatedState(localState);
+
     const EMoveInputDirection nextDir = stateMachine->Get_PendingMoveInputDirection();
     const EAnimPhase nextPhase = stateMachine->Get_AnimPhase();
 
-    const bool stateChanged = (_replicatedState.state != nextState);
+    const bool stateChanged = (_replicatedState.state != replicatedState);
 
-    _replicatedState.state = nextState;
+    _replicatedState.state = replicatedState;
     _replicatedState.dir = nextDir;
     _replicatedState.phase = nextPhase;
 
-    _replicatedState.forceRestart = stateChanged && Requires_ForceRestart(nextState);
+    _replicatedState.forceRestart = stateChanged && Requires_ForceRestart(localState);
 
     // 다음 변경 상태가 Attack일 때에만 프로파일 체크
-    if (nextState == EPlayerState::Attack)
+    if (localState == EPlayerState::Attack)
     {
         auto attackState = dynamic_pointer_cast<PlayerState_Attack>(
             stateMachine->Get_CurrentState());
@@ -526,9 +529,6 @@ void AnimationStateComponent::Apply_NetworkState()
     const bool phaseChanged =
         _replicatedState.phase != _appliedState.phase;
 
-    // [추가] 콤보 인덱스 또는 프로파일이 바뀌면 공격 클립을 다시 재생해야 한다.
-    // Attack 상태에서 콤보가 진행될 때 state는 동일하고 index만 올라가기 때문에
-    // stateChanged 만으로는 감지 불가능하므로 별도 체크가 필요하다.
     const bool attackInfoChanged =
         _replicatedState.attackComboIndex != _appliedState.attackComboIndex ||
         _replicatedState.attackProfile != _appliedState.attackProfile;
@@ -558,21 +558,23 @@ void AnimationStateComponent::Apply_NetworkState()
     // 위에서 재생되지 않은 경우 기존 로직 그대로 실행
     if (!played)
     {
+        const EPlayerState localState = To_LocalState(_replicatedState.state);
+
         const string stateName = Find_StateNameByWeapon(
-            Get_Owner().get(), _replicatedState.state);
+            Get_Owner().get(), localState);
 
         const auto* stateDesc = Find_State(stateName);
 
         if (_replicatedState.forceRestart)
         {
-            if (_replicatedState.state == EPlayerState::Dash)
+            if (localState == EPlayerState::Dash)
                 played = Play_DirectionalState(stateName, _replicatedState.dir);
             else
                 played = Play_State(stateName);
         }
         else if (stateChanged)
         {
-            if (_replicatedState.state == EPlayerState::Dash)
+            if (localState == EPlayerState::Dash)
                 played = Play_DirectionalState(stateName, _replicatedState.dir);
             else
                 played = Play_State(stateName);
@@ -608,7 +610,7 @@ void AnimationStateComponent::Apply_NetworkState()
 
 void AnimationStateComponent::Write_ToObjectInfo(Protocol::ObjectInfo& info) const
 {
-    info.set_object_state(To_ProtoState(_replicatedState.state));
+    info.set_object_state(_replicatedState.state);
     info.set_move_dir(To_ProtoDir(_replicatedState.dir));
 
     info.set_anim_phase(To_ProtoAnimPhase(_replicatedState.phase));
@@ -621,7 +623,8 @@ void AnimationStateComponent::Write_ToObjectInfo(Protocol::ObjectInfo& info) con
 void AnimationStateComponent::Read_FromObjectInfo(const Protocol::ObjectInfo& info)
 {
     FAnimReplicatedState state{};
-    state.state = From_ProtoState(info.object_state());
+
+    state.state = info.object_state();
     state.dir = From_ProtoDir(info.move_dir());
 
     state.phase = From_ProtoAnimPhase(info.anim_phase());
@@ -677,27 +680,130 @@ bool AnimationStateComponent::Requires_ForceRestart(EPlayerState state)
     case EPlayerState::SuperJump:
     case EPlayerState::HeightLand:
     case EPlayerState::Dash:
+    case EPlayerState::JumpDash:
+    case EPlayerState::WireDash:
+    case EPlayerState::AirApproach:
+    case EPlayerState::Hit:
+    case EPlayerState::JumpAttack:
+    case EPlayerState::Skill_Rasengan:
+    case EPlayerState::Skill_Rasengan_Air:
+    case EPlayerState::Skill_Rasengan_End:
+    case EPlayerState::Skill_RasenShuriken:
+    case EPlayerState::Skill_RasenShuriken_Air:
+    case EPlayerState::Skill_Chidori:
+    case EPlayerState::Skill_Chidori_Air:
+    case EPlayerState::Skill_Chidori_End:
+    case EPlayerState::Skill_FireBall:
+    case EPlayerState::Skill_FireBall_Air:
         return true;
+
     default:
         return false;
     }
 }
 
-Protocol::OBJECT_STATE_TYPE AnimationStateComponent::To_ProtoState(EPlayerState state)
+Protocol::OBJECT_STATE_TYPE AnimationStateComponent::To_ReplicatedState(EPlayerState state)
 {
     switch (state)
     {
-    case EPlayerState::Idle:            return Protocol::OBJECT_STATE_TYPE_IDLE;
-    case EPlayerState::Run:             return Protocol::OBJECT_STATE_TYPE_RUN;
-    case EPlayerState::Jump:            return Protocol::OBJECT_STATE_TYPE_JUMP;
-    case EPlayerState::DoubleJump:      return Protocol::OBJECT_STATE_TYPE_DOUBLE_JUMP;
-    case EPlayerState::SuperJumpCharge: return Protocol::OBJECT_STATE_TYPE_SUPER_JUMP_CHARGE;
-    case EPlayerState::SuperJump:       return Protocol::OBJECT_STATE_TYPE_SUPER_JUMP;
-    case EPlayerState::HeightLand:      return Protocol::OBJECT_STATE_TYPE_HEIGHT_LAND;
-    case EPlayerState::Dash:            return Protocol::OBJECT_STATE_TYPE_DASH;
-    default:                            return Protocol::OBJECT_STATE_TYPE_IDLE;
+    case EPlayerState::Idle:                return Protocol::OBJECT_STATE_TYPE_IDLE;
+    case EPlayerState::BigSword_Idle:       return Protocol::OBJECT_STATE_TYPE_BIGSWORD_IDLE;
+    case EPlayerState::Wall_Idle:           return Protocol::OBJECT_STATE_TYPE_WALL_IDLE;
+    case EPlayerState::Run:                 return Protocol::OBJECT_STATE_TYPE_RUN;
+    case EPlayerState::Wall_Run:            return Protocol::OBJECT_STATE_TYPE_WALL_RUN;
+    case EPlayerState::Jump:                return Protocol::OBJECT_STATE_TYPE_JUMP;
+    case EPlayerState::JumpFall:            return Protocol::OBJECT_STATE_TYPE_JUMP_FALL;
+    case EPlayerState::DoubleJump:          return Protocol::OBJECT_STATE_TYPE_DOUBLE_JUMP;
+    case EPlayerState::JumpDash:            return Protocol::OBJECT_STATE_TYPE_JUMP_DASH;
+    case EPlayerState::SuperJumpCharge:     return Protocol::OBJECT_STATE_TYPE_SUPER_JUMP_CHARGE;
+    case EPlayerState::SuperJump:           return Protocol::OBJECT_STATE_TYPE_SUPER_JUMP;
+    case EPlayerState::HeightLand:          return Protocol::OBJECT_STATE_TYPE_HEIGHT_LAND;
+    case EPlayerState::WireDash:            return Protocol::OBJECT_STATE_TYPE_WIRE_DASH;
+    case EPlayerState::AirApproach:         return Protocol::OBJECT_STATE_TYPE_AIR_APPROACH;
+    case EPlayerState::Attack:              return Protocol::OBJECT_STATE_TYPE_ATTACK;
+    case EPlayerState::JumpAttack:          return Protocol::OBJECT_STATE_TYPE_JUMP_ATTACK;
+    case EPlayerState::Attack_01:           return Protocol::OBJECT_STATE_TYPE_ATTACK_01;
+    case EPlayerState::Attack_02:           return Protocol::OBJECT_STATE_TYPE_ATTACK_02;
+    case EPlayerState::Attack_03:           return Protocol::OBJECT_STATE_TYPE_ATTACK_03;
+    case EPlayerState::Attack_04:           return Protocol::OBJECT_STATE_TYPE_ATTACK_04;
+    case EPlayerState::Attack_Air_01:       return Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_01;
+    case EPlayerState::Attack_Air_02:       return Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_02;
+    case EPlayerState::Attack_Air_03:       return Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_03;
+    case EPlayerState::Attack_Air_04:       return Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_04;
+    case EPlayerState::Attack_Sword_01:     return Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_01;
+    case EPlayerState::Attack_Sword_02:     return Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_02;
+    case EPlayerState::Attack_Sword_03:     return Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_03;
+    case EPlayerState::Attack_Sword_04:     return Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_04;
+    case EPlayerState::Attack_SwordAir_01:  return Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_AIR_01;
+    case EPlayerState::Attack_SwordAir_02:  return Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_AIR_02;
+    case EPlayerState::Hit:                 return Protocol::OBJECT_STATE_TYPE_HIT;
+    case EPlayerState::Dash:                return Protocol::OBJECT_STATE_TYPE_DASH;
+    case EPlayerState::Skill_Rasengan:      return Protocol::OBJECT_STATE_TYPE_SKILL_RASENGAN;
+    case EPlayerState::Skill_Rasengan_Air:  return Protocol::OBJECT_STATE_TYPE_SKILL_RASENGAN_AIR;
+    case EPlayerState::Skill_Rasengan_End:  return Protocol::OBJECT_STATE_TYPE_SKILL_RASENGAN_END;
+    case EPlayerState::Skill_RasenShuriken: return Protocol::OBJECT_STATE_TYPE_SKILL_RASENSHURIKEN;
+    case EPlayerState::Skill_RasenShuriken_Air: return Protocol::OBJECT_STATE_TYPE_SKILL_RASENSHURIKEN_AIR;
+    case EPlayerState::Skill_Chidori:       return Protocol::OBJECT_STATE_TYPE_SKILL_CHIDORI;
+    case EPlayerState::Skill_Chidori_Air:   return Protocol::OBJECT_STATE_TYPE_SKILL_CHIDORI_AIR;
+    case EPlayerState::Skill_Chidori_End:   return Protocol::OBJECT_STATE_TYPE_SKILL_CHIDORI_END;
+    case EPlayerState::Skill_FireBall:      return Protocol::OBJECT_STATE_TYPE_SKILL_FIREBALL;
+    case EPlayerState::Skill_FireBall_Air:  return Protocol::OBJECT_STATE_TYPE_SKILL_FIREBALL_AIR;
+    case EPlayerState::Dead:                return Protocol::OBJECT_STATE_TYPE_DEAD;
+    default:                                return Protocol::OBJECT_STATE_TYPE_IDLE;
     }
 }
+
+EPlayerState AnimationStateComponent::To_LocalState(Protocol::OBJECT_STATE_TYPE state)
+{
+    switch (state)
+    {
+    case Protocol::OBJECT_STATE_TYPE_IDLE:                  return EPlayerState::Idle;
+    case Protocol::OBJECT_STATE_TYPE_BIGSWORD_IDLE:         return EPlayerState::BigSword_Idle;
+    case Protocol::OBJECT_STATE_TYPE_WALL_IDLE:             return EPlayerState::Wall_Idle;
+    case Protocol::OBJECT_STATE_TYPE_RUN:                   return EPlayerState::Run;
+    case Protocol::OBJECT_STATE_TYPE_WALL_RUN:              return EPlayerState::Wall_Run;
+    case Protocol::OBJECT_STATE_TYPE_JUMP:                  return EPlayerState::Jump;
+    case Protocol::OBJECT_STATE_TYPE_JUMP_FALL:             return EPlayerState::JumpFall;
+    case Protocol::OBJECT_STATE_TYPE_DOUBLE_JUMP:           return EPlayerState::DoubleJump;
+    case Protocol::OBJECT_STATE_TYPE_JUMP_DASH:             return EPlayerState::JumpDash;
+    case Protocol::OBJECT_STATE_TYPE_SUPER_JUMP_CHARGE:     return EPlayerState::SuperJumpCharge;
+    case Protocol::OBJECT_STATE_TYPE_SUPER_JUMP:            return EPlayerState::SuperJump;
+    case Protocol::OBJECT_STATE_TYPE_HEIGHT_LAND:           return EPlayerState::HeightLand;
+    case Protocol::OBJECT_STATE_TYPE_WIRE_DASH:             return EPlayerState::WireDash;
+    case Protocol::OBJECT_STATE_TYPE_AIR_APPROACH:          return EPlayerState::AirApproach;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK:                return EPlayerState::Attack;
+    case Protocol::OBJECT_STATE_TYPE_JUMP_ATTACK:           return EPlayerState::JumpAttack;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_01:             return EPlayerState::Attack_01;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_02:             return EPlayerState::Attack_02;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_03:             return EPlayerState::Attack_03;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_04:             return EPlayerState::Attack_04;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_01:         return EPlayerState::Attack_Air_01;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_02:         return EPlayerState::Attack_Air_02;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_03:         return EPlayerState::Attack_Air_03;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_04:         return EPlayerState::Attack_Air_04;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_01:       return EPlayerState::Attack_Sword_01;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_02:       return EPlayerState::Attack_Sword_02;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_03:       return EPlayerState::Attack_Sword_03;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_04:       return EPlayerState::Attack_Sword_04;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_AIR_01:   return EPlayerState::Attack_SwordAir_01;
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_AIR_02:   return EPlayerState::Attack_SwordAir_02;
+    case Protocol::OBJECT_STATE_TYPE_HIT:                   return EPlayerState::Hit;
+    case Protocol::OBJECT_STATE_TYPE_DASH:                  return EPlayerState::Dash;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_RASENGAN:        return EPlayerState::Skill_Rasengan;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_RASENGAN_AIR:    return EPlayerState::Skill_Rasengan_Air;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_RASENGAN_END:    return EPlayerState::Skill_Rasengan_End;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_RASENSHURIKEN:   return EPlayerState::Skill_RasenShuriken;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_RASENSHURIKEN_AIR:return EPlayerState::Skill_RasenShuriken_Air;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_CHIDORI:         return EPlayerState::Skill_Chidori;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_CHIDORI_AIR:     return EPlayerState::Skill_Chidori_Air;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_CHIDORI_END:     return EPlayerState::Skill_Chidori_End;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_FIREBALL:        return EPlayerState::Skill_FireBall;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_FIREBALL_AIR:    return EPlayerState::Skill_FireBall_Air;
+    case Protocol::OBJECT_STATE_TYPE_DEAD:                  return EPlayerState::Dead;
+    default:                                                return EPlayerState::Idle;
+    }
+}
+
 
 Protocol::MOVE_INPUT_DIR_TYPE AnimationStateComponent::To_ProtoDir(EMoveInputDirection dir)
 {
@@ -731,22 +837,6 @@ Protocol::ATTACK_PROFILE_TYPE AnimationStateComponent::To_ProtoAttackProfile(EAt
     case EAttackProfileType::BigSword_Ground:   return Protocol::ATTACK_PROFILE_TYPE_BIGSWORD_GROUND;
     case EAttackProfileType::BigSword_Aerial:   return Protocol::ATTACK_PROFILE_TYPE_BIGSWORD_AERIAL;
     default:                                    return Protocol::ATTACK_PROFILE_TYPE_HAND_GROUND;
-    }
-}
-
-EPlayerState AnimationStateComponent::From_ProtoState(Protocol::OBJECT_STATE_TYPE state)
-{
-    switch (state)
-    {
-    case Protocol::OBJECT_STATE_TYPE_IDLE:              return EPlayerState::Idle;
-    case Protocol::OBJECT_STATE_TYPE_RUN:               return EPlayerState::Run;
-    case Protocol::OBJECT_STATE_TYPE_JUMP:              return EPlayerState::Jump;
-    case Protocol::OBJECT_STATE_TYPE_DOUBLE_JUMP:       return EPlayerState::DoubleJump;
-    case Protocol::OBJECT_STATE_TYPE_SUPER_JUMP_CHARGE: return EPlayerState::SuperJumpCharge;
-    case Protocol::OBJECT_STATE_TYPE_SUPER_JUMP:        return EPlayerState::SuperJump;
-    case Protocol::OBJECT_STATE_TYPE_HEIGHT_LAND:       return EPlayerState::HeightLand;
-    case Protocol::OBJECT_STATE_TYPE_DASH:              return EPlayerState::Dash;
-    default:                                            return EPlayerState::Idle;
     }
 }
 

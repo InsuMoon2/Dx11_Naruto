@@ -39,6 +39,7 @@ const Vec4* PipeLine::Get_CamPosition() const
 void PipeLine::Set_Transform(ETransformState state, const Matrix& matrix)
 {
     _transformMatrices[ETOI(state)] = matrix;
+    _transformInverseMatrices[ETOI(state)] = matrix.Invert();
 }
 
 HRESULT PipeLine::Bind_CamPosition(Shared<Shader> shader, const char* constantName)

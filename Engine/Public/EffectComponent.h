@@ -49,13 +49,20 @@ public:
 
     bool    Apply_LayerDesc(int32 layerIndex, const FEffectLayerDesc& layerDesc, bool rebuildObject);
     bool    Apply_LayerTransform(int32 layerIndex, const FEffectLayerBase& baseDesc);
-    // 이펙트 뷰 프리뷰에서 메시를 강제로 보이게 해야 할 때 현재/이후 레이어 오브젝트에 동일하게 적용한다.
+
     void    Set_ForceVisiblePreview(bool enabled);
+
+    // NotifyState에서 조절
+    void    Set_RuntimeLocalTransform(const Vec3& localPosition, const Vec3& localRotation, const Vec3& localScale);
+    void    Clear_RuntimeLocalTransform();
 
 private:
     HRESULT Create_LayerObject(FActiveLayer& layer);
 
     void    Apply_LayerTransformInternal(FActiveLayer& layer);
+    void    Apply_LayerScaleInternal(FActiveLayer& layer);
+    Vec3    Resolve_LayerScale(const FActiveLayer& layer) const;
+    float   Resolve_LayerDuration(const FActiveLayer& layer) const;
 
     string  Resolve_EffectAssetPathByName(const string& effectAssetName);
 
@@ -66,10 +73,16 @@ private:
 
     float                   _lifeSpan = 0.f;
     bool                    _isPlaying = false;
-    // 런타임은 false, 에디터 프리뷰는 true로 켜서 effect shader 출력이 0이어도 메시 실루엣을 확인한다.
+
     bool                    _forceVisiblePreview = false;
 
     FPlayDesc               _desc;
+
+private:
+    bool    _useRuntimeLocalTransform = false;
+    Vec3    _runtimeLocalPosition = Vec3::Zero;
+    Vec3    _runtimeLocalRotation = Vec3::Zero;
+    Vec3    _runtimeLocalScale = Vec3::One;
 
 public:
     static Shared<EffectComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

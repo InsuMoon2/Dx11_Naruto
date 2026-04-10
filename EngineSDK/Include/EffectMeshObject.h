@@ -57,12 +57,14 @@ private:
     Shared<Model>   _modelCom;
     Shared<Texture> _diffuseTexture;
     Shared<Texture> _maskTexture;
+    Shared<Texture> _emissiveTexture;
+    Shared<Texture> _opacityTexture;
 
     FEffectLayerDesc _layerDesc;
 
     float _elapsed = 0.f;                     
     float _accumulatedRotation = 0.f;         
-    bool  _hasMask = false;                   
+    bool  _hasOpacity = false;                
     // 이펙트 뷰 진단용으로만 쓰는 강제 가시화 플래그다. 런타임 기본 동작은 false를 유지한다.
     bool  _forceVisiblePreview = false;
 

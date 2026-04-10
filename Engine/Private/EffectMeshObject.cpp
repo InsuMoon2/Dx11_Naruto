@@ -19,7 +19,9 @@ EffectMeshObject::EffectMeshObject(const EffectMeshObject& rhs)
     , _modelCom(rhs._modelCom)
     , _diffuseTexture(rhs._diffuseTexture)
     , _maskTexture(rhs._maskTexture)
-    , _hasMask(rhs._hasMask)
+    , _emissiveTexture(rhs._emissiveTexture)
+    , _opacityTexture(rhs._opacityTexture)
+    , _hasOpacity(rhs._hasOpacity)
 {
 }
 
@@ -120,23 +122,41 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FresnelMultiplier", &_layerDesc.mesh.fresnelMultiplier, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_ForceVisiblePreview", &forceVisiblePreview, sizeof(int)), E_FAIL);
 
-	if (_diffuseTexture)
-	{
-		CHECK_FAILED(_diffuseTexture->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);
-	}
-	else
-	{
-		CHECK_FAILED(_shaderCom->Bind_SRV("g_DiffuseTexture", nullptr), E_FAIL);
-	}
+    if (_diffuseTexture)
+    {
+        CHECK_FAILED(_diffuseTexture->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);
+    }
+    else
+    {
+        CHECK_FAILED(_shaderCom->Bind_SRV("g_DiffuseTexture", nullptr), E_FAIL);
+    }
 
-	if (_maskTexture)
-	{
-		CHECK_FAILED(_maskTexture->Bind_SRV(_shaderCom, "g_MaskTexture", 0), E_FAIL);
-	}
-	else
-	{
-		CHECK_FAILED(_shaderCom->Bind_SRV("g_MaskTexture", nullptr), E_FAIL);
-	}
+    if (_maskTexture)
+    {
+        CHECK_FAILED(_maskTexture->Bind_SRV(_shaderCom, "g_MaskTexture", 0), E_FAIL);
+    }
+    else
+    {
+        CHECK_FAILED(_shaderCom->Bind_SRV("g_MaskTexture", nullptr), E_FAIL);
+    }
+
+    if (_emissiveTexture)
+    {
+        CHECK_FAILED(_emissiveTexture->Bind_SRV(_shaderCom, "g_EmissiveTexture", 0), E_FAIL);
+    }
+    else
+    {
+        CHECK_FAILED(_shaderCom->Bind_SRV("g_EmissiveTexture", nullptr), E_FAIL);
+    }
+
+    if (_opacityTexture)
+    {
+        CHECK_FAILED(_opacityTexture->Bind_SRV(_shaderCom, "g_OpacityTexture", 0), E_FAIL);
+    }
+    else
+    {
+        CHECK_FAILED(_shaderCom->Bind_SRV("g_OpacityTexture", nullptr), E_FAIL);
+    }
 
 
     return S_OK;
@@ -144,7 +164,9 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
 
 HRESULT EffectMeshObject::Resolve_Resources()
 {
-    _hasMask = !_layerDesc.mesh.maskTextureGuid.empty();
+    _hasOpacity =
+        !_layerDesc.mesh.opacityTextureGuid.empty() ||
+        !_layerDesc.mesh.maskTextureGuid.empty();
 
     if (!_layerDesc.mesh.modelGuid.empty() && !_modelCom)
     {
@@ -165,12 +187,12 @@ HRESULT EffectMeshObject::Resolve_Resources()
 
             if (!resolvedPath.empty())
             {
-				Matrix scaleMatrix = Matrix::CreateScale(0.001f);
-				Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
-				Matrix preTransform = scaleMatrix * rotationMatrix;
+                Matrix scaleMatrix = Matrix::CreateScale(0.0001f);
+                Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
+                Matrix preTransform = scaleMatrix * rotationMatrix;
 
                 auto proto = Model::Create(
-					_device, _context, EMeshVertexType::StaticMesh, Utils::ToString(resolvedPath), preTransform);
+                    _device, _context, EMeshVertexType::StaticMesh, Utils::ToString(resolvedPath), preTransform);
 
                 if (proto)
                 {
@@ -210,44 +232,130 @@ HRESULT EffectMeshObject::Resolve_Resources()
         }
     }
 
-	// Diffuse와 Mask가 같은 GUID면 Texture 컴포넌트 재사용
-	if (!_layerDesc.mesh.maskTextureGuid.empty() &&
-		_layerDesc.mesh.maskTextureGuid == _layerDesc.mesh.diffuseTextureGuid)
-	{
-		_maskTexture = _diffuseTexture;
-		return S_OK;
-	}
-
     if (!_layerDesc.mesh.maskTextureGuid.empty() && !_maskTexture)
     {
-        uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.maskTextureGuid));
-        if (FAILED(Add_Component(texKey, _maskTexture)))
+        if (_layerDesc.mesh.maskTextureGuid == _layerDesc.mesh.diffuseTextureGuid && _diffuseTexture)
         {
-            wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.maskTextureGuid);
-
-            if (resolvedPath.empty())
+            _maskTexture = _diffuseTexture;
+        }
+        else
+        {
+            uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.maskTextureGuid));
+            if (FAILED(Add_Component(texKey, _maskTexture)))
             {
-                LOG_ERROR(
-                    "EffectMeshObject mask resolve failed. layer='{}', maskGuid='{}'",
-                    _layerDesc.base.layerName,
-                    _layerDesc.mesh.maskTextureGuid);
+                wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.maskTextureGuid);
 
-                return E_FAIL;
+                if (resolvedPath.empty())
+                {
+                    LOG_ERROR(
+                        "EffectMeshObject mask resolve failed. layer='{}', maskGuid='{}'",
+                        _layerDesc.base.layerName,
+                        _layerDesc.mesh.maskTextureGuid);
+
+                    return E_FAIL;
+                }
+
+                if (!resolvedPath.empty())
+                {
+                    auto proto = Texture::Create(_device, _context, resolvedPath, 1);
+                    if (proto)
+                    {
+                        GAME->Add_Component_Prototype(0, texKey, proto);
+                        CHECK_FAILED(Add_Component(0, texKey, _maskTexture), E_FAIL);
+                    }
+                }
             }
+        }
+    }
 
-            if (!resolvedPath.empty())
+    const string emissiveGuid = _layerDesc.mesh.emissiveTextureGuid.empty()
+        ? _layerDesc.mesh.diffuseTextureGuid
+        : _layerDesc.mesh.emissiveTextureGuid;
+
+    const string opacityGuid = _layerDesc.mesh.opacityTextureGuid.empty()
+        ? _layerDesc.mesh.maskTextureGuid
+        : _layerDesc.mesh.opacityTextureGuid;
+
+    if (!emissiveGuid.empty() && !_emissiveTexture)
+    {
+        if (emissiveGuid == _layerDesc.mesh.diffuseTextureGuid && _diffuseTexture)
+        {
+            _emissiveTexture = _diffuseTexture;
+        }
+        else if (emissiveGuid == _layerDesc.mesh.maskTextureGuid && _maskTexture)
+        {
+            _emissiveTexture = _maskTexture;
+        }
+        else
+        {
+            uint32 texKey = static_cast<uint32>(hash<string>{}(emissiveGuid));
+            if (FAILED(Add_Component(texKey, _emissiveTexture)))
             {
+                wstring resolvedPath = GAME->Resolve_AssetPath(emissiveGuid);
+
+                if (resolvedPath.empty())
+                {
+                    LOG_ERROR(
+                        "EffectMeshObject emissive resolve failed. layer='{}', emissiveGuid='{}'",
+                        _layerDesc.base.layerName,
+                        emissiveGuid);
+
+                    return E_FAIL;
+                }
+
                 auto proto = Texture::Create(_device, _context, resolvedPath, 1);
                 if (proto)
                 {
                     GAME->Add_Component_Prototype(0, texKey, proto);
-                    CHECK_FAILED(Add_Component(0, texKey, _maskTexture), E_FAIL);
+                    CHECK_FAILED(Add_Component(0, texKey, _emissiveTexture), E_FAIL);
+                }
+            }
+        }
+    }
+
+    if (!opacityGuid.empty() && !_opacityTexture)
+    {
+        if (opacityGuid == _layerDesc.mesh.maskTextureGuid && _maskTexture)
+        {
+            _opacityTexture = _maskTexture;
+        }
+        else if (opacityGuid == _layerDesc.mesh.diffuseTextureGuid && _diffuseTexture)
+        {
+            _opacityTexture = _diffuseTexture;
+        }
+        else if (opacityGuid == _layerDesc.mesh.emissiveTextureGuid && _emissiveTexture)
+        {
+            _opacityTexture = _emissiveTexture;
+        }
+        else
+        {
+            uint32 texKey = static_cast<uint32>(hash<string>{}(opacityGuid));
+            if (FAILED(Add_Component(texKey, _opacityTexture)))
+            {
+                wstring resolvedPath = GAME->Resolve_AssetPath(opacityGuid);
+
+                if (resolvedPath.empty())
+                {
+                    LOG_ERROR(
+                        "EffectMeshObject opacity resolve failed. layer='{}', opacityGuid='{}'",
+                        _layerDesc.base.layerName,
+                        opacityGuid);
+
+                    return E_FAIL;
+                }
+
+                auto proto = Texture::Create(_device, _context, resolvedPath, 1);
+                if (proto)
+                {
+                    GAME->Add_Component_Prototype(0, texKey, proto);
+                    CHECK_FAILED(Add_Component(0, texKey, _opacityTexture), E_FAIL);
                 }
             }
         }
     }
 
     return S_OK;
+
 }
 
 void EffectMeshObject::Update_Rotation(float timeDelta)
@@ -261,13 +369,13 @@ void EffectMeshObject::Update_Rotation(float timeDelta)
 
     axis.Normalize();
 
-    _accumulatedRotation += _layerDesc.mesh.rotationSpeed * timeDelta;
-    _transformCom->Turn(axis, _layerDesc.mesh.rotationSpeed * timeDelta);
+    const float radians = XMConvertToRadians(_layerDesc.mesh.rotationSpeed) * timeDelta;
+    Quat deltaRot = Quat::CreateFromAxisAngle(axis, radians);
+    _transformCom->Add_LocalRotation(deltaRot);
 }
 
 HRESULT EffectMeshObject::Ready_Components()
 {
-    // 메쉬 이펙트 레이어 리소스(model/texture) 해석 실패 지점을 구분하기 위한 로그
     if (FAILED(Resolve_Resources()))
     {
         LOG_ERROR(
@@ -303,7 +411,7 @@ uint32 EffectMeshObject::Resolve_PassIndex() const
         if (_layerDesc.mesh.blendMode == EEffectBlendMode::Opaque)
             return 2;
 
-        if (_hasMask)
+        if (_hasOpacity)
             return static_cast<uint32>(_layerDesc.mesh.blendMode);
 
         return 3 + static_cast<uint32>(_layerDesc.mesh.blendMode);
@@ -312,7 +420,7 @@ uint32 EffectMeshObject::Resolve_PassIndex() const
     if (_layerDesc.mesh.blendMode == EEffectBlendMode::Opaque)
         return 7;
 
-    if (_hasMask)
+    if (_hasOpacity)
         return 5 + static_cast<uint32>(_layerDesc.mesh.blendMode);
 
     return 8 + static_cast<uint32>(_layerDesc.mesh.blendMode);

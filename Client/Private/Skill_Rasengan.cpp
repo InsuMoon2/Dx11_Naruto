@@ -21,12 +21,12 @@ Skill_Rasengan::Skill_Rasengan(const Skill_Rasengan& rhs)
 
 HRESULT Skill_Rasengan::Initialize_Prototype()
 {
-    _lifetime = 3.f;       
-    _maxHitCount = 6;     
-    _hitInterval = 0.1f;   
-    _hitLaunchForce = 0.f; 
+    _lifetime        = 15.f;
+    _maxHitCount     = 6;
+    _hitInterval     = 0.1f;   
+    _hitLaunchForce  = 0.f; 
 
-    _colliderRadius = 0.3f;
+    _colliderRadius  = 0.3f;
     _collisionPreset = Collision_Preset::Player_Attack;
 
     return SkillObject::Initialize_Prototype();
@@ -37,7 +37,7 @@ HRESULT Skill_Rasengan::Initialize(void* arg)
     CHECK_FAILED(SkillObject::Initialize(arg), E_FAIL);
 
     EffectComponent::FPlayDesc playDesc{};
-    playDesc.effectAssetName = "RasenganTest";
+    playDesc.effectAssetName = "Rasengan";
     playDesc.loopOverride = true;
 
     CHECK_FAILED(_effectCom->Play_Effect(playDesc), E_FAIL);
@@ -51,7 +51,6 @@ void Skill_Rasengan::Update(float timeDelta)
 
     if (Is_Destroy())
         return;
-
 
 
 }

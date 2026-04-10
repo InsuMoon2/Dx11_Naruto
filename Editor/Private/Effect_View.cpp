@@ -703,8 +703,13 @@ void Effect_View::Draw_LayerList()
         ImGui::PushID(i);
 
         auto& layer = _currentAsset.layers[i];
-        string layerTitle = "[" + string(layer.base.kind == Engine::EEffectLayerKind::Mesh ? "Mesh" : "Point")
-            + "] " + layer.base.layerName;
+        string layerKindLabel = "Point";
+        if (layer.base.kind == Engine::EEffectLayerKind::Mesh)
+            layerKindLabel = "Mesh";
+        else if (layer.base.kind == Engine::EEffectLayerKind::BillboardRect)
+            layerKindLabel = "Billboard";
+
+        string layerTitle = "[" + layerKindLabel + "] " + layer.base.layerName;
 
         if (ImGui::Selectable(layerTitle.c_str(), _selectedLayerIdx == i))
             _selectedLayerIdx = i;
@@ -728,7 +733,49 @@ void Effect_View::Draw_LayerList()
         Restart_PreviewEffect();
     }
 
-    ImGui::TextDisabled("Point emitter는 이번 단계에서 미지원");
+    if (ImGui::Button("+ Add Point Emitter", ImVec2(-1.f, 30.f)))
+    {
+        Engine::FEffectLayerDesc newLayer{};
+        newLayer.base.layerName = "NewPointEmitter";
+        newLayer.base.kind = Engine::EEffectLayerKind::Point;
+        newLayer.base.localScale = Vec3(1.f, 1.f, 1.f);
+        newLayer.point.numInstances = 1;
+        newLayer.point.scale = Vec2(0.25f, 0.25f);
+        newLayer.point.speed = Vec2(0.f, 0.f);
+        newLayer.point.lifeTime = Vec2(1.f, 1.f);
+        newLayer.point.isLoop = true;
+        newLayer.point.blendMode = Engine::EEffectBlendMode::Additive;
+        newLayer.point.colorTint = Vec4(0.2f, 1.f, 1.f, 1.f);
+        newLayer.point.opacity = 1.f;
+        newLayer.point.moveMode = 2;
+
+        _currentAsset.layers.push_back(newLayer);
+        _selectedLayerIdx = static_cast<int32>(_currentAsset.layers.size()) - 1;
+
+        MarkDirty();
+        Restart_PreviewEffect();
+    }
+
+    if (ImGui::Button("+ Add Billboard Emitter", ImVec2(-1.f, 30.f)))
+    {
+        Engine::FEffectLayerDesc newLayer{};
+        newLayer.base.layerName = "NewBillboardEmitter";
+        newLayer.base.kind = Engine::EEffectLayerKind::BillboardRect;
+        newLayer.base.localScale = Vec3(1.f, 1.f, 1.f);
+        newLayer.billboard.blendMode = Engine::EEffectBlendMode::Additive;
+        newLayer.billboard.baseTint = Vec4(0.55f, 0.92f, 1.f, 1.f);
+        newLayer.billboard.ringTint = Vec4(0.85f, 1.f, 1.f, 1.f);
+        newLayer.billboard.baseOpacity = 1.f;
+        newLayer.billboard.ringOpacity = 0.35f;
+        newLayer.billboard.useRing = true;
+        newLayer.billboard.billboardToCamera = true;
+
+        _currentAsset.layers.push_back(newLayer);
+        _selectedLayerIdx = static_cast<int32>(_currentAsset.layers.size()) - 1;
+
+        MarkDirty();
+        Restart_PreviewEffect();
+    }
 
     if (_selectedLayerIdx >= 0 && _selectedLayerIdx < static_cast<int32>(_currentAsset.layers.size()))
     {
@@ -823,6 +870,40 @@ void Effect_View::Draw_Inspector()
             MarkDirty();
             transformChanged = true;
         }
+
+        if (ImGui::Checkbox("Scale Over Time", &layer.base.useScaleOverTime))
+        {
+            if (layer.base.useScaleOverTime)
+            {
+                layer.base.endScale = layer.base.localScale;
+
+                if (layer.base.scaleDuration <= 0.f)
+                    layer.base.scaleDuration = 1.0f;
+            }
+
+            MarkDirty();
+            transformChanged = true;
+        }
+
+        if (layer.base.useScaleOverTime)
+        {
+            ImGui::Indent();
+
+            if (ImGui::DragFloat("Scale Duration", &layer.base.scaleDuration, 0.01f, 0.01f, 10.f))
+            {
+                MarkDirty();
+                transformChanged = true;
+            }
+
+            if (ImGui::DragFloat3("End Scale", (float*)&layer.base.endScale, 0.05f))
+            {
+                MarkDirty();
+                transformChanged = true;
+            }
+
+            ImGui::Unindent();
+        }
+
     }
 
     if (layer.base.kind == Engine::EEffectLayerKind::Mesh)
@@ -854,9 +935,33 @@ void Effect_View::Draw_Inspector()
             ImGui::Spacing();
 
             Draw_AssetSlotPicker(
-                "Mask",
+                "Emissive",
+                "##EffectEmissivePicker",
+                ICON_FA_IMAGE " Select Emissive Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.mesh.emissiveTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
+                "Opacity",
+                "##EffectOpacityPicker",
+                ICON_FA_IMAGE " Select Opacity Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.mesh.opacityTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
+                "Legacy Mask",
                 "##EffectMaskPicker",
-                ICON_FA_IMAGE " Select Mask Texture",
+                ICON_FA_IMAGE " Select Legacy Mask Texture",
                 "CONTENT_TEXTURE",
                 "texture",
                 "Effects/;Skills/",
@@ -925,6 +1030,180 @@ void Effect_View::Draw_Inspector()
             }
 
             if (ImGui::DragFloat("Fresnel Mul", &layer.mesh.fresnelMultiplier, 0.1f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+        }
+    }
+    else if (layer.base.kind == Engine::EEffectLayerKind::Point)
+    {
+        if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Point Render", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            Draw_AssetSlotPicker(
+                "Texture",
+                "##EffectPointTexturePicker",
+                ICON_FA_IMAGE " Select Point Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.point.textureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            int blend = static_cast<int>(layer.point.blendMode);
+            if (ImGui::Combo("BlendMode", &blend, "Translucent\0Additive\0Opaque\0"))
+            {
+                layer.point.blendMode = static_cast<Engine::EEffectBlendMode>(blend);
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            int numInstances = static_cast<int>(layer.point.numInstances);
+            if (ImGui::DragInt("Num Instances", &numInstances, 1.f, 1, 1000))
+            {
+                layer.point.numInstances = static_cast<uint32>((std::max)(1, numInstances));
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (ImGui::Checkbox("Respawn Loop", &layer.point.isLoop))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            int moveMode = static_cast<int>(layer.point.moveMode);
+            if (ImGui::Combo("Move Mode", &moveMode, "Drop\0Spread\0Static\0"))
+            {
+                layer.point.moveMode = static_cast<uint8>(moveMode);
+                MarkDirty();
+                resourceChanged = true;
+            }
+        }
+
+        if (ImGui::CollapsingHeader(ICON_FA_WAND_MAGIC_SPARKLES " Point Details", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            if (ImGui::DragFloat3("Center", (float*)&layer.point.center, 0.05f))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (ImGui::DragFloat3("Range", (float*)&layer.point.range, 0.05f))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (ImGui::DragFloat2("Scale", (float*)&layer.point.scale, 0.01f, 0.001f, 10.f))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (ImGui::ColorEdit4("Color Tint", (float*)&layer.point.colorTint))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (ImGui::SliderFloat("Opacity", &layer.point.opacity, 0.f, 1.f))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (ImGui::DragFloat2("Speed", (float*)&layer.point.speed, 0.01f))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (ImGui::DragFloat2("Life Time", (float*)&layer.point.lifeTime, 0.01f, 0.01f, 100.f))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (ImGui::DragFloat3("Pivot", (float*)&layer.point.pivot, 0.05f))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+        }
+    }
+    else if (layer.base.kind == Engine::EEffectLayerKind::BillboardRect)
+    {
+        if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Billboard Render", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            Draw_AssetSlotPicker(
+                "Base Texture",
+                "##EffectBillboardBaseTexturePicker",
+                ICON_FA_IMAGE " Select Billboard Base Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.billboard.baseTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
+                "Ring Texture",
+                "##EffectBillboardRingTexturePicker",
+                ICON_FA_IMAGE " Select Billboard Ring Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.billboard.ringTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            int blend = static_cast<int>(layer.billboard.blendMode);
+            if (ImGui::Combo("BlendMode", &blend, "Translucent\0Additive\0Opaque\0"))
+            {
+                layer.billboard.blendMode = static_cast<Engine::EEffectBlendMode>(blend);
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::Checkbox("Use Ring", &layer.billboard.useRing))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::Checkbox("Billboard To Camera", &layer.billboard.billboardToCamera))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+        }
+
+        if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Billboard Details", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            if (ImGui::ColorEdit4("Base Tint", (float*)&layer.billboard.baseTint))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::SliderFloat("Base Opacity", &layer.billboard.baseOpacity, 0.f, 1.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::ColorEdit4("Ring Tint", (float*)&layer.billboard.ringTint))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::SliderFloat("Ring Opacity", &layer.billboard.ringOpacity, 0.f, 1.f))
             {
                 MarkDirty();
                 materialChanged = true;

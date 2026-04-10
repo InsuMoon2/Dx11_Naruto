@@ -5,6 +5,9 @@
 
 #include "Engine_Shader_Defines.hlsli"
 
+Texture2D g_EmissiveTexture;
+Texture2D g_OpacityTexture;
+
 float2 g_UVOffset;
 
 /* UV 타일링 반복 횟수 */
@@ -75,10 +78,10 @@ PS_OUT PS_MAIN(PS_IN In)
     float2 scrolledUV = In.vTexcoord * g_UVTiling + g_UVOffset;
 
     /* 2. Diffuse(Emissive) 텍스처 샘플링 */
-    float4 diffuse = g_DiffuseTexture.Sample(DefaultSampler, scrolledUV);
+    float4 emissive = g_EmissiveTexture.Sample(DefaultSampler, scrolledUV);
 
     /* 3. 마스크 텍스처 샘플링 — R 채널을 알파로 사용 */
-    float maskValue = g_MaskTexture.Sample(DefaultSampler, scrolledUV).r;
+    float maskValue = g_OpacityTexture.Sample(DefaultSampler, scrolledUV).r;
 
     /* 4. 프레넬 (가장자리 투명/발광 효과) */
     float fresnel = 1.0f;
@@ -89,8 +92,8 @@ PS_OUT PS_MAIN(PS_IN In)
         fresnel = pow(1.0f - ndotv, g_FresnelPower) * g_FresnelMultiplier;
     }
 
-    Out.vColor.rgb = diffuse.rgb * g_ColorTint.rgb;
-    Out.vColor.a   = diffuse.a * maskValue * g_Opacity * fresnel * g_ColorTint.a;
+    Out.vColor.rgb = emissive.rgb * g_ColorTint.rgb;
+    Out.vColor.a   = maskValue * g_Opacity * fresnel * g_ColorTint.a;
 
     if (Out.vColor.a < 0.01f)
         discard;
@@ -108,7 +111,7 @@ PS_OUT PS_MAIN_NO_MASK(PS_IN In)
     }
 
     float2 scrolledUV = In.vTexcoord * g_UVTiling + g_UVOffset;
-    float4 diffuse = g_DiffuseTexture.Sample(DefaultSampler, scrolledUV);
+    float4 emissive = g_EmissiveTexture.Sample(DefaultSampler, scrolledUV);
 
     float fresnel = 1.0f;
     if (g_FresnelPower > 0.f)
@@ -118,8 +121,10 @@ PS_OUT PS_MAIN_NO_MASK(PS_IN In)
         fresnel = pow(1.0f - ndotv, g_FresnelPower) * g_FresnelMultiplier;
     }
 
-    Out.vColor.rgb = diffuse.rgb * g_ColorTint.rgb;
-    Out.vColor.a   = diffuse.a * g_Opacity * fresnel * g_ColorTint.a;
+    float emissiveAlpha = max(emissive.a, max(emissive.r, max(emissive.g, emissive.b)));
+
+    Out.vColor.rgb = emissive.rgb * g_ColorTint.rgb;
+    Out.vColor.a   = emissiveAlpha * g_Opacity * fresnel * g_ColorTint.a;
 
     // 왜안나오냐고 지금
     //if (Out.vColor.a < 0.01f)

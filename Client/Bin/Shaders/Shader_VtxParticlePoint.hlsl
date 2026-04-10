@@ -1,5 +1,9 @@
 #include "Engine_Shader_Defines.hlsli"
 
+float4 g_ColorTint;
+float  g_Opacity;
+int    g_UseLifetimeFade;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -101,22 +105,23 @@ PS_OUT PS_MAIN(PS_IN In)
 
     float4 tex = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
 
-    float mask = max(tex.r, max(tex.g, tex.b));
+    float mask = (tex.a > 0.001f)
+        ? tex.a
+        : max(tex.r, max(tex.g, tex.b));
+    mask = saturate((mask - 0.08f) / 0.92f);
 
     // 검은/회색 주변부를 더 강하게 제거
-    mask = saturate((mask - 0.35f) / 0.65f);
-    mask = pow(mask, 2.0f);
 
     if (mask < 0.02f)
         discard;
 
     float lifeRatio = saturate(In.vLifeTime.y / max(In.vLifeTime.x, 0.001f));
-    float fade = 1.f - lifeRatio;
+    float fade = (g_UseLifetimeFade != 0) ? (1.f - lifeRatio) : 1.f;
+    float detail = dot(tex.rgb, float3(0.299f, 0.587f, 0.114f));
+    detail = max(detail, mask * 0.35f);
 
-    float3 hitColor = float3(1.0f, 0.95f, 0.85f);
-
-    Out.vColor.rgb = hitColor * mask;
-    Out.vColor.a = mask * fade;
+    Out.vColor.rgb = g_ColorTint.rgb * detail;
+    Out.vColor.a = mask * g_Opacity * fade * g_ColorTint.a;
 
     return Out;
 }
@@ -124,11 +129,33 @@ PS_OUT PS_MAIN(PS_IN In)
 
 technique11 DefaultTechnique
 {
-    pass DefaultPass
+    pass TranslucentPass
+    {
+        SetRasterizerState(RS_CullNone);
+        SetDepthStencilState(DSS_ZTest_NoWrite, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader    = compile vs_5_0 VS_MAIN();
+        GeometryShader  = compile gs_5_0 GS_MAIN();
+        PixelShader     = compile ps_5_0 PS_MAIN();
+    }
+
+    pass AdditivePass
     {
         SetRasterizerState(RS_CullNone);
         SetDepthStencilState(DSS_ZTest_NoWrite, 0);
         SetBlendState(BS_Additive, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader    = compile vs_5_0 VS_MAIN();
+        GeometryShader  = compile gs_5_0 GS_MAIN();
+        PixelShader     = compile ps_5_0 PS_MAIN();
+    }
+
+    pass OpaquePass
+    {
+        SetRasterizerState(RS_CullNone);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader    = compile vs_5_0 VS_MAIN();
         GeometryShader  = compile gs_5_0 GS_MAIN();

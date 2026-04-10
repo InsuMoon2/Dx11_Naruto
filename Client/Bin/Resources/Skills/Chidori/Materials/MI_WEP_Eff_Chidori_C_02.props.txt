@@ -1,0 +1,100 @@
+Parent = MaterialInstanceConstant'/Game/Effects/BaseMaterials/Instance_Base/MacroUV/MI_EFF_GMT_3_MUB_Uds.MI_EFF_GMT_3_MUB_Uds'
+ScalarParameterValues[1] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = RefractionDepthBias
+    }
+}
+TextureParameterValues[8] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/Hit/T_EFF_Hit_13_M.T_EFF_Hit_13_M'
+        ParameterName = 05_OpacityMap
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/Hit/T_EFF_Hit_07_M.T_EFF_Hit_07_M'
+        ParameterName = 05_OpacityMap_SubUV
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/GradationMap/T_EFF_GMO_04_M.T_EFF_GMO_04_M'
+        ParameterName = 35_OpacityMap_GradationMap
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/Noise/T_EFF_Noise_01_M.T_EFF_Noise_01_M'
+        ParameterName = 05_OpacityDissolve_Map
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/Noise/T_EFF_Noise_Copic_01_M.T_EFF_Noise_Copic_01_M'
+        ParameterName = 05_EmissiveMap
+    }
+    TextureParameterValues[5] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/BaseMaterials/Textures/T_EFF_GMT__Default_01_BC.T_EFF_GMT__Default_01_BC'
+        ParameterName = 35_EmissiveMap_GradationMap
+    }
+    TextureParameterValues[6] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/BaseMaterials/Textures/T_EFF_Default_05_M.T_EFF_Default_05_M'
+        ParameterName = 10_UVDistortion_Map
+    }
+    TextureParameterValues[7] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/Gradient/T_EFF_Gradation_03_M.T_EFF_Gradation_03_M'
+        ParameterName = 05_UVDistortionMask_Map
+    }
+}
+VectorParameterValues[2] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=1, G=1, B=1, A=1 }
+        ParameterName = 11_OpacityUVDistortion_Value
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=0, G=0, B=1, A=1 }
+        ParameterName = 11_UVDistortion_Value
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

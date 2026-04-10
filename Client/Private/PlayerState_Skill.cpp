@@ -54,8 +54,10 @@ void PlayerState_Skill::Enter(PlayerStateMachine* state)
         state->Get_AnimationState()->Play_State(stateName);
 
     _channelingTimer = 0.f;
-    _isEnding = false;
-    _subPhase = ESkillSubPhase::Charging;
+    _isEnding        = false;
+    _subPhase        = ESkillSubPhase::Charging;
+
+    _hasLanded = movement ? movement->Is_OnGround() : false;
 
     _dashStartPos = transform->Get_WorldPosition();
 }
@@ -122,7 +124,7 @@ void PlayerState_Skill::Update(PlayerStateMachine* state, float timeDelta)
         }
     }
 
-    if (state->Is_AnimStateFinished())
+    if (!hasDash && state->Is_AnimStateFinished())
     {
         if (movement->Is_OnGround())
         {
@@ -156,26 +158,49 @@ void PlayerState_Skill::Exit(PlayerStateMachine* state)
     _subPhase = ESkillSubPhase::Charging;
     _dashTarget.reset();
 
-    // 장착된 스킬 해제
-    auto skillCom = state->Get_Owner()->Get_Component<SkillComponent>();
-    if (skillCom)
-    {
-        skillCom->Clear_MeleeSkill();
-    }
 }
 
 void PlayerState_Skill::Update_Charging(PlayerStateMachine* state, float timeDelta)
 {
     EAnimPhase phase = state->Get_AnimPhase();
-    if (phase != EAnimPhase::Loop)
+    if (phase != EAnimPhase::Loop && !_hasLanded)
         return; // 아직 Start 재생 중이면 대기
+
+
+    auto skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(_mySkill_Id);
+    auto movement  = state->Get_Movement();
+
+    if (!movement || !skillData)
+        return;
+
+    if (!_hasLanded && movement->Is_OnGround())
+    {
+        if (!skillData->airLandedAnimStateName.empty())
+        {
+            state->Get_AnimationState()->Play_State(skillData->airLandedAnimStateName);
+            _hasLanded = true; // 이후 재진입 방지
+        }
+    }
+
+    // 착지 모션이 재생되고 났을 떄 지상 Loop로 연결
+    if (_hasLanded && state->Is_AnimStateFinished())
+    {
+        state->Get_AnimationState()->Play_StateLoopOnly(skillData->animStateName);
+    }
+
+    if (movement->Is_GravityEnabled())
+    {
+        auto cmd = state->Init_MoveCommand();
+        cmd.moveAxis = Vec2::Zero;       
+        movement->Apply_Command(cmd);
+        movement->Update(timeDelta);     // 중력 적용되게
+    }
 
     _channelingTimer += timeDelta;
 
-    auto skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(_mySkill_Id);
     float maxDuration = skillData ? skillData->loopDurationSec : 0.f;
-    bool isHold = skillData ? skillData->isHoldSkill : false;
-    bool shouldEnd = false;
+    bool  isHold      = skillData ? skillData->isHoldSkill     : false;
+    bool  shouldEnd   = false;
 
     if (isHold)
     {
@@ -204,60 +229,90 @@ void PlayerState_Skill::Update_Dashing(PlayerStateMachine* state, float timeDelt
     if (!skillData) return;
 
     auto movement = state->Get_Movement();
-
     auto owner = state->Get_Owner();
     auto transform = owner ? owner->Get_Component<Transform>() : nullptr;
 
-    if (!skillData || !movement || !transform)
-        return;
+    if (!movement || !transform)
+        return; 
 
     auto cmd = state->Init_MoveCommand();
     cmd.moveAxis = Vec2::Zero;
     movement->Apply_Command(cmd);
-
     movement->Update(timeDelta);
 
     Vec3 currentPos = transform->Get_WorldPosition();
     bool shouldAttack = false;
 
-    // 최대 거리 도달
-    float traveled = Vec3::Distance(currentPos, _dashStartPos);
-    if (traveled >= skillData->maxDashDistance)
-        shouldAttack = true;
+    // 대 대쉬 거리 도달 체크
+    {
+        Vec3 travelVec = currentPos - _dashStartPos;
+        float travelDistance = travelVec.Length();
 
-    // 또는 타겟 근처까지 도달
+        if (travelDistance >= skillData->maxDashDistance)
+            shouldAttack = true;
+    }   
+
     if (!shouldAttack)
     {
         auto target = _dashTarget.lock();
         if (target)
         {
-            float distToTarget = Vec3::Distance(currentPos, target->Get_Transform()->Get_WorldPosition());
+            Vec3 toTargetVec = target->Get_Transform()->Get_WorldPosition() - currentPos;
 
-            if (distToTarget <= skillData->targetStopDistance)
-            {
+            Vec3 distCheckVec = toTargetVec;
+            if (_hasLanded)
+                distCheckVec.y = 0.f;
+
+            float finalStopDist = skillData->targetStopDistance;
+            if (!_hasLanded)
+                finalStopDist *= 0.85f; 
+
+            float distToTarget = distCheckVec.Length();
+            if (distToTarget <= finalStopDist)
                 shouldAttack = true;
+
+            Vec3 toTargetDir = toTargetVec;
+            if (_hasLanded)
+                toTargetDir.y = 0.f;
+
+            toTargetDir = Utils::Safe_Normalize(toTargetDir, _dashDirection);
+            _dashDirection = toTargetDir;
+
+            Vec3 lookDir = _dashDirection;
+            lookDir.y = 0.f;  
+            lookDir.Normalize();
+            if (lookDir.LengthSquared() > FLT_EPSILON)
+            {
+                transform->LookAt(transform->Get_WorldPosition() + lookDir);
             }
-
-            Vec3 toTarget = target->Get_Transform()->Get_WorldPosition() - transform->Get_WorldPosition();
-            toTarget.y = 0.f;
-            toTarget = Utils::Safe_Normalize(toTarget, _dashDirection);
-
-            _dashDirection = toTarget;
-            transform->LookAt(transform->Get_WorldPosition() + _dashDirection);
-
         }
     }
 
-    // 이제 여기서 마지막 애니메이션 재생
     if (shouldAttack)
         Begin_AttackPhase(state);
 }
 
+
 void PlayerState_Skill::Update_Attacking(PlayerStateMachine* state, float timeDelta)
 {
-    // AttackEnd 애니메이션은 Single 일듯 웬만하면
-    if (state->Is_AnimStateFinished())
+    if (!state)
+      return;
+
+    auto movement = state->Get_Movement();
+    if (!movement)
+        return;
+
+    if (!state->Is_AnimStateFinished())
+        return;
+
+    if (movement->Is_OnGround())
+    {
         state->Change_State(EPlayerState::Idle);
+    }
+    else
+    {
+        state->Change_State(EPlayerState::JumpFall);
+    }
 }
 
 void PlayerState_Skill::Begin_DashPhase(PlayerStateMachine* state)
@@ -291,10 +346,23 @@ void PlayerState_Skill::Begin_DashPhase(PlayerStateMachine* state)
         if (_dashDirection.LengthSquared() <= FLT_EPSILON)
             _dashDirection = Vec3::Forward;
     }
-    _dashDirection.y = 0.f;
+
+    if (_hasLanded || !target)
+    {
+        _dashDirection.y = 0.f;
+    }
+
+
     _dashDirection.Normalize();
 
-    transform->LookAt(_dashStartPos + _dashDirection);
+    Vec3 lookDir = _dashDirection;
+    lookDir.y = 0.f; // 몸통 회전 X
+    lookDir.Normalize();
+
+    if (lookDir.LengthSquared() > FLT_EPSILON)
+    {
+        transform->LookAt(_dashStartPos + lookDir);
+    }
 
     float duration = skillData->maxDashDistance / skillData->dashSpeed;
     movement->Start_Dash(_dashDirection, skillData->maxDashDistance, duration);
@@ -311,11 +379,17 @@ void PlayerState_Skill::Begin_AttackPhase(PlayerStateMachine* state)
 
     // Attack End 애니메이션 재생
     auto skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(_mySkill_Id);
-    if (skillData && !skillData->attackEndAnimStateName.empty())
+    if (!skillData) return;
+
+    const string& endStateName = _hasLanded
+        ? skillData->attackEndAnimStateName
+        : skillData->airAttackEndAnimStateName;
+
+    if (!endStateName.empty())
     {
-        // 이름을 데이터랑 Enum값일아 잘 맞춰야함
-        state->Get_AnimationState()->Play_State(skillData->attackEndAnimStateName);
+        state->Get_AnimationState()->Play_State(endStateName);
     }
+
 }
 
 void PlayerState_Skill::Find_DashTarget(PlayerStateMachine* state)

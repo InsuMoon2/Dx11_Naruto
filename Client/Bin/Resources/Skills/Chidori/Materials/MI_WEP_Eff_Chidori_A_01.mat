@@ -1,0 +1,7 @@
+Diffuse=DefaultTexture
+Opacity=T_EFF_Blur_03_M
+Emissive=T_EFF_Default_05_M
+Other[0]=T_EFF_GMO_04_M
+Other[1]=T_EFF_Gradation_10_M
+Other[2]=T_EFF_GMT_Lightning_01_BC
+Other[3]=T_EFF_Noise_04_BC

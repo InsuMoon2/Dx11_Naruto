@@ -11,6 +11,7 @@ public:
     enum class EMoveDirectionSource : uint8
     {
         OwnerForward,
+        OwnerBackward,
         TargetDirection,
         DashInputDirection
     };
@@ -37,12 +38,14 @@ private:
 private:
     float _moveSpeed = 0.f;
 
+    Vec3  _moveDir = Vec3::Zero;
+    Vec3  _moveVelocity = Vec3::Zero;
+
     bool  _rotateToTarget = true;    
     float _rotationSpeed = 720.f;
 
     EMoveDirectionSource _directionSource = EMoveDirectionSource::OwnerForward;
 
-    Vec3  _moveDir = Vec3::Zero;
 
     // Y축 무시할지?
     bool _ignoreY = true;

@@ -39,8 +39,15 @@
                 {
                     "duration_sec": 0.10000000149011612,
                     "payload": {
+                        "Direction Source": 258,
                         "direction_source": "TargetDirection",
+                        "ignore_y": true,
                         "move_speed": 5.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "rotate_to_target": true,
                         "rotation_speed": 0.0
                     },
@@ -94,8 +101,15 @@
                 {
                     "duration_sec": 0.20000000298023224,
                     "payload": {
+                        "Direction Source": 256,
                         "direction_source": "OwnerForward",
+                        "ignore_y": true,
                         "move_speed": 3.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "rotate_to_target": true,
                         "rotation_speed": 720.0
                     },
@@ -600,8 +614,15 @@
                 {
                     "duration_sec": 2.7666666507720947,
                     "payload": {
+                        "Direction Source": 258,
                         "direction_source": "TargetDirection",
+                        "ignore_y": true,
                         "move_speed": 0.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "rotate_to_target": true,
                         "rotation_speed": 1800.0
                     },
@@ -629,8 +650,15 @@
                 {
                     "duration_sec": 0.6000000238418579,
                     "payload": {
+                        "Direction Source": 259,
                         "direction_source": "DashInputDirection",
+                        "ignore_y": true,
                         "move_speed": 13.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "rotate_to_target": false,
                         "rotation_speed": 720.0
                     },
@@ -658,8 +686,15 @@
                 {
                     "duration_sec": 0.6000000238418579,
                     "payload": {
+                        "Direction Source": 259,
                         "direction_source": "DashInputDirection",
+                        "ignore_y": true,
                         "move_speed": 13.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "rotate_to_target": false,
                         "rotation_speed": 720.0
                     },
@@ -687,8 +722,15 @@
                 {
                     "duration_sec": 0.4333333373069763,
                     "payload": {
+                        "Direction Source": 259,
                         "direction_source": "DashInputDirection",
+                        "ignore_y": true,
                         "move_speed": 13.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "rotate_to_target": false,
                         "rotation_speed": 720.0
                     },
@@ -716,8 +758,15 @@
                 {
                     "duration_sec": 0.4333333373069763,
                     "payload": {
+                        "Direction Source": 259,
                         "direction_source": "DashInputDirection",
+                        "ignore_y": true,
                         "move_speed": 13.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "rotate_to_target": false,
                         "rotation_speed": 720.0
                     },
@@ -806,8 +855,15 @@
                 {
                     "duration_sec": 2.9000000953674316,
                     "payload": {
+                        "Direction Source": 258,
                         "direction_source": "TargetDirection",
+                        "ignore_y": true,
                         "move_speed": 0.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "rotate_to_target": true,
                         "rotation_speed": 1700.0
                     },
@@ -842,6 +898,11 @@
             "notifies": [
                 {
                     "payload": {
+                        "attach_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "bone_name": "R_Hand_Weapon_cnt_tr",
                         "collision_preset": 3,
                         "spawn_type": 18
@@ -893,8 +954,15 @@
                 {
                     "duration_sec": 0.4333333373069763,
                     "payload": {
+                        "Direction Source": 258,
                         "direction_source": "TargetDirection",
+                        "ignore_y": true,
                         "move_speed": 0.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "rotate_to_target": true,
                         "rotation_speed": 1800.0
                     },
@@ -903,6 +971,273 @@
                     "type": "ANS_Move"
                 }
             ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Charge_Lv2toLv3",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "attach_offset": [
+                            0.10000000149011612,
+                            0.20000000298023224,
+                            0.0
+                        ],
+                        "bone_name": "R_Hand_Weapon_cnt_tr",
+                        "collision_preset": 3,
+                        "spawn_type": 18
+                    },
+                    "time_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "AN_EquipMeleeSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "bone_name": "R_Hand_Weapon_cnt_tr",
+                        "effect_name": "Rasengan_Start",
+                        "local_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            2.0,
+                            2.0,
+                            2.0
+                        ],
+                        "loop_override": true
+                    },
+                    "start_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "ANS_SpawnParticle"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_Start",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "attach_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "bone_name": "R_Hand_Weapon_cnt_tr",
+                        "collision_preset": 3,
+                        "spawn_type": 18
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "AN_EquipMeleeSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_End",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {},
+                    "time_sec": 0.36666667461395264,
+                    "track_index": 0,
+                    "type": "AN_ClearMeleeSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.30000001192092896,
+                    "payload": {
+                        "Direction Source": 1,
+                        "direction_source": "OwnerBackward",
+                        "ignore_y": false,
+                        "move_speed": 15.0,
+                        "move_velocity": [
+                            0.0,
+                            8.0,
+                            5.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.5333333611488342,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv2toLv3_Loop",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "check_gravity": true
+                    },
+                    "time_sec": 0.6333333253860474,
+                    "track_index": 0,
+                    "type": "AN_Gravity"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv1",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "attach_offset": [
+                            0.10000000149011612,
+                            0.20000000298023224,
+                            0.0
+                        ],
+                        "bone_name": "R_Hand_Weapon_cnt_tr",
+                        "collision_preset": 3,
+                        "spawn_type": 18
+                    },
+                    "time_sec": 0.13333334028720856,
+                    "track_index": 0,
+                    "type": "AN_EquipMeleeSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Fireball_Lv3",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "aim_at_target": true,
+                        "collision_preset": 3,
+                        "local_offset": [
+                            0.0,
+                            1.2000000476837158,
+                            1.7999999523162842
+                        ],
+                        "spawn_type": 20,
+                        "use_owner_forward": false
+                    },
+                    "time_sec": 0.4333333373069763,
+                    "track_index": 0,
+                    "type": "AN_SpawnSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.36666667461395264,
+                    "payload": {
+                        "Direction Source": 258,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": true,
+                        "move_speed": 0.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Attack_Lv1_End",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {},
+                    "time_sec": 0.5666666626930237,
+                    "track_index": 0,
+                    "type": "AN_ClearMeleeSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
             "notify_tracks": [
                 {
                     "name": "Notifies"

@@ -3,9 +3,9 @@
         {
             "SkillID": 1001,
             "SkillName": "Rasengan",
-            "Cooldown": 8,
+            "Cooldown": 2,
             "AnimStateName": "Skill_Rasengan",
-            "LoopDurationSec": 5,
+            "LoopDurationSec": 15,
             "IsHoldSkill": true,
             "hasDashPhase": true,
             "dashSpeed": 14,
@@ -13,12 +13,14 @@
             "targetStopDistance": 1.5,
             "attackEndAnimStateName": "Skill_Rasengan_End",
             "airAnimStateName": "Skill_Rasengan_Air",
-            "airGravityOff": true
+            "airGravityOff": true,
+            "airLandedAnimStateName": "Skill_Rasengan_Landed",
+            "airAttackEndAnimStateName": "Skill_Rasengan_Air_End"
         },
         {
             "SkillID": 1002,
             "SkillName": "Rasen_Shuriken",
-            "Cooldown": 7,
+            "Cooldown": 3,
             "AnimStateName": "Skill_RasenShuriken",
             "LoopDurationSec": 0,
             "IsHoldSkill": false,
@@ -48,7 +50,7 @@
             "SkillName": "Chidori",
             "Cooldown": 5,
             "AnimStateName": "Skill_Chidori",
-            "LoopDurationSec": 4,
+            "LoopDurationSec": 15,
             "IsHoldSkill": true,
             "hasDashPhase": true,
             "dashSpeed": 14,
@@ -56,7 +58,9 @@
             "targetStopDistance": 1.5,
             "attackEndAnimStateName": "Skill_Chidori_End",
             "airAnimStateName": "Skill_Chidori_Air",
-            "airGravityOff": true
+            "airGravityOff": true,
+            "airLandedAnimStateName": "Skill_Chidori_Landed",
+            "airAttackEndAnimStateName": "Skill_Chidori_Air_End"
         },
         {
             "SkillID": 1005,

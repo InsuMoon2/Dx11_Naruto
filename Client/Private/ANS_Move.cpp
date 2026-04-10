@@ -15,12 +15,14 @@ bool ANS_Move::Register_Properties()
 {
     auto& info = GetStaticReflectionInfo();
     info.className = "ANS_Move";
-    info.properties.clear();
 
-    PROPERTY_FLOAT("Move Speed", _moveSpeed, 0.f, 100.f);
-    PROPERTY_BOOL("Rotate To Target", _rotateToTarget);
-    PROPERTY_FLOAT("Rotation Speed", _rotationSpeed, 0.f, 1800.f);
+    PROPERTY_FLOAT_JSON("Move Speed", "move_speed", _moveSpeed, -100.f, 100.f);
+    PROPERTY_BOOL_JSON("Rotate To Target", "rotate_to_target",  _rotateToTarget);
+    PROPERTY_FLOAT_JSON("Rotation Speed", "rotation_speed", _rotationSpeed, 0.f, 1800.f);
+
     PROPERTY_ENUM("Direction Source", _directionSource, ANS_Move::EMoveDirectionSource);
+
+    PROPERTY_VEC3_JSON("Move Velocity", "move_velocity", _moveVelocity, 0.1f); 
 
     PROPERTY_BOOL_JSON("스킬 Y축 무시(지상용)", "ignore_y", _ignoreY);
 
@@ -107,7 +109,20 @@ void ANS_Move::On_Tick(const FAnimNotifyContext& context)
     if (_moveDir.LengthSquared() <= FLT_EPSILON)
         return;
 
-    transform->Add_WorldOffset(_moveDir * (_moveSpeed * dt));
+   Vec3 forwardDir = _moveDir;
+    Vec3 rightDir = Vec3::Up.Cross(forwardDir);
+
+    rightDir.Normalize();
+    Vec3 upDir = Vec3::Up;
+
+    Vec3 finalOffset = (forwardDir * (_moveSpeed + _moveVelocity.z))
+                     + (rightDir * _moveVelocity.x)
+                     + (upDir * _moveVelocity.y);
+
+    if (_ignoreY)
+        finalOffset.y = 0.f;
+
+    transform->Add_WorldOffset(finalOffset * dt);
 }
 
 void ANS_Move::On_End(const FAnimNotifyContext& context)
@@ -118,33 +133,28 @@ void ANS_Move::On_End(const FAnimNotifyContext& context)
 
 json ANS_Move::Serialize_Payload() const
 {
-    json j;
-    j["move_speed"] = _moveSpeed;
-    j["rotate_to_target"] = _rotateToTarget;
-    j["rotation_speed"] = _rotationSpeed;
+    json j = AnimNotifyState::Serialize_Payload();
     j["direction_source"] = string(magic_enum::enum_name(_directionSource));
 
     return j;
 }
+
 void ANS_Move::Deserialize_Payload(const json& payload)
 {
-    if (payload.contains("move_speed"))
-        _moveSpeed = payload["move_speed"].get<float>();
-
-    if (payload.contains("rotate_to_target"))
-        _rotateToTarget = payload["rotate_to_target"].get<bool>();
-
-    if (payload.contains("rotation_speed"))
-        _rotationSpeed = payload["rotation_speed"].get<float>();
-
+    AnimNotifyState::Deserialize_Payload(payload);
     if (payload.contains("direction_source"))
     {
-        const string sourceName = payload["direction_source"].get<string>();
-        _directionSource = magic_enum::enum_cast<EMoveDirectionSource>(sourceName)
-            .value_or(EMoveDirectionSource::OwnerForward);
+        if (payload["direction_source"].is_string())
+        {
+            const string sourceName = payload["direction_source"].get<string>();
+            _directionSource = magic_enum::enum_cast<EMoveDirectionSource>(sourceName)
+                .value_or(EMoveDirectionSource::OwnerForward);
+        }
+        else if (payload["direction_source"].is_number_integer())
+        {
+            _directionSource = static_cast<EMoveDirectionSource>(payload["direction_source"].get<int>());
+        }
     }
-
-    AnimNotifyState::Deserialize_Payload(payload);
 }
 
 bool ANS_Move::Set_MoveDirection(const FAnimNotifyContext& context, Vec3& outDir) const
@@ -169,10 +179,17 @@ bool ANS_Move::Set_MoveDirection(const FAnimNotifyContext& context, Vec3& outDir
             return true;
         break;
 
+    case EMoveDirectionSource::OwnerBackward:
+        outDir = -transform->Get_WorldForward();
+        break;
+
     case EMoveDirectionSource::OwnerForward:
     default:
         outDir = transform->Get_WorldForward();
         break;
+
+
+
     }
 
     if (_ignoreY) outDir.y = 0.f;
@@ -181,6 +198,7 @@ bool ANS_Move::Set_MoveDirection(const FAnimNotifyContext& context, Vec3& outDir
         return false;
 
     outDir.Normalize();
+
     return true;
 }
 

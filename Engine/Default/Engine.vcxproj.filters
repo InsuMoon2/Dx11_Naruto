@@ -313,6 +313,8 @@
     <ClInclude Include="..\Public\EffectComponent.h" />
     <ClInclude Include="..\Public\BTDecorator.h" />
     <ClInclude Include="..\Public\BTDecorator_Blackboard.h" />
+    <ClInclude Include="..\Public\Particle_Point.h" />
+    <ClInclude Include="..\Public\EffectBilldboardObject.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -766,6 +768,8 @@
     <ClCompile Include="..\Private\EffectComponent.cpp" />
     <ClCompile Include="..\Private\BTDecorator.cpp" />
     <ClCompile Include="..\Private\BTDecorator_Blackboard.cpp" />
+    <ClCompile Include="..\Private\Particle_Point.cpp" />
+    <ClCompile Include="..\Private\EffectBilldboardObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

@@ -159,6 +159,10 @@ void VIBuffer_Particle_Point::Update_Particles(float timeDelta)
         Update_Spread(timeDelta);
         break;
 
+    case EMoveMode::Static:
+        Update_Static(timeDelta);
+        break;
+
     default:
         break;
     }
@@ -201,6 +205,24 @@ void VIBuffer_Particle_Point::Update_Spread(float timeDelta)
         const float growAmount = timeDelta;
         instance.right.x += growAmount;
         instance.up.y += growAmount;
+
+        if (instance.lifetime.y >= instance.lifetime.x)
+        {
+            if (_isLoop)
+            {
+                Reset_Instance(i);
+            }
+        }
+    }
+}
+
+void VIBuffer_Particle_Point::Update_Static(float timeDelta)
+{
+    for (uint32 i = 0; i < _numInstances; ++i)
+    {
+        auto& instance = _instances[i];
+
+        instance.lifetime.y += timeDelta;
 
         if (instance.lifetime.y >= instance.lifetime.x)
         {
