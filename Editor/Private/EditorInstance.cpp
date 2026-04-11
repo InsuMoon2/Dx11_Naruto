@@ -91,8 +91,11 @@ void EditorInstance::Play()
 
 void EditorInstance::Pause()
 {
-    GAME->Set_GameState(EGameState::Pause);
+    if (GAME->Get_GameState() != EGameState::Play)
+        return;
 
+    GAME->Set_GameState(EGameState::Pause);
+    ImGui::SetWindowFocus("Scene");
 }
 
 void EditorInstance::Stop()
@@ -127,6 +130,17 @@ void EditorInstance::Stop()
     {
         btView->Clear_DebugMode();
     }
+}
+
+void EditorInstance::Resume()
+{
+    GAME->Set_GameState(EGameState::Play);
+    ImGui::SetWindowFocus("Game");
+
+    auto targetCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_TARGET);
+
+    if (targetCam)
+        GAME->Set_ActiveCamera(targetCam);
 }
 
 shared_ptr<EditorWindow> EditorInstance::Get_Window(const wstring& key)

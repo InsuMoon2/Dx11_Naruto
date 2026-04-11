@@ -7,6 +7,18 @@
 
 REGISTER_GAMEOBJECT(EffectMeshObject, Protocol::OBJECT_TYPE_EFFECT_MESH)
 
+/* Additive 메쉬 레이어라도 opacity를 일반 알파처럼 느끼게 하고 싶을 때 런타임 블렌드 모드를 바꿔준다. */
+static EEffectBlendMode Resolve_RuntimeBlendMode(const FEffectMeshLayerDesc& meshDesc)
+{
+    if (meshDesc.blendMode == EEffectBlendMode::Additive &&
+        meshDesc.useOpacityAsTransparency)
+    {
+        return EEffectBlendMode::Translucent;
+    }
+
+    return meshDesc.blendMode;
+}
+
 EffectMeshObject::EffectMeshObject(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
 {
@@ -21,6 +33,10 @@ EffectMeshObject::EffectMeshObject(const EffectMeshObject& rhs)
     , _maskTexture(rhs._maskTexture)
     , _emissiveTexture(rhs._emissiveTexture)
     , _opacityTexture(rhs._opacityTexture)
+    , _opacitySubUvTexture(rhs._opacitySubUvTexture)
+    , _opacityGradationTexture(rhs._opacityGradationTexture)
+    , _emissiveGradationTexture(rhs._emissiveGradationTexture)
+    , _uvDistortionTexture(rhs._uvDistortionTexture)
     , _hasOpacity(rhs._hasOpacity)
 {
 }
@@ -79,7 +95,9 @@ void EffectMeshObject::Late_Update(float timeDelta)
 {
     GameObject::Late_Update(timeDelta);
 
-    if (_layerDesc.mesh.blendMode == EEffectBlendMode::Opaque)
+    const EEffectBlendMode runtimeBlendMode = Resolve_RuntimeBlendMode(_layerDesc.mesh);
+
+    if (runtimeBlendMode == EEffectBlendMode::Opaque)
         GAME->Add_RenderGroup(ERenderGroup::NonBlend, GetSharedPtr());
     else
         GAME->Add_RenderGroup(ERenderGroup::Blend, GetSharedPtr());
@@ -106,7 +124,14 @@ HRESULT EffectMeshObject::Render()
 HRESULT EffectMeshObject::Bind_ShaderResources()
 {
     Vec2 uvOffset = _layerDesc.mesh.uvScrollSpeed * _elapsed;
+    Vec2 uvDistortionOffset = _layerDesc.mesh.uvDistortionSpeed * _elapsed;
+
     const int forceVisiblePreview = _forceVisiblePreview ? 1 : 0;
+    const int hasOpacityTexture = _opacityTexture ? 1 : 0;
+    const int hasOpacitySubUvTexture = _opacitySubUvTexture ? 1 : 0;
+    const int hasOpacityGradationTexture = _opacityGradationTexture ? 1 : 0;
+    const int hasEmissiveGradationTexture = _emissiveGradationTexture ? 1 : 0;
+    const int hasUvDistortionTexture = _uvDistortionTexture ? 1 : 0;
 
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix()), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View)), E_FAIL);
@@ -116,48 +141,59 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
 
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVOffset", &uvOffset, sizeof(Vec2)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVTiling", &_layerDesc.mesh.uvTiling, sizeof(Vec2)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVDistortionOffset", &uvDistortionOffset, sizeof(Vec2)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVDistortionStrength", &_layerDesc.mesh.uvDistortionStrength, sizeof(Vec2)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_ColorTint", &_layerDesc.mesh.colorTint, sizeof(Vec4)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_Opacity", &_layerDesc.mesh.opacity, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FresnelPower", &_layerDesc.mesh.fresnelPower, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FresnelMultiplier", &_layerDesc.mesh.fresnelMultiplier, sizeof(float)), E_FAIL);
+
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_ForceVisiblePreview", &forceVisiblePreview, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasOpacityTexture", &hasOpacityTexture, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasOpacitySubUvTexture", &hasOpacitySubUvTexture, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasOpacityGradationTexture", &hasOpacityGradationTexture, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasEmissiveGradationTexture", &hasEmissiveGradationTexture, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasUVDistortionTexture", &hasUvDistortionTexture, sizeof(int)), E_FAIL);
 
     if (_diffuseTexture)
-    {
-        CHECK_FAILED(_diffuseTexture->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);
-    }
+        {CHECK_FAILED(_diffuseTexture->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);}
     else
-    {
-        CHECK_FAILED(_shaderCom->Bind_SRV("g_DiffuseTexture", nullptr), E_FAIL);
-    }
+        {CHECK_FAILED(_shaderCom->Bind_SRV("g_DiffuseTexture", nullptr), E_FAIL);}
 
     if (_maskTexture)
-    {
-        CHECK_FAILED(_maskTexture->Bind_SRV(_shaderCom, "g_MaskTexture", 0), E_FAIL);
-    }
+        {CHECK_FAILED(_maskTexture->Bind_SRV(_shaderCom, "g_MaskTexture", 0), E_FAIL);}
     else
-    {
-        CHECK_FAILED(_shaderCom->Bind_SRV("g_MaskTexture", nullptr), E_FAIL);
-    }
+        {CHECK_FAILED(_shaderCom->Bind_SRV("g_MaskTexture", nullptr), E_FAIL);}
 
     if (_emissiveTexture)
-    {
-        CHECK_FAILED(_emissiveTexture->Bind_SRV(_shaderCom, "g_EmissiveTexture", 0), E_FAIL);
-    }
+        {CHECK_FAILED(_emissiveTexture->Bind_SRV(_shaderCom, "g_EmissiveTexture", 0), E_FAIL);}
     else
-    {
-        CHECK_FAILED(_shaderCom->Bind_SRV("g_EmissiveTexture", nullptr), E_FAIL);
-    }
+        {CHECK_FAILED(_shaderCom->Bind_SRV("g_EmissiveTexture", nullptr), E_FAIL);}
 
     if (_opacityTexture)
-    {
-        CHECK_FAILED(_opacityTexture->Bind_SRV(_shaderCom, "g_OpacityTexture", 0), E_FAIL);
-    }
+        {CHECK_FAILED(_opacityTexture->Bind_SRV(_shaderCom, "g_OpacityTexture", 0), E_FAIL);}
     else
-    {
-        CHECK_FAILED(_shaderCom->Bind_SRV("g_OpacityTexture", nullptr), E_FAIL);
-    }
+        {CHECK_FAILED(_shaderCom->Bind_SRV("g_OpacityTexture", nullptr), E_FAIL);}
 
+    if (_opacitySubUvTexture)
+        {CHECK_FAILED(_opacitySubUvTexture->Bind_SRV(_shaderCom, "g_OpacitySubUvTexture", 0), E_FAIL);}
+    else
+        {CHECK_FAILED(_shaderCom->Bind_SRV("g_OpacitySubUvTexture", nullptr), E_FAIL);}
+
+    if (_opacityGradationTexture)
+        {CHECK_FAILED(_opacityGradationTexture->Bind_SRV(_shaderCom, "g_OpacityGradationTexture", 0), E_FAIL);}
+    else
+        {CHECK_FAILED(_shaderCom->Bind_SRV("g_OpacityGradationTexture", nullptr), E_FAIL);}
+
+    if (_emissiveGradationTexture)
+        {CHECK_FAILED(_emissiveGradationTexture->Bind_SRV(_shaderCom, "g_EmissiveGradationTexture", 0), E_FAIL);}
+    else
+        {CHECK_FAILED(_shaderCom->Bind_SRV("g_EmissiveGradationTexture", nullptr), E_FAIL);}
+
+    if (_uvDistortionTexture)
+        {CHECK_FAILED(_uvDistortionTexture->Bind_SRV(_shaderCom, "g_UVDistortionTexture", 0), E_FAIL);}
+    else
+        {CHECK_FAILED(_shaderCom->Bind_SRV("g_UVDistortionTexture", nullptr), E_FAIL);}
 
     return S_OK;
 }
@@ -166,7 +202,8 @@ HRESULT EffectMeshObject::Resolve_Resources()
 {
     _hasOpacity =
         !_layerDesc.mesh.opacityTextureGuid.empty() ||
-        !_layerDesc.mesh.maskTextureGuid.empty();
+        !_layerDesc.mesh.maskTextureGuid.empty() ||
+        !_layerDesc.mesh.opacitySubUvTextureGuid.empty();
 
     if (!_layerDesc.mesh.modelGuid.empty() && !_modelCom)
     {
@@ -354,6 +391,121 @@ HRESULT EffectMeshObject::Resolve_Resources()
         }
     }
 
+    if (!_layerDesc.mesh.opacitySubUvTextureGuid.empty() && !_opacitySubUvTexture)
+    {
+        if (_layerDesc.mesh.opacitySubUvTextureGuid == _layerDesc.mesh.opacityTextureGuid && _opacityTexture)
+        {
+            _opacitySubUvTexture = _opacityTexture;
+        }
+        else if (_layerDesc.mesh.opacitySubUvTextureGuid == _layerDesc.mesh.maskTextureGuid && _maskTexture)
+        {
+            _opacitySubUvTexture = _maskTexture;
+        }
+        else
+        {
+            uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.opacitySubUvTextureGuid));
+            if (FAILED(Add_Component(texKey, _opacitySubUvTexture)))
+            {
+                wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.opacitySubUvTextureGuid);
+
+                if (resolvedPath.empty())
+                {
+                    LOG_ERROR(
+                        "EffectMeshObject opacity subuv resolve failed. layer='{}', opacitySubUvGuid='{}'",
+                        _layerDesc.base.layerName,
+                        _layerDesc.mesh.opacitySubUvTextureGuid);
+
+                    return E_FAIL;
+                }
+
+                auto proto = Texture::Create(_device, _context, resolvedPath, 1);
+                if (proto)
+                {
+                    GAME->Add_Component_Prototype(0, texKey, proto);
+                    CHECK_FAILED(Add_Component(0, texKey, _opacitySubUvTexture), E_FAIL);
+                }
+            }
+        }
+    }
+
+    if (!_layerDesc.mesh.opacityGradationTextureGuid.empty() && !_opacityGradationTexture)
+    {
+        uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.opacityGradationTextureGuid));
+        if (FAILED(Add_Component(texKey, _opacityGradationTexture)))
+        {
+            wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.opacityGradationTextureGuid);
+
+            if (resolvedPath.empty())
+            {
+                LOG_ERROR(
+                    "EffectMeshObject opacity gradation resolve failed. layer='{}', opacityGradationGuid='{}'",
+                    _layerDesc.base.layerName,
+                    _layerDesc.mesh.opacityGradationTextureGuid);
+
+                return E_FAIL;
+            }
+
+            auto proto = Texture::Create(_device, _context, resolvedPath, 1);
+            if (proto)
+            {
+                GAME->Add_Component_Prototype(0, texKey, proto);
+                CHECK_FAILED(Add_Component(0, texKey, _opacityGradationTexture), E_FAIL);
+            }
+        }
+    }
+
+    if (!_layerDesc.mesh.emissiveGradationTextureGuid.empty() && !_emissiveGradationTexture)
+    {
+        uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.emissiveGradationTextureGuid));
+        if (FAILED(Add_Component(texKey, _emissiveGradationTexture)))
+        {
+            wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.emissiveGradationTextureGuid);
+
+            if (resolvedPath.empty())
+            {
+                LOG_ERROR(
+                    "EffectMeshObject emissive gradation resolve failed. layer='{}', emissiveGradationGuid='{}'",
+                    _layerDesc.base.layerName,
+                    _layerDesc.mesh.emissiveGradationTextureGuid);
+
+                return E_FAIL;
+            }
+
+            auto proto = Texture::Create(_device, _context, resolvedPath, 1);
+            if (proto)
+            {
+                GAME->Add_Component_Prototype(0, texKey, proto);
+                CHECK_FAILED(Add_Component(0, texKey, _emissiveGradationTexture), E_FAIL);
+            }
+        }
+    }
+
+    if (!_layerDesc.mesh.uvDistortionTextureGuid.empty() && !_uvDistortionTexture)
+    {
+        uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.uvDistortionTextureGuid));
+        if (FAILED(Add_Component(texKey, _uvDistortionTexture)))
+        {
+            wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.uvDistortionTextureGuid);
+
+            if (resolvedPath.empty())
+            {
+                LOG_ERROR(
+                    "EffectMeshObject uv distortion resolve failed. layer='{}', uvDistortionGuid='{}'",
+                    _layerDesc.base.layerName,
+                    _layerDesc.mesh.uvDistortionTextureGuid);
+
+                return E_FAIL;
+            }
+
+            auto proto = Texture::Create(_device, _context, resolvedPath, 1);
+            if (proto)
+            {
+                GAME->Add_Component_Prototype(0, texKey, proto);
+                CHECK_FAILED(Add_Component(0, texKey, _uvDistortionTexture), E_FAIL);
+            }
+        }
+    }
+
     return S_OK;
 
 }
@@ -405,25 +557,27 @@ HRESULT EffectMeshObject::Ready_Components()
 uint32 EffectMeshObject::Resolve_PassIndex() const
 {
     const bool twoSided = _layerDesc.mesh.twoSided;
+    /* 실제 렌더링 시 사용할 블렌드 모드다. Additive를 강제로 Translucent처럼 보정할 수 있다. */
+    const EEffectBlendMode runtimeBlendMode = Resolve_RuntimeBlendMode(_layerDesc.mesh);
 
     if (!twoSided)
     {
-        if (_layerDesc.mesh.blendMode == EEffectBlendMode::Opaque)
+        if (runtimeBlendMode == EEffectBlendMode::Opaque)
             return 2;
 
         if (_hasOpacity)
-            return static_cast<uint32>(_layerDesc.mesh.blendMode);
+            return static_cast<uint32>(runtimeBlendMode);
 
-        return 3 + static_cast<uint32>(_layerDesc.mesh.blendMode);
+        return 3 + static_cast<uint32>(runtimeBlendMode);
     }
 
-    if (_layerDesc.mesh.blendMode == EEffectBlendMode::Opaque)
+    if (runtimeBlendMode == EEffectBlendMode::Opaque)
         return 7;
 
     if (_hasOpacity)
-        return 5 + static_cast<uint32>(_layerDesc.mesh.blendMode);
+        return 5 + static_cast<uint32>(runtimeBlendMode);
 
-    return 8 + static_cast<uint32>(_layerDesc.mesh.blendMode);
+    return 8 + static_cast<uint32>(runtimeBlendMode);
 }
 
 Shared<GameObject> EffectMeshObject::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

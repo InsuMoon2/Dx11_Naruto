@@ -79,23 +79,7 @@ void SkillObject_Projectile::Update(float timeDelta)
     if (_isMoving && _projectile)
         _projectile->Update_Projectile(timeDelta);
 
-    // 움직일 때에만 LifeTime이 소비되도록
-	if (_isMoving)
-	{
-		SkillObject::Update(timeDelta);
-	}
-	else
-	{
-		GameObject::Update(timeDelta);
-
-        for (auto& pair : _hitCooldowns)
-        {
-            if (pair.second > 0.f)
-            {
-                pair.second -= timeDelta;
-            }
-        }
-	}
+    SkillObject::Update(timeDelta);
 
 }
 

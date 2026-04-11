@@ -1,0 +1,5 @@
+Diffuse=DefaultTexture
+Opacity=T_EFF_Noise_Line_04_BC
+Emissive=T_EFF_GMT_Wind_01_BC
+Other[0]=T_EFF_GMO_02_M
+Other[1]=T_EFF_Gradation_10_M

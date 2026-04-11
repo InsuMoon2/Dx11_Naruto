@@ -42,6 +42,8 @@ public:
     void    Pause();
     void    Stop();
 
+    void    Resume();
+
     bool    IsPlaying() const { return GAME->Get_GameState() == EGameState::Play; }
     bool    IsPaused()  const { return GAME->Get_GameState() == EGameState::Pause; }
 
@@ -68,10 +70,6 @@ public: /* Command History */
 public: /* AnimNotify_Inspector_Factory */
     Shared<AnimNotify_Inspector>        Get_NotifyInspector(const string& typeName);
     Shared<AnimNotifyState_Inspector>   Get_NotifyStateInspector(const string& typeName);
-
-public:
-    void Save_SceneSnapshot();
-    void Restore_SceneSnapshot();
 
 private: /* Manager */
     Unique<ImGui_Manager>           _imguiManager;

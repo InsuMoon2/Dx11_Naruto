@@ -57,7 +57,9 @@ void PlayerState_Skill::Enter(PlayerStateMachine* state)
     _isEnding        = false;
     _subPhase        = ESkillSubPhase::Charging;
 
-    _hasLanded = movement ? movement->Is_OnGround() : false;
+    _startedOnGround = movement->Is_OnGround();
+    _hasLanded = false;
+    _chargeReady = false;
 
     _dashStartPos = transform->Get_WorldPosition();
 }
@@ -158,35 +160,72 @@ void PlayerState_Skill::Exit(PlayerStateMachine* state)
     _subPhase = ESkillSubPhase::Charging;
     _dashTarget.reset();
 
+    _startedOnGround = false;
+    _hasLanded = false;
+    _chargeReady = false;
 }
 
 void PlayerState_Skill::Update_Charging(PlayerStateMachine* state, float timeDelta)
 {
-    EAnimPhase phase = state->Get_AnimPhase();
-    if (phase != EAnimPhase::Loop && !_hasLanded)
-        return; // 아직 Start 재생 중이면 대기
-
-
     auto skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(_mySkill_Id);
     auto movement  = state->Get_Movement();
 
     if (!movement || !skillData)
         return;
 
-    if (!_hasLanded && movement->Is_OnGround())
+    EAnimPhase phase = state->Get_AnimPhase();
+
+    if (_startedOnGround)
     {
-        if (!skillData->airLandedAnimStateName.empty())
+        if (!_chargeReady)
         {
-            state->Get_AnimationState()->Play_State(skillData->airLandedAnimStateName);
-            _hasLanded = true; // 이후 재진입 방지
+              if (phase != EAnimPhase::Loop)
+                return;
+
+            _chargeReady = true;
+        }
+    }
+    else
+    {
+        if (_hasLanded)
+        {
+            if (!_chargeReady)
+            {
+                if (!state->Is_AnimStateFinished())
+                    return;
+
+                state->Get_AnimationState()->Play_StateLoopOnly(skillData->animStateName);
+                _chargeReady = true;
+            }
+        }
+        else
+        {
+            if (phase != EAnimPhase::Loop)
+                return;
+
+            if (movement->Is_OnGround())
+            {
+                _hasLanded = true;
+                _chargeReady = false;
+
+                if (!skillData->airLandedAnimStateName.empty())
+                {
+                    state->Get_AnimationState()->Play_State(skillData->airLandedAnimStateName);
+                    return;
+                }
+
+                state->Get_AnimationState()->Play_StateLoopOnly(skillData->animStateName);
+                _chargeReady = true;
+            }
+            else
+            {
+                _chargeReady = true;
+            }
         }
     }
 
-    // 착지 모션이 재생되고 났을 떄 지상 Loop로 연결
-    if (_hasLanded && state->Is_AnimStateFinished())
-    {
-        state->Get_AnimationState()->Play_StateLoopOnly(skillData->animStateName);
-    }
+    if (!_chargeReady)
+        return;
 
     if (movement->Is_GravityEnabled())
     {
@@ -240,6 +279,8 @@ void PlayerState_Skill::Update_Dashing(PlayerStateMachine* state, float timeDelt
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
 
+    const bool useGroundFlow = _startedOnGround || _hasLanded;
+
     Vec3 currentPos = transform->Get_WorldPosition();
     bool shouldAttack = false;
 
@@ -260,11 +301,11 @@ void PlayerState_Skill::Update_Dashing(PlayerStateMachine* state, float timeDelt
             Vec3 toTargetVec = target->Get_Transform()->Get_WorldPosition() - currentPos;
 
             Vec3 distCheckVec = toTargetVec;
-            if (_hasLanded)
+            if (useGroundFlow)
                 distCheckVec.y = 0.f;
 
             float finalStopDist = skillData->targetStopDistance;
-            if (!_hasLanded)
+            if (!useGroundFlow)
                 finalStopDist *= 0.85f; 
 
             float distToTarget = distCheckVec.Length();
@@ -272,7 +313,7 @@ void PlayerState_Skill::Update_Dashing(PlayerStateMachine* state, float timeDelt
                 shouldAttack = true;
 
             Vec3 toTargetDir = toTargetVec;
-            if (_hasLanded)
+            if (useGroundFlow)
                 toTargetDir.y = 0.f;
 
             toTargetDir = Utils::Safe_Normalize(toTargetDir, _dashDirection);
@@ -329,6 +370,8 @@ void PlayerState_Skill::Begin_DashPhase(PlayerStateMachine* state)
 
     _dashStartPos = transform->Get_WorldPosition();
 
+    const bool useGroundFlow = _startedOnGround || _hasLanded;
+
     Find_DashTarget(state);
 
     auto target = _dashTarget.lock();
@@ -347,7 +390,7 @@ void PlayerState_Skill::Begin_DashPhase(PlayerStateMachine* state)
             _dashDirection = Vec3::Forward;
     }
 
-    if (_hasLanded || !target)
+    if (useGroundFlow || !target)
     {
         _dashDirection.y = 0.f;
     }
@@ -381,7 +424,9 @@ void PlayerState_Skill::Begin_AttackPhase(PlayerStateMachine* state)
     auto skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(_mySkill_Id);
     if (!skillData) return;
 
-    const string& endStateName = _hasLanded
+     const bool useGroundFlow = _startedOnGround || _hasLanded;
+
+  const string& endStateName = useGroundFlow
         ? skillData->attackEndAnimStateName
         : skillData->airAttackEndAnimStateName;
 

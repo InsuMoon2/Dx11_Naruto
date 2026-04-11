@@ -16,7 +16,7 @@ Component::Component(const Component& rhs)
 Component::~Component()
 {
 }
-
+       
 HRESULT Component::Initialize(void* arg)
 {
 

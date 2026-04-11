@@ -605,6 +605,16 @@
                     "payload": {
                         "bone_name": "R_Hand_Weapon_cnt_tr",
                         "collision_preset": 3,
+                        "local_offset": [
+                            20.0,
+                            5.0,
+                            15.0
+                        ],
+                        "local_rotation": [
+                            90.0,
+                            0.0,
+                            0.0
+                        ],
                         "spawn_type": 19
                     },
                     "start_sec": 0.30000001192092896,
@@ -614,9 +624,9 @@
                 {
                     "duration_sec": 2.7666666507720947,
                     "payload": {
-                        "Direction Source": 258,
+                        "Direction Source": 2,
                         "direction_source": "TargetDirection",
-                        "ignore_y": true,
+                        "ignore_y": false,
                         "move_speed": 0.0,
                         "move_velocity": [
                             0.0,
@@ -634,6 +644,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -876,6 +889,16 @@
                     "payload": {
                         "bone_name": "R_Hand_Weapon_cnt_tr",
                         "collision_preset": 3,
+                        "local_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "spawn_type": 19
                     },
                     "start_sec": 0.3333333432674408,
@@ -995,6 +1018,31 @@
                     "time_sec": 0.03333333507180214,
                     "track_index": 0,
                     "type": "AN_EquipMeleeSkill"
+                },
+                {
+                    "payload": {
+                        "bone_name": "R_Hand_Weapon_cnt_tr",
+                        "effect_name": "WhyInvi",
+                        "local_offset": [
+                            0.20000000298023224,
+                            0.10000000149011612,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            180.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "loop_override": false
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 1,
+                    "type": "AN_SpawnParticle"
                 }
             ],
             "notify_state_tracks": [
@@ -1002,37 +1050,13 @@
                     "name": "Notify States"
                 }
             ],
-            "notify_states": [
-                {
-                    "duration_sec": 0.3333333432674408,
-                    "payload": {
-                        "bone_name": "R_Hand_Weapon_cnt_tr",
-                        "effect_name": "Rasengan_Start",
-                        "local_offset": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "local_rotation": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "local_scale": [
-                            2.0,
-                            2.0,
-                            2.0
-                        ],
-                        "loop_override": true
-                    },
-                    "start_sec": 0.06666667014360428,
-                    "track_index": 0,
-                    "type": "ANS_SpawnParticle"
-                }
-            ],
+            "notify_states": [],
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -1230,6 +1254,48 @@
                     "time_sec": 0.5666666626930237,
                     "track_index": 0,
                     "type": "AN_ClearMeleeSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Run_Lv1_Loop",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "R_Hand_Weapon_cnt_tr",
+                        "effect_name": "RasenganC",
+                        "local_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            90.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "loop_override": false
+                    },
+                    "time_sec": 0.0,
+                    "track_index": 0,
+                    "type": "AN_SpawnParticle"
                 }
             ],
             "notify_state_tracks": [

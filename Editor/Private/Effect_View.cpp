@@ -190,7 +190,7 @@ void Effect_View::OnGui()
     Draw_Header();
     ImGui::Separator();
 
-    if (ImGui::BeginTable("EffectLayout", 3, ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerV))
+    if (ImGui::BeginTable("EffectLayout", 3, ImGuiTableFlags_Resizable | ImGuiWindowFlags_NoDocking | ImGuiTableFlags_BordersInnerV))
     {
         ImGui::TableSetupColumn("LayerList", ImGuiTableColumnFlags_WidthStretch, 1.f);
         ImGui::TableSetupColumn("Viewport", ImGuiTableColumnFlags_WidthStretch, 2.5f);
@@ -787,6 +787,19 @@ void Effect_View::Draw_LayerList()
         if (ImGui::Button(ICON_FA_ARROW_DOWN " Move Down", ImVec2(-1.f, 28.f)))
             Move_SelectedLayer(1);
 
+        if (ImGui::Button(ICON_FA_COPY " Duplicate Selected", ImVec2(-1.f, 30.f)))
+        {
+            FEffectLayerDesc clonedLayer = _currentAsset.layers[_selectedLayerIdx];
+
+            clonedLayer.base.layerName += "_Copy"; 
+
+            _currentAsset.layers.push_back(clonedLayer);
+
+            _selectedLayerIdx = static_cast<int32>(_currentAsset.layers.size()) - 1;
+            MarkDirty();
+            Restart_PreviewEffect();
+        }
+
         if (ImGui::Button(ICON_FA_TRASH " Delete Selected", ImVec2(-1.f, 30.f)))
         {
             _currentAsset.layers.erase(_currentAsset.layers.begin() + _selectedLayerIdx);
@@ -947,6 +960,18 @@ void Effect_View::Draw_Inspector()
             ImGui::Spacing();
 
             Draw_AssetSlotPicker(
+                "Emissive Gradation",
+                "##EffectEmissiveGradationPicker",
+                ICON_FA_IMAGE " Select Emissive Gradation Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.mesh.emissiveGradationTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
                 "Opacity",
                 "##EffectOpacityPicker",
                 ICON_FA_IMAGE " Select Opacity Texture",
@@ -954,6 +979,30 @@ void Effect_View::Draw_Inspector()
                 "texture",
                 "Effects/;Skills/",
                 layer.mesh.opacityTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
+                "Opacity SubUV",
+                "##EffectOpacitySubUvPicker",
+                ICON_FA_IMAGE " Select Opacity SubUV Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.mesh.opacitySubUvTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
+                "Opacity Gradation",
+                "##EffectOpacityGradationPicker",
+                ICON_FA_IMAGE " Select Opacity Gradation Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.mesh.opacityGradationTextureGuid,
                 resourceChanged);
 
             ImGui::Spacing();
@@ -970,6 +1019,18 @@ void Effect_View::Draw_Inspector()
 
             ImGui::Spacing();
 
+            Draw_AssetSlotPicker(
+                "UV Distortion",
+                "##EffectUvDistortionPicker",
+                ICON_FA_IMAGE " Select UV Distortion Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.mesh.uvDistortionTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
             int blend = static_cast<int>(layer.mesh.blendMode);
             if (ImGui::Combo("BlendMode", &blend, "Translucent\0Additive\0Opaque\0"))
             {
@@ -979,6 +1040,12 @@ void Effect_View::Draw_Inspector()
             }
 
             if (ImGui::Checkbox("Two Sided", &layer.mesh.twoSided))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::Checkbox("Use Opacity As Transparency", &layer.mesh.useOpacityAsTransparency))
             {
                 MarkDirty();
                 materialChanged = true;
@@ -1000,6 +1067,18 @@ void Effect_View::Draw_Inspector()
             }
 
             if (ImGui::DragFloat2("UV Speed", (float*)&layer.mesh.uvScrollSpeed, 0.05f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat2("Distortion Strength", (float*)&layer.mesh.uvDistortionStrength, 0.005f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat2("Distortion Speed", (float*)&layer.mesh.uvDistortionSpeed, 0.05f))
             {
                 MarkDirty();
                 materialChanged = true;

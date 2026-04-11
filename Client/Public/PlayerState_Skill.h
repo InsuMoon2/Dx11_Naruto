@@ -56,7 +56,10 @@ private:
     float        _channelingTimer = 0.f;         // 루프를 도는 지속시간 체크용
     bool         _isEnding = false;
 
+    bool         _startedOnGround = false;
     bool         _hasLanded = false;
+    bool         _chargeReady = false;
+
 
 private:
     ESkillSubPhase _subPhase = ESkillSubPhase::Charging;

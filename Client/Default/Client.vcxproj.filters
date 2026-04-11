@@ -311,8 +311,11 @@
       <Filter>02. GameObject\07. Skill</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AN_ClearMeleeSkill.h" />
-    <ClInclude Include="..\Public\ANS_SpawnParticle.h" />
+    <ClInclude Include="..\Public\AN_SpawnParticle.h" />
     <ClInclude Include="..\Public\AttachedEffectObject.h" />
+    <ClInclude Include="..\Public\Skill_RasenShuriken_Hit.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -607,8 +610,11 @@
       <Filter>02. GameObject\07. Skill</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AN_ClearMeleeSkill.cpp" />
-    <ClCompile Include="..\Private\ANS_SpawnParticle.cpp" />
+    <ClCompile Include="..\Private\AN_SpawnParticle.cpp" />
     <ClCompile Include="..\Private\AttachedEffectObject.cpp" />
+    <ClCompile Include="..\Private\Skill_RasenShuriken_Hit.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

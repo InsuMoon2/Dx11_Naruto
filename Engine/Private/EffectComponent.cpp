@@ -168,7 +168,7 @@ HRESULT EffectComponent::Play_EffectAsset(const FEffectAssetDesc& assetDesc)
 
         if (_layers[i].desc.base.enabled)
         {
-            Create_LayerObject(_layers[i]);
+           Create_LayerObject(_layers[i]);
         }
     }
 

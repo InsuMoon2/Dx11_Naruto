@@ -1,0 +1,78 @@
+{
+    "autoPlay": true,
+    "effectName": "NewEffect",
+    "layers": [
+        {
+            "blendMode": 0,
+            "colorTint": [
+                0.22580647468566895,
+                0.8418315649032593,
+                1.0,
+                1.0
+            ],
+            "diffuseTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "duration": -1.0,
+            "emissiveGradationTextureGuid": "",
+            "emissiveTextureGuid": "",
+            "enabled": true,
+            "endScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "NewMeshEmitter",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                270.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "101f93bb-685c-4520-b5c1-a6b5ec4e6cae",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "7ce30b35-f544-4049-b51d-f5e6a99e9d07",
+            "rotationAxis": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotationSpeed": 218.6999969482422,
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useScaleOverTime": false,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "totalDuration": -1.0
+}

@@ -7,15 +7,26 @@
 
 Texture2D g_EmissiveTexture;
 Texture2D g_OpacityTexture;
+Texture2D g_OpacitySubUvTexture;
+Texture2D g_OpacityGradationTexture;
+Texture2D g_EmissiveGradationTexture;
+Texture2D g_UVDistortionTexture;
 
 float2 g_UVOffset;
+float2 g_UVDistortionOffset;
 
-/* UV 타일링 반복 횟수 */
 float2 g_UVTiling;
+float2 g_UVDistortionStrength;
 
 float4 g_ColorTint;
-float  g_Opacity;
-int    g_ForceVisiblePreview;
+float g_Opacity;
+int g_ForceVisiblePreview;
+
+int g_HasOpacityTexture;
+int g_HasOpacitySubUvTexture;
+int g_HasOpacityGradationTexture;
+int g_HasEmissiveGradationTexture;
+int g_HasUVDistortionTexture;
 
 /* 프레넬 강도 (가운데 투명정도) */
 float  g_FresnelPower;
@@ -49,6 +60,7 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix).xyz;
 
+
     return Out;
 }
 
@@ -65,73 +77,133 @@ struct PS_OUT
     float4 vColor : SV_TARGET0;
 };
 
+float2 BuildFinalUV(float2 baseUV)
+{
+    float2 finalUV = baseUV * g_UVTiling + g_UVOffset;
+
+    if (g_HasUVDistortionTexture != 0)
+    {
+        float2 distortionUV = baseUV * g_UVTiling + g_UVDistortionOffset;
+        float2 distortionSample = g_UVDistortionTexture.Sample(DefaultSampler, distortionUV).rg * 2.f - 1.f;
+        finalUV += distortionSample * g_UVDistortionStrength;
+    }
+
+    return finalUV;
+}
+
+float3 ApplyEmissiveGradation(float3 emissiveRgb)
+{
+    float3 result = emissiveRgb;
+
+    if (g_HasEmissiveGradationTexture != 0)
+    {
+        float emissiveMask = max(emissiveRgb.r, max(emissiveRgb.g, emissiveRgb.b));
+        float3 gradation = g_EmissiveGradationTexture.Sample(DefaultSampler, float2(saturate(emissiveMask), 0.5f)).rgb;
+        result *= gradation;
+    }
+
+    return result;
+}
+
+float ApplyOpacityPipeline(float2 uv)
+{
+    float maskValue = 1.f;
+
+    if (g_HasOpacityTexture != 0)
+    {
+        maskValue = g_OpacityTexture.Sample(DefaultSampler, uv).r;
+    }
+
+    if (g_HasOpacitySubUvTexture != 0)
+    {
+        float subMaskValue = g_OpacitySubUvTexture.Sample(DefaultSampler, uv).r;
+        maskValue = saturate(maskValue * subMaskValue);
+    }
+
+    if (g_HasOpacityGradationTexture != 0)
+    {
+        float gradMask = g_OpacityGradationTexture.Sample(
+            DefaultSampler, float2(saturate(maskValue), 0.5f)).r;
+
+        maskValue = gradMask;
+    }
+
+    return saturate(maskValue);
+}
+
+
+
+float ResolveFresnel(float3 worldNormal, float3 worldPos)
+{
+    float fresnel = 1.0f;
+
+    if (g_FresnelPower > 0.f)
+    {
+        float3 viewDir = normalize(g_CamPosition.xyz - worldPos);
+        float ndotv = saturate(dot(normalize(worldNormal), viewDir));
+        fresnel = pow(1.0f - ndotv, g_FresnelPower) * g_FresnelMultiplier;
+    }
+
+    return fresnel;
+}
+
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
+
     if (g_ForceVisiblePreview != 0)
     {
         Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
         return Out;
     }
 
-    /* 1. UV 스크롤 적용 — uvScrollSpeed * time이 g_UVOffset으로 들어온다 */
-    float2 scrolledUV = In.vTexcoord * g_UVTiling + g_UVOffset;
+    float2 scrolledUV = BuildFinalUV(In.vTexcoord);
 
-    /* 2. Diffuse(Emissive) 텍스처 샘플링 */
     float4 emissive = g_EmissiveTexture.Sample(DefaultSampler, scrolledUV);
+    emissive.rgb = ApplyEmissiveGradation(emissive.rgb);
 
-    /* 3. 마스크 텍스처 샘플링 — R 채널을 알파로 사용 */
-    float maskValue = g_OpacityTexture.Sample(DefaultSampler, scrolledUV).r;
+    float maskValue = ApplyOpacityPipeline(scrolledUV);
+    float fresnel = ResolveFresnel(In.vNormal, In.vWorldPos);
 
-    /* 4. 프레넬 (가장자리 투명/발광 효과) */
-    float fresnel = 1.0f;
-    if (g_FresnelPower > 0.f)
-    {
-        float3 viewDir = normalize(g_CamPosition.xyz - In.vWorldPos);
-        float ndotv = saturate(dot(normalize(In.vNormal), viewDir));
-        fresnel = pow(1.0f - ndotv, g_FresnelPower) * g_FresnelMultiplier;
-    }
+    float finalAlpha = saturate(maskValue * g_Opacity * fresnel * g_ColorTint.a);
+
+    if (finalAlpha < 0.01f)
+        discard;
 
     Out.vColor.rgb = emissive.rgb * g_ColorTint.rgb;
-    Out.vColor.a   = maskValue * g_Opacity * fresnel * g_ColorTint.a;
-
-    if (Out.vColor.a < 0.01f)
-        discard;
+    Out.vColor.a = finalAlpha;
 
     return Out;
 }
+
 
 PS_OUT PS_MAIN_NO_MASK(PS_IN In)
 {
     PS_OUT Out;
+
     if (g_ForceVisiblePreview != 0)
     {
         Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
         return Out;
     }
 
-    float2 scrolledUV = In.vTexcoord * g_UVTiling + g_UVOffset;
+    float2 scrolledUV = BuildFinalUV(In.vTexcoord);
+
     float4 emissive = g_EmissiveTexture.Sample(DefaultSampler, scrolledUV);
+    emissive.rgb = ApplyEmissiveGradation(emissive.rgb);
 
-    float fresnel = 1.0f;
-    if (g_FresnelPower > 0.f)
-    {
-        float3 viewDir = normalize(g_CamPosition.xyz - In.vWorldPos);
-        float ndotv = saturate(dot(normalize(In.vNormal), viewDir));
-        fresnel = pow(1.0f - ndotv, g_FresnelPower) * g_FresnelMultiplier;
-    }
-
+    float fresnel = ResolveFresnel(In.vNormal, In.vWorldPos);
     float emissiveAlpha = max(emissive.a, max(emissive.r, max(emissive.g, emissive.b)));
+    float finalAlpha = saturate(emissiveAlpha * g_Opacity * fresnel * g_ColorTint.a);
+
+    if (finalAlpha < 0.01f)
+        discard;
 
     Out.vColor.rgb = emissive.rgb * g_ColorTint.rgb;
-    Out.vColor.a   = emissiveAlpha * g_Opacity * fresnel * g_ColorTint.a;
-
-    // 왜안나오냐고 지금
-    //if (Out.vColor.a < 0.01f)
-    //    discard;
-
+    Out.vColor.a = finalAlpha;
     return Out;
 }
+
 
 technique11 DefaultTechnique
 {

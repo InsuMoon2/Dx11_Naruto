@@ -1,0 +1,271 @@
+{
+    "autoPlay": true,
+    "effectName": "BillboardTest",
+    "layers": [
+        {
+            "blendMode": 1,
+            "colorTint": [
+                0.616487443447113,
+                0.8571228384971619,
+                1.0,
+                1.0
+            ],
+            "diffuseTextureGuid": "",
+            "duration": -1.0,
+            "emissiveGradationTextureGuid": "",
+            "emissiveTextureGuid": "7ce30b35-f544-4049-b51d-f5e6a99e9d07",
+            "enabled": false,
+            "endScale": [
+                1.600000023841858,
+                1.600000023841858,
+                1.5
+            ],
+            "fresnelMultiplier": 0.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "Shuriken_WaveDisc",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                90.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "loop": true,
+            "maskTextureGuid": "",
+            "modelGuid": "55597f5d-b2a9-4009-861e-b6cef0b90b49",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "7ce30b35-f544-4049-b51d-f5e6a99e9d07",
+            "rotationAxis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "rotationSpeed": 50.0,
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useOpacityAsTransparency": false,
+            "useScaleOverTime": true,
+            "uvDistortionSpeed": [
+                -9.350000381469727,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                0.44999998807907104,
+                0.44999998807907104
+            ]
+        },
+        {
+            "blendMode": 1,
+            "colorTint": [
+                0.4313725531101227,
+                0.7843137383460999,
+                0.8823529481887817,
+                1.0
+            ],
+            "diffuseTextureGuid": "",
+            "duration": -1.0,
+            "emissiveGradationTextureGuid": "",
+            "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "enabled": true,
+            "endScale": [
+                2.0,
+                2.0,
+                2.0
+            ],
+            "fresnelMultiplier": 0.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "Shuriken_WindFlow",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                90.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "40102866-52f0-497a-a228-90a68713405c",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "c9c78959-c96c-4d4c-a26e-f0f8720f4199",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "10af665e-bc83-46e8-94e9-2f656d67ffa7",
+            "rotationAxis": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotationSpeed": 600.0,
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useOpacityAsTransparency": false,
+            "useScaleOverTime": true,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                2.299999952316284,
+                2.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "blendMode": 1,
+            "colorTint": [
+                0.36200714111328125,
+                0.9519791007041931,
+                1.0,
+                0.7098039388656616
+            ],
+            "diffuseTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "duration": -1.0,
+            "emissiveGradationTextureGuid": "",
+            "emissiveTextureGuid": "",
+            "enabled": true,
+            "endScale": [
+                2.0,
+                2.0,
+                0.15000000596046448
+            ],
+            "fresnelMultiplier": 2.0999999046325684,
+            "fresnelPower": 0.30000001192092896,
+            "kind": 1,
+            "layerName": "Shuriken_Body",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                90.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "49ff0814-0088-4b5d-9d70-50e10a3c1ca2",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "",
+            "rotationAxis": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotationSpeed": 600.0,
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useOpacityAsTransparency": false,
+            "useScaleOverTime": true,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "baseOpacity": 1.0,
+            "baseTextureGuid": "e6edb6f1-819e-43df-a4db-fec8d888c45c",
+            "baseTint": [
+                0.2675197124481201,
+                0.9171198010444641,
+                0.9820788502693176,
+                1.0
+            ],
+            "billboardToCamera": true,
+            "blendMode": 2,
+            "duration": -1.0,
+            "enabled": true,
+            "endScale": [
+                0.6000000238418579,
+                0.6000000238418579,
+                0.6000000238418579
+            ],
+            "kind": 2,
+            "layerName": "Core",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                0.20000000298023224,
+                0.20000000298023224,
+                0.20000000298023224
+            ],
+            "loop": true,
+            "ringOpacity": 0.6520000100135803,
+            "ringTextureGuid": "e6edb6f1-819e-43df-a4db-fec8d888c45c",
+            "ringTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "startDelay": 0.0,
+            "useRing": true,
+            "useScaleOverTime": true
+        }
+    ],
+    "totalDuration": -1.0
+}

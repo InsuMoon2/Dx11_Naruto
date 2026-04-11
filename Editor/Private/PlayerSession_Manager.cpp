@@ -262,6 +262,9 @@ void PlayerSession_Manager::Save_SceneSnapshot()
                 objType == Protocol::OBJECT_TYPE_PLAYER)
                 continue;
 
+            if (obj->Should_ExcludeFromEditorSnapshot())
+                continue;
+
             json j = obj->To_Json();
             j["layerTag"] = Utils::ToString(layerTag);
 
@@ -510,6 +513,9 @@ void PlayerSession_Manager::Restore_SceneSnapshot()
             gameObject = GAME->Clone_GameObject(0, objType, nullptr);
 
         if (!gameObject)
+            continue;
+
+        if (gameObject->Should_ExcludeFromEditorSnapshot())
             continue;
 
         gameObject->From_Json(objJson);

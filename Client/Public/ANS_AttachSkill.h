@@ -23,8 +23,10 @@ private:
     Protocol::OBJECT_TYPE _spawnObjectType = Protocol::OBJECT_TYPE_SKILL_RASENSHURIKEN;
 
     string _boneName = "R_Hand_Weapon_cnt_tr"; // 에디터에서 세팅 가능
-
     Collision_Preset _collisionPreset = Collision_Preset::Projectile;
+
+    Vec3 _localOffset = Vec3::Zero;
+    Vec3 _localRotation = Vec3::Zero;
 };
 
 NS_END

@@ -1,0 +1,4 @@
+Diffuse=DefaultTexture
+Emissive=T_EFF_Noise_06_BC
+Other[0]=T_EFF_GMT_Fireball_03_BC
+Other[1]=T_EFF_Gradation_09_M

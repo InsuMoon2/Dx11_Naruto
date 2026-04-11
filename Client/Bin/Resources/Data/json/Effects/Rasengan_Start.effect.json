@@ -10,9 +10,10 @@
                 0.0,
                 1.0
             ],
-            "diffuseTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "diffuseTextureGuid": "6f67b946-6275-4daf-95e5-a3b7c0005768",
             "duration": 1.2000000476837158,
-            "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "emissiveTextureGuid": "6f67b946-6275-4daf-95e5-a3b7c0005768",
+            "emissiveGradationTextureGuid": "dbb4855b-4fa9-40a5-9647-555241ffcbf4",
             "enabled": true,
             "endScale": [
                 10.0,
@@ -42,6 +43,8 @@
             "maskTextureGuid": "",
             "modelGuid": "46850340-344d-432d-86c0-58ccf6de8c37",
             "opacity": 1.0,
+            "opacityGradationTextureGuid": "e225aa07-cc30-45cc-b91e-4d7f0cb95700",
+            "opacitySubUvTextureGuid": "",
             "opacityTextureGuid": "6f67b946-6275-4daf-95e5-a3b7c0005768",
             "rotationAxis": [
                 1.0,
@@ -51,6 +54,15 @@
             "rotationSpeed": 260.0,
             "startDelay": 0.0,
             "twoSided": true,
+            "uvDistortionSpeed": [
+                1.0,
+                1.2999999523162842
+            ],
+            "uvDistortionStrength": [
+                0.05000000074505806,
+                0.019999999552965164
+            ],
+            "uvDistortionTextureGuid": "966ebd63-c1d7-4b02-9f34-6fcc3539911e",
             "useScaleOverTime": true,
             "uvScrollSpeed": [
                 0.0,

@@ -2,6 +2,7 @@
 #include "AttachedEffectObject.h"
 #include "GameObject_Factory.h"
 #include "EffectComponent.h"
+#include "Model.h"
 
 REGISTER_GAMEOBJECT(AttachedEffectObject, Protocol::OBJECT_TYPE_ATTACHED_EFFECT)
 
@@ -52,12 +53,45 @@ void AttachedEffectObject::Update(float timeDelta)
     GameObject::Update(timeDelta);
 
     if (_effectCom)
+    {
         _effectCom->Update(timeDelta);
+
+        if (_autoDestroyOnFinish && !_effectCom->Is_Playing())
+        {
+            Set_Destroy(true);
+            return;
+        }
+    }
+        
 }
 
 void AttachedEffectObject::Late_Update(float timeDelta)
 {
     GameObject::Late_Update(timeDelta);
+
+    // 뼈대 추적
+    if (_isTrackingBone)
+    {
+        auto model = _targetModel;
+        auto transform = _targetTransform.lock();
+
+        if (model && transform)
+        {
+            const Matrix* boneMatrix = model->Get_SocketBoneMatrixPtr(_targetBoneName);
+            if (boneMatrix)
+            {
+                Matrix boneWorldMatrix = (*boneMatrix) * transform->Get_WorldMatrix();
+
+                Sync_AttachedTransform(boneWorldMatrix, _targetLocalOffset, _targetLocalRotation, _targetLocalScale);
+            }
+        }
+        else
+        {
+            // 타겟이 파괴되면, 이펙트도 파괴
+            Set_Destroy(true);
+        }
+    }
+
 
     if (_effectCom)
         _effectCom->Late_Update(timeDelta);
@@ -90,10 +124,7 @@ void AttachedEffectObject::Sync_AttachedTransform(
 
     const Quat finalRotation = socketRotation * localRotationQuat;
 
-    const Vec3 finalScale(
-        socketScale.x * localScale.x,
-        socketScale.y * localScale.y,
-        socketScale.z * localScale.z);
+    const Vec3 finalScale = localScale;
 
     _transformCom->Set_WorldPosition(socketPosition + rotatedOffset);
     _transformCom->Set_WorldRotation(finalRotation);
@@ -106,6 +137,19 @@ void AttachedEffectObject::Stop_AttachedEffect()
         _effectCom->Stop_Effect();
 
     Set_Destroy(true);
+}
+
+void AttachedEffectObject::Attach_To_Bone(Model* targetModel, Weak<Transform> targetTransform,
+    const string& boneName, const Vec3& localOffset, const Vec3& localRotation, const Vec3& localScale)
+{
+    _targetModel = targetModel;
+    _targetTransform = targetTransform;
+    _targetBoneName = boneName;
+    _targetLocalOffset = localOffset;
+    _targetLocalRotation = localRotation;
+    _targetLocalScale = localScale;
+
+    _isTrackingBone = true;
 }
 
 HRESULT AttachedEffectObject::Ready_Components()

@@ -283,48 +283,109 @@ void Editor_Manager::Begin_DockSpace()
         float windowWidth = ImGui::GetWindowWidth();
         ImGui::SetCursorPosX((windowWidth / 2.f) - 150.f); // 왼쪽으로 이동
 
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 4));
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 4));
 
-        if (GAME->Get_GameState() == EGameState::Edit)
+        const EGameState gameState = GAME->Get_GameState();
+
+        if (gameState == EGameState::Edit)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
 
             if (ImGui::Button(ICON_FA_PLAY "##Play"))
             {
                 ImGui::SetWindowFocus("Game");
-
                 EDITOR->Play();
+            }
+
+            ImGui::PopStyleColor();
+
+            ImGui::SameLine();
+
+            ImGui::BeginDisabled();
+            ImGui::Button(ICON_FA_PAUSE "##PauseDisabled");
+            ImGui::EndDisabled();
+
+            ImGui::SameLine();
+
+            ImGui::BeginDisabled();
+            ImGui::Button(ICON_FA_STOP "##StopDisabled");
+            ImGui::EndDisabled();
+        }
+        else if (gameState == EGameState::Play)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.85f, 0.75f, 0.15f, 1.0f));
+
+            if (ImGui::Button(ICON_FA_PAUSE "##Pause"))
+            {
+                EDITOR->Pause();
+            }
+
+            ImGui::PopStyleColor();
+
+            ImGui::SameLine();
+
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.7f, 0.2f, 0.2f, 1.0f));
+
+            if (ImGui::Button(ICON_FA_STOP "##Stop"))
+            {
+                ImGui::SetWindowFocus("Scene");
+                EDITOR->Stop();
+            }
+
+            ImGui::PopStyleColor();
+
+            ImGui::SameLine();
+
+            ImGui::BeginDisabled();
+            ImGui::Button(ICON_FA_PLAY "##PlayDisabledWhileRunning");
+            ImGui::EndDisabled();
+        }
+        else if (gameState == EGameState::Pause)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+
+            if (ImGui::Button(ICON_FA_PLAY "##Resume"))
+            {
+                ImGui::SetWindowFocus("Game");
+                EDITOR->Resume();
+            }
+
+            ImGui::PopStyleColor();
+
+            ImGui::SameLine();
+
+            ImGui::BeginDisabled();
+            ImGui::Button(ICON_FA_PAUSE "##PauseDisabledWhilePaused");
+            ImGui::EndDisabled();
+
+            ImGui::SameLine();
+
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.7f, 0.2f, 0.2f, 1.0f));
+
+            if (ImGui::Button(ICON_FA_STOP "##StopWhilePaused"))
+            {
+                ImGui::SetWindowFocus("Scene");
+                EDITOR->Stop();
             }
 
             ImGui::PopStyleColor();
         }
         else
         {
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.7f, 0.2f, 0.2f, 1.0f));
-
-            if (ImGui::Button(ICON_FA_STOP "##Stop"))
-            {
-                ImGui::SetWindowFocus("Scene");
-
-                EDITOR->Stop();
-            }
-
-
-            ImGui::PopStyleColor();
+            ImGui::BeginDisabled();
+            ImGui::Button(ICON_FA_PLAY "##PlayDisabledUnknown");
+            ImGui::SameLine();
+            ImGui::Button(ICON_FA_PAUSE "##PauseDisabledUnknown");
+            ImGui::SameLine();
+            ImGui::Button(ICON_FA_STOP "##StopDisabledUnknown");
+            ImGui::EndDisabled();
         }
 
         ImGui::SameLine();
 
-        // Pause
-        if (ImGui::Button(ICON_FA_PAUSE "##Pause"))
-            EDITOR->Pause();
-
-        ImGui::SameLine();
-
-        // Next Frame
         if (ImGui::Button(ICON_FA_FORWARD_STEP "##NextFrame"))
         {
-            // TODO: 한 프레임만 진행
+            // TODO: Pause 상태에서 한 프레임만 진행
         }
 
         ImGui::SameLine();

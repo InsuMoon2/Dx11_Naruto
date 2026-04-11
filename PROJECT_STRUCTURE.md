@@ -1,7 +1,7 @@
 # Dx11_Naruto 프로젝트 구조
 
 > AI 어시스턴트는 매 대화 시작 시 이 파일을 먼저 읽고 현재 구조를 기준으로 판단할 것.
-> 마지막 갱신: 2026-03-28
+> 마지막 갱신: 2026-04-11
 
 ## 문서 보강 규칙
 
@@ -558,6 +558,7 @@ Client/Bin/Resources/
 - Server/Protobuf는 배포본이 커서, 구조 문서를 읽을 때는 `Protocol` 원본 폴더를 우선 기준으로 삼는 편이 좋다.
 - 카메라 시네마틱 시스템(`Camera_Cinematic` + `CameraTrack_Player` + `CameraTrack_Serializer`)과 에디터 `Cinematic_View`가 시네마틱 편집을 지원한다.
 - 스킬은 데이터 드리븐 방식으로 `DT_SkillData.json` → `SkillDataManager` → `SkillComponent` → `AnimationStateComponent` → `PlayerState_Skill` 흐름으로 작동한다.
+- **[추가: 이펙트/노티파이 관례]** 나선환과 같은 무한 루프 애니메이션 재생 시 노티파이(`ANS`)의 중복 호출/스폰을 방지하기 위해, 향후 핵심 스킬 이펙트의 생성 및 생명주기 관리는 `AnimNotify`에 의존하기보다 `PlayerState_Skill`(FSM)의 `Enter`/`Exit` 단에서 자체 관리 및 파괴하도록 구조를 분리/발전시키는 방향을 갖는다.
 - `Weapon`은 `PartObject` 기반으로 캐릭터 본(소켓)에 부착된다.
 - `Player_CustomPart`와 `Customizer_Manager`는 캐릭터 파츠 교체 시스템의 핵심이다.
 

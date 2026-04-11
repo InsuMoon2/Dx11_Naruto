@@ -1,5 +1,7 @@
 #include "Engine_Shader_Defines.hlsli"
 
+// 이름은 빌보드이긴한데, 나선환 전용이네
+
 Texture2D g_BaseTexture;
 Texture2D g_RingTexture;
 
@@ -31,6 +33,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
     Out.vPosition = worldPos;
     Out.vTexcoord = In.vTexcoord;
+
     return Out;
 };
 

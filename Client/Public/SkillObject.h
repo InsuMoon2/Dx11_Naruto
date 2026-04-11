@@ -47,6 +47,7 @@ public:
     void    Priority_Update(float timeDelta) override;
     void    Update(float timeDelta) override;
     void    Late_Update(float timeDelta) override;
+    bool    Should_ExcludeFromEditorSnapshot() const override { return true; }
 
     virtual void Sync_AttachedTransform(const Matrix& boneWorldMatrix);
 

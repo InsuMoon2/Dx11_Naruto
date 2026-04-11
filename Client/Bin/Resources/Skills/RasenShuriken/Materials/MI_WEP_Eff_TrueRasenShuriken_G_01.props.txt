@@ -1,0 +1,130 @@
+Parent = Material3'/Game/Effects/BaseMaterials/Materials/M_EFF_GradationMap.M_EFF_GradationMap'
+ScalarParameterValues[8] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1
+        ParameterName = 11_Opacity_Value
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1
+        ParameterName = 21_OpacityMask_Power
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1
+        ParameterName = 22_OpacityMask_Multi
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = 23_OpacityMask_Contrast
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 50
+        ParameterName = 01_OpacityDepthFade_Distance
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = 04_OpacityDepthFade_Value
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 1
+        ParameterName = 02_Emissive_Value
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = 0
+        ParameterName = RefractionDepthBias
+    }
+}
+TextureParameterValues[4] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/Noise/T_EFF_Noise_Line_04_BC.T_EFF_Noise_Line_04_BC'
+        ParameterName = 05_OpacityMap
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/GradationMap/T_EFF_GMO_02_M.T_EFF_GMO_02_M'
+        ParameterName = 35_OpacityMap_GradationMap
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/Gradient/T_EFF_Gradation_10_M.T_EFF_Gradation_10_M'
+        ParameterName = 05_OpacityMask_Map
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = Texture2D'/Game/Effects/Textures/GradationMap/T_EFF_GMT_Wind_01_BC.T_EFF_GMT_Wind_01_BC'
+        ParameterName = 35_EmissiveMap_GradationMap
+    }
+}
+VectorParameterValues[4] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=1, G=1, B=-2.3, A=2.5 }
+        ParameterName = 20_OpacityAnimation_A
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=1, G=1, B=-2, A=1.5 }
+        ParameterName = 30_OpacityAnimation_B
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=0.85, G=0.85, B=0.85, A=1 }
+        ParameterName = 05_Emissive_BaseColor
+    }
+    VectorParameterValues[3] =
+    {
+        ParameterInfo = { Name=None }
+        ParameterValue = { R=0.67, G=0.67, B=0.67, A=1 }
+        ParameterName = 01_EmissiveFresnel_Color
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = true
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

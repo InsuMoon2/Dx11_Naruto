@@ -1,0 +1,7 @@
+Diffuse=DefaultTexture
+Opacity=T_EFF_Fire_05_M
+Emissive=T_EFF_Fire_05_BC
+Other[0]=T_EFF_GMO_04_M
+Other[1]=T_EFF_Noise_16_M
+Other[2]=T_EFF_GMT_Fireball_02_BC
+Other[3]=T_EFF_Fire_06_M

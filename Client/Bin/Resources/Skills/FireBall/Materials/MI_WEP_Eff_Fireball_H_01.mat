@@ -1,0 +1,10 @@
+Diffuse=DefaultTexture
+Opacity=T_EFF_Sand_01_M
+Emissive=T_EFF_Sand_01_M
+Other[0]=T_EFF_GMO_02_M
+Other[1]=T_EFF_Default_02_M
+Other[2]=T_EFF_GMT_Fireball_01_BC
+Other[3]=T_EFF_Noise_10_M
+Other[4]=T_EFF_Sphere_03_M
+Other[5]=T_EFF_GMT__Default_01_BC
+Other[6]=T_EFF_Default_05_M

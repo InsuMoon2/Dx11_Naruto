@@ -74,12 +74,18 @@ struct FEffectMeshLayerDesc
     string maskTextureGuid;
     string emissiveTextureGuid;
     string opacityTextureGuid;
+    string opacitySubUvTextureGuid;
+    string opacityGradationTextureGuid;
+    string emissiveGradationTextureGuid;
+    string uvDistortionTextureGuid;
 
     EEffectBlendMode blendMode = EEffectBlendMode::Translucent; 
 
     /* --- UV 스크롤 --- */
     Vec2 uvScrollSpeed = Vec2(0.f, 0.f);       // 초당 UV 이동 속도 (u, v). 소용돌이 회전의 핵심
     Vec2 uvTiling = Vec2(1.f, 1.f);            // UV 타일링 반복 횟수
+    Vec2 uvDistortionStrength = Vec2(0.f, 0.f);
+    Vec2 uvDistortionSpeed = Vec2(0.f, 0.f);
 
     Vec4 colorTint = Vec4(1.f, 1.f, 1.f, 1.f); 
     float opacity = 1.f;                       
@@ -92,6 +98,7 @@ struct FEffectMeshLayerDesc
     float fresnelMultiplier = 1.f;             
 
     bool twoSided = false;                     // CullNone 적용 여부
+    bool useOpacityAsTransparency = false;     // Additive 메쉬라도 opacity를 일반 알파 투명도처럼 처리하고 싶을 때 켜는 옵션이다.
 };
 
 struct FEffectBillboardLayerDesc

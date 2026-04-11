@@ -76,6 +76,167 @@
             "Count": 1,
             "ModelType": "StaticMesh",
             "Level": "Static"
+        },
+        {
+            "Id": "RasenShuriken_01",
+            "Path": "../../Client/Bin/Resources/Skills/RasenShuriken/Meshes/SM_WEP_Eff_TrueRasenShuriken_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "RasenShuriken_02",
+            "Path": "../../Client/Bin/Resources/Skills/RasenShuriken/Meshes/SM_WEP_Eff_TrueRasenShuriken_02.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "RasenShuriken_03",
+            "Path": "../../Client/Bin/Resources/Skills/RasenShuriken/Meshes/SM_WEP_Eff_TrueRasenShuriken_03.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "RasenShuriken_04",
+            "Path": "../../Client/Bin/Resources/Skills/RasenShuriken/Meshes/SM_WEP_Eff_TrueRasenShuriken_04.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Chidori",
+            "Path": "../../Client/Bin/Resources/Skills/Chidori/Meshes/Chidori.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "FireBall_A",
+            "Path": "../../Client/Bin/Resources/Skills/FireBall/Meshes/FireBall_A.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "FireBall_B",
+            "Path": "../../Client/Bin/Resources/Skills/FireBall/Meshes/FireBall_B.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "FireBall_D",
+            "Path": "../../Client/Bin/Resources/Skills/FireBall/Meshes/FireBall_D.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Circle_01",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Circle_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Circle_02",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Circle_02.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Claw_A",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Claw_A_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Ring_01",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Ring_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Ring_02",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Ring_02.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Ring_05",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Ring_05.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Ring_06",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Ring_06.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Ring_07",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Ring_07.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Ring_08",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Ring_08.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Smoke_02",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Smoke_02.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Sphere_02",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Sphere_02.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Sphere_A_01",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Sphere_A_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Smoke_01",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Smoke/Smoke_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "SmokeRing_01",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Smoke/SmokeRing_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Stone_E_1",
+            "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Stone/Stone_E_1.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
         }
     ]
 }

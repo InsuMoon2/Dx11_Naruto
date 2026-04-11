@@ -35,6 +35,7 @@ public:
     virtual void        From_Json(const json& data);
 
     virtual HRESULT     Bind_ShaderResources();
+    virtual bool        Should_ExcludeFromEditorSnapshot() const { return false; }
 
 public: /* PendingKill */
     void Set_Destroy(bool flag) { _isDestroyed = flag; }

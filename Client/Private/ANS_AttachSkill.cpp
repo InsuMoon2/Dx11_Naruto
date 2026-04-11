@@ -19,6 +19,9 @@ bool ANS_AttachSkill::Register_Properties()
     PROPERTY_ENUM_JSON("스킬 타입", "spawn_type", _spawnObjectType, Protocol::OBJECT_TYPE);
     PROPERTY_ENUM_JSON("충돌 프리셋", "collision_preset", _collisionPreset, Collision_Preset);
 
+    PROPERTY_VEC3_JSON("부착 위치 오프셋", "local_offset", _localOffset, 0.1f);
+    PROPERTY_VEC3_JSON("부착 회전 각도(Pitch,Yaw,Roll)", "local_rotation", _localRotation, 0.1f);
+
     return true;
 }
 
@@ -73,7 +76,13 @@ void ANS_AttachSkill::On_Tick(const FAnimNotifyContext& context)
     const Matrix* boneMatrix = context.model->Get_SocketBoneMatrixPtr(_boneName);
     if (!boneMatrix) return;
 
-    Matrix boneWorld = (*boneMatrix) * context.owner->Get_Transform()->Get_WorldMatrix();
+    Matrix offsetRot = Matrix::CreateRotationX(XMConvertToRadians(_localRotation.x)) *
+                   Matrix::CreateRotationY(XMConvertToRadians(_localRotation.y)) *
+                   Matrix::CreateRotationZ(XMConvertToRadians(_localRotation.z));
+
+    Matrix offsetTrans = Matrix::CreateTranslation(_localOffset);
+    Matrix boneWorld = offsetRot * offsetTrans * (*boneMatrix) * context.owner->Get_Transform()->Get_WorldMatrix();
+
     skill->Sync_AttachedTransform(boneWorld);
 }
 

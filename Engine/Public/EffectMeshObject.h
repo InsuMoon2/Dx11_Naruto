@@ -29,6 +29,7 @@ public:
     virtual void    Update(float timeDelta) override;
     virtual void    Late_Update(float timeDelta) override;
     virtual HRESULT Render() override;
+    virtual bool    Should_ExcludeFromEditorSnapshot() const override { return true; }
 
     virtual HRESULT Bind_ShaderResources() override;
 
@@ -59,6 +60,10 @@ private:
     Shared<Texture> _maskTexture;
     Shared<Texture> _emissiveTexture;
     Shared<Texture> _opacityTexture;
+    Shared<Texture> _opacitySubUvTexture;
+    Shared<Texture> _opacityGradationTexture;
+    Shared<Texture> _emissiveGradationTexture;
+    Shared<Texture> _uvDistortionTexture;
 
     FEffectLayerDesc _layerDesc;
 

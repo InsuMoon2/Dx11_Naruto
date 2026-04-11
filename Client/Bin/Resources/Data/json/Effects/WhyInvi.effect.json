@@ -1,0 +1,78 @@
+{
+    "autoPlay": true,
+    "effectName": "NewEffect",
+    "layers": [
+        {
+            "blendMode": 2,
+            "colorTint": [
+                0.5167841911315918,
+                0.5698924660682678,
+                0.5681793093681335,
+                1.0
+            ],
+            "diffuseTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "duration": 0.8500000238418579,
+            "emissiveGradationTextureGuid": "",
+            "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "enabled": true,
+            "endScale": [
+                2.0,
+                2.0,
+                2.0
+            ],
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "Rasengan_Start",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                90.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                100.0,
+                100.0,
+                100.0
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "46850340-344d-432d-86c0-58ccf6de8c37",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "6f67b946-6275-4daf-95e5-a3b7c0005768",
+            "rotationAxis": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "rotationSpeed": 80.0,
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useScaleOverTime": true,
+            "uvDistortionSpeed": [
+                1.0,
+                1.2999999523162842
+            ],
+            "uvDistortionStrength": [
+                0.05000000074505806,
+                0.019999999552965164
+            ],
+            "uvDistortionTextureGuid": "966ebd63-c1d7-4b02-9f34-6fcc3539911e",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "totalDuration": -1.0
+}

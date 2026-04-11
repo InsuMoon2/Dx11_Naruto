@@ -244,7 +244,7 @@
     <ClInclude Include="..\Public\AN_LaunchSkill.h" />
     <ClInclude Include="..\Public\AN_PlayCinematic.h" />
     <ClInclude Include="..\Public\AN_SpawnAttack.h" />
-    <ClInclude Include="..\Public\ANS_SpawnParticle.h" />
+    <ClInclude Include="..\Public\AN_SpawnParticle.h" />
     <ClInclude Include="..\Public\AN_SpawnSkill.h" />
     <ClInclude Include="..\Public\AN_Test.h" />
     <ClInclude Include="..\Public\AttachedEffectObject.h" />
@@ -315,6 +315,7 @@
     <ClInclude Include="..\Public\Skill_FireBall.h" />
     <ClInclude Include="..\Public\Skill_Rasengan.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
+    <ClInclude Include="..\Public\Skill_RasenShuriken_Hit.h" />
     <ClInclude Include="..\Public\SmearEffect_Component.h" />
     <ClInclude Include="..\Public\Spawn_Helper.h" />
     <ClInclude Include="..\Public\Player.h" />
@@ -380,7 +381,7 @@
     <ClCompile Include="..\Private\AN_LaunchSkill.cpp" />
     <ClCompile Include="..\Private\AN_PlayCinematic.cpp" />
     <ClCompile Include="..\Private\AN_SpawnAttack.cpp" />
-    <ClCompile Include="..\Private\ANS_SpawnParticle.cpp" />
+    <ClCompile Include="..\Private\AN_SpawnParticle.cpp" />
     <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
     <ClCompile Include="..\Private\AN_Test.cpp" />
     <ClCompile Include="..\Private\AttachedEffectObject.cpp" />
@@ -444,6 +445,7 @@
     <ClCompile Include="..\Private\Skill_FireBall.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
+    <ClCompile Include="..\Private\Skill_RasenShuriken_Hit.cpp" />
     <ClCompile Include="..\Private\SmearEffect_Component.cpp" />
     <ClCompile Include="..\Private\Spawn_Helper.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />

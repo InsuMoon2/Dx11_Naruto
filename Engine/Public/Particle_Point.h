@@ -46,6 +46,7 @@ public:
     void    Update(float timeDelta) override;
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
+    bool    Should_ExcludeFromEditorSnapshot() const override { return true; }
     HRESULT Bind_ShaderResources() override;
 
 private:

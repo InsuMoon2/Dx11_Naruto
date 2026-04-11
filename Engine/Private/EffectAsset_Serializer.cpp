@@ -122,10 +122,16 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["maskTextureGuid"] = mesh.maskTextureGuid;
         j["emissiveTextureGuid"] = mesh.emissiveTextureGuid;
         j["opacityTextureGuid"] = mesh.opacityTextureGuid;
+        j["opacitySubUvTextureGuid"] = mesh.opacitySubUvTextureGuid;
+        j["opacityGradationTextureGuid"] = mesh.opacityGradationTextureGuid;
+        j["emissiveGradationTextureGuid"] = mesh.emissiveGradationTextureGuid;
+        j["uvDistortionTextureGuid"] = mesh.uvDistortionTextureGuid;
         j["blendMode"] = (int)mesh.blendMode;
 
         j["uvScrollSpeed"] = { mesh.uvScrollSpeed.x, mesh.uvScrollSpeed.y };
         j["uvTiling"] = { mesh.uvTiling.x, mesh.uvTiling.y };
+        j["uvDistortionStrength"] = { mesh.uvDistortionStrength.x, mesh.uvDistortionStrength.y };
+        j["uvDistortionSpeed"] = { mesh.uvDistortionSpeed.x, mesh.uvDistortionSpeed.y };
         j["colorTint"] = { mesh.colorTint.x, mesh.colorTint.y, mesh.colorTint.z, mesh.colorTint.w };
 
         j["opacity"] = mesh.opacity;
@@ -134,6 +140,7 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["fresnelPower"] = mesh.fresnelPower;
         j["fresnelMultiplier"] = mesh.fresnelMultiplier;
         j["twoSided"] = mesh.twoSided;
+        j["useOpacityAsTransparency"] = mesh.useOpacityAsTransparency;
     }
     else if (layerDesc.base.kind == EEffectLayerKind::Point)
     {
@@ -194,10 +201,16 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("maskTextureGuid")) mesh.maskTextureGuid = j["maskTextureGuid"];
         if (j.contains("emissiveTextureGuid")) mesh.emissiveTextureGuid = j["emissiveTextureGuid"];
         if (j.contains("opacityTextureGuid")) mesh.opacityTextureGuid = j["opacityTextureGuid"];
+        if (j.contains("opacitySubUvTextureGuid")) mesh.opacitySubUvTextureGuid = j["opacitySubUvTextureGuid"];
+        if (j.contains("opacityGradationTextureGuid")) mesh.opacityGradationTextureGuid = j["opacityGradationTextureGuid"];
+        if (j.contains("emissiveGradationTextureGuid")) mesh.emissiveGradationTextureGuid = j["emissiveGradationTextureGuid"];
+        if (j.contains("uvDistortionTextureGuid")) mesh.uvDistortionTextureGuid = j["uvDistortionTextureGuid"];
         if (j.contains("blendMode")) mesh.blendMode = (EEffectBlendMode)j["blendMode"].get<int>();
 
         if (j.contains("uvScrollSpeed")) mesh.uvScrollSpeed = Vec2(j["uvScrollSpeed"][0], j["uvScrollSpeed"][1]);
         if (j.contains("uvTiling")) mesh.uvTiling = Vec2(j["uvTiling"][0], j["uvTiling"][1]);
+        if (j.contains("uvDistortionStrength")) mesh.uvDistortionStrength = Vec2(j["uvDistortionStrength"][0], j["uvDistortionStrength"][1]);
+        if (j.contains("uvDistortionSpeed")) mesh.uvDistortionSpeed = Vec2(j["uvDistortionSpeed"][0], j["uvDistortionSpeed"][1]);
         if (j.contains("colorTint")) mesh.colorTint = Vec4(j["colorTint"][0], j["colorTint"][1], j["colorTint"][2], j["colorTint"][3]);
 
         if (j.contains("opacity")) mesh.opacity = j["opacity"];
@@ -206,6 +219,7 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("fresnelPower")) mesh.fresnelPower = j["fresnelPower"];
         if (j.contains("fresnelMultiplier")) mesh.fresnelMultiplier = j["fresnelMultiplier"];
         if (j.contains("twoSided")) mesh.twoSided = j["twoSided"];
+        if (j.contains("useOpacityAsTransparency")) mesh.useOpacityAsTransparency = j["useOpacityAsTransparency"];
     }
     else if (layer.base.kind == EEffectLayerKind::Point)
     {

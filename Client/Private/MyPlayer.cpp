@@ -301,7 +301,6 @@ HRESULT MyPlayer::Ready_HitboxColliders()
 
         if (!comp)
         {
-            LOG_ERROR("MyPlayer::Ready_HitboxColliders — Clone 실패 index={}", i);
             return E_FAIL;
         }
 
