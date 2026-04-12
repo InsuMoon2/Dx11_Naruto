@@ -48,7 +48,10 @@ void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
 
     if (frame.attackDown)
     {
-        state->Change_State(EPlayerState::Attack);
+        // 이미 근접하거나 타겟이 없으면 공격
+        if (!state->Try_MeleeApproach(EPlayerState::Attack))
+            state->Change_State(EPlayerState::Attack);
+
         return;
     }
 

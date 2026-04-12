@@ -1,0 +1,92 @@
+{
+    "boneCount": 14,
+    "bones": [
+        {
+            "depth": 0,
+            "index": 0,
+            "name": "RootNode",
+            "parentIndex": -1
+        },
+        {
+            "depth": 1,
+            "index": 1,
+            "name": "SK_CHR_Man_PajamaHat_01",
+            "parentIndex": 0
+        },
+        {
+            "depth": 2,
+            "index": 2,
+            "name": "CharacterRoot",
+            "parentIndex": 1
+        },
+        {
+            "depth": 3,
+            "index": 3,
+            "name": "Hips",
+            "parentIndex": 2
+        },
+        {
+            "depth": 4,
+            "index": 4,
+            "name": "Spine",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 5,
+            "name": "Spine1",
+            "parentIndex": 4
+        },
+        {
+            "depth": 6,
+            "index": 6,
+            "name": "Neck",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 7,
+            "name": "Head",
+            "parentIndex": 6
+        },
+        {
+            "depth": 8,
+            "index": 8,
+            "name": "face02",
+            "parentIndex": 7
+        },
+        {
+            "depth": 9,
+            "index": 9,
+            "name": "Ponytail01",
+            "parentIndex": 8
+        },
+        {
+            "depth": 10,
+            "index": 10,
+            "name": "transform1",
+            "parentIndex": 9
+        },
+        {
+            "depth": 11,
+            "index": 11,
+            "name": "Ponytail02",
+            "parentIndex": 10
+        },
+        {
+            "depth": 9,
+            "index": 12,
+            "name": "face01",
+            "parentIndex": 8
+        },
+        {
+            "depth": 1,
+            "index": 13,
+            "name": "SK_CHR_Man_PajamaHat_01.001",
+            "parentIndex": 0
+        }
+    ],
+    "guid": "ff376703-1e3e-4bff-ab2a-c79b9485687f",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

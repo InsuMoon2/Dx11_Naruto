@@ -22,24 +22,17 @@
             "Level": "Static"
         },
         {
-            "Id": "Model_Body_Upper_Armor1",
-            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Upper/Armor1.meshbin",
-            "Count": 1,
-            "ModelType": "SkeletalMesh",
-            "Level": "Static"
-        },
-        {
-            "Id": "Model_Body_Upper_Coat15",
-            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Upper/Coat15.meshbin",
-            "Count": 1,
-            "ModelType": "SkeletalMesh",
-            "Level": "Static"
-        },
-        {
             "Id": "Model_Face_Face1",
             "Path": "../../Client/Bin/Resources/Models/Custom/Face/Face1.meshbin",
             "Count": 1,
             "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_BigSword",
+            "Path": "../../Client/Bin/Resources/Models/Weapon/BigSword/BigSword.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
             "Level": "Static"
         },
         {
@@ -50,10 +43,73 @@
             "Level": "Static"
         },
         {
-            "Id": "Model_BigSword",
-            "Path": "../../Client/Bin/Resources/Models/Weapon/BigSword/BigSword.meshbin",
+            "Id": "Model_AllBack",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_AllBack_01.meshbin",
             "Count": 1,
             "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_ManHat_03",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_Hat_03.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_SnowHead",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_SnowHead.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_PajamaHat",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_PajamaHat.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Umbrella",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_Umbrella.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_OnePiece_Armor1",
+            "Path": "../../Client/Bin/Resources/Models/Custom/OnePiece/Armor1.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_OnePiece_Coat15",
+            "Path": "../../Client/Bin/Resources/Models/Custom/OnePiece/Coat15.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_OnePiece_Armor2",
+            "Path": "../../Client/Bin/Resources/Models/Custom/OnePiece/Armor2.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_OnePiece_Armor3",
+            "Path": "../../Client/Bin/Resources/Models/Custom/OnePiece/Armor3.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_OnePiece_Minato",
+            "Path": "../../Client/Bin/Resources/Models/Custom/OnePiece/Minato.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
             "Level": "Static"
         },
         {

@@ -18,10 +18,25 @@ EffectBillboardObject::EffectBillboardObject(const EffectBillboardObject& rhs)
     , _shaderCom(rhs._shaderCom)
     , _bufferCom(rhs._bufferCom)
     , _baseTextureCom(rhs._baseTextureCom)
+    , _baseMaskTextureCom(rhs._baseMaskTextureCom)
+    , _baseOpacityTextureCom(rhs._baseOpacityTextureCom)
+    , _baseOpacityGradationTextureCom(rhs._baseOpacityGradationTextureCom)
     , _ringTextureCom(rhs._ringTextureCom)
+    , _ringOpacityTextureCom(rhs._ringOpacityTextureCom)
+    , _ringOpacityGradationTextureCom(rhs._ringOpacityGradationTextureCom)
     , _layerDesc(rhs._layerDesc)
     , _resolvedBaseTextureGuid(rhs._resolvedBaseTextureGuid)
+    , _resolvedBaseMaskTextureGuid(rhs._resolvedBaseMaskTextureGuid)
+    , _resolvedBaseOpacityTextureGuid(rhs._resolvedBaseOpacityTextureGuid)
+    , _resolvedBaseOpacityGradationTextureGuid(rhs._resolvedBaseOpacityGradationTextureGuid)
     , _resolvedRingTextureGuid(rhs._resolvedRingTextureGuid)
+    , _resolvedRingOpacityTextureGuid(rhs._resolvedRingOpacityTextureGuid)
+    , _resolvedRingOpacityGradationTextureGuid(rhs._resolvedRingOpacityGradationTextureGuid)
+    , _useRuntimeBaseOpacityOverride(rhs._useRuntimeBaseOpacityOverride)
+    , _runtimeBaseOpacity(rhs._runtimeBaseOpacity)
+    , _useRuntimeRingOpacityOverride(rhs._useRuntimeRingOpacityOverride)
+    , _runtimeRingOpacity(rhs._runtimeRingOpacity)
+    , _elapsedTime(rhs._elapsedTime)
 {
 }
 
@@ -37,6 +52,7 @@ HRESULT EffectBillboardObject::Initialize(void* arg)
     CHECK_FAILED(GameObject::Initialize(desc), E_FAIL);
 
     _layerDesc = desc->layerDesc;
+    _elapsedTime = 0.f;
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_BILLBOARD, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
@@ -52,6 +68,18 @@ void EffectBillboardObject::Apply_LayerDesc(const FEffectLayerDesc& layerDesc)
     _layerDesc = layerDesc;
     Apply_BaseTransform(_layerDesc.base);
     Resolve_Textures();
+}
+
+void EffectBillboardObject::Set_RuntimeBaseOpacityOverride(float baseOpacity, bool enabled)
+{
+    _useRuntimeBaseOpacityOverride = enabled;
+    _runtimeBaseOpacity = baseOpacity;
+}
+
+void EffectBillboardObject::Set_RuntimeRingOpacityOverride(float ringOpacity, bool enabled)
+{
+    _useRuntimeRingOpacityOverride = enabled;
+    _runtimeRingOpacity = ringOpacity;
 }
 
 void EffectBillboardObject::Apply_BaseTransform(const FEffectLayerBase& baseDesc)
@@ -115,19 +143,110 @@ HRESULT EffectBillboardObject::Render()
 
 HRESULT EffectBillboardObject::Bind_ShaderResources()
 {
+    // Billboard shader variants in the workspace are mixed.
+    // Treat newer runtime-only uniforms as optional so older shaders still render.
+    auto BindOptionalRaw = [this](const char* name, const void* data, uint32 size)
+        {
+            _shaderCom->Bind_RawValue(name, data, size);
+        };
+
+    auto BindOptionalNullSrv = [this](const char* name)
+        {
+            _shaderCom->Bind_SRV(name, nullptr);
+        };
+
+    auto BindOptionalTexture = [this](Shared<Texture> texture, const char* name)
+        {
+            if (texture)
+                texture->Bind_SRV(_shaderCom, name, 0);
+            else
+                _shaderCom->Bind_SRV(name, nullptr);
+        };
+
+    const float finalBaseOpacity = _useRuntimeBaseOpacityOverride
+        ? _runtimeBaseOpacity
+        : _layerDesc.billboard.baseOpacity;
+    const float finalRingOpacity = _useRuntimeRingOpacityOverride
+        ? _runtimeRingOpacity
+        : _layerDesc.billboard.ringOpacity;
+    const int useBaseFlipbook = _layerDesc.billboard.baseFlipbook.enabled ? 1 : 0;
+    const int useRingFlipbook = _layerDesc.billboard.ringFlipbook.enabled ? 1 : 0;
+    const int baseFlipbookColumns = (std::max)(_layerDesc.billboard.baseFlipbook.columns, 1);
+    const int baseFlipbookRows = (std::max)(_layerDesc.billboard.baseFlipbook.rows, 1);
+    const int ringFlipbookColumns = (std::max)(_layerDesc.billboard.ringFlipbook.columns, 1);
+    const int ringFlipbookRows = (std::max)(_layerDesc.billboard.ringFlipbook.rows, 1);
+    const int baseFlipbookLoop = _layerDesc.billboard.baseFlipbook.loop ? 1 : 0;
+    const int ringFlipbookLoop = _layerDesc.billboard.ringFlipbook.loop ? 1 : 0;
+    const int renderMode = static_cast<int>(_layerDesc.billboard.renderMode);
+    const int hasBaseMaskTexture = _baseMaskTextureCom ? 1 : 0;
+    const int hasBaseOpacityTexture = _baseOpacityTextureCom ? 1 : 0;
+    const int hasBaseOpacityGradationTexture = _baseOpacityGradationTextureCom ? 1 : 0;
+    const int hasRingOpacityTexture = _ringOpacityTextureCom ? 1 : 0;
+    const int hasRingOpacityGradationTexture = _ringOpacityGradationTextureCom ? 1 : 0;
+
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix()), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj)), E_FAIL);
 
     CHECK_NULL(_baseTextureCom, E_FAIL);
     CHECK_FAILED(_baseTextureCom->Bind_SRV(_shaderCom, "g_BaseTexture", 0), E_FAIL);
+    BindOptionalRaw("g_HasBaseMaskTexture", &hasBaseMaskTexture, sizeof(int));
+
+    if (_baseMaskTextureCom)
+    {
+        BindOptionalTexture(_baseMaskTextureCom, "g_BaseMaskTexture");
+    }
+    else
+    {
+        BindOptionalNullSrv("g_BaseMaskTexture");
+    }
+
+    BindOptionalRaw("g_HasBaseOpacityTexture", &hasBaseOpacityTexture, sizeof(int));
+    if (_baseOpacityTextureCom)
+    {
+        BindOptionalTexture(_baseOpacityTextureCom, "g_BaseOpacityTexture");
+    }
+    else
+    {
+        BindOptionalNullSrv("g_BaseOpacityTexture");
+    }
+
+    BindOptionalRaw("g_HasBaseOpacityGradationTexture", &hasBaseOpacityGradationTexture, sizeof(int));
+    if (_baseOpacityGradationTextureCom)
+    {
+        BindOptionalTexture(_baseOpacityGradationTextureCom, "g_BaseOpacityGradationTexture");
+    }
+    else
+    {
+        BindOptionalNullSrv("g_BaseOpacityGradationTexture");
+    }
 
     const int useRing = (_layerDesc.billboard.useRing && _ringTextureCom) ? 1 : 0;
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_UseRing", &useRing, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseTint", &_layerDesc.billboard.baseTint, sizeof(Vec4)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_RingTint", &_layerDesc.billboard.ringTint, sizeof(Vec4)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseOpacity", &_layerDesc.billboard.baseOpacity, sizeof(float)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_RingOpacity", &_layerDesc.billboard.ringOpacity, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseOpacity", &finalBaseOpacity, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_RingOpacity", &finalRingOpacity, sizeof(float)), E_FAIL);
+    BindOptionalRaw("g_BaseEmissiveStrength", &_layerDesc.billboard.baseEmissiveStrength, sizeof(float));
+    BindOptionalRaw("g_RingEmissiveStrength", &_layerDesc.billboard.ringEmissiveStrength, sizeof(float));
+    BindOptionalRaw("g_ElapsedTime", &_elapsedTime, sizeof(float));
+    BindOptionalRaw("g_RenderMode", &renderMode, sizeof(int));
+    BindOptionalRaw("g_UseBaseFlipbook", &useBaseFlipbook, sizeof(int));
+    BindOptionalRaw("g_BaseFlipbookColumns", &baseFlipbookColumns, sizeof(int));
+    BindOptionalRaw("g_BaseFlipbookRows", &baseFlipbookRows, sizeof(int));
+    BindOptionalRaw("g_BaseFlipbookFps", &_layerDesc.billboard.baseFlipbook.fps, sizeof(float));
+    BindOptionalRaw("g_BaseFlipbookStartFrame", &_layerDesc.billboard.baseFlipbook.startFrame, sizeof(int));
+    BindOptionalRaw("g_BaseFlipbookEndFrame", &_layerDesc.billboard.baseFlipbook.endFrame, sizeof(int));
+    BindOptionalRaw("g_BaseFlipbookLoop", &baseFlipbookLoop, sizeof(int));
+    BindOptionalRaw("g_UseRingFlipbook", &useRingFlipbook, sizeof(int));
+    BindOptionalRaw("g_RingFlipbookColumns", &ringFlipbookColumns, sizeof(int));
+    BindOptionalRaw("g_RingFlipbookRows", &ringFlipbookRows, sizeof(int));
+    BindOptionalRaw("g_RingFlipbookFps", &_layerDesc.billboard.ringFlipbook.fps, sizeof(float));
+    BindOptionalRaw("g_RingFlipbookStartFrame", &_layerDesc.billboard.ringFlipbook.startFrame, sizeof(int));
+    BindOptionalRaw("g_RingFlipbookEndFrame", &_layerDesc.billboard.ringFlipbook.endFrame, sizeof(int));
+    BindOptionalRaw("g_RingFlipbookLoop", &ringFlipbookLoop, sizeof(int));
+    BindOptionalRaw("g_CustomParams0", &_layerDesc.billboard.customParams0, sizeof(Vec4));
+    BindOptionalRaw("g_CustomParams1", &_layerDesc.billboard.customParams1, sizeof(Vec4));
 
     if (_layerDesc.billboard.useRing && _ringTextureCom)
     {
@@ -136,6 +255,26 @@ HRESULT EffectBillboardObject::Bind_ShaderResources()
     else
     {
         CHECK_FAILED(_shaderCom->Bind_SRV("g_RingTexture", nullptr), E_FAIL);
+    }
+
+    BindOptionalRaw("g_HasRingOpacityTexture", &hasRingOpacityTexture, sizeof(int));
+    if (_ringOpacityTextureCom)
+    {
+        BindOptionalTexture(_ringOpacityTextureCom, "g_RingOpacityTexture");
+    }
+    else
+    {
+        BindOptionalNullSrv("g_RingOpacityTexture");
+    }
+
+    BindOptionalRaw("g_HasRingOpacityGradationTexture", &hasRingOpacityGradationTexture, sizeof(int));
+    if (_ringOpacityGradationTextureCom)
+    {
+        BindOptionalTexture(_ringOpacityGradationTextureCom, "g_RingOpacityGradationTexture");
+    }
+    else
+    {
+        BindOptionalNullSrv("g_RingOpacityGradationTexture");
     }
         
 
@@ -155,6 +294,54 @@ HRESULT EffectBillboardObject::Resolve_Textures()
         _resolvedBaseTextureGuid = _layerDesc.billboard.baseTextureGuid;
     }
 
+    if (_layerDesc.billboard.baseMaskTextureGuid.empty())
+    {
+        _baseMaskTextureCom.reset();
+        _resolvedBaseMaskTextureGuid.clear();
+    }
+    else if (_layerDesc.billboard.baseMaskTextureGuid == _resolvedBaseTextureGuid && _baseTextureCom)
+    {
+        _baseMaskTextureCom = _baseTextureCom;
+        _resolvedBaseMaskTextureGuid = _layerDesc.billboard.baseMaskTextureGuid;
+    }
+    else if (_resolvedBaseMaskTextureGuid != _layerDesc.billboard.baseMaskTextureGuid || !_baseMaskTextureCom)
+    {
+        CHECK_FAILED(Resolve_TextureComponent(_layerDesc.billboard.baseMaskTextureGuid, _baseMaskTextureCom), E_FAIL);
+        _resolvedBaseMaskTextureGuid = _layerDesc.billboard.baseMaskTextureGuid;
+    }
+
+    if (_layerDesc.billboard.baseOpacityTextureGuid.empty())
+    {
+        _baseOpacityTextureCom.reset();
+        _resolvedBaseOpacityTextureGuid.clear();
+    }
+    else if (_layerDesc.billboard.baseOpacityTextureGuid == _resolvedBaseTextureGuid && _baseTextureCom)
+    {
+        _baseOpacityTextureCom = _baseTextureCom;
+        _resolvedBaseOpacityTextureGuid = _layerDesc.billboard.baseOpacityTextureGuid;
+    }
+    else if (_layerDesc.billboard.baseOpacityTextureGuid == _resolvedBaseMaskTextureGuid && _baseMaskTextureCom)
+    {
+        _baseOpacityTextureCom = _baseMaskTextureCom;
+        _resolvedBaseOpacityTextureGuid = _layerDesc.billboard.baseOpacityTextureGuid;
+    }
+    else if (_resolvedBaseOpacityTextureGuid != _layerDesc.billboard.baseOpacityTextureGuid || !_baseOpacityTextureCom)
+    {
+        CHECK_FAILED(Resolve_TextureComponent(_layerDesc.billboard.baseOpacityTextureGuid, _baseOpacityTextureCom), E_FAIL);
+        _resolvedBaseOpacityTextureGuid = _layerDesc.billboard.baseOpacityTextureGuid;
+    }
+
+    if (_layerDesc.billboard.baseOpacityGradationTextureGuid.empty())
+    {
+        _baseOpacityGradationTextureCom.reset();
+        _resolvedBaseOpacityGradationTextureGuid.clear();
+    }
+    else if (_resolvedBaseOpacityGradationTextureGuid != _layerDesc.billboard.baseOpacityGradationTextureGuid || !_baseOpacityGradationTextureCom)
+    {
+        CHECK_FAILED(Resolve_TextureComponent(_layerDesc.billboard.baseOpacityGradationTextureGuid, _baseOpacityGradationTextureCom), E_FAIL);
+        _resolvedBaseOpacityGradationTextureGuid = _layerDesc.billboard.baseOpacityGradationTextureGuid;
+    }
+
     if (_layerDesc.billboard.ringTextureGuid.empty())
     {
         _ringTextureCom.reset();
@@ -169,6 +356,33 @@ HRESULT EffectBillboardObject::Resolve_Textures()
     {
         CHECK_FAILED(Resolve_TextureComponent(_layerDesc.billboard.ringTextureGuid, _ringTextureCom), E_FAIL);
         _resolvedRingTextureGuid = _layerDesc.billboard.ringTextureGuid;
+    }
+
+    if (_layerDesc.billboard.ringOpacityTextureGuid.empty())
+    {
+        _ringOpacityTextureCom.reset();
+        _resolvedRingOpacityTextureGuid.clear();
+    }
+    else if (_layerDesc.billboard.ringOpacityTextureGuid == _resolvedRingTextureGuid && _ringTextureCom)
+    {
+        _ringOpacityTextureCom = _ringTextureCom;
+        _resolvedRingOpacityTextureGuid = _layerDesc.billboard.ringOpacityTextureGuid;
+    }
+    else if (_resolvedRingOpacityTextureGuid != _layerDesc.billboard.ringOpacityTextureGuid || !_ringOpacityTextureCom)
+    {
+        CHECK_FAILED(Resolve_TextureComponent(_layerDesc.billboard.ringOpacityTextureGuid, _ringOpacityTextureCom), E_FAIL);
+        _resolvedRingOpacityTextureGuid = _layerDesc.billboard.ringOpacityTextureGuid;
+    }
+
+    if (_layerDesc.billboard.ringOpacityGradationTextureGuid.empty())
+    {
+        _ringOpacityGradationTextureCom.reset();
+        _resolvedRingOpacityGradationTextureGuid.clear();
+    }
+    else if (_resolvedRingOpacityGradationTextureGuid != _layerDesc.billboard.ringOpacityGradationTextureGuid || !_ringOpacityGradationTextureCom)
+    {
+        CHECK_FAILED(Resolve_TextureComponent(_layerDesc.billboard.ringOpacityGradationTextureGuid, _ringOpacityGradationTextureCom), E_FAIL);
+        _resolvedRingOpacityGradationTextureGuid = _layerDesc.billboard.ringOpacityGradationTextureGuid;
     }
 
     return S_OK;

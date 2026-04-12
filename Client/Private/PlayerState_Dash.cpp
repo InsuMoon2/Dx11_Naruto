@@ -40,16 +40,33 @@ void PlayerState_Dash::Enter(PlayerStateMachine* state)
 
     auto cmd = state->Init_MoveCommand();
 
-    Vec3 faceDir = cmd.moveBasisForward;
-    faceDir.y = 0.f;
-
-    if (faceDir.LengthSquared() > FLT_EPSILON)
+    if (resolvedDir == EMoveInputDirection::Forward)
     {
-        faceDir.Normalize();
+        Vec3 faceDir = resolvedWorldDir;
+        faceDir.y = 0.f;
 
-        Quat faceRot = Quat::FromToRotation(Vec3::Backward, faceDir);
-        owner->Get_Transform()->Set_WorldRotation(faceRot);
+        if (faceDir.LengthSquared() > FLT_EPSILON)
+        {
+            faceDir.Normalize();
+
+            Quat faceRot = Quat::FromToRotation(Vec3::Backward, faceDir);
+            owner->Get_Transform()->Set_WorldRotation(faceRot);
+        }   
     }
+    else
+    {
+        Vec3 faceDir = cmd.moveBasisForward;
+        faceDir.y = 0.f;
+
+        if (faceDir.LengthSquared() > FLT_EPSILON)
+        {
+            faceDir.Normalize();
+
+            Quat faceRot = Quat::FromToRotation(Vec3::Backward, faceDir);
+            owner->Get_Transform()->Set_WorldRotation(faceRot);
+        }
+    }
+
 
     state->Set_PendingMoveInputDirection(_dashDir);
     state->Set_PendingDashWorldDirection(resolvedWorldDir);

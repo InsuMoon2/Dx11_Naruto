@@ -377,6 +377,9 @@ void Transform::Set_Parent(Shared<Transform> parent)
     // 새 부모에 추가
     _parent = parent;
 
+    // 부모가 세팅돼있으면 false
+    _isOrphaned = false;
+
     if (parent)
         parent->Add_Child(GetSharedThis());
 
@@ -469,9 +472,18 @@ void Transform::Update_WorldMatrix() const
     {
         // Local * ParentWorld = World가 된다
         _worldMatrix = localMatrix * parent->Get_WorldMatrix();
+
+        // 음.. const를 뺄까
+        const_cast<Transform*>(this)->_isOrphaned = true; 
     }
     else
     {
+        if (_isOrphaned)
+        {
+            _isDirty = false;
+            return;
+        }
+
         _worldMatrix = localMatrix;
     }
 

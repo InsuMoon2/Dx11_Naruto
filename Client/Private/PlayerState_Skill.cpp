@@ -306,7 +306,7 @@ void PlayerState_Skill::Update_Dashing(PlayerStateMachine* state, float timeDelt
 
             float finalStopDist = skillData->targetStopDistance;
             if (!useGroundFlow)
-                finalStopDist *= 0.85f; 
+                finalStopDist *= 0.9f; 
 
             float distToTarget = distCheckVec.Length();
             if (distToTarget <= finalStopDist)

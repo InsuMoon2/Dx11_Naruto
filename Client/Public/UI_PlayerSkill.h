@@ -27,7 +27,7 @@ public:
     void    On_WeaponTypeChanged(int32 weaponTypeIndex);
 
 public:
-    void Bind_Player(Shared<Player> player);
+    void    Bind_Player(Shared<Player> player);
 
 private:
     HRESULT Ready_Skill(void* arg);

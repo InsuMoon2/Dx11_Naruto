@@ -99,11 +99,20 @@ public:
 
     void                        Trigger_HitReaction() { _pendingHitReaction = true; }
 
+    // 상태 바뀔 때 이벤트 전파
     FOnPlayerStateChanged       OnStateChanged;
 
+    // 근접해서 때릴지 판단
+    bool Try_MeleeApproach(
+        EPlayerState nextState,
+        float approachRange = 12.f,
+        float meleeRange = 2.55f);
+
+public:
+    void Set_ForceGroundAttack(bool val) { _forceGroundAttack = val; }
+    bool Is_ForceGroundAttack() const    { return _forceGroundAttack; }
+
 private:
-
-
     bool                        Check_Global_Transitions();
 
     bool                        Check_Skill_Input();
@@ -138,6 +147,7 @@ private:
 
     int32                                       _activeSkillSlot = -1;
 
+    bool _forceGroundAttack = false;
 
 protected:
     json To_Json() const override;

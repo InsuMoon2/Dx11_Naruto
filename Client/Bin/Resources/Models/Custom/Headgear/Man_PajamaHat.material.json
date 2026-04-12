@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_Man_PajamaHat_01",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_Man_PajamaHat_01_BC.png"
+        }
+      ]
+    }
+  ]
+}

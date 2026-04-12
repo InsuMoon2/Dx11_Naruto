@@ -500,7 +500,7 @@ HRESULT Loader::Loading_For_GamePlay()
     //pushChunk("BM_ExamStadium_Env_Terrain");
     //pushChunk("BM_ExamStadium_p");
 
-    pushChunk("[20260409]Tutorial");
+    pushChunk("[20260412]Tutorial");
 
     {
         scoped_lock lock(_jobMutex);

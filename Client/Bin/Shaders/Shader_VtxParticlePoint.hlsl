@@ -3,6 +3,15 @@
 float4 g_ColorTint;
 float  g_Opacity;
 int    g_UseLifetimeFade;
+int    g_UseFlipbook;
+int    g_FlipbookColumns;
+int    g_FlipbookRows;
+float  g_FlipbookFps;
+int    g_FlipbookStartFrame;
+int    g_FlipbookEndFrame;
+int    g_FlipbookLoop;
+float4 g_CustomParams0;
+float4 g_CustomParams1;
 
 struct VS_IN
 {
@@ -99,11 +108,42 @@ struct PS_OUT
     float4 vColor : SV_TARGET0;
 };
 
+float2 ResolveFlipbookUV(float2 baseUV, float particleAge)
+{
+    if (g_UseFlipbook == 0)
+        return baseUV;
+
+    int columns = max(g_FlipbookColumns, 1);
+    int rows = max(g_FlipbookRows, 1);
+    int totalFrames = max(columns * rows, 1);
+    int startFrame = clamp(g_FlipbookStartFrame, 0, totalFrames - 1);
+    int endFrame = g_FlipbookEndFrame;
+    if (endFrame < startFrame || endFrame >= totalFrames)
+        endFrame = totalFrames - 1;
+
+    int frameCount = max(endFrame - startFrame + 1, 1);
+    int relativeFrame = (int)floor(max(particleAge, 0.f) * max(g_FlipbookFps, 0.01f));
+
+    if (g_FlipbookLoop != 0)
+        relativeFrame = relativeFrame % frameCount;
+    else
+        relativeFrame = min(relativeFrame, frameCount - 1);
+
+    int frameIndex = startFrame + relativeFrame;
+    int frameX = frameIndex % columns;
+    int frameY = frameIndex / columns;
+
+    return float2(
+        (baseUV.x + frameX) / columns,
+        (baseUV.y + frameY) / rows);
+}
+
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
 
-    float4 tex = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    float2 finalUV = ResolveFlipbookUV(In.vTexcoord, In.vLifeTime.y);
+    float4 tex = g_DiffuseTexture.Sample(DefaultSampler, finalUV);
 
     float mask = (tex.a > 0.001f)
         ? tex.a
@@ -122,6 +162,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
     Out.vColor.rgb = g_ColorTint.rgb * detail;
     Out.vColor.a = mask * g_Opacity * fade * g_ColorTint.a;
+    Out.vColor.rgb += (g_CustomParams0.rgb + g_CustomParams1.rgb) * 0.f;
 
     return Out;
 }

@@ -87,7 +87,7 @@ void SkillObject_Projectile::OnBeginOverlap(Shared<Collider> self, Shared<Collid
 {
     SkillObject::OnBeginOverlap(self, other);
 
-    if (!other || Is_Destroy())
+    if (!other)
         return;
 
     auto otherOwner = other->Get_Owner();

@@ -2,13 +2,13 @@
     "components": [
         {
             "position": [
-                2.88293194770813,
+                1.161224126815796,
                 0.0,
-                -4.733914852142334
+                2.6973562240600586
             ],
             "rotation": [
                 -0.0,
-                29.610971450805664,
+                10.230757713317871,
                 0.0
             ],
             "scale": [
@@ -25,7 +25,7 @@
                     0.75,
                     0.0
                 ],
-                "radius": 0.5299999713897705
+                "radius": 0.75
             },
             "channel": "Monster_Body",
             "collision_preset": "Monster_Body",
@@ -295,7 +295,7 @@
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
         }
     ],
-    "guid": "d5211eb9-3a05-4135-937e-710b5b81a0f3",
+    "guid": "a57de70b-d215-483a-a70b-abdb9ee481d5",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster",
     "static_class": "Monster"

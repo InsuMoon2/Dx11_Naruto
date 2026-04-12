@@ -11,6 +11,7 @@
 #include "Bounding_Sphere.h"
 #include "MyPlayer.h"
 #include "EffectComponent.h"
+#include "AttachedEffectObject.h"
 
 REGISTER_GAMEOBJECT(SkillObject, Protocol::OBJECT_TYPE_SKILL_OBJECT)
 
@@ -148,6 +149,32 @@ void SkillObject::Sync_AttachedTransform(const Matrix& boneWorldMatrix)
         _transformCom->Set_WorldPosition(worldPos + worldOffset);
         _transformCom->Set_WorldRotation(worldQuat);
     }
+}
+
+Shared<GameObject> SkillObject::Spawn_Effect_Once(const string& effectAssetName, const Vec3& worldPosition,
+    const Vec3 worldScale)
+{
+    AttachedEffectObject::FAttachedEffectObjectDesc desc{};
+    desc.effectAssetName = effectAssetName;
+    desc.loopOverride    = false;
+
+     auto spawned = GAME->Clone_And_Add_GameObject(
+        ETOI(ELevelType::Static),
+        Protocol::OBJECT_TYPE_ATTACHED_EFFECT,
+        GAME->Current_Level(),
+        TEXT("Layer_Skill"),
+        &desc);
+
+    if (!spawned)
+        return nullptr;
+
+    if (auto transform = spawned->Get_Transform())
+    {
+        transform->Set_WorldPosition(worldPosition);
+        transform->Set_LocalScale(worldScale);
+    }
+
+    return spawned;
 }
 
 HRESULT SkillObject::Ready_Components(const FSkillObjectDesc& desc)

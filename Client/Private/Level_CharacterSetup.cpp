@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Level_CharacterSetup.h"
 #include "UI_Text.h"
 #include "Background.h"
@@ -421,10 +421,14 @@ HRESULT Level_CharacterSetup::Ready_PreviewScene()
 
 void Level_CharacterSetup::Build_PartCatalog()
 {
-    // 실제로 존재하는 리소스만 카탈로그에 넣기. 일단 테스트용은 하드코딩
+    // 실제로 존재하는 리소스만 카탈로그에 넣기. 일단 테스트용은 하드코딩. 귀찮은데 그냥 하드코딩 ㄱ
     _catalog[ETOI(ContainerObject::EPartSlot::Headegear)] =
     {
-        { L"기본 모자", L"Model_Headgear_Man_Cap1" }
+        { L"기본 모자", L"Model_Headgear_Man_Cap1" },
+        {L"머리 3", L"Model_ManHat_03" },
+        {L"스노우 머리통", L"Model_SnowHead" },
+        {L"파자마 머리통", L"Model_PajamaHat" },
+        {L"우산 머리통", L"Model_Umbrella" },
     };
 
     _catalog[ETOI(ContainerObject::EPartSlot::Face)] =
@@ -434,8 +438,11 @@ void Level_CharacterSetup::Build_PartCatalog()
 
     _catalog[ETOI(ContainerObject::EPartSlot::Onepiece)] =
     {
-        { L"한벌옷 1", L"Model_Body_Upper_Armor1" },
-        { L"코트 1",  L"Model_Body_Upper_Coat15" }
+        { L"코트", L"Model_OnePiece_Coat15" },
+        { L"방어구1",  L"Model_OnePiece_Armor1" },
+        { L"방어구2",  L"Model_OnePiece_Armor2" },
+        { L"방어구3",  L"Model_OnePiece_Armor3" },
+        { L"방어구4",  L"Model_OnePiece_Minato" },
     };
 }
 

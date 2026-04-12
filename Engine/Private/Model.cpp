@@ -625,7 +625,7 @@ Shared<Animation> Model::Clone_RebindAnimation(Shared<Animation> animation) cons
 
 void Model::Reset_AnimationSequenceState()
 {
-    Stop_AllNotifyStates(false);
+    Stop_AllNotifyStates(true);
 
     _hasAnimSequence = false;
     _isAnimSequenceFinished = false;

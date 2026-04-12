@@ -666,7 +666,7 @@
                         "Direction Source": 259,
                         "direction_source": "DashInputDirection",
                         "ignore_y": true,
-                        "move_speed": 13.0,
+                        "move_speed": 16.0,
                         "move_velocity": [
                             0.0,
                             0.0,
@@ -890,12 +890,12 @@
                         "bone_name": "R_Hand_Weapon_cnt_tr",
                         "collision_preset": 3,
                         "local_offset": [
-                            0.0,
-                            0.0,
-                            0.0
+                            20.0,
+                            5.0,
+                            15.0
                         ],
                         "local_rotation": [
-                            0.0,
+                            90.0,
                             0.0,
                             0.0
                         ],
@@ -1271,11 +1271,18 @@
         {
             "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Run_Lv1_Loop",
             "display_fps": 30,
-            "notifies": [
+            "notifies": [],
+            "notify_state_tracks": [
                 {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.4333333373069763,
                     "payload": {
                         "bone_name": "R_Hand_Weapon_cnt_tr",
-                        "effect_name": "RasenganC",
+                        "effect_name": "Rasengan_Dash",
                         "local_offset": [
                             0.0,
                             0.0,
@@ -1293,17 +1300,51 @@
                         ],
                         "loop_override": false
                     },
-                    "time_sec": 0.0,
+                    "start_sec": 0.0,
                     "track_index": 0,
-                    "type": "AN_SpawnParticle"
+                    "type": "ANS_SpawnParticle"
                 }
             ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Loop",
+            "display_fps": 30,
+            "notifies": [],
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
                 }
             ],
-            "notify_states": [],
+            "notify_states": [
+                {
+                    "duration_sec": 0.1666666716337204,
+                    "payload": {
+                        "base_color": [
+                            0.05000000074505806,
+                            0.07999999821186066,
+                            0.25,
+                            1.0
+                        ],
+                        "edge_color": [
+                            0.44999998807907104,
+                            0.6499999761581421,
+                            1.0,
+                            1.0
+                        ],
+                        "interval": 0.019999999552965164,
+                        "lifespan": 0.07000000029802322,
+                        "smear_length": 1.399999976158142
+                    },
+                    "start_sec": 0.0,
+                    "track_index": 0,
+                    "type": "ANS_SmearEffect"
+                }
+            ],
             "notify_tracks": [
                 {
                     "name": "Notifies"

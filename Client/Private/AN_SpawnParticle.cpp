@@ -29,6 +29,11 @@ void AN_SpawnParticle::Execute(const FAnimNotifyContext& context)
     if (context.isPreview || !context.owner || !context.model)
         return;
 
+    // 중복 방지
+    if (context.wrapped)
+        return;
+
+    // 에셋 이름 없는거 방지
     if (_effectAssetName.empty())
         return;
 

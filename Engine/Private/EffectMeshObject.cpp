@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "EffectMeshObject.h"
 #include "Shader.h"
 #include "Model.h"
@@ -88,6 +88,7 @@ void EffectMeshObject::Update(float timeDelta)
 {
     GameObject::Update(timeDelta);
 
+    _elapsed += timeDelta;
     Update_Rotation(timeDelta);
 }
 
@@ -127,11 +128,16 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
     Vec2 uvDistortionOffset = _layerDesc.mesh.uvDistortionSpeed * _elapsed;
 
     const int forceVisiblePreview = _forceVisiblePreview ? 1 : 0;
+    const int shadingMode = static_cast<int>(_layerDesc.mesh.shadingMode);
+    const int hasDiffuseTexture = _diffuseTexture ? 1 : 0;
     const int hasOpacityTexture = _opacityTexture ? 1 : 0;
     const int hasOpacitySubUvTexture = _opacitySubUvTexture ? 1 : 0;
     const int hasOpacityGradationTexture = _opacityGradationTexture ? 1 : 0;
     const int hasEmissiveGradationTexture = _emissiveGradationTexture ? 1 : 0;
     const int hasUvDistortionTexture = _uvDistortionTexture ? 1 : 0;
+    const int hasNormalTexture = _normalTexture ? 1 : 0;
+    const int hasRoughnessTexture = _roughnessTexture ? 1 : 0;
+    const int hasSpecularTexture = _specularTexture ? 1 : 0;
 
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix()), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View)), E_FAIL);
@@ -143,17 +149,28 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVTiling", &_layerDesc.mesh.uvTiling, sizeof(Vec2)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVDistortionOffset", &uvDistortionOffset, sizeof(Vec2)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVDistortionStrength", &_layerDesc.mesh.uvDistortionStrength, sizeof(Vec2)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_ColorTint", &_layerDesc.mesh.colorTint, sizeof(Vec4)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_Opacity", &_layerDesc.mesh.opacity, sizeof(float)), E_FAIL);
+    
+    const Vec4 colorTint = _useRuntimeColorTintOverride ? _runtimeColorTint : _layerDesc.mesh.colorTint;
+    const float opacity = _useRuntimeOpacityOverride ? _runtimeOpacity : _layerDesc.mesh.opacity;
+    const float emissiveStrength = _useRuntimeEmissiveStrengthOverride ? _runtimeEmissiveStrength : _layerDesc.mesh.emissiveStrength;
+
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_ColorTint", &colorTint, sizeof(Vec4)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_Opacity", &opacity, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_EmissiveStrength", &emissiveStrength, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FresnelPower", &_layerDesc.mesh.fresnelPower, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FresnelMultiplier", &_layerDesc.mesh.fresnelMultiplier, sizeof(float)), E_FAIL);
 
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_ForceVisiblePreview", &forceVisiblePreview, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_ShadingMode", &shadingMode, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasDiffuseTexture", &hasDiffuseTexture, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasOpacityTexture", &hasOpacityTexture, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasOpacitySubUvTexture", &hasOpacitySubUvTexture, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasOpacityGradationTexture", &hasOpacityGradationTexture, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasEmissiveGradationTexture", &hasEmissiveGradationTexture, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasUVDistortionTexture", &hasUvDistortionTexture, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasNormalTexture", &hasNormalTexture, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasRoughnessTexture", &hasRoughnessTexture, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasSpecularTexture", &hasSpecularTexture, sizeof(int)), E_FAIL);
 
     if (_diffuseTexture)
         {CHECK_FAILED(_diffuseTexture->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);}
@@ -194,6 +211,21 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
         {CHECK_FAILED(_uvDistortionTexture->Bind_SRV(_shaderCom, "g_UVDistortionTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_UVDistortionTexture", nullptr), E_FAIL);}
+
+    if (_normalTexture)
+        {CHECK_FAILED(_normalTexture->Bind_SRV(_shaderCom, "g_NormalTexture", 0), E_FAIL);}
+    else
+        {CHECK_FAILED(_shaderCom->Bind_SRV("g_NormalTexture", nullptr), E_FAIL);}
+
+    if (_roughnessTexture)
+        {CHECK_FAILED(_roughnessTexture->Bind_SRV(_shaderCom, "g_RoughnessTexture", 0), E_FAIL);}
+    else
+        {CHECK_FAILED(_shaderCom->Bind_SRV("g_RoughnessTexture", nullptr), E_FAIL);}
+
+    if (_specularTexture)
+        {CHECK_FAILED(_specularTexture->Bind_SRV(_shaderCom, "g_SpecularTexture", 0), E_FAIL);}
+    else
+        {CHECK_FAILED(_shaderCom->Bind_SRV("g_SpecularTexture", nullptr), E_FAIL);}
 
     return S_OK;
 }
@@ -508,6 +540,22 @@ HRESULT EffectMeshObject::Resolve_Resources()
 
     return S_OK;
 
+}
+
+void EffectMeshObject::Set_RuntimeColorTintOverride(const Vec4& colorTint, bool enabled)
+{
+    _useRuntimeColorTintOverride = enabled;
+    _runtimeColorTint = colorTint;
+}
+void EffectMeshObject::Set_RuntimeOpacityOverride(float opacity, bool enabled)
+{
+    _useRuntimeOpacityOverride = enabled;
+    _runtimeOpacity = opacity;
+}
+void EffectMeshObject::Set_RuntimeEmissiveStrengthOverride(float emissiveStrength, bool enabled)
+{
+    _useRuntimeEmissiveStrengthOverride = enabled;
+    _runtimeEmissiveStrength = emissiveStrength;
 }
 
 void EffectMeshObject::Update_Rotation(float timeDelta)

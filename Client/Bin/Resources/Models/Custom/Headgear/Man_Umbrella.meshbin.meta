@@ -1,0 +1,326 @@
+{
+    "boneCount": 53,
+    "bones": [
+        {
+            "depth": 0,
+            "index": 0,
+            "name": "RootNode",
+            "parentIndex": -1
+        },
+        {
+            "depth": 1,
+            "index": 1,
+            "name": "SK_CHR_Umbrella_Hat_01_S",
+            "parentIndex": 0
+        },
+        {
+            "depth": 2,
+            "index": 2,
+            "name": "CharacterRoot",
+            "parentIndex": 1
+        },
+        {
+            "depth": 3,
+            "index": 3,
+            "name": "Hips",
+            "parentIndex": 2
+        },
+        {
+            "depth": 4,
+            "index": 4,
+            "name": "Spine",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 5,
+            "name": "Spine1",
+            "parentIndex": 4
+        },
+        {
+            "depth": 6,
+            "index": 6,
+            "name": "Neck",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 7,
+            "name": "Head",
+            "parentIndex": 6
+        },
+        {
+            "depth": 8,
+            "index": 8,
+            "name": "hair_B01",
+            "parentIndex": 7
+        },
+        {
+            "depth": 8,
+            "index": 9,
+            "name": "hair_FL01",
+            "parentIndex": 7
+        },
+        {
+            "depth": 9,
+            "index": 10,
+            "name": "hair_FL02",
+            "parentIndex": 9
+        },
+        {
+            "depth": 8,
+            "index": 11,
+            "name": "hair_L01",
+            "parentIndex": 7
+        },
+        {
+            "depth": 9,
+            "index": 12,
+            "name": "hair_L02",
+            "parentIndex": 11
+        },
+        {
+            "depth": 10,
+            "index": 13,
+            "name": "hair_L03",
+            "parentIndex": 12
+        },
+        {
+            "depth": 9,
+            "index": 14,
+            "name": "hair_L04",
+            "parentIndex": 11
+        },
+        {
+            "depth": 10,
+            "index": 15,
+            "name": "hair_L05",
+            "parentIndex": 14
+        },
+        {
+            "depth": 8,
+            "index": 16,
+            "name": "hair_R01",
+            "parentIndex": 7
+        },
+        {
+            "depth": 9,
+            "index": 17,
+            "name": "hair_R02",
+            "parentIndex": 16
+        },
+        {
+            "depth": 10,
+            "index": 18,
+            "name": "hair_R03",
+            "parentIndex": 17
+        },
+        {
+            "depth": 9,
+            "index": 19,
+            "name": "hair_R04",
+            "parentIndex": 16
+        },
+        {
+            "depth": 10,
+            "index": 20,
+            "name": "hair_R05",
+            "parentIndex": 19
+        },
+        {
+            "depth": 8,
+            "index": 21,
+            "name": "hair_FR01",
+            "parentIndex": 7
+        },
+        {
+            "depth": 9,
+            "index": 22,
+            "name": "hair_FR02",
+            "parentIndex": 21
+        },
+        {
+            "depth": 8,
+            "index": 23,
+            "name": "Hat",
+            "parentIndex": 7
+        },
+        {
+            "depth": 9,
+            "index": 24,
+            "name": "R_Pendant1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 25,
+            "name": "R_Pendant2",
+            "parentIndex": 24
+        },
+        {
+            "depth": 9,
+            "index": 26,
+            "name": "C_Hat_Back1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 27,
+            "name": "C_Hat_Back2",
+            "parentIndex": 26
+        },
+        {
+            "depth": 9,
+            "index": 28,
+            "name": "L_Hat_FrontA1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 29,
+            "name": "L_Hat_FrontA2",
+            "parentIndex": 28
+        },
+        {
+            "depth": 9,
+            "index": 30,
+            "name": "L_Hat_FrontB1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 31,
+            "name": "L_Hat_FrontB2",
+            "parentIndex": 30
+        },
+        {
+            "depth": 9,
+            "index": 32,
+            "name": "L_Hat_SideA1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 33,
+            "name": "L_Hat_SideA2",
+            "parentIndex": 32
+        },
+        {
+            "depth": 9,
+            "index": 34,
+            "name": "L_Hat_SideB1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 35,
+            "name": "L_Hat_SideB2",
+            "parentIndex": 34
+        },
+        {
+            "depth": 9,
+            "index": 36,
+            "name": "L_Hat_BackSide1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 37,
+            "name": "L_Hat_BackSide2",
+            "parentIndex": 36
+        },
+        {
+            "depth": 9,
+            "index": 38,
+            "name": "L_Hat_Back1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 39,
+            "name": "L_Hat_Back2",
+            "parentIndex": 38
+        },
+        {
+            "depth": 9,
+            "index": 40,
+            "name": "R_Hat_FrontA1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 41,
+            "name": "R_Hat_FrontA2",
+            "parentIndex": 40
+        },
+        {
+            "depth": 9,
+            "index": 42,
+            "name": "R_Hat_FrontB1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 43,
+            "name": "R_Hat_FrontB2",
+            "parentIndex": 42
+        },
+        {
+            "depth": 9,
+            "index": 44,
+            "name": "R_Hat_SideA1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 45,
+            "name": "R_Hat_SideA2",
+            "parentIndex": 44
+        },
+        {
+            "depth": 9,
+            "index": 46,
+            "name": "R_Hat_SideB1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 47,
+            "name": "R_Hat_SideB2",
+            "parentIndex": 46
+        },
+        {
+            "depth": 9,
+            "index": 48,
+            "name": "R_Hat_BackSide1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 49,
+            "name": "R_Hat_BackSide2",
+            "parentIndex": 48
+        },
+        {
+            "depth": 9,
+            "index": 50,
+            "name": "R_Hat_Back1",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 51,
+            "name": "R_Hat_Back2",
+            "parentIndex": 50
+        },
+        {
+            "depth": 1,
+            "index": 52,
+            "name": "SK_CHR_Umbrella_Hat_01_S.001",
+            "parentIndex": 0
+        }
+    ],
+    "guid": "86992f9b-d22d-4222-871d-621a42f2f32c",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

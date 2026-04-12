@@ -1,0 +1,79 @@
+{
+    "autoPlay": true,
+    "effectName": "RasenganC",
+    "layers": [
+        {
+            "blendMode": 1,
+            "colorTint": [
+                0.33067408204078674,
+                0.3707234859466553,
+                0.4193548560142517,
+                1.0
+            ],
+            "diffuseTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "duration": 0.6000000238418579,
+            "emissiveGradationTextureGuid": "",
+            "emissiveTextureGuid": "0afdc1aa-87e6-4d40-b545-d1792e4d5df2",
+            "enabled": true,
+            "endScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "RasenganC",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "loop": true,
+            "maskTextureGuid": "",
+            "modelGuid": "1cb1422e-0df3-4ff5-b0c8-4ee61b423351",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "",
+            "rotationAxis": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "rotationSpeed": 292.6000061035156,
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useOpacityAsTransparency": false,
+            "useScaleOverTime": false,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "totalDuration": -1.0
+}

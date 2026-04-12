@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_Man_SnowHead_01",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_Man_SnowHead_01_BC.png"
+        },
+        {
+          "slot": "metalness",
+          "index": 0,
+          "path": "Textures/T_CHR_Man_SnowHead_01_M.png"
+        }
+      ]
+    }
+  ]
+}

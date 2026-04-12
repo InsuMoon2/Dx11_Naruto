@@ -30,7 +30,7 @@
 #include "PlayerState_WallRun.h"
 #include "PlayerState_Wall_Idle.h"
 #include "PlayerState_WireDash.h"
-
+#include "TargetComponent.h"
 
 IMPLEMENT_REFLECTION(PlayerStateMachine)
 
@@ -157,6 +157,49 @@ void PlayerStateMachine::Update(float timeDelta)
         _currentState->Update(this, timeDelta);
 }
 
+bool PlayerStateMachine::Try_MeleeApproach(EPlayerState nextState, float approachRange, float meleeRange)
+{
+    auto player = dynamic_pointer_cast<MyPlayer>(Get_Owner());
+    if (!player) return false;
+
+    auto targetComp = player->Get_Component<TargetComponent>();
+    if (!targetComp || !targetComp->IsLockOn())
+        return false;
+
+    auto target = targetComp->Get_LockedTarget().lock();
+    if (!target) return false;
+
+    Vec3 myPos     = player->Get_Transform()->Get_WorldPosition();
+    Vec3 targetPos = target->Get_Transform()->Get_WorldPosition();
+
+    float dist     = (targetPos - myPos).Length();
+
+     // 이미 근접권 or 너무 멀면 접근 X
+    if (dist <= meleeRange || dist > approachRange)
+        return false;
+
+     auto airApproach = Get_State<PlayerState_AirApproach>(EPlayerState::AirApproach);
+    if (!airApproach) return false;
+
+    PlayerState_AirApproach::FApproachDesc desc{};
+    desc.targetPosition    = targetPos + Vec3(0.f, 0.1f, 0.f);
+    desc.stopDistance      = meleeRange;
+    desc.moveSpeed         = 20.f;
+    desc.gravityOff        = true;         // 지상 달리기 유지할지?
+    desc.maxApproachTime   = 0.8f;
+    desc.animState         = EPlayerState::JumpDash;
+    desc.arriveAction      = PlayerState_AirApproach::EArriveAction::ChangeState;
+    desc.nextStateOnArrive = nextState;     // 도착 후 전환할 상태
+    desc.nextStateOnFail   = EPlayerState::Idle;
+
+    airApproach->Set_AirApproachDesc(desc);
+
+    _forceGroundAttack = true;
+    Change_State(EPlayerState::AirApproach);
+
+    return true; 
+}
+
 bool PlayerStateMachine::Check_Global_Transitions()
 {
     auto currentId = Get_CurrentStateID();
@@ -166,6 +209,8 @@ bool PlayerStateMachine::Check_Global_Transitions()
     // TODO : 아직은 처리 안했음
     if (Check_Death())          return true;
     if (Check_Cinematic())      return true;
+
+    // 스킬 쓸 때 그냥 슈퍼아퍼처리
     if (Check_HitReaction())    return true;
 
     if (Check_Skill_Input())

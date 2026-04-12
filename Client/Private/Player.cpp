@@ -264,7 +264,7 @@ HRESULT Player::Ready_PartObjects()
     PartObject::FPartObjectDesc headDesc{};
     //headDesc.parentMatrix = &_transformCom->Get_WorldMatrix(); 이제 그냥 Transform 넘기기
     headDesc.parentTransform = _transformCom;
-    headDesc.modelAssetTag = TEXT("Model_Headgear_Man_Cap1");
+    headDesc.modelAssetTag = TEXT("Model_SnowHead");
     headDesc.masterPoseModel = _model;
     CHECK_FAILED(Add_PartObject(EPartSlot::Headegear, Protocol::OBJECT_TYPE_PART_OBJECT, &headDesc), E_FAIL);
 
@@ -278,7 +278,7 @@ HRESULT Player::Ready_PartObjects()
     // Onepiece
     PartObject::FPartObjectDesc onePieceDesc{};
     onePieceDesc.parentTransform = _transformCom;
-    onePieceDesc.modelAssetTag = TEXT("Model_Body_Upper_Coat15");
+    onePieceDesc.modelAssetTag = TEXT("Model_OnePiece_Armor3");
     onePieceDesc.masterPoseModel = _model;
     CHECK_FAILED(Add_PartObject(EPartSlot::Onepiece, Protocol::OBJECT_TYPE_PART_OBJECT, &onePieceDesc), E_FAIL);
 

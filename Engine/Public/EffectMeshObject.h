@@ -41,8 +41,10 @@ public:
 
     void Apply_LayerDesc(const FEffectLayerDesc& layerDesc);
     void Apply_BaseTransform(const FEffectLayerBase& baseDesc);
-    // 에디터 프리뷰에서만 텍스처/알파를 무시하고 메시 실루엣을 강제로 보이게 할 때 호출한다.
     void Set_ForceVisiblePreview(bool enabled) { _forceVisiblePreview = enabled; }
+    void Set_RuntimeColorTintOverride(const Vec4& colorTint, bool enabled);
+    void Set_RuntimeOpacityOverride(float opacity, bool enabled);
+    void Set_RuntimeEmissiveStrengthOverride(float emissiveStrength, bool enabled);
 
     void Update_Rotation(float timeDelta);
 
@@ -64,6 +66,9 @@ private:
     Shared<Texture> _opacityGradationTexture;
     Shared<Texture> _emissiveGradationTexture;
     Shared<Texture> _uvDistortionTexture;
+    Shared<Texture> _normalTexture;            // Lit 모드에서 노멀맵 샘플링에 사용할 텍스처 컴포넌트다.
+    Shared<Texture> _roughnessTexture;         // Lit 모드에서 러프니스 값을 읽어올 텍스처 컴포넌트다.
+    Shared<Texture> _specularTexture;          // Lit 모드에서 스페큘러 마스크를 읽어올 텍스처 컴포넌트다.
 
     FEffectLayerDesc _layerDesc;
 
@@ -72,6 +77,14 @@ private:
     bool  _hasOpacity = false;                
     // 이펙트 뷰 진단용으로만 쓰는 강제 가시화 플래그다. 런타임 기본 동작은 false를 유지한다.
     bool  _forceVisiblePreview = false;
+    bool  _useRuntimeColorTintOverride = false;        // true면 layerDesc의 기본 tint 대신 런타임 보간 tint를 셰이더에 바인딩한다.
+    Vec4  _runtimeColorTint = Vec4(1.f, 1.f, 1.f, 1.f); // 레이어 수명 보간으로 계산된 현재 Mesh tint 값이다.
+    bool  _useRuntimeOpacityOverride = false;          // true면 layerDesc의 기본 opacity 대신 런타임 보간 opacity를 셰이더에 바인딩한다.
+    float _runtimeOpacity = 1.f;                       // 레이어 수명 보간으로 계산된 현재 Mesh opacity 값이다.
+    bool  _useRuntimeEmissiveStrengthOverride = false; // true면 layerDesc의 기본 emissiveStrength 대신 런타임 보간 값을 바인딩한다.
+    float _runtimeEmissiveStrength = 1.f;              // 레이어 수명 보간으로 계산된 현재 Mesh emissive 강도다.
+    Vec4  _runtimeCustomParams0 = Vec4::Zero;          // 현재 Mesh 셰이더에 바인딩할 사용자 정의 파라미터 0번 슬롯이다.
+    Vec4  _runtimeCustomParams1 = Vec4::Zero;          // 현재 Mesh 셰이더에 바인딩할 사용자 정의 파라미터 1번 슬롯이다.
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

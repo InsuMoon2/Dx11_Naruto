@@ -4,6 +4,22 @@
 #include "EffectBilldboardObject.h"
 #include "Particle_Point.h"
 
+/* Vec4 수명 보간이 필요할 때 SimpleMath 의존 없이 각 채널을 선형 보간하기 위한 헬퍼다. */
+static Vec4 Lerp_EffectVec4(const Vec4& start, const Vec4& end, float t)
+{
+    return Vec4(
+        start.x + (end.x - start.x) * t,
+        start.y + (end.y - start.y) * t,
+        start.z + (end.z - start.z) * t,
+        start.w + (end.w - start.w) * t);
+}
+
+/* float 계열 머티리얼 값을 레이어 진행률 기준으로 보간할 때 호출한다. */
+static float Lerp_EffectFloat(float start, float end, float t)
+{
+    return start + (end - start) * t;
+}
+
 EffectComponent::EffectComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
@@ -77,6 +93,7 @@ void EffectComponent::Update(float timeDelta)
         }
 
         Apply_LayerScaleInternal(layer);
+        Apply_LayerAnimatedMaterialInternal(layer);
 
         if (layer.obj)
         {
@@ -88,6 +105,14 @@ void EffectComponent::Update(float timeDelta)
                 if (meshObj)
                 {
                     meshObj->Set_ElapsedTime(layer.elapsed);
+                }
+            }
+            else if (layer.desc.base.kind == EEffectLayerKind::BillboardRect)
+            {
+                auto billboardObj = static_pointer_cast<EffectBillboardObject>(layer.obj);
+                if (billboardObj)
+                {
+                    billboardObj->Set_ElapsedTime(layer.elapsed);
                 }
             }
         }
@@ -297,8 +322,18 @@ bool EffectComponent::Apply_LayerDesc(int32 layerIndex, const FEffectLayerDesc& 
         if (billboardObj)
             billboardObj->Apply_LayerDesc(layer.desc);
     }
+    else if (layer.desc.base.kind == EEffectLayerKind::Point)
+    {
+        auto pointObj = dynamic_pointer_cast<Particle_Point>(layer.obj);
+        if (pointObj)
+        {
+            pointObj->Set_ColorTint(layer.desc.point.colorTint);
+            pointObj->Set_Opacity(layer.desc.point.opacity);
+        }
+    }
 
     Apply_LayerTransformInternal(layer);
+    Apply_LayerAnimatedMaterialInternal(layer);
 
     return true;
 }
@@ -344,6 +379,7 @@ HRESULT EffectComponent::Create_LayerObject(FActiveLayer& layer)
         if (meshObj)
             meshObj->Set_ForceVisiblePreview(_forceVisiblePreview);
 
+        Apply_LayerAnimatedMaterialInternal(layer);
         return S_OK;
     }
 
@@ -355,11 +391,18 @@ HRESULT EffectComponent::Create_LayerObject(FActiveLayer& layer)
         pointDesc.blendMode = layer.desc.point.blendMode;
         pointDesc.colorTint = layer.desc.point.colorTint;
         pointDesc.opacity = layer.desc.point.opacity;
+        pointDesc.flipbook = layer.desc.point.flipbook;
+        pointDesc.customParams0 = layer.desc.point.customParams0;
+        pointDesc.customParams1 = layer.desc.point.customParams1;
         pointDesc.addToBlendGroup = (layer.desc.point.blendMode != EEffectBlendMode::Opaque);
 
         pointDesc.bufferDesc.numInstances = layer.desc.point.numInstances;
         pointDesc.bufferDesc.center = layer.desc.point.center;
         pointDesc.bufferDesc.range = layer.desc.point.range;
+        pointDesc.bufferDesc.spawnShape = layer.desc.point.spawnShape;
+        pointDesc.bufferDesc.spawnRadius = layer.desc.point.spawnRadius;
+        pointDesc.bufferDesc.spawnInnerRadius = layer.desc.point.spawnInnerRadius;
+        pointDesc.bufferDesc.spawnHeight = layer.desc.point.spawnHeight;
         pointDesc.bufferDesc.scale = layer.desc.point.scale;
         pointDesc.bufferDesc.speed = layer.desc.point.speed;
         pointDesc.bufferDesc.lifeTime = layer.desc.point.lifeTime;
@@ -376,6 +419,10 @@ HRESULT EffectComponent::Create_LayerObject(FActiveLayer& layer)
             return E_FAIL;
 
         Apply_LayerTransformInternal(layer);
+        auto billboardObj = dynamic_pointer_cast<EffectBillboardObject>(layer.obj);
+        if (billboardObj)
+            billboardObj->Set_ElapsedTime(layer.elapsed);
+        Apply_LayerAnimatedMaterialInternal(layer);
         return S_OK;
     }
 
@@ -394,6 +441,7 @@ HRESULT EffectComponent::Create_LayerObject(FActiveLayer& layer)
             return E_FAIL;
 
         Apply_LayerTransformInternal(layer);
+        Apply_LayerAnimatedMaterialInternal(layer);
         return S_OK;
     }
 
@@ -499,6 +547,86 @@ float EffectComponent::Resolve_LayerDuration(const FActiveLayer& layer) const
         return (std::max)(0.f, _asset.totalDuration - layer.desc.base.startDelay);
 
     return 0.f;
+}
+
+float EffectComponent::Resolve_LayerProgress(const FActiveLayer& layer) const
+{
+    const float duration = Resolve_LayerDuration(layer);
+    if (duration <= 0.f)
+        return 0.f;
+
+    return std::clamp(layer.elapsed / duration, 0.f, 1.f);
+}
+
+void EffectComponent::Apply_LayerAnimatedMaterialInternal(FActiveLayer& layer)
+{
+    if (!layer.obj)
+        return;
+
+    const float layerProgress = Resolve_LayerProgress(layer);
+
+    if (layer.desc.base.kind == EEffectLayerKind::Mesh)
+    {
+        auto meshObj = dynamic_pointer_cast<EffectMeshObject>(layer.obj);
+        if (!meshObj)
+            return;
+
+        const Vec4 colorTint = layer.desc.mesh.useColorTintOverTime
+            ? Lerp_EffectVec4(layer.desc.mesh.colorTint, layer.desc.mesh.endColorTint, layerProgress)
+            : layer.desc.mesh.colorTint;
+        const float opacity = layer.desc.mesh.useOpacityOverTime
+            ? Lerp_EffectFloat(layer.desc.mesh.opacity, layer.desc.mesh.endOpacity, layerProgress)
+            : layer.desc.mesh.opacity;
+        const float emissiveStrength = layer.desc.mesh.useEmissiveStrengthOverTime
+            ? Lerp_EffectFloat(layer.desc.mesh.emissiveStrength, layer.desc.mesh.endEmissiveStrength, layerProgress)
+            : layer.desc.mesh.emissiveStrength;
+
+        meshObj->Set_RuntimeColorTintOverride(colorTint, layer.desc.mesh.useColorTintOverTime);
+        meshObj->Set_RuntimeOpacityOverride(opacity, layer.desc.mesh.useOpacityOverTime);
+        meshObj->Set_RuntimeEmissiveStrengthOverride(
+            emissiveStrength,
+            layer.desc.mesh.useEmissiveStrengthOverTime);
+        return;
+    }
+
+    if (layer.desc.base.kind == EEffectLayerKind::Point)
+    {
+        auto pointObj = dynamic_pointer_cast<Particle_Point>(layer.obj);
+        if (!pointObj)
+            return;
+
+        const Vec4 colorTint = layer.desc.point.useColorTintOverTime
+            ? Lerp_EffectVec4(layer.desc.point.colorTint, layer.desc.point.endColorTint, layerProgress)
+            : layer.desc.point.colorTint;
+        const float opacity = layer.desc.point.useOpacityOverTime
+            ? Lerp_EffectFloat(layer.desc.point.opacity, layer.desc.point.endOpacity, layerProgress)
+            : layer.desc.point.opacity;
+
+        pointObj->Set_ColorTint(colorTint);
+        pointObj->Set_Opacity(opacity);
+        return;
+    }
+
+    if (layer.desc.base.kind == EEffectLayerKind::BillboardRect)
+    {
+        auto billboardObj = dynamic_pointer_cast<EffectBillboardObject>(layer.obj);
+        if (!billboardObj)
+            return;
+
+        const float baseOpacity = layer.desc.billboard.useBaseOpacityOverTime
+            ? Lerp_EffectFloat(layer.desc.billboard.baseOpacity, layer.desc.billboard.endBaseOpacity, layerProgress)
+            : layer.desc.billboard.baseOpacity;
+        const float ringOpacity = layer.desc.billboard.useRingOpacityOverTime
+            ? Lerp_EffectFloat(layer.desc.billboard.ringOpacity, layer.desc.billboard.endRingOpacity, layerProgress)
+            : layer.desc.billboard.ringOpacity;
+
+        billboardObj->Set_RuntimeBaseOpacityOverride(
+            baseOpacity,
+            layer.desc.billboard.useBaseOpacityOverTime);
+        billboardObj->Set_RuntimeRingOpacityOverride(
+            ringOpacity,
+            layer.desc.billboard.useRingOpacityOverTime);
+    }
 }
 
 string EffectComponent::Resolve_EffectAssetPathByName(const string& effectAssetName)

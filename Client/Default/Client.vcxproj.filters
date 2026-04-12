@@ -316,6 +316,7 @@
     <ClInclude Include="..\Public\Skill_RasenShuriken_Hit.h">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ANS_SpawnParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -615,6 +616,7 @@
     <ClCompile Include="..\Private\Skill_RasenShuriken_Hit.cpp">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\ANS_SpawnParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

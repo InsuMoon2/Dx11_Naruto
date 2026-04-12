@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Renderer.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -174,7 +174,8 @@ void Renderer::Render_NonBlend()
 
 void Renderer::Render_Blend()
 {
-    //_context->OMSetBlendState(_uiBlendState.Get(), nullptr, 0xffffffff);
+    // Release global blend state to allow shader passes to use their own (e.g., BS_Additive)
+    _context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::Blend)])
     {
@@ -186,7 +187,7 @@ void Renderer::Render_Blend()
 
     _renderObjects[ETOI(ERenderGroup::Blend)].clear();
 
-    //_context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+    _context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 }
 
 void Renderer::Render_UI()

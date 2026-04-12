@@ -22,6 +22,9 @@ Particle_Point::Particle_Point(const Particle_Point& rhs)
     , _colorTint(rhs._colorTint)
     , _opacity(rhs._opacity)
     , _useLifetimeFade(rhs._useLifetimeFade)
+    , _flipbook(rhs._flipbook)
+    , _customParams0(rhs._customParams0)
+    , _customParams1(rhs._customParams1)
 {
 }
 
@@ -43,6 +46,9 @@ HRESULT Particle_Point::Initialize(void* arg)
     _colorTint = desc->colorTint;
     _opacity = desc->opacity;
     _useLifetimeFade = (desc->bufferDesc.moveMode != VIBuffer_Particle_Point::EMoveMode::Static);
+    _flipbook = desc->flipbook;
+    _customParams0 = desc->customParams0;
+    _customParams1 = desc->customParams1;
 
     CHECK_FAILED(Ready_Components(*desc), E_FAIL);
 
@@ -108,12 +114,37 @@ HRESULT Particle_Point::Bind_ShaderResources()
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_DiffuseTexture", _textureIndex), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_ColorTint", &_colorTint, sizeof(Vec4)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_Opacity", &_opacity, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_CustomParams0", &_customParams0, sizeof(Vec4)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_CustomParams1", &_customParams1, sizeof(Vec4)), E_FAIL);
 
     // Static Point는 데칼처럼 계속 유지돼야 하므로 lifetime fade를 끈다.
     const int useLifetimeFade = _useLifetimeFade ? 1 : 0;
+    const int useFlipbook = _flipbook.enabled ? 1 : 0;
+    const int flipbookColumns = (std::max)(_flipbook.columns, 1);
+    const int flipbookRows = (std::max)(_flipbook.rows, 1);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_UseLifetimeFade", &useLifetimeFade, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_UseFlipbook", &useFlipbook, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookColumns", &flipbookColumns, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookRows", &flipbookRows, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookFps", &_flipbook.fps, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookStartFrame", &_flipbook.startFrame, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookEndFrame", &_flipbook.endFrame, sizeof(int)), E_FAIL);
+    {
+        const int flipbookLoop = _flipbook.loop ? 1 : 0;
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookLoop", &flipbookLoop, sizeof(int)), E_FAIL);
+    }
 
     return S_OK;
+}
+
+void Particle_Point::Set_ColorTint(const Vec4& colorTint)
+{
+    _colorTint = colorTint;
+}
+
+void Particle_Point::Set_Opacity(float opacity)
+{
+    _opacity = opacity;
 }
 
 HRESULT Particle_Point::Ready_Components(const FParticlePointDesc& desc)

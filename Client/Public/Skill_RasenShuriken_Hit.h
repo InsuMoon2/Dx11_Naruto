@@ -1,17 +1,23 @@
 ﻿#pragma once
 
-#include "SkillObject_Projectile.h"
+#include "SkillObject.h"
 
 NS_BEGIN(Client)
 
-class Skill_RasenShuriken : public SkillObject_Projectile
+class Skill_RasenShuriken_Hit : public SkillObject
 {
-    GENERATED_BODY(Skill_RasenShuriken)
+    GENERATED_BODY(Skill_RasenShuriken_Hit)
 
 public:
-    explicit Skill_RasenShuriken(ComPtr<Device> device, ComPtr<DeviceContext> context);
-    explicit Skill_RasenShuriken(const Skill_RasenShuriken& rhs);
-    virtual ~Skill_RasenShuriken() = default;
+    struct FHitDesc : public FSkillObjectDesc
+    {
+        Shared<GameObject> damageCauser = nullptr;
+    };
+
+public:
+    explicit Skill_RasenShuriken_Hit(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    explicit Skill_RasenShuriken_Hit(const Skill_RasenShuriken_Hit& rhs);
+    virtual ~Skill_RasenShuriken_Hit() = default;
     
 public:
     HRESULT Initialize_Prototype() override;
@@ -27,13 +33,9 @@ private:
     Character*  Find_HitCharacter(Shared<Collider> other);
 
     void        Process_MultiHit(Character* hitted, GameObject* targetKey);
-
     void        Trigger_FinalHit(Character* character, GameObject* targetKey);
 
 private:
-    bool        _isActivatedByHit = false;
-    Vec3        _activationPosition = Vec3::Zero;
-
     float       _baseScale = 1.0f;
     float       _maxScale = 2.4f;
     float       _scaleGrowSpeed = 2.8f;
@@ -41,12 +43,12 @@ private:
     float       _midHitLaunchUp = 4.5f;
 
     // 터질 때
-    float       _finalBlastRadius = 4.5f;
+    float       _finalBlastRadius = 2.5f;
     float       _finalBlastLaunchPower = 140.f;
     float       _finalBlastLaunchUp = 3.5f;
 
     // 터졌는지?
-    bool _isFinalBlast = false;
+    bool        _isFinalBlast = false;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

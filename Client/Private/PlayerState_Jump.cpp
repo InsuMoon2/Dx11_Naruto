@@ -58,7 +58,8 @@ void PlayerState_Jump::Update(PlayerStateMachine* state, float timeDelta)
 
     if (frame.attackDown && !movement->Is_OnGround())
     {
-        state->Change_State(EPlayerState::JumpAttack);
+        if (!state->Try_MeleeApproach(EPlayerState::JumpAttack))
+            state->Change_State(EPlayerState::JumpAttack);
         return;
     }
 

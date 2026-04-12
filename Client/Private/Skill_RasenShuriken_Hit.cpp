@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "Skill_RasenShuriken.h"
+#include "Skill_RasenShuriken_Hit.h"
 #include "GameObject_Factory.h"
 #include "Collider.h"
 #include "GameObject.h"
@@ -8,17 +8,15 @@
 #include "MyPlayer.h"
 #include "EffectComponent.h"
 
-REGISTER_GAMEOBJECT_CATEGORY(Skill_RasenShuriken, Protocol::OBJECT_TYPE_SKILL_RASENSHURIKEN, "SkillSpawn");
+REGISTER_GAMEOBJECT_CATEGORY(Skill_RasenShuriken_Hit, Protocol::OBJECT_TYPE_SKILL_RASENSHURIKEN_HIT, "SkillSpawn");
 
-Skill_RasenShuriken::Skill_RasenShuriken(ComPtr<Device> device, ComPtr<DeviceContext> context)
-    : SkillObject_Projectile(device, context)
+Skill_RasenShuriken_Hit::Skill_RasenShuriken_Hit(ComPtr<Device> device, ComPtr<DeviceContext> context)
+    : SkillObject(device, context)
 {
 }
 
-Skill_RasenShuriken::Skill_RasenShuriken(const Skill_RasenShuriken& rhs)
-    : SkillObject_Projectile(rhs)
-    , _isActivatedByHit(rhs._isActivatedByHit)
-    , _activationPosition(rhs._activationPosition)
+Skill_RasenShuriken_Hit::Skill_RasenShuriken_Hit(const Skill_RasenShuriken_Hit& rhs)
+    : SkillObject(rhs)
     , _baseScale(rhs._baseScale)
     , _maxScale(rhs._maxScale)
     , _scaleGrowSpeed(rhs._scaleGrowSpeed)
@@ -30,11 +28,8 @@ Skill_RasenShuriken::Skill_RasenShuriken(const Skill_RasenShuriken& rhs)
 {
 }
 
-HRESULT Skill_RasenShuriken::Initialize_Prototype()
+HRESULT Skill_RasenShuriken_Hit::Initialize_Prototype()
 {
-    _speed = 28.f;
-    _maxDistance = 35.f;
-    _lifetime = 5.5f;
     _maxHitCount = 5;
     _hitInterval = 0.12f;
     _hitLaunchForce = 2.5f;
@@ -42,57 +37,61 @@ HRESULT Skill_RasenShuriken::Initialize_Prototype()
 
     _collisionPreset = Collision_Preset::Player_Attack;
 
-    _isMoving = false;
-
-    return SkillObject_Projectile::Initialize_Prototype();
+    return SkillObject::Initialize_Prototype();
 }
 
-HRESULT Skill_RasenShuriken::Initialize(void* arg)
+HRESULT Skill_RasenShuriken_Hit::Initialize(void* arg)
 {
-    CHECK_FAILED(SkillObject_Projectile::Initialize(arg), E_FAIL);
+    CHECK_FAILED(SkillObject::Initialize(arg), E_FAIL);
 
-    _isMoving = false;
-    _isActivatedByHit = false;
-    _activationPosition = Vec3::Zero;
+    auto* desc = static_cast<FHitDesc*>(arg);
+    if (!desc) return E_FAIL;
+
+     if (desc->damageCauser)
+        Set_Owner(desc->damageCauser);
+
+    _isFinalBlast = false;
 
     if (_transformCom)
+    {
+        _transformCom->Set_WorldPosition(desc->spawnPosition);
         _transformCom->Set_LocalScale(_baseScale);
+    }
+
+    if (_collider)
+        _collider->Set_IsActive(true);
 
     EffectComponent::FPlayDesc playDesc{};
-    playDesc.effectAssetName = "RasenganShuriken";
+    playDesc.effectAssetName = "RasenShuriken_Hit";
 
     CHECK_FAILED(_effectCom->Play_Effect(playDesc), E_FAIL);
 
     return S_OK;
 }
 
-void Skill_RasenShuriken::Update(float timeDelta)
+void Skill_RasenShuriken_Hit::Update(float timeDelta)
 {
-    SkillObject_Projectile::Update(timeDelta);
+    SkillObject::Update(timeDelta);
 
     if (Is_Destroy())
         return;
 
-    // 첫 충돌 이후에는 위치 고정
-    if (_isActivatedByHit && _transformCom)
+    if (!_isFinalBlast)
     {
-        _transformCom->Set_WorldPosition(_activationPosition);
-
         Vec3 currentScale = _transformCom->Get_LocalScale();
-        float currentRadius = _maxScale;
         float nextScale = min(_maxScale, currentScale.x + (_scaleGrowSpeed * timeDelta));
+        _transformCom->Set_LocalScale(nextScale);
 
         Shared<Bounding_Sphere> sphere = static_pointer_cast<Bounding_Sphere>(_collider->Get_Bounding());
         if (sphere)
-            sphere->Get_OriginSphere().Radius = nextScale; 
-
+            sphere->Get_OriginSphere().Radius = nextScale;
     }
     
 }
 
-void Skill_RasenShuriken::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
+void Skill_RasenShuriken_Hit::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
 {
-    SkillObject_Projectile::OnBeginOverlap(self, other);
+    SkillObject::OnBeginOverlap(self, other);
 
     if (Is_Destroy())
         return;
@@ -104,23 +103,14 @@ void Skill_RasenShuriken::OnBeginOverlap(Shared<Collider> self, Shared<Collider>
     auto otherOwner = other->Get_Owner();
     CHECK_NULL(otherOwner);
 
-    if (!_isActivatedByHit)
-    {
-        _isActivatedByHit = true;
-        _isMoving = false;
-
-        if (_transformCom)
-            _activationPosition = _transformCom->Get_WorldPosition();
-    }
-
     Process_MultiHit(character, otherOwner.get());
 }
 
-void Skill_RasenShuriken::OnStayOverlap(Shared<Collider> self, Shared<Collider> other)
+void Skill_RasenShuriken_Hit::OnStayOverlap(Shared<Collider> self, Shared<Collider> other)
 {
-    SkillObject_Projectile::OnStayOverlap(self, other);
+    SkillObject::OnStayOverlap(self, other);
 
-    if (!_isActivatedByHit || Is_Destroy())
+    if (Is_Destroy())
         return;
 
     auto character = Find_HitCharacter(other);
@@ -137,9 +127,9 @@ void Skill_RasenShuriken::OnStayOverlap(Shared<Collider> self, Shared<Collider> 
     }
 }
 
-void Skill_RasenShuriken::OnEndOverlap(Shared<Collider> self, Shared<Collider> other)
+void Skill_RasenShuriken_Hit::OnEndOverlap(Shared<Collider> self, Shared<Collider> other)
 {
-    SkillObject_Projectile::OnEndOverlap(self, other);
+    SkillObject::OnEndOverlap(self, other);
 
     if (!other)
         return;
@@ -152,7 +142,7 @@ void Skill_RasenShuriken::OnEndOverlap(Shared<Collider> self, Shared<Collider> o
     _hitCooldowns.erase(otherOwner.get());
 }
 
-Character* Skill_RasenShuriken::Find_HitCharacter(Shared<Collider> other)
+Character* Skill_RasenShuriken_Hit::Find_HitCharacter(Shared<Collider> other)
 {
     if (!other || Is_Destroy())
         return nullptr;
@@ -167,7 +157,7 @@ Character* Skill_RasenShuriken::Find_HitCharacter(Shared<Collider> other)
     return dynamic_cast<Character*>(otherOwner.get());
 }
 
-void Skill_RasenShuriken::Process_MultiHit(Character* hitted, GameObject* targetKey)
+void Skill_RasenShuriken_Hit::Process_MultiHit(Character* hitted, GameObject* targetKey)
 {
     CHECK_NULL(hitted);
     CHECK_NULL(targetKey);
@@ -181,7 +171,13 @@ void Skill_RasenShuriken::Process_MultiHit(Character* hitted, GameObject* target
         _hitCooldowns.clear();
 
         if (_transformCom)
+        {
             _transformCom->Set_LocalScale(_finalBlastRadius);
+            
+            Shared<Bounding_Sphere> sphere = static_pointer_cast<Bounding_Sphere>(_collider->Get_Bounding());
+            if (sphere)
+                sphere->Get_OriginSphere().Radius = _finalBlastRadius;
+        }
 
         Trigger_FinalHit(hitted, targetKey);
 
@@ -195,7 +191,7 @@ void Skill_RasenShuriken::Process_MultiHit(Character* hitted, GameObject* target
     _hitCount++;
 }
 
-void Skill_RasenShuriken::Trigger_FinalHit(Character* character, GameObject* targetKey)
+void Skill_RasenShuriken_Hit::Trigger_FinalHit(Character* character, GameObject* targetKey)
 {
     CHECK_NULL(character);
     CHECK_NULL(targetKey);
@@ -203,7 +199,7 @@ void Skill_RasenShuriken::Trigger_FinalHit(Character* character, GameObject* tar
     if (_hitCooldowns[targetKey] > 0.f)
         return;
 
-    Vec3 dir = character->Get_Transform()->Get_WorldPosition() - _activationPosition;
+    Vec3 dir = character->Get_Transform()->Get_WorldPosition() -  _transformCom->Get_WorldPosition();
     dir.y = 0.f;
     dir = Utils::Safe_Normalize(dir);
 
@@ -221,16 +217,17 @@ void Skill_RasenShuriken::Trigger_FinalHit(Character* character, GameObject* tar
     if (myPlayer)
         myPlayer->Add_ComboHit();
 
+    // 두번 히트 안되게
     _hitCooldowns[targetKey] = FLT_MAX;
 }
 
-Shared<GameObject> Skill_RasenShuriken::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+Shared<GameObject> Skill_RasenShuriken_Hit::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
-    auto instance = make_shared<Skill_RasenShuriken>(device, context);
+    auto instance = make_shared<Skill_RasenShuriken_Hit>(device, context);
 
     if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Create : Skill_RasenShuriken");
+        MSG_BOX("Failed to Create : Skill_RasenShuriken_Hit");
 
         return nullptr;
     }
@@ -238,13 +235,13 @@ Shared<GameObject> Skill_RasenShuriken::Create(ComPtr<Device> device, ComPtr<Dev
     return instance;
 }
 
-Shared<GameObject> Skill_RasenShuriken::Clone(void* arg)
+Shared<GameObject> Skill_RasenShuriken_Hit::Clone(void* arg)
 {
-    auto clone = make_shared<Skill_RasenShuriken>(*this);
+    auto clone = make_shared<Skill_RasenShuriken_Hit>(*this);
 
     if (FAILED(clone->Initialize(arg)))
     {
-        MSG_BOX("Failed to Clone : Skill_RasenShuriken");
+        MSG_BOX("Failed to Clone : Skill_RasenShuriken_Hit");
 
         return nullptr;
     }
@@ -252,7 +249,7 @@ Shared<GameObject> Skill_RasenShuriken::Clone(void* arg)
     return clone;
 }
 
-void Skill_RasenShuriken::Free()
+void Skill_RasenShuriken_Hit::Free()
 {
-    SkillObject_Projectile::Free();
+    SkillObject::Free();
 }

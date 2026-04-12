@@ -61,8 +61,6 @@ static bool Is_EffectAssetTypeMatched(const FAssetMeta* meta, const string& expe
     return Utils::ToLowerCopy(meta->type) == Utils::ToLowerCopy(expectedAssetType);
 }
 
-// Diffuse/Mask 피커에서 한 개가 아니라 여러 루트(예: Effects/;Skills/)를 동시에 허용할 수 있게 검사한다.
-// allowedRelativePrefix는 ';' 구분 문자열로 들어오며, 어떤 prefix 하나라도 맞으면 통과시킨다.
 static bool Is_EffectAssetInAllowedRelativeRoot(const FAssetMeta* meta, const char* allowedRelativePrefix)
 {
     if (!meta)
@@ -262,12 +260,12 @@ void Effect_View::Pre_Render()
     }
         
 
+    //_prevRT->Clear(Color(0.f, 0.f, 1.15f, 1.f));
     _prevRT->Clear(Color(0.12f, 0.12f, 0.15f, 1.f));
     _prevRT->BindAsTarget();
 
     GAME->Draw(false, false);
 
-    // GAME->Draw 이후 다른 경로에서 타깃이 바뀔 수 있어서 프리뷰 RT를 다시 명시적으로 물린다.
     _prevRT->BindAsTarget();
 
     Ensure_PreviewGridResources();
@@ -394,7 +392,7 @@ void Effect_View::Apply_PreviewCameraSettings()
     _previewCamera->Apply_EditorDesc(desc);
 }
 
-// 프리뷰 오브젝트가 안 보여도 카메라 위치와 파라미터를 숫자로 확인하고 즉시 복구할 수 있게 한다.
+
 void Effect_View::Draw_PreviewCameraInspector()
 {
     if (!_previewCamera)
@@ -763,6 +761,7 @@ void Effect_View::Draw_LayerList()
         newLayer.base.kind = Engine::EEffectLayerKind::BillboardRect;
         newLayer.base.localScale = Vec3(1.f, 1.f, 1.f);
         newLayer.billboard.blendMode = Engine::EEffectBlendMode::Additive;
+        newLayer.billboard.renderMode = Engine::EEffectBillboardRenderMode::CoreSphere;
         newLayer.billboard.baseTint = Vec4(0.55f, 0.92f, 1.f, 1.f);
         newLayer.billboard.ringTint = Vec4(0.85f, 1.f, 1.f, 1.f);
         newLayer.billboard.baseOpacity = 1.f;
@@ -960,6 +959,42 @@ void Effect_View::Draw_Inspector()
             ImGui::Spacing();
 
             Draw_AssetSlotPicker(
+                "Normal",
+                "##EffectNormalPicker",
+                ICON_FA_IMAGE " Select Normal Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.mesh.normalTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
+                "Roughness",
+                "##EffectRoughnessPicker",
+                ICON_FA_IMAGE " Select Roughness Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.mesh.roughnessTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
+                "Specular",
+                "##EffectSpecularPicker",
+                ICON_FA_IMAGE " Select Specular Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.mesh.specularTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
                 "Emissive Gradation",
                 "##EffectEmissiveGradationPicker",
                 ICON_FA_IMAGE " Select Emissive Gradation Texture",
@@ -1039,6 +1074,14 @@ void Effect_View::Draw_Inspector()
                 materialChanged = true;
             }
 
+            int shadingMode = static_cast<int>(layer.mesh.shadingMode);
+            if (ImGui::Combo("Shading Mode", &shadingMode, "Unlit\0Lit\0"))
+            {
+                layer.mesh.shadingMode = static_cast<Engine::EEffectMeshShadingMode>(shadingMode);
+                MarkDirty();
+                materialChanged = true;
+            }
+
             if (ImGui::Checkbox("Two Sided", &layer.mesh.twoSided))
             {
                 MarkDirty();
@@ -1058,6 +1101,28 @@ void Effect_View::Draw_Inspector()
             {
                 MarkDirty();
                 materialChanged = true;
+            }
+
+            if (ImGui::Checkbox("Color Tint Over Time", &layer.mesh.useColorTintOverTime))
+            {
+                if (layer.mesh.useColorTintOverTime)
+                    layer.mesh.endColorTint = layer.mesh.colorTint;
+
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (layer.mesh.useColorTintOverTime)
+            {
+                ImGui::Indent();
+
+                if (ImGui::ColorEdit4("End Color Tint", (float*)&layer.mesh.endColorTint))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                ImGui::Unindent();
             }
 
             if (ImGui::DragFloat2("UV Tiling", (float*)&layer.mesh.uvTiling, 0.05f))
@@ -1085,6 +1150,92 @@ void Effect_View::Draw_Inspector()
             }
 
             if (ImGui::SliderFloat("Opacity", &layer.mesh.opacity, 0.f, 1.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::Checkbox("Opacity Over Time", &layer.mesh.useOpacityOverTime))
+            {
+                if (layer.mesh.useOpacityOverTime)
+                    layer.mesh.endOpacity = layer.mesh.opacity;
+
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (layer.mesh.useOpacityOverTime)
+            {
+                ImGui::Indent();
+
+                if (ImGui::SliderFloat("End Opacity", &layer.mesh.endOpacity, 0.f, 1.f))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                ImGui::Unindent();
+            }
+
+            if (ImGui::DragFloat("Normal Strength", &layer.mesh.normalStrength, 0.01f, 0.f, 8.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::SliderFloat("Roughness", &layer.mesh.roughness, 0.f, 1.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat("Specular Strength", &layer.mesh.specularStrength, 0.01f, 0.f, 8.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat("Specular Power", &layer.mesh.specularPower, 0.5f, 1.f, 256.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat("Emissive Strength", &layer.mesh.emissiveStrength, 0.01f, 0.f, 16.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::Checkbox("Emissive Over Time", &layer.mesh.useEmissiveStrengthOverTime))
+            {
+                if (layer.mesh.useEmissiveStrengthOverTime)
+                    layer.mesh.endEmissiveStrength = layer.mesh.emissiveStrength;
+
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (layer.mesh.useEmissiveStrengthOverTime)
+            {
+                ImGui::Indent();
+
+                if (ImGui::DragFloat("End Emissive Strength", &layer.mesh.endEmissiveStrength, 0.01f, 0.f, 16.f))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                ImGui::Unindent();
+            }
+
+            if (ImGui::DragFloat4("Custom Params 0", (float*)&layer.mesh.customParams0, 0.01f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat4("Custom Params 1", (float*)&layer.mesh.customParams1, 0.01f))
             {
                 MarkDirty();
                 materialChanged = true;
@@ -1170,10 +1321,42 @@ void Effect_View::Draw_Inspector()
                 resourceChanged = true;
             }
 
-            if (ImGui::DragFloat3("Range", (float*)&layer.point.range, 0.05f))
+            int spawnShape = static_cast<int>(layer.point.spawnShape);
+            if (ImGui::Combo("Spawn Shape", &spawnShape, "Box\0Sphere\0Cylinder\0Ring\0"))
+            {
+                layer.point.spawnShape = static_cast<Engine::EEffectPointSpawnShape>(spawnShape);
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (layer.point.spawnShape == Engine::EEffectPointSpawnShape::Box &&
+                ImGui::DragFloat3("Range", (float*)&layer.point.range, 0.05f))
             {
                 MarkDirty();
                 resourceChanged = true;
+            }
+
+            if (layer.point.spawnShape != Engine::EEffectPointSpawnShape::Box)
+            {
+                if (ImGui::DragFloat("Spawn Radius", &layer.point.spawnRadius, 0.05f, 0.f, 100.f))
+                {
+                    MarkDirty();
+                    resourceChanged = true;
+                }
+
+                if (ImGui::DragFloat("Inner Radius", &layer.point.spawnInnerRadius, 0.05f, 0.f, 100.f))
+                {
+                    layer.point.spawnInnerRadius = (std::clamp)(layer.point.spawnInnerRadius, 0.f, layer.point.spawnRadius);
+                    MarkDirty();
+                    resourceChanged = true;
+                }
+
+                if (layer.point.spawnShape == Engine::EEffectPointSpawnShape::Cylinder &&
+                    ImGui::DragFloat("Spawn Height", &layer.point.spawnHeight, 0.05f, 0.f, 100.f))
+                {
+                    MarkDirty();
+                    resourceChanged = true;
+                }
             }
 
             if (ImGui::DragFloat2("Scale", (float*)&layer.point.scale, 0.01f, 0.001f, 10.f))
@@ -1188,7 +1371,112 @@ void Effect_View::Draw_Inspector()
                 resourceChanged = true;
             }
 
+            if (ImGui::Checkbox("Color Tint Over Time", &layer.point.useColorTintOverTime))
+            {
+                if (layer.point.useColorTintOverTime)
+                    layer.point.endColorTint = layer.point.colorTint;
+
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (layer.point.useColorTintOverTime)
+            {
+                ImGui::Indent();
+
+                if (ImGui::ColorEdit4("End Color Tint", (float*)&layer.point.endColorTint))
+                {
+                    MarkDirty();
+                    resourceChanged = true;
+                }
+
+                ImGui::Unindent();
+            }
+
             if (ImGui::SliderFloat("Opacity", &layer.point.opacity, 0.f, 1.f))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (ImGui::Checkbox("Opacity Over Time", &layer.point.useOpacityOverTime))
+            {
+                if (layer.point.useOpacityOverTime)
+                    layer.point.endOpacity = layer.point.opacity;
+
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (layer.point.useOpacityOverTime)
+            {
+                ImGui::Indent();
+
+                if (ImGui::SliderFloat("End Opacity", &layer.point.endOpacity, 0.f, 1.f))
+                {
+                    MarkDirty();
+                    resourceChanged = true;
+                }
+
+                ImGui::Unindent();
+            }
+
+            if (ImGui::Checkbox("Use Flipbook", &layer.point.flipbook.enabled))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (layer.point.flipbook.enabled)
+            {
+                ImGui::Indent();
+
+                if (ImGui::DragInt("Columns", &layer.point.flipbook.columns, 1.f, 1, 64))
+                {
+                    MarkDirty();
+                    resourceChanged = true;
+                }
+
+                if (ImGui::DragInt("Rows", &layer.point.flipbook.rows, 1.f, 1, 64))
+                {
+                    MarkDirty();
+                    resourceChanged = true;
+                }
+
+                if (ImGui::DragFloat("FPS", &layer.point.flipbook.fps, 0.1f, 0.01f, 120.f))
+                {
+                    MarkDirty();
+                    resourceChanged = true;
+                }
+
+                if (ImGui::DragInt("Start Frame", &layer.point.flipbook.startFrame, 1.f, 0, 4096))
+                {
+                    MarkDirty();
+                    resourceChanged = true;
+                }
+
+                if (ImGui::DragInt("End Frame", &layer.point.flipbook.endFrame, 1.f, -1, 4096))
+                {
+                    MarkDirty();
+                    resourceChanged = true;
+                }
+
+                if (ImGui::Checkbox("Flipbook Loop", &layer.point.flipbook.loop))
+                {
+                    MarkDirty();
+                    resourceChanged = true;
+                }
+
+                ImGui::Unindent();
+            }
+
+            if (ImGui::DragFloat4("Custom Params 0", (float*)&layer.point.customParams0, 0.01f))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (ImGui::DragFloat4("Custom Params 1", (float*)&layer.point.customParams1, 0.01f))
             {
                 MarkDirty();
                 resourceChanged = true;
@@ -1230,6 +1518,42 @@ void Effect_View::Draw_Inspector()
             ImGui::Spacing();
 
             Draw_AssetSlotPicker(
+                "Base Mask Texture",
+                "##EffectBillboardBaseMaskTexturePicker",
+                ICON_FA_IMAGE " Select Billboard Base Mask Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.billboard.baseMaskTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
+                "Base Opacity",
+                "##EffectBillboardBaseOpacityPicker",
+                ICON_FA_IMAGE " Select Billboard Base Opacity Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.billboard.baseOpacityTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
+                "Base Opacity Gradation",
+                "##EffectBillboardBaseOpacityGradationPicker",
+                ICON_FA_IMAGE " Select Billboard Base Opacity Gradation Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.billboard.baseOpacityGradationTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
                 "Ring Texture",
                 "##EffectBillboardRingTexturePicker",
                 ICON_FA_IMAGE " Select Billboard Ring Texture",
@@ -1241,10 +1565,42 @@ void Effect_View::Draw_Inspector()
 
             ImGui::Spacing();
 
+            Draw_AssetSlotPicker(
+                "Ring Opacity",
+                "##EffectBillboardRingOpacityPicker",
+                ICON_FA_IMAGE " Select Billboard Ring Opacity Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.billboard.ringOpacityTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
+            Draw_AssetSlotPicker(
+                "Ring Opacity Gradation",
+                "##EffectBillboardRingOpacityGradationPicker",
+                ICON_FA_IMAGE " Select Billboard Ring Opacity Gradation Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.billboard.ringOpacityGradationTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
             int blend = static_cast<int>(layer.billboard.blendMode);
             if (ImGui::Combo("BlendMode", &blend, "Translucent\0Additive\0Opaque\0"))
             {
                 layer.billboard.blendMode = static_cast<Engine::EEffectBlendMode>(blend);
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            int renderMode = static_cast<int>(layer.billboard.renderMode);
+            if (ImGui::Combo("Render Mode", &renderMode, "CoreSphere\0FlipbookDecal\0Distortion\0"))
+            {
+                layer.billboard.renderMode = static_cast<Engine::EEffectBillboardRenderMode>(renderMode);
                 MarkDirty();
                 materialChanged = true;
             }
@@ -1276,6 +1632,83 @@ void Effect_View::Draw_Inspector()
                 materialChanged = true;
             }
 
+            if (ImGui::DragFloat("Base Emissive Strength", &layer.billboard.baseEmissiveStrength, 0.01f, 0.f, 16.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::Checkbox("Base Opacity Over Time", &layer.billboard.useBaseOpacityOverTime))
+            {
+                if (layer.billboard.useBaseOpacityOverTime)
+                    layer.billboard.endBaseOpacity = layer.billboard.baseOpacity;
+
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (layer.billboard.useBaseOpacityOverTime)
+            {
+                ImGui::Indent();
+
+                if (ImGui::SliderFloat("End Base Opacity", &layer.billboard.endBaseOpacity, 0.f, 1.f))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                ImGui::Unindent();
+            }
+
+            if (ImGui::Checkbox("Use Base Flipbook", &layer.billboard.baseFlipbook.enabled))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (layer.billboard.baseFlipbook.enabled)
+            {
+                ImGui::Indent();
+
+                if (ImGui::DragInt("Base Columns", &layer.billboard.baseFlipbook.columns, 1.f, 1, 64))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragInt("Base Rows", &layer.billboard.baseFlipbook.rows, 1.f, 1, 64))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragFloat("Base FPS", &layer.billboard.baseFlipbook.fps, 0.1f, 0.01f, 120.f))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragInt("Base Start Frame", &layer.billboard.baseFlipbook.startFrame, 1.f, 0, 4096))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragInt("Base End Frame", &layer.billboard.baseFlipbook.endFrame, 1.f, -1, 4096))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::Checkbox("Base Flipbook Loop", &layer.billboard.baseFlipbook.loop))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                ImGui::Unindent();
+            }
+
             if (ImGui::ColorEdit4("Ring Tint", (float*)&layer.billboard.ringTint))
             {
                 MarkDirty();
@@ -1283,6 +1716,95 @@ void Effect_View::Draw_Inspector()
             }
 
             if (ImGui::SliderFloat("Ring Opacity", &layer.billboard.ringOpacity, 0.f, 1.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat("Ring Emissive Strength", &layer.billboard.ringEmissiveStrength, 0.01f, 0.f, 16.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::Checkbox("Ring Opacity Over Time", &layer.billboard.useRingOpacityOverTime))
+            {
+                if (layer.billboard.useRingOpacityOverTime)
+                    layer.billboard.endRingOpacity = layer.billboard.ringOpacity;
+
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (layer.billboard.useRingOpacityOverTime)
+            {
+                ImGui::Indent();
+
+                if (ImGui::SliderFloat("End Ring Opacity", &layer.billboard.endRingOpacity, 0.f, 1.f))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                ImGui::Unindent();
+            }
+
+            if (ImGui::Checkbox("Use Ring Flipbook", &layer.billboard.ringFlipbook.enabled))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (layer.billboard.ringFlipbook.enabled)
+            {
+                ImGui::Indent();
+
+                if (ImGui::DragInt("Ring Columns", &layer.billboard.ringFlipbook.columns, 1.f, 1, 64))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragInt("Ring Rows", &layer.billboard.ringFlipbook.rows, 1.f, 1, 64))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragFloat("Ring FPS", &layer.billboard.ringFlipbook.fps, 0.1f, 0.01f, 120.f))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragInt("Ring Start Frame", &layer.billboard.ringFlipbook.startFrame, 1.f, 0, 4096))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragInt("Ring End Frame", &layer.billboard.ringFlipbook.endFrame, 1.f, -1, 4096))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::Checkbox("Ring Flipbook Loop", &layer.billboard.ringFlipbook.loop))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                ImGui::Unindent();
+            }
+
+            if (ImGui::DragFloat4("Custom Params 0", (float*)&layer.billboard.customParams0, 0.01f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat4("Custom Params 1", (float*)&layer.billboard.customParams1, 0.01f))
             {
                 MarkDirty();
                 materialChanged = true;

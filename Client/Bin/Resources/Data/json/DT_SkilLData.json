@@ -10,7 +10,7 @@
             "hasDashPhase": true,
             "dashSpeed": 14,
             "maxDashDistance": 12,
-            "targetStopDistance": 1.5,
+            "targetStopDistance": 1.8,
             "attackEndAnimStateName": "Skill_Rasengan_End",
             "airAnimStateName": "Skill_Rasengan_Air",
             "airGravityOff": true,

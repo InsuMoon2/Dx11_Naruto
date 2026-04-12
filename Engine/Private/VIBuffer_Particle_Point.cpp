@@ -15,6 +15,10 @@ VIBuffer_Particle_Point::VIBuffer_Particle_Point(const VIBuffer_Particle_Point& 
     , _pivot(rhs._pivot)
     , _isLoop(rhs._isLoop)
     , _moveMode(rhs._moveMode)
+    , _spawnShape(rhs._spawnShape)
+    , _spawnRadius(rhs._spawnRadius)
+    , _spawnInnerRadius(rhs._spawnInnerRadius)
+    , _spawnHeight(rhs._spawnHeight)
 {
 }
 
@@ -38,6 +42,10 @@ HRESULT VIBuffer_Particle_Point::Initialize(void* arg)
     _pivot = desc->pivot;
     _isLoop = desc->isLoop;
     _moveMode = desc->moveMode;
+    _spawnShape = desc->spawnShape;
+    _spawnRadius = desc->spawnRadius;
+    _spawnInnerRadius = desc->spawnInnerRadius;
+    _spawnHeight = desc->spawnHeight;
 
     VTXPOS vertices[1]{};
     vertices[0].position = Vec3(0.f, 0.f, 0.f);
@@ -83,18 +91,12 @@ HRESULT VIBuffer_Particle_Point::Build_Instances(const FParticlePointDesc& desc)
 
     for (uint32 i = 0; i < desc.numInstances; ++i)
     {
-        const float scaleX = Utils::RandomRange(desc.scale.x, desc.scale.y);
-        const float scaleY = Utils::RandomRange(desc.scale.x, desc.scale.y);
         const float speed = Utils::RandomRange(desc.speed.x, desc.speed.y);
         const float maxLifeTime = Utils::RandomRange(desc.lifeTime.x, desc.lifeTime.y);
-
-        Vec3 offset(
-            Utils::RandomRange(-desc.range.x, desc.range.x),
-            Utils::RandomRange(-desc.range.y, desc.range.y),
-            Utils::RandomRange(-desc.range.z, desc.range.z));
+        const Vec3 offset = Build_SpawnOffset(desc);
 
         const Vec3 startPos = desc.center + _pivot + offset;
-        const Vec3 direction = (_moveMode == EMoveMode::Spread) ? Utils::RandomDirection() : Vec3(0.f, -1.f, 0.f);
+        const Vec3 direction = (_moveMode == EMoveMode::Spread) ? Resolve_SpreadDirection(offset) : Vec3(0.f, -1.f, 0.f);
 
         VTXPARTICLE_INSTANCE instance{};
 
@@ -114,6 +116,59 @@ HRESULT VIBuffer_Particle_Point::Build_Instances(const FParticlePointDesc& desc)
     }
 
     return S_OK;
+}
+
+Vec3 VIBuffer_Particle_Point::Build_SpawnOffset(const FParticlePointDesc& desc) const
+{
+    switch (desc.spawnShape)
+    {
+    case EEffectPointSpawnShape::Sphere:
+    {
+        const Vec3 direction = Utils::RandomDirection();
+        const float outerRadius = (std::max)(desc.spawnRadius, 0.f);
+        const float innerRadius = std::clamp(desc.spawnInnerRadius, 0.f, outerRadius);
+        const float radius = Utils::RandomRange(innerRadius, outerRadius);
+        return direction * radius;
+    }
+
+    case EEffectPointSpawnShape::Cylinder:
+    {
+        const float outerRadius = (std::max)(desc.spawnRadius, 0.f);
+        const float innerRadius = std::clamp(desc.spawnInnerRadius, 0.f, outerRadius);
+        const float angle = Utils::RandomRange(0.f, XM_2PI);
+        const float radius = Utils::RandomRange(innerRadius, outerRadius);
+        const float height = Utils::RandomRange(-desc.spawnHeight * 0.5f, desc.spawnHeight * 0.5f);
+        return Vec3(cosf(angle) * radius, height, sinf(angle) * radius);
+    }
+
+    case EEffectPointSpawnShape::Ring:
+    {
+        const float outerRadius = (std::max)(desc.spawnRadius, 0.f);
+        const float innerRadius = std::clamp(desc.spawnInnerRadius, 0.f, outerRadius);
+        const float angle = Utils::RandomRange(0.f, XM_2PI);
+        const float radius = Utils::RandomRange(innerRadius, outerRadius);
+        return Vec3(cosf(angle) * radius, 0.f, sinf(angle) * radius);
+    }
+
+    case EEffectPointSpawnShape::Box:
+    default:
+        return Vec3(
+            Utils::RandomRange(-desc.range.x, desc.range.x),
+            Utils::RandomRange(-desc.range.y, desc.range.y),
+            Utils::RandomRange(-desc.range.z, desc.range.z));
+    }
+}
+
+Vec3 VIBuffer_Particle_Point::Resolve_SpreadDirection(const Vec3& spawnOffset) const
+{
+    if (spawnOffset.LengthSquared() > FLT_EPSILON)
+    {
+        Vec3 direction = spawnOffset;
+        direction.Normalize();
+        return direction;
+    }
+
+    return Utils::RandomDirection();
 }
 
 HRESULT VIBuffer_Particle_Point::Bind_Resources()

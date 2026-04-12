@@ -26,6 +26,9 @@ public:
         EEffectBlendMode blendMode = EEffectBlendMode::Additive; // Point 파티클 셰이더 패스 선택용 블렌드 모드다.
         Vec4 colorTint = Vec4(1.f, 1.f, 1.f, 1.f); // Point 텍스처를 원본 색 대신 원하는 색으로 틴트할 때 사용한다.
         float opacity = 1.f;                       // Point shader 최종 알파 강도 보정값이다.
+        FEffectFlipbookDesc flipbook;              // Point 텍스처를 Flipbook/SubUV 시트로 재생할 때 사용할 설정이다.
+        Vec4 customParams0 = Vec4::Zero;           // 셰이더에서 자유롭게 읽을 수 있는 사용자 정의 파라미터 0번 슬롯이다.
+        Vec4 customParams1 = Vec4::Zero;           // 셰이더에서 자유롭게 읽을 수 있는 사용자 정의 파라미터 1번 슬롯이다.
 
         uint32 textureIndex = 0;
 
@@ -48,6 +51,10 @@ public:
     HRESULT Render() override;
     bool    Should_ExcludeFromEditorSnapshot() const override { return true; }
     HRESULT Bind_ShaderResources() override;
+    // EffectComponent가 레이어 수명 보간 결과를 Point 오브젝트에 실시간 반영할 때 호출한다.
+    void    Set_ColorTint(const Vec4& colorTint);
+    // EffectComponent가 레이어 수명 보간 결과를 Point 알파 값으로 넘길 때 호출한다.
+    void    Set_Opacity(float opacity);
 
 private:
     // GUID 텍스처가 들어온 경우 에셋 경로를 해석해 Texture 컴포넌트를 동적으로 준비한다.
@@ -69,6 +76,9 @@ private:
     Vec4 _colorTint = Vec4(1.f, 1.f, 1.f, 1.f);              // Point 텍스처를 마스크처럼 사용할 때 곱해질 최종 색상이다.
     float _opacity = 1.f;                                     // Point 텍스처의 최종 불투명도 강도다.
     bool _useLifetimeFade = true;                             // 정적 데칼처럼 유지돼야 하는 Point인지, 수명 기반 fade를 쓸지 결정한다.
+    FEffectFlipbookDesc _flipbook;                            // 현재 Point 텍스처를 어떤 Flipbook 설정으로 샘플링할지 기억한다.
+    Vec4 _customParams0 = Vec4::Zero;                         // 현재 Point 셰이더에 바인딩할 사용자 정의 파라미터 0번 슬롯이다.
+    Vec4 _customParams1 = Vec4::Zero;                         // 현재 Point 셰이더에 바인딩할 사용자 정의 파라미터 1번 슬롯이다.
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

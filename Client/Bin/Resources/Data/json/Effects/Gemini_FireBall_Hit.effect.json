@@ -1,0 +1,409 @@
+{
+    "autoPlay": true,
+    "effectName": "Gemini_FireBall_Hit",
+    "layers": [
+        {
+            "blendMode": 1,
+            "colorTint": [
+                1.0,
+                0.25,
+                0.019999999552965164,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "diffuseTextureGuid": "",
+            "duration": 0.800000011920929,
+            "emissiveGradationTextureGuid": "",
+            "emissiveStrength": 10.0,
+            "emissiveTextureGuid": "1b8719c6-a832-496d-bd9f-dba5e99fa55c",
+            "enabled": true,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endEmissiveStrength": 0.0,
+            "endOpacity": 1.0,
+            "endScale": [
+                4.0,
+                4.0,
+                4.0
+            ],
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "Gemini_Hit_Shockwave_Inner",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "07a92316-0fb5-4d98-bae6-f3f40a41b396",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "1b8719c6-a832-496d-bd9f-dba5e99fa55c",
+            "rotationAxis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "rotationSpeed": 0.0,
+            "roughness": 0.0,
+            "roughnessTextureGuid": "",
+            "shadingMode": 0,
+            "specularPower": 32.0,
+            "specularStrength": 1.0,
+            "specularTextureGuid": "",
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useColorTintOverTime": false,
+            "useEmissiveStrengthOverTime": true,
+            "useOpacityAsTransparency": false,
+            "useOpacityOverTime": true,
+            "useScaleOverTime": true,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "blendMode": 1,
+            "colorTint": [
+                1.0,
+                0.05000000074505806,
+                0.009999999776482582,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "diffuseTextureGuid": "",
+            "duration": 1.0,
+            "emissiveGradationTextureGuid": "",
+            "emissiveStrength": 8.0,
+            "emissiveTextureGuid": "72bf4061-0356-41f2-8ead-cb8b7a1f7503",
+            "enabled": true,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endEmissiveStrength": 0.0,
+            "endOpacity": 1.0,
+            "endScale": [
+                6.0,
+                6.0,
+                6.0
+            ],
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "Gemini_Hit_Shockwave_Outer",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "901754c1-340c-4748-9b17-cdda2fbe64e5",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "1b8719c6-a832-496d-bd9f-dba5e99fa55c",
+            "rotationAxis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "rotationSpeed": 360.0,
+            "roughness": 0.0,
+            "roughnessTextureGuid": "",
+            "shadingMode": 0,
+            "specularPower": 32.0,
+            "specularStrength": 1.0,
+            "specularTextureGuid": "",
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useColorTintOverTime": false,
+            "useEmissiveStrengthOverTime": true,
+            "useOpacityAsTransparency": false,
+            "useOpacityOverTime": true,
+            "useScaleOverTime": true,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "blendMode": 1,
+            "colorTint": [
+                1.0,
+                0.15662693977355957,
+                0.007168471813201904,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "diffuseTextureGuid": "",
+            "duration": 0.6000000238418579,
+            "emissiveGradationTextureGuid": "",
+            "emissiveStrength": 2.130000114440918,
+            "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "enabled": true,
+            "endColorTint": [
+                1.0,
+                0.0788530707359314,
+                0.0788530707359314,
+                1.0
+            ],
+            "endEmissiveStrength": 0.0,
+            "endOpacity": 0.7089999914169312,
+            "endScale": [
+                3.0,
+                3.0,
+                3.0
+            ],
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "Gemini_Hit_CoreExplosion",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "7f465ce9-ec4d-46df-a61a-a3cec2483da5",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "",
+            "rotationAxis": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "rotationSpeed": -400.0,
+            "roughness": 0.0,
+            "roughnessTextureGuid": "",
+            "shadingMode": 0,
+            "specularPower": 32.0,
+            "specularStrength": 1.0,
+            "specularTextureGuid": "",
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useColorTintOverTime": false,
+            "useEmissiveStrengthOverTime": false,
+            "useOpacityAsTransparency": false,
+            "useOpacityOverTime": true,
+            "useScaleOverTime": true,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "baseEmissiveStrength": 1.0,
+            "baseFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": false,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "baseMaskTextureGuid": "",
+            "baseOpacity": 1.0,
+            "baseOpacityGradationTextureGuid": "",
+            "baseOpacityTextureGuid": "",
+            "baseTextureGuid": "52e4d990-9b6b-47fa-8033-efcdf0aa1d85",
+            "baseTint": [
+                1.0,
+                0.2224920392036438,
+                0.06093192100524902,
+                1.0
+            ],
+            "billboardToCamera": true,
+            "blendMode": 1,
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "duration": 0.800000011920929,
+            "enabled": true,
+            "endBaseOpacity": 0.7120000123977661,
+            "endRingOpacity": 0.0,
+            "endScale": [
+                8.0,
+                8.0,
+                1.0
+            ],
+            "kind": 2,
+            "layerName": "Gemini_Hit_Distortion",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "loop": false,
+            "renderMode": 2,
+            "ringEmissiveStrength": 1.0,
+            "ringFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": false,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "ringOpacity": 1.0,
+            "ringOpacityGradationTextureGuid": "",
+            "ringOpacityTextureGuid": "",
+            "ringTextureGuid": "",
+            "ringTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "startDelay": 0.0,
+            "useBaseOpacityOverTime": true,
+            "useRing": false,
+            "useRingOpacityOverTime": false,
+            "useScaleOverTime": true
+        }
+    ],
+    "totalDuration": 1.0
+}

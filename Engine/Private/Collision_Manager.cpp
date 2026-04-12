@@ -76,6 +76,21 @@ void Collision_Manager::Update()
                         srcRatio = 1.f;
                         dstRatio = 0.f;
                     }
+                    else
+                    {
+                        bool srcIsPlayer = (src->Get_Channel() == Collision_Channel::Player_Body);
+                        bool dstIsPlayer = (dst->Get_Channel() == Collision_Channel::Player_Body);
+                        if (srcIsPlayer && !dstIsPlayer)
+                        {
+                            srcRatio = 1.f;
+                            dstRatio = 0.f;
+                        }
+                        else if (!srcIsPlayer && dstIsPlayer)
+                        {
+                            srcRatio = 0.f;
+                            dstRatio = 1.f;
+                        }
+                    }
 
                     if (srcRatio > 0.f)
                     {

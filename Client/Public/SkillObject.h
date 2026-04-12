@@ -51,6 +51,9 @@ public:
 
     virtual void Sync_AttachedTransform(const Matrix& boneWorldMatrix);
 
+    static Shared<GameObject> Spawn_Effect_Once(
+        const string& effectAssetName, const Vec3& worldPosition, const Vec3 worldScale = Vec3::One);
+
 protected:
     HRESULT Ready_Components(const FSkillObjectDesc& desc);
 

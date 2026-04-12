@@ -6,6 +6,7 @@
 #include "Character.h"
 #include "Bounding_Sphere.h"
 #include "MyPlayer.h"
+#include "EffectComponent.h"
 
 REGISTER_GAMEOBJECT_CATEGORY(Skill_FireBall, Protocol::OBJECT_TYPE_SKILL_FIREBALL, "SkillSpawn");
 
@@ -43,6 +44,11 @@ HRESULT Skill_FireBall::Initialize(void* arg)
 
     _isMoving = true;
 
+    EffectComponent::FPlayDesc playDesc{};
+    playDesc.effectAssetName = "FireBall_Loop";
+
+    CHECK_FAILED(_effectCom->Play_Effect(playDesc), E_FAIL);
+
     return S_OK;
 }
 
@@ -58,34 +64,43 @@ void Skill_FireBall::Update(float timeDelta)
 
 void Skill_FireBall::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
 {
-    SkillObject_Projectile::OnBeginOverlap(self, other);
+     SkillObject::OnBeginOverlap(self, other);
 
-    auto character = Find_HitCharacter(other);
-    if (!character)
+    if (Is_Destroy())
+        return;
+
+    if (!other)
         return;
 
     auto otherOwner = other->Get_Owner();
-    CHECK_NULL(otherOwner);
+    if (!otherOwner)
+        return;
 
-    Process_Hit(character, otherOwner.get());
+    if (otherOwner == Get_Owner())
+        return;
+
+    if (_hitCount >= _maxHitCount)
+        return;
+
+    if (_hitCooldowns[otherOwner.get()] > 0.f)
+        return;
+
+    Spawn_Effect_Once("Gemini_FireBall_Hit", _transformCom->Get_WorldPosition(), Vec3(2.f));
+
+    if (auto character = dynamic_cast<Character*>(otherOwner.get()))
+    {
+        Apply_Skill_Hit(character, 10.f, _launchPower, _launchUp);
+    }
+
+    _hitCooldowns[otherOwner.get()] = (_hitInterval > 0.f) ? _hitInterval : 9999.f;
+    ++_hitCount;
+    Set_Destroy(true);
 }
 
 void Skill_FireBall::OnStayOverlap(Shared<Collider> self, Shared<Collider> other)
 {
     SkillObject_Projectile::OnStayOverlap(self, other);
 
-    if (Is_Destroy())
-        return;
-
-    auto character = Find_HitCharacter(other);
-    CHECK_NULL(character);
-
-    auto otherOwner = other->Get_Owner();
-    CHECK_NULL(otherOwner);
-
-    Process_Hit(character, otherOwner.get());
-
-   
 }
 
 void Skill_FireBall::OnEndOverlap(Shared<Collider> self, Shared<Collider> other)
@@ -126,7 +141,9 @@ void Skill_FireBall::Process_Hit(Character* hitted, GameObject* targetKey)
     if (!Apply_Skill_Hit(hitted, 10.f, _launchPower, _launchUp))
         return;
 
+    Spawn_Effect_Once("Gemini_FireBall_Hit", _transformCom->Get_WorldPosition());
 
+    Set_Destroy(true);
 }
 
 Shared<GameObject> Skill_FireBall::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

@@ -139,6 +139,8 @@ private:
     float   _speedPerSec = 0.f;
     float   _rotationPerSec = 0.f;
 
+     bool _isOrphaned = false; 
+
 public:
     static shared_ptr<Transform>  Create(ComPtr<Device> device,ComPtr<DeviceContext> context);
     virtual shared_ptr<Component> Clone(void* arg) override;

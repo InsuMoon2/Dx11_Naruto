@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_Man_Umbrella_Hat_01",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_Umbrella_Hat_01_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_Hachigane_Konoha_01",
+      "textures": [
+      ]
+    }
+  ]
+}

@@ -187,6 +187,12 @@ void PlayerState_Attack::Select_Profile(PlayerStateMachine* state)
     if (movement)
         isAerial = !movement->Is_OnGround(); // 공중
 
+    if (state->Is_ForceGroundAttack())
+    {
+        isAerial = false;
+        state->Set_ForceGroundAttack(false);
+    }
+
     // 프로파일 타입 결정
     if (equipment)
     {

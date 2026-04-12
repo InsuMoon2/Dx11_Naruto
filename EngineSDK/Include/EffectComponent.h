@@ -61,8 +61,12 @@ private:
 
     void    Apply_LayerTransformInternal(FActiveLayer& layer);
     void    Apply_LayerScaleInternal(FActiveLayer& layer);
+    // 레이어 수명에 따라 tint/opacity/emissive 값을 계산해 현재 오브젝트에 반영할 때 호출한다.
+    void    Apply_LayerAnimatedMaterialInternal(FActiveLayer& layer);
     Vec3    Resolve_LayerScale(const FActiveLayer& layer) const;
     float   Resolve_LayerDuration(const FActiveLayer& layer) const;
+    // 현재 레이어가 자신의 수명 중 어디까지 진행됐는지 0~1로 계산할 때 호출한다.
+    float   Resolve_LayerProgress(const FActiveLayer& layer) const;
 
     string  Resolve_EffectAssetPathByName(const string& effectAssetName);
 

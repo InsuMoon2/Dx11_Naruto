@@ -292,7 +292,7 @@ HRESULT MyPlayer::Ready_HitboxColliders()
     _hitboxBoneNames[ETOI(EHitboxTarget::LeftFoot)] = "LeftFoot";
 
     Bounding_Sphere::FBoundingSphereDesc sphereDesc{};
-    sphereDesc.radius = 0.35f;
+    sphereDesc.radius = 0.45f;
 
     for (int i = 0; i < ETOI(EHitboxTarget::END); ++i)
     {

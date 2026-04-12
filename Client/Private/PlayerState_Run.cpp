@@ -59,7 +59,9 @@ void PlayerState_Run::Update(PlayerStateMachine* state, float timeDelta)
 
     if (frame.attackDown)
     {
-        state->Change_State(EPlayerState::Attack);
+        if (!state->Try_MeleeApproach(EPlayerState::Attack))
+            state->Change_State(EPlayerState::Attack);
+
         return;
     }
 

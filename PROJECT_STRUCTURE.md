@@ -559,6 +559,9 @@ Client/Bin/Resources/
 - 카메라 시네마틱 시스템(`Camera_Cinematic` + `CameraTrack_Player` + `CameraTrack_Serializer`)과 에디터 `Cinematic_View`가 시네마틱 편집을 지원한다.
 - 스킬은 데이터 드리븐 방식으로 `DT_SkillData.json` → `SkillDataManager` → `SkillComponent` → `AnimationStateComponent` → `PlayerState_Skill` 흐름으로 작동한다.
 - **[추가: 이펙트/노티파이 관례]** 나선환과 같은 무한 루프 애니메이션 재생 시 노티파이(`ANS`)의 중복 호출/스폰을 방지하기 위해, 향후 핵심 스킬 이펙트의 생성 및 생명주기 관리는 `AnimNotify`에 의존하기보다 `PlayerState_Skill`(FSM)의 `Enter`/`Exit` 단에서 자체 관리 및 파괴하도록 구조를 분리/발전시키는 방향을 갖는다.
+- **[추가: AN_SpawnParticle 중복 방지]** 루프 클립에 배치된 `AN_SpawnParticle`은 `FAnimNotifyContext::wrapped`가 `true`일 때(`context.wrapped`) `Execute()`를 스킵하여 매 루프마다 중복 스폰되는 현상을 방지한다.
+- **[추가: ANS_SpawnParticle]** `Client/Public/ANS_SpawnParticle.h`, `Client/Private/ANS_SpawnParticle.cpp` 신규 추가. `On_Begin`에서 `AttachedEffectObject` 스폰 후 `Weak<AttachedEffectObject> _spawnedEffect`로 보관, `On_End`에서 `Stop_AttachedEffect()`로 정리. Loop → AttackEnd 전환 시 이펙트 잔재 제거 목적.
+- **[추가: ANS On_End 보장 원칙]** `Model::Reset_AnimationSequenceState()`에서 `Stop_AllNotifyStates`를 `true`로 호출하여, 강제 인터럽트 시에도 활성 ANS에 `On_End`가 반드시 전달되도록 수정. "Begin이 불렸으면 End는 반드시 불린다"는 ANS 설계 계약을 엔진 레벨에서 보장.
 - `Weapon`은 `PartObject` 기반으로 캐릭터 본(소켓)에 부착된다.
 - `Player_CustomPart`와 `Customizer_Manager`는 캐릭터 파츠 교체 시스템의 핵심이다.
 

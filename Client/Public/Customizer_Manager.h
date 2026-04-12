@@ -17,9 +17,9 @@ struct FCustomizerDesc
         for (auto& tag : partTags)
             tag.clear();
 
-        partTags[ETOI(ContainerObject::EPartSlot::Headegear)]   = TEXT("Model_Headgear_Man_Cap1");
+        partTags[ETOI(ContainerObject::EPartSlot::Headegear)]   = TEXT("Model_SnowHead");
         partTags[ETOI(ContainerObject::EPartSlot::Face)]        = TEXT("Model_Face_Face1");
-        partTags[ETOI(ContainerObject::EPartSlot::Onepiece)]    = TEXT("Model_Body_Upper_Coat15");
+        partTags[ETOI(ContainerObject::EPartSlot::Onepiece)]    = TEXT("Model_OnePiece_Armor3");
     }
 
     void Set_Part(ContainerObject::EPartSlot slot, const wstring& modelAssetTag)
