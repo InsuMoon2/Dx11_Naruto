@@ -33,6 +33,7 @@ enum class ECharacterSetupTexture
 
     PlayerTextBG,
     PlayerTextInput,
+    Roll_Selected,
 
     END
 };
@@ -63,6 +64,8 @@ public:
     virtual void    Late_Update(float timeDelta) override;
     virtual HRESULT Render() override;
 
+  
+
 private:
     HRESULT         Ready_Layer_UI();
     HRESULT         Ready_PreviewScene();
@@ -91,6 +94,16 @@ private:
 
     void            Refresh_UI_Visibility();
     void            Finish_CharacterSetup();
+
+public:
+    void            On_CharInput(wchar_t ch) override;
+
+private:
+    // 이름 입력
+    HRESULT Ready_NameInputUI();
+    void    Enter_NameInput();
+    void    Handle_NameInput();
+    void    Refresh_NameInputText();
 
 private:
     static constexpr uint32 TAB_COUNT = 6;
@@ -134,8 +147,9 @@ private:
     float               _rotSensitivity = 0.4f;
 
 private: /* Local Player Name */
-    wstring             _playerName = L"";
+    wstring             _pendingPlayerName = L"";
     Shared<Background>  _nameInputBg;
+    Shared<Background>  _nameTextBg;
     Shared<UI_Text>     _nameInputText;
 
 public:

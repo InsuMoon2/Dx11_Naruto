@@ -409,6 +409,11 @@ uint32 GameInstance::Current_Level()
     return _levelManager->Get_CurrentLevel();
 }
 
+Shared<Level> GameInstance::Get_Current_Level()
+{
+    return _levelManager->Get_CurrentLevelType();
+}
+
 HRESULT GameInstance::Add_GameObject_Prototype(uint32 levelIndex, uint32 objID, shared_ptr<GameObject> gameObject)
 {
     return _protoManager->Add_GameObject_Prototype(levelIndex, objID, gameObject);

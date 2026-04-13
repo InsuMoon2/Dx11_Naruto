@@ -22,8 +22,10 @@ public:
 public:
     uint32  Get_CurrentLevel() const { return _currentLevelIndex; }
 
+    Shared<Level> Get_CurrentLevelType() const { return _currentLevel; }
+
 private:
-    shared_ptr<Level>   _currentLevel;
+    Shared<Level>       _currentLevel;
     uint32              _currentLevelIndex = { };
 
 public:

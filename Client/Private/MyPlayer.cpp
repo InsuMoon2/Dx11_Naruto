@@ -18,6 +18,7 @@
 #include "GameObject_Factory.h"
 #include "Debug_Manager.h"
 #include "TargetComponent.h"
+#include "Customizer_Manager.h"
 
 REGISTER_GAMEOBJECT(MyPlayer, Protocol::OBJECT_TYPE_PLAYER)
 
@@ -41,6 +42,11 @@ HRESULT MyPlayer::Initialize_Prototype()
 HRESULT MyPlayer::Initialize(void* arg)
 {
     CHECK_FAILED(Player::Initialize(arg), E_FAIL);
+
+    // 이름 세팅
+    auto custom = GET_SINGLE(Customizer_Manager);
+    wstring name = custom->Get_PlayerName();
+    // Set_PlayerName(name) 또는 프로토콜 패킷에 이름 포함
 
     // MyPlayer만 입력/이동 컴포넌트 보유
     {

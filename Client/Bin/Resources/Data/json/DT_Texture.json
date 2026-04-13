@@ -236,6 +236,12 @@
             "Level": "Static"
         },
         {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_UI_Roll_Selected_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
             "Id": "COMPONENT_TYPE_TEXTURE_SKILL_GAUGE",
             "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_Skill_Gauge_Base%d_BC.png",
             "Count": 2,

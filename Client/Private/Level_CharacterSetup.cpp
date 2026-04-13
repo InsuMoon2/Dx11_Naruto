@@ -39,6 +39,8 @@ HRESULT Level_CharacterSetup::Initialize()
     CHECK_FAILED(Ready_Layer_UI(), E_FAIL);
     CHECK_FAILED(Ready_PreviewScene(), E_FAIL);
 
+    CHECK_FAILED(Ready_NameInputUI(), E_FAIL);
+
     _selectedTabIndex = 0;
     _selectedOptionIndex = 0;
 
@@ -59,6 +61,8 @@ void Level_CharacterSetup::Update(float timeDelta)
 {
     Level::Update(timeDelta);
 
+    
+
     Update_CameraLerp(timeDelta);
 
     // 플레이어 회전
@@ -71,6 +75,11 @@ void Level_CharacterSetup::Update(float timeDelta)
     else if (_setupState == ESetupState::Item)
     {
         Handle_OptionInput();
+    }
+    else if (_setupState == ESetupState::NameInput)
+    {
+        Handle_NameInput();
+        return;
     }
 }
 
@@ -574,7 +583,8 @@ void Level_CharacterSetup::Handle_TabInput()
     {
         if (_selectedTabIndex == static_cast<int32>(TAB_COUNT))
         {
-            Finish_CharacterSetup();
+            Enter_NameInput();
+            //Finish_CharacterSetup();
 
             return;
         }
@@ -839,9 +849,121 @@ void Level_CharacterSetup::Finish_CharacterSetup()
         }
     }
 
+    custom->Set_PlayerName(_pendingPlayerName);
+
     GAME->Change_Level(
         ETOI(ELevelType::Loading),
         Level_Loading::Create(_device, _context, ELevelType::GamePlay, true, spawnMode));
+}
+
+void Level_CharacterSetup::On_CharInput(wchar_t ch)
+{
+    if (_setupState != ESetupState::NameInput)
+        return;
+
+    // 12자 제한
+    if (ch >= 0x20 && _pendingPlayerName.size() < 12)
+    {
+        _pendingPlayerName += ch;
+        Refresh_NameInputText(); // UI 갱신
+    }
+}
+
+HRESULT Level_CharacterSetup::Ready_NameInputUI()
+{
+    const Vec2 viewport = { GAME->Get_UIReferenceWidth(), GAME->Get_UIReferenceHeight() }; 
+
+    // 입력창 배경 설정
+    Background::FBackgroundDesc bgDesc{};
+    bgDesc.name = TEXT("NameInput_Background"); 
+    bgDesc.posX = viewport.x * 0.5f;
+    bgDesc.posY = viewport.y * 0.5f;
+    bgDesc.sizeX = 600.f;
+    bgDesc.sizeY = 200.f;
+    bgDesc.levelIndex = ETOI(ELevelType::CharacterSetup); 
+    bgDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_EQUIPMENT; 
+    bgDesc.textureIndex = ETOI(ECharacterSetupTexture::PlayerTextBG);
+    bgDesc.zOrder = 0.6f; 
+
+    bgDesc.textDesc.text = L"이름을 입력하세요"; 
+    bgDesc.textDesc.style.fontSize = 22.f; 
+    bgDesc.textDesc.style.hAlign = ETextHAlign::Center; 
+
+    _nameInputBg = static_pointer_cast<Background>(
+        GAME->Add_UI(Protocol::OBJECT_TYPE_BACKGROUND, EUILayer::Overlay, &bgDesc)); 
+
+    _nameInputBg->Set_Visibility(false); 
+
+    // 실시간 입력 텍스트 UI 
+    UI_Text::FUITextDesc textDesc{}; 
+    textDesc.name = L"NameInput_Text"; 
+    textDesc.levelIndex = ETOI(ELevelType::CharacterSetup);
+    textDesc.zOrder = bgDesc.zOrder + 0.01f; 
+    textDesc.style.fontSize = 28.f; 
+    textDesc.style.color = Color(1.f, 0.9f, 0.2f, 1.f); 
+    textDesc.style.hAlign = ETextHAlign::Center;
+
+    _nameInputText = static_pointer_cast<UI_Text>(
+        GAME->Clone_UI(Protocol::OBJECT_TYPE_UI_TEXT, &textDesc));
+
+    _nameInputText->Get_Transform()->Set_Parent(_nameInputBg->Get_Transform());
+    GAME->Register_UI(EUILayer::Overlay, _nameInputText); 
+    _nameInputText->Set_Visibility(false);
+
+    return S_OK;
+}
+
+void Level_CharacterSetup::Enter_NameInput()
+{
+    _setupState = ESetupState::NameInput;
+    _pendingPlayerName.clear();
+
+    if (_nameInputBg)
+        _nameInputBg->Set_Visibility(true);
+
+    if (_nameInputText)
+        _nameInputText->Set_Visibility(true);
+
+    Refresh_NameInputText();
+}
+
+void Level_CharacterSetup::Handle_NameInput()
+{
+    if (INPUT->KeyDown(KEY_TYPE::ENTER)) 
+    {
+        if (!_pendingPlayerName.empty())
+            Finish_CharacterSetup();
+
+        return;
+    }
+
+    if (INPUT->KeyDown(KEY_TYPE::BACK) || INPUT->KeyPress(KEY_TYPE::BACK))
+    {
+        if (!_pendingPlayerName.empty())
+        {
+            _pendingPlayerName.pop_back(); 
+            Refresh_NameInputText();
+        }
+        return;
+    }
+
+    if (INPUT->KeyDown(KEY_TYPE::ESCAPE)) 
+    {
+        _setupState = ESetupState::Category; 
+
+        // 이게 필요한가 근데?
+    }
+
+}
+
+void Level_CharacterSetup::Refresh_NameInputText()
+{
+    wstring display = _pendingPlayerName + L"_";
+
+    if (_nameInputText)
+    {
+        _nameInputText->Set_Text(display);
+    }
 }
 
 Shared<Level_CharacterSetup> Level_CharacterSetup::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

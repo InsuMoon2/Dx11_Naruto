@@ -47,8 +47,14 @@ public:
     void                    Set_Part(ContainerObject::EPartSlot slot, const wstring& modelAssetTag);
     const FCustomizerDesc&  Get_CustomizerDesc() const { return _customizerDesc; }
 
+    void                    Set_PlayerName(const wstring& name) { _playerName = name; } 
+    const wstring&          Get_PlayerName() const { return _playerName; } 
+
 private:
     FCustomizerDesc         _customizerDesc{};
+
+private:
+    wstring _playerName = L"이름을 입력해 주세요";
 
 public:
     static Unique<Customizer_Manager> Create();

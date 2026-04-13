@@ -133,7 +133,7 @@ public: /* Timer Manager */
 public: /* LevelType Manager */
     HRESULT                 Change_Level(uint32 levelIndex, Shared<Level> level);
     uint32                  Current_Level();
-
+    Shared<Level>           Get_Current_Level();
 
 public: /* Prototype Manager */
     HRESULT                 Add_GameObject_Prototype(uint32 levelIndex, uint32 objID, Shared<GameObject> gameObject);

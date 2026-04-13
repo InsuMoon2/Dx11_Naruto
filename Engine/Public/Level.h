@@ -19,6 +19,8 @@ public:
     virtual void    Late_Update(float timeDelta);
     virtual HRESULT Render();
 
+    virtual void    On_CharInput(wchar_t ch) {};
+
 public:
     virtual HRESULT Load_LevelFromJson(const wstring& fileName);
 

@@ -7,7 +7,9 @@
 
 #include "Protocol.pb.h"
 
+#include "GameInstance.h"
 #include "Editor_MainApp.h"
+#include "Level_CharacterSetup.h"
 
 #define MAX_LOADSTRING 100
 
@@ -209,6 +211,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         FreeConsole();
         DestroyWindow(hWnd);
+    }
+
+    case WM_CHAR:
+    {
+        wchar_t ch = static_cast<wchar_t>(wParam); 
+
+        auto currentLevel = GAME->Get_Current_Level();
+        if (currentLevel)
+        {
+            currentLevel->On_CharInput(ch);
+        }
+        break;
     }
 
     case WM_MOUSEWHEEL:
