@@ -57,9 +57,13 @@
 #include "EffectComponent.h"
 
 #include "Collider.h"
+#include "LightningTrail_Component.h"
 
 #include "VIBuffer_Particle_Point.h"
 #include "Particle_Point.h"
+#include "Trail_Component.h"
+#include "VIBuffer_Trail.h"
+
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -166,6 +170,7 @@ void Loader::Register_Components()
 
     GAME->Register_ComponentFactory<VIBuffer_Rect>(staticLevel);
     GAME->Register_ComponentFactory<VIBuffer_Particle_Point>(staticLevel);
+    GAME->Register_ComponentFactory<VIBuffer_Trail>(staticLevel);
 
     GAME->Register_ComponentFactory<MovementComponent>(staticLevel);
     GAME->Register_ComponentFactory<InputComponent>(staticLevel);
@@ -180,6 +185,9 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<TargetComponent>(staticLevel);
     GAME->Register_ComponentFactory<GhostEffect_Component>(staticLevel);
     GAME->Register_ComponentFactory<SmearEffect_Component>(staticLevel);
+
+    GAME->Register_ComponentFactory<Trail_Component>(staticLevel);
+    GAME->Register_ComponentFactory<LightningTrail_Component>(staticLevel);
 
     GAME->Register_ComponentFactory<EffectComponent>(staticLevel);
 

@@ -367,6 +367,9 @@
                 },
                 {
                     "name": "Notify State Track"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
@@ -389,6 +392,18 @@
                     "start_sec": 0.5,
                     "track_index": 1,
                     "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.2666666805744171,
+                    "payload": {
+                        "bot_bone": "",
+                        "lifespan": 0.5,
+                        "top_bone": "R_Hand_Weapon_cnt_tr",
+                        "width": 3.0
+                    },
+                    "start_sec": 0.4000000059604645,
+                    "track_index": 2,
+                    "type": "ANS_Trail"
                 }
             ],
             "notify_tracks": [
@@ -1024,8 +1039,8 @@
                         "bone_name": "R_Hand_Weapon_cnt_tr",
                         "effect_name": "WhyInvi",
                         "local_offset": [
-                            0.20000000298023224,
                             0.10000000149011612,
+                            0.16500000655651093,
                             0.0
                         ],
                         "local_rotation": [
@@ -1345,6 +1360,79 @@
                     "type": "ANS_SmearEffect"
                 }
             ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Charge_Lv1",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "attach_offset": [
+                            0.20000000298023224,
+                            0.10000000149011612,
+                            0.0
+                        ],
+                        "bone_name": "L_Hand_Weapon_cnt_tr",
+                        "collision_preset": 3,
+                        "spawn_type": 21
+                    },
+                    "time_sec": 0.23333333432674408,
+                    "track_index": 0,
+                    "type": "AN_EquipMeleeSkill"
+                },
+                {
+                    "payload": {
+                        "bone_name": "L_Hand_Weapon_cnt_tr",
+                        "effect_name": "Lightning_Follow",
+                        "mesh_length": 100.0,
+                        "thickness": [
+                            5.0,
+                            5.0,
+                            5.0
+                        ]
+                    },
+                    "time_sec": 0.20000000298023224,
+                    "track_index": 1,
+                    "type": "AN_StretchingMesh_Start"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Attack_Lv3_End",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {},
+                    "time_sec": 0.23333333432674408,
+                    "track_index": 0,
+                    "type": "AN_LightningTrail_Stop"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
             "notify_tracks": [
                 {
                     "name": "Notifies"

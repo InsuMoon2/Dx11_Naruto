@@ -76,6 +76,11 @@
             "Level": "Static"
         },
         {
+            "Id": "Stretching_Effect",
+            "ObjectType": "OBJECT_TYPE_STRETCHING_MESH_EFFECT",
+            "Level": "Static"
+        },
+        {
             "Id": "Skill_Object",
             "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
             "Level": "Static"

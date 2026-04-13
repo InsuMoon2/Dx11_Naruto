@@ -26,6 +26,9 @@ public:
 
         float elapsed = 0.f;
         bool  started = false, finished = false;
+
+        bool  worldLocked = false;
+        Vec3  lockedWorldPos = Vec3::Zero;
     };
 
 public:
@@ -60,9 +63,13 @@ private:
     HRESULT Create_LayerObject(FActiveLayer& layer);
 
     void    Apply_LayerTransformInternal(FActiveLayer& layer);
+    // 레이어 Position Over Time 계산 결과를 현재 오브젝트 로컬 위치에만 반영할 때 호출한다.
+    void    Apply_LayerPositionInternal(FActiveLayer& layer);
     void    Apply_LayerScaleInternal(FActiveLayer& layer);
     // 레이어 수명에 따라 tint/opacity/emissive 값을 계산해 현재 오브젝트에 반영할 때 호출한다.
     void    Apply_LayerAnimatedMaterialInternal(FActiveLayer& layer);
+    // Position Over Time이 켜진 레이어의 현재 로컬 위치를 계산할 때 호출한다.
+    Vec3    Resolve_LayerPosition(const FActiveLayer& layer) const;
     Vec3    Resolve_LayerScale(const FActiveLayer& layer) const;
     float   Resolve_LayerDuration(const FActiveLayer& layer) const;
     // 현재 레이어가 자신의 수명 중 어디까지 진행됐는지 0~1로 계산할 때 호출한다.

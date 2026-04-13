@@ -871,6 +871,39 @@ void Effect_View::Draw_Inspector()
             transformChanged = true;
         }
 
+        if (ImGui::Checkbox("Position Over Time", &layer.base.usePositionOverTime))
+        {
+            if (layer.base.usePositionOverTime)
+            {
+                layer.base.endPosition = layer.base.localPosition;
+
+                if (layer.base.positionDuration <= 0.f)
+                    layer.base.positionDuration = 1.0f;
+            }
+
+            MarkDirty();
+            transformChanged = true;
+        }
+
+        if (layer.base.usePositionOverTime)
+        {
+            ImGui::Indent();
+
+            if (ImGui::DragFloat("Position Duration", &layer.base.positionDuration, 0.01f, 0.01f, 10.f))
+            {
+                MarkDirty();
+                transformChanged = true;
+            }
+
+            if (ImGui::DragFloat3("End Position", (float*)&layer.base.endPosition, 0.1f))
+            {
+                MarkDirty();
+                transformChanged = true;
+            }
+
+            ImGui::Unindent();
+        }
+
         if (ImGui::DragFloat3("Local Rot", (float*)&layer.base.localRotation, 1.0f))
         {
             MarkDirty();
@@ -1149,6 +1182,55 @@ void Effect_View::Draw_Inspector()
                 materialChanged = true;
             }
 
+            if (ImGui::Checkbox("Use Mesh Flipbook", &layer.mesh.flipbook.enabled))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (layer.mesh.flipbook.enabled)
+            {
+                ImGui::Indent();
+
+                if (ImGui::DragInt("Mesh Flipbook Columns", &layer.mesh.flipbook.columns, 1.f, 1, 64))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragInt("Mesh Flipbook Rows", &layer.mesh.flipbook.rows, 1.f, 1, 64))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragFloat("Mesh Flipbook FPS", &layer.mesh.flipbook.fps, 0.1f, 0.01f, 120.f))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragInt("Mesh Flipbook Start Frame", &layer.mesh.flipbook.startFrame, 1.f, 0, 4096))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragInt("Mesh Flipbook End Frame", &layer.mesh.flipbook.endFrame, 1.f, -1, 4096))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::Checkbox("Mesh Flipbook Loop", &layer.mesh.flipbook.loop))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                ImGui::Unindent();
+            }
+
             if (ImGui::SliderFloat("Opacity", &layer.mesh.opacity, 0.f, 1.f))
             {
                 MarkDirty();
@@ -1280,6 +1362,26 @@ void Effect_View::Draw_Inspector()
                 layer.point.textureGuid,
                 resourceChanged);
 
+            Draw_AssetSlotPicker(
+                "Mask Texture",
+                "##EffectPointMaskTexturePicker",
+                ICON_FA_IMAGE " Select Point Mask Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.point.maskTextureGuid,
+                resourceChanged);
+
+            Draw_AssetSlotPicker(
+                "Opacity Texture",
+                "##EffectPointOpacityTexturePicker",
+                ICON_FA_IMAGE " Select Point Opacity Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/",
+                layer.point.opacityTextureGuid,
+                resourceChanged);
+
             ImGui::Spacing();
 
             int blend = static_cast<int>(layer.point.blendMode);
@@ -1311,6 +1413,17 @@ void Effect_View::Draw_Inspector()
                 MarkDirty();
                 resourceChanged = true;
             }
+
+            ImGui::Separator();
+            if (ImGui::Checkbox("Lock World On Spawn", &layer.point.lockWorldOnSpawn))
+            {
+                _isDirty = true;
+            }
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip(
+                    "true: 파티클 묶음이 스폰된 위치에 고정");
+            }
         }
 
         if (ImGui::CollapsingHeader(ICON_FA_WAND_MAGIC_SPARKLES " Point Details", ImGuiTreeNodeFlags_DefaultOpen))
@@ -1322,7 +1435,7 @@ void Effect_View::Draw_Inspector()
             }
 
             int spawnShape = static_cast<int>(layer.point.spawnShape);
-            if (ImGui::Combo("Spawn Shape", &spawnShape, "Box\0Sphere\0Cylinder\0Ring\0"))
+            if (ImGui::Combo("Spawn Shape", &spawnShape, "Box\0Sphere\0Cylinder\0Ring\0Ring Z\0"))
             {
                 layer.point.spawnShape = static_cast<Engine::EEffectPointSpawnShape>(spawnShape);
                 MarkDirty();
@@ -1394,6 +1507,12 @@ void Effect_View::Draw_Inspector()
             }
 
             if (ImGui::SliderFloat("Opacity", &layer.point.opacity, 0.f, 1.f))
+            {
+                MarkDirty();
+                resourceChanged = true;
+            }
+
+            if (ImGui::DragFloat("Emissive Strength", &layer.point.emissiveStrength, 0.05f, 0.f, 20.f))
             {
                 MarkDirty();
                 resourceChanged = true;

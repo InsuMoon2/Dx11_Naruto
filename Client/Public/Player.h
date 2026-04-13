@@ -13,6 +13,8 @@ class AnimationStateComponent;
 class CombatStat;
 class EquipmentComponent;
 class SmearEffect_Component;
+class Trail_Component;
+class LightningTrail_Component;
 
 class Player : public Character
 {
@@ -64,11 +66,14 @@ protected:
 
 
 protected:
-    Shared<CombatStat>              _combatStat;
-    Shared<AnimationStateComponent> _animState;
-    Shared<Model>                   _model;
-    Shared<EquipmentComponent>      _equipment;
-    Shared<SmearEffect_Component>      _smearEffect;
+    Shared<CombatStat>                  _combatStat;
+    Shared<AnimationStateComponent>     _animState;
+    Shared<Model>                       _model;
+    Shared<EquipmentComponent>          _equipment;
+    Shared<SmearEffect_Component>       _smearEffect;
+    Shared<Trail_Component>             _trail;
+    Shared<LightningTrail_Component>             _lightningTrail;
+
 
 protected:
     uint64                          _networkId = 0;

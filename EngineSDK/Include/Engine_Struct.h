@@ -127,4 +127,10 @@ namespace Engine
         int32   hitSound = 0;       // 이건 추후에 타격 사운드
     };
 
+    struct FTrailPoint
+    {
+        Vec3 topPos;
+        Vec3 bottomPos;
+    };
+
 }

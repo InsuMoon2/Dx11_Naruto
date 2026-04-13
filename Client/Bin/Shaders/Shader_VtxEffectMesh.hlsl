@@ -39,6 +39,16 @@ float g_SpecularPower;
 float4 g_CustomParams0;
 float4 g_CustomParams1;
 
+// Mesh SubUV/Flipbook playback lets mesh effect layers use frame atlases like Cascade ParticleModuleSubUV.
+float g_ElapsedTime;
+int g_UseFlipbook;
+int g_FlipbookColumns;
+int g_FlipbookRows;
+float g_FlipbookFps;
+int g_FlipbookStartFrame;
+int g_FlipbookEndFrame;
+int g_FlipbookLoop;
+
 int g_ForceVisiblePreview;
 int g_ShadingMode;
 int g_HasDiffuseTexture;
@@ -102,17 +112,23 @@ struct PS_OUT
 // prefer alpha when it exists, otherwise derive a stable mask from luminance.
 float SampleMask(float4 tex)
 {
-    if (tex.a > 0.01f)
+    // Fully opaque black-background masks, like the Chidori lightning sheets,
+    // must use luminance because their alpha channel cannot cut out the mesh.
+    if (tex.a < 0.99f)
         return tex.a;
 
     float luminance = dot(tex.rgb, float3(0.299f, 0.587f, 0.114f));
     return saturate((luminance - 0.35f) / 0.65f);
 }
 
-// Emissive-only effect maps in this project often keep opaque alpha on a black background.
-// For no-mask passes we should derive visibility from RGB brightness, not the source alpha.
+// No-mask emissive layers need a hybrid rule:
+// keep authored alpha when it is actually cut out, but fall back to luminance
+// only for legacy textures whose alpha is fully opaque on a black background.
 float SampleEmissiveMask(float4 tex)
 {
+    if (tex.a < 0.99f)
+        return tex.a;
+
     float luminance = dot(tex.rgb, float3(0.299f, 0.587f, 0.114f));
     return saturate((luminance - 0.05f) / 0.95f);
 }
@@ -130,6 +146,38 @@ float2 BuildFinalUV(float2 uv)
     }
 
     return finalUV;
+}
+
+// Converts a full-texture UV into the current SubUV frame cell when a mesh flipbook is enabled.
+float2 BuildFlipbookUV(float2 baseUV)
+{
+    if (g_UseFlipbook == 0)
+        return baseUV;
+
+    int columns = max(g_FlipbookColumns, 1);
+    int rows = max(g_FlipbookRows, 1);
+    int totalFrames = max(columns * rows, 1);
+    int startFrame = clamp(g_FlipbookStartFrame, 0, totalFrames - 1);
+    int endFrame = g_FlipbookEndFrame;
+    if (endFrame < startFrame || endFrame >= totalFrames)
+        endFrame = totalFrames - 1;
+
+    int frameCount = max(endFrame - startFrame + 1, 1);
+    int relativeFrame = (int)floor(max(g_ElapsedTime, 0.f) * max(g_FlipbookFps, 0.01f));
+
+    if (g_FlipbookLoop != 0)
+        relativeFrame = relativeFrame % frameCount;
+    else
+        relativeFrame = min(relativeFrame, frameCount - 1);
+
+    int frameIndex = startFrame + relativeFrame;
+    int frameX = frameIndex % columns;
+    int frameY = frameIndex / columns;
+    float2 cellUV = frac(baseUV);
+
+    return float2(
+        (cellUV.x + frameX) / columns,
+        (cellUV.y + frameY) / rows);
 }
 
 // Uses a normal map only for Lit mesh layers; Unlit effects keep their mesh normal.
@@ -179,8 +227,8 @@ float ResolveFresnel(float3 normal, float3 worldPos)
     return saturate(fresnel);
 }
 
-// Builds the final alpha mask from explicit opacity, sub-UV opacity, and gradation slots.
-float ApplyOpacityPipeline(float2 uv)
+// Builds the final alpha mask from explicit opacity, SubUV opacity, and gradation slots.
+float ApplyOpacityPipeline(float2 uv, float2 flipbookUV)
 {
     float maskValue = 1.f;
 
@@ -191,7 +239,7 @@ float ApplyOpacityPipeline(float2 uv)
 
     if (g_HasOpacitySubUvTexture != 0)
     {
-        float subMaskValue = SampleMask(g_OpacitySubUvTexture.Sample(DefaultSampler, uv));
+        float subMaskValue = SampleMask(g_OpacitySubUvTexture.Sample(DefaultSampler, flipbookUV));
         maskValue = saturate(maskValue * subMaskValue);
     }
 
@@ -263,38 +311,43 @@ PS_OUT ResolvePixel(PS_IN In, bool useOpacityMask)
     }
 
     float2 scrolledUV = BuildFinalUV(In.vTexcoord);
+    float2 flipbookUV = BuildFlipbookUV(scrolledUV);
+    float2 mainSampleUV = (g_UseFlipbook != 0 && g_HasOpacitySubUvTexture == 0) ? flipbookUV : scrolledUV;
 
-    float4 emissive = g_EmissiveTexture.Sample(DefaultSampler, scrolledUV);
+    float4 emissive = g_EmissiveTexture.Sample(DefaultSampler, mainSampleUV);
     emissive.rgb = ApplyEmissiveGradation(emissive.rgb);
     emissive.rgb *= g_EmissiveStrength;
 
     float3 surfaceNormal = ResolveSurfaceNormal(In, scrolledUV);
     float fresnel = ResolveFresnel(surfaceNormal, In.vWorldPos);
     float emissiveAlpha = SampleEmissiveMask(emissive);
-    float maskValue = useOpacityMask ? ApplyOpacityPipeline(scrolledUV) : emissiveAlpha;
+    float maskValue = useOpacityMask ? ApplyOpacityPipeline(scrolledUV, flipbookUV) : emissiveAlpha;
 
     float finalAlpha = saturate(maskValue * g_Opacity * fresnel * g_ColorTint.a);
-    
-    // Diagnostic Override: Force visibility to 0.5 min alpha
-    finalAlpha = saturate(finalAlpha + 0.5f); 
+
+    if (finalAlpha <= 0.001f)
+        discard;
 
     float3 baseColor = emissive.rgb;
     if (g_HasDiffuseTexture != 0)
     {
-        baseColor = g_DiffuseTexture.Sample(DefaultSampler, scrolledUV).rgb;
+        baseColor = g_DiffuseTexture.Sample(DefaultSampler, mainSampleUV).rgb;
     }
 
     baseColor *= g_ColorTint.rgb;
 
-    float3 finalColor = emissive.rgb * g_ColorTint.rgb;
+    float3 emissiveColor = emissive.rgb * g_ColorTint.rgb;
+    float3 finalColor = emissiveColor;
+
+    if (g_HasDiffuseTexture != 0)
+    {
+        finalColor = baseColor + emissiveColor;
+    }
 
     if (g_ShadingMode == 1)
     {
-        finalColor = BuildLitColor(scrolledUV, surfaceNormal, In.vWorldPos, baseColor, emissive.rgb * g_ColorTint.rgb);
+        finalColor = BuildLitColor(scrolledUV, surfaceNormal, In.vWorldPos, baseColor, emissiveColor);
     }
-
-    // Pre-multiplied alpha (Multiply RGB by Alpha)
-    finalColor *= finalAlpha;
 
     Out.vColor.rgb = finalColor;
     Out.vColor.a = finalAlpha;

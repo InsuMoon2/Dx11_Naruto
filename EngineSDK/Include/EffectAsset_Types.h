@@ -26,6 +26,7 @@ enum class EEffectPointSpawnShape : uint8
     Sphere,                                     // 구 안쪽 볼륨에서 랜덤하게 뿌릴 때 사용한다.
     Cylinder,                                   // 원기둥 볼륨에서 랜덤하게 뿌릴 때 사용한다.
     Ring,                                       // 바닥 링/원판 테두리처럼 평면 원형 띠에 뿌릴 때 사용한다.
+    RingZ,                                      // 손 앞면 전류처럼 Z축을 중심으로 XY 평면 원형 띠에 뿌릴 때 사용한다.
     END
 };
 
@@ -68,6 +69,9 @@ struct FEffectLayerBase
 
     /* --- 로컬 트랜스폼 (오너 기준) --- */
     Vec3 localPosition = Vec3::Zero;           // 오너 기준 위치 오프셋
+    bool usePositionOverTime = false;          // true면 localPosition에서 endPosition으로 레이어 시간 동안 이동 보간한다.
+    Vec3 endPosition = Vec3::Zero;             // Position Over Time이 끝날 때 도달할 오너 기준 위치다.
+    float positionDuration = 1.f;              // localPosition에서 endPosition까지 이동 보간할 총 시간이다.
     Vec3 localRotation = Vec3::Zero;           // 오너 기준 회전 오프셋 (Euler, degree)
     Vec3 localScale = Vec3(1.f, 1.f, 1.f);     // 오너 기준 스케일
     bool useScaleOverTime = false;
@@ -80,6 +84,8 @@ struct FEffectPointLayerDesc
 {
     /* --- 텍스처 --- */
     string textureGuid;                        // Asset_Manager GUID로 파티클 텍스처 참조
+    string maskTextureGuid;                    // Point 텍스처 alpha를 추가로 잘라낼 마스크 텍스처 GUID다.
+    string opacityTextureGuid;                 // Point 최종 alpha 강도를 별도로 제어할 opacity 텍스처 GUID다.
 
     /* --- 인스턴스 --- */
     uint32 numInstances = 1;                   // 파티클 인스턴스 수
@@ -101,6 +107,7 @@ struct FEffectPointLayerDesc
 
     Vec4 colorTint = Vec4(1.f, 1.f, 1.f, 1.f); // 포인트 파티클 전체에 곱해질 틴트/알파 값이다.
     float opacity = 1.f;                       // Point shader 최종 알파 강도 보정값이다.
+    float emissiveStrength = 1.f;              // Billboard와 색감을 맞추기 위해 Point 발광 색을 증폭하는 계수다.
     bool useColorTintOverTime = false;         // true면 colorTint에서 endColorTint로 레이어 수명 동안 보간한다.
     Vec4 endColorTint = Vec4(1.f, 1.f, 1.f, 1.f); // Point 레이어 수명 끝에서 도달할 틴트 색상이다.
     bool useOpacityOverTime = false;           // true면 opacity에서 endOpacity로 레이어 수명 동안 보간한다.
@@ -110,6 +117,8 @@ struct FEffectPointLayerDesc
     Vec4 customParams1 = Vec4::Zero;           // 셰이더에서 자유롭게 읽을 수 있는 사용자 정의 파라미터 1번 슬롯이다.
 
     uint8 moveMode = 2;                        // 0=Drop(낙하), 1=Spread(방사), 2=Static(정지)
+
+    bool lockWorldOnSpawn = false;
 };
 
 struct FEffectMeshLayerDesc
@@ -136,6 +145,7 @@ struct FEffectMeshLayerDesc
     Vec2 uvTiling = Vec2(1.f, 1.f);            // UV 타일링 반복 횟수
     Vec2 uvDistortionStrength = Vec2(0.f, 0.f);
     Vec2 uvDistortionSpeed = Vec2(0.f, 0.f);
+    FEffectFlipbookDesc flipbook;              // Mesh opacitySubUvTextureGuid 또는 메인 텍스처를 SubUV/Flipbook 방식으로 재생할 때 사용한다.
 
     Vec4 colorTint = Vec4(1.f, 1.f, 1.f, 1.f); 
     float opacity = 1.f;                       

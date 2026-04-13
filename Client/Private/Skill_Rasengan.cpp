@@ -69,6 +69,8 @@ void Skill_Rasengan::OnBeginOverlap(Shared<Collider> self, Shared<Collider> othe
 
     CHECK_NULL(otherOwner);
 
+    Spawn_Effect_Once("Rasengan_Hit", _transformCom->Get_WorldPosition());
+
     Process_MultiHit(character, otherOwner.get());
 }
 

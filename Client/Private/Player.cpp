@@ -11,8 +11,10 @@
 #include "Bounding_AABB.h"
 #include "Collider.h"
 #include "GhostEffect_Component.h"
+#include "LightningTrail_Component.h"
 #include "PlayerStateMachine.h"
 #include "SmearEffect_Component.h"
+#include "Trail_Component.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
@@ -75,6 +77,12 @@ void Player::Update(float timeDelta)
     if (_smearEffect)
         _smearEffect->Update_Smear(timeDelta);
 
+    if (_trail)
+        _trail->Update_Trail(timeDelta);
+
+    if (_lightningTrail)
+        _lightningTrail->Update_LightningTrail(timeDelta);
+
     // 스킬 연출 재생
     //if (INPUT->KeyDown(KEY_TYPE::KEY_1))
     //{
@@ -87,7 +95,9 @@ void Player::Late_Update(float timeDelta)
 {
     Character::Late_Update(timeDelta);
 
-    if (_smearEffect && _smearEffect->Has_ActiveSmear())
+    if ((_smearEffect && _smearEffect->Has_ActiveSmear()) ||
+    (_trail && _trail->Has_ActiveTrail()) ||
+    (_lightningTrail && _lightningTrail->Has_ActiveLightningTrail()))
     {
         GAME->Add_RenderGroup(ERenderGroup::Blend, this->GetSharedPtr());
     }
@@ -99,9 +109,13 @@ HRESULT Player::Render()
     //Character::Render();
 
     if (_smearEffect)
-    {
         CHECK_FAILED(_smearEffect->Render(), E_FAIL);
-    }
+
+    if (_trail)
+        CHECK_FAILED(_trail->Render(), E_FAIL);
+
+    if (_lightningTrail)
+        CHECK_FAILED(_lightningTrail->Render(), E_FAIL);
 
     return S_OK;
 }
@@ -217,6 +231,12 @@ HRESULT Player::Ready_Components()
 
     // 대쉬 잔상
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SMEAR_EFFECT, _smearEffect), E_FAIL);
+
+    // 트레일
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TRAIL, _trail), E_FAIL);
+
+    // 치도리
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_LIGHTNING_TRAIL, _lightningTrail), E_FAIL);
 
     return S_OK;
 }

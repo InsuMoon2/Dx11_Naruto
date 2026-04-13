@@ -27,7 +27,7 @@
             "emissiveGradationTextureGuid": "",
             "emissiveStrength": 10.0,
             "emissiveTextureGuid": "1b8719c6-a832-496d-bd9f-dba5e99fa55c",
-            "enabled": true,
+            "enabled": false,
             "endColorTint": [
                 1.0,
                 1.0,
@@ -36,6 +36,11 @@
             ],
             "endEmissiveStrength": 0.0,
             "endOpacity": 1.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
             "endScale": [
                 4.0,
                 4.0,
@@ -69,6 +74,7 @@
             "opacityGradationTextureGuid": "",
             "opacitySubUvTextureGuid": "",
             "opacityTextureGuid": "1b8719c6-a832-496d-bd9f-dba5e99fa55c",
+            "positionDuration": 1.0,
             "rotationAxis": [
                 0.0,
                 1.0,
@@ -87,6 +93,7 @@
             "useEmissiveStrengthOverTime": true,
             "useOpacityAsTransparency": false,
             "useOpacityOverTime": true,
+            "usePositionOverTime": false,
             "useScaleOverTime": true,
             "uvDistortionSpeed": [
                 0.0,
@@ -140,6 +147,11 @@
             ],
             "endEmissiveStrength": 0.0,
             "endOpacity": 1.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
             "endScale": [
                 6.0,
                 6.0,
@@ -173,6 +185,7 @@
             "opacityGradationTextureGuid": "",
             "opacitySubUvTextureGuid": "",
             "opacityTextureGuid": "1b8719c6-a832-496d-bd9f-dba5e99fa55c",
+            "positionDuration": 1.0,
             "rotationAxis": [
                 0.0,
                 1.0,
@@ -191,6 +204,7 @@
             "useEmissiveStrengthOverTime": true,
             "useOpacityAsTransparency": false,
             "useOpacityOverTime": true,
+            "usePositionOverTime": false,
             "useScaleOverTime": true,
             "uvDistortionSpeed": [
                 0.0,
@@ -233,7 +247,7 @@
             "diffuseTextureGuid": "",
             "duration": 0.6000000238418579,
             "emissiveGradationTextureGuid": "",
-            "emissiveStrength": 2.130000114440918,
+            "emissiveStrength": 1.7100000381469727,
             "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
             "enabled": true,
             "endColorTint": [
@@ -244,6 +258,11 @@
             ],
             "endEmissiveStrength": 0.0,
             "endOpacity": 0.7089999914169312,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
             "endScale": [
                 3.0,
                 3.0,
@@ -273,10 +292,11 @@
             "modelGuid": "7f465ce9-ec4d-46df-a61a-a3cec2483da5",
             "normalStrength": 1.0,
             "normalTextureGuid": "",
-            "opacity": 1.0,
+            "opacity": 0.5619999766349792,
             "opacityGradationTextureGuid": "",
             "opacitySubUvTextureGuid": "",
             "opacityTextureGuid": "",
+            "positionDuration": 1.0,
             "rotationAxis": [
                 1.0,
                 1.0,
@@ -295,6 +315,7 @@
             "useEmissiveStrengthOverTime": false,
             "useOpacityAsTransparency": false,
             "useOpacityOverTime": true,
+            "usePositionOverTime": false,
             "useScaleOverTime": true,
             "uvDistortionSpeed": [
                 0.0,
@@ -325,15 +346,15 @@
                 "rows": 1,
                 "startFrame": 0
             },
-            "baseMaskTextureGuid": "",
+            "baseMaskTextureGuid": "f5ddf73a-65e6-4362-aa6c-50b16b1e3f5c",
             "baseOpacity": 1.0,
             "baseOpacityGradationTextureGuid": "",
             "baseOpacityTextureGuid": "",
-            "baseTextureGuid": "52e4d990-9b6b-47fa-8033-efcdf0aa1d85",
+            "baseTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
             "baseTint": [
                 1.0,
-                0.2224920392036438,
-                0.06093192100524902,
+                0.42212969064712524,
+                0.14695340394973755,
                 1.0
             ],
             "billboardToCamera": true,
@@ -352,7 +373,12 @@
             ],
             "duration": 0.800000011920929,
             "enabled": true,
-            "endBaseOpacity": 0.7120000123977661,
+            "endBaseOpacity": 0.593999981880188,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
             "endRingOpacity": 0.0,
             "endScale": [
                 8.0,
@@ -377,6 +403,7 @@
                 1.0
             ],
             "loop": false,
+            "positionDuration": 1.0,
             "renderMode": 2,
             "ringEmissiveStrength": 1.0,
             "ringFlipbook": {
@@ -400,6 +427,7 @@
             ],
             "startDelay": 0.0,
             "useBaseOpacityOverTime": true,
+            "usePositionOverTime": false,
             "useRing": false,
             "useRingOpacityOverTime": false,
             "useScaleOverTime": true

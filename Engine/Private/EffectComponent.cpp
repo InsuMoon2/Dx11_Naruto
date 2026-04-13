@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "EffectComponent.h"
 #include "EffectAsset_Serializer.h"
 #include "EffectBilldboardObject.h"
@@ -18,6 +18,15 @@ static Vec4 Lerp_EffectVec4(const Vec4& start, const Vec4& end, float t)
 static float Lerp_EffectFloat(float start, float end, float t)
 {
     return start + (end - start) * t;
+}
+
+/* Vec3 위치/스케일 값을 레이어 진행 시간에 맞춰 선형 보간할 때 호출한다. */
+static Vec3 Lerp_EffectVec3(const Vec3& start, const Vec3& end, float t)
+{
+    return Vec3(
+        start.x + (end.x - start.x) * t,
+        start.y + (end.y - start.y) * t,
+        start.z + (end.z - start.z) * t);
 }
 
 EffectComponent::EffectComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -92,6 +101,7 @@ void EffectComponent::Update(float timeDelta)
             }
         }
 
+        Apply_LayerPositionInternal(layer);
         Apply_LayerScaleInternal(layer);
         Apply_LayerAnimatedMaterialInternal(layer);
 
@@ -388,9 +398,12 @@ HRESULT EffectComponent::Create_LayerObject(FActiveLayer& layer)
         Particle_Point::FParticlePointDesc pointDesc{};
         pointDesc.name = Utils::ToWString(layer.desc.base.layerName);
         pointDesc.textureGuid = layer.desc.point.textureGuid;
+        pointDesc.maskTextureGuid = layer.desc.point.maskTextureGuid;
+        pointDesc.opacityTextureGuid = layer.desc.point.opacityTextureGuid;
         pointDesc.blendMode = layer.desc.point.blendMode;
         pointDesc.colorTint = layer.desc.point.colorTint;
         pointDesc.opacity = layer.desc.point.opacity;
+        pointDesc.emissiveStrength = layer.desc.point.emissiveStrength;
         pointDesc.flipbook = layer.desc.point.flipbook;
         pointDesc.customParams0 = layer.desc.point.customParams0;
         pointDesc.customParams1 = layer.desc.point.customParams1;
@@ -423,6 +436,17 @@ HRESULT EffectComponent::Create_LayerObject(FActiveLayer& layer)
         if (billboardObj)
             billboardObj->Set_ElapsedTime(layer.elapsed);
         Apply_LayerAnimatedMaterialInternal(layer);
+
+        // [수정] Point 레이어 생성 블록 안으로 월드 고정 로직 이동
+        if (layer.desc.point.lockWorldOnSpawn)
+        {
+            layer.worldLocked = true;
+            layer.lockedWorldPos = layer.obj->Get_Transform()->Get_WorldPosition();
+
+            layer.obj->Get_Transform()->Set_Parent(nullptr);
+            layer.obj->Get_Transform()->Set_LocalPosition(layer.lockedWorldPos);
+        }
+
         return S_OK;
     }
 
@@ -456,6 +480,12 @@ void EffectComponent::Apply_LayerTransformInternal(FActiveLayer& layer)
     if (!layer.obj)
         return;
 
+    if (layer.worldLocked)
+    {
+        layer.obj->Get_Transform()->Set_LocalPosition(layer.lockedWorldPos);
+        return;
+    }
+
     auto owner = Get_Owner();
     auto childTransform = layer.obj->Get_Transform();
 
@@ -475,10 +505,11 @@ void EffectComponent::Apply_LayerTransformInternal(FActiveLayer& layer)
         runtimeScale = _runtimeLocalScale;
     }
 
+    const Vec3 layerPosition = Resolve_LayerPosition(layer);
     const Vec3 finalLocalPosition =
         runtimePosition +
         _desc.localPosition +
-        layer.desc.base.localPosition;
+        layerPosition;
 
     const Vec3 finalLocalRotation =
         runtimeRotation +
@@ -497,6 +528,32 @@ void EffectComponent::Apply_LayerTransformInternal(FActiveLayer& layer)
         finalLocalRotation.y,
         finalLocalRotation.z);
     childTransform->Set_LocalScale(finalLocalScale);
+}
+
+void EffectComponent::Apply_LayerPositionInternal(FActiveLayer& layer)
+{
+    if (!layer.obj)
+        return;
+
+    if (layer.worldLocked)
+        return;
+
+    auto childTransform = layer.obj->Get_Transform();
+    if (!childTransform)
+        return;
+
+    Vec3 runtimePosition = Vec3::Zero;
+
+    if (_useRuntimeLocalTransform)
+        runtimePosition = _runtimeLocalPosition;
+
+    const Vec3 layerPosition = Resolve_LayerPosition(layer);
+    const Vec3 finalLocalPosition =
+        runtimePosition +
+        _desc.localPosition +
+        layerPosition;
+
+    childTransform->Set_LocalPosition(finalLocalPosition);
 }
 
 void EffectComponent::Apply_LayerScaleInternal(FActiveLayer& layer)
@@ -536,6 +593,20 @@ Vec3 EffectComponent::Resolve_LayerScale(const FActiveLayer& layer) const
 
     const float t = std::clamp(layer.elapsed / duration, 0.f, 1.f);
     return Vec3::Lerp(layer.desc.base.localScale, layer.desc.base.endScale, t);
+}
+
+Vec3 EffectComponent::Resolve_LayerPosition(const FActiveLayer& layer) const
+{
+    if (!layer.desc.base.usePositionOverTime)
+        return layer.desc.base.localPosition;
+
+    const float duration = layer.desc.base.positionDuration;
+
+    if (duration <= 0.f)
+        return layer.desc.base.endPosition;
+
+    const float t = std::clamp(layer.elapsed / duration, 0.f, 1.f);
+    return Lerp_EffectVec3(layer.desc.base.localPosition, layer.desc.base.endPosition, t);
 }
 
 float EffectComponent::Resolve_LayerDuration(const FActiveLayer& layer) const

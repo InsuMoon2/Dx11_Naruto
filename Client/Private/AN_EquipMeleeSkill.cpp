@@ -8,6 +8,7 @@
 #include "SkillObject.h"
 #include "Client_Defines.h"
 #include "SkillComponent.h"
+#include "Model.h"
 
 REGISTER_ANIM_NOTIFY(AN_EquipMeleeSkill)
 IMPLEMENT_REFLECTION(AN_EquipMeleeSkill)
@@ -38,7 +39,25 @@ void AN_EquipMeleeSkill::Execute(const FAnimNotifyContext& context)
 
     SkillObject::FSkillObjectDesc desc{};
     desc.collisionPreset = _collisionPreset;
-    desc.spawnPosition = ownerTransform->Get_WorldPosition();
+    
+    Vec3 initialPos = ownerTransform->Get_WorldPosition();
+    if (context.model)
+    {
+        const Matrix* boneMatrix = context.model->Get_SocketBoneMatrixPtr(_boneName);
+        if (boneMatrix)
+        {
+            Matrix boneWorld = (*boneMatrix) * ownerTransform->Get_WorldMatrix();
+            Vec3 scale, pos;
+            Quat rot;
+            boneWorld.Decompose(scale, rot, pos);
+            
+            Matrix rotMat = Matrix::CreateFromQuaternion(rot);
+            Vec3 worldOffset = Vec3::TransformNormal(_attachOffset, rotMat);
+            initialPos = pos + worldOffset;
+        }
+    }
+    
+    desc.spawnPosition = initialPos;
     desc.attachOffset = _attachOffset;
 
     auto spawned = GAME->Clone_And_Add_GameObject(

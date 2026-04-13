@@ -1,0 +1,120 @@
+{
+    "autoPlay": true,
+    "effectName": "NewEffect",
+    "layers": [
+        {
+            "blendMode": 1,
+            "center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "colorTint": [
+                0.15770608186721802,
+                0.853514552116394,
+                1.0,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "duration": -1.0,
+            "emissiveStrength": 1.0,
+            "enabled": true,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "flipbook": {
+                "columns": 2,
+                "enabled": true,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "isLoop": true,
+            "kind": 0,
+            "layerName": "NewPointEmitter",
+            "lifeTime": [
+                0.15000000596046448,
+                0.44999998807907104
+            ],
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "lockWorldOnSpawn": true,
+            "loop": false,
+            "maskTextureGuid": "",
+            "moveMode": 1,
+            "numInstances": 8,
+            "opacity": 1.0,
+            "opacityTextureGuid": "",
+            "pivot": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "positionDuration": 1.0,
+            "range": [
+                0.0,
+                2.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ],
+            "spawnHeight": 1.0,
+            "spawnInnerRadius": 0.0,
+            "spawnRadius": 0.03999999910593033,
+            "spawnShape": 4,
+            "speed": [
+                1.4500000476837158,
+                6.940000057220459
+            ],
+            "startDelay": 0.0,
+            "textureGuid": "862c206f-8053-418a-bbaa-02f612dd6999",
+            "useColorTintOverTime": false,
+            "useOpacityOverTime": false,
+            "usePositionOverTime": false,
+            "useScaleOverTime": false
+        }
+    ],
+    "totalDuration": -1.0
+}

@@ -138,6 +138,11 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
     const int hasNormalTexture = _normalTexture ? 1 : 0;
     const int hasRoughnessTexture = _roughnessTexture ? 1 : 0;
     const int hasSpecularTexture = _specularTexture ? 1 : 0;
+    // Mesh SubUV 애니메이션은 원본 Cascade의 ParticleModuleSubUV처럼 현재 레이어 시간으로 프레임을 고른다.
+    const int useFlipbook = _layerDesc.mesh.flipbook.enabled ? 1 : 0;
+    const int flipbookColumns = (std::max)(_layerDesc.mesh.flipbook.columns, 1);
+    const int flipbookRows = (std::max)(_layerDesc.mesh.flipbook.rows, 1);
+    const int flipbookLoop = _layerDesc.mesh.flipbook.loop ? 1 : 0;
 
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix()), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View)), E_FAIL);
@@ -171,6 +176,14 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasNormalTexture", &hasNormalTexture, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasRoughnessTexture", &hasRoughnessTexture, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasSpecularTexture", &hasSpecularTexture, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_ElapsedTime", &_elapsed, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_UseFlipbook", &useFlipbook, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookColumns", &flipbookColumns, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookRows", &flipbookRows, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookFps", &_layerDesc.mesh.flipbook.fps, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookStartFrame", &_layerDesc.mesh.flipbook.startFrame, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookEndFrame", &_layerDesc.mesh.flipbook.endFrame, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookLoop", &flipbookLoop, sizeof(int)), E_FAIL);
 
     if (_diffuseTexture)
         {CHECK_FAILED(_diffuseTexture->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);}

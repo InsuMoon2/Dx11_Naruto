@@ -61,6 +61,9 @@ public:
     void Apply_WeaponSkillSet(EWeaponType weaponType);
     void Set_EquippedSkill_ID(int slot, int skill_Id);
 
+    void Set_ActiveStretchingMesh(Shared<GameObject> effect) { _activeStretchingMesh = effect; }
+    Shared<GameObject> Get_ActiveStretchingMesh() { return _activeStretchingMesh.lock(); }
+
 protected:
     json    To_Json() const override;
     void    From_Json(const json& data) override;
@@ -79,6 +82,9 @@ private:
     // 장착된 스킬
     Weak<SkillObject> _attachedMeleeSkill;
     string            _attachedBoneName = "";
+
+    // 거의 치도리 전용?
+    Weak<GameObject> _activeStretchingMesh;
 
 public:
     static Shared<SkillComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

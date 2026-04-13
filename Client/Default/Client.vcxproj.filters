@@ -317,6 +317,20 @@
       <Filter>02. GameObject\07. Skill</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ANS_SpawnParticle.h" />
+    <ClInclude Include="..\Public\Skill_Chidori.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StretchingMeshEffect.h" />
+    <ClInclude Include="..\Public\ANS_StretchingMesh.h" />
+    <ClInclude Include="..\Public\AN_StretchingMesh_Start.h" />
+    <ClInclude Include="..\Public\AN_StretchingMesh_End.h" />
+    <ClInclude Include="..\Public\Trail_Component.h" />
+    <ClInclude Include="..\Public\ANS_Trail.h" />
+    <ClInclude Include="..\Public\AN_Trail_Start.h" />
+    <ClInclude Include="..\Public\AN_Trail_Stop.h" />
+    <ClInclude Include="..\Public\LightningTrail_Component.h" />
+    <ClInclude Include="..\Public\AN_LightningTrail_Start.h" />
+    <ClInclude Include="..\Public\AN_LightningTrail_Stop.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -617,6 +631,20 @@
       <Filter>02. GameObject\07. Skill</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ANS_SpawnParticle.cpp" />
+    <ClCompile Include="..\Private\Skill_Chidori.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StretchingMeshEffect.cpp" />
+    <ClCompile Include="..\Private\ANS_StretchingMesh.cpp" />
+    <ClCompile Include="..\Private\AN_StretchingMesh_Start.cpp" />
+    <ClCompile Include="..\Private\AN_StretchingMesh_End.cpp" />
+    <ClCompile Include="..\Private\Trail_Component.cpp" />
+    <ClCompile Include="..\Private\ANS_Trail.cpp" />
+    <ClCompile Include="..\Private\AN_Trail_Start.cpp" />
+    <ClCompile Include="..\Private\AN_Trail_Stop.cpp" />
+    <ClCompile Include="..\Private\LightningTrail_Component.cpp" />
+    <ClCompile Include="..\Private\AN_LightningTrail_Start.cpp" />
+    <ClCompile Include="..\Private\AN_LightningTrail_Stop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

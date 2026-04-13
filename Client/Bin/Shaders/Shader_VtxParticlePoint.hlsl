@@ -1,7 +1,10 @@
 #include "Engine_Shader_Defines.hlsli"
 
+Texture2D g_OpacityTexture : register(t2);
+
 float4 g_ColorTint;
 float  g_Opacity;
+float  g_EmissiveStrength;
 int    g_UseLifetimeFade;
 int    g_UseFlipbook;
 int    g_FlipbookColumns;
@@ -10,8 +13,18 @@ float  g_FlipbookFps;
 int    g_FlipbookStartFrame;
 int    g_FlipbookEndFrame;
 int    g_FlipbookLoop;
+int    g_HasMaskTexture;
+int    g_HasOpacityTexture;
+int    g_BlendMode;
 float4 g_CustomParams0;
 float4 g_CustomParams1;
+
+sampler PointClampSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = clamp;
+    AddressV = clamp;
+};
 
 struct VS_IN
 {
@@ -25,6 +38,7 @@ struct VS_OUT
     float4 vPosition : POSITION;
     float2 vPSize    : TEXCOORD0;
     float2 vLifeTime : TEXCOORD1;
+    float3 vAlignDir : TEXCOORD2;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -39,15 +53,17 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vPSize = float2(length(In.TransformMatrix._11_12_13), length(In.TransformMatrix._21_22_23));
     Out.vLifeTime = In.vLifeTime;
 
+    Out.vAlignDir = normalize(In.TransformMatrix._31_32_33);
 
     return Out;
 }
 
 struct GS_IN
 {
-    float4 vPosition : POSITION;
+    float4 vPosition : POSITION; 
     float2 vPSize    : TEXCOORD0;
     float2 vLifeTime : TEXCOORD1;
+    float3 vAlignDir : TEXCOORD2;
 };
 
 struct GS_OUT
@@ -61,29 +77,62 @@ struct GS_OUT
 void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 {
     GS_OUT Out[4];
-    
-    float3 vLook = g_CamPosition.xyz - In[0].vPosition.xyz;
-    float3 vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * In[0].vPSize.x * 0.5f;
-    float3 vUp = normalize(cross(vLook, vRight)) * In[0].vPSize.y * 0.5f;
-    
+
+    float3 toCamera = normalize(g_CamPosition.xyz - In[0].vPosition.xyz);
+
+    float3 cameraRight = cross(float3(0.f, 1.f, 0.f), toCamera);
+    if (dot(cameraRight, cameraRight) < 0.0001f)
+        cameraRight = cross(float3(1.f, 0.f, 0.f), toCamera);
+    cameraRight = normalize(cameraRight);
+
+    float3 cameraUp = normalize(cross(toCamera, cameraRight));
+
+    // Use the effect center as the radial origin so RingZ bolts visually burst from the hand center.
+    float3 effectWorldCenter = mul(float4(0.f, 0.f, 0.f, 1.f), g_WorldMatrix).xyz;
+    float3 radialDir = In[0].vPosition.xyz - effectWorldCenter;
+
+    // Use the actual world-space movement direction as a fallback for particles close to the center.
+    float3 worldMoveDir = mul(float4(In[0].vAlignDir, 0.f), g_WorldMatrix).xyz;
+    if (dot(worldMoveDir, worldMoveDir) < 0.0001f)
+        worldMoveDir = cameraUp;
+    else
+        worldMoveDir = normalize(worldMoveDir);
+
+    // Prefer screen-space radial direction; pure depth movement cannot define a visible billboard roll.
+    float2 rollDir = float2(dot(radialDir, cameraRight), dot(radialDir, cameraUp));
+    if (dot(rollDir, rollDir) < 0.0001f)
+        rollDir = float2(dot(worldMoveDir, cameraRight), dot(worldMoveDir, cameraUp));
+
+    if (dot(rollDir, rollDir) < 0.0001f)
+        rollDir = float2(0.f, 1.f);
+    else
+        rollDir = normalize(rollDir);
+
+    // 이동 방향을 카메라 평면에 투영해서 billboard long-axis로 사용
+    float3 longAxis = normalize(cameraRight * rollDir.x + cameraUp * rollDir.y);
+    float3 shortAxis = normalize(cameraRight * rollDir.y - cameraUp * rollDir.x);
+
+    // 텍스처가 세로로 긴 번개면 longAxis를 높이축으로 쓴다
+    float3 vRight = shortAxis * In[0].vPSize.x * 0.5f;
+    float3 vUp = longAxis * In[0].vPSize.y * 0.5f;
+
     matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-    Out[0].vPosition = mul(vector(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
+    Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
     Out[0].vTexcoord = float2(0.f, 0.f);
     Out[0].vLifeTime = In[0].vLifeTime;
-    
-    Out[1].vPosition = mul(vector(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
+
+    Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
     Out[1].vTexcoord = float2(1.f, 0.f);
     Out[1].vLifeTime = In[0].vLifeTime;
-    
-    Out[2].vPosition = mul(vector(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
+
+    Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
     Out[2].vTexcoord = float2(1.f, 1.f);
     Out[2].vLifeTime = In[0].vLifeTime;
-    
-    Out[3].vPosition = mul(vector(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
+
+    Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
     Out[3].vTexcoord = float2(0.f, 1.f);
     Out[3].vLifeTime = In[0].vLifeTime;
-    
 
     OutStream.Append(Out[0]);
     OutStream.Append(Out[1]);
@@ -94,7 +143,7 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
     OutStream.Append(Out[2]);
     OutStream.Append(Out[3]);
     OutStream.RestartStrip();
-};
+}
 
 struct PS_IN
 {
@@ -107,6 +156,27 @@ struct PS_OUT
 {
     float4 vColor : SV_TARGET0;
 };
+
+// Point 파티클도 alpha-authored PNG를 우선 사용하고,
+// 알파가 거의 1로 고정된 레거시 마스크 텍스처만 luminance fallback을 사용한다.
+float SampleParticleMask(float4 tex)
+{
+    if (tex.a < 0.999f)
+        return tex.a;
+
+    if (g_BlendMode == 1)
+        return 1.f;
+
+    float luminance = dot(tex.rgb, float3(0.299f, 0.587f, 0.114f));
+    return saturate((luminance - 0.35f) / 0.65f);
+}
+
+// Point 텍스처가 실제 색을 가진 PNG면 그 색을 살리고,
+// 흑백 마스크 텍스처면 luminance를 emissive source로 사용한다.
+float3 ResolveParticleColor(float4 tex)
+{
+    return tex.rgb;
+}
 
 float2 ResolveFlipbookUV(float2 baseUV, float particleAge)
 {
@@ -143,25 +213,46 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out;
 
     float2 finalUV = ResolveFlipbookUV(In.vTexcoord, In.vLifeTime.y);
-    float4 tex = g_DiffuseTexture.Sample(DefaultSampler, finalUV);
+    float4 tex = g_DiffuseTexture.Sample(PointClampSampler, finalUV);
 
-    float mask = (tex.a > 0.001f)
-        ? tex.a
-        : max(tex.r, max(tex.g, tex.b));
-    mask = saturate((mask - 0.08f) / 0.92f);
+    float mask = SampleParticleMask(tex);
+
+    if (g_HasMaskTexture != 0)
+    {
+        float4 maskTex = g_MaskTexture.Sample(PointClampSampler, finalUV);
+        mask *= SampleParticleMask(maskTex);
+    }
+
+    if (g_HasOpacityTexture != 0)
+    {
+        float4 opacityTex = g_OpacityTexture.Sample(PointClampSampler, finalUV);
+        mask *= SampleParticleMask(opacityTex);
+    }
 
     // 검은/회색 주변부를 더 강하게 제거
 
-    if (mask < 0.02f)
+    if (mask < 0.04f)
         discard;
 
     float lifeRatio = saturate(In.vLifeTime.y / max(In.vLifeTime.x, 0.001f));
     float fade = (g_UseLifetimeFade != 0) ? (1.f - lifeRatio) : 1.f;
-    float detail = dot(tex.rgb, float3(0.299f, 0.587f, 0.114f));
-    detail = max(detail, mask * 0.35f);
+    float alpha = saturate(mask * g_Opacity * fade * g_ColorTint.a);
+    float3 colorSource = ResolveParticleColor(tex);
 
-    Out.vColor.rgb = g_ColorTint.rgb * detail;
-    Out.vColor.a = mask * g_Opacity * fade * g_ColorTint.a;
+    // AlphaBlend 패스가 premultiplied alpha 구성이므로 source rgb에도 alpha를 곱해준다.
+    float3 finalRgb = colorSource * g_ColorTint.rgb * max(g_EmissiveStrength, 0.f);
+    if (g_BlendMode == 1)
+    {
+        const bool useAuthoredAlpha = tex.a < 0.999f || g_HasMaskTexture != 0 || g_HasOpacityTexture != 0;
+        const float additiveScale = useAuthoredAlpha
+            ? alpha
+            : saturate(g_Opacity * fade * g_ColorTint.a);
+
+        finalRgb *= additiveScale;
+    }
+
+    Out.vColor.rgb = finalRgb;
+    Out.vColor.a = alpha;
     Out.vColor.rgb += (g_CustomParams0.rgb + g_CustomParams1.rgb) * 0.f;
 
     return Out;

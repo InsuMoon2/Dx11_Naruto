@@ -276,6 +276,12 @@
             "Path": "../../Client/Bin/Resources/Skills/Rasengan/Textures/T_EFF_Rasengan_05_M.png",
             "Count": 1,
             "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_TRAIL",
+            "Path": "../../Client/Bin/Resources/Effects/Textures/Traill/T_EFF_Trail_01_M.png",
+            "Count": 1,
+            "Level": "Static"
         }
     ]
 }

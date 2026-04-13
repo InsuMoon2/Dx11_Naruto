@@ -5,16 +5,37 @@
         {
             "blendMode": 1,
             "colorTint": [
-                0.33067408204078674,
-                0.3707234859466553,
-                0.4193548560142517,
+                0.07001452893018723,
+                0.07886218279600143,
+                0.08960574865341187,
                 1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
             ],
             "diffuseTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
             "duration": 0.6000000238418579,
             "emissiveGradationTextureGuid": "",
-            "emissiveTextureGuid": "0afdc1aa-87e6-4d40-b545-d1792e4d5df2",
+            "emissiveStrength": 1.0,
+            "emissiveTextureGuid": "fe2a5a3b-0767-47fd-9be7-35aa07d36a78",
             "enabled": true,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endEmissiveStrength": 0.0,
+            "endOpacity": 0.0,
             "endScale": [
                 1.0,
                 1.0,
@@ -42,19 +63,30 @@
             "loop": true,
             "maskTextureGuid": "",
             "modelGuid": "1cb1422e-0df3-4ff5-b0c8-4ee61b423351",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
             "opacity": 1.0,
             "opacityGradationTextureGuid": "",
             "opacitySubUvTextureGuid": "",
-            "opacityTextureGuid": "",
+            "opacityTextureGuid": "6f67b946-6275-4daf-95e5-a3b7c0005768",
             "rotationAxis": [
                 1.0,
                 0.0,
                 0.0
             ],
             "rotationSpeed": 292.6000061035156,
+            "roughness": 0.5,
+            "roughnessTextureGuid": "",
+            "shadingMode": 0,
+            "specularPower": 32.0,
+            "specularStrength": 1.0,
+            "specularTextureGuid": "",
             "startDelay": 0.0,
             "twoSided": true,
+            "useColorTintOverTime": false,
+            "useEmissiveStrengthOverTime": false,
             "useOpacityAsTransparency": false,
+            "useOpacityOverTime": false,
             "useScaleOverTime": false,
             "uvDistortionSpeed": [
                 0.0,

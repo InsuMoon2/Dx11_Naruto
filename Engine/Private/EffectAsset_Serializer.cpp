@@ -97,6 +97,13 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         layerDesc.base.localPosition.y,
         layerDesc.base.localPosition.z
     };
+    j["usePositionOverTime"] = layerDesc.base.usePositionOverTime;
+    j["endPosition"] = {
+        layerDesc.base.endPosition.x,
+        layerDesc.base.endPosition.y,
+        layerDesc.base.endPosition.z
+    };
+    j["positionDuration"] = layerDesc.base.positionDuration;
     j["localRotation"] = {
         layerDesc.base.localRotation.x,
         layerDesc.base.localRotation.y,
@@ -136,6 +143,15 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["uvTiling"] = { mesh.uvTiling.x, mesh.uvTiling.y };
         j["uvDistortionStrength"] = { mesh.uvDistortionStrength.x, mesh.uvDistortionStrength.y };
         j["uvDistortionSpeed"] = { mesh.uvDistortionSpeed.x, mesh.uvDistortionSpeed.y };
+        j["flipbook"] = {
+            { "enabled", mesh.flipbook.enabled },
+            { "columns", mesh.flipbook.columns },
+            { "rows", mesh.flipbook.rows },
+            { "fps", mesh.flipbook.fps },
+            { "startFrame", mesh.flipbook.startFrame },
+            { "endFrame", mesh.flipbook.endFrame },
+            { "loop", mesh.flipbook.loop }
+        };
         j["colorTint"] = { mesh.colorTint.x, mesh.colorTint.y, mesh.colorTint.z, mesh.colorTint.w };
 
         j["opacity"] = mesh.opacity;
@@ -163,6 +179,8 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
     {
         const auto& point = layerDesc.point;
         j["textureGuid"] = point.textureGuid;
+        j["maskTextureGuid"] = point.maskTextureGuid;
+        j["opacityTextureGuid"] = point.opacityTextureGuid;
         j["numInstances"] = point.numInstances;
         j["center"] = { point.center.x, point.center.y, point.center.z };
         j["range"] = { point.range.x, point.range.y, point.range.z };
@@ -177,6 +195,7 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["isLoop"] = point.isLoop;
         j["blendMode"] = static_cast<int>(point.blendMode);
         j["colorTint"] = { point.colorTint.x, point.colorTint.y, point.colorTint.z, point.colorTint.w };
+        j["emissiveStrength"] = point.emissiveStrength;
         j["useColorTintOverTime"] = point.useColorTintOverTime;
         j["endColorTint"] = { point.endColorTint.x, point.endColorTint.y, point.endColorTint.z, point.endColorTint.w };
         j["opacity"] = point.opacity;
@@ -194,6 +213,9 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["customParams0"] = { point.customParams0.x, point.customParams0.y, point.customParams0.z, point.customParams0.w };
         j["customParams1"] = { point.customParams1.x, point.customParams1.y, point.customParams1.z, point.customParams1.w };
         j["moveMode"] = point.moveMode;
+        j["moveMode"] = point.moveMode;
+        j["lockWorldOnSpawn"] = point.lockWorldOnSpawn;
+
     }
     else if (layerDesc.base.kind == EEffectLayerKind::BillboardRect)
     {
@@ -256,6 +278,9 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
     if (j.contains("loop")) layer.base.loop = j["loop"];
 
     if (j.contains("localPosition")) layer.base.localPosition = Vec3(j["localPosition"][0], j["localPosition"][1], j["localPosition"][2]);
+    if (j.contains("usePositionOverTime")) layer.base.usePositionOverTime = j["usePositionOverTime"];
+    if (j.contains("endPosition")) layer.base.endPosition = Vec3(j["endPosition"][0], j["endPosition"][1], j["endPosition"][2]);
+    if (j.contains("positionDuration")) layer.base.positionDuration = j["positionDuration"];
     if (j.contains("localRotation")) layer.base.localRotation = Vec3(j["localRotation"][0], j["localRotation"][1], j["localRotation"][2]);
     if (j.contains("localScale")) layer.base.localScale = Vec3(j["localScale"][0], j["localScale"][1], j["localScale"][2]);
     if (j.contains("useScaleOverTime")) layer.base.useScaleOverTime = j["useScaleOverTime"];
@@ -283,6 +308,17 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("uvTiling")) mesh.uvTiling = Vec2(j["uvTiling"][0], j["uvTiling"][1]);
         if (j.contains("uvDistortionStrength")) mesh.uvDistortionStrength = Vec2(j["uvDistortionStrength"][0], j["uvDistortionStrength"][1]);
         if (j.contains("uvDistortionSpeed")) mesh.uvDistortionSpeed = Vec2(j["uvDistortionSpeed"][0], j["uvDistortionSpeed"][1]);
+        if (j.contains("flipbook"))
+        {
+            const auto& flipbook = j["flipbook"];
+            if (flipbook.contains("enabled")) mesh.flipbook.enabled = flipbook["enabled"];
+            if (flipbook.contains("columns")) mesh.flipbook.columns = flipbook["columns"];
+            if (flipbook.contains("rows")) mesh.flipbook.rows = flipbook["rows"];
+            if (flipbook.contains("fps")) mesh.flipbook.fps = flipbook["fps"];
+            if (flipbook.contains("startFrame")) mesh.flipbook.startFrame = flipbook["startFrame"];
+            if (flipbook.contains("endFrame")) mesh.flipbook.endFrame = flipbook["endFrame"];
+            if (flipbook.contains("loop")) mesh.flipbook.loop = flipbook["loop"];
+        }
         if (j.contains("colorTint")) mesh.colorTint = Vec4(j["colorTint"][0], j["colorTint"][1], j["colorTint"][2], j["colorTint"][3]);
 
         if (j.contains("opacity")) mesh.opacity = j["opacity"];
@@ -310,6 +346,8 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
     {
         auto& point = layer.point;
         if (j.contains("textureGuid")) point.textureGuid = j["textureGuid"];
+        if (j.contains("maskTextureGuid")) point.maskTextureGuid = j["maskTextureGuid"];
+        if (j.contains("opacityTextureGuid")) point.opacityTextureGuid = j["opacityTextureGuid"];
         if (j.contains("numInstances")) point.numInstances = j["numInstances"];
         if (j.contains("center")) point.center = Vec3(j["center"][0], j["center"][1], j["center"][2]);
         if (j.contains("range")) point.range = Vec3(j["range"][0], j["range"][1], j["range"][2]);
@@ -324,6 +362,7 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("isLoop")) point.isLoop = j["isLoop"];
         if (j.contains("blendMode")) point.blendMode = static_cast<EEffectBlendMode>(j["blendMode"].get<int>());
         if (j.contains("colorTint")) point.colorTint = Vec4(j["colorTint"][0], j["colorTint"][1], j["colorTint"][2], j["colorTint"][3]);
+        if (j.contains("emissiveStrength")) point.emissiveStrength = j["emissiveStrength"];
         if (j.contains("useColorTintOverTime")) point.useColorTintOverTime = j["useColorTintOverTime"];
         if (j.contains("endColorTint")) point.endColorTint = Vec4(j["endColorTint"][0], j["endColorTint"][1], j["endColorTint"][2], j["endColorTint"][3]);
         if (j.contains("opacity")) point.opacity = j["opacity"];
@@ -343,6 +382,8 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("customParams0")) point.customParams0 = Vec4(j["customParams0"][0], j["customParams0"][1], j["customParams0"][2], j["customParams0"][3]);
         if (j.contains("customParams1")) point.customParams1 = Vec4(j["customParams1"][0], j["customParams1"][1], j["customParams1"][2], j["customParams1"][3]);
         if (j.contains("moveMode")) point.moveMode = j["moveMode"];
+        if (j.contains("moveMode"))        point.moveMode        = j["moveMode"];
+        if (j.contains("lockWorldOnSpawn")) point.lockWorldOnSpawn = j["lockWorldOnSpawn"];
     }
     else if (layer.base.kind == EEffectLayerKind::BillboardRect)
     {

@@ -14,8 +14,9 @@ enum ComponentID
     COMPONENT_TYPE_MODEL                    = 7;
     COMPONENT_TYPE_PROJECTILE               = 8;
     COMPONENT_TYPE_VIBUFFER_PARTICLE_POINT  = 9;
-    COMPONENT_TYPE_EFFECT                   = 10;  
-
+    COMPONENT_TYPE_EFFECT                   = 10;
+    COMPONENT_TYPE_VIBUFFER_TRAIL           = 11;
+    
     COMPONENT_TYPE_COLLIDER_AABB         = 21;
     COMPONENT_TYPE_COLLIDER_OBB          = 22;
     COMPONENT_TYPE_COLLIDER_SPHERE       = 23;
@@ -47,6 +48,7 @@ enum ComponentID
     COMPONENT_TYPE_TEXTURE_PARTICLE_EXPLOSION = 217;
 
     COMPONENT_TYPE_TEXTURE_PARTICLE_HIT = 218;
+    COMPONENT_TYPE_TEXTURE_TRAIL        = 219;
 
     // Mesh
     COMPONENT_TYPE_MESH                 = 299;
@@ -86,7 +88,8 @@ enum ComponentID
     COMPONENT_TYPE_TARGET               = 1011;
     COMPONENT_TYPE_GHOST_EFFECT         = 1012;
     COMPONENT_TYPE_SMEAR_EFFECT         = 1013;
-    
+    COMPONENT_TYPE_TRAIL                = 1014;
+    COMPONENT_TYPE_LIGHTNING_TRAIL      = 1015;
 }
 
 enum OBJECT_TYPE
@@ -130,7 +133,7 @@ enum OBJECT_TYPE
 
     // 땜빵
     OBJECT_TYPE_ATTACHED_EFFECT          = 80;
-
+    OBJECT_TYPE_STRETCHING_MESH_EFFECT   = 81;
 
     // UI : 100+
     OBJECT_TYPE_UI_TEXT                 = 100;

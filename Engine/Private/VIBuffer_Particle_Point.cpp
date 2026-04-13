@@ -96,7 +96,9 @@ HRESULT VIBuffer_Particle_Point::Build_Instances(const FParticlePointDesc& desc)
         const Vec3 offset = Build_SpawnOffset(desc);
 
         const Vec3 startPos = desc.center + _pivot + offset;
-        const Vec3 direction = (_moveMode == EMoveMode::Spread) ? Resolve_SpreadDirection(offset) : Vec3(0.f, -1.f, 0.f);
+        const Vec3 direction = (_moveMode == EMoveMode::Spread)
+            ? Resolve_SpreadDirection(offset)
+            : Vec3(0.f, -1.f, 0.f);
 
         VTXPARTICLE_INSTANCE instance{};
 
@@ -104,7 +106,8 @@ HRESULT VIBuffer_Particle_Point::Build_Instances(const FParticlePointDesc& desc)
 
         instance.right = Vec4(scale, 0.f, 0.f, 0.f);
         instance.up = Vec4(0.f, scale, 0.f, 0.f);
-        instance.look = Vec4(0.f, 0.f, scale, 0.f);
+
+        instance.look = Vec4(direction.x, direction.y, direction.z, 0.f);
 
         instance.translation = Vec4(startPos.x, startPos.y, startPos.z, 1.f);
         instance.lifetime = Vec2(maxLifeTime, 0.f);
@@ -148,6 +151,16 @@ Vec3 VIBuffer_Particle_Point::Build_SpawnOffset(const FParticlePointDesc& desc) 
         const float angle = Utils::RandomRange(0.f, XM_2PI);
         const float radius = Utils::RandomRange(innerRadius, outerRadius);
         return Vec3(cosf(angle) * radius, 0.f, sinf(angle) * radius);
+    }
+
+    case EEffectPointSpawnShape::RingZ:
+    {
+        // Chidori처럼 손 앞면에서 Z축을 중심으로 번개가 방사되는 전용 XY 평면 링이다.
+        const float outerRadius = (std::max)(desc.spawnRadius, 0.f);
+        const float innerRadius = std::clamp(desc.spawnInnerRadius, 0.f, outerRadius);
+        const float angle = Utils::RandomRange(0.f, XM_2PI);
+        const float radius = Utils::RandomRange(innerRadius, outerRadius);
+        return Vec3(cosf(angle) * radius, sinf(angle) * radius, 0.f);
     }
 
     case EEffectPointSpawnShape::Box:
@@ -257,9 +270,9 @@ void VIBuffer_Particle_Point::Update_Spread(float timeDelta)
         instance.translation.y += velocity.y;
         instance.translation.z += velocity.z;
 
-        const float growAmount = timeDelta;
-        instance.right.x += growAmount;
-        instance.up.y += growAmount;
+        //const float growAmount = timeDelta;
+        //instance.right.x += growAmount;
+        //instance.up.y += growAmount;
 
         if (instance.lifetime.y >= instance.lifetime.x)
         {

@@ -36,6 +36,11 @@
             ],
             "endEmissiveStrength": 0.0,
             "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
             "endScale": [
                 1.0,
                 1.0,
@@ -68,7 +73,8 @@
             "opacity": 1.0,
             "opacityGradationTextureGuid": "c9c78959-c96c-4d4c-a26e-f0f8720f4199",
             "opacitySubUvTextureGuid": "",
-            "opacityTextureGuid": "eb9543c5-2d45-4cfe-95b8-a5fa44eda7d3",
+            "opacityTextureGuid": "",
+            "positionDuration": 1.0,
             "rotationAxis": [
                 0.0,
                 1.0,
@@ -87,6 +93,118 @@
             "useEmissiveStrengthOverTime": false,
             "useOpacityAsTransparency": false,
             "useOpacityOverTime": false,
+            "usePositionOverTime": false,
+            "useScaleOverTime": false,
+            "uvDistortionSpeed": [
+                0.6000000238418579,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.10999999940395355,
+                0.10000000149011612
+            ],
+            "uvDistortionTextureGuid": "e2a33c52-2d2b-41a1-8cad-6cf004c304a2",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "blendMode": 1,
+            "colorTint": [
+                0.47058823704719543,
+                0.9019607901573181,
+                1.0,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "diffuseTextureGuid": "",
+            "duration": -1.0,
+            "emissiveGradationTextureGuid": "3cd76d67-a1ba-4bbf-ad3a-b7fc2a54e841",
+            "emissiveStrength": 16.0,
+            "emissiveTextureGuid": "4bf78e6f-0e6e-4ccc-9d34-b83d82c2e384",
+            "enabled": true,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endEmissiveStrength": 0.0,
+            "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "Charge_Core_A01_Copy",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                16.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "6999a224-faf5-499b-a888-387c2f25ef44",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "c9c78959-c96c-4d4c-a26e-f0f8720f4199",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "",
+            "positionDuration": 1.0,
+            "rotationAxis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "rotationSpeed": 0.0,
+            "roughness": 0.5,
+            "roughnessTextureGuid": "",
+            "shadingMode": 0,
+            "specularPower": 31.5,
+            "specularStrength": 1.0,
+            "specularTextureGuid": "",
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useColorTintOverTime": false,
+            "useEmissiveStrengthOverTime": false,
+            "useOpacityAsTransparency": false,
+            "useOpacityOverTime": false,
+            "usePositionOverTime": false,
             "useScaleOverTime": false,
             "uvDistortionSpeed": [
                 0.6000000238418579,

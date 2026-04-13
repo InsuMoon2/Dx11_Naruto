@@ -140,8 +140,8 @@ void Skill_FireBall::Process_Hit(Character* hitted, GameObject* targetKey)
 
     if (!Apply_Skill_Hit(hitted, 10.f, _launchPower, _launchUp))
         return;
-
-    Spawn_Effect_Once("Gemini_FireBall_Hit", _transformCom->Get_WorldPosition());
+Spawn_Effect_Once("Gemini_FireBall_Hit", _transformCom->Get_WorldPosition());
+    
 
     Set_Destroy(true);
 }

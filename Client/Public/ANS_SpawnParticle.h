@@ -18,9 +18,9 @@ public:
     void On_End(const FAnimNotifyContext& context)   override;
 
 private:
-    string _effectAssetName = "R_Hand_Weapon_cnt_tr";
+    string _effectAssetName = "";
 
-    string _boneName = "";
+    string _boneName = "R_Hand_Weapon_cnt_tr";
 
     Vec3 _localOffset   = Vec3::Zero;
     Vec3 _localRotation = Vec3::Zero;

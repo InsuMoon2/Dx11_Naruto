@@ -97,7 +97,7 @@ void EffectBillboardObject::Apply_BaseTransform(const FEffectLayerBase& baseDesc
 void EffectBillboardObject::Update(float timeDelta)
 {
     GameObject::Update(timeDelta);
-
+    _elapsedTime += timeDelta;
 
 }
 
@@ -115,6 +115,7 @@ void EffectBillboardObject::Late_Update(float timeDelta)
     else
         GAME->Add_RenderGroup(ERenderGroup::Blend, GetSharedPtr());
 }
+
 void EffectBillboardObject::Update_BillboardRotation()
 {
     CHECK_NULL(_transformCom);
@@ -123,8 +124,26 @@ void EffectBillboardObject::Update_BillboardRotation()
     CHECK_NULL(camPos4);
 
     const Vec3 camPos(camPos4->x, camPos4->y, camPos4->z);
+
     _transformCom->LookAt(camPos);
+
+    const float rollDegrees = _layerDesc.base.localRotation.z;
+    if (abs(rollDegrees) > 0.0001f)
+    {
+        Vec3 forwardAxis = _transformCom->Get_WorldForward();
+        if (forwardAxis.LengthSquared() > FLT_EPSILON)
+        {
+            forwardAxis.Normalize();
+
+            Quat rollDelta = Quat::CreateFromAxisAngle(
+                forwardAxis,
+                XMConvertToRadians(rollDegrees));
+
+            _transformCom->Add_WorldRotation(rollDelta);
+        }
+    }
 }
+
 
 HRESULT EffectBillboardObject::Render()
 {
@@ -416,6 +435,10 @@ HRESULT EffectBillboardObject::Resolve_TextureComponent(const string& textureGui
 
 uint32 EffectBillboardObject::Resolve_PassIndex() const
 {
+    // Distortion billboards are heat/shock masks, so they must never alpha-darken the background.
+    if (_layerDesc.billboard.renderMode == EEffectBillboardRenderMode::Distortion)
+        return 1;
+
     switch (_layerDesc.billboard.blendMode)
     {
     case EEffectBlendMode::Translucent:

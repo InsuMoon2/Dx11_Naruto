@@ -3,18 +3,50 @@
     "effectName": "BillboardTest",
     "layers": [
         {
+            "baseEmissiveStrength": 0.6000000238418579,
+            "baseFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "baseMaskTextureGuid": "",
             "baseOpacity": 1.0,
+            "baseOpacityGradationTextureGuid": "",
+            "baseOpacityTextureGuid": "",
             "baseTextureGuid": "e6edb6f1-819e-43df-a4db-fec8d888c45c",
             "baseTint": [
-                0.2675197124481201,
-                0.9171198010444641,
-                0.9820788502693176,
+                0.18637990951538086,
+                0.9260357618331909,
+                1.0,
                 1.0
             ],
             "billboardToCamera": true,
             "blendMode": 1,
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
             "duration": -1.0,
             "enabled": true,
+            "endBaseOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endRingOpacity": 0.0,
             "endScale": [
                 0.5,
                 0.5,
@@ -38,16 +70,33 @@
                 0.20000000298023224
             ],
             "loop": false,
-            "ringOpacity": 0.6520000100135803,
+            "positionDuration": 1.0,
+            "renderMode": 0,
+            "ringEmissiveStrength": 1.0099999904632568,
+            "ringFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "ringOpacity": 1.0,
+            "ringOpacityGradationTextureGuid": "",
+            "ringOpacityTextureGuid": "",
             "ringTextureGuid": "e6edb6f1-819e-43df-a4db-fec8d888c45c",
             "ringTint": [
-                1.0,
-                1.0,
-                1.0,
+                0.5161290168762207,
+                0.46248120069503784,
+                0.46248120069503784,
                 1.0
             ],
             "startDelay": 0.0,
+            "useBaseOpacityOverTime": false,
+            "usePositionOverTime": false,
             "useRing": true,
+            "useRingOpacityOverTime": false,
             "useScaleOverTime": true
         }
     ],

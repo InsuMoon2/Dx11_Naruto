@@ -67,6 +67,7 @@ enum ComponentID : int {
   COMPONENT_TYPE_PROJECTILE = 8,
   COMPONENT_TYPE_VIBUFFER_PARTICLE_POINT = 9,
   COMPONENT_TYPE_EFFECT = 10,
+  COMPONENT_TYPE_VIBUFFER_TRAIL = 11,
   COMPONENT_TYPE_COLLIDER_AABB = 21,
   COMPONENT_TYPE_COLLIDER_OBB = 22,
   COMPONENT_TYPE_COLLIDER_SPHERE = 23,
@@ -92,6 +93,7 @@ enum ComponentID : int {
   COMPONENT_TYPE_TEXTURE_PARTICLE_SNOW = 216,
   COMPONENT_TYPE_TEXTURE_PARTICLE_EXPLOSION = 217,
   COMPONENT_TYPE_TEXTURE_PARTICLE_HIT = 218,
+  COMPONENT_TYPE_TEXTURE_TRAIL = 219,
   COMPONENT_TYPE_MESH = 299,
   COMPONENT_TYPE_MODEL_START = 300,
   COMPONENT_TYPE_MODEL_PLAYER = 301,
@@ -123,6 +125,8 @@ enum ComponentID : int {
   COMPONENT_TYPE_TARGET = 1011,
   COMPONENT_TYPE_GHOST_EFFECT = 1012,
   COMPONENT_TYPE_SMEAR_EFFECT = 1013,
+  COMPONENT_TYPE_TRAIL = 1014,
+  COMPONENT_TYPE_LIGHTNING_TRAIL = 1015,
   ComponentID_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   ComponentID_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -132,8 +136,8 @@ enum ComponentID : int {
 bool ComponentID_IsValid(int value);
 extern const uint32_t ComponentID_internal_data_[];
 constexpr ComponentID ComponentID_MIN = static_cast<ComponentID>(0);
-constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1013);
-constexpr int ComponentID_ARRAYSIZE = 1013 + 1;
+constexpr ComponentID ComponentID_MAX = static_cast<ComponentID>(1015);
+constexpr int ComponentID_ARRAYSIZE = 1015 + 1;
 const ::google::protobuf::EnumDescriptor*
 ComponentID_descriptor();
 template <typename T>
@@ -174,6 +178,7 @@ enum OBJECT_TYPE : int {
   OBJECT_TYPE_EFFECT_MESH = 61,
   OBJECT_TYPE_EFFECT_BILLBOARD = 62,
   OBJECT_TYPE_ATTACHED_EFFECT = 80,
+  OBJECT_TYPE_STRETCHING_MESH_EFFECT = 81,
   OBJECT_TYPE_UI_TEXT = 100,
   OBJECT_TYPE_UI_LOADING_SPINNER = 101,
   OBJECT_TYPE_UI_LOADING_PROGRESS_BAR = 102,
