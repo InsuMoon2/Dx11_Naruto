@@ -3,7 +3,7 @@
     "effectName": "BillboardTest",
     "layers": [
         {
-            "baseEmissiveStrength": 0.6000000238418579,
+            "baseEmissiveStrength": 0.5899999737739563,
             "baseFlipbook": {
                 "columns": 1,
                 "enabled": false,
@@ -72,7 +72,7 @@
             "loop": false,
             "positionDuration": 1.0,
             "renderMode": 0,
-            "ringEmissiveStrength": 1.0099999904632568,
+            "ringEmissiveStrength": 0.8500000238418579,
             "ringFlipbook": {
                 "columns": 1,
                 "enabled": false,

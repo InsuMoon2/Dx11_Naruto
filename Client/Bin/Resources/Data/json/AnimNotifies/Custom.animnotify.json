@@ -1375,6 +1375,33 @@
             "notifies": [
                 {
                     "payload": {
+                        "attach_to_bone": true,
+                        "bone_name": "CharacterRoot",
+                        "effect_name": "RingEffect_Loop",
+                        "local_offset": [
+                            0.0,
+                            2.0,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "loop_override": true,
+                        "use_initial_bone_transform": true
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "AN_SpawnParticle"
+                },
+                {
+                    "payload": {
                         "attach_offset": [
                             0.20000000298023224,
                             0.10000000149011612,
