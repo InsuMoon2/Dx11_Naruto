@@ -34,6 +34,9 @@ public:
     float           Get_FovY() const { return _currentFovY; }
     int32           Get_CurrentFrame() const { return _currentFrame; }
     ECineCameraMode Get_CurrentMode() const { return _currentMode; }
+    // 현재 프레임 평가 결과에 해당하는 카메라 키 설정 스냅샷이다.
+    // Preview / Runtime 카메라가 Target / LookAt 전용 옵션을 읽을 때 사용한다.
+    const FCameraKey& Get_CurrentKey() const { return _currentKey; }
 
     // 재생 완료
     function<void()> OnFinished;
@@ -77,6 +80,7 @@ private:
     Quat                _currentRot = Quat::Identity;
     float               _currentFovY = XM_PIDIV4;
     ECineCameraMode     _currentMode = ECineCameraMode::Free;
+    FCameraKey          _currentKey = {}; // 현재 프레임의 카메라 키 설정 스냅샷이다.
 
 public:
     static Shared<CameraTrack_Player> Create();

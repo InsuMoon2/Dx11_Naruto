@@ -55,7 +55,7 @@ json Model_Inspector::Build_ModelSwapJson(const json& sourceData, const string& 
     return result;
 }
 
-bool Model_Inspector::Is_SkeletalMeshAsset(const FAssetMeta* meta)
+bool Model_Inspector::Is_ModelAssetOfType(const FAssetMeta* meta, const string& expectedModelType)
 {
     if (!meta)
         return false;
@@ -63,7 +63,7 @@ bool Model_Inspector::Is_SkeletalMeshAsset(const FAssetMeta* meta)
     if (meta->type != "model" && meta->type != "Model")
         return false;
 
-    if (meta->modelType != "SkeletalMesh")
+    if (!expectedModelType.empty() && meta->modelType != expectedModelType)
         return false;
 
     const fs::path assetPath(meta->fullPath);
@@ -98,6 +98,8 @@ void Model_Inspector::Draw_Inspector(shared_ptr<Component> component)
 
 void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
 {
+    static char searchBuf[128] = "";
+
     string modelGuid = data.value("model_guid", string(""));
     string displayName = "(None)";
 
@@ -108,7 +110,13 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
             displayName = fs::path(resolved).stem().string();
     }
 
-    string modelType = data.value("model_type", string("SkeletalMesh"));
+    string modelType = data.value("model_type", string(""));
+    if (modelType.empty())
+    {
+        modelType = (model->Get_ModelType() == EMeshVertexType::SkeletalMesh)
+            ? "SkeletalMesh"
+            : "StaticMesh";
+    }
     ImGui::Text("Type"); ImGui::SameLine(80.f);
     ImGui::TextDisabled("%s", modelType.c_str());
     ImGui::Spacing();
@@ -128,6 +136,9 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
         ImGui::Text(ICON_FA_CUBE " Model 선택");
         ImGui::Separator();
         ImGui::Spacing();
+        ImGui::SetNextItemWidth(-1.f);
+        ImGui::InputTextWithHint("##ModelSearch", "Search model...", searchBuf, IM_ARRAYSIZE(searchBuf));
+        ImGui::Spacing();
 
         auto assets = GAME->Get_AssetByType("model");
         if (assets.empty())
@@ -139,16 +150,27 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
         }
 
         bool hasSelectableModel = false;
+        const string searchText = Utils::ToLowerCopy(string(searchBuf));
 
         for (auto* meta : assets)
         {
-            if (!Is_SkeletalMeshAsset(meta))
+            if (!Is_ModelAssetOfType(meta, modelType))
                 continue;
-
-            hasSelectableModel = true;
 
             bool isSelected = (meta->guid == modelGuid);
             const string label = Build_ModelPickerLabel(*meta);
+            if (!searchText.empty())
+            {
+                const string lowerLabel = Utils::ToLowerCopy(label);
+                const string lowerPath = Utils::ToLowerCopy(Utils::ToString(meta->fullPath));
+                if (lowerLabel.find(searchText) == string::npos &&
+                    lowerPath.find(searchText) == string::npos)
+                {
+                    continue;
+                }
+            }
+
+            hasSelectableModel = true;
 
             if (isSelected)
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 0.8f, 0.3f, 1.f));
@@ -167,7 +189,7 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
 
         if (!hasSelectableModel)
         {
-            ImGui::TextDisabled("(meshbin 스켈레탈 메시 없음)");
+            ImGui::TextDisabled("(현재 타입에 맞는 meshbin 모델 없음)");
         }
 
         ImGui::Spacing();
@@ -195,9 +217,9 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
             if (!resolved.empty())
             {
                 auto* meta = GAME->Find_AssetByGUID(guid);
-                if (!Is_SkeletalMeshAsset(meta))
+                if (!Is_ModelAssetOfType(meta, modelType))
                 {
-                    LOG_WARN("Model Assigned skipped - skeletal meshbin only: {}", guid);
+                    LOG_WARN("Model Assigned skipped - model type mismatch: {}", guid);
                     ImGui::EndDragDropTarget();
                     return;
                 }

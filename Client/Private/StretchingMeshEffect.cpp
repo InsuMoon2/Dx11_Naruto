@@ -3,6 +3,8 @@
 #include "EffectComponent.h"
 #include "GameObject_Factory.h"
 #include "Model.h"
+#include "Debug_Manager.h"
+#include "GameInstance.h"
 
 NS_BEGIN(Client)
 
@@ -26,20 +28,28 @@ HRESULT StretchingMeshEffect::Initialize_Prototype()
 }
 
 HRESULT StretchingMeshEffect::Initialize(void* arg)
-{   
-    CHECK_NULL(arg, E_FAIL); 
+{
+    CHECK_NULL(arg, E_FAIL);
     FStretchingMeshDesc* desc = static_cast<FStretchingMeshDesc*>(arg);
 
     CHECK_FAILED(GameObject::Initialize(desc), E_FAIL);
 
-    _meshOriginalLength = desc->meshOriginalLength;
+    _meshOriginalLength = max(desc->meshOriginalLength, 0.001f);
     _thickness = desc->thickness;
+    _rotationOffset = desc->rotationOffset;
+    _localOffset = desc->localOffset;
 
     _ownerObj = desc->ownerObj;
     _trackBoneName = desc->trackBoneName;
-    _originalWorldPos = Get_Transform()->Get_WorldPosition();
 
-    //_currentTargetPos = _originalWorldPos;
+    _spawnWorldPos = Get_Transform()->Get_WorldPosition();
+    _currentTargetPos = _spawnWorldPos;
+
+    // 플레이어 위치 기준으로 세팅 해보기
+    if (auto owner = _ownerObj.lock())
+        _ownerSpawnWorldPos = owner->Get_Transform()->Get_WorldPosition();
+    else
+        _ownerSpawnWorldPos = _spawnWorldPos;
 
     CHECK_FAILED(Ready_Components(desc->effectAssetName), E_FAIL);
 
@@ -53,10 +63,17 @@ void StretchingMeshEffect::Update(float timeDelta)
     if (_effectCom)
         _effectCom->Update(timeDelta);
 
-    Vec3 currentTargetPos = _originalWorldPos;
+    Vec3 handWorldPos = _spawnWorldPos;
+
+    Vec3 ownerWorldPos = _ownerSpawnWorldPos;
+
+    Quat ownerWorldRot = Quat::Identity;
 
     if (auto owner = _ownerObj.lock())
     {
+        ownerWorldPos = owner->Get_Transform()->Get_WorldPosition();
+        ownerWorldRot = owner->Get_Transform()->Get_WorldRotation();
+
         auto model = owner->Get_Component<Model>();
         if (model)
         {
@@ -64,24 +81,55 @@ void StretchingMeshEffect::Update(float timeDelta)
             if (socketMatrix)
             {
                 Matrix boneWorldMatrix = (*socketMatrix) * owner->Get_Transform()->Get_WorldMatrix();
-                currentTargetPos = boneWorldMatrix.Translation();
+                handWorldPos = boneWorldMatrix.Translation();
             }
         }
     }
 
-    Vec3 start = _originalWorldPos; 
-    Vec3 end   = currentTargetPos;
-    Vec3 dir = end - start;
-    float distance = dir.Length();
+    Vec3 moveDelta = ownerWorldPos - _ownerSpawnWorldPos;
 
-    if (distance > 0.001f)
+
+    const float distance = moveDelta.Length();
+
+    Get_Transform()->Set_WorldPosition(handWorldPos);
+
+    const Vec3 childLocalRotation = _rotationOffset;
+
+    if (distance <= 0.001f)
     {
-        Get_Transform()->LookAt(end);
+        Get_Transform()->Set_WorldRotation(ownerWorldRot);
 
-        float scaleZ = distance / _meshOriginalLength;
-        Get_Transform()->Set_LocalScale(_thickness.x, _thickness.y, scaleZ);
+        if (_effectCom)
+        {
+            _effectCom->Set_RuntimeLocalTransform(
+                _localOffset,
+                _rotationOffset,
+                Vec3(_thickness.x, 0.001f, _thickness.z));
+        }
+
+        return;
+    }
+
+    Vec3 lookDir = -moveDelta;
+    lookDir.Normalize();
+
+    const Vec3 lookTarget = handWorldPos + lookDir;
+
+    Get_Transform()->LookAt(lookTarget);
+
+    const float safeOriginalLength = max(_meshOriginalLength, 0.001f);
+    const float scaleLength = distance / safeOriginalLength;
+
+    if (_effectCom)
+    {
+        _effectCom->Set_RuntimeLocalTransform(
+            _localOffset,
+            _rotationOffset,
+            Vec3(_thickness.x, scaleLength, _thickness.z));
     }
 }
+
+
 
 void StretchingMeshEffect::Late_Update(float timeDelta)
 {
@@ -106,24 +154,24 @@ HRESULT StretchingMeshEffect::Ready_Components(const string& effectAssetName)
 
 Shared<GameObject> StretchingMeshEffect::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
-    auto pInstance = make_shared<StretchingMeshEffect>(device, context);
-    if (FAILED(pInstance->Initialize_Prototype()))
+    auto instance = make_shared<StretchingMeshEffect>(device, context);
+    if (FAILED(instance->Initialize_Prototype()))
     {
         MSG_BOX("Failed to Create StretchingMeshEffect");
         return nullptr;
     }
-    return pInstance;
+    return instance;
 }
 
 Shared<GameObject> StretchingMeshEffect::Clone(void* arg)
 {
-    auto pClone = make_shared<StretchingMeshEffect>(*this);
-    if (FAILED(pClone->Initialize(arg)))
+    auto clone = make_shared<StretchingMeshEffect>(*this);
+    if (FAILED(clone->Initialize(arg)))
     {
         MSG_BOX("Failed to Clone StretchingMeshEffect");
         return nullptr;
     }
-    return pClone;
+    return clone;
 }
 
 void StretchingMeshEffect::Free()

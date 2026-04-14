@@ -10,6 +10,7 @@ NS_BEGIN(Engine)
 class GameObject;
 class Component;
 class Transform;
+class ContainerObject;
 NS_END
 
 NS_BEGIN(Editor)
@@ -32,7 +33,12 @@ public:
     static void Draw_Components(Shared<GameObject> target);
 
 private:
+    void Draw_PartObjects(Shared<Engine::ContainerObject> container);
+    void Draw_SelectedPartObject(Shared<Engine::ContainerObject> container);
+
+private:
     Shared<GameObject> _targetObject;
+    int32 _selectedPartSlot = -1;
 
 public:
     static shared_ptr<Inspector> Create();

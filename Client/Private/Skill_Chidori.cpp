@@ -8,6 +8,7 @@
 #include "EffectComponent.h"
 #include "Character.h"
 #include "Model.h"
+#include "Skill_Chidori_Hit.h"
 #include "StretchingMeshEffect.h"
 
 REGISTER_GAMEOBJECT_CATEGORY(Skill_Chidori, Protocol::OBJECT_TYPE_SKILL_CHIDORI, "SkillSpawn");
@@ -25,8 +26,8 @@ Skill_Chidori::Skill_Chidori(const Skill_Chidori& rhs)
 HRESULT Skill_Chidori::Initialize_Prototype()
 {
     _lifetime        = 15.f;
-    _maxHitCount     = 6;
-    _hitInterval     = 0.1f;   
+    _maxHitCount     = 1;
+    _hitInterval     = 0.05f;   
     _hitLaunchForce  = 0.f; 
 
     _colliderRadius  = 0.3f;
@@ -38,16 +39,6 @@ HRESULT Skill_Chidori::Initialize_Prototype()
 HRESULT Skill_Chidori::Initialize(void* arg)
 {
     CHECK_FAILED(SkillObject::Initialize(arg), E_FAIL);
-
-    EffectComponent::FPlayDesc playDesc{};
-    //playDesc.effectAssetName = "Chidori_Point";
-    playDesc.effectAssetName = "Chidori_Charging";
-    //playDesc.loopOverride = true;
-
-    CHECK_FAILED(_effectCom->Play_Effect(playDesc), E_FAIL);
-
-    // 일단 바로 생성해보기
-    //Create_StretchingLightning();
 
     return S_OK;
 }
@@ -76,24 +67,35 @@ void Skill_Chidori::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other
 
     CHECK_NULL(otherOwner);
 
-    Process_MultiHit(character, otherOwner.get());
-}
-
-void Skill_Chidori::OnStayOverlap(Shared<Collider> self, Shared<Collider> other)
-{
-    SkillObject::OnStayOverlap(self, other);
-
-    if (Is_Destroy())
-        return;
-    auto character = Find_HitCharacter(other);
-    if (!character)
+    if (_hitCount >= _maxHitCount)
         return;
 
-    auto otherOwner = other->Get_Owner();
+    Vec3 hitDir = _transformCom->Get_WorldForward();
+    hitDir = Utils::Safe_Normalize(hitDir);
 
-    CHECK_NULL(otherOwner);
+    FDamageEvent event{};
+    event.damage = 10.f;
+    event.damageCauser = Get_Owner();
+    event.hasCustomDir = true;
+    event.damageDir = hitDir;
+    event.launchPower = 2.5f;
+    event.launchUp = 0.f;
 
-    Process_MultiHit(character, otherOwner.get());
+    character->TakeDamage(event);
+
+    auto myPlayer = dynamic_pointer_cast<MyPlayer>(Get_Owner());
+    if (myPlayer)
+        myPlayer->Add_ComboHit();
+
+    _hitCount++;
+
+    if (_collider)
+        _collider->Set_IsActive(false);
+
+    _lifetime = min(_lifetime, _elapsedTime + 0.08f);
+
+    // 히트되면 카메라 연출
+
 }
 
 void Skill_Chidori::OnEndOverlap(Shared<Collider> self, Shared<Collider> other)

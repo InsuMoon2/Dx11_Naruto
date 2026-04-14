@@ -394,16 +394,17 @@
                     "type": "ANS_CollisionEnable"
                 },
                 {
-                    "duration_sec": 0.2666666805744171,
+                    "duration_sec": 0.3333333432674408,
                     "payload": {
                         "bot_bone": "",
-                        "lifespan": 0.5,
+                        "lifespan": 0.18000000715255737,
+                        "texture_index": 2,
                         "top_bone": "R_Hand_Weapon_cnt_tr",
-                        "width": 3.0
+                        "width": 2.5
                     },
-                    "start_sec": 0.4000000059604645,
+                    "start_sec": 0.46666666865348816,
                     "track_index": 2,
-                    "type": "ANS_Trail"
+                    "type": "ANS_SwordTrail"
                 }
             ],
             "notify_tracks": [
@@ -1036,6 +1037,7 @@
                 },
                 {
                     "payload": {
+                        "attach_to_bone": false,
                         "bone_name": "R_Hand_Weapon_cnt_tr",
                         "effect_name": "WhyInvi",
                         "local_offset": [
@@ -1053,7 +1055,8 @@
                             1.0,
                             1.0
                         ],
-                        "loop_override": false
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
                     },
                     "time_sec": 0.06666667014360428,
                     "track_index": 1,
@@ -1389,16 +1392,119 @@
                     "payload": {
                         "bone_name": "L_Hand_Weapon_cnt_tr",
                         "effect_name": "Lightning_Follow",
-                        "mesh_length": 100.0,
+                        "local_offset_step": [
+                            0.07999999821186066,
+                            0.0,
+                            0.0
+                        ],
+                        "mesh_length": 1.0,
+                        "rotation_offset": [
+                            90.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotation_offset_step": [
+                            0.0,
+                            0.0,
+                            8.0
+                        ],
+                        "spawn_count": 1,
                         "thickness": [
-                            5.0,
-                            5.0,
-                            5.0
+                            3.0,
+                            3.0,
+                            3.0
+                        ],
+                        "thickness_step": [
+                            0.15000000596046448,
+                            0.0,
+                            0.15000000596046448
                         ]
+                    },
+                    "time_sec": 0.6333333253860474,
+                    "track_index": 0,
+                    "type": "AN_StretchingMesh_Start"
+                },
+                {
+                    "payload": {
+                        "attach_to_bone": false,
+                        "bone_name": "L_Hand_Weapon_cnt_tr",
+                        "effect_name": "Chidori_Charging",
+                        "local_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": true
+                    },
+                    "time_sec": 0.23333333432674408,
+                    "track_index": 1,
+                    "type": "AN_SpawnParticle"
+                },
+                {
+                    "payload": {
+                        "block_game_input": false,
+                        "sequence_name": "Cam_Chidori"
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 2,
+                    "type": "AN_PlayCinematic"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
+                },
+                {
+                    "name": "Notify Track"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Attack_Lv3_End",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "충돌 프리셋": 2
+                    },
+                    "time_sec": 0.800000011920929,
+                    "track_index": 0,
+                    "type": "AN_BodyCollisionPreset_Change"
+                },
+                {
+                    "payload": {},
+                    "time_sec": 1.0,
+                    "track_index": 0,
+                    "type": "AN_StretchingMesh_End"
+                },
+                {
+                    "payload": {
+                        "block_game_input": false,
+                        "sequence_name": "Cam_ChidoriEnd"
                     },
                     "time_sec": 0.20000000298023224,
                     "track_index": 1,
-                    "type": "AN_StretchingMesh_Start"
+                    "type": "AN_PlayCinematic"
                 }
             ],
             "notify_state_tracks": [
@@ -1417,14 +1523,25 @@
             ]
         },
         {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Attack_Lv3_End",
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Run_Lv3_Loop",
             "display_fps": 30,
             "notifies": [
                 {
-                    "payload": {},
-                    "time_sec": 0.23333333432674408,
+                    "payload": {
+                        "effect_name": "Chidori_Charging",
+                        "stop_all_from_owner": false
+                    },
+                    "time_sec": 0.0,
                     "track_index": 0,
-                    "type": "AN_LightningTrail_Stop"
+                    "type": "AN_StopParticle"
+                },
+                {
+                    "payload": {
+                        "충돌 프리셋": 1
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "AN_BodyCollisionPreset_Change"
                 }
             ],
             "notify_state_tracks": [
@@ -1436,6 +1553,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         }

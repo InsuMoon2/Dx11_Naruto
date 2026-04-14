@@ -22,7 +22,7 @@ public:
 
 private:
     static json Build_ModelSwapJson(const json& sourceData, const string& newGuid, const string& newModelType);
-    static bool Is_SkeletalMeshAsset(const FAssetMeta* meta);
+    static bool Is_ModelAssetOfType(const FAssetMeta* meta, const string& expectedModelType);
 
     void        Draw_ModelPicker(Shared<Model> model, json& data);
     void        Draw_MeshList(Shared<Model> model);

@@ -22,6 +22,10 @@ private:
     Vec3 _localScale = Vec3(1.f, 1.f, 1.f);
 
     bool _loopOverride = false;
+
+    bool _attachToBone = false;
+    bool _useInitialBoneTransform = false;
+
 };
 
 NS_END

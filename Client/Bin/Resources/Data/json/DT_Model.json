@@ -36,6 +36,13 @@
             "Level": "Static"
         },
         {
+            "Id": "Model_Samehada",
+            "Path": "../../Client/Bin/Resources/Models/Weapon/Samehada/Samehada.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
             "Id": "Model_Headgear_Man_Cap1",
             "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_Cap1.meshbin",
             "Count": 1,

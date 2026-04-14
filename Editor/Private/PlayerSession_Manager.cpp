@@ -8,6 +8,7 @@
 #include "Customizer_Manager.h"
 #include "EditorInstance.h"
 #include "Level_Serializer.h"
+#include "PartObject.h"
 
 static bool Is_CameraObject(const Shared<GameObject>& obj)
 {
@@ -436,9 +437,24 @@ void PlayerSession_Manager::Apply_PlayerCustomizing(const Shared<GameObject>& pl
         if (partTag.empty())
             continue;
 
-        player->Apply_CustomizingPart(
-            static_cast<ContainerObject::EPartSlot>(i),
-            partTag);
+        const auto slot = static_cast<ContainerObject::EPartSlot>(i);
+
+        player->Apply_CustomizingPart(slot, partTag);
+
+        const json& transformData = customDesc.partTransforms[i];
+        if (!transformData.is_object())
+            continue;
+
+        auto partObject = player->Get_PartObject(slot);
+        if (!partObject)
+            continue;
+
+        auto transform = partObject->Get_Component<Transform>();
+        if (!transform)
+            continue;
+
+        transform->From_Json(transformData);
+        player->Set_PartTransformOverride(slot, transformData);
     }
 }
 

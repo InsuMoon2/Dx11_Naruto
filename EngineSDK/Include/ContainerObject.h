@@ -49,6 +49,8 @@ public:
     static string       Get_PartSlotName(EPartSlot slot);
 
     Shared<PartObject>  Get_PartObject(EPartSlot slot) const;
+    void                Set_PartTransformOverride(EPartSlot slot, const json& transformData);
+    bool                Try_GetPartTransformOverride(EPartSlot slot, json& outTransformData) const;
 
     json To_Json() const override;
     void From_Json(const json& data) override;

@@ -238,9 +238,11 @@
     <ClInclude Include="..\Public\ANS_SmearEffect.h" />
     <ClInclude Include="..\Public\ANS_SpawnParticle.h" />
     <ClInclude Include="..\Public\ANS_StretchingMesh.h" />
+    <ClInclude Include="..\Public\ANS_SwordTrail.h" />
     <ClInclude Include="..\Public\ANS_Test.h" />
     <ClInclude Include="..\Public\ANS_Trail.h" />
     <ClInclude Include="..\Public\AN_ChangeState.h" />
+    <ClInclude Include="..\Public\AN_BodyCollisionPreset_Change.h" />
     <ClInclude Include="..\Public\AN_ClearMeleeSkill.h" />
     <ClInclude Include="..\Public\AN_EquipMeleeSkill.h" />
     <ClInclude Include="..\Public\AN_Gravity.h" />
@@ -251,6 +253,7 @@
     <ClInclude Include="..\Public\AN_SpawnAttack.h" />
     <ClInclude Include="..\Public\AN_SpawnParticle.h" />
     <ClInclude Include="..\Public\AN_SpawnSkill.h" />
+    <ClInclude Include="..\Public\AN_StopParticle.h" />
     <ClInclude Include="..\Public\AN_StretchingMesh_End.h" />
     <ClInclude Include="..\Public\AN_StretchingMesh_Start.h" />
     <ClInclude Include="..\Public\AN_Test.h" />
@@ -281,7 +284,7 @@
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_MainTitle.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
-    <ClInclude Include="..\Public\LightningTrail_Component.h" />
+    <ClInclude Include="..\Public\CharkraMove_Component.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\MyPlayer.h" />
@@ -323,8 +326,10 @@
     <ClInclude Include="..\Public\SkillObject_MonsterAttack.h" />
     <ClInclude Include="..\Public\SkillObject_Projectile.h" />
     <ClInclude Include="..\Public\Skill_Chidori.h" />
+    <ClInclude Include="..\Public\Skill_Chidori_Hit.h" />
     <ClInclude Include="..\Public\Skill_FireBall.h" />
     <ClInclude Include="..\Public\Skill_Rasengan.h" />
+    <ClInclude Include="..\Public\Skill_Rasengan_Hit.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken_Hit.h" />
     <ClInclude Include="..\Public\SmearEffect_Component.h" />
@@ -332,6 +337,7 @@
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\StaticMeshActor.h" />
     <ClInclude Include="..\Public\StretchingMeshEffect.h" />
+    <ClInclude Include="..\Public\SwordTrail_Component.h" />
     <ClInclude Include="..\Public\TargetComponent.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Trail_Component.h" />
@@ -388,9 +394,11 @@
     <ClCompile Include="..\Private\ANS_SmearEffect.cpp" />
     <ClCompile Include="..\Private\ANS_SpawnParticle.cpp" />
     <ClCompile Include="..\Private\ANS_StretchingMesh.cpp" />
+    <ClCompile Include="..\Private\ANS_SwordTrail.cpp" />
     <ClCompile Include="..\Private\ANS_Test.cpp" />
     <ClCompile Include="..\Private\ANS_Trail.cpp" />
     <ClCompile Include="..\Private\AN_ChangeState.cpp" />
+    <ClCompile Include="..\Private\AN_BodyCollisionPreset_Change.cpp" />
     <ClCompile Include="..\Private\AN_ClearMeleeSkill.cpp" />
     <ClCompile Include="..\Private\AN_EquipMeleeSkill.cpp" />
     <ClCompile Include="..\Private\AN_Gravity.cpp" />
@@ -401,6 +409,7 @@
     <ClCompile Include="..\Private\AN_SpawnAttack.cpp" />
     <ClCompile Include="..\Private\AN_SpawnParticle.cpp" />
     <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
+    <ClCompile Include="..\Private\AN_StopParticle.cpp" />
     <ClCompile Include="..\Private\AN_StretchingMesh_End.cpp" />
     <ClCompile Include="..\Private\AN_StretchingMesh_Start.cpp" />
     <ClCompile Include="..\Private\AN_Test.cpp" />
@@ -425,7 +434,7 @@
     <ClCompile Include="..\Private\Level_Gameplay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_MainTitle.cpp" />
-    <ClCompile Include="..\Private\LightningTrail_Component.cpp" />
+    <ClCompile Include="..\Private\CharkraMove_Component.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\MyPlayer.cpp" />
@@ -466,8 +475,10 @@
     <ClCompile Include="..\Private\SkillObject_MonsterAttack.cpp" />
     <ClCompile Include="..\Private\SkillObject_Projectile.cpp" />
     <ClCompile Include="..\Private\Skill_Chidori.cpp" />
+    <ClCompile Include="..\Private\Skill_Chidori_Hit.cpp" />
     <ClCompile Include="..\Private\Skill_FireBall.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
+    <ClCompile Include="..\Private\Skill_Rasengan_Hit.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken_Hit.cpp" />
     <ClCompile Include="..\Private\SmearEffect_Component.cpp" />
@@ -475,6 +486,7 @@
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\StaticMeshActor.cpp" />
     <ClCompile Include="..\Private\StretchingMeshEffect.cpp" />
+    <ClCompile Include="..\Private\SwordTrail_Component.cpp" />
     <ClCompile Include="..\Private\TargetComponent.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Trail_Component.cpp" />
@@ -502,11 +514,19 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Shaders\Shader_ChakraMove.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_GhostAfterImage.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_SmearSkeletal.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_Sword_Trail.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>

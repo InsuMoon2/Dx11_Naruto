@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Renderer.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -109,8 +109,12 @@ void Renderer::Draw(bool renderDebugPrimitives, bool renderColliders)
 
 #ifdef _DEBUG
 
-    if (renderColliders)
+  if (renderColliders)
+    {
+        Apply_Default3DState(); 
         GAME->Render_Colliders();
+        Apply_UIState(); 
+    }
     
 #endif
 

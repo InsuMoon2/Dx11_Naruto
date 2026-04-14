@@ -2,7 +2,7 @@
 #include "AN_LightningTrail_Start.h"
 #include "AnimNotify_Factory.h"
 #include "GameObject.h"
-#include "LightningTrail_Component.h"
+#include "CharkraMove_Component.h"
 
 NS_BEGIN(Client)
 
@@ -27,14 +27,14 @@ void AN_LightningTrail_Start::Execute(const FAnimNotifyContext& context)
     if (context.isPreview || !context.owner)
         return;
 
-    auto trailCom = context.owner->Get_Component<LightningTrail_Component>();
+    auto trailCom = context.owner->Get_Component<CharkraMove_Component>();
     if (!trailCom)
         return;
 
     const uint32 safeLineCount = static_cast<uint32>(max(1, _lineCount));
 
     // 치도리 돌진 구간에서 왼손 본 기준 다중 번개 트레일 방출을 시작
-    trailCom->Start_LightningTrail(_boneName, _lifespan, _width, safeLineCount);
+    //trailCom->Start_ChakraMove(_boneName, _lifespan, _width, safeLineCount);
 }
 
 NS_END

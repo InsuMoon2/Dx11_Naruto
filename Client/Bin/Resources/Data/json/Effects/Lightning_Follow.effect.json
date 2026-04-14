@@ -51,7 +51,7 @@
                 "enabled": true,
                 "endFrame": -1,
                 "fps": 16.0,
-                "loop": true,
+                "loop": false,
                 "rows": 1,
                 "startFrame": 0
             },
@@ -76,7 +76,7 @@
             ],
             "loop": false,
             "maskTextureGuid": "",
-            "modelGuid": "af75ae06-8cc5-456e-9009-416add3cf850",
+            "modelGuid": "b32c281d-fb5e-4342-829f-31f4650a8fba",
             "normalStrength": 1.0,
             "normalTextureGuid": "",
             "opacity": 1.0,
@@ -114,7 +114,7 @@
             ],
             "uvDistortionTextureGuid": "",
             "uvScrollSpeed": [
-                0.6499999761581421,
+                0.550000011920929,
                 0.0
             ],
             "uvTiling": [

@@ -17,12 +17,7 @@ void AN_StretchingMesh_End::Execute(const FAnimNotifyContext& context)
     if (!skillCom)
         return;
 
-    // 바로 파괴 AttackEnd에서 하면 될듯
-    auto activeEffect = skillCom->Get_ActiveStretchingMesh();
-    if (activeEffect && !activeEffect->Is_Destroy())
-    {
-        activeEffect->Set_Destroy(true);
-    }
+    skillCom->Destroy_AllStretchingMeshes();
 }
 
 NS_END

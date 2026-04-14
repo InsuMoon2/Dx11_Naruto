@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_WEP_Samehada",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_WEP_Samehada_BC.png"
+        }
+      ]
+    }
+  ]
+}

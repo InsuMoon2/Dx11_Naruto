@@ -57,7 +57,8 @@
 #include "EffectComponent.h"
 
 #include "Collider.h"
-#include "LightningTrail_Component.h"
+#include "CharkraMove_Component.h"
+#include "SwordTrail_Component.h"
 
 #include "VIBuffer_Particle_Point.h"
 #include "Particle_Point.h"
@@ -187,11 +188,10 @@ void Loader::Register_Components()
     GAME->Register_ComponentFactory<SmearEffect_Component>(staticLevel);
 
     GAME->Register_ComponentFactory<Trail_Component>(staticLevel);
-    GAME->Register_ComponentFactory<LightningTrail_Component>(staticLevel);
+    GAME->Register_ComponentFactory<CharkraMove_Component>(staticLevel);
 
     GAME->Register_ComponentFactory<EffectComponent>(staticLevel);
-
-    
+    GAME->Register_ComponentFactory<SwordTrail_Component>(staticLevel);
 
     //GAME->Register_ComponentFactory<Model>(staticLevel);
 

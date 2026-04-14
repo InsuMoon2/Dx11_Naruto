@@ -14,7 +14,9 @@ class CombatStat;
 class EquipmentComponent;
 class SmearEffect_Component;
 class Trail_Component;
-class LightningTrail_Component;
+class CharkraMove_Component;
+class AttachedEffectObject;
+class SwordTrail_Component;
 
 class Player : public Character
 {
@@ -63,17 +65,15 @@ protected:
 
     void  On_WeaponTypeChagned(int32 weaponTypeIndex);
 
-
-
 protected:
     Shared<CombatStat>                  _combatStat;
     Shared<AnimationStateComponent>     _animState;
     Shared<Model>                       _model;
     Shared<EquipmentComponent>          _equipment;
     Shared<SmearEffect_Component>       _smearEffect;
-    Shared<Trail_Component>             _trail;
-    Shared<LightningTrail_Component>             _lightningTrail;
-
+    
+    Shared<CharkraMove_Component>       _chakraTrail;
+    Shared<SwordTrail_Component>        _swordTrail;
 
 protected:
     uint64                          _networkId = 0;

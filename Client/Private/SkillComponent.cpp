@@ -254,6 +254,44 @@ void SkillComponent::Set_EquippedSkill_ID(int slot, int skill_Id)
     _cooldownRemain[slot] = 0.f;
 }
 
+void SkillComponent::Add_ActiveStretchingMesh(Shared<GameObject> effect)
+{
+     if (!effect)
+        return;
+
+    Cleanup_ActiveStretchingMeshes();
+    _activeStretchingMeshes.emplace_back(effect);
+}
+
+void SkillComponent::Cleanup_ActiveStretchingMeshes()
+{
+    _activeStretchingMeshes.erase(
+        remove_if(_activeStretchingMeshes.begin(), _activeStretchingMeshes.end(),
+            [](const Weak<GameObject>& weakObj)
+            {
+                auto obj = weakObj.lock();
+
+                return !obj || obj->Is_Destroy();
+
+            }), _activeStretchingMeshes.end());
+}
+
+void SkillComponent::Destroy_AllStretchingMeshes()
+{
+     Cleanup_ActiveStretchingMeshes();
+
+    for (auto& weakObj : _activeStretchingMeshes)
+    {
+        auto obj = weakObj.lock();
+        if (!obj || obj->Is_Destroy())
+            continue;
+
+        obj->Set_Destroy(true);
+    }
+
+    _activeStretchingMeshes.clear();
+}
+
 json SkillComponent::To_Json() const
 {
     json root = Component::To_Json();

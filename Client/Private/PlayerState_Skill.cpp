@@ -306,18 +306,35 @@ void PlayerState_Skill::Update_Dashing(PlayerStateMachine* state, float timeDelt
 
             float finalStopDist = skillData->targetStopDistance;
             if (!useGroundFlow)
-                finalStopDist *= 0.9f; 
+                finalStopDist *= 0.9f;
 
-            float distToTarget = distCheckVec.Length();
-            if (distToTarget <= finalStopDist)
-                shouldAttack = true;
+            if (!skillData->ignoreTargetStop)
+            {
+                float distToTarget = distCheckVec.Length();
+                if (distToTarget <= finalStopDist)
+                    shouldAttack = true;
+            }
 
             Vec3 toTargetDir = toTargetVec;
             if (useGroundFlow)
                 toTargetDir.y = 0.f;
 
             toTargetDir = Utils::Safe_Normalize(toTargetDir, _dashDirection);
-            _dashDirection = toTargetDir;
+
+            bool shouldUpdateDashDirection = true;
+
+            if (skillData->ignoreTargetStop)
+            {
+                // 내적값이 0보다 작으면 뒤로 판정, 넘어가면 회전 안하게
+                const float forwardDot = _dashDirection.Dot(toTargetDir);
+                if (forwardDot < 0.f)
+                    shouldUpdateDashDirection = false;
+            }
+
+            if (shouldUpdateDashDirection)
+            {
+                _dashDirection = toTargetDir;
+            }
 
             Vec3 lookDir = _dashDirection;
             lookDir.y = 0.f;  

@@ -39,6 +39,9 @@ public:
     void    Set_SocketMatrix(const Matrix* matrix) { _socketMatrix = matrix; }
     void    Set_ColliderActive(bool active);
 
+    void    Set_SwordTrailLocalPoints(const Vec3& rootLocal, const Vec3& tipLocal);
+    bool    Get_SwordTrailWorldPoints(Vec3& outRootWorld, Vec3& outTipWorld) const;
+
 private:
     HRESULT Ready_Components(const wstring& modelAssetTag);
     HRESULT Bind_ShaderResources();
@@ -52,6 +55,9 @@ private:
 
 private:
     const Matrix*  _socketMatrix = nullptr;
+
+    Vec3 _swordTrailRootLocal = Vec3::Zero;
+    Vec3 _swordTrailTipLocal = Vec3(0.f, 10.f, 0.f);
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

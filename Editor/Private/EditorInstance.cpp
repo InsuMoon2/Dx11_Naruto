@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "EditorInstance.h"
-
+#include "Camera.h"
 #include "AnimNotify_Inspector_Factory.h"
 #include "BehaviorTree_View.h"
 #include "ImGui_Manager.h"    
@@ -8,6 +8,7 @@
 #include "Notification_Manager.h"
 #include "PlayerSession_Manager.h"
 #include "Camera_Target.h"
+#include "Camera_Free.h"
 #include "CommandHistory.h"
 
 IMPLEMENT_SINGLETON(EditorInstance)
@@ -77,6 +78,7 @@ void EditorInstance::Release()
 
 void EditorInstance::Play()
 {
+    _pausedPreviousCamera.reset();
     _playerSessionManager->Begin_PlaySession();
 
     GAME->Set_GameState(EGameState::Play);
@@ -94,12 +96,33 @@ void EditorInstance::Pause()
     if (GAME->Get_GameState() != EGameState::Play)
         return;
 
+    _pausedPreviousCamera = GAME->Get_ActiveCamera();
+
+    auto freeCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_FREE);
+    auto previousCam = _pausedPreviousCamera.lock();
+    if (freeCam)
+    {
+        if (previousCam && previousCam != freeCam)
+        {
+            auto srcTransform = previousCam->Get_Component<Transform>();
+            auto destTransform = freeCam->Get_Component<Transform>();
+            if (srcTransform && destTransform)
+            {
+                destTransform->Set_LocalPosition(srcTransform->Get_WorldPosition());
+                destTransform->Set_LocalRotation(srcTransform->Get_WorldRotation());
+            }
+        }
+
+        GAME->Set_ActiveCamera(freeCam);
+    }
+
     GAME->Set_GameState(EGameState::Pause);
     ImGui::SetWindowFocus("Scene");
 }
 
 void EditorInstance::Stop()
 {
+    _pausedPreviousCamera.reset();
     GAME->Set_GameState(EGameState::Edit);
 
     _playerSessionManager->End_PlaySession();
@@ -137,8 +160,15 @@ void EditorInstance::Resume()
     GAME->Set_GameState(EGameState::Play);
     ImGui::SetWindowFocus("Game");
 
-    auto targetCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_TARGET);
+    auto previousCam = _pausedPreviousCamera.lock();
+    if (previousCam)
+    {
+        GAME->Set_ActiveCamera(previousCam);
+        _pausedPreviousCamera.reset();
+        return;
+    }
 
+    auto targetCam = GAME->Find_Camera(Protocol::OBJECT_TYPE_CAMERA_TARGET);
     if (targetCam)
         GAME->Set_ActiveCamera(targetCam);
 }

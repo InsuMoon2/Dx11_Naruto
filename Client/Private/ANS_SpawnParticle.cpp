@@ -35,36 +35,15 @@ void ANS_SpawnParticle::On_Begin(const FAnimNotifyContext& context)
     if (_effectAssetName.empty())
         return;
 
-    AttachedEffectObject::FAttachedEffectObjectDesc desc{};
-    desc.effectAssetName = _effectAssetName;
-    desc.loopOverride    = _loopOverride;
-
-    auto spawned = GAME->Clone_And_Add_GameObject(
-        ETOI(ELevelType::Static),
-        Protocol::OBJECT_TYPE_ATTACHED_EFFECT,
-        GAME->Current_Level(),
-        TEXT("Layer_Effect"),
-        &desc);
-
-    auto attachedEffect = dynamic_pointer_cast<AttachedEffectObject>(spawned);
-    if (!attachedEffect)
-        return;
-
-    attachedEffect->Set_Owner(context.owner->GetSharedPtr<GameObject>());
-
-    attachedEffect->Attach_To_Bone(
-        context.model,
-        context.owner->Get_Transform(),
-        _boneName,
-        _localOffset,
-        _localRotation,
-        _localScale);
-
-    _spawnedEffect = dynamic_pointer_cast<AttachedEffectObject>(attachedEffect);
+    Try_SpawnAttachedEffect(context);
 }
 
 void ANS_SpawnParticle::On_Tick(const FAnimNotifyContext& context)
 {
+    if (_spawnedEffect.lock())
+        return;
+
+    Try_SpawnAttachedEffect(context);
 }
 
 void ANS_SpawnParticle::On_End(const FAnimNotifyContext& context)
@@ -76,9 +55,50 @@ void ANS_SpawnParticle::On_End(const FAnimNotifyContext& context)
     if (effect->Is_Destroy())
         return;
 
-    // 이펙트를 즉시 정지
     effect->Stop_AttachedEffect();
-
     _spawnedEffect.reset();
 }
 
+bool ANS_SpawnParticle::Try_SpawnAttachedEffect(const FAnimNotifyContext& context)
+{
+    if (!context.owner || !context.model)
+        return false;
+
+    if (_effectAssetName.empty())
+        return false;
+
+    if (_boneName.empty())
+        return false;
+
+    const Matrix* socketMatrix = context.model->Get_SocketBoneMatrixPtr(_boneName);
+    if (!socketMatrix)
+        return false;
+
+    AttachedEffectObject::FAttachedEffectObjectDesc desc{};
+    desc.effectAssetName = _effectAssetName;
+    desc.loopOverride = _loopOverride;
+
+    auto spawned = GAME->Clone_And_Add_GameObject(
+        ETOI(ELevelType::Static),
+        Protocol::OBJECT_TYPE_ATTACHED_EFFECT,
+        GAME->Current_Level(),
+        TEXT("Layer_Effect"),
+        &desc);
+
+    auto attachedEffect = dynamic_pointer_cast<AttachedEffectObject>(spawned);
+    if (!attachedEffect)
+        return false;
+
+    attachedEffect->Set_Owner(context.owner->GetSharedPtr<GameObject>());
+
+    attachedEffect->Attach_To_Bone(
+        context.model,
+        context.owner->Get_Transform(),
+        _boneName,
+        _localOffset,
+        _localRotation,
+        _localScale);
+
+    _spawnedEffect = attachedEffect;
+    return true;
+}

@@ -118,6 +118,22 @@ Shared<PartObject> ContainerObject::Get_PartObject(EPartSlot slot) const
     return _partObjects[index];
 }
 
+void ContainerObject::Set_PartTransformOverride(EPartSlot slot, const json& transformData)
+{
+    const string slotName = Get_PartSlotName(slot);
+    _cachedPartTransforms[slotName] = transformData;
+}
+
+bool ContainerObject::Try_GetPartTransformOverride(EPartSlot slot, json& outTransformData) const
+{
+    const string slotName = Get_PartSlotName(slot);
+    if (!_cachedPartTransforms.contains(slotName))
+        return false;
+
+    outTransformData = _cachedPartTransforms[slotName];
+    return true;
+}
+
 json ContainerObject::To_Json() const
 {
     json j = GameObject::To_Json();

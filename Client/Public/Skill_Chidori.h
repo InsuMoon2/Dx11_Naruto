@@ -19,7 +19,6 @@ public:
     void    Update(float timeDelta) override;
 
     void    OnBeginOverlap(Shared<Collider> self, Shared<Collider> other) override;
-    void    OnStayOverlap(Shared<Collider> self, Shared<Collider> other) override;
     void    OnEndOverlap(Shared<Collider> self, Shared<Collider> other) override;
 
 private:

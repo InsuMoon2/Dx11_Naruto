@@ -116,6 +116,16 @@
             "Level": "Static"
         },
         {
+            "Id": "Skill_Rasengan_Hit",
+            "ObjectType": "OBJECT_TYPE_SKILL_RASENGAN_HIT",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_Chidori_Hit",
+            "ObjectType": "OBJECT_TYPE_SKILL_CHIDORI_HIT",
+            "Level": "Static"
+        },
+        {
             "Id": "Monster_Attack",
             "ObjectType": "OBJECT_TYPE_SKILL_MONSTER_ATTACK",
             "Level": "Static"

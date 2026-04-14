@@ -6,6 +6,7 @@
 
 NS_BEGIN(Engine)
 class ICommand;
+class Camera;
 NS_END
 
 NS_BEGIN(Editor)
@@ -21,8 +22,6 @@ class EditorWindow;
 
 class AnimNotify_Inspector;
 class AnimNotifyState_Inspector;
-
-
 class EditorInstance
 {
     DECLARE_SINGLETON(EditorInstance);
@@ -83,6 +82,7 @@ private: /* Manager */
 
 private:
     EDITOR_DESC _desc = {};
+    Weak<Camera> _pausedPreviousCamera;
 
 };
 

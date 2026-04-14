@@ -5,6 +5,7 @@
 #include "Camera_Cinematic.h"
 #include "RenderTarget.h"
 #include "GameInstance.h"
+#include "GameObject.h"
 #include "Hierarchy.h"
 #include "Transform.h"
 #include "Notification_Manager.h"
@@ -30,6 +31,64 @@ static Quat Convert_WorldRotation_ToAnchorLocal(const Quat& worldRot, Shared<Tra
     anchorInverse.Inverse(anchorInverse);
 
     return worldRot * anchorInverse;
+}
+
+// target_tag 문자열로 현재 레벨의 실제 오브젝트를 찾을 때 사용한다.
+// 현재 시네마틱 데이터는 별도 Tag 시스템이 아니라 이름 문자열 기반으로 사용되고 있다.
+static Shared<GameObject> Find_CinematicTargetObject(const string& targetTag)
+{
+    if (targetTag.empty())
+        return nullptr;
+
+    const auto objects = GAME->Get_GameObjects(GAME->Current_Level());
+    for (const auto& obj : objects)
+    {
+        if (!obj)
+            continue;
+
+        if (Utils::ToString(obj->Get_Name()) == targetTag)
+            return obj;
+    }
+
+    return nullptr;
+}
+
+// 현재 프레임 카메라 키 설정을 Preview 카메라에 반영할 때 호출한다.
+// OwnerRelative + Target / LookAt 조합에서도 실제 gameplay 카메라와 비슷한 동작을 만들기 위해 사용한다.
+static void Apply_TrackPlayerState_ToPreviewCamera(
+    const Shared<CameraTrack_Player>& player,
+    const Shared<Camera_Cinematic>& previewCamera,
+    const Shared<GameObject>& anchorObject)
+{
+    if (!player || !previewCamera)
+        return;
+
+    const FCameraKey& currentKey = player->Get_CurrentKey();
+
+    previewCamera->Set_Mode(currentKey.cameraMode);
+    previewCamera->Set_Distance(currentKey.distance);
+    previewCamera->Set_TargetOffset(currentKey.targetOffset);
+    previewCamera->Set_PitchYaw(currentKey.pitch, currentKey.yaw);
+
+    Shared<Transform> targetTransform = nullptr;
+
+    if (currentKey.cameraMode == ECineCameraMode::Target ||
+        currentKey.cameraMode == ECineCameraMode::LookAt)
+    {
+        if (!currentKey.targetTag.empty())
+        {
+            auto targetObject = Find_CinematicTargetObject(currentKey.targetTag);
+            if (targetObject)
+                targetTransform = targetObject->Get_Transform();
+        }
+
+        // target_tag가 비어 있으면 anchor를 기본 타겟으로 사용한다.
+        // 이렇게 해야 OwnerRelative 카메라가 플레이어에 장착됐을 때 실제 플레이 화면처럼 플레이어 근처를 따라간다.
+        if (!targetTransform && anchorObject)
+            targetTransform = anchorObject->Get_Transform();
+    }
+
+    previewCamera->Set_TargetTransform(targetTransform);
 }
 
 Cinematic_View::Cinematic_View()
@@ -70,6 +129,11 @@ void Cinematic_View::Update(float timeDelta)
         _sequencerState.currentFrame = _player->Get_CurrentFrame();
         if (_previewCamera)
         {
+            Apply_TrackPlayerState_ToPreviewCamera(
+                _player,
+                _previewCamera,
+                _previewAnchorObject.lock());
+
             _previewCamera->Apply_CinematicState(
                 _player->Get_Position(),
                 _player->Get_Rotation(),
@@ -811,6 +875,11 @@ void Cinematic_View::Apply_CurrentFrame()
     Sync_PreviewAnchor();
     _player->Bind(&_asset.track);
     _player->Seek(_sequencerState.currentFrame);
+
+    Apply_TrackPlayerState_ToPreviewCamera(
+        _player,
+        _previewCamera,
+        _previewAnchorObject.lock());
 
     _previewCamera->Apply_CinematicState(
         _player->Get_Position(),

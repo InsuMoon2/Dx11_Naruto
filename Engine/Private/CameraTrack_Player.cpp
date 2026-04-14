@@ -37,6 +37,7 @@ void CameraTrack_Player::Stop()
     _isPlaying = false;
     _playbackTimeSec = 0.f;
     _currentFrame = 0;
+    _currentKey = {};
 
     if (_track && !_track->keys.empty())
         Evaluate(0); // current 트랙 초기화
@@ -276,6 +277,18 @@ void CameraTrack_Player::Evaluate(int32 frame)
 
     _currentFovY = Lerp_FovY(prevKey, nextKey, easedT);
     _currentMode = (t < 1.f) ? prevKey.cameraMode : nextKey.cameraMode;
+
+    // 현재 프레임의 카메라 키 상태를 별도로 스냅샷해 둔다.
+    // Preview / Runtime 카메라가 Target / LookAt 전용 설정을 읽을 때 사용한다.
+    _currentKey = (t < 1.f) ? prevKey : nextKey;
+    _currentKey.cameraMode = _currentMode;
+    _currentKey.position = _currentPos;
+    _currentKey.rotation = _currentRot;
+    _currentKey.fovY = _currentFovY;
+    _currentKey.distance = prevKey.distance + (nextKey.distance - prevKey.distance) * easedT;
+    _currentKey.targetOffset = prevKey.targetOffset + (nextKey.targetOffset - prevKey.targetOffset) * easedT;
+    _currentKey.pitch = prevKey.pitch + (nextKey.pitch - prevKey.pitch) * easedT;
+    _currentKey.yaw = prevKey.yaw + (nextKey.yaw - prevKey.yaw) * easedT;
 }
 
 Shared<CameraTrack_Player> CameraTrack_Player::Create()

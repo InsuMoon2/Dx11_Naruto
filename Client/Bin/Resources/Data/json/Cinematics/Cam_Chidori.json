@@ -1,0 +1,64 @@
+{
+    "name": "Cam_Chidori",
+    "track": {
+        "fps": 60,
+        "keys": [
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "LookAt",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7944738864898682,
+                "frame": 0,
+                "pitch": 0.0,
+                "position": [
+                    -1.0,
+                    2.0999999046325684,
+                    -4.400000095367432
+                ],
+                "rotation": [
+                    0.004286718089133501,
+                    0.18652226030826569,
+                    -0.0008138588164001703,
+                    0.9824410676956177
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "LookAt",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.8344768285751343,
+                "frame": 22,
+                "pitch": 0.0,
+                "position": [
+                    1.0,
+                    1.7000000476837158,
+                    -4.099999904632568
+                ],
+                "rotation": [
+                    0.004361783619970083,
+                    -0.026176700368523598,
+                    0.0001142174078267999,
+                    0.9996477961540222
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            }
+        ],
+        "total_frames": 60,
+        "track_name": "Camera"
+    }
+}

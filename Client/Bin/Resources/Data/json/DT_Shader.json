@@ -65,6 +65,18 @@
             "Path": "../../Client/Bin/Shaders/Shader_VtxEffectBillboard.hlsl",
             "Level": "Static",
             "Extra": "VtxTex"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_CHAKRA",
+            "Path": "../../Client/Bin/Shaders/Shader_ChakraMove.hlsl",
+            "Level": "Static",
+            "Extra": "VtxTex"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_SWORD_TRAIL",
+            "Path": "../../Client/Bin/Shaders/Shader_Sword_Trail.hlsl",
+            "Level": "Static",
+            "Extra": "VtxTex"
         }
     ]
 }

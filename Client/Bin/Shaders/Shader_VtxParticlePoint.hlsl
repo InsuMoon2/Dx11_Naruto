@@ -87,18 +87,15 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
     float3 cameraUp = normalize(cross(toCamera, cameraRight));
 
-    // Use the effect center as the radial origin so RingZ bolts visually burst from the hand center.
     float3 effectWorldCenter = mul(float4(0.f, 0.f, 0.f, 1.f), g_WorldMatrix).xyz;
     float3 radialDir = In[0].vPosition.xyz - effectWorldCenter;
 
-    // Use the actual world-space movement direction as a fallback for particles close to the center.
     float3 worldMoveDir = mul(float4(In[0].vAlignDir, 0.f), g_WorldMatrix).xyz;
     if (dot(worldMoveDir, worldMoveDir) < 0.0001f)
         worldMoveDir = cameraUp;
     else
         worldMoveDir = normalize(worldMoveDir);
 
-    // Prefer screen-space radial direction; pure depth movement cannot define a visible billboard roll.
     float2 rollDir = float2(dot(radialDir, cameraRight), dot(radialDir, cameraUp));
     if (dot(rollDir, rollDir) < 0.0001f)
         rollDir = float2(dot(worldMoveDir, cameraRight), dot(worldMoveDir, cameraUp));
@@ -108,11 +105,9 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
     else
         rollDir = normalize(rollDir);
 
-    // 이동 방향을 카메라 평면에 투영해서 billboard long-axis로 사용
     float3 longAxis = normalize(cameraRight * rollDir.x + cameraUp * rollDir.y);
     float3 shortAxis = normalize(cameraRight * rollDir.y - cameraUp * rollDir.x);
 
-    // 텍스처가 세로로 긴 번개면 longAxis를 높이축으로 쓴다
     float3 vRight = shortAxis * In[0].vPSize.x * 0.5f;
     float3 vUp = longAxis * In[0].vPSize.y * 0.5f;
 
@@ -157,22 +152,18 @@ struct PS_OUT
     float4 vColor : SV_TARGET0;
 };
 
-// Point 파티클도 alpha-authored PNG를 우선 사용하고,
-// 알파가 거의 1로 고정된 레거시 마스크 텍스처만 luminance fallback을 사용한다.
-float SampleParticleMask(float4 tex)
+float SampleParticleMask(float4 tex, bool allowAdditiveFullQuad)
 {
     if (tex.a < 0.999f)
         return tex.a;
 
-    if (g_BlendMode == 1)
+    if (allowAdditiveFullQuad && g_BlendMode == 1)
         return 1.f;
 
     float luminance = dot(tex.rgb, float3(0.299f, 0.587f, 0.114f));
     return saturate((luminance - 0.35f) / 0.65f);
 }
 
-// Point 텍스처가 실제 색을 가진 PNG면 그 색을 살리고,
-// 흑백 마스크 텍스처면 luminance를 emissive source로 사용한다.
 float3 ResolveParticleColor(float4 tex)
 {
     return tex.rgb;
@@ -215,21 +206,19 @@ PS_OUT PS_MAIN(PS_IN In)
     float2 finalUV = ResolveFlipbookUV(In.vTexcoord, In.vLifeTime.y);
     float4 tex = g_DiffuseTexture.Sample(PointClampSampler, finalUV);
 
-    float mask = SampleParticleMask(tex);
+    float mask = SampleParticleMask(tex, true);
 
     if (g_HasMaskTexture != 0)
     {
         float4 maskTex = g_MaskTexture.Sample(PointClampSampler, finalUV);
-        mask *= SampleParticleMask(maskTex);
+        mask *= SampleParticleMask(maskTex, false);
     }
 
     if (g_HasOpacityTexture != 0)
     {
         float4 opacityTex = g_OpacityTexture.Sample(PointClampSampler, finalUV);
-        mask *= SampleParticleMask(opacityTex);
+        mask *= SampleParticleMask(opacityTex, false);
     }
-
-    // 검은/회색 주변부를 더 강하게 제거
 
     if (mask < 0.04f)
         discard;

@@ -109,6 +109,54 @@
             "Level": "Static"
         },
         {
+            "Id": "COMPONENT_TYPE_TEXTURE_SWORD_TRAIL",
+            "Path": "../../Client/Bin/Resources/Textures/Noise/T_EFF_Noise_Line_00_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SWORD_TRAIL",
+            "Path": "../../Client/Bin/Resources/Textures/Noise/T_EFF_Noise_Line_01_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SWORD_TRAIL",
+            "Path": "../../Client/Bin/Resources/Textures/Noise/T_EFF_Noise_Line_02_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SWORD_TRAIL",
+            "Path": "../../Client/Bin/Resources/Textures/Noise/T_EFF_Noise_Line_03_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SWORD_TRAIL",
+            "Path": "../../Client/Bin/Resources/Textures/Noise/T_EFF_Noise_Line_04_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SWORD_TRAIL",
+            "Path": "../../Client/Bin/Resources/Textures/Noise/T_EFF_Noise_Line_05_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SWORD_TRAIL",
+            "Path": "../../Client/Bin/Resources/Textures/Noise/T_WEP_Eff_ChakraKatana_B_01_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SWORD_TRAIL",
+            "Path": "../../Client/Bin/Resources/Textures/Noise/T_WEP_Eff_D51NJ3_Noise_Line_02_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
             "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
             "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle%d.png",
             "Count": 2,
@@ -286,6 +334,12 @@
         {
             "Id": "COMPONENT_TYPE_TEXTURE_TRAIL",
             "Path": "../../Client/Bin/Resources/Effects/Textures/Traill/T_EFF_Trail_01_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_TRAIL",
+            "Path": "../../Client/Bin/Resources/Effects/Textures/Traill/T_EFF_Trail_02_M.png",
             "Count": 1,
             "Level": "Static"
         }

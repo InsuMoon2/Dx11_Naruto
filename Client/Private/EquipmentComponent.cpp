@@ -83,8 +83,11 @@ void EquipmentComponent::Toggle_WeaponMode()
 EWeaponType EquipmentComponent::Find_WeaponType_FromAssetTag(const wstring& assetTag)
 {
     // 무기 추가되면 늘려야함
-    if (assetTag.find(TEXT("BigSword")) != wstring::npos)
+    if (assetTag.find(TEXT("BigSword")) != wstring::npos ||
+        assetTag.find(TEXT("Samehada")) != wstring::npos)
+    {
         return EWeaponType::BigSwrod;
+    }
 
     return EWeaponType::Hand;
 }

@@ -8,6 +8,65 @@
 #include "CameraTrack_Serializer.h"
 #include "Camera_Cinematic.h"
 #include "GameInstance.h"
+#include "GameObject.h"
+
+// target_tag 문자열로 현재 레벨에서 실제 타겟 오브젝트를 찾을 때 호출한다.
+// 현재 시네마틱 타겟 문자열은 GameObject 이름 문자열 기준으로 사용한다.
+static Shared<GameObject> Find_CinematicTargetObject(const string& targetTag)
+{
+    if (targetTag.empty())
+        return nullptr;
+
+    const auto objects = GAME->Get_GameObjects(GAME->Current_Level());
+    for (const auto& obj : objects)
+    {
+        if (!obj)
+            continue;
+
+        if (Utils::ToString(obj->Get_Name()) == targetTag)
+            return obj;
+    }
+
+    return nullptr;
+}
+
+// 현재 프레임 카메라 키 설정을 Runtime 시네마틱 카메라에 반영할 때 호출한다.
+// Target / LookAt 모드의 distance, pitch, yaw, targetOffset, targetTransform을 같이 전달한다.
+static void Apply_TrackPlayerState_ToRuntimeCamera(
+    const Shared<CameraTrack_Player>& player,
+    const Shared<Camera_Cinematic>& cineCamera,
+    const Shared<Transform>& anchorTransform)
+{
+    if (!player || !cineCamera)
+        return;
+
+    const FCameraKey& currentKey = player->Get_CurrentKey();
+
+    cineCamera->Set_Mode(currentKey.cameraMode);
+    cineCamera->Set_Distance(currentKey.distance);
+    cineCamera->Set_TargetOffset(currentKey.targetOffset);
+    cineCamera->Set_PitchYaw(currentKey.pitch, currentKey.yaw);
+
+    Shared<Transform> targetTransform = nullptr;
+
+    if (currentKey.cameraMode == ECineCameraMode::Target ||
+        currentKey.cameraMode == ECineCameraMode::LookAt)
+    {
+        if (!currentKey.targetTag.empty())
+        {
+            auto targetObject = Find_CinematicTargetObject(currentKey.targetTag);
+            if (targetObject)
+                targetTransform = targetObject->Get_Transform();
+        }
+
+        // target_tag가 비어 있으면 anchor를 기본 타겟으로 사용한다.
+        // OwnerRelative 카메라가 플레이어에 장착된 연출에서 실제 플레이 카메라와 동기화하기 위한 기본 동작이다.
+        if (!targetTransform)
+            targetTransform = anchorTransform;
+    }
+
+    cineCamera->Set_TargetTransform(targetTransform);
+}
 
 void Camera_Manager::Update(float timeDelta)
 {
@@ -29,6 +88,11 @@ void Camera_Manager::Update(float timeDelta)
 
         if (_cineCamera && _currentAsset)
         {
+            Apply_TrackPlayerState_ToRuntimeCamera(
+                _cinePlayer,
+                _cineCamera,
+                _cineAnchorTransform.lock());
+
             _cineCamera->Apply_CinematicState(
                 _cinePlayer->Get_Position(),
                 _cinePlayer->Get_Rotation(),

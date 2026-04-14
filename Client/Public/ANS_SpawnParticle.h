@@ -18,6 +18,9 @@ public:
     void On_End(const FAnimNotifyContext& context)   override;
 
 private:
+    bool Try_SpawnAttachedEffect(const FAnimNotifyContext& context);
+
+private:
     string _effectAssetName = "";
 
     string _boneName = "R_Hand_Weapon_cnt_tr";

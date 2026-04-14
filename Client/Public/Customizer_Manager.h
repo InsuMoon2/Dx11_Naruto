@@ -10,12 +10,16 @@ class Player;
 struct FCustomizerDesc
 {
     array<wstring, ETOI(ContainerObject::EPartSlot::END)> partTags{};
+    array<json, ETOI(ContainerObject::EPartSlot::END)> partTransforms{};
 
     // 기본 커스터마이징 프리셋
     void Reset_ToDefault()
     {
         for (auto& tag : partTags)
             tag.clear();
+
+        for (auto& transform : partTransforms)
+            transform = json{};
 
         partTags[ETOI(ContainerObject::EPartSlot::Headegear)]   = TEXT("Model_SnowHead");
         partTags[ETOI(ContainerObject::EPartSlot::Face)]        = TEXT("Model_Face_Face1");
@@ -32,6 +36,16 @@ struct FCustomizerDesc
         return partTags[ETOI(slot)];
     }
 
+    void Set_PartTransform(ContainerObject::EPartSlot slot, const json& transformData)
+    {
+        partTransforms[ETOI(slot)] = transformData;
+    }
+
+    const json& Get_PartTransform(ContainerObject::EPartSlot slot) const
+    {
+        return partTransforms[ETOI(slot)];
+    }
+
 };
 
 class Customizer_Manager : public Base
@@ -45,6 +59,7 @@ public:
 public:
     void                    Reset_ToDefault();
     void                    Set_Part(ContainerObject::EPartSlot slot, const wstring& modelAssetTag);
+    void                    Set_PartTransform(ContainerObject::EPartSlot slot, const json& transformData);
     const FCustomizerDesc&  Get_CustomizerDesc() const { return _customizerDesc; }
 
     void                    Set_PlayerName(const wstring& name) { _playerName = name; } 

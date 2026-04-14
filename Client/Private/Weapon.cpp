@@ -50,6 +50,10 @@ HRESULT Weapon::Initialize(void* arg)
         _transformCom->Set_LocalRotation(0.f, 180.f, 0.f);
     }
 
+    Set_SwordTrailLocalPoints(
+    Vec3(0.f, 0.f, 0.f),
+    Vec3(0.f, 20000.f, 0.f));
+
     return S_OK;
 }
 
@@ -152,6 +156,20 @@ void Weapon::Set_ColliderActive(bool active)
     {
         _collider->Set_IsActive(active);
     }
+}
+
+void Weapon::Set_SwordTrailLocalPoints(const Vec3& rootLocal, const Vec3& tipLocal)
+{
+    _swordTrailRootLocal = rootLocal;
+    _swordTrailTipLocal = tipLocal;
+}
+
+bool Weapon::Get_SwordTrailWorldPoints(Vec3& outRootWorld, Vec3& outTipWorld) const
+{
+    outRootWorld = XMVector3TransformCoord(_swordTrailRootLocal, _combinedWorldMatrix);
+    outTipWorld = XMVector3TransformCoord(_swordTrailTipLocal, _combinedWorldMatrix);
+
+    return true;
 }
 
 HRESULT Weapon::Ready_Components(const wstring& modelAssetTag)

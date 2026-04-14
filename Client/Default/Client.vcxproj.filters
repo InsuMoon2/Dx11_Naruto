@@ -205,6 +205,9 @@
     <ClInclude Include="..\Public\AN_ChangeState.h">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AN_BodyCollisionPreset_Change.h">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\AN_LaunchSkill.h">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClInclude>
@@ -328,9 +331,18 @@
     <ClInclude Include="..\Public\ANS_Trail.h" />
     <ClInclude Include="..\Public\AN_Trail_Start.h" />
     <ClInclude Include="..\Public\AN_Trail_Stop.h" />
-    <ClInclude Include="..\Public\LightningTrail_Component.h" />
+    <ClInclude Include="..\Public\CharkraMove_Component.h" />
     <ClInclude Include="..\Public\AN_LightningTrail_Start.h" />
     <ClInclude Include="..\Public\AN_LightningTrail_Stop.h" />
+    <ClInclude Include="..\Public\AN_StopParticle.h" />
+    <ClInclude Include="..\Public\Skill_Rasengan_Hit.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_Chidori_Hit.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SwordTrail_Component.h" />
+    <ClInclude Include="..\Public\ANS_SwordTrail.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -519,6 +531,9 @@
     <ClCompile Include="..\Private\AN_ChangeState.cpp">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\AN_BodyCollisionPreset_Change.cpp">
+      <Filter>04. Notify\00. AnimNotify</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\AN_LaunchSkill.cpp">
       <Filter>04. Notify\00. AnimNotify</Filter>
     </ClCompile>
@@ -642,9 +657,18 @@
     <ClCompile Include="..\Private\ANS_Trail.cpp" />
     <ClCompile Include="..\Private\AN_Trail_Start.cpp" />
     <ClCompile Include="..\Private\AN_Trail_Stop.cpp" />
-    <ClCompile Include="..\Private\LightningTrail_Component.cpp" />
+    <ClCompile Include="..\Private\CharkraMove_Component.cpp" />
     <ClCompile Include="..\Private\AN_LightningTrail_Start.cpp" />
     <ClCompile Include="..\Private\AN_LightningTrail_Stop.cpp" />
+    <ClCompile Include="..\Private\AN_StopParticle.cpp" />
+    <ClCompile Include="..\Private\Skill_Rasengan_Hit.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_Chidori_Hit.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SwordTrail_Component.cpp" />
+    <ClCompile Include="..\Private\ANS_SwordTrail.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -820,6 +844,12 @@
       <Filter>94. Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_VtxEffectBillboard.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_ChakraMove.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_Sword_Trail.hlsl">
       <Filter>94. Shaders</Filter>
     </FxCompile>
   </ItemGroup>

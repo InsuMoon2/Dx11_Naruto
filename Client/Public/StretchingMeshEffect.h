@@ -19,6 +19,9 @@ public:
         float               meshOriginalLength = 1.0f; 
         Vec3                thickness = Vec3(1.f, 1.f, 1.f);
 
+        Vec3                rotationOffset = Vec3::Zero;
+        Vec3                localOffset = Vec3::Zero;
+
         // 이팩트가 소스 타겟 뼈를 추적하기 위해
         Weak<GameObject> ownerObj;
         string trackBoneName = "";
@@ -50,12 +53,15 @@ private:
 
     float                   _meshOriginalLength = 1.0f;
     Vec3                    _thickness = Vec3(1.f, 1.f, 1.f);
+    Vec3                    _rotationOffset = Vec3::Zero;
+    Vec3                    _localOffset = Vec3::Zero; 
 
-    Vec3 _originalWorldPos = Vec3::Zero;
-    Vec3 _currentTargetPos = Vec3::Zero;
+    Vec3                    _spawnWorldPos = Vec3::Zero;
+    Vec3                    _currentTargetPos = Vec3::Zero;
+    Vec3                    _ownerSpawnWorldPos = Vec3::Zero;
 
-    Weak<GameObject> _ownerObj;
-    string _trackBoneName = "";
+    Weak<GameObject>        _ownerObj;
+    string                  _trackBoneName = "";
 
 public:
     static  Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

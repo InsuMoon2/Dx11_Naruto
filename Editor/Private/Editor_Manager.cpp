@@ -215,6 +215,18 @@ void Editor_Manager::Handle_Shortcuts()
         if (hierachy)  hierachy->Set_Active(!hierachy->IsActive());
         if (inspector) inspector->Set_Active(!inspector->IsActive());
     }
+
+    if (ImGui::IsKeyPressed(ImGuiKey_F9, false))
+    {
+        if (GAME->Get_GameState() == EGameState::Play)
+        {
+            EDITOR->Pause(); 
+        }
+        else if (GAME->Get_GameState() == EGameState::Pause)
+        {
+            EDITOR->Resume();
+        }
+    }
 }
 
 shared_ptr<EditorWindow> Editor_Manager::Get_Window(const wstring& key)

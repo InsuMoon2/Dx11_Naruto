@@ -2,27 +2,36 @@
 // 엔진 전역 셰이더 인클루드 (Engine_Shader_Defines.hlsli)
 // ---------------------------------------------------------
 
-// --- Transform Matrices ---
-float4x4 g_WorldMatrix;
-float4x4 g_ViewMatrix;
-float4x4 g_ProjMatrix;
+// --- Transform Matrices (b0) ---
+cbuffer TransformBuffer : register(b0)
+{
+    float4x4 g_WorldMatrix;
+    float4x4 g_ViewMatrix;
+    float4x4 g_ProjMatrix;
+}
 
-// --- Camera ---
-vector g_CamPosition;
+// --- Camera (b1) ---
+cbuffer CameraBuffer : register(b1)
+{
+    float4 g_CamPosition;
+}
 
-// --- Global Lighting ---
-vector g_LightDir;
-vector g_LightDiffuse;
-vector g_LightAmbient;
-vector g_LightSpecular;
+// --- Global Lighting (b2) ---
+cbuffer LightBuffer : register(b2)
+{
+    float4 g_LightDir;
+    float4 g_LightDiffuse;
+    float4 g_LightAmbient;
+    float4 g_LightSpecular;
+}
 
 // --- Material Default ---
 vector g_MtrlAmbient = vector(0.3f, 0.3f, 0.3f, 1.f);
 vector g_MtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 // --- Textures ---
-Texture2D g_DiffuseTexture;
-Texture2D g_MaskTexture;
+Texture2D g_DiffuseTexture : register(t0);
+Texture2D g_MaskTexture : register(t1);
 
 // --- Common Sampler ---
 sampler DefaultSampler = sampler_state
@@ -74,7 +83,7 @@ BlendState BS_Additive
 {
     BlendEnable[0] = true;
 
-    SrcBlend = Src_Alpha;
+    SrcBlend = One;
     DestBlend = One;
     BlendOp = Add;
 };

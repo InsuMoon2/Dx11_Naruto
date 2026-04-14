@@ -15,6 +15,7 @@ AttachedEffectObject::AttachedEffectObject(const AttachedEffectObject& rhs)
     : GameObject(rhs)
     , _effectAssetName(rhs._effectAssetName)
     , _loopOverride(rhs._loopOverride)
+    , _boneMissingDestroyDelay(rhs._boneMissingDestroyDelay)
 {
 }
 
@@ -62,14 +63,12 @@ void AttachedEffectObject::Update(float timeDelta)
             return;
         }
     }
-        
 }
 
 void AttachedEffectObject::Late_Update(float timeDelta)
 {
     GameObject::Late_Update(timeDelta);
 
-    // 뼈대 추적
     if (_isTrackingBone)
     {
         auto model = _targetModel;
@@ -81,17 +80,26 @@ void AttachedEffectObject::Late_Update(float timeDelta)
             if (boneMatrix)
             {
                 Matrix boneWorldMatrix = (*boneMatrix) * transform->Get_WorldMatrix();
-
                 Sync_AttachedTransform(boneWorldMatrix, _targetLocalOffset, _targetLocalRotation, _targetLocalScale);
+                _boneMissingElapsed = 0.f;
+            }
+            else
+            {
+                _boneMissingElapsed += timeDelta;
+
+                if (_boneMissingElapsed >= _boneMissingDestroyDelay)
+                {
+                    Set_Destroy(true);
+                    return;
+                }
             }
         }
         else
         {
-            // 타겟이 파괴되면, 이펙트도 파괴
             Set_Destroy(true);
+            return;
         }
     }
-
 
     if (_effectCom)
         _effectCom->Late_Update(timeDelta);
@@ -123,7 +131,6 @@ void AttachedEffectObject::Sync_AttachedTransform(
         XMConvertToRadians(localRotation.z));
 
     const Quat finalRotation = socketRotation * localRotationQuat;
-
     const Vec3 finalScale = localScale;
 
     _transformCom->Set_WorldPosition(socketPosition + rotatedOffset);
@@ -148,14 +155,31 @@ void AttachedEffectObject::Attach_To_Bone(Model* targetModel, Weak<Transform> ta
     _targetLocalOffset = localOffset;
     _targetLocalRotation = localRotation;
     _targetLocalScale = localScale;
+    _boneMissingElapsed = 0.f;
 
     _isTrackingBone = true;
+
+    auto transform = _targetTransform.lock();
+    if (_targetModel && transform)
+    {
+        const Matrix* boneMatrix = _targetModel->Get_SocketBoneMatrixPtr(_targetBoneName);
+        if (boneMatrix)
+        {
+            Matrix boneWorldMatrix = (*boneMatrix) * transform->Get_WorldMatrix();
+            Sync_AttachedTransform(boneWorldMatrix, _targetLocalOffset, _targetLocalRotation, _targetLocalScale);
+        }
+    }
+}
+
+void AttachedEffectObject::Apply_InitialTransform(const Matrix& sourceWorldMatrix, const Vec3& localOffset,
+    const Vec3& localRotation, const Vec3& localScale)
+{
+    Sync_AttachedTransform(sourceWorldMatrix, localOffset, localRotation, localScale);
 }
 
 HRESULT AttachedEffectObject::Ready_Components()
 {
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_EFFECT, _effectCom), E_FAIL);
-
     return S_OK;
 }
 

@@ -51,7 +51,7 @@
                 "enabled": true,
                 "endFrame": -1,
                 "fps": 1.0,
-                "loop": true,
+                "loop": false,
                 "rows": 1,
                 "startFrame": 0
             },

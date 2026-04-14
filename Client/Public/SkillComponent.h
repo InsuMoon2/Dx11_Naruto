@@ -61,8 +61,11 @@ public:
     void Apply_WeaponSkillSet(EWeaponType weaponType);
     void Set_EquippedSkill_ID(int slot, int skill_Id);
 
-    void Set_ActiveStretchingMesh(Shared<GameObject> effect) { _activeStretchingMesh = effect; }
-    Shared<GameObject> Get_ActiveStretchingMesh() { return _activeStretchingMesh.lock(); }
+    void Add_ActiveStretchingMesh(Shared<GameObject> effect);
+    void Cleanup_ActiveStretchingMeshes();
+    void Destroy_AllStretchingMeshes();
+
+     const vector<Weak<GameObject>>& Get_ActiveStretchingMeshes() const { return _activeStretchingMeshes; }
 
 protected:
     json    To_Json() const override;
@@ -84,7 +87,7 @@ private:
     string            _attachedBoneName = "";
 
     // 거의 치도리 전용?
-    Weak<GameObject> _activeStretchingMesh;
+    vector<Weak<GameObject>> _activeStretchingMeshes;
 
 public:
     static Shared<SkillComponent> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

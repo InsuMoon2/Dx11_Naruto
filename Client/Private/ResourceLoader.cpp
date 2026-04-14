@@ -515,10 +515,10 @@ HRESULT ResourceLoader::Build_AllResourceJobs(const wstring& tablePath, vector<F
             job.skillData.animStateName = item.value("AnimStateName", string{});
             job.skillData.loopDurationSec = item.value("LoopDurationSec", 0.f);
 
-            const auto& holdValue = item["IsHoldSkill"];
-
             if (item.contains("IsHoldSkill"))
             {
+                const auto& holdValue = item["IsHoldSkill"];
+
                 if (holdValue.is_boolean())
                     job.skillData.isHoldSkill = holdValue.get<bool>();
                 else if (holdValue.is_number())
@@ -537,6 +537,17 @@ HRESULT ResourceLoader::Build_AllResourceJobs(const wstring& tablePath, vector<F
 			job.skillData.dashSpeed = item.value("dashSpeed", 15.f);
 			job.skillData.maxDashDistance = item.value("maxDashDistance", 20.f);
 			job.skillData.targetStopDistance = item.value("targetStopDistance", 1.5f);
+
+            if (item.contains("ignoreTargetStop"))
+            {
+                const auto& ignoreStopValue = item["ignoreTargetStop"];
+
+                if (ignoreStopValue.is_boolean())
+                    job.skillData.ignoreTargetStop = ignoreStopValue.get<bool>();
+                else if (ignoreStopValue.is_number())
+                    job.skillData.ignoreTargetStop = (ignoreStopValue.get<float>() != 0.f);
+            }
+
 			job.skillData.attackEndAnimStateName = item.value("attackEndAnimStateName", string{});
 
             job.skillData.airAnimStateName = item.value("airAnimStateName", string{});

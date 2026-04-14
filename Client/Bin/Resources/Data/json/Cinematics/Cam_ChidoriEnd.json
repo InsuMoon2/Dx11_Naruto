@@ -1,0 +1,64 @@
+{
+    "name": "Cam_ChidoriEnd",
+    "track": {
+        "fps": 60,
+        "keys": [
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7944738864898682,
+                "frame": 0,
+                "pitch": 0.0,
+                "position": [
+                    1.100000023841858,
+                    0.8999999761581421,
+                    4.0
+                ],
+                "rotation": [
+                    0.00039928287151269615,
+                    -0.9957946538925171,
+                    0.0043449425138533115,
+                    0.09150956571102142
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7944738864898682,
+                "frame": 39,
+                "pitch": 0.0,
+                "position": [
+                    1.0999996662139893,
+                    0.8999999761581421,
+                    4.000000476837158
+                ],
+                "rotation": [
+                    -0.0003992828424088657,
+                    0.9957945942878723,
+                    -0.0043449425138533115,
+                    -0.091509610414505
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            }
+        ],
+        "total_frames": 60,
+        "track_name": "Camera"
+    }
+}

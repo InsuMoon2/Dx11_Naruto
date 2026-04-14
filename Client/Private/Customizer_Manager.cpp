@@ -20,6 +20,11 @@ void Customizer_Manager::Set_Part(ContainerObject::EPartSlot slot, const wstring
     _customizerDesc.Set_Part(slot, modelAssetTag);
 }
 
+void Customizer_Manager::Set_PartTransform(ContainerObject::EPartSlot slot, const json& transformData)
+{
+    _customizerDesc.Set_PartTransform(slot, transformData);
+}
+
 Unique<Customizer_Manager> Customizer_Manager::Create()
 {
     return make_unique<Customizer_Manager>();

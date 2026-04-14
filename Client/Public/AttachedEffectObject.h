@@ -33,6 +33,10 @@ public:
     void    Late_Update(float timeDelta) override;
     bool    Should_ExcludeFromEditorSnapshot() const override { return true; }
 
+    const string& Get_EffectAssetName() const { return _effectAssetName; }
+
+    bool Is_TrackingBone() const { return _isTrackingBone; }
+
 public:
     Shared<EffectComponent> Get_EffectComponent() const { return _effectCom; }
 
@@ -44,10 +48,16 @@ public:
 
     void Stop_AttachedEffect();
 
-     void Attach_To_Bone(
-        Model* targetModel, 
+    void Attach_To_Bone(
+        Model* targetModel,
         Weak<Transform> targetTransform,
         const string& boneName,
+        const Vec3& localOffset,
+        const Vec3& localRotation,
+        const Vec3& localScale);
+
+    void Apply_InitialTransform(
+        const Matrix& sourceWorldMatrix,
         const Vec3& localOffset,
         const Vec3& localRotation,
         const Vec3& localScale);
@@ -61,7 +71,6 @@ private:
     string _effectAssetName = "";
     bool   _loopOverride = false;
 
-    // 이팩트 재생이 끝나면 자동으로 삭제될지
     bool _autoDestroyOnFinish = true;
     bool _isTrackingBone = false;
 
@@ -73,6 +82,9 @@ private:
     Vec3 _targetLocalOffset = Vec3::Zero;
     Vec3 _targetLocalRotation = Vec3::Zero;
     Vec3 _targetLocalScale = Vec3::One;
+
+    float _boneMissingElapsed = 0.f;
+    float _boneMissingDestroyDelay = 0.2f;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

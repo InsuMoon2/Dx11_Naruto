@@ -28,6 +28,9 @@ namespace Client
         float   maxDashDistance = 20.f;     // 이 거리 넘으면 강제로 Attack End로 세팅
         float   targetStopDistance = 1.5f;  // 타겟 근처로 가면 멈출 값
 
+        // true면 락온 타겟에 가까워져도 조기 종료 ㄴㄴ
+        bool    ignoreTargetStop = false;
+
         // 대쉬 루프 이후 애니메이션 -> 나선환, 치도리 말고 또 있나 쓸 데가
         string  attackEndAnimStateName = "";
 

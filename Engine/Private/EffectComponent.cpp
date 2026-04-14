@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "EffectComponent.h"
 #include "EffectAsset_Serializer.h"
 #include "EffectBilldboardObject.h"

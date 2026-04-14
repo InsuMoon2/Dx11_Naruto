@@ -646,7 +646,8 @@ void Level_CharacterSetup::Handle_OptionInput()
     {
         if (_selectedOptionIndex == optionCount)
         {
-            Finish_CharacterSetup();
+			Enter_NameInput();
+            //Finish_CharacterSetup();
             return;
         }
 
@@ -885,9 +886,9 @@ HRESULT Level_CharacterSetup::Ready_NameInputUI()
     bgDesc.textureIndex = ETOI(ECharacterSetupTexture::PlayerTextBG);
     bgDesc.zOrder = 0.6f; 
 
-    bgDesc.textDesc.text = L"이름을 입력하세요"; 
-    bgDesc.textDesc.style.fontSize = 22.f; 
-    bgDesc.textDesc.style.hAlign = ETextHAlign::Center; 
+    //bgDesc.textDesc.text = L""; 
+    //bgDesc.textDesc.style.fontSize = 22.f; 
+    //bgDesc.textDesc.style.hAlign = ETextHAlign::Center; 
 
     _nameInputBg = static_pointer_cast<Background>(
         GAME->Add_UI(Protocol::OBJECT_TYPE_BACKGROUND, EUILayer::Overlay, &bgDesc)); 

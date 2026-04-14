@@ -11,9 +11,10 @@
 #include "Bounding_AABB.h"
 #include "Collider.h"
 #include "GhostEffect_Component.h"
-#include "LightningTrail_Component.h"
+#include "CharkraMove_Component.h"
 #include "PlayerStateMachine.h"
 #include "SmearEffect_Component.h"
+#include "SwordTrail_Component.h"
 #include "Trail_Component.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -76,18 +77,12 @@ void Player::Update(float timeDelta)
 
     if (_smearEffect)
         _smearEffect->Update_Smear(timeDelta);
+ 
+    if (_chakraTrail)
+        _chakraTrail->Update_ChakraMove(timeDelta);
 
-    if (_trail)
-        _trail->Update_Trail(timeDelta);
-
-    if (_lightningTrail)
-        _lightningTrail->Update_LightningTrail(timeDelta);
-
-    // 스킬 연출 재생
-    //if (INPUT->KeyDown(KEY_TYPE::KEY_1))
-    //{
-    //    GAME->Play_Cinematic(TEXT("PlayerCamTest2"), _transformCom, true);
-    //}
+    if (_swordTrail)
+        _swordTrail->Update_SwordTrail(timeDelta);
 
 }
 
@@ -96,8 +91,8 @@ void Player::Late_Update(float timeDelta)
     Character::Late_Update(timeDelta);
 
     if ((_smearEffect && _smearEffect->Has_ActiveSmear()) ||
-    (_trail && _trail->Has_ActiveTrail()) ||
-    (_lightningTrail && _lightningTrail->Has_ActiveLightningTrail()))
+        (_swordTrail && _swordTrail->Has_ActiveSwordTrail()) ||
+        (_chakraTrail && _chakraTrail->Has_ActiveChakraMove()))
     {
         GAME->Add_RenderGroup(ERenderGroup::Blend, this->GetSharedPtr());
     }
@@ -111,11 +106,11 @@ HRESULT Player::Render()
     if (_smearEffect)
         CHECK_FAILED(_smearEffect->Render(), E_FAIL);
 
-    if (_trail)
-        CHECK_FAILED(_trail->Render(), E_FAIL);
+    if (_chakraTrail)
+        CHECK_FAILED(_chakraTrail->Render(), E_FAIL);
 
-    if (_lightningTrail)
-        CHECK_FAILED(_lightningTrail->Render(), E_FAIL);
+    if (_swordTrail)
+        CHECK_FAILED(_swordTrail->Render(), E_FAIL);
 
     return S_OK;
 }
@@ -232,11 +227,10 @@ HRESULT Player::Ready_Components()
     // 대쉬 잔상
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SMEAR_EFFECT, _smearEffect), E_FAIL);
 
-    // 트레일
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TRAIL, _trail), E_FAIL);
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SWORD_TRAIL, _swordTrail), E_FAIL);
 
-    // 치도리
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_LIGHTNING_TRAIL, _lightningTrail), E_FAIL);
+    // 차크라
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_CHAKRA_MOVE, _chakraTrail), E_FAIL);
 
     return S_OK;
 }
@@ -306,7 +300,10 @@ HRESULT Player::Ready_PartObjects()
     {
         Weapon::FWeaponDesc weaponDesc{};
         weaponDesc.parentTransform = _transformCom;
-        weaponDesc.modelAssetTag = TEXT("Model_BigSword");
+        weaponDesc.modelAssetTag = TEXT("Model_Samehada");
+
+        if (_equipment)
+            _equipment->Equip_Part(EPartSlot::Weapon, weaponDesc.modelAssetTag);
 
         EWeaponType currentWeaponType = EWeaponType::Hand;
         if (_equipment)
@@ -350,10 +347,16 @@ const Matrix* Player::Find_WeaponSocketMatrix(EWeaponType weaponType, EPlayerSta
 
 bool Player::Is_SwordAttackState(EPlayerState state) const
 {
-    switch (state)
+   switch (state)
     {
     case EPlayerState::Attack:
     case EPlayerState::JumpAttack:
+    case EPlayerState::Attack_Sword_01:
+    case EPlayerState::Attack_Sword_02:
+    case EPlayerState::Attack_Sword_03:
+    case EPlayerState::Attack_Sword_04:
+    case EPlayerState::Attack_SwordAir_01:
+    case EPlayerState::Attack_SwordAir_02:
         return true;
     default:
         return false;
@@ -370,6 +373,9 @@ void Player::Refresh_WeaponAttachment_ByCurrentState()
 
 void Player::Change_WeaponAttachment(EWeaponType weaponType)
 {
+      if (_swordTrail)
+        _swordTrail->Clear_SwordTrail();
+
     auto weaponPartBase = Get_PartObject(EPartSlot::Weapon);
     if (!weaponPartBase)
         return;
