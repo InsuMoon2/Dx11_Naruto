@@ -8,9 +8,12 @@
 #include "RemotePlayer.h"
 #include "Spawn_Helper.h"
 #include "Customizer_Manager.h"
+#include "Monster.h"
 
 static uint64 s_MyNetworkId = 0;
-static umap<uint64, Weak<Player>> s_NetworkPlayers;
+
+// 네트워크로 생성된 플레이어/몬스터를 objectId 기준으로 추적해보기
+static umap<uint64, Weak<GameObject>> s_NetworkObjects;
 
 void Client_PacketHandler::HandlePacket(Shared<ServerSession> session, BYTE* buffer, int32 len)
 {
@@ -68,8 +71,8 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
     uint64 myId = pkt.info().objectid();
     s_MyNetworkId = myId;
 
-    auto existingIt = s_NetworkPlayers.find(myId);
-    if (existingIt != s_NetworkPlayers.end())
+    auto existingIt = s_NetworkObjects.find(myId);
+    if (existingIt != s_NetworkObjects.end())
     {
         auto existing = existingIt->second.lock();
         if (existing)
@@ -102,7 +105,7 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
     player->Set_NetworkId(myId);
     player->Sync(pkt.info());
 
-    s_NetworkPlayers[myId] = player;
+    s_NetworkObjects[myId] = player;
 
     GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(player->Get_Component<Transform>());
     GAME->Get_DelegateHub().OnPlayerObjectSpawned.Broadcast(player);
@@ -118,11 +121,13 @@ void Client_PacketHandler::Handle_S_AddObject(Shared<ServerSession> session, BYT
         const Protocol::ObjectInfo& info = pkt.objects(i);
         uint64 objectId = info.objectid();
 
+        // 내 플레이어는 스킵
         if (objectId == s_MyNetworkId)
             continue;
 
-        auto it = s_NetworkPlayers.find(objectId);
-        if (it != s_NetworkPlayers.end())
+        // 이미 같은 objectId를 가진 네트워크 오브젝트가 살아있으면 중복생성 ㄴㄴ
+        auto it = s_NetworkObjects.find(objectId);
+        if (it != s_NetworkObjects.end())
         {
             if (!it->second.expired())
                 continue;
@@ -130,31 +135,38 @@ void Client_PacketHandler::Handle_S_AddObject(Shared<ServerSession> session, BYT
 
         uint32 levelIndex = GAME->Current_Level();
 
-        auto gameObject = Spawn_Helper::Prefab("RemotePlayer")
-            .AtLevel(levelIndex)
-            .InLayer(TEXT("Layer_GameObject"))
-            .Spawn();
-
+        auto gameObject = Spawn_NetworkObject(info, levelIndex);
         if (!gameObject)
             continue;
 
-        auto remote = dynamic_pointer_cast<Player>(gameObject);
-        if (!remote)
-            continue;
-
-        for (auto& pair : info.equipparts())
+        // 원격 플레이어면 장비 파츠, 네트워크 ID 세팅
+        if (auto remotePlayer = dynamic_pointer_cast<Player>(gameObject))
         {
-            ContainerObject::EPartSlot slot = static_cast<ContainerObject::EPartSlot>(pair.first);
-            wstring assetTag = Utils::ToWString(pair.second);
+            for (auto& pair : info.equipparts())
+            {
+                ContainerObject::EPartSlot slot = static_cast<ContainerObject::EPartSlot>(pair.first);
+                wstring assetTag = wstring(pair.second.begin(), pair.second.end());
+                remotePlayer->Apply_CustomizingPart(slot, assetTag);
+            }
 
-            remote->Apply_CustomizingPart(slot, assetTag);
+            remotePlayer->Set_Local(false);
+            remotePlayer->Set_NetworkId(objectId);
         }
 
-        remote->Set_NetworkId(objectId);
-        remote->Set_Local(false);
-        remote->Sync(info);
+        // 네트워크 몬스터면, 로컬 AI를 끄고 서버 상태에 따라서 움직이도록 -> Behavior Tree 동기화 어떻게 할지?
+        auto monster = dynamic_pointer_cast<Monster>(gameObject);
+        if (monster)
+        {
+            monster->Set_Local(false);
+            monster->Set_NetworkDriven(true);
+        }
 
-        s_NetworkPlayers[objectId] = remote;
+        // 패킷의 위치/회전/상태를 실제 오브젝트에 반영
+        Apply_NetworkObjectInfo(gameObject, info);
+
+        // 이후 S_Move / S_RemoveObject에서 찾을 수 있게 저장한다.
+        s_NetworkObjects[objectId] = gameObject;
+        
     }
 }
 
@@ -164,22 +176,21 @@ void Client_PacketHandler::Handle_S_RemoveObject(Shared<ServerSession> session, 
     Protocol::S_RemoveObject pkt;
     ParsePacket(buffer, pkt);
 
-    // 삭제 대상 순회
     for (int i = 0; i < pkt.ids_size(); i++)
     {
         int64 id = pkt.ids(i);
 
-        auto it = s_NetworkPlayers.find(id);
-        if (it == s_NetworkPlayers.end())
+        auto it = s_NetworkObjects.find(id);
+        if (it == s_NetworkObjects.end())
             continue;
 
-        auto player = it->second.lock();
-        if (player)
+        auto gameObject = it->second.lock();
+        if (gameObject)
         {
-            EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, player));
+            EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, gameObject));
         }
 
-        s_NetworkPlayers.erase(it);
+        s_NetworkObjects.erase(it);
     }
 }
 
@@ -189,30 +200,22 @@ void Client_PacketHandler::Handle_S_Move(Shared<ServerSession> session, BYTE* bu
     ParsePacket(buffer, pkt);
 
     uint64 objectId = pkt.info().objectid();
-    float x = pkt.info().pos().x();
-    float y = pkt.info().pos().y();
-    float z = pkt.info().pos().z();
-    float rotY = pkt.info().rot_y();
 
-    // 내 캐릭터 패킷이라면 무시
     if (objectId == s_MyNetworkId)
         return;
 
-    // 해당 objectId의 RemotePlayer 찾기
-    auto it = s_NetworkPlayers.find(objectId);
-    if (it == s_NetworkPlayers.end())
-        return;     // 모르는 ID -> 무시
+    auto it = s_NetworkObjects.find(objectId);
+    if (it == s_NetworkObjects.end())
+        return;
 
-    auto player = it->second.lock();
-    if (!player)
+    auto gameObject = it->second.lock();
+    if (!gameObject)
     {
-        // 이미 파괴된 오브젝트
-        s_NetworkPlayers.erase(it);
+        s_NetworkObjects.erase(it);
         return;
     }
 
-    // Snyc -> RemotePlayer에서 보간처리
-    player->Sync(pkt.info());
+    Apply_NetworkObjectInfo(gameObject, pkt.info());
 }
 
 SendBufferRef Client_PacketHandler::Make_C_Move(const Protocol::ObjectInfo& objectInfo)
@@ -248,4 +251,42 @@ SendBufferRef Client_PacketHandler::Make_C_EnterGame(const Vec3& spawnPos, float
     }
 
     return MakeSendBuffer(pkt, C_EnterGame);
+}
+
+Shared<GameObject> Client_PacketHandler::Spawn_NetworkObject(const Protocol::ObjectInfo& info, uint32 levelIndex)
+{
+    switch (info.objecttype())
+    {
+    case Protocol::OBJECT_TYPE_PLAYER:
+        return Spawn_Helper::Prefab("RemotePlayer")
+            .AtLevel(levelIndex)
+            .InLayer(TEXT("Layer_GameObject"))
+            .Spawn();
+
+    case Protocol::OBJECT_TYPE_MONSTER:
+        return Spawn_Helper::Prefab("Monster")
+            .AtLevel(levelIndex)
+            .InLayer(TEXT("Layer_GameObject"))
+            .Spawn();
+
+    default:
+        return nullptr;
+    }
+}
+
+void Client_PacketHandler::Apply_NetworkObjectInfo(Shared<GameObject> gameObject, const Protocol::ObjectInfo& info)
+{
+    CHECK_NULL(gameObject);
+
+    if (auto player = dynamic_pointer_cast<Player>(gameObject))
+    {
+        player->Sync(info);
+        return;
+    }
+
+    if (auto monster = dynamic_pointer_cast<Monster>(gameObject))
+    {
+        monster->Sync(info);
+        return;
+    }
 }

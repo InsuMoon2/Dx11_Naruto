@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG02_StoneStairs",
+      "material_instance_guid": "2979ea26-3eb7-42c4-90ff-b3487a5e776b"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

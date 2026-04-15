@@ -40,6 +40,19 @@ static bool Contains_CaseInsensitive(const string& text, const string& pattern)
     return it != text.end();
 }
 
+// 애니메이션 이름 표시 순서를 보기 좋게 맞추기 위한 대소문자 무시 비교 함수다.
+static bool Compare_NameCaseInsensitive(const string& lhs, const string& rhs)
+{
+    return std::lexicographical_compare(
+        lhs.begin(), lhs.end(),
+        rhs.begin(), rhs.end(),
+        [](char l, char r)
+        {
+            return std::tolower(static_cast<unsigned char>(l)) <
+                   std::tolower(static_cast<unsigned char>(r));
+        });
+}
+
 static void Collect_AnimationName(const FAnimationClipSetting& clip, unordered_set<string>& outNames)
 {
     if (!clip.animationName.empty())
@@ -162,6 +175,7 @@ void Animation_View::OnGui()
 
     Handle_PlaybackShortcut();
     Handle_DeleteShortcut();
+    Handle_CopyPasteShortcut();
 
     Draw_ToolBar();
     ImGui::Separator();
@@ -806,10 +820,23 @@ void Animation_View::Draw_ClipList()
     {
         const uint32 count = _model->Get_AnimationCount();
         bool foundAny = false;
+        vector<uint32> sortedIndices;
+        sortedIndices.reserve(count);
 
         for (uint32 i = 0; i < count; ++i)
+            sortedIndices.push_back(i);
+
+        sort(sortedIndices.begin(), sortedIndices.end(),
+            [this](uint32 lhs, uint32 rhs)
+            {
+                return Compare_NameCaseInsensitive(
+                    _model->Get_AnimationName(lhs),
+                    _model->Get_AnimationName(rhs));
+            });
+
+        for (uint32 index : sortedIndices)
         {
-            const string label = _model->Get_AnimationName(i);
+            const string label = _model->Get_AnimationName(index);
             if (!Passes_AnimStateClipFilter(label))
                 continue;
 
@@ -818,11 +845,11 @@ void Animation_View::Draw_ClipList()
 
             foundAny = true;
 
-            const bool selected = (_selectedClipIndex == static_cast<int32>(i));
+            const bool selected = (_selectedClipIndex == static_cast<int32>(index));
 
             if (ImGui::Selectable(label.c_str(), selected))
             {
-                _selectedClipIndex = static_cast<int32>(i);
+                _selectedClipIndex = static_cast<int32>(index);
                 Clear_SelectedEntries();
                 Refresh_CurrentClip();
             }
@@ -1803,6 +1830,49 @@ void Animation_View::Handle_DeleteShortcut()
         Delete_SelectedNotifyTrack();
 }
 
+void Animation_View::Handle_CopyPasteShortcut()
+{
+    if (!_isFocused || !_model)
+        return;
+
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.WantTextInput)
+        return;
+
+    if (ImGui::IsPopupOpen(nullptr, ImGuiPopupFlags_AnyPopupId))
+        return;
+
+    if (!io.KeyCtrl)
+        return;
+
+    if (ImGui::IsKeyPressed(ImGuiKey_C, false))
+    {
+        if (Has_SelectedNotify())
+        {
+            Copy_SelectedNotify();
+            return;
+        }
+
+        if (Has_SelectedState())
+        {
+            Copy_SelectedNotifyState();
+            return;
+        }
+    }
+
+    if (!ImGui::IsKeyPressed(ImGuiKey_V, false))
+        return;
+
+    if (_copiedNotifyKind == ENotifyClipboardKind::Notify)
+    {
+        Paste_CopiedNotify();
+        return;
+    }
+
+    if (_copiedNotifyKind == ENotifyClipboardKind::NotifyState)
+        Paste_CopiedNotifyState();
+}
+
 bool Animation_View::Passes_ClipSearch(const string& clipName) const
 {
     return Contains_CaseInsensitive(clipName, _clipSearchText);
@@ -1925,6 +1995,158 @@ void Animation_View::Select_NotifyStateTrack(int32 trackIndex)
     _selectedNotifyStateTrackIndex = std::clamp(trackIndex, 0, static_cast<int32>(clip->notifyStateTracks.size()) - 1);
     _sequencerContext.isSelectedStateTrack = true;
     _sequencerContext.selectedTrackIndex = _selectedNotifyStateTrackIndex;
+}
+
+void Animation_View::Copy_SelectedNotify()
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip)
+        return;
+
+    if (_selectedNotifyIndex < 0 || _selectedNotifyIndex >= static_cast<int32>(clip->notifies.size()))
+        return;
+
+    auto& entry = clip->notifies[_selectedNotifyIndex];
+    if (!entry.notify)
+        return;
+
+    _copiedNotifyKind = ENotifyClipboardKind::Notify;
+    _copiedNotifyTypeName = entry.notify->Get_TypeName();
+    _copiedNotifyPayload = entry.notify->Serialize_Payload();
+    _copiedNotifyStateDurationSec = 0.f;
+
+    NOTIFY("노티파이 복사");
+}
+
+void Animation_View::Copy_SelectedNotifyState()
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip)
+        return;
+
+    if (_selectedStateIndex < 0 || _selectedStateIndex >= static_cast<int32>(clip->notifyStates.size()))
+        return;
+
+    auto& entry = clip->notifyStates[_selectedStateIndex];
+    if (!entry.notifyState)
+        return;
+
+    _copiedNotifyKind = ENotifyClipboardKind::NotifyState;
+    _copiedNotifyTypeName = entry.notifyState->Get_TypeName();
+    _copiedNotifyPayload = entry.notifyState->Serialize_Payload();
+    _copiedNotifyStateDurationSec = entry.durationSec;
+
+    NOTIFY("노티파이 스테이트 복사");
+}
+
+void Animation_View::Paste_CopiedNotify()
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip || _copiedNotifyTypeName.empty())
+        return;
+
+    if (clip->notifyTracks.empty())
+        Add_NotifyTrack("Notifies");
+
+    auto instance = AnimNotify_Factory::Create_Notify(_copiedNotifyTypeName);
+    if (!instance)
+        return;
+
+    instance->Deserialize_Payload(_copiedNotifyPayload);
+
+    int32 trackIndex = _selectedNotifyTrackIndex;
+    if (!_sequencerContext.isSelectedStateTrack && _sequencerContext.selectedTrackIndex >= 0)
+        trackIndex = _sequencerContext.selectedTrackIndex;
+
+    trackIndex = std::clamp(trackIndex, 0, static_cast<int32>(clip->notifyTracks.size()) - 1);
+
+    FAnimNotifyEventEntry entry;
+    entry.timeSec = static_cast<float>(_sequencerState.currentFrame) / static_cast<float>(Get_CurrentClipFps());
+    entry.trackIndex = trackIndex;
+    entry.notify = instance;
+
+    clip->notifies.push_back(entry);
+
+    sort(clip->notifies.begin(), clip->notifies.end(),
+        [](const FAnimNotifyEventEntry& lhs, const FAnimNotifyEventEntry& rhs)
+        {
+            if (lhs.trackIndex == rhs.trackIndex)
+                return lhs.timeSec < rhs.timeSec;
+
+            return lhs.trackIndex < rhs.trackIndex;
+        });
+
+    for (int32 i = 0; i < static_cast<int32>(clip->notifies.size()); ++i)
+    {
+        if (clip->notifies[i].notify == instance)
+        {
+            _selectedNotifyIndex = i;
+            _selectedStateIndex = -1;
+            Select_NotifyTrack(clip->notifies[i].trackIndex);
+            break;
+        }
+    }
+
+    MarkDirty();
+    NOTIFY("노티파이 붙여넣기");
+}
+
+void Animation_View::Paste_CopiedNotifyState()
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip || _copiedNotifyTypeName.empty())
+        return;
+
+    if (clip->notifyStateTracks.empty())
+        Add_NotifyStateTrack("Notify States");
+
+    auto instance = AnimNotify_Factory::Create_NotifyState(_copiedNotifyTypeName);
+    if (!instance)
+        return;
+
+    instance->Deserialize_Payload(_copiedNotifyPayload);
+
+    int32 trackIndex = _selectedNotifyStateTrackIndex;
+    if (_sequencerContext.isSelectedStateTrack && _sequencerContext.selectedTrackIndex >= 0)
+        trackIndex = _sequencerContext.selectedTrackIndex;
+
+    trackIndex = std::clamp(trackIndex, 0, static_cast<int32>(clip->notifyStateTracks.size()) - 1);
+
+    const int32 fps = Get_CurrentClipFps();
+
+    FAnimNotifyStateEntry entry;
+    entry.startSec = static_cast<float>(_sequencerState.currentFrame) / static_cast<float>(fps);
+    entry.durationSec = max(0.f, _copiedNotifyStateDurationSec);
+    entry.trackIndex = trackIndex;
+    entry.notifyState = instance;
+
+    clip->notifyStates.push_back(entry);
+
+    sort(clip->notifyStates.begin(), clip->notifyStates.end(),
+        [](const FAnimNotifyStateEntry& lhs, const FAnimNotifyStateEntry& rhs)
+        {
+            if (lhs.trackIndex != rhs.trackIndex)
+                return lhs.trackIndex < rhs.trackIndex;
+
+            if (lhs.startSec == rhs.startSec)
+                return lhs.durationSec < rhs.durationSec;
+
+            return lhs.startSec < rhs.startSec;
+        });
+
+    for (int32 i = 0; i < static_cast<int32>(clip->notifyStates.size()); ++i)
+    {
+        if (clip->notifyStates[i].notifyState == instance)
+        {
+            _selectedStateIndex = i;
+            _selectedNotifyIndex = -1;
+            Select_NotifyStateTrack(clip->notifyStates[i].trackIndex);
+            break;
+        }
+    }
+
+    MarkDirty();
+    NOTIFY("노티파이 스테이트 붙여넣기");
 }
 
 float Animation_View::Get_CurrentFrameTimeSec() const

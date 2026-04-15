@@ -224,6 +224,9 @@ void GameInstance::Late_Update_Engine(float timeDelta)
 
 void GameInstance::Update_CameraOnly(float timeDelta)
 {
+    if (_debugManager)
+        _debugManager->Tick(timeDelta);
+
     auto activeCamera = _cameraManager->Get_ActiveCamera();
     if (activeCamera)
     {

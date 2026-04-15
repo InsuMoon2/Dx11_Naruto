@@ -35,11 +35,16 @@ public:
     virtual HRESULT Render() override;
     virtual HRESULT Bind_ShaderResources() override;
 
+public:
+    const string& Get_ModelGuid() const { return _modelGuid; }
+    Shared<Model> Get_Model() const { return _modelCom; }
+    const string& Get_ResolvedPath() const { return _resolvedPath; }
+
+public:
     virtual json    To_Json() const override;
     virtual void    From_Json(const json& data) override;
 
 public:
-    const string& Get_ModelGuid() const { return _modelGuid; }
     void Set_OutlineEnabled(bool enabled) { _isOutlineEnabled = enabled; }
     bool Is_OutlineEnabled() const { return _isOutlineEnabled; }
 

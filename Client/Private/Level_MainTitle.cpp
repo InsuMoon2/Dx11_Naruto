@@ -148,7 +148,7 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
         {
             L"게임 시작",
             L"게임 설정",
-            L"게임 종료"
+            L"나뭇잎 마을"
         };
 
         const float startY = viewport.y * 0.7f;
@@ -252,7 +252,7 @@ void Level_MainTitle::Execute_SelectedMenu()
     {
         const EGameplaySpawnMode spawnMode =
             GAME->Is_EditorRuntime() ? EGameplaySpawnMode::LocalOnly
-            : EGameplaySpawnMode::Server;
+                                     : EGameplaySpawnMode::Server;
 
         if (spawnMode == EGameplaySpawnMode::Server)
         {
@@ -268,17 +268,34 @@ void Level_MainTitle::Execute_SelectedMenu()
         break;
     }
 
-    case 1: // 일단은, CharacterSetup
+    case 1: // CharacterSetup
         GAME->Change_Level(
             ETOI(ELevelType::Loading),
             Level_Loading::Create(_device, _context, ELevelType::CharacterSetup, true, EGameplaySpawnMode::LocalOnly));
         break;
 
-    case 2: // 게임종료는 실제 실행 ㄴ
-        //PostQuitMessage(0);
+    case 2: // Konoha
+    {
+        const EGameplaySpawnMode spawnMode =
+            GAME->Is_EditorRuntime() ? EGameplaySpawnMode::LocalOnly
+                                     : EGameplaySpawnMode::Server;
+
+        if (spawnMode == EGameplaySpawnMode::Server)
+        {
+            if (!NetworkManager::GetInstance()->IsNetworkEnabled())
+            {
+                NetworkManager::GetInstance()->Initialize();
+            }
+        }
+
+        GAME->Change_Level(
+            ETOI(ELevelType::Loading),
+            Level_Loading::Create(_device, _context, ELevelType::Konoha, true, spawnMode));
         break;
     }
+    }
 }
+
 
 shared_ptr<Level_MainTitle> Level_MainTitle::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {

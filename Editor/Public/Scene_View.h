@@ -24,6 +24,7 @@ public:
 
 public:
     shared_ptr<RenderTarget> Get_RenderTarget() { return _renderTarget; }
+    shared_ptr<RenderTarget> Get_DisplayRenderTarget() { return _displayRenderTarget; }
 
     void                Focus_OnPosition(const Vec3& targetPos);
 
@@ -64,6 +65,7 @@ private: /* Prefab Preview */
 
 private:
     Shared<RenderTarget>    _renderTarget;
+    Shared<RenderTarget>    _displayRenderTarget;
 
     Vec2    _viewportSize = {};
 

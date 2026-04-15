@@ -30,6 +30,7 @@ void Scene_View::Initialize()
 
     // RenderTarget 초기화
     _renderTarget = RenderTarget::Create(GAME->Get_Device(), GAME->Get_ViewportWidth(), GAME->Get_ViewportHeight());
+    _displayRenderTarget = RenderTarget::Create(GAME->Get_Device(), GAME->Get_ViewportWidth(), GAME->Get_ViewportHeight());
 }
 
 void Scene_View::Update(float timeDelta)
@@ -215,7 +216,11 @@ void Scene_View::Render_Viewport()
         _renderTarget->Resize(static_cast<uint32>(panelSize.x),
             static_cast<uint32>(panelSize.y));
 
-        auto srv = _renderTarget->Get_SRV();
+        if (_displayRenderTarget)
+            _displayRenderTarget->Resize(static_cast<uint32>(panelSize.x),
+                static_cast<uint32>(panelSize.y));
+
+        auto srv = _displayRenderTarget ? _displayRenderTarget->Get_SRV() : _renderTarget->Get_SRV();
 
         ImGui::Image((ImTextureID)srv, panelSize);
 

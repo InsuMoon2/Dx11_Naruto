@@ -13,7 +13,8 @@ NS_BEGIN(Client)
 class MainApp : public Base
 {
 public:
-    explicit MainApp();
+    // 에디터 멀티플레이 테스트처럼 실행 직후 서버 게임플레이로 진입할지 결정하는 생성자다.
+    explicit MainApp(bool startInServerGameplayMode = false);
     virtual ~MainApp();
 
 public:
@@ -32,10 +33,12 @@ private:
     ComPtr<DeviceContext>       _context;
 
 private:
-    bool _networkConnected = false;
+    // 에디터에서 Game.exe를 멀티 테스트용으로 실행했는지 기록한다.
+    bool _startInServerGameplayMode = false;
 
 public:
-    static unique_ptr<MainApp> Create();
+    // 실행 모드에 맞는 시작 레벨과 네트워크 초기화를 구성한 MainApp을 생성한다.
+    static unique_ptr<MainApp> Create(bool startInServerGameplayMode = false);
     virtual void Free() override;
 
 };

@@ -350,7 +350,7 @@ void CharkraMove_Component::Start_DefaultChakraMove()
 
     Start_ChakraMove(channelDescs, _settings.trailLifespan, _settings.minOwnerMoveSpeed);
 
-    Ensure_GlowObjects();
+    //Ensure_GlowObjects();
 
     _hasStartedDefaultChakraMove = true;
 }

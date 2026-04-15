@@ -12,7 +12,6 @@ class CombatStat;
 class PlayerStateMachine;
 class PlayerController;
 class InputComponent;
-class SkillComponent;
 class AnimationStateComponent;
 class TargetComponent;
 
@@ -74,7 +73,6 @@ private:
     Shared<MovementComponent>   _movement;
     Shared<PlayerController>    _playerController;
     Shared<PlayerStateMachine>  _stateMachine;
-    Shared<SkillComponent>      _skill;
 
     Shared<TargetComponent>     _target;
     Shared<Collider>            _targetCollider;

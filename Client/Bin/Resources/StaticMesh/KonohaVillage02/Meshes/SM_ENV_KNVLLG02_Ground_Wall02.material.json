@@ -1,0 +1,17 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG02_RoughTiles",
+      "material_instance_guid": "3f495c7a-f76b-4913-a13c-f9141946bc85"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_StoneWall_Blend",
+      "textures": []
+    },
+    {
+      "material_name": "Material_2",
+      "textures": []
+    }
+  ]
+}

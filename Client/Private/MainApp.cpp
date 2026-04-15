@@ -1,4 +1,4 @@
-#include "MainApp.h"
+﻿#include "MainApp.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "NetworkManager.h"
@@ -71,16 +71,20 @@ HRESULT MainApp::Ready_StaticLevel() {
     return S_OK;
 }
 
-HRESULT MainApp::Ready_StartLevel(ELevelType startLevelID) {
+HRESULT MainApp::Ready_StartLevel(ELevelType startLevelID)
+{
     if (ELevelType::Loading == startLevelID)
         return E_FAIL;
 
-    const bool loadSharedResources = (startLevelID == ELevelType::GamePlay);
+    // Gameplay와 Konoha는 동일하게 shared resource + network spawn rule을 사용한다.
+    const bool isRuntimeBattleLevel =
+        (startLevelID == ELevelType::GamePlay) ||
+        (startLevelID == ELevelType::Konoha);
 
-    // 서버가 실제로 연결되어 있을 때만 Server 모드로 진입.
-    // 서버 없이 단독 테스트 시에는 LocalOnly로 플레이어를 바로 스폰한다.
-    const bool isServerConnected = NetworkManager::GetInstance()->IsConnected();
-    const bool useServerMode = (startLevelID == ELevelType::GamePlay) && isServerConnected;
+    const bool loadSharedResources = isRuntimeBattleLevel;
+
+    // 에디터 멀티플레이 테스트 실행에서는 battle level일 때 서버 스폰 모드를 사용한다.
+    const bool useServerMode = isRuntimeBattleLevel && _startInServerGameplayMode;
     const EGameplaySpawnMode spawnMode =
         useServerMode ? EGameplaySpawnMode::Server
                       : EGameplaySpawnMode::LocalOnly;
@@ -88,15 +92,20 @@ HRESULT MainApp::Ready_StartLevel(ELevelType startLevelID) {
     if (FAILED(GAME->Change_Level(
         ETOI(ELevelType::Loading),
         Level_Loading::Create(_device, _context, startLevelID, loadSharedResources, spawnMode))))
+    {
         return E_FAIL;
+    }
 
     return S_OK;
 }
 
-unique_ptr<MainApp> MainApp::Create() {
+
+unique_ptr<MainApp> MainApp::Create()
+{
     auto instance = make_unique<MainApp>();
 
-    if (FAILED(instance->Initialize())) {
+    if (FAILED(instance->Initialize()))
+    {
         MSG_BOX("Failed to Created : MainApp");
 
         return nullptr;

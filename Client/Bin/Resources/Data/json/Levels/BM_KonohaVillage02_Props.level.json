@@ -1,0 +1,1302 @@
+{
+    "levelName": "BM_KonohaVillage02_Props",
+    "levelIndex": 3,
+    "gameObjects": [
+        {
+            "static_class": "SM_ENV_KNVLLG02_AreaA_Building_B_Curtain2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "c652475b-2087-4322-8c4a-cb07977ee02a",
+            "layerTag": "Layer_Props",
+            "model_guid": "8a5b5b03-ee22-424d-a2eb-83fc6d1a774b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -37.5,
+                        -21.7,
+                        298.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        -43.0,
+                        0.0
+                    ],
+                    "scale": [
+                        2.0,
+                        2.0,
+                        2.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_AreaA_Building_B_Curtain_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "2f8555b9-28bd-4843-9662-24163ba2c1ba",
+            "layerTag": "Layer_Props",
+            "model_guid": "8a5b5b03-ee22-424d-a2eb-83fc6d1a774b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_Balloon_A_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b726ac88-bee9-45a3-8c80-ef500af7b305",
+            "layerTag": "Layer_Props",
+            "model_guid": "1f2cb128-b583-470f-a800-9c83780eada7",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -44.6,
+                        61.2,
+                        37.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_Fence_set_01_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "c141ac08-15ce-4144-9f91-504b81bd4dc4",
+            "layerTag": "Layer_Props",
+            "model_guid": "fb711271-2bda-4d57-9d76-390fb36327f5",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_Fence_set_02_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f782608f-49de-42db-ae3b-445194e38e67",
+            "layerTag": "Layer_Props",
+            "model_guid": "e679fd46-2b4d-4e18-894c-ba736c5dc290",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_Flags_11",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e88bb50d-8516-45b6-a0a8-f327f3753666",
+            "layerTag": "Layer_Props",
+            "model_guid": "74a94819-d9d3-494a-85f6-1c1b28c625c4",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_Flags_4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "21ef3816-f4e1-43ab-ab8a-297b7828a5bb",
+            "layerTag": "Layer_Props",
+            "model_guid": "59ceffce-40c0-4fcf-ac66-94f22ded370b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_Flags_8",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5e801831-b7f5-4243-bb2b-27d43453d0c9",
+            "layerTag": "Layer_Props",
+            "model_guid": "11e09eb8-b24c-4c4d-816f-9f97167f6643",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_LanternGround_10",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f18e320a-699d-460a-857b-2fdb643761b8",
+            "layerTag": "Layer_Props",
+            "model_guid": "8b53f5e6-5148-4258-a6ea-3cf1281c591d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_LanternGround_12",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "25af9d81-db8e-4021-a7ca-56e2c950d4bf",
+            "layerTag": "Layer_Props",
+            "model_guid": "105f8e2d-c245-48e7-962a-982d1e96551c",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_LanternGround_13",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "47a5839c-1eb8-4415-99ac-73579843c5a5",
+            "layerTag": "Layer_Props",
+            "model_guid": "0ee7dab4-4dea-4f0b-bead-d082ed7223b4",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_LanternGround_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "56997de4-79b1-48a5-8b0e-c424e6008123",
+            "layerTag": "Layer_Props",
+            "model_guid": "8abc5e03-d0cb-40b5-bb0e-f4c6a04202ec",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_LanternGround_6",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "1a1b0502-8fdd-48bc-beeb-cf5a050f2689",
+            "layerTag": "Layer_Props",
+            "model_guid": "9cf1ebcb-6050-4c2f-881e-6cc7a0b39af0",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_LanternGround_9",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "a43ee89e-0792-4d00-87a6-43538b3d7d22",
+            "layerTag": "Layer_Props",
+            "model_guid": "28d9fe4e-45aa-4a85-a1b7-6654d338e58d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_LanternSet_01_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "af57f9ff-3fb4-4a06-b4df-9d255ee2f671",
+            "layerTag": "Layer_Props",
+            "model_guid": "3a8ffe36-4e9e-47fe-9487-171549b7e4a7",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_LanternSet_02_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "de6beacf-5351-4627-b8b1-3ef2c124ef58",
+            "layerTag": "Layer_Props",
+            "model_guid": "96488233-7796-499a-b632-5572ff9ee30a",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_LanternSet_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "6a9fb56d-e0bf-45bb-a770-a43f4fa36194",
+            "layerTag": "Layer_Props",
+            "model_guid": "e46a8e3c-7be7-4984-89a6-ab39063183b2",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_SnowMass_A01_11",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5414c312-ded1-46f6-b02e-34a7bf43c930",
+            "layerTag": "Layer_Props",
+            "model_guid": "9252b5c0-9737-4175-937b-533c84c7a0b2",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_SnowMass_A02_13",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "34a544b5-e310-44d4-a186-73a051a2637f",
+            "layerTag": "Layer_Props",
+            "model_guid": "34edf7a4-a911-4f95-b12f-5065bc007be6",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_SnowMass_A03_15",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "9132ebcb-858a-4cea-be4b-20f3a37a4a17",
+            "layerTag": "Layer_Props",
+            "model_guid": "ebcd8127-ae53-4ab5-80ff-d98db3c1bd65",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_SnowMass_A04_17",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "98115d28-d30f-4b03-aa26-c7a46d97a0bc",
+            "layerTag": "Layer_Props",
+            "model_guid": "3fd506d8-852d-4626-9d59-36ca5e8a6a77",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_SnowMass_A05_19",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "9eb07434-18b7-471d-9788-9d3a881c5615",
+            "layerTag": "Layer_Props",
+            "model_guid": "31d86919-5edb-4096-bbe3-231e3dad0200",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_SnowMass_B01_21",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f73b4dbd-011c-40a9-896c-28503bb13d7f",
+            "layerTag": "Layer_Props",
+            "model_guid": "c02f0d64-da8d-459c-9d14-2467a32d2dc6",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_SnowMass_B02_23",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "020d3bd3-ab67-4b51-a3aa-64721d179f44",
+            "layerTag": "Layer_Props",
+            "model_guid": "7de37358-b050-42e6-9655-b6c2d68efb76",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_SnowMass_B03_25",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "ae3b8a1d-0d7d-489d-8ddf-967807af7c42",
+            "layerTag": "Layer_Props",
+            "model_guid": "86911d77-e7e7-4cfe-93f6-75da07a119ee",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_SnowMass_B04_27",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "49ddd45a-e89c-4b9d-9b52-41f4d4a572a8",
+            "layerTag": "Layer_Props",
+            "model_guid": "e88fa8f0-c191-4991-b23a-acb0133fbcdb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_SnowMass_B05_29",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7604d17e-b354-4ec1-a79d-7698757e3a0c",
+            "layerTag": "Layer_Props",
+            "model_guid": "4a20dc4c-d139-4008-b222-cde933681ace",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_SteelBoard_01_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f69d9164-578b-46af-9c33-b2551278325e",
+            "layerTag": "Layer_Props",
+            "model_guid": "619feca6-5c8b-4a87-b504-dfa3fc5ab11d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_WoodBoard_01_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "9223102e-d0c0-43d8-b3e0-59f3e022495d",
+            "layerTag": "Layer_Props",
+            "model_guid": "243bf2de-4839-43ad-9e2e-1ecad59f722f",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -25.900000000000002,
+                        7.0,
+                        82.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.00006,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_WoodBoard_02_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "67b345c3-70d3-48e5-a66a-87caf761e528",
+            "layerTag": "Layer_Props",
+            "model_guid": "5934ef11-9702-4235-84ac-90497170adcc",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        37.9,
+                        35.300000000000004,
+                        -99.9
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_WoodBoard_03_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "c8fe0aeb-8e06-4726-a19e-24775cedded3",
+            "layerTag": "Layer_Props",
+            "model_guid": "2eee1b0d-b105-4307-9db4-f3f080d3cf64",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG02_WoodBoard_04_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5bc4e569-7945-4920-8119-9f86049c60fe",
+            "layerTag": "Layer_Props",
+            "model_guid": "e171bfa6-b64a-480a-a3d0-89a8b9abcf1c",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Stall_A3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "173222d7-3fe6-4d29-aeb6-92ed46882d18",
+            "layerTag": "Layer_Props",
+            "model_guid": "f09b47ce-4dcf-4a9f-9b63-5a9b98c69051",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        59.350190000000005,
+                        18.63,
+                        14.880432
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.999756,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Stall_C3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e3c1e009-ed81-464f-9317-cd9b4c90d370",
+            "layerTag": "Layer_Props",
+            "model_guid": "b7631a77-a49c-4257-bea9-fed9da310f60",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        58.28346,
+                        18.580000000000002,
+                        -36.00881
+                    ],
+                    "rotation": [
+                        0.0,
+                        -83.54321,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Stall_C4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b2b87e79-8ce3-4fff-99bc-0f1f89d0a866",
+            "layerTag": "Layer_Props",
+            "model_guid": "b7631a77-a49c-4257-bea9-fed9da310f60",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -76.11355999999999,
+                        6.98,
+                        141.0386
+                    ],
+                    "rotation": [
+                        0.0,
+                        123.543335,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Stall_E3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "03a4c1a2-9b97-4b59-aa69-b468e075fc5a",
+            "layerTag": "Layer_Props",
+            "model_guid": "528deac2-30aa-4ca7-b3e2-31e9a4028dd1",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        81.00466300000001,
+                        18.6,
+                        4.142510700000001
+                    ],
+                    "rotation": [
+                        0.0,
+                        93.76125,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_VideoScreen_01_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "29707e4d-f435-4c74-9bc4-dc779c189253",
+            "layerTag": "Layer_Props",
+            "model_guid": "dceab5f1-45ff-41ac-a6c5-4f54a62873de",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        50.2,
+                        27.8,
+                        -49.1
+                    ],
+                    "rotation": [
+                        0.0,
+                        179.99995,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_VideoScreen_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "1166ed45-3b7e-4cfc-91b9-33d86662cacc",
+            "layerTag": "Layer_Props",
+            "model_guid": "dceab5f1-45ff-41ac-a6c5-4f54a62873de",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        13.9,
+                        27.400000000000002,
+                        -21.1
+                    ],
+                    "rotation": [
+                        0.0,
+                        89.99971,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_VideoScreen_3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "21b562b5-8a9a-4b9a-8a9c-19d8483ce55e",
+            "layerTag": "Layer_Props",
+            "model_guid": "dceab5f1-45ff-41ac-a6c5-4f54a62873de",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -45.2,
+                        32.8,
+                        47.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.000427,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_VideoScreen_4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "01201d18-60b8-4383-be99-1a712739e4ff",
+            "layerTag": "Layer_Props",
+            "model_guid": "dceab5f1-45ff-41ac-a6c5-4f54a62873de",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -58.0,
+                        33.0,
+                        147.4
+                    ],
+                    "rotation": [
+                        0.0,
+                        179.99951,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E1_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5d845bd4-ed95-4f5e-a079-60202c671002",
+            "layerTag": "Layer_Props",
+            "model_guid": "c6d2dce3-115c-449f-abef-8daee00c6e52",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        45.599985,
+                        44.6,
+                        -34.399922000000004
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E2_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "67fbcb84-2291-4bed-a321-519a07ac1000",
+            "layerTag": "Layer_Props",
+            "model_guid": "c6d2dce3-115c-449f-abef-8daee00c6e52",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -109.89997,
+                        33.1,
+                        94.70004000000002
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.99998,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E3_14",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "8331caa2-dfe4-46d3-9f1b-e9c2662ad0a1",
+            "layerTag": "Layer_Props",
+            "model_guid": "c6d2dce3-115c-449f-abef-8daee00c6e52",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        54.800000000000004,
+                        44.6,
+                        2.1
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_Manhole_Snow2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "ce961cfc-f991-4c33-b3de-39eed8974d52",
+            "layerTag": "Layer_Props",
+            "model_guid": "1675569b-811c-4506-ad64-57740af2714b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -69.8,
+                        7.0,
+                        75.75
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_Manhole_Snow3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "2df1849f-8810-4c99-a6f4-9e30c6871d94",
+            "layerTag": "Layer_Props",
+            "model_guid": "1675569b-811c-4506-ad64-57740af2714b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        43.85,
+                        18.55,
+                        -77.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_Manhole_Snow4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5649d634-a1f0-401d-9e96-540555d111e2",
+            "layerTag": "Layer_Props",
+            "model_guid": "1675569b-811c-4506-ad64-57740af2714b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -14.1,
+                        18.55,
+                        -11.35
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_Manhole_Snow5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "90e2fa20-2d7d-4cdc-a86c-4e978a6b2235",
+            "layerTag": "Layer_Props",
+            "model_guid": "1675569b-811c-4506-ad64-57740af2714b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        71.75,
+                        18.55,
+                        18.1
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_Manhole_Snow_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5b7ead89-94b3-42e3-b5fa-92ada2a3a45b",
+            "layerTag": "Layer_Props",
+            "model_guid": "1675569b-811c-4506-ad64-57740af2714b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -30.900000000000002,
+                        7.0,
+                        126.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        }
+    ]
+}

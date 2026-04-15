@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_Pain",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_Pain_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_Pain_EyeL",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_PainEye_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_Pain_EyeR",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_PainEye_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_Pain_Metal",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "M_Line",
+      "textures": [
+      ]
+    }
+  ]
+}

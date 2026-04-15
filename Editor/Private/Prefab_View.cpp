@@ -810,27 +810,53 @@ void Prefab_View::Draw_AnimationControls()
     ImGui::TextColored(ImVec4(0.7f, 0.9f, 1.f, 1.f), "[ Animation ]");
     ImGui::Separator();
 
-    vector<string> names;
-    vector<const char*> items;
+    vector<pair<string, uint32>> sortedAnimations;
 
     const uint32 count = model->Get_AnimationCount();
-    names.reserve(count);
-    items.reserve(count);
+    sortedAnimations.reserve(count);
 
     for (uint32 i = 0; i < count; ++i)
-        names.push_back(model->Get_AnimationName(i));
+        sortedAnimations.emplace_back(model->Get_AnimationName(i), i);
 
-    for (auto& name : names)
-        items.push_back(name.c_str());
+    sort(sortedAnimations.begin(), sortedAnimations.end(),
+        [](const pair<string, uint32>& lhs, const pair<string, uint32>& rhs)
+        {
+            return std::lexicographical_compare(
+                lhs.first.begin(), lhs.first.end(),
+                rhs.first.begin(), rhs.first.end(),
+                [](char l, char r)
+                {
+                    return std::tolower(static_cast<unsigned char>(l)) <
+                           std::tolower(static_cast<unsigned char>(r));
+                });
+        });
 
-    if (!items.empty())
+    if (!sortedAnimations.empty())
     {
         _previewSelectedAnimIndex = std::clamp(
             _previewSelectedAnimIndex,
             0,
-            static_cast<int32>(items.size()) - 1);
+            static_cast<int32>(count) - 1);
 
-        ImGui::Combo("Preview Clip", &_previewSelectedAnimIndex, items.data(), static_cast<int32>(items.size()));
+        const string currentPreviewName =
+            (_previewSelectedAnimIndex >= 0 && _previewSelectedAnimIndex < static_cast<int32>(count))
+            ? model->Get_AnimationName(static_cast<uint32>(_previewSelectedAnimIndex))
+            : sortedAnimations.front().first;
+
+        if (ImGui::BeginCombo("Preview Clip", currentPreviewName.c_str()))
+        {
+            for (const auto& [name, realIndex] : sortedAnimations)
+            {
+                const bool isSelected = (_previewSelectedAnimIndex == static_cast<int32>(realIndex));
+                if (ImGui::Selectable(name.c_str(), isSelected))
+                    _previewSelectedAnimIndex = static_cast<int32>(realIndex);
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+
+            ImGui::EndCombo();
+        }
     }
 
     ImGui::Checkbox("Loop", &_previewAnimLoop);

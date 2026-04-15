@@ -39,7 +39,17 @@ void PlayerSession_Manager::Start_SinglePlayer()
     _editorMainWindow = GetActiveWindow();
     //ShowWindow(_editorMainWindow, SW_MINIMIZE);
 
-    // 싱글 플레이어 아닐 때 예외처리
+    // 싱글 멀티테스트도 서버를 먼저 띄운 뒤 클라이언트 하나만 접속시킨다.
+    if (!Launch_Server())
+    {
+        MessageBox(nullptr, L"Failed to launch GameServer.exe!", L"Error", MB_OK | MB_ICONERROR);
+        ShowWindow(_editorMainWindow, SW_RESTORE);
+        return;
+    }
+
+    Sleep(2000);
+
+    // 테스트용 클라이언트 하나 실행
     if (!Launch_Client(0, 1))
     {
         MessageBox(nullptr, L"Failed to launch client!", L"Error", MB_OK | MB_ICONERROR);
@@ -154,7 +164,7 @@ bool PlayerSession_Manager::Launch_Server()
 bool PlayerSession_Manager::Launch_Client(int32 playerIndex, int32 totalPlayers)
 {
     fs::path currentPath = fs::current_path();
-    fs::path clientPath = currentPath / L"../../Client/Bin/Client.exe";
+    fs::path clientPath = currentPath / L"../../Game/Bin/Game.exe";
 
     if (!fs::exists(clientPath))
         return false;

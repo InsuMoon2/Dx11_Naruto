@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG02_FarTree_A",
+      "material_instance_guid": "0d253560-28eb-45d4-b32f-515d96726a65"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

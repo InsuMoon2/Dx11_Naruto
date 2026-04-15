@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG02_DistanceTree_B",
+      "material_instance_guid": "ef0dcfb9-8bdb-4c82-aafe-d490df8f8cc2"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

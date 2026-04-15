@@ -169,11 +169,32 @@ void AnimationState_Inspector::Draw_StateList(Shared<AnimationStateComponent> an
         ImGui::SetNextItemWidth(comboWidth);
         if (ImGui::BeginCombo("##PlayerState", currentLabel))
         {
+            vector<EPlayerState> sortedStates;
+            sortedStates.reserve(magic_enum::enum_count<EPlayerState>());
+
             for (EPlayerState state : magic_enum::enum_values<EPlayerState>())
             {
                 if (state == EPlayerState::END)
                     continue;
 
+                sortedStates.push_back(state);
+            }
+
+            sort(sortedStates.begin(), sortedStates.end(),
+                [](EPlayerState lhs, EPlayerState rhs)
+                {
+                    return std::lexicographical_compare(
+                        magic_enum::enum_name(lhs).begin(), magic_enum::enum_name(lhs).end(),
+                        magic_enum::enum_name(rhs).begin(), magic_enum::enum_name(rhs).end(),
+                        [](char l, char r)
+                        {
+                            return std::tolower(static_cast<unsigned char>(l)) <
+                                   std::tolower(static_cast<unsigned char>(r));
+                        });
+                });
+
+            for (EPlayerState state : sortedStates)
+            {
                 const bool selected = (_selectedPlayerState == state);
 
                 if (ImGui::Selectable(Get_PlayerStateLabel(state), selected))

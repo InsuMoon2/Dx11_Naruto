@@ -261,6 +261,7 @@
     <ClInclude Include="..\Public\AN_Trail_Start.h" />
     <ClInclude Include="..\Public\AttachedEffectObject.h" />
     <ClInclude Include="..\Public\Background.h" />
+    <ClInclude Include="..\Public\Boss_Pain.h" />
     <ClInclude Include="..\Public\BTTask_Attack.h" />
     <ClInclude Include="..\Public\BTTask_FindClosestTarget.h" />
     <ClInclude Include="..\Public\BTTask_Hit.h" />
@@ -281,6 +282,7 @@
     <ClInclude Include="..\Public\IReplicable.h" />
     <ClInclude Include="..\Public\Level_CharacterSetup.h" />
     <ClInclude Include="..\Public\Level_Gameplay.h" />
+    <ClInclude Include="..\Public\Level_Konoha.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_MainTitle.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -417,6 +419,7 @@
     <ClCompile Include="..\Private\AN_Trail_Start.cpp" />
     <ClCompile Include="..\Private\AttachedEffectObject.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
+    <ClCompile Include="..\Private\Boss_Pain.cpp" />
     <ClCompile Include="..\Private\BTTask_Attack.cpp" />
     <ClCompile Include="..\Private\BTTask_FindClosestTarget.cpp" />
     <ClCompile Include="..\Private\BTTask_Hit.cpp" />
@@ -432,6 +435,7 @@
     <ClCompile Include="..\Private\Level_CharacterSetup.cpp" />
     <!-- <ClCompile Include="..\Private\Client_PacketHandler.cpp" /> -->
     <ClCompile Include="..\Private\Level_Gameplay.cpp" />
+    <ClCompile Include="..\Private\Level_Konoha.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_MainTitle.cpp" />
     <ClCompile Include="..\Private\CharkraMove_Component.cpp" />
@@ -515,6 +519,10 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\Shaders\Shader_ChakraMove.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_EditorViewport.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>

@@ -10,13 +10,12 @@ NS_END
 NS_BEGIN(Client)
 
 class AnimationStateComponent;
+class CharkraMove_Component;
 class CombatStat;
 class EquipmentComponent;
 class SmearEffect_Component;
-class Trail_Component;
-class CharkraMove_Component;
-class AttachedEffectObject;
 class SwordTrail_Component;
+class SkillComponent;
 
 class Player : public Character
 {
@@ -65,15 +64,19 @@ protected:
 
     void  On_WeaponTypeChagned(int32 weaponTypeIndex);
 
+
+
 protected:
     Shared<CombatStat>                  _combatStat;
     Shared<AnimationStateComponent>     _animState;
     Shared<Model>                       _model;
     Shared<EquipmentComponent>          _equipment;
     Shared<SmearEffect_Component>       _smearEffect;
-    
     Shared<CharkraMove_Component>       _chakraTrail;
     Shared<SwordTrail_Component>        _swordTrail;
+
+    Shared<SkillComponent>				_skill;
+
 
 protected:
     uint64                          _networkId = 0;

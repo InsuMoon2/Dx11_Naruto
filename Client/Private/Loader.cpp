@@ -142,6 +142,10 @@ HRESULT Loader::Loading()
     case ELevelType::CharacterSetup:
         hr = Loading_For_CharacterSetup();
         break;
+
+    case ELevelType::Konoha:
+        hr = Loading_For_Konoha();
+        break;
     }
 
     if (FAILED(hr))
@@ -564,6 +568,70 @@ HRESULT Loader::Loading_For_CharacterSetup()
 
     //pushProto(Protocol::OBJECT_TYPE_CAMERA_FREE);
     //pushProto(Protocol::OBJECT_TYPE_CAMERA_TARGET);
+
+    {
+        scoped_lock lock(_jobMutex);
+        for (auto& job : jobs)
+            _pendingJobs.push(std::move(job));
+    }
+
+    _totalJobs = static_cast<int32>(jobs.size());
+    _completedJobs = 0;
+    _prepareFinished = true;
+
+    _isFinished = (_totalJobs.load() == 0);
+
+    return S_OK;
+}
+
+HRESULT Loader::Loading_For_Konoha()
+{
+    vector<FLoadJob> jobs;
+
+    // 클라 단독 실행
+    if (_loadSharedResources)
+    {
+        Register_Components();
+        Initialize_BT_Nodes();
+
+        lstrcpy(_loadingText, TEXT("공용 리소스 작업 준비 중"));
+
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Shader.json"), jobs), E_FAIL);
+
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Texture.json"), jobs), E_FAIL);
+
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_Model.json"), jobs), E_FAIL);
+
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_SkillData.json"), jobs), E_FAIL);
+
+        // 콤보 프로파일 읽기
+        GET_SINGLE(ComboProfile_Manager)->Load_FromJson(
+            "../../Client/Bin/Resources/Data/json/DT_ComboProfile.json");
+    }
+
+    CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+        TEXT("../../Client/Bin/Resources/Data/json/DT_GameObject.json"), jobs), E_FAIL);
+
+    auto pushChunk = [&](const char* fileName)
+        {
+            FLoadJob job{};
+            job.type = ELoadJobType::LevelChunk;
+            job.levelIndex = ETOI(ELevelType::Konoha);
+            job.prototypeLevelIndex = ETOI(ELevelType::Konoha);
+            job.pathStr = fileName;
+            jobs.push_back(std::move(job));
+        };
+
+    // 맵 리소스 로드
+    pushChunk("BM_Konoha_Village02_Env_WaterTank");
+    pushChunk("BM_KonohaVillage02");
+    pushChunk("BM_KonohaVillage02_Env_Terrain");
+    pushChunk("BM_KonohaVillage02_Floor");
+    pushChunk("BM_KonohaVillage02_Props");
 
     {
         scoped_lock lock(_jobMutex);

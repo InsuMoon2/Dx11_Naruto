@@ -1,5 +1,249 @@
 {
     "levelName": "BM_KonohaVillage03_Environments_Props",
     "levelIndex": 3,
-    "gameObjects": []
+    "gameObjects": [
+        {
+            "static_class": "SM_ENV_KNVLLG03_AreaF_Fence_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b53f99e2-6cfd-4611-9e21-3789ea28b6f1",
+            "layerTag": "Layer_Props",
+            "model_guid": "646aedce-8950-4afa-b37a-edfef729fe43",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Fence_Set_11",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "88dc093b-d4a5-4574-908f-74692e35716e",
+            "layerTag": "Layer_Props",
+            "model_guid": "24a9a546-3320-49d3-af90-eef221831d72",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Fence_Set_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "68720a4e-b73e-4ce5-be0f-fb09410ad094",
+            "layerTag": "Layer_Props",
+            "model_guid": "6e087bd6-a22c-4edd-9b0a-f4e39edf217c",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Fence_Set_7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "938c9f68-dfc7-43bb-9700-66d1a6ca3b84",
+            "layerTag": "Layer_Props",
+            "model_guid": "1b561b8c-8fe6-41b7-9a38-3576062ad2f4",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Fence_Set_9",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "80f90beb-bc55-4001-a66b-b3c8a3d91b9c",
+            "layerTag": "Layer_Props",
+            "model_guid": "4b26a167-3f8d-424b-bff0-c990f918d397",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Poster_A_3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "244a77bb-f5f3-4469-b957-a3916b94ca30",
+            "layerTag": "Layer_Props",
+            "model_guid": "2ae40c4f-ed21-4105-96ff-ed55cbfd2219",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_Poster_B_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "ac7f08ff-0066-4787-bd77-582fa626d728",
+            "layerTag": "Layer_Props",
+            "model_guid": "17c3f8bb-cea6-4860-bb1e-978c7070e1c4",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG03_VideoScreen_A_3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "1a86538a-8249-463d-80c5-6f11d8984355",
+            "layerTag": "Layer_Props",
+            "model_guid": "379be24c-6642-4c78-ade2-efb693cd5a14",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_LKNVLD03_VideoScreen_B_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "34835f05-7e45-4c5f-bd35-6a1ab35f62f6",
+            "layerTag": "Layer_Props",
+            "model_guid": "27ea2b28-5809-4e10-bd5a-109678cc729e",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        }
+    ]
 }

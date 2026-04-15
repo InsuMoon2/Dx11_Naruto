@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_LeafNinja_Face",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_LeafNinja_BC_Face.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_LeafNinja",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_LeafNinja_BC.png"
+        }
+      ]
+    }
+  ]
+}

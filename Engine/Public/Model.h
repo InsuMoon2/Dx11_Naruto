@@ -117,6 +117,14 @@ public: /* 지형타기 */
         Vec3& outHitPoint,
         Vec3& outNormal) const;
 
+    bool    Raycast(
+        const Ray& ray,
+        const Matrix& worldMatrix,
+        float& outDist,
+        Vec3& outHitPoint,
+        Vec3& outNormal) const;
+
+
     const vector<Shared<Mesh>>& Get_Meshes() const { return _meshes; }
 
 private:

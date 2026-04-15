@@ -45,11 +45,15 @@ public:
     json    To_Json() const override;
     void    From_Json(const json& data) override;
 
+public:
+    void Set_NetworkDriven(bool enabled) { _networkDriven = enabled; }
+
+    // 서버 ObjectInfo를 현재 몬스터 transform에 반영
+    void Sync(const Protocol::ObjectInfo& info);
+
 protected:
     HRESULT Ready_Components() override;
     HRESULT Bind_ShaderResources() override;
-
-    
 
 private:
     Shared<Model>                   _model;
@@ -62,6 +66,8 @@ private:
 
     Shared<Collider> _collider;
 
+    // AI/BT를 끄고 서버 상태 따르기
+    bool _networkDriven = false;
 
     float _test = 10.f;
 

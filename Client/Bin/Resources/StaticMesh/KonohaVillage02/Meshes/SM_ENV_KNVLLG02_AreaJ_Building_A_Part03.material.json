@@ -1,0 +1,49 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG02_WoodPlain_Brown",
+      "material_instance_guid": "df4b8e30-51ad-491b-b6a0-7f16b8623aae"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG02_Plaster",
+      "material_instance_guid": "6a2ac29a-e48a-47be-a9a7-340ca48c136e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG02_ConcreteSlabs_Bright",
+      "material_instance_guid": "317219b4-0d00-46a5-9f77-52e35f5a1aee"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG02_MetalRoof_GreenLight",
+      "material_instance_guid": "2becb624-fbe5-4544-9f09-afe656a9664d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG02_Pipe_04",
+      "material_instance_guid": "1e908290-4c7d-4fc0-993b-a2737abebdfe"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG02_PipeDetails_01",
+      "material_instance_guid": "0547ba36-4f59-40b4-8072-bb6954e77de6"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Wooden_Sign_Atlas_02",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodWindow_A",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_A",
+      "textures": []
+    },
+    {
+      "material_name": "Material_10",
+      "textures": []
+    }
+  ]
+}

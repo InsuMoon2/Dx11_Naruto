@@ -10,12 +10,12 @@
 #include "Bounding_Capsule.h"
 #include "Bounding_AABB.h"
 #include "Collider.h"
-#include "GhostEffect_Component.h"
 #include "CharkraMove_Component.h"
+#include "GhostEffect_Component.h"
 #include "PlayerStateMachine.h"
 #include "SmearEffect_Component.h"
 #include "SwordTrail_Component.h"
-#include "Trail_Component.h"
+#include "SkillComponent.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
@@ -75,14 +75,18 @@ void Player::Update(float timeDelta)
     if (_model)
         _model->Play_Animation(timeDelta, true);
 
+    if (_skill)
+        _skill->Update(timeDelta);
+
     if (_smearEffect)
         _smearEffect->Update_Smear(timeDelta);
- 
+
     if (_chakraTrail)
         _chakraTrail->Update_ChakraMove(timeDelta);
 
     if (_swordTrail)
         _swordTrail->Update_SwordTrail(timeDelta);
+
 
 }
 
@@ -91,8 +95,8 @@ void Player::Late_Update(float timeDelta)
     Character::Late_Update(timeDelta);
 
     if ((_smearEffect && _smearEffect->Has_ActiveSmear()) ||
-        (_swordTrail && _swordTrail->Has_ActiveSwordTrail()) ||
-        (_chakraTrail && _chakraTrail->Has_ActiveChakraMove()))
+        (_chakraTrail && _chakraTrail->Has_ActiveChakraMove()) ||
+        (_swordTrail && _swordTrail->Has_ActiveSwordTrail()))
     {
         GAME->Add_RenderGroup(ERenderGroup::Blend, this->GetSharedPtr());
     }
@@ -111,6 +115,7 @@ HRESULT Player::Render()
 
     if (_swordTrail)
         CHECK_FAILED(_swordTrail->Render(), E_FAIL);
+
 
     return S_OK;
 }
@@ -227,10 +232,14 @@ HRESULT Player::Ready_Components()
     // 대쉬 잔상
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SMEAR_EFFECT, _smearEffect), E_FAIL);
 
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_CHAKRA_MOVE, _chakraTrail), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SWORD_TRAIL, _swordTrail), E_FAIL);
 
-    // 차크라
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_CHAKRA_MOVE, _chakraTrail), E_FAIL);
+    // 스킬
+    {
+        SkillComponent::FSkillDesc skillDesc{};
+        CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SKILL, _skill, &skillDesc), E_FAIL);
+    }
 
     return S_OK;
 }
@@ -347,7 +356,7 @@ const Matrix* Player::Find_WeaponSocketMatrix(EWeaponType weaponType, EPlayerSta
 
 bool Player::Is_SwordAttackState(EPlayerState state) const
 {
-   switch (state)
+    switch (state)
     {
     case EPlayerState::Attack:
     case EPlayerState::JumpAttack:
@@ -373,9 +382,6 @@ void Player::Refresh_WeaponAttachment_ByCurrentState()
 
 void Player::Change_WeaponAttachment(EWeaponType weaponType)
 {
-      if (_swordTrail)
-        _swordTrail->Clear_SwordTrail();
-
     auto weaponPartBase = Get_PartObject(EPartSlot::Weapon);
     if (!weaponPartBase)
         return;

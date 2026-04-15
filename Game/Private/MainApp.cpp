@@ -14,7 +14,8 @@
 
 #include "ComboProfile_Manager.h"
 
-MainApp::MainApp()
+MainApp::MainApp(bool startInServerGameplayMode)
+    : _startInServerGameplayMode(startInServerGameplayMode)
 {
 }
 
@@ -56,7 +57,16 @@ HRESULT MainApp::Initialize()
     }
 
     CHECK_FAILED(Ready_StaticLevel(), E_FAIL);
-    CHECK_FAILED(Ready_StartLevel(ELevelType::MainTitle), E_FAIL);
+
+    if (_startInServerGameplayMode)
+    {
+        NetworkManager::GetInstance()->Initialize();
+        CHECK_FAILED(Ready_StartLevel(ELevelType::MainTitle), E_FAIL);
+    }
+    else
+    {
+        CHECK_FAILED(Ready_StartLevel(ELevelType::MainTitle), E_FAIL);
+    }
 
     GAME->Set_GameState(EGameState::Play);
     GAME->Set_GameInputEnabled(true);
@@ -139,18 +149,31 @@ HRESULT MainApp::Ready_StartLevel(ELevelType startLevelID)
     if (ELevelType::Loading == startLevelID)
         return E_FAIL;
 
-    const bool loadSharedResources = (startLevelID == ELevelType::GamePlay);
+    const bool isRuntimeBattleLevel =
+        (startLevelID == ELevelType::GamePlay) ||
+        (startLevelID == ELevelType::Konoha);
 
-    if (FAILED(GAME->Change_Level(ETOI(ELevelType::Loading),
-        Level_Loading::Create(_device, _context, startLevelID, loadSharedResources))))
+    const bool loadSharedResources = isRuntimeBattleLevel;
+
+    const bool useServerMode = isRuntimeBattleLevel && _startInServerGameplayMode;
+    const EGameplaySpawnMode spawnMode =
+        useServerMode ? EGameplaySpawnMode::Server
+                      : EGameplaySpawnMode::LocalOnly;
+
+    if (FAILED(GAME->Change_Level(
+        ETOI(ELevelType::Loading),
+        Level_Loading::Create(_device, _context, startLevelID, loadSharedResources, spawnMode))))
+    {
         return E_FAIL;
+    }
 
     return S_OK;
 }
 
-unique_ptr<MainApp> MainApp::Create()
+
+unique_ptr<MainApp> MainApp::Create(bool startInServerGameplayMode)
 {
-    auto instance = make_unique<MainApp>();
+    auto instance = make_unique<MainApp>(startInServerGameplayMode);
 
     if (FAILED(instance->Initialize()))
     {

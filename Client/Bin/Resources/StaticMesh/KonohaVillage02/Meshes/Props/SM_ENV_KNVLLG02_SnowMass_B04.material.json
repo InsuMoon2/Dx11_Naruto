@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "M_ENV_KNVLLG02_Mass_Snow",
+      "material_instance_guid": "154a070d-c4dc-4590-a4e3-fcc518d6e71d"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

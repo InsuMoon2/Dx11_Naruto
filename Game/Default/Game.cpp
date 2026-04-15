@@ -35,6 +35,7 @@ struct LaunchParams
     int32 windowY = CW_USEDEFAULT;
     int32 windowWidth = g_winSizeX;
     int32 windowHeight = g_winSizeY;
+    bool launchWithoutEditor = false;
 };
 
 LaunchParams ParseCommandLine(LPWSTR lpCmdLine)
@@ -66,6 +67,9 @@ LaunchParams ParseCommandLine(LPWSTR lpCmdLine)
     size_t heightPos = cmdLine.find(L"--height");
     if (heightPos != wstring::npos)
         params.windowHeight = _wtoi(cmdLine.c_str() + heightPos + 8);
+
+    // --no-editor
+    params.launchWithoutEditor = (cmdLine.find(L"--no-editor") != wstring::npos);
 
     return params;
 }
@@ -114,7 +118,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
     MSG msg;
 
-    mainApp = MainApp::Create();
+    mainApp = MainApp::Create(params.launchWithoutEditor);
     CHECK_NULL(mainApp, FALSE);
     g_engineInitialized = true;
 

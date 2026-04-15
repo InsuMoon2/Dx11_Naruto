@@ -20,7 +20,10 @@ void ANS_ComboWindow::On_Begin(const FAnimNotifyContext& context)
     auto* owner = context.owner;
     CHECK_NULL(owner);
 
+    // 원격 플레이어 예외처리
+
     auto psm = owner->Get_Component<PlayerStateMachine>();
+    CHECK_NULL(psm);
 
     // 공격 상태인지 확인
     auto currentId = psm->Get_CurrentStateID();
@@ -64,6 +67,7 @@ void ANS_ComboWindow::On_End(const FAnimNotifyContext& context)
     CHECK_NULL(owner);
 
     auto psm = owner->Get_Component<PlayerStateMachine>();
+    CHECK_NULL(psm);
 
     auto currentId = psm->Get_CurrentStateID();
 

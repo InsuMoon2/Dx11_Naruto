@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "name": "MI_ENV_KNVLLG02_RockWall_AGGREGATION_01",
+  "profile": "flat_color_normal",
+  "parent": "M_ENV_FlatColorNormal",
+  "base_color_factor": [
+    0.5171512500000001,
+    0.544663,
+    0.5771,
+    1.0
+  ],
+  "shadow_color": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "normal_strength": 3.0,
+  "blend_mode": 0,
+  "textures": [],
+  "source": {
+    "fmodel_mi_json": "MI_ENV_KNVLLG02_RockWall_AGGREGATION_01.props.txt"
+  }
+}

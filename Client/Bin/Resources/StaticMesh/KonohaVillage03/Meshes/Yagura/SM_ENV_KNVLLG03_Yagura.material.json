@@ -3,7 +3,7 @@
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG03_WoodPlain_Natural_Lighter",
-      "textures": []
+      "material_instance_guid": "6d3a27ed-c779-422c-971d-7b99f845399d"
     },
     {
       "material_name": "MI_ENV_LKNVLD_WoodPlain_Brown_A",
@@ -15,11 +15,11 @@
     },
     {
       "material_name": "MI_ENV_KNVLLG03_WireMesh_B",
-      "textures": []
+      "material_instance_guid": "69379eb0-ba7e-4a40-a0f8-6573b2ad9ba5"
     },
     {
       "material_name": "MI_ENV_KNVLLG03_WoodBoard_Natural_Lighter",
-      "textures": []
+      "material_instance_guid": "da9cc8a2-6574-4a6c-aa4a-b2e92bdf6fc2"
     },
     {
       "material_name": "Material_5",
