@@ -148,7 +148,10 @@ void SkillObject::Sync_AttachedTransform(const Matrix& boneWorldMatrix)
 
         _transformCom->Set_WorldPosition(worldPos + worldOffset);
         _transformCom->Set_WorldRotation(worldQuat);
+        return;
     }
+
+    _transformCom->Set_WorldPosition(tempMatrix.Translation() + _attachOffset);
 }
 
 Shared<GameObject> SkillObject::Spawn_Effect_Once(const string& effectAssetName, const Vec3& worldPosition,

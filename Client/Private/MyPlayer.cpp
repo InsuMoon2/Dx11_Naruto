@@ -92,14 +92,16 @@ void MyPlayer::Priority_Update(float timeDelta)
 
     if (_playerController)
         _playerController->Update(timeDelta);
-
-    if (_skill)
-        _skill->Update(timeDelta);
 }
 
 void MyPlayer::Update(float timeDelta)
 {
     Player::Update(timeDelta);
+
+    // 장착형 스킬은 플레이어 모델의 최신 본 행렬을 사용해야 해서,
+    // 애니메이션이 갱신된 뒤에 follow 업데이트를 수행한다.
+    if (_skill)
+        _skill->Update(timeDelta);
 
     Update_Combo(timeDelta);
 }

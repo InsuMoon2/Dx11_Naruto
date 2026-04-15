@@ -81,6 +81,8 @@ public:
 public:
     void Init(HWND hwnd);
     void Update(float timeDelta);
+    // 에디터 Play/Stop 전환처럼 세션 경계를 넘길 때 키/마우스 상태를 초기화한다.
+    void Reset();
 
     // 누르고 있을 때
     bool KeyPress(KEY_TYPE key) { return GetState(key) == KEY_STATE::PRESS; }

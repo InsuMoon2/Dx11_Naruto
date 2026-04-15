@@ -290,7 +290,7 @@ void Prefab_View::Pre_Render()
     _prevRT->Clear(Color(0.15f, 0.15f, 0.15f, 1.f));
 
     _prevRT->BindAsTarget();
-    GAME->Draw(false, true);
+    GAME->Draw(false, false);
     _prevRT->BindAsTarget();
 
     Draw_PreviewGrid();

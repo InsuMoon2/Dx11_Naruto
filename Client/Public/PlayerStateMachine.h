@@ -113,6 +113,8 @@ public:
     bool Is_ForceGroundAttack() const    { return _forceGroundAttack; }
 
 private:
+    void                        Register_DefaultStates();
+
     bool                        Check_Global_Transitions();
 
     bool                        Check_Skill_Input();

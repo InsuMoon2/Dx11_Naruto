@@ -16,11 +16,6 @@ Collider::Collider(ComPtr<Device> device, ComPtr<DeviceContext> context)
 Collider::Collider(const Collider& rhs)
     : Component(rhs)
     , _shape(rhs._shape)
-#ifdef _DEBUG
-    , _batch(rhs._batch)
-    , _effect(rhs._effect)
-    , _inputLayout(rhs._inputLayout)
-#endif
 {
 }
 
@@ -29,24 +24,7 @@ HRESULT Collider::Initialize_Prototype(EShape shape)
     _shape = shape;
 
 #ifdef _DEBUG
-    _batch = make_shared<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>(_context.Get());
-    _effect = make_shared<DirectX::BasicEffect>(_device.Get());
-    _effect->SetVertexColorEnabled(true);
-
-    const void* pShaderByteCode = nullptr;
-    size_t iShaderByteCodeLength = 0;
-    _effect->GetVertexShaderBytecode(&pShaderByteCode, &iShaderByteCodeLength);
-
-    if (FAILED(_device->CreateInputLayout(
-        DirectX::VertexPositionColor::InputElements,       
-        DirectX::VertexPositionColor::InputElementCount,   
-        pShaderByteCode,
-        iShaderByteCodeLength,
-        &_inputLayout)))
-    {
-
-        return E_FAIL;
-    }
+    CHECK_FAILED(Ready_DebugRenderResources(), E_FAIL);
 #endif
 
     return S_OK;
@@ -55,6 +33,14 @@ HRESULT Collider::Initialize_Prototype(EShape shape)
 HRESULT Collider::Initialize(void* arg)
 {
     if (!arg) return E_FAIL;
+
+#ifdef _DEBUG
+    /* clone된 Collider도 prototype과 디버그 렌더 자원을 공유하지 않도록 초기화 시점에 별도 생성한다. */
+    if (!_batch || !_effect || !_inputLayout)
+    {
+        CHECK_FAILED(Ready_DebugRenderResources(), E_FAIL);
+    }
+#endif
 
     switch (_shape)
     {
@@ -77,6 +63,36 @@ HRESULT Collider::Initialize(void* arg)
 
     return S_OK;
 }
+
+#ifdef _DEBUG
+HRESULT Collider::Ready_DebugRenderResources()
+{
+    _batch = make_shared<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>(_context.Get());
+    _effect = make_shared<DirectX::BasicEffect>(_device.Get());
+    CHECK_NULL(_batch, E_FAIL);
+    CHECK_NULL(_effect, E_FAIL);
+
+    _effect->SetVertexColorEnabled(true);
+
+    const void* pShaderByteCode = nullptr;
+    size_t iShaderByteCodeLength = 0;
+    _effect->GetVertexShaderBytecode(&pShaderByteCode, &iShaderByteCodeLength);
+
+    _inputLayout.Reset();
+
+    if (FAILED(_device->CreateInputLayout(
+        DirectX::VertexPositionColor::InputElements,
+        DirectX::VertexPositionColor::InputElementCount,
+        pShaderByteCode,
+        iShaderByteCodeLength,
+        &_inputLayout)))
+    {
+        return E_FAIL;
+    }
+
+    return S_OK;
+}
+#endif
 
 
 void Collider::Update_Collider(const Matrix& worldMatrix)
@@ -337,9 +353,16 @@ HRESULT Collider::Render_Debug()
     if (!_bounding)
         return S_OK;
 
+    if (!_effect || !_batch || !_inputLayout)
+        return S_OK;
+
     _effect->SetWorld(Matrix::Identity);
-    _effect->SetView(*GAME->Get_Transform(ETransformState::View));
-    _effect->SetProjection(*GAME->Get_Transform(ETransformState::Proj));
+
+    const Matrix view = *GAME->Get_Transform(ETransformState::View);
+    const Matrix proj = *GAME->Get_Transform(ETransformState::Proj);
+
+    _effect->SetView(view);
+    _effect->SetProjection(proj);
 
     _context->IASetInputLayout(_inputLayout.Get());
     _effect->Apply(_context.Get());

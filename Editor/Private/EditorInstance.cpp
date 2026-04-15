@@ -79,6 +79,9 @@ void EditorInstance::Release()
 void EditorInstance::Play()
 {
     _pausedPreviousCamera.reset();
+    GAME->Stop_Cinematic();
+    GAME->Set_GameInputEnabled(true);
+    INPUT->Reset();
     _playerSessionManager->Begin_PlaySession();
 
     GAME->Set_GameState(EGameState::Play);
@@ -123,6 +126,9 @@ void EditorInstance::Pause()
 void EditorInstance::Stop()
 {
     _pausedPreviousCamera.reset();
+    GAME->Stop_Cinematic();
+    GAME->Set_GameInputEnabled(true);
+    INPUT->Reset();
     GAME->Set_GameState(EGameState::Edit);
 
     _playerSessionManager->End_PlaySession();
@@ -157,6 +163,8 @@ void EditorInstance::Stop()
 
 void EditorInstance::Resume()
 {
+    GAME->Set_GameInputEnabled(true);
+    INPUT->Reset();
     GAME->Set_GameState(EGameState::Play);
     ImGui::SetWindowFocus("Game");
 

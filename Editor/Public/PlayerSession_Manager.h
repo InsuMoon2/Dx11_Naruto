@@ -49,9 +49,10 @@ private:
 private:
     json                        _sceneSnapshot;
     bool                        _hasSnapShot = false;
+
     // Play 진입 시점에 이미 존재하던 오브젝트 GUID 집합이다.
     // Stop 시 이 집합에 없는 오브젝트만 런타임 생성 대상으로 본다.
-    unordered_set<string>       _playSessionObjectGuids;
+    uset<string>       _playSessionObjectGuids;
 
 public:
     static Unique<PlayerSession_Manager> Create();

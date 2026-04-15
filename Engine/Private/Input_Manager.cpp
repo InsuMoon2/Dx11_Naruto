@@ -101,6 +101,27 @@ void Input_Manager::Update(float timeDleta)
     //LOG_INFO("Wheel Detal Test : {}", _mouseWheelDelta);
 }
 
+void Input_Manager::Reset()
+{
+    for (uint32 key = 0; key < KEY_TYPE_COUNT; ++key)
+        _states[key] = KEY_STATE::NONE;
+
+    _mouseDelta = Vec2::Zero;
+    _mouseWheelDelta = 0.f;
+
+    if (_hwnd)
+    {
+        POINT currentPos;
+        ::GetCursorPos(&currentPos);
+        ::ScreenToClient(_hwnd, &currentPos);
+        _mousePos = currentPos;
+    }
+    else
+    {
+        _mousePos = {};
+    }
+}
+
 void Input_Manager::LockMouse()
 {
     if (_mouseLocked)

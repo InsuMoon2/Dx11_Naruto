@@ -51,8 +51,8 @@ HRESULT Weapon::Initialize(void* arg)
     }
 
     Set_SwordTrailLocalPoints(
-    Vec3(0.f, 0.f, 0.f),
-    Vec3(0.f, 20000.f, 0.f));
+        Vec3(0.f, 0.f, 0.f),
+        Vec3(0.f, 20000.f, 0.f));
 
     return S_OK;
 }

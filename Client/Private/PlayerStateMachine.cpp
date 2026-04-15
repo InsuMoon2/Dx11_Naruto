@@ -52,17 +52,15 @@ PlayerStateMachine::PlayerStateMachine(ComPtr<Device> device, ComPtr<DeviceConte
 PlayerStateMachine::PlayerStateMachine(const PlayerStateMachine& rhs)
     : Component(rhs)
 {
-    _states = rhs._states;
-
     _currentState = nullptr;
     _currentStateID = EPlayerState::END;
     _prevStateID = EPlayerState::END;
 }
 
-
-HRESULT PlayerStateMachine::Initialize_Prototype()
+void PlayerStateMachine::Register_DefaultStates()
 {
-    Component::Initialize_Prototype();
+    if (!_states.empty())
+        return;
 
     Register_State(EPlayerState::Idle, PlayerState_Idle::Create());
     Register_State(EPlayerState::Wall_Idle, PlayerState_Wall_Idle::Create());
@@ -86,6 +84,13 @@ HRESULT PlayerStateMachine::Initialize_Prototype()
 
     Register_State(EPlayerState::WireDash, PlayerState_WireDash::Create());
     Register_State(EPlayerState::AirApproach, PlayerState_AirApproach::Create());
+}
+
+
+HRESULT PlayerStateMachine::Initialize_Prototype()
+{
+    Component::Initialize_Prototype();
+    Register_DefaultStates();
 
     return S_OK;
 }
@@ -93,6 +98,7 @@ HRESULT PlayerStateMachine::Initialize_Prototype()
 HRESULT PlayerStateMachine::Initialize(void* arg)
 {
     Component::Initialize(arg);
+    Register_DefaultStates();
 
     return S_OK;
 }
@@ -470,7 +476,7 @@ void PlayerStateMachine::Change_State(EPlayerState newState)
     if (_currentState)
     {
         // 새로 바뀔 상태가 스킬이 아니라면, 장착한 스킬 파괴
-         if (!dynamic_pointer_cast<PlayerState_Skill>(_currentState))
+        if (!dynamic_pointer_cast<PlayerState_Skill>(_currentState))
         {
             auto skillCom = Get_Owner()->Get_Component<SkillComponent>();
             if (skillCom)

@@ -34,7 +34,11 @@ HRESULT BehaviorTree::Initialize_Prototype()
 
 HRESULT BehaviorTree::Initialize(void* arg)
 {
-    _blackboard = Blackboard::Create();
+    if (!_blackboard)
+        _blackboard = Blackboard::Create();
+
+    if (_rootNode && _blackboard)
+        _rootNode->Set_Blackboard(_blackboard);
 
 
     return S_OK;
@@ -293,16 +297,13 @@ Shared<BehaviorTree> BehaviorTree::Create(ComPtr<Device> device, ComPtr<DeviceCo
 
 Shared<Component> BehaviorTree::Clone(void* arg)
 {
-    // 기본 복사 생성자 호출
     auto instance = make_shared<BehaviorTree>(*this);
 
     if (_rootNode)
     {
-        // 트리를 통째로 복제하여 교체
         instance->Set_RootNode(_rootNode->Clone());
     }
 
-    // 새로운 블랙보드 생성 후 세팅
     instance->_blackboard = Blackboard::Create();
 
     if (instance->_rootNode)

@@ -37,6 +37,7 @@ public:
     virtual HRESULT Initialize(void* arg) override;
     virtual void    Update(float timeDelta) override;
     virtual void    Late_Update(float timeDelta) override;
+    bool            Should_ExcludeFromEditorSnapshot() const override { return true; }
     
     virtual HRESULT Render() override { return S_OK; }
 
