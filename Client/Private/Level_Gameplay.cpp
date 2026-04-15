@@ -232,7 +232,7 @@ HRESULT Level_Gameplay::Ready_GroundColliison()
     const Matrix preTransform = Build_CollisionModelPreTransform();
 
     _groundCollisionModels.clear();
-    _wallCollisionModels.clear();
+    _wallCollisionProxies.clear();
 
     for (const auto& entry : fs::recursive_directory_iterator(colDir))
     {
@@ -275,7 +275,7 @@ HRESULT Level_Gameplay::Ready_GroundColliison()
 
     LOG_INFO("[Level_Gameplay] Ground COL = {}, Wall COL = {}",
         _groundCollisionModels.size(),
-        _wallCollisionModels.size());
+        _wallCollisionProxies.size());
 
     return S_OK;
 }
@@ -288,6 +288,59 @@ Matrix Level_Gameplay::Build_CollisionModelPreTransform()
     Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
 
     return scaleMatrix * rotationMatrix;
+}
+
+bool Level_Gameplay::Try_BuildWallProxyFromActorBounds(
+    const BoundingBox& localBounds,
+    const Matrix& worldMatrix,
+    MovementComponent::FWallCollisionProxy& outProxy)
+{
+    Vec3 scale = Vec3::One;
+    Quat rotation = Quat::Identity;
+    Vec3 translation = Vec3::Zero;
+
+    Matrix tempMat = worldMatrix;
+    if (!tempMat.Decompose(scale, rotation, translation))
+        return false;
+
+    const Vec3 absScale(fabsf(scale.x), fabsf(scale.y), fabsf(scale.z));
+    Vec3 extents = localBounds.Extents * absScale;
+    extents *= 1.10f;
+
+    extents.x = max(extents.x, 0.50f);
+    extents.y = max(extents.y, 0.90f);
+    extents.z = max(extents.z, 0.50f);
+
+    XMFLOAT4 orientation(rotation.x, rotation.y, rotation.z, rotation.w);
+
+    BoundingOrientedBox worldObb(
+        Vec3::Transform(localBounds.Center, worldMatrix),
+        extents,
+        orientation);
+
+    XMFLOAT3 corners[BoundingOrientedBox::CORNER_COUNT]{};
+    worldObb.GetCorners(corners);
+
+    Vec3 minPos(FLT_MAX, FLT_MAX, FLT_MAX);
+    Vec3 maxPos(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
+    for (const auto& corner : corners)
+    {
+        minPos.x = min(minPos.x, corner.x);
+        minPos.y = min(minPos.y, corner.y);
+        minPos.z = min(minPos.z, corner.z);
+
+        maxPos.x = max(maxPos.x, corner.x);
+        maxPos.y = max(maxPos.y, corner.y);
+        maxPos.z = max(maxPos.z, corner.z);
+    }
+
+    outProxy.worldObb = worldObb;
+    outProxy.worldBounds.Center = (minPos + maxPos) * 0.5f;
+    outProxy.worldBounds.Extents = (maxPos - minPos) * 0.5f;
+    outProxy.hasWorldBounds = true;
+
+    return true;
 }
 
 void Level_Gameplay::Spawn_LocalPlayer()
@@ -352,9 +405,9 @@ void Level_Gameplay::On_PlayerObjectSpawned(Shared<GameObject> obj)
         moveCom->Set_GroundCollisionModels(_groundCollisionModels);
     }
 
-    if (!_wallCollisionModels.empty())
+    if (!_wallCollisionProxies.empty())
     {
-        moveCom->Set_WallCollisionModels(_wallCollisionModels);
+        moveCom->Set_WallCollisionProxies(_wallCollisionProxies);
     }
 
 }
@@ -534,7 +587,7 @@ bool Level_Gameplay::Try_BuildWorldBoundsFromModel(Shared<Model> model, const Ma
 
 HRESULT Level_Gameplay::Rebuild_WallCollisionFromPlacedMeshes()
 {
-    _wallCollisionModels.clear();
+    _wallCollisionProxies.clear();
 
     vector<wstring> layerTags =
     {
@@ -545,7 +598,7 @@ HRESULT Level_Gameplay::Rebuild_WallCollisionFromPlacedMeshes()
     CHECK_FAILED(Collect_WallCollisionCandidatesFromLayers(layerTags), E_FAIL);
 
     LOG_INFO("[Level_GamePlay] Wall collision rebuilt from placed meshes = {}",
-        _wallCollisionModels.size());
+        _wallCollisionProxies.size());
 
     return S_OK;
 }
@@ -574,14 +627,14 @@ HRESULT Level_Gameplay::Collect_WallCollisionCandidatesFromLayers(const vector<w
             if (!actor)
                 continue;
 
-            CHECK_FAILED(Append_WallCollisionInstanceFromActor(actor), E_FAIL);
+            CHECK_FAILED(Append_WallCollisionProxyFromActor(actor), E_FAIL);
         }
     }
 
     return S_OK;
 }
 
-HRESULT Level_Gameplay::Append_WallCollisionInstanceFromActor(Shared<StaticMeshActor> actor)
+HRESULT Level_Gameplay::Append_WallCollisionProxyFromActor(Shared<StaticMeshActor> actor)
 {
     if (!actor)
         return S_OK;
@@ -610,19 +663,23 @@ HRESULT Level_Gameplay::Append_WallCollisionInstanceFromActor(Shared<StaticMeshA
     if (!collisionModel)
         return S_OK;
 
-    MovementComponent::FCollisionModelInstance collision{};
-    collision.model = collisionModel;
-    collision.worldMatrix = transform->Get_WorldMatrix();
-    collision.hasWorldBounds =
-        Try_BuildWorldBoundsFromModel(collisionModel, collision.worldMatrix, collision.worldBounds);
-
-    if (!collision.hasWorldBounds)
+    BoundingBox localBounds{};
+    if (!Try_BuildWorldBoundsFromModel(collisionModel, Matrix::Identity, localBounds))
         return S_OK;
 
-    if (!Is_WallCollisionSizeCandidate(collision.worldBounds))
+    MovementComponent::FWallCollisionProxy proxy{};
+    if (!Try_BuildWallProxyFromActorBounds(localBounds, transform->Get_WorldMatrix(), proxy))
         return S_OK;
 
-    _wallCollisionModels.push_back(collision);
+    if (!Is_WallCollisionSizeCandidate(proxy.worldBounds))
+        return S_OK;
+
+    proxy.refineModel = collisionModel;
+    proxy.refineWorldMatrix = transform->Get_WorldMatrix();
+    proxy.hasRefineModel = true;
+    proxy.debugName = candidateName;
+
+    _wallCollisionProxies.push_back(proxy);
 
     return S_OK;
 }
@@ -656,7 +713,6 @@ Shared<Model> Level_Gameplay::Get_OrCreateWallCollisionModel(const string& model
 
 void Level_Gameplay::Draw_StaticMeshRender()
 {
-    // 플레이어 위치 기준으로 짤라보기
     if (INPUT->KeyDown(KEY_TYPE::F3))
     {
         _showCollisionDebug = !_showCollisionDebug;
@@ -664,7 +720,7 @@ void Level_Gameplay::Draw_StaticMeshRender()
 
     if (_showCollisionDebug)
     {
-        const uint32 levelIndex = ETOI(ELevelType::Konoha);
+        const uint32 levelIndex = ETOI(ELevelType::GamePlay);
 
         Vec3 debugCenter = Vec3::Zero;
         bool hasDebugCenter = false;
@@ -734,32 +790,41 @@ void Level_Gameplay::Draw_StaticMeshRender()
                 break;
         }
 
-        for (const auto& collision : _wallCollisionModels)
+        for (const auto& proxy : _wallCollisionProxies)
         {
-            if (!collision.model)
+            if (!proxy.hasWorldBounds)
                 continue;
 
-            if (hasDebugCenter && collision.hasWorldBounds)
+            if (hasDebugCenter)
             {
-                const Vec3 toCenter = collision.worldBounds.Center - debugCenter;
+                const Vec3 toCenter = proxy.worldBounds.Center - debugCenter;
                 if (toCenter.LengthSquared() > debugRadiusSq)
                     continue;
             }
 
-            FDebugMeshDesc desc{};
-            desc.model = collision.model;
-            desc.worldMatrix = collision.worldMatrix;
-            desc.style.color = Color(1.f, 0.5f, 0.f, 1.f);
-
-            desc.style.duration = 0.f;
-
-            GAME->Draw_DebugMesh(desc);
+            Draw_WallCollisionProxyDebug(proxy);
 
             ++wallDrawCount;
             if (wallDrawCount >= maxWallDrawCount)
                 break;
         }
     }
+}
+
+void Level_Gameplay::Draw_WallCollisionProxyDebug(const MovementComponent::FWallCollisionProxy& proxy)
+{
+    FDebugBoxDesc desc{};
+    desc.center = proxy.worldObb.Center;
+    desc.extents = proxy.worldObb.Extents;
+    desc.rotation = Quat(
+        proxy.worldObb.Orientation.x,
+        proxy.worldObb.Orientation.y,
+        proxy.worldObb.Orientation.z,
+        proxy.worldObb.Orientation.w);
+    desc.style.color = Color(1.f, 0.5f, 0.f, 1.f);
+    desc.style.duration = 0.f;
+
+    GAME->Draw_DebugBox(desc);
 }
 
 shared_ptr<Level_Gameplay> Level_Gameplay::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode)

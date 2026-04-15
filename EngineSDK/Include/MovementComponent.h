@@ -28,6 +28,21 @@ public:
         bool hasWorldBounds = false;
     };
 
+    struct FWallCollisionProxy
+    {
+        BoundingOrientedBox worldObb{};
+
+        BoundingBox worldBounds{};
+
+        bool hasWorldBounds = false;
+        Shared<Model> refineModel = nullptr;
+
+        Matrix refineWorldMatrix = Matrix::Identity;
+        bool hasRefineModel = false;
+
+        string debugName;
+    };
+
     struct FSurfaceHit
     {
         Shared<Model> hitModel; // 어떤 CollisionModel에 맞았는지.
@@ -136,6 +151,7 @@ public:
     bool Is_WallRunning() const { return _isWallRunning; }
     void Start_WallJump();
     void Set_WallCollisionModels(const vector<FCollisionModelInstance>& models) { _wallCollisionModels = models; }
+    void Set_WallCollisionProxies(const vector<FWallCollisionProxy>& proxies) { _wallCollisionProxies = proxies; }
     Vec3 Get_currentWallNormal() const { return _currentWallNormal; }
 
     void Set_Velocity(Vec3 velocity);
@@ -169,6 +185,9 @@ private: /* 벽타기 */
     Vec3 Build_WallRunMoveDirection() const;
     bool Detect_GroundSurface(const Vec3& currentPos, FSurfaceHit& outHit) const;
     bool Detect_WallSurface(const Vec3& currentPos, const Vec3& castDir, FSurfaceHit& outHit) const;
+    bool Build_WallHitFromProxy(const FWallCollisionProxy& proxy, const Ray& wallRay, float obbHitDistance, FSurfaceHit& outHit) const;
+    bool Try_RefineWallHitWithModel(const FWallCollisionProxy& proxy, const Ray& wallRay, FSurfaceHit& inOutHit) const;
+    Vec3 Compute_WallNormalFromObb(const FWallCollisionProxy& proxy, const Vec3& hitPoint) const;
 
     bool Can_EnterWallRun(const FSurfaceHit& wallHit, const Vec3& desiredMoveDir) const;
 
@@ -209,6 +228,8 @@ private:
 
     // 벽 감지/벽타기에 사용하는 충돌
     vector<FCollisionModelInstance> _wallCollisionModels;
+
+    vector<FWallCollisionProxy> _wallCollisionProxies;
 
     bool    _isWallRunning = false;
 

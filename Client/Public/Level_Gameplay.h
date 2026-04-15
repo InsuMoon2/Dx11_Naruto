@@ -37,6 +37,10 @@ private:
     HRESULT         Ready_GroundColliison();
 
     static Matrix Build_CollisionModelPreTransform();
+    static bool Try_BuildWallProxyFromActorBounds(
+        const BoundingBox& localBounds,
+        const Matrix& worldMatrix,
+        MovementComponent::FWallCollisionProxy& outProxy);
 
 private:
     void            Spawn_LocalPlayer();
@@ -50,7 +54,6 @@ private:
     void            Request_EnterKonoha();
 
 private:
-    private:
     static bool             Is_WallCollisionLayerTag(const wstring& layerTag);
     static bool             Is_WallCollisionNameCandidate(const string& candidateName);
     static bool             Is_WallCollisionSizeCandidate(const BoundingBox& bounds);
@@ -62,10 +65,11 @@ private:
 
     HRESULT                 Rebuild_WallCollisionFromPlacedMeshes();
     HRESULT                 Collect_WallCollisionCandidatesFromLayers(const vector<wstring>& layerTags);
-    HRESULT                 Append_WallCollisionInstanceFromActor(Shared<StaticMeshActor> actor);
+    HRESULT                 Append_WallCollisionProxyFromActor(Shared<StaticMeshActor> actor);
     Shared<Model>           Get_OrCreateWallCollisionModel(const string& modelGuid, const string& resolvedPath);
 
     void                    Draw_StaticMeshRender();
+    void                    Draw_WallCollisionProxyDebug(const MovementComponent::FWallCollisionProxy& proxy);
     
 private:
     Shared<UI_PlayerHUD> _playerHUD;
@@ -76,11 +80,11 @@ private:
     bool                _enterGameSent = false;
 
     vector<MovementComponent::FCollisionModelInstance> _groundCollisionModels;
-    vector<MovementComponent::FCollisionModelInstance> _wallCollisionModels;
 
     bool            _konohaTransitionRequested = false;
 
     umap<string, Shared<Model>> _wallCollisionModelCache;
+    vector<MovementComponent::FWallCollisionProxy> _wallCollisionProxies;
 
     bool _showCollisionDebug = false;
 

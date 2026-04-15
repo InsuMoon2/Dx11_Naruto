@@ -62,6 +62,7 @@ private:
 
     HRESULT                 Collect_WallCollisionCandidatesFromLayers(const vector<wstring>& layerTags);
 
+
 private:
     void                    Draw_StaticMeshRender();
 
@@ -72,7 +73,7 @@ private:
 
     // 서버에서 로컬 몬스터 제거하게
     void                    Remove_LocalMonsters_ForServerMode();
-    
+
 private:
     Shared<UI_PlayerHUD> _playerHUD;
 
@@ -86,7 +87,8 @@ private:
 
     umap<string, Shared<Model>> _wallCollisionModelCache;
 
-     bool               _showCollisionDebug = false;
+    bool               _showCollisionDebug = false;
+
 
 public:
     static Shared<Level_Konoha> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode);
