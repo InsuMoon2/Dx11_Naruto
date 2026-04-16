@@ -65,7 +65,8 @@ struct PS_IN
 
 struct PS_OUT
 {
-    vector vColor : SV_TARGET0;
+    vector vDiffuse : SV_TARGET0;
+    vector vNormal  : SV_TARGET1;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -77,20 +78,8 @@ PS_OUT PS_MAIN(PS_IN In)
     if (vMtrlDiffuse.a < 0.3f)
         discard;
 
-    vector vShade = saturate(
-        max(dot(normalize(g_LightDir) * -1.f, In.vNormal), 0.f) +
-        (g_LightAmbient * g_MtrlAmbient));
-
-    vector vLook = In.vWorldPos - g_CamPosition;
-    vector vReflect = reflect(normalize(g_LightDir), In.vNormal);
-
-    float fSpecular = pow(
-        max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f),
-        50.f);
-
-    vector vSpecularColor = g_LightSpecular * g_MtrlSpecular * fSpecular;
-
-    Out.vColor = g_LightDiffuse * vMtrlDiffuse * vShade + vSpecularColor;
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(normalize(In.vNormal.xyz) * 0.5f + 0.5f, 0.f);
 
     return Out;
 }

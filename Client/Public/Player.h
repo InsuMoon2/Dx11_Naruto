@@ -37,8 +37,8 @@ public:
 
     void    TakeDamage(const FDamageEvent& damageEvent) override;
 
-	void OnDamaged(const FDamageEvent& damageEvent) override;
-	void OnDead(const FDamageEvent& damageEvent) override;
+	void    OnDamaged(const FDamageEvent& damageEvent) override;
+	void    OnDead(const FDamageEvent& damageEvent) override;
 
 public: /* Network */
     uint64  Get_NetworkId() const { return _networkId; }
@@ -53,7 +53,6 @@ public:
 protected:
     HRESULT Ready_Components() override;
     HRESULT Bind_ShaderResources() override;
-    HRESULT Bind_Lights() override;
 
     virtual HRESULT Ready_PartObjects();
 

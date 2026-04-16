@@ -8,7 +8,7 @@ namespace Engine
 
     enum class EObjectType { GameObject, Component };
 
-    enum class ERenderGroup { BackgroundUI, Priority, NonBlend, Blend, UI, END };
+    enum class ERenderGroup { BackgroundUI, Priority, NonLight, NonBlend, Blend, UI, END };
 
     enum class EGameState { Edit, Play, Pause, END };
 
@@ -23,6 +23,8 @@ namespace Engine
     enum class ELightType { Directional, Point, END };
 
     enum class EMoveInputDirection { Forward, Backward, Left, Right, END };
+
+    enum class EDeferred { Debug, Directinal, Point, Combined, End };
 
     enum class EUILayer
     {
@@ -70,6 +72,14 @@ namespace Engine
 
     // 충돌 종류
     enum class EShape { AABB, OBB, Sphere, Capsule, END };
+
+    enum class ECollisionProxyType : uint8
+    {
+        WorldBlock,
+        Walkable,
+        WallRun,
+        END
+    };
 
 }
 

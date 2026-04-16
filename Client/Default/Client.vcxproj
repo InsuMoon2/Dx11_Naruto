@@ -271,6 +271,7 @@
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\Public\Client_PacketHandler.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
+    <ClInclude Include="..\Public\CollisionProxyActor.h" />
     <ClInclude Include="..\Public\ComboProfile_Manager.h" />
     <ClInclude Include="..\Public\Customizer_Manager.h" />
     <ClInclude Include="..\Public\EquipmentComponent.h" />
@@ -426,6 +427,7 @@
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Target.cpp" />
     <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
+    <ClCompile Include="..\Private\CollisionProxyActor.cpp" />
     <ClCompile Include="..\Private\ComboProfile_Manager.cpp" />
     <ClCompile Include="..\Private\Customizer_Manager.cpp" />
     <ClCompile Include="..\Private\EquipmentComponent.cpp" />
@@ -519,6 +521,10 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\Shaders\Shader_ChakraMove.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_Deferred.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>

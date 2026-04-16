@@ -5,6 +5,8 @@
 NS_BEGIN(Engine)
 
 class Light;
+class Shader;
+class VIBuffer_Rect;
 
 class Light_Manager : public Base
 {
@@ -16,6 +18,8 @@ public:
     const FLightDesc* Get_LightDesc(uint32 index);
     HRESULT           Add_Light(const FLightDesc& desc);
     void              Clear_Lights();
+
+    HRESULT           Render_Lights(Shared<Shader> shader, Shared<VIBuffer_Rect> viBuffer);
 
 private:
     vector<Shared<Light>> _lights;

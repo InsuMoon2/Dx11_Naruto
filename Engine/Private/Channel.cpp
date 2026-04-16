@@ -127,9 +127,10 @@ void Channel::Sample_LocalPose(float trackPosition, FAnimationLocalPose& outPose
     const float delta = next.time - cur.time;
     const float ratio = (delta <= FLT_EPSILON) ? 0.f : (trackPosition - cur.time) / delta;
 
-    outPose.scale = Vec3::Lerp(cur.scale, next.scale, ratio);
-    outPose.rotation = Quat::Slerp(cur.rotation, next.rotation, ratio);
+    outPose.scale       = Vec3::Lerp(cur.scale, next.scale, ratio);
+    outPose.rotation    = Quat::Slerp(cur.rotation, next.rotation, ratio);
     outPose.translation = Vec3::Lerp(cur.translation, next.translation, ratio);
+
     outPose.valid = true;
 }
 

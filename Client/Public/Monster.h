@@ -33,8 +33,6 @@ public:
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
 
-    HRESULT Bind_Lights() override;
-
     void    OnBeginOverlap(Shared<Collider> self, Shared<Collider> other) override;
     void    TakeDamage(const FDamageEvent& damageEvent) override;
 

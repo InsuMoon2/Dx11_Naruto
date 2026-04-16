@@ -15,7 +15,7 @@ void Profiler_View::Initialize()
 {
     EditorWindow::Initialize();
 
-    Set_Active(false);
+    Set_Active(true);
 }
 
 void Profiler_View::Update(float timeDelta)

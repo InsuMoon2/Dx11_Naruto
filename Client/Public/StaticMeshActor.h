@@ -68,7 +68,7 @@ private:
     Shared<Model>           _modelCom;
     bool                    _isOutlineEnabled = false;
     Vec4                    _outlineColor = Vec4(0.1f, 1.f, 0.1f, 1.f);
-    float                   _outlineThickness = 0.015f;
+    float                   _outlineThickness = 0.0035f;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

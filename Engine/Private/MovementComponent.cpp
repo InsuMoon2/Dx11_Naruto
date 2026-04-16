@@ -360,6 +360,8 @@ void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> trans
 
 void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transform)
 {
+    const Vec3 previousPos = transform->Get_WorldPosition();
+
     transform->Add_WorldOffset(_velocity * timeDelta);
 
     Vec3 currentPos = transform->Get_WorldPosition();
@@ -390,21 +392,30 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
             _velocity.y = 0.f;
             _onGround = true;
             _canDoubleJump = false;
-            return;
         }
-
-        if (!foundGround && currentPos.y <= _moveDesc.groundY)
+        else if (!foundGround && currentPos.y <= _moveDesc.groundY)
         {
             currentPos.y = _moveDesc.groundY;
             transform->Set_WorldPosition(currentPos);
             _velocity.y = 0.f;
             _onGround = true;
             _canDoubleJump = false;
-            return;
+        }
+        else
+        {
+            _onGround = false;
         }
     }
+    else
+    {
+        _onGround = false;
+    }
 
-    _onGround = false;
+    if (!_isWallRunning && _velocity.y <= 0.f)
+    {
+        Apply_WallBlock(previousPos, transform);
+        currentPos = transform->Get_WorldPosition();
+    }
 
     Vec3 desiredDir = Build_DesiredMoveDirection();
     Vec3 horizontalVelocity = _velocity;
@@ -417,8 +428,15 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
         horizontalVelocity.Length() >= 2.0f)
     {
         FSurfaceHit wallHit{};
-        if (Detect_WallEntrySurface(currentPos, desiredDir, wallHit) &&
-            Can_EnterWallRun(wallHit, desiredDir))
+        //if (Detect_WallEntrySurface(currentPos, desiredDir, wallHit) &&
+        //    Can_EnterWallRun(wallHit, desiredDir))
+        //{
+        //    Enter_WallRun(wallHit);
+        //    Apply_WallRunPosition(transform, wallHit);
+        //    return;
+        //}
+
+        if (Detect_WallEntrySurface(currentPos, desiredDir, wallHit))
         {
             Enter_WallRun(wallHit);
             Apply_WallRunPosition(transform, wallHit);
@@ -426,7 +444,6 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
         }
     }
 }
-
 
 Vec3 MovementComponent::Build_DesiredMoveDirection() const
 {
@@ -513,10 +530,19 @@ bool MovementComponent::Detect_GroundSurface(const Vec3& currentPos, FSurfaceHit
         Vec3 hitPoint = Vec3::Zero;
         Vec3 hitNormal = Vec3::Up;
 
+        if (!collision.model)
+            continue;
+
         if (!collision.model->Raycast(downRay, collision.worldMatrix, hitDist, hitPoint, hitNormal))
             continue;
 
-        const Vec3 surfaceNormal = Utils::Safe_Normalize(hitNormal, Vec3::Up);
+        Vec3 surfaceNormal = Utils::Safe_Normalize(hitNormal, Vec3::Up);
+
+        if (surfaceNormal.Dot(Vec3::Up) < 0.f)
+        {
+            surfaceNormal = surfaceNormal * -1.f;
+        }
+
         const float upDot = surfaceNormal.Dot(Vec3::Up);
 
         if (upDot < _moveDesc.groundWalkableMinUpDot)
@@ -537,7 +563,6 @@ bool MovementComponent::Detect_GroundSurface(const Vec3& currentPos, FSurfaceHit
     outHit = bestHit;
     return bestHit.isValid;
 }
-
 
 bool MovementComponent::Detect_WallSurface(
     const Vec3& currentPos,
@@ -726,6 +751,9 @@ bool MovementComponent::Trace_WallSurface(
         Vec3 hitPoint = Vec3::Zero;
         Vec3 hitNormal = Vec3::Up;
 
+        if (!collision.model)
+            continue;
+
         if (!collision.model->Raycast(wallRay, collision.worldMatrix, hitDist, hitPoint, hitNormal))
             continue;
 
@@ -751,7 +779,6 @@ bool MovementComponent::Trace_WallSurface(
     return bestHit.isValid;
 }
 
-
 Vec3 MovementComponent::Rotate_HorizontalDirection(const Vec3& dir, float degrees)
 {
     Vec3 horizontalDir = dir;
@@ -763,6 +790,36 @@ Vec3 MovementComponent::Rotate_HorizontalDirection(const Vec3& dir, float degree
     rotatedDir.y = 0.f;
 
     return Utils::Safe_Normalize(rotatedDir, horizontalDir);
+}
+
+void MovementComponent::Apply_WallBlock(const Vec3& previousPos, Shared<Transform> transform)
+{
+     if (!transform)
+        return;
+
+    Vec3 currentPos = transform->Get_WorldPosition();
+    Vec3 moveDelta = currentPos - previousPos;
+    moveDelta.y = 0.f;
+
+    if (moveDelta.LengthSquared() <= FLT_EPSILON)
+        return;
+
+    Vec3 moveDir = Utils::Safe_Normalize(moveDelta, Vec3::Forward);
+
+    FSurfaceHit wallHit{};
+    if (!Detect_WallSurface(previousPos, moveDir, wallHit))
+        return;
+
+    // 벽 쪽으로 실제로 파고드는 이동일 때만 막는다.
+    const float intoWall = moveDelta.Dot(-wallHit.hitNormal);
+    if (intoWall <= 0.f)
+        return;
+
+    Vec3 correctedDelta = moveDelta - (-wallHit.hitNormal) * intoWall;
+    Vec3 correctedPos = previousPos + correctedDelta;
+    correctedPos.y = currentPos.y;
+
+    transform->Set_WorldPosition(correctedPos);
 }
 
 Shared<MovementComponent> MovementComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

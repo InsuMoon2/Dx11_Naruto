@@ -70,7 +70,8 @@ struct PS_IN
 
 struct PS_OUT
 {
-    vector vColor : SV_TARGET0;
+    vector vDiffuse : SV_TARGET0;
+    vector vNormal  : SV_TARGET1;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -80,21 +81,10 @@ PS_OUT PS_MAIN(PS_IN In)
     vector mtrlDiffuse = g_BaseColorFactor;
 
     if (g_HasDiffuseTexture != 0)
-    {
         mtrlDiffuse *= g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    }
 
-    vector shade = saturate(
-        max(dot(normalize(g_LightDir) * -1.f, In.vNormal), 0.f) + (g_LightAmbient * g_MtrlAmbient));
-
-    vector lookDir = In.vWorldPos - g_CamPosition;
-    vector reflectDir = reflect(normalize(g_LightDir), In.vNormal);
-
-    float specular = pow(max(dot(normalize(lookDir) * -1.f, normalize(reflectDir)), 0.f), 50.f);
-    vector specularColor = g_LightSpecular * g_MtrlSpecular * specular;
-
-    Out.vColor = g_LightDiffuse * mtrlDiffuse * shade + specularColor;
-    Out.vColor.a = 1.f;
+    Out.vDiffuse = mtrlDiffuse;
+    Out.vNormal = vector(normalize(In.vNormal.xyz) * 0.5f + 0.5f, 0.f);
 
     return Out;
 }
@@ -102,11 +92,13 @@ PS_OUT PS_MAIN(PS_IN In)
 PS_OUT PS_OUTLINE(PS_IN In)
 {
     PS_OUT Out;
-    Out.vColor = g_OutlineColor;
-    Out.vColor.a = 1.f;
+
+    Out.vDiffuse = g_OutlineColor;
+    Out.vDiffuse.a = 1.f;
+    Out.vNormal = vector(0.5f, 0.5f, 1.f, 0.f);
+
     return Out;
 }
-
 
 technique11 DefaultTechnique
 {
@@ -125,7 +117,7 @@ technique11 DefaultTechnique
     {
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_CullFront);
 
         VertexShader = compile vs_5_0 VS_OUTLINE();
         GeometryShader = NULL;

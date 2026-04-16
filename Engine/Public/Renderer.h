@@ -5,6 +5,10 @@
 NS_BEGIN(Engine)
 
 class GameObject;
+class Target_Manager;
+class Shader;
+class VIBuffer_Rect;
+class Component;
 
 class Renderer : public Base
 {
@@ -20,6 +24,10 @@ public:
     void    Backup_RenderGroup();
     void    Restore_RenderGroup();
 
+#ifdef _DEBUG
+    void    Add_DebugRenderGroup(Shared<Component> debugComponent);
+#endif
+
 private:
     void    Render_BackgroundUI();
     void    Render_Priority();
@@ -27,11 +35,21 @@ private:
     void    Render_Blend();
     void    Render_UI();
 
+    void    Render_Lights();
+    void    Render_NonLight(); // 조명 ㄴㄴ
+    void    Render_Combined(); // Diffuse * Shade 최종 합성 -> 백버퍼 출력
+
     void    Apply_Default3DState();
     void    Apply_UIState();
 
+#ifdef _DEBUG
+    void    Render_Debug();
+#endif
+
+    HRESULT    Ready_RenderTarget();
+
 public:
-    int32   Get_DrawCallCount() const { return _drawCallCount; }
+    uint32  Get_DrawCallCount() const { return _drawCallCount; }
     void    Reset_DrawCallCount() { _drawCallCount = 0; }
 
 private:
@@ -46,6 +64,17 @@ private:
 
     list<shared_ptr<GameObject>> _renderObjects[ETOI(ERenderGroup::END)];
     list<shared_ptr<GameObject>> _backupRenderObjects[ETOI(ERenderGroup::END)];
+
+    Shared<Shader>          _deferredShader;
+    Shared<VIBuffer_Rect>   _viBuffer;
+
+    Matrix _worldMatrix;
+    Matrix _viewMatrix;
+    Matrix _projMatrix;
+
+#ifdef _DEBUG
+    list<shared_ptr<Component>> _debugComponents;
+#endif
 
 public:
     static unique_ptr<Renderer> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

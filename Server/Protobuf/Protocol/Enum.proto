@@ -141,6 +141,7 @@ enum OBJECT_TYPE
     // 땜빵
     OBJECT_TYPE_ATTACHED_EFFECT          = 80;
     OBJECT_TYPE_STRETCHING_MESH_EFFECT   = 81;
+    OBJECT_TYPE_COLLISION_PROXY          = 82;
 
     // UI : 100+
     OBJECT_TYPE_UI_TEXT                 = 100;

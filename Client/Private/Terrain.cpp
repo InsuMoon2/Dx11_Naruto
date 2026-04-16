@@ -90,19 +90,6 @@ HRESULT Terrain::Bind_ShaderResources()
 
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);
 
-    GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
-
-    {
-        const FLightDesc* lightDesc = GAME->Get_LightDesc(0);
-        CHECK_NULL(lightDesc, E_FAIL);
-
-        _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
-        _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Vec4));
-        _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Vec4));
-        _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Vec4));
-    }
-    
-
     return S_OK;
 }
 

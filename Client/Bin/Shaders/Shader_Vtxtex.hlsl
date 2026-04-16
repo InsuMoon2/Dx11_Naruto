@@ -32,10 +32,6 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
-/* w나누기연산을 수행한다.-> 이 연산으로 이어질수 있는 이유 -> VS_OUT구조체의 위치 -> SV_ */
-/* 뷰포트(윈도우좌표)로 변환한다. */
-/* 래스터라이즈 -> 정점 세개로 감싸진 영역의 픽셀 정보를 생성한다 */
-
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
@@ -44,10 +40,9 @@ struct PS_IN
 
 struct PS_OUT
 {
-    vector vColor : SV_TARGET0;
+    vector vColor  : SV_TARGET0;
+    vector vNormal : SV_TARGET1;
 };
-
-/* Pixel Shader -> 픽셀의 색을 결정한다. */
 
 PS_OUT PS_MAIN(PS_IN In)
 {

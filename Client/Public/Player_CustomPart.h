@@ -32,7 +32,6 @@ public:
 private:
     HRESULT Ready_Components(const wstring& modelAssetTag);
     HRESULT Bind_ShaderResources();
-    HRESULT Bind_Lights();
 
 private:
     Shared<Shader>  _shader;

@@ -251,33 +251,6 @@ HRESULT Player::Bind_ShaderResources()
     _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
     _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
 
-    GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
-    CHECK_FAILED(Bind_Lights(), E_FAIL);
-
-    return S_OK;
-}
-
-HRESULT Player::Bind_Lights()
-{
-    const FLightDesc* lightDesc = GAME->Get_LightDesc(0);
-
-    FLightDesc defaultLight;
-    if (!lightDesc)
-    {
-        defaultLight.direction = Vec4(0.f, -1.f, 1.f, 0.f);
-        defaultLight.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
-        defaultLight.ambient = Vec4(0.4f, 0.4f, 0.4f, 1.f);
-        defaultLight.specular = Vec4(1.f, 1.f, 1.f, 1.f);
-        lightDesc = &defaultLight;
-    }
-
-    CHECK_NULL(lightDesc, E_FAIL);
-
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Vec4)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Vec4)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Vec4)), E_FAIL);
-
     return S_OK;
 }
 

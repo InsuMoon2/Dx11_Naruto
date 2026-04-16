@@ -4,6 +4,9 @@
 
 NS_BEGIN(Engine)
 
+class Shader;
+class VIBuffer_Rect;
+
 class Light final : public Base
 {
 public:
@@ -12,6 +15,7 @@ public:
 
 public:
     HRESULT Initialize(const FLightDesc& desc);
+    HRESULT Render(Shared<Shader> shader, Shared<VIBuffer_Rect> viBuffer);
 
     const FLightDesc* Get_LightDesc() { return &_lightDesc; }
 

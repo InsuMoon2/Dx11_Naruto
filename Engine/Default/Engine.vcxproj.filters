@@ -316,6 +316,8 @@
     <ClInclude Include="..\Public\Particle_Point.h" />
     <ClInclude Include="..\Public\EffectBilldboardObject.h" />
     <ClInclude Include="..\Public\VIBuffer_Trail.h" />
+    <ClInclude Include="..\Public\CollisionProxy_Manager.h" />
+    <ClInclude Include="..\Public\Target_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -772,6 +774,8 @@
     <ClCompile Include="..\Private\Particle_Point.cpp" />
     <ClCompile Include="..\Private\EffectBilldboardObject.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Trail.cpp" />
+    <ClCompile Include="..\Private\CollisionProxy_Manager.cpp" />
+    <ClCompile Include="..\Private\Target_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vkpkg.json">

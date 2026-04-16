@@ -15,12 +15,11 @@
 #include "PlayerStart.h"
 #include "GameInstance.h"
 #include "Debug_Manager.h"
-#include "Particle_Point.h"
 #include "Player.h"
 #include "UI_PlayerHUD.h"
 #include "Event_Manager.h"
-#include "StaticMeshActor.h"
 #include "Layer.h"
+#include "CollisionProxyActor.h"
 
 Level_Konoha::Level_Konoha(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -40,12 +39,8 @@ HRESULT Level_Konoha::Initialize(EGameplaySpawnMode spawnMode)
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
     CHECK_FAILED(Ready_UI(), E_FAIL);
 
-    {
-        CHECK_FAILED(Ready_GroundColliison(), E_FAIL);
-        CHECK_FAILED(Rebuild_WallCollisionFromPlacedMeshes(), E_FAIL);
-        CHECK_FAILED(Rebuild_ExtraGroundCollisionFromPlacedMeshes(), E_FAIL);
-    }
-    
+    CHECK_FAILED(Ready_DefaultGroundCollision(), E_FAIL);
+    CHECK_FAILED(Rebuild_CollisionProxyCache(), E_FAIL);
 
     CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
     //CHECK_FAILED(Ready_Effect(), E_FAIL);
@@ -263,499 +258,307 @@ HRESULT Level_Konoha::Ready_UI()
     return S_OK;
 }
 
-HRESULT Level_Konoha::Append_CollisionInstancesFromDirectory(
-    const string& dirPath,
-    bool treatAsWall)
+void Level_Konoha::Build_CollisionProxyEntries(vector<FProxyEntry>& outEntries) const
 {
-    if (!fs::exists(dirPath))
-        return S_OK;
+    outEntries.clear();
+    outEntries.reserve(
+        _defaultGroundModels.size() +
+        _walkableProxyModels.size() +
+        _wallProxyModels.size() +
+        _worldBlockProxyModels.size());
+
+    const auto appendEntries =
+        [&outEntries](const vector<MovementComponent::FCollisionModelInstance>& instances, ECollisionProxyType proxyType)
+        {
+             for (const auto& instance : instances)
+             {
+                 FProxyEntry entry{};
+                 entry.instance = instance;
+                 entry.proxyType = static_cast<uint8>(proxyType);
+                 outEntries.push_back(entry);
+             }
+        };
+
+    appendEntries(_defaultGroundModels, ECollisionProxyType::Walkable);
+    appendEntries(_walkableProxyModels, ECollisionProxyType::Walkable);
+    appendEntries(_wallProxyModels, ECollisionProxyType::WallRun);
+    appendEntries(_worldBlockProxyModels, ECollisionProxyType::WorldBlock);
+}
+
+HRESULT Level_Konoha::Ready_DefaultGroundCollision()
+{
+    _defaultGroundModels.clear();
+
+    const fs::path groundDirectory =
+        L"../../Client/Bin/Resources/StaticMesh/KonohaVillage02/Meshes/Ground_Collision";
+
+    CHECK_FAILED(Append_CollisionInstancesFromDirectory(groundDirectory, _defaultGroundModels), E_FAIL);
+
+    LOG_INFO("[Level_Konoha] Default Ground = {}", _defaultGroundModels.size());
+
+    return S_OK;
+}
+
+HRESULT Level_Konoha::Append_CollisionInstancesFromDirectory(
+    const fs::path& directoryPath,
+    vector<MovementComponent::FCollisionModelInstance>& outInstances)
+{
+    if (!fs::exists(directoryPath) || !fs::is_directory(directoryPath))
+    {
+        LOG_ERROR("[Level_Konoha] Ground collision directory not found: {}", directoryPath.string());
+        return E_FAIL;
+    }
 
     const Matrix preTransform = Build_CollisionModelPreTransform();
 
-    for (const auto& entry : fs::directory_iterator(dirPath))
+    for (const auto& entry : fs::directory_iterator(directoryPath))
     {
-        if (entry.path().extension() != ".meshbin")
+        if (!entry.is_regular_file())
             continue;
 
-        const string fullPath = entry.path().string();
-        const string fileName = entry.path().filename().string();
+        const fs::path meshPath = entry.path();
+        if (Utils::ToLowerCopy(meshPath.extension().string()) != ".meshbin")
+            continue;
 
-        Shared<Model> colModel = Model::Create(
+        auto model = Model::Create(
             _device,
             _context,
             EMeshVertexType::StaticMesh,
-            fullPath,
+            meshPath.string(),
             preTransform,
             true);
 
-        if (!colModel)
+        if (!model)
+        {
+            LOG_WARN("[Level_Konoha] Failed to load default ground mesh: {}", meshPath.string());
             continue;
+        }
 
         MovementComponent::FCollisionModelInstance instance{};
-        instance.model = colModel;
+        instance.model = model;
         instance.worldMatrix = Matrix::Identity;
-        instance.hasWorldBounds =
-            Try_BuildWorldBoundsFromModel(colModel, instance.worldMatrix, instance.worldBounds);
+        instance.hasWorldBounds = Try_BuildWorldBoundsFromModel(
+            model,
+            instance.worldMatrix,
+            instance.worldBounds);
 
-        const bool isWallLike =
-            treatAsWall ||
-            fileName.find("Wall") != string::npos ||
-            fileName.find("WALL") != string::npos;
+        if (!instance.hasWorldBounds)
+        {
+            LOG_WARN("[Level_Konoha] Failed to build bounds for default ground mesh: {}", meshPath.string());
+            continue;
+        }
 
-        if (isWallLike)
-            _wallCollisionModels.push_back(instance);
-        else
-            _groundCollisionModels.push_back(instance);
+        outInstances.push_back(instance);
     }
 
     return S_OK;
 }
 
-bool Level_Konoha::Is_WallCollisionLayerTag(const wstring& layerTag)
+HRESULT Level_Konoha::Rebuild_CollisionProxyCache()
 {
-    return layerTag == TEXT("Layer_Terrain") || layerTag == TEXT("Layer_Props");
-}
+    _walkableProxyModels.clear();
+    _wallProxyModels.clear();
+    _worldBlockProxyModels.clear();
 
-bool Level_Konoha::Is_WallCollisionNameCandidate(const string& candidateName)
-{
-    const string lowered = Utils::ToLowerCopy(candidateName);
+    CHECK_FAILED(Collect_CollisionProxyActorsFromLayer(TEXT("Layer_CollisionProxy")), E_FAIL);
 
-    static const vector<string> includeKeywords =
-    {
-        "building",
-        "roof",
-        "wall",
-        "slope",
-        "house",
-        "shop",
-        "tower"
-    };
+    vector<FProxyEntry> proxyEntries;
+    Build_CollisionProxyEntries(proxyEntries);
 
-    static const vector<string> excludeKeywords =
-    {
-        "curtain",
-        "lantern",
-        "banner",
-        "tree",
-        "bush",
-        "grass",
-        "plant"
-    };
+    GAME->Ready_CollisionProxy(proxyEntries);
 
-    for (const auto& keyword : excludeKeywords)
-    {
-        if (lowered.find(keyword) != string::npos)
-            return false;
-    }
-
-    for (const auto& keyword : includeKeywords)
-    {
-        if (lowered.find(keyword) != string::npos)
-            return true;
-    }
-
-    return false;
-}
-
-bool Level_Konoha::Is_WallCollisionSizeCandidate(const BoundingBox& bounds)
-{
-    const float width = bounds.Extents.x * 2.f;
-    const float height = bounds.Extents.y * 2.f;
-    const float depth = bounds.Extents.z * 2.f;
-
-    // 너무 작은애들은 제거
-    if (height < 1.5f)
-        return false;
-
-    if (max(width, depth) < 2.0f)
-        return false;
-
-    return true;
-}
-
-HRESULT Level_Konoha::Rebuild_WallCollisionFromPlacedMeshes()
-{
-    _wallCollisionModels.clear();
-
-    vector<wstring> layerTags =
-    {
-        TEXT("Layer_Terrain"),
-        TEXT("Layer_Props")
-    };
-
-    CHECK_FAILED(Collect_WallCollisionCandidatesFromLayers(layerTags), E_FAIL);
-
-    LOG_INFO("[Level_Konoha] Wall collision rebuilt from placed meshes = {}",
-        _wallCollisionModels.size());
+    LOG_INFO("[Level_Konoha] Walkable Proxy = {}", _walkableProxyModels.size());
+    LOG_INFO("[Level_Konoha] Wall Proxy = {}", _wallProxyModels.size());
+    LOG_INFO("[Level_Konoha] WorldBlock Proxy = {}", _worldBlockProxyModels.size());
 
     return S_OK;
 }
 
-HRESULT Level_Konoha::Append_WallCollisionInstanceFromActor(Shared<StaticMeshActor> actor)
+HRESULT Level_Konoha::Collect_CollisionProxyActorsFromLayer(const wstring& layerTag)
 {
-    if (!actor)
+    const uint32 levelIndex = ETOI(ELevelType::Konoha);
+    const auto& layers = GAME->Get_Layers(levelIndex);
+
+    auto iter = layers.find(layerTag);
+    if (iter == layers.end() || !iter->second)
+        return S_OK;
+
+    const auto& objects = iter->second->Get_GameObjects();
+    for (const auto& obj : objects)
+    {
+        auto proxyActor = dynamic_pointer_cast<CollisionProxyActor>(obj);
+        if (!proxyActor)
+            continue;
+
+        CHECK_FAILED(Append_CollisionProxyInstance(proxyActor), E_FAIL);
+    }
+
+    return S_OK;
+}
+
+HRESULT Level_Konoha::Append_CollisionProxyInstance(Shared<CollisionProxyActor> actor)
+{
+    if (!actor || !actor->Is_Enabled())
         return S_OK;
 
     auto transform = actor->Get_Transform();
     if (!transform)
         return S_OK;
 
-    const string& modelGuid = actor->Get_ModelGuid();
-    if (modelGuid.empty())
+    MovementComponent::FCollisionModelInstance instance{};
+    instance.worldMatrix = transform->Get_WorldMatrix();
+
+    auto model = actor->Get_Model();
+    if (!model)
         return S_OK;
 
-    string resolvedPath = actor->Get_ResolvedPath();
-    if (resolvedPath.empty())
+    instance.model = model;
+    instance.hasWorldBounds = Try_BuildWorldBoundsFromModel(model, instance.worldMatrix, instance.worldBounds);
+
+    switch (actor->Get_ProxyType())
     {
-        resolvedPath = Utils::ToString(GAME->Resolve_AssetPath(modelGuid));
-    }
+    case ECollisionProxyType::Walkable:
+        _walkableProxyModels.push_back(instance);
+        break;
 
-    const string candidateName =
-        Utils::ToString(actor->Get_Name()) + "|" + resolvedPath + "|" + modelGuid;
+    case ECollisionProxyType::WallRun:
+        _wallProxyModels.push_back(instance);
+        break;
 
-    if (!Is_WallCollisionNameCandidate(candidateName))
-        return S_OK;
+    case ECollisionProxyType::WorldBlock:
+        _worldBlockProxyModels.push_back(instance);
+        break;
 
-    Shared<Model> collisionModel = Get_OrCreateWallCollisionModel(modelGuid, resolvedPath);
-    if (!collisionModel)
-        return S_OK;
-
-    MovementComponent::FCollisionModelInstance collision{};
-    collision.model = collisionModel;
-    collision.worldMatrix = transform->Get_WorldMatrix();
-    collision.hasWorldBounds =
-        Try_BuildWorldBoundsFromModel(collisionModel, collision.worldMatrix, collision.worldBounds);
-
-    if (!collision.hasWorldBounds)
-        return S_OK;
-
-    if (!Is_WallCollisionSizeCandidate(collision.worldBounds))
-        return S_OK;
-
-    _wallCollisionModels.push_back(collision);
-
-    return S_OK;
-}
-
-Shared<Model> Level_Konoha::Get_OrCreateWallCollisionModel(const string& modelGuid, const string& resolvedPath)
-{
-    auto iter = _wallCollisionModelCache.find(modelGuid);
-    if (iter != _wallCollisionModelCache.end())
-        return iter->second;
-
-    if (resolvedPath.empty())
-        return nullptr;
-
-    const Matrix preTransform = Build_CollisionModelPreTransform();
-
-    // wall collision용 모델은 CPU raycast가 가능해야 함
-    Shared<Model> collisionModel = Model::Create(
-        _device,
-        _context,
-        EMeshVertexType::StaticMesh,
-        resolvedPath,
-        preTransform,
-        true);
-
-    if (!collisionModel)
-        return nullptr;
-
-    _wallCollisionModelCache.emplace(modelGuid, collisionModel);
-    return collisionModel;
-}
-
-HRESULT Level_Konoha::Collect_WallCollisionCandidatesFromLayers(const vector<wstring>& layerTags)
-{
-    const uint32 levelIndex = ETOI(ELevelType::Konoha);
-    const auto layers = GAME->Get_Layers(levelIndex);
-
-    for (const auto& layerTag : layerTags)
-    {
-        auto iter = layers.find(layerTag);
-        if (iter == layers.end() || !iter->second)
-            continue;
-
-        const auto& objects = iter->second->Get_GameObjects();
-        for (const auto& obj : objects)
-        {
-            if (!obj)
-                continue;
-
-            if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_STATIC_MESH)
-                continue;
-
-            auto actor = dynamic_pointer_cast<StaticMeshActor>(obj);
-            if (!actor)
-                continue;
-
-            CHECK_FAILED(Append_WallCollisionInstanceFromActor(actor), E_FAIL);
-        }
+    default:
+        break;
     }
 
     return S_OK;
 }
-
-bool Level_Konoha::Is_ExtraGroundNameCandidate(const string& candidateName)
-{
-    const string lowered = Utils::ToLowerCopy(candidateName);
-
-    static const vector<string> includeKeywords =
-    {
-        "roof",
-        "top",
-        "terrace",
-        "balcony",
-        "platform"
-    };
-
-    static const vector<string> excludeKeywords =
-    {
-        "curtain",
-        "lantern",
-        "banner",
-        "tree",
-        "bush",
-        "grass",
-        "plant"
-    };
-
-    for (const auto& keyword : excludeKeywords)
-    {
-        if (lowered.find(keyword) != string::npos)
-            return false;
-    }
-
-    for (const auto& keyword : includeKeywords)
-    {
-        if (lowered.find(keyword) != string::npos)
-            return true;
-    }
-
-    return false;
-}
-
-
-HRESULT Level_Konoha::Rebuild_ExtraGroundCollisionFromPlacedMeshes()
-{
-    _extraGroundCollisionModels.clear();
-
-    const vector<wstring> layerTags =
-    {
-        TEXT("Layer_Terrain"),
-        TEXT("Layer_Props")
-    };
-
-    const uint32 levelIndex = ETOI(ELevelType::Konoha);
-    const auto layers = GAME->Get_Layers(levelIndex);
-
-    for (const auto& layerTag : layerTags)
-    {
-        auto iter = layers.find(layerTag);
-        if (iter == layers.end() || !iter->second)
-            continue;
-
-        const auto& objects = iter->second->Get_GameObjects();
-        for (const auto& obj : objects)
-        {
-            if (!obj)
-                continue;
-
-            if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_STATIC_MESH)
-                continue;
-
-            auto actor = dynamic_pointer_cast<StaticMeshActor>(obj);
-            if (!actor)
-                continue;
-
-            CHECK_FAILED(Append_ExtraGroundCollisionFromActor(actor), E_FAIL);
-        }
-    }
-
-    LOG_INFO("[Level_Konoha] Extra ground collision rebuilt from placed meshes = {}",
-        _extraGroundCollisionModels.size());
-
-    return S_OK;
-}
-
-HRESULT Level_Konoha::Append_ExtraGroundCollisionFromActor(Shared<StaticMeshActor> actor)
-{
-    if (!actor)
-        return S_OK;
-
-    auto transform = actor->Get_Transform();
-    if (!transform)
-        return S_OK;
-
-    const string& modelGuid = actor->Get_ModelGuid();
-    if (modelGuid.empty())
-        return S_OK;
-
-    string resolvedPath = actor->Get_ResolvedPath();
-    if (resolvedPath.empty())
-    {
-        resolvedPath = Utils::ToString(GAME->Resolve_AssetPath(modelGuid));
-    }
-
-    const string candidateName =
-        Utils::ToString(actor->Get_Name()) + "|" + resolvedPath + "|" + modelGuid;
-
-    if (!Is_ExtraGroundNameCandidate(candidateName))
-        return S_OK;
-
-    Shared<Model> collisionModel = Get_OrCreateWallCollisionModel(modelGuid, resolvedPath);
-    if (!collisionModel)
-        return S_OK;
-
-    MovementComponent::FCollisionModelInstance collision{};
-    collision.model = collisionModel;
-    collision.worldMatrix = transform->Get_WorldMatrix();
-    collision.hasWorldBounds =
-        Try_BuildWorldBoundsFromModel(collisionModel, collision.worldMatrix, collision.worldBounds);
-
-    if (!collision.hasWorldBounds)
-        return S_OK;
-
-    const float width = collision.worldBounds.Extents.x * 2.f;
-    const float depth = collision.worldBounds.Extents.z * 2.f;
-
-    if (max(width, depth) < 1.5f)
-        return S_OK;
-
-    _extraGroundCollisionModels.push_back(collision);
-    return S_OK;
-}
-
 
 void Level_Konoha::Draw_StaticMeshRender()
 {
-    // 플레이어 위치 기준으로 짤라보기
     if (INPUT->KeyDown(KEY_TYPE::F3))
     {
         _showCollisionDebug = !_showCollisionDebug;
     }
 
-    if (_showCollisionDebug)
+    if (!_showCollisionDebug)
+        return;
+
+    const uint32 levelIndex = ETOI(ELevelType::Konoha);
+
+    Vec3 debugCenter = Vec3::Zero;
+    bool hasDebugCenter = false;
+
+    const auto gameObjects = GAME->Get_GameObjects(levelIndex);
+    for (const auto& obj : gameObjects)
     {
-        const uint32 levelIndex = ETOI(ELevelType::Konoha);
+        if (!obj)
+            continue;
 
-        Vec3 debugCenter = Vec3::Zero;
-        bool hasDebugCenter = false;
+        if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_PLAYER)
+            continue;
 
-        auto gameObjects = GAME->Get_GameObjects(levelIndex);
-        for (const auto& obj : gameObjects)
+        auto transform = obj->Get_Transform();
+        if (!transform)
+            continue;
+
+        debugCenter = transform->Get_WorldPosition();
+        hasDebugCenter = true;
+        break;
+    }
+
+    if (!hasDebugCenter)
+    {
+        auto activeCamera = GAME->Get_ActiveCamera();
+        if (activeCamera && activeCamera->Get_Transform())
         {
-            if (!obj)
-                continue;
-
-            if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_PLAYER)
-                continue;
-
-            auto transform = obj->Get_Transform();
-            if (!transform)
-                continue;
-
-            debugCenter = transform->Get_WorldPosition();
+            debugCenter = activeCamera->Get_Transform()->Get_WorldPosition();
             hasDebugCenter = true;
-            break;
-        }
-
-        if (!hasDebugCenter)
-        {
-            auto activeCamera = GAME->Get_ActiveCamera();
-            if (activeCamera && activeCamera->Get_Transform())
-            {
-                debugCenter = activeCamera->Get_Transform()->Get_WorldPosition();
-                hasDebugCenter = true;
-            }
-        }
-
-        const float debugRadius = 35.f;
-        const float debugRadiusSq = debugRadius * debugRadius;
-
-        int32 groundDrawCount = 0;
-        int32 wallDrawCount = 0;
-
-        const int32 maxGroundDrawCount = 80;
-        const int32 maxWallDrawCount = 80;
-
-        for (const auto& collision : _groundCollisionModels)
-        {
-            if (!collision.model)
-                continue;
-
-            if (hasDebugCenter && collision.hasWorldBounds)
-            {
-                const Vec3 toCenter = collision.worldBounds.Center - debugCenter;
-                if (toCenter.LengthSquared() > debugRadiusSq)
-                    continue;
-            }
-
-            FDebugMeshDesc desc{};
-            desc.model = collision.model;
-            desc.worldMatrix = collision.worldMatrix;
-            desc.style.color = Color(0.f, 0.5f, 1.f, 1.f);
-
-            // 10초로하니까, 큐에 10초동안남아서 렌더 프레임이 더 떨어졌음.
-            // 어차피 Render에서 계속 호출하니까 duration을 0으로 해도 됨
-            desc.style.duration = 0.f;
-
-            GAME->Draw_DebugMesh(desc);
-
-            ++groundDrawCount;
-            if (groundDrawCount >= maxGroundDrawCount)
-                break;
-        }
-
-        for (const auto& collision : _wallCollisionModels)
-        {
-            if (!collision.model)
-                continue;
-
-            if (hasDebugCenter && collision.hasWorldBounds)
-            {
-                const Vec3 toCenter = collision.worldBounds.Center - debugCenter;
-                if (toCenter.LengthSquared() > debugRadiusSq)
-                    continue;
-            }
-
-            FDebugMeshDesc desc{};
-            desc.model = collision.model;
-            desc.worldMatrix = collision.worldMatrix;
-            desc.style.color = Color(1.f, 0.5f, 0.f, 1.f);
-
-            desc.style.duration = 0.f;
-
-            GAME->Draw_DebugMesh(desc);
-
-            ++wallDrawCount;
-            if (wallDrawCount >= maxWallDrawCount)
-                break;
         }
     }
-}
 
-HRESULT Level_Konoha::Ready_GroundColliison()
-{
-    const string collisionRoot = "../../Client/Bin/Resources/StaticMesh/KonohaVillage02/Meshes/";
+    if (!hasDebugCenter)
+        return;
 
-    _groundCollisionModels.clear();
+    const float debugRadius = 40.f;
+    const float debugRadiusSq = debugRadius * debugRadius;
 
+    const int32 maxDefaultGroundDrawCount = 120;
+    const int32 maxWalkableDrawCount = 80;
+    const int32 maxWallDrawCount = 80;
+    const int32 maxWorldBlockDrawCount = 80;
 
-    _wallCollisionModels.clear();
+    int32 defaultGroundDrawCount = 0;
+    int32 walkableDrawCount = 0;
+    int32 wallDrawCount = 0;
+    int32 worldBlockDrawCount = 0;
 
-    CHECK_FAILED(Append_CollisionInstancesFromDirectory(
-        collisionRoot + "Ground_Collision",
-        false), E_FAIL);
+    const auto drawProxyBoxes =
+        [debugCenter, debugRadiusSq](
+            const vector<MovementComponent::FCollisionModelInstance>& instances,
+            const Color& color,
+            int32 maxDrawCount,
+            int32& drawCount)
+        {
+            for (const auto& instance : instances)
+            {
+                if (drawCount >= maxDrawCount)
+                    break;
 
-    //CHECK_FAILED(Append_CollisionInstancesFromDirectory(
-    //    collisionRoot + "AreaBorder",
-    //    true), E_FAIL);
+                if (!instance.hasWorldBounds)
+                    continue;
 
-    LOG_INFO("[Level_Konoha] Ground COL = {}, Wall COL = {}",
-        _groundCollisionModels.size(),
-        _wallCollisionModels.size());
+                const Vec3 toCenter = instance.worldBounds.Center - debugCenter;
+                if (toCenter.LengthSquared() > debugRadiusSq)
+                    continue;
 
-    return S_OK;
+                FDebugBoxDesc debugBoxDesc{};
+                debugBoxDesc.center = instance.worldBounds.Center;
+                debugBoxDesc.extents = instance.worldBounds.Extents;
+                debugBoxDesc.rotation = Quat::Identity;
+                debugBoxDesc.style.color = color;
+                debugBoxDesc.style.duration = 0.f;
+                debugBoxDesc.style.depthEnabled = true;
+
+                GAME->Draw_DebugBox(debugBoxDesc);
+                ++drawCount;
+            }
+        };
+
+    drawProxyBoxes(
+        _defaultGroundModels,
+        Color(1.f, 0.f, 0.2f, 1.f),
+        maxDefaultGroundDrawCount,
+        defaultGroundDrawCount);
+
+    drawProxyBoxes(
+        _walkableProxyModels,
+        Color(0.f, 1.f, 0.f, 1.f),
+        maxWalkableDrawCount,
+        walkableDrawCount);
+
+    drawProxyBoxes(
+        _wallProxyModels,
+        Color(1.f, 0.5f, 0.f, 1.f),
+        maxWallDrawCount,
+        wallDrawCount);
+
+    drawProxyBoxes(
+        _worldBlockProxyModels,
+        Color(0.f, 0.6f, 1.f, 1.f),
+        maxWorldBlockDrawCount,
+        worldBlockDrawCount);
+
+    FDebugSphereDesc debugSphereDesc{};
+    debugSphereDesc.center = debugCenter;
+    debugSphereDesc.radius = 0.3f;
+    debugSphereDesc.style.color = Color(1.f, 1.f, 0.f, 1.f);
+    debugSphereDesc.style.duration = 0.f;
+    debugSphereDesc.style.depthEnabled = false;
+
+    GAME->Draw_DebugSphere(debugSphereDesc);
 }
 
 void Level_Konoha::Spawn_LocalPlayer()
@@ -804,7 +607,7 @@ void Level_Konoha::Spawn_LocalPlayer()
 
 void Level_Konoha::On_PlayerObjectSpawned(Shared<GameObject> obj)
 {
-      if (!_playerHUD || !obj)
+    if (!_playerHUD || !obj)
         return;
 
     auto player = dynamic_pointer_cast<Player>(obj);
@@ -817,23 +620,15 @@ void Level_Konoha::On_PlayerObjectSpawned(Shared<GameObject> obj)
     if (!moveCom)
         return;
 
-    vector<MovementComponent::FCollisionModelInstance> combinedGroundModels = _groundCollisionModels;
+    vector<MovementComponent::FCollisionModelInstance> combinedGroundModels = _defaultGroundModels;
     combinedGroundModels.insert(
         combinedGroundModels.end(),
-        _extraGroundCollisionModels.begin(),
-        _extraGroundCollisionModels.end());
+        _walkableProxyModels.begin(),
+        _walkableProxyModels.end());
 
-    if (!combinedGroundModels.empty())
-    {
-        moveCom->Set_GroundCollisionModels(combinedGroundModels);
-    }
-
-    if (!_wallCollisionModels.empty())
-    {
-        moveCom->Set_WallCollisionModels(_wallCollisionModels);
-    }
+    moveCom->Set_GroundCollisionModels(combinedGroundModels);
+    moveCom->Set_WallCollisionModels(_wallProxyModels);
 }
-
 
 void Level_Konoha::Try_SendEnterGamePacket()
 {

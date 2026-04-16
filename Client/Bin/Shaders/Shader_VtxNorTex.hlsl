@@ -47,7 +47,8 @@ struct PS_IN
 
 struct PS_OUT
 {
-    vector vColor : SV_TARGET0;
+    vector vDiffuse : SV_TARGET0;
+    vector vNormal : SV_TARGET1;
 };
 
 /* Pixel Shader -> 픽셀의 색을 결정한다. */
@@ -58,15 +59,8 @@ PS_OUT PS_MAIN(PS_IN In)
 
     vector mtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
 
-    vector shade = saturate(max(dot(normalize(g_LightDir) * -1.f, In.vNormal), 0.f) + (g_LightAmbient * g_MtrlAmbient));
-
-    vector lookDir = In.vWorldPos - g_CamPosition;
-    vector refelctDir = reflect(normalize(g_LightDir), In.vNormal);
-
-    float specular = pow(max(dot(normalize(lookDir) * -1.f, normalize(refelctDir)), 0.f), 50.f);
-    vector specularColor = g_LightSpecular * g_MtrlSpecular * specular;;
-    
-    Out.vColor = g_LightDiffuse * mtrlDiffuse * shade + specularColor;
+    Out.vDiffuse = vector(mtrlDiffuse.rgb, 1.f);
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     
     return Out;
 }

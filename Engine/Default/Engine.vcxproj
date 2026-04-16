@@ -278,6 +278,7 @@
     <ClInclude Include="..\Public\Channel.h" />
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\Collider.h" />
+    <ClInclude Include="..\Public\CollisionProxy_Manager.h" />
     <ClInclude Include="..\Public\Collision_Define.h" />
     <ClInclude Include="..\Public\Collision_Manager.h" />
     <ClInclude Include="..\Public\Component.h" />
@@ -332,6 +333,7 @@
     <ClInclude Include="..\Public\RenderTarget.h" />
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\Sound_Manager.h" />
+    <ClInclude Include="..\Public\Target_Manager.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Text_Renderer.h" />
     <ClInclude Include="..\Public\Text_Types.h" />
@@ -393,6 +395,7 @@
     <ClCompile Include="..\Private\Channel.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\Collider.cpp" />
+    <ClCompile Include="..\Private\CollisionProxy_Manager.cpp" />
     <ClCompile Include="..\Private\Collision_Manager.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\Component_Factory.cpp" />
@@ -436,6 +439,7 @@
     <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\Sound_Manager.cpp" />
+    <ClCompile Include="..\Private\Target_Manager.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Text_Renderer.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />

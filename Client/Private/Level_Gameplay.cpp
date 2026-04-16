@@ -18,9 +18,9 @@
 #include "Player.h"
 #include "UI_PlayerHUD.h"
 #include "Event_Manager.h"
-#include "StaticMeshActor.h"
 #include "Layer.h"
 #include "Mesh.h"
+#include "CollisionProxyActor.h"
 
 Level_Gameplay::Level_Gameplay(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -39,11 +39,7 @@ HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
     CHECK_FAILED(Ready_UI(), E_FAIL);
 
-    {
-        CHECK_FAILED(Ready_GroundColliison(), E_FAIL);
-        CHECK_FAILED(Rebuild_WallCollisionFromPlacedMeshes(), E_FAIL);
-        CHECK_FAILED(Rebuild_ExtraGroundCollisionFromPlacedMeshes(), E_FAIL);
-    }
+    CHECK_FAILED(Rebuild_CollisionProxyCache(), E_FAIL);
 
     CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
 
@@ -223,72 +219,90 @@ HRESULT Level_Gameplay::Ready_UI()
     return S_OK;
 }
 
-HRESULT Level_Gameplay::Ready_GroundColliison()
-{
-    const string colDir = "../../Client/Bin/Resources/StaticMesh/ExamStadium/Meshes/";
-
-    if (!fs::exists(colDir))
-        return S_OK;
-
-    const Matrix preTransform = Build_CollisionModelPreTransform();
-
-    _groundCollisionModels.clear();
-    _wallCollisionModels.clear();
-
-    for (const auto& entry : fs::recursive_directory_iterator(colDir))
-    {
-        if (entry.path().extension() != ".meshbin")
-            continue;
-
-        const string fullPath = entry.path().string();
-        const string fileName = entry.path().filename().string();
-
-        const bool isGroundLike =
-            fileName.find("Ground") != string::npos ||
-            fileName.find("ground") != string::npos ||
-            fileName.find("Terrain") != string::npos ||
-            fileName.find("terrain") != string::npos ||
-            fileName.find("AreaBorder") != string::npos ||
-            fileName.find("_COL") != string::npos;
-
-        if (!isGroundLike)
-            continue;
-
-        Shared<Model> colModel = Model::Create(
-            _device,
-            _context,
-            EMeshVertexType::StaticMesh,
-            fullPath,
-            preTransform,
-            true);
-
-        if (!colModel)
-            continue;
-
-        MovementComponent::FCollisionModelInstance collision{};
-        collision.model = colModel;
-        collision.worldMatrix = Matrix::Identity;
-        collision.hasWorldBounds =
-            Try_BuildWorldBoundsFromModel(colModel, collision.worldMatrix, collision.worldBounds);
-
-        _groundCollisionModels.push_back(collision);
-    }
-
-    LOG_INFO("[Level_Gameplay] Ground COL = {}, Wall COL = {}",
-        _groundCollisionModels.size(),
-        _wallCollisionModels.size());
-
-    return S_OK;
-}
-
-
-
 Matrix Level_Gameplay::Build_CollisionModelPreTransform()
 {
     Matrix scaleMatrix = Matrix::CreateScale(1.f);
     Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
 
     return scaleMatrix * rotationMatrix;
+}
+
+HRESULT Level_Gameplay::Rebuild_CollisionProxyCache()
+{
+    _walkableProxyModels.clear();
+    _wallProxyModels.clear();
+    _worldBlockProxyModels.clear();
+
+    CHECK_FAILED(Collect_CollisionProxyActorsFromLayer(TEXT("Layer_CollisionProxy")), E_FAIL);
+
+    LOG_INFO("[Level_Gameplay] Walkable Proxy = {}", _walkableProxyModels.size());
+    LOG_INFO("[Level_Gameplay] Wall Proxy = {}", _wallProxyModels.size());
+    LOG_INFO("[Level_Gameplay] WorldBlock Proxy = {}", _worldBlockProxyModels.size());
+
+    return S_OK;
+}
+
+HRESULT Level_Gameplay::Collect_CollisionProxyActorsFromLayer(const wstring& layerTag)
+{
+    const uint32 levelIndex = ETOI(ELevelType::GamePlay);
+    const auto& layers = GAME->Get_Layers(levelIndex);
+
+    auto iter = layers.find(layerTag);
+    if (iter == layers.end() || !iter->second)
+        return S_OK;
+
+    const auto& objects = iter->second->Get_GameObjects();
+    for (const auto& obj : objects)
+    {
+        auto proxyActor = dynamic_pointer_cast<CollisionProxyActor>(obj);
+        if (!proxyActor)
+            continue;
+
+        CHECK_FAILED(Append_CollisionProxyInstance(proxyActor), E_FAIL);
+    }
+
+    return S_OK;
+}
+
+HRESULT Level_Gameplay::Append_CollisionProxyInstance(Shared<CollisionProxyActor> actor)
+{
+    if (!actor || !actor->Is_Enabled())
+        return S_OK;
+
+    auto transform = actor->Get_Transform();
+    if (!transform)
+        return S_OK;
+
+    MovementComponent::FCollisionModelInstance instance{};
+    instance.worldMatrix = transform->Get_WorldMatrix();
+
+    auto model = actor->Get_Model();
+    if (!model)
+        return S_OK;
+
+    instance.model = model;
+    instance.hasWorldBounds =
+        Try_BuildWorldBoundsFromModel(model, instance.worldMatrix, instance.worldBounds);
+
+    switch (actor->Get_ProxyType())
+    {
+    case ECollisionProxyType::Walkable:
+        _walkableProxyModels.push_back(instance);
+        break;
+
+    case ECollisionProxyType::WallRun:
+        _wallProxyModels.push_back(instance);
+        break;
+
+    case ECollisionProxyType::WorldBlock:
+        _worldBlockProxyModels.push_back(instance);
+        break;
+
+    default:
+        break;
+    }
+
+    return S_OK;
 }
 
 void Level_Gameplay::Spawn_LocalPlayer()
@@ -335,7 +349,7 @@ void Level_Gameplay::Spawn_LocalPlayer()
 
 void Level_Gameplay::On_PlayerObjectSpawned(Shared<GameObject> obj)
 {
-  if (!_playerHUD || !obj)
+    if (!_playerHUD || !obj)
         return;
 
     auto player = dynamic_pointer_cast<Player>(obj);
@@ -348,15 +362,14 @@ void Level_Gameplay::On_PlayerObjectSpawned(Shared<GameObject> obj)
     if (!moveCom)
         return;
 
-
-    if (!_groundCollisionModels.empty())
+    if (!_walkableProxyModels.empty())
     {
-        moveCom->Set_GroundCollisionModels(_groundCollisionModels);
+        moveCom->Set_GroundCollisionModels(_walkableProxyModels);
     }
 
-    if (!_wallCollisionModels.empty())
+    if (!_wallProxyModels.empty())
     {
-        moveCom->Set_WallCollisionModels(_wallCollisionModels);
+        moveCom->Set_WallCollisionModels(_wallProxyModels);
     }
 }
 
@@ -427,68 +440,6 @@ void Level_Gameplay::Request_EnterKonoha()
         Level_Loading::Create(_device, _context, ELevelType::Konoha, true, spawnMode));
 }
 
-bool Level_Gameplay::Is_WallCollisionLayerTag(const wstring& layerTag)
-{
-    return layerTag == TEXT("Layer_Terrain") || layerTag == TEXT("Layer_Props");
-}
-
-bool Level_Gameplay::Is_WallCollisionNameCandidate(const string& candidateName)
-{
-    const string lowered = Utils::ToLowerCopy(candidateName);
-
-    static const vector<string> includeKeywords =
-    {
-        "building",
-        "roof",
-        "wall",
-        "slope",
-        "house",
-        "shop",
-        "tower"
-    };
-
-    static const vector<string> excludeKeywords =
-    {
-        "curtain",
-        "lantern",
-        "banner",
-        "tree",
-        "bush",
-        "grass",
-        "plant"
-    };
-
-    for (const auto& keyword : excludeKeywords)
-    {
-        if (lowered.find(keyword) != string::npos)
-            return false;
-    }
-
-    for (const auto& keyword : includeKeywords)
-    {
-        if (lowered.find(keyword) != string::npos)
-            return true;
-    }
-
-    return false;
-}
-
-bool Level_Gameplay::Is_WallCollisionSizeCandidate(const BoundingBox& bounds)
-{
-    const float width = bounds.Extents.x * 2.f;
-    const float height = bounds.Extents.y * 2.f;
-    const float depth = bounds.Extents.z * 2.f;
-
-    // 너무 작은애들은 제거
-    if (height < 1.5f)
-        return false;
-
-    if (max(width, depth) < 2.0f)
-        return false;
-
-    return true;
-}
-
 bool Level_Gameplay::Try_BuildWorldBoundsFromModel(Shared<Model> model, const Matrix& worldMatrix,
     BoundingBox& outBounds)
 {
@@ -531,128 +482,6 @@ bool Level_Gameplay::Try_BuildWorldBoundsFromModel(Shared<Model> model, const Ma
     outBounds.Extents = (maxPos - minPos) * 0.5f;
 
     return true;
-}
-
-HRESULT Level_Gameplay::Rebuild_WallCollisionFromPlacedMeshes()
-{
-    _wallCollisionModels.clear();
-
-    vector<wstring> layerTags =
-    {
-        TEXT("Layer_Terrain"),
-        TEXT("Layer_Props")
-    };
-
-    CHECK_FAILED(Collect_WallCollisionCandidatesFromLayers(layerTags), E_FAIL);
-
-    LOG_INFO("[Level_GamePlay] Wall collision rebuilt from placed meshes = {}",
-        _wallCollisionModels.size());
-
-    return S_OK;
-}
-
-HRESULT Level_Gameplay::Collect_WallCollisionCandidatesFromLayers(const vector<wstring>& layerTags)
-{
-    const uint32 levelIndex = ETOI(ELevelType::GamePlay);
-    const auto layers = GAME->Get_Layers(levelIndex);
-
-    for (const auto& layerTag : layerTags)
-    {
-        auto iter = layers.find(layerTag);
-        if (iter == layers.end() || !iter->second)
-            continue;
-
-        const auto& objects = iter->second->Get_GameObjects();
-        for (const auto& obj : objects)
-        {
-            if (!obj)
-                continue;
-
-            if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_STATIC_MESH)
-                continue;
-
-            auto actor = dynamic_pointer_cast<StaticMeshActor>(obj);
-            if (!actor)
-                continue;
-
-            CHECK_FAILED(Append_WallCollisionInstanceFromActor(actor), E_FAIL);
-        }
-    }
-
-    return S_OK;
-}
-
-HRESULT Level_Gameplay::Append_WallCollisionInstanceFromActor(Shared<StaticMeshActor> actor)
-{
-    if (!actor)
-        return S_OK;
-
-    auto transform = actor->Get_Transform();
-    if (!transform)
-        return S_OK;
-
-    const string& modelGuid = actor->Get_ModelGuid();
-    if (modelGuid.empty())
-        return S_OK;
-
-    string resolvedPath = actor->Get_ResolvedPath();
-    if (resolvedPath.empty())
-    {
-        resolvedPath = Utils::ToString(GAME->Resolve_AssetPath(modelGuid));
-    }
-
-    const string candidateName =
-        Utils::ToString(actor->Get_Name()) + "|" + resolvedPath + "|" + modelGuid;
-
-    if (!Is_WallCollisionNameCandidate(candidateName))
-        return S_OK;
-
-    Shared<Model> collisionModel = Get_OrCreateWallCollisionModel(modelGuid, resolvedPath);
-    if (!collisionModel)
-        return S_OK;
-
-    MovementComponent::FCollisionModelInstance collision{};
-    collision.model = collisionModel;
-    collision.worldMatrix = transform->Get_WorldMatrix();
-    collision.hasWorldBounds =
-        Try_BuildWorldBoundsFromModel(collisionModel, collision.worldMatrix, collision.worldBounds);
-
-    if (!collision.hasWorldBounds)
-        return S_OK;
-
-    if (!Is_WallCollisionSizeCandidate(collision.worldBounds))
-        return S_OK;
-
-    _wallCollisionModels.push_back(collision);
-
-    return S_OK;
-}
-
-Shared<Model> Level_Gameplay::Get_OrCreateWallCollisionModel(const string& modelGuid, const string& resolvedPath)
-{
-    auto iter = _wallCollisionModelCache.find(modelGuid);
-    if (iter != _wallCollisionModelCache.end())
-        return iter->second;
-
-    if (resolvedPath.empty())
-        return nullptr;
-
-    const Matrix preTransform = Build_CollisionModelPreTransform();
-
-    // wall collision용 모델은 CPU raycast가 가능해야 함
-    Shared<Model> collisionModel = Model::Create(
-        _device,
-        _context,
-        EMeshVertexType::StaticMesh,
-        resolvedPath,
-        preTransform,
-        true);
-
-    if (!collisionModel)
-        return nullptr;
-
-    _wallCollisionModelCache.emplace(modelGuid, collisionModel);
-    return collisionModel;
 }
 
 void Level_Gameplay::Draw_StaticMeshRender()
@@ -706,190 +535,7 @@ void Level_Gameplay::Draw_StaticMeshRender()
 
         const int32 maxGroundDrawCount = 80;
         const int32 maxWallDrawCount = 80;
-
-        for (const auto& collision : _groundCollisionModels)
-        {
-            if (!collision.model)
-                continue;
-
-            if (hasDebugCenter && collision.hasWorldBounds)
-            {
-                const Vec3 toCenter = collision.worldBounds.Center - debugCenter;
-                if (toCenter.LengthSquared() > debugRadiusSq)
-                    continue;
-            }
-
-            FDebugMeshDesc desc{};
-            desc.model = collision.model;
-            desc.worldMatrix = collision.worldMatrix;
-            desc.style.color = Color(0.f, 0.5f, 1.f, 1.f);
-
-            // 10초로하니까, 큐에 10초동안남아서 렌더 프레임이 더 떨어졌음.
-            // 어차피 Render에서 계속 호출하니까 duration을 0으로 해도 됨
-            desc.style.duration = 0.f;
-
-            GAME->Draw_DebugMesh(desc);
-
-            ++groundDrawCount;
-            if (groundDrawCount >= maxGroundDrawCount)
-                break;
-        }
-
-        for (const auto& collision : _wallCollisionModels)
-        {
-            if (!collision.model)
-                continue;
-
-            if (hasDebugCenter && collision.hasWorldBounds)
-            {
-                const Vec3 toCenter = collision.worldBounds.Center - debugCenter;
-                if (toCenter.LengthSquared() > debugRadiusSq)
-                    continue;
-            }
-
-            FDebugMeshDesc desc{};
-            desc.model = collision.model;
-            desc.worldMatrix = collision.worldMatrix;
-            desc.style.color = Color(1.f, 0.5f, 0.f, 1.f);
-
-            desc.style.duration = 0.f;
-
-            GAME->Draw_DebugMesh(desc);
-
-            ++wallDrawCount;
-            if (wallDrawCount >= maxWallDrawCount)
-                break;
-        }
     }
-}
-
-bool Level_Gameplay::Is_ExtraGroundNameCandidate(const string& candidateName)
-{
-    const string lowered = Utils::ToLowerCopy(candidateName);
-
-    static const vector<string> includeKeywords =
-    {
-        "roof",
-        "top",
-        "terrace",
-        "balcony",
-        "platform"
-    };
-
-    static const vector<string> excludeKeywords =
-    {
-        "curtain",
-        "lantern",
-        "banner",
-        "tree",
-        "bush",
-        "grass",
-        "plant"
-    };
-
-    for (const auto& keyword : excludeKeywords)
-    {
-        if (lowered.find(keyword) != string::npos)
-            return false;
-    }
-
-    for (const auto& keyword : includeKeywords)
-    {
-        if (lowered.find(keyword) != string::npos)
-            return true;
-    }
-
-    return false;
-}
-
-HRESULT Level_Gameplay::Rebuild_ExtraGroundCollisionFromPlacedMeshes()
-{
-    _extraGroundCollisionModels.clear();
-
-    const vector<wstring> layerTags =
-    {
-        TEXT("Layer_Terrain"),
-        TEXT("Layer_Props")
-    };
-
-    const uint32 levelIndex = ETOI(ELevelType::GamePlay);
-    const auto layers = GAME->Get_Layers(levelIndex);
-
-    for (const auto& layerTag : layerTags)
-    {
-        auto iter = layers.find(layerTag);
-        if (iter == layers.end() || !iter->second)
-            continue;
-
-        const auto& objects = iter->second->Get_GameObjects();
-        for (const auto& obj : objects)
-        {
-            if (!obj)
-                continue;
-
-            if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_STATIC_MESH)
-                continue;
-
-            auto actor = dynamic_pointer_cast<StaticMeshActor>(obj);
-            if (!actor)
-                continue;
-
-            CHECK_FAILED(Append_ExtraGroundCollisionFromActor(actor), E_FAIL);
-        }
-    }
-
-    LOG_INFO("[Level_GamePlay] Extra ground collision rebuilt from placed meshes = {}",
-        _extraGroundCollisionModels.size());
-
-    return S_OK;
-}
-
-HRESULT Level_Gameplay::Append_ExtraGroundCollisionFromActor(Shared<StaticMeshActor> actor)
-{
-    if (!actor)
-        return S_OK;
-
-    auto transform = actor->Get_Transform();
-    if (!transform)
-        return S_OK;
-
-    const string& modelGuid = actor->Get_ModelGuid();
-    if (modelGuid.empty())
-        return S_OK;
-
-    string resolvedPath = actor->Get_ResolvedPath();
-    if (resolvedPath.empty())
-    {
-        resolvedPath = Utils::ToString(GAME->Resolve_AssetPath(modelGuid));
-    }
-
-    const string candidateName =
-        Utils::ToString(actor->Get_Name()) + "|" + resolvedPath + "|" + modelGuid;
-
-    if (!Is_ExtraGroundNameCandidate(candidateName))
-        return S_OK;
-
-    Shared<Model> collisionModel = Get_OrCreateWallCollisionModel(modelGuid, resolvedPath);
-    if (!collisionModel)
-        return S_OK;
-
-    MovementComponent::FCollisionModelInstance collision{};
-    collision.model = collisionModel;
-    collision.worldMatrix = transform->Get_WorldMatrix();
-    collision.hasWorldBounds =
-        Try_BuildWorldBoundsFromModel(collisionModel, collision.worldMatrix, collision.worldBounds);
-
-    if (!collision.hasWorldBounds)
-        return S_OK;
-
-    const float width = collision.worldBounds.Extents.x * 2.f;
-    const float depth = collision.worldBounds.Extents.z * 2.f;
-
-    if (max(width, depth) < 1.5f)
-        return S_OK;
-
-    _extraGroundCollisionModels.push_back(collision);
-    return S_OK;
 }
 
 shared_ptr<Level_Gameplay> Level_Gameplay::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode)

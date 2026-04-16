@@ -2,8 +2,10 @@
 #include "Renderer.h"
 #include "GameInstance.h"
 #include "GameObject.h"
+#include "Shader.h"
 #include "UIObject.h"
 #include "UI_Text.h"
+#include "VIBuffer_Rect.h"
 
 Renderer::Renderer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -59,6 +61,8 @@ HRESULT Renderer::Initialize()
     if (FAILED(_device->CreateDepthStencilState(&uiDepthDesc, _uiDepthDisabledState.GetAddressOf())))
         return E_FAIL;
 
+    CHECK_FAILED(Ready_RenderTarget(), E_FAIL);
+
     return S_OK;
 }
 
@@ -86,17 +90,26 @@ void Renderer::Restore_RenderGroup()
     }
 }
 
+#ifdef _DEBUG
+void Renderer::Add_DebugRenderGroup(Shared<Component> debugComponent)
+{
+    _debugComponents.push_back(debugComponent);
+}
+#endif
+
 void Renderer::Draw(bool renderDebugPrimitives, bool renderColliders)
 {
     _drawCallCount = 0;
 
     Render_BackgroundUI();
-
     Apply_Default3DState();
-
-    Render_Priority();
+    Render_Priority(); // SkyBox
 
     Render_NonBlend();
+
+    Render_Lights();
+    Render_Combined();
+    Render_NonLight();
 
     Render_Blend();
 
@@ -124,6 +137,11 @@ void Renderer::Draw(bool renderDebugPrimitives, bool renderColliders)
     Apply_Default3DState();
 
     Render_UI();
+
+#ifdef _DEBUG
+    Render_Debug();
+#endif
+
 }
 
 void Renderer::Render_BackgroundUI()
@@ -165,6 +183,8 @@ void Renderer::Render_Priority()
 
 void Renderer::Render_NonBlend()
 {
+    CHECK_FAILED(GAME->Begin_MRT(L"MRT_GameObjects"));
+
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::NonBlend)])
     {
         if (renderObject)
@@ -174,11 +194,12 @@ void Renderer::Render_NonBlend()
     }
 
     _renderObjects[ETOI(ERenderGroup::NonBlend)].clear();
+
+    GAME->End_MRT();
 }
 
 void Renderer::Render_Blend()
 {
-    // Release global blend state to allow shader passes to use their own (e.g., BS_Additive)
     _context->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::Blend)])
@@ -248,6 +269,66 @@ void Renderer::Render_UI()
     Apply_Default3DState();
 }
 
+void Renderer::Render_Lights()
+{
+    if (FAILED(GAME->Begin_MRT(L"MRT_LightAcc")))
+        return;
+
+    bool canRender = true;
+
+    if (FAILED(_deferredShader->Bind_Matrix("g_WorldMatrix", &_worldMatrix)))
+        canRender = false;
+
+    if (FAILED(_deferredShader->Bind_Matrix("g_ViewMatrix", &_viewMatrix)))
+        canRender = false;
+
+    if (FAILED(_deferredShader->Bind_Matrix("g_ProjMatrix", &_projMatrix)))
+        canRender = false;
+
+    if (canRender &&
+        FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_NormalTexture", L"Target_Normal")))
+    {
+        canRender = false;
+    }
+
+    if (canRender)
+    {
+        _viBuffer->Bind_Resources();
+
+        if (FAILED(GAME->Render_Lights(_deferredShader, _viBuffer)))
+            canRender = false;
+    }
+
+    GAME->End_MRT();
+}
+
+
+void Renderer::Render_NonLight()
+{
+    for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::NonLight)])
+    {
+        if (renderObject)
+            renderObject->Render();
+        _drawCallCount++;
+    }
+    _renderObjects[ETOI(ERenderGroup::NonLight)].clear();
+}
+
+void Renderer::Render_Combined()
+{
+    if (FAILED(_deferredShader->Bind_Matrix("g_WorldMatrix", &_worldMatrix))) return;
+    if (FAILED(_deferredShader->Bind_Matrix("g_ViewMatrix",  &_viewMatrix)))  return;
+    if (FAILED(_deferredShader->Bind_Matrix("g_ProjMatrix",  &_projMatrix)))  return;
+
+    if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_DiffuseTexture", L"Target_Diffuse"))) return;
+    if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_ShadeTexture",   L"Target_Shade")))   return;
+
+    _deferredShader->Begin_Pass(ETOI(EDeferred::Combined));
+
+    _viBuffer->Bind_Resources();
+    _viBuffer->Render();
+}
+
 void Renderer::Apply_Default3DState()
 {
     _context->OMSetDepthStencilState(_defaultDepthState.Get(), 0);
@@ -261,11 +342,72 @@ void Renderer::Apply_UIState()
 
 }
 
+void Renderer::Render_Debug()
+{
+    for (auto& debugComponent : _debugComponents)
+        debugComponent->Render_Debug();
+
+    _debugComponents.clear();
+
+    if (FAILED(_deferredShader->Bind_Matrix("g_ViewMatrix", &_viewMatrix))) return;
+    if (FAILED(_deferredShader->Bind_Matrix("g_ProjMatrix", &_projMatrix))) return;
+
+    if (FAILED(GAME->Render_RT_Debug(_viBuffer, _deferredShader, L"MRT_GameObjects"))) return;
+    if (FAILED(GAME->Render_RT_Debug(_viBuffer, _deferredShader, L"MRT_LightAcc")))    return;
+}
+
+HRESULT Renderer::Ready_RenderTarget()
+{
+    uint32 numViewports = 1;
+
+    const uint32 width = static_cast<uint32>(GAME->Get_ViewportWidth());
+    const uint32 height = static_cast<uint32>(GAME->Get_ViewportHeight());
+
+    CHECK_FAILED(GAME->Add_RenderTarget(L"Target_Diffuse",
+        width, height, DXGI_FORMAT_R8G8B8A8_UNORM, Color(0,0,0,0)), E_FAIL);
+
+    CHECK_FAILED(GAME->Add_RenderTarget(L"Target_Normal",
+        width, height, DXGI_FORMAT_R16G16B16A16_UNORM, Color(0,0,0,0)), E_FAIL);
+
+    CHECK_FAILED(GAME->Add_RenderTarget(L"Target_Shade",
+        width, height, DXGI_FORMAT_R16G16B16A16_UNORM, Color(0,0,0,0)), E_FAIL);
+
+
+    CHECK_FAILED(GAME->Add_MRT(L"MRT_GameObjects", L"Target_Diffuse"), E_FAIL); // SV_TARGET0
+    CHECK_FAILED(GAME->Add_MRT(L"MRT_GameObjects", L"Target_Normal"),  E_FAIL); // SV_TARGET1
+    CHECK_FAILED(GAME->Add_MRT(L"MRT_LightAcc",    L"Target_Shade"),   E_FAIL); // SV_TARGET0
+
+    // Deferred Shader, 풀스크린 Rect 생성
+    _viBuffer = VIBuffer_Rect::Create(_device, _context);
+    CHECK_NULL(_viBuffer, E_FAIL);
+
+    _deferredShader = Shader::Create(_device, _context,
+        L"../../Client/Bin/Shaders/Shader_Deferred.hlsl", VTXTEX::Elements, VTXTEX::numElements);
+
+    if (!_deferredShader) return E_FAIL;
+
+    // 직교투영 행렬 세팅
+    _worldMatrix = Matrix::CreateScale(width, height, 1.f);
+    _viewMatrix = Matrix::Identity;
+    _projMatrix = XMMatrixOrthographicLH(width, height, 0.f, 1.f);
+
+#ifdef _DEBUG
+    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Diffuse", 150.f, 150.f, 300.f, 300.f), E_FAIL);
+    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Normal",  150.f, 450.f, 300.f, 300.f), E_FAIL);
+    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Shade",   450.f, 150.f, 300.f, 300.f), E_FAIL);
+#endif
+
+    return S_OK;
+}
+
 unique_ptr<Renderer> Renderer::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
     auto instance = make_unique<Renderer>(device, context);
 
-    instance->Initialize();
+    if (FAILED(instance->Initialize()))
+    {
+        return nullptr; 
+    }
 
     return instance;
 }

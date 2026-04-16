@@ -50,6 +50,7 @@ void Editor_Manager::Initialize()
 
     Add_Window(TEXT("Cinematic View"), Cinematic_View::Create());
     Add_Window(TEXT("Effect View"), Effect_View::Create());
+
 }
 
 void Editor_Manager::Update(float timeDelta)
@@ -760,25 +761,19 @@ void Editor_Manager::On_SaveLevel(const wstring& fileName)
     fs::path path(fileName);
     string pureName = path.stem().stem().string(); // 파일명 자르기
 
-    Level_Serializer::Save_Level(
-        fileName,
-        GAME->Current_Level(),
-        Utils::ToWString(pureName));
+    Level_Serializer::Save_Level(fileName, GAME->Current_Level(), Utils::ToWString(pureName));
+    Level_Serializer::Save_LevelProxy(fileName, GAME->Current_Level(), Utils::ToWString(pureName));
 
     _lastLevelPath = fileName; // 경로 갱신
 
     LOG_WARN("Level Saved: {}", pureName);
-
     NOTIFY("Level Saved"); 
 }
 
 void Editor_Manager::On_LoadLevel(const wstring& fileName)
 {
     auto objects = Level_Serializer::Load_Level(fileName);
-
-    // TODO : 
-    // 1. 현재 레벨 클리어
-    // 2. 로드한 오브젝트 추가 -> 이거는 됐다.
+    auto proxyObjects = Level_Serializer::Load_LevelProxy(fileName);
 
     _lastLevelPath = fileName;
 

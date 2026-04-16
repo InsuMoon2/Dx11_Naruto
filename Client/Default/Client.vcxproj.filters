@@ -347,6 +347,7 @@
     <ClInclude Include="..\Public\Level_Konoha.h">
       <Filter>01. Levels</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CollisionProxyActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -677,6 +678,7 @@
     <ClCompile Include="..\Private\Level_Konoha.cpp">
       <Filter>01. Levels</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CollisionProxyActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -861,6 +863,9 @@
       <Filter>94. Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_EditorViewport.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_Deferred.hlsl">
       <Filter>94. Shaders</Filter>
     </FxCompile>
   </ItemGroup>

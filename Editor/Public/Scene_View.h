@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "EditorWindow.h"
+#include "CollisionProxyActor.h"
 
 NS_BEGIN(Engine)
 class RenderTarget;
@@ -26,7 +27,14 @@ public:
     shared_ptr<RenderTarget> Get_RenderTarget() { return _renderTarget; }
     shared_ptr<RenderTarget> Get_DisplayRenderTarget() { return _displayRenderTarget; }
 
-    void                Focus_OnPosition(const Vec3& targetPos);
+    void                     Focus_OnPosition(const Vec3& targetPos);
+
+    Shared<GameObject>  Create_StaticMesh(const string& guid, const Vec3& position);
+
+    Shared<GameObject>  Create_CollisionProxy(
+                const CollisionProxyActor::FCollisionProxyDesc& desc);
+
+    void                Create_CollisionProxySetFromStaticMesh(Shared<GameObject> sourceObj);
 
 
 private:
@@ -49,15 +57,22 @@ private:
     void                Clear_Drag();
 
     // Static Mesh Spawn
-    Shared<GameObject>  Create_StaticMesh(const string& guid, const Vec3& position);
     void                Handle_DragDrop(Shared<GameObject> previewObj,
                                             const Vec3& worldPos,
                                             const ImGuiPayload* payload);
 
+
     // Camera
     void                Update_CameraLerp(float timeDelta);
 
-    
+private:
+    Ray Build_PickingRay(Vec2 localMousePos) const;
+    Shared<GameObject> Pick_GameObject(const Ray& ray) const;
+    void Handle_MousePicking();
+
+private:
+    ImVec2 _viewportTopLeft = {};
+    ImVec2 _viewportBottomRight = {};
 
 private: /* Prefab Preview */
     Shared<GameObject>      _previewObject;

@@ -27,8 +27,7 @@ public:
     // ㅅ현재 트랙 위치의 로컬 포즈 샘플링
     void    Sample_LocalPoses(float trackPosition, vector<FAnimationLocalPose>& inOutPoses) const;
 
-    // 현재 모델의 본 이름 기준으로 각 채널의 bone index를 다시 세팅할 때 호출한다.
-    // AssimpTool이 다른 본 순서로 추출한 animbin도 런타임에서 안전하게 다시 맞추기 위해 사용한다.
+    // AssimpTool이 다른 본 순서로 추출한 animbin도 런타임에서 안전하게 다시 맞추기 위해 사용
     void    Rebind_BoneIndices(const vector<Shared<Bone>>& bones);
 
     const string& Get_Name() const { return _name; }

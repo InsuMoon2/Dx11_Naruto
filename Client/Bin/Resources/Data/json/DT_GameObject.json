@@ -81,6 +81,11 @@
             "Level": "Static"
         },
         {
+            "Id": "Proxy_Mesh",
+            "ObjectType": "OBJECT_TYPE_COLLISION_PROXY",
+            "Level": "Static"
+        },
+        {
             "Id": "Skill_Object",
             "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
             "Level": "Static"

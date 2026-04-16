@@ -18,6 +18,8 @@ public:
     virtual HRESULT Initialize(void* arg);
     virtual void    BeginPlay() {}; // 컴포넌트 추가 후, 호출
 
+    virtual HRESULT Render_Debug() { return S_OK; }
+
 public:
     virtual uint32      Get_ComponentID() const = 0;
 

@@ -128,26 +128,6 @@ HRESULT StaticMeshActor::Bind_ShaderResources()
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj)), E_FAIL);
 
-    GAME->Bind_CamPosition(_shaderCom, "g_CamPosition");
-
-    const FLightDesc* lightDesc = GAME->Get_LightDesc(0);
-    FLightDesc defaultLight{};
-    if (!lightDesc)
-    {
-        defaultLight.direction = Vec4(0.f, -1.f, 1.f, 0.f);
-        defaultLight.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
-        defaultLight.ambient = Vec4(0.4f, 0.4f, 0.4f, 1.f);
-        defaultLight.specular = Vec4(1.f, 1.f, 1.f, 1.f);
-        lightDesc = &defaultLight;
-    }
-
-    CHECK_NULL(lightDesc, E_FAIL);
-
-    _shaderCom->Bind_RawValue("g_LightDir", &lightDesc->direction, sizeof(Vec4));
-    _shaderCom->Bind_RawValue("g_LightDiffuse", &lightDesc->diffuse, sizeof(Color));
-    _shaderCom->Bind_RawValue("g_LightAmbient", &lightDesc->ambient, sizeof(Color));
-    _shaderCom->Bind_RawValue("g_LightSpecular", &lightDesc->specular, sizeof(Color));
-
     return S_OK;
 }
 
@@ -261,7 +241,7 @@ HRESULT StaticMeshActor::Ready_Components()
     Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
     Matrix preTransform = scaleMatrix * rotationMatrix;
 
-    auto proto = Model::Create(_device, _context, EMeshVertexType::StaticMesh, _resolvedPath, preTransform);
+    auto proto = Model::Create(_device, _context, EMeshVertexType::StaticMesh, _resolvedPath, preTransform, true);
     CHECK_NULL(proto, E_FAIL);
 
     GAME->Add_Component_Prototype(ETOI(ELevelType::Static), modelKey, proto);

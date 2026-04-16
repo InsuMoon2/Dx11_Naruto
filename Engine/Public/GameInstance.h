@@ -6,6 +6,7 @@
 #include "DelegateHub.h"
 #include "Prototype_Manager.h"
 #include "UI_Manager.h"
+#include "CollisionProxy_Manager.h"
 
 NS_BEGIN(Engine)
     /* Device */
@@ -26,6 +27,8 @@ class Animation_Manager;
 class Sound_Manager;
 class Collision_Manager;
 class Debug_Manager;
+class CollisionProxy_Manager;
+class Target_Manager;
 
 class Renderer;
 class PipeLine;
@@ -33,6 +36,7 @@ class PipeLine;
 /* Base */
 class GameObject;
 class Component;
+class VIBuffer_Rect;
 
 class Level;
 class Layer;
@@ -251,6 +255,8 @@ public: /* Light */
     HRESULT                         Add_Light(const FLightDesc& desc);
     void                            Clear_Lights();
 
+    HRESULT                         Render_Lights(Shared<Shader> shader, Shared<VIBuffer_Rect> viBuffer);
+
 public: /* Asset */
     string                          Find_AssetGUID(const wstring& filePath);
     const FAssetMeta*               Find_AssetByGUID(const string& guid);
@@ -357,6 +363,27 @@ public: /* Debug */
     HRESULT                 Render_DebugDepth();
     HRESULT                 Render_DebugOverlay();
 
+public: /* Collision Proxy */
+    void Ready_CollisionProxy(const vector<FProxyEntry>& entries);
+
+    void Query_ActiveCollisionProxy(
+        const Vec3& focusPos,
+        vector<MovementComponent::FCollisionModelInstance>& outWalkable,
+        vector<MovementComponent::FCollisionModelInstance>& outWall) const;
+
+    void Clear_CollisionProxy();
+
+public: /* Target Manager */
+    HRESULT     Add_RenderTarget(const wstring& targetTag, uint32 sizeX, uint32 sizeY, DXGI_FORMAT format, const Color& clearColor);
+    HRESULT     Add_MRT(const wstring& mrtTag, const wstring& targetTag);
+    HRESULT     Begin_MRT(const wstring& mrtTag);
+    HRESULT     End_MRT();
+    HRESULT     Bind_RT_ShaderResource(Shared<Shader> shader, const char* constantName, const wstring& targetTag);
+    HRESULT     Resize_MRTs(uint32 width, uint32 height);
+#ifdef _DEBUG
+    HRESULT     Ready_RT_Debug(const wstring& targetTag, float x, float y, float sizeX, float sizeY);
+    HRESULT     Render_RT_Debug(Shared<VIBuffer_Rect> viBuffer, Shared<Shader> shader, const wstring& mrtTag);
+#endif
 
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};
@@ -374,9 +401,12 @@ private: /* Manager */
     Unique<Sound_Manager>           _soundManager   {};
     Unique<Collision_Manager>       _collisionManager{};
     Unique<Debug_Manager>           _debugManager{}; // 충돌 여부와 무관한 디버그 도형 요청을 모아 렌더하는 매니저
+    Unique<CollisionProxy_Manager>  _collisionProxyManager{};
+    Unique<Target_Manager>          _targetManager;
 
     Unique<Renderer>                _renderer {};
     Unique<PipeLine>                _pipeLine {};
+
     
 
 private: /* Factory */

@@ -11,7 +11,7 @@ NS_BEGIN(Client)
 
 class Loader;
 class UI_PlayerHUD;
-class StaticMeshActor;
+class CollisionProxyActor;
 
 class Level_Gameplay final : public Level
 {
@@ -34,8 +34,6 @@ private:
 
     HRESULT         Ready_UI();
 
-    HRESULT         Ready_GroundColliison();
-
     static Matrix Build_CollisionModelPreTransform();
 
 private:
@@ -50,27 +48,22 @@ private:
     void            Request_EnterKonoha();
 
 private:
-    private:
-    static bool             Is_WallCollisionLayerTag(const wstring& layerTag);
-    static bool             Is_WallCollisionNameCandidate(const string& candidateName);
-    static bool             Is_WallCollisionSizeCandidate(const BoundingBox& bounds);
+    // 레벨에 배치된 CollisionProxyActor를 다시 읽어 proxy cache를 재구성한다.
+    HRESULT         Rebuild_CollisionProxyCache();
 
-    static bool             Try_BuildWorldBoundsFromModel(
-                                Shared<Model> model,
-                                const Matrix& worldMatrix,
-                                BoundingBox& outBounds);
+    // 지정한 layer에서 collision proxy actor를 수집한다.
+    HRESULT         Collect_CollisionProxyActorsFromLayer(const wstring& layerTag);
 
-    HRESULT                 Rebuild_WallCollisionFromPlacedMeshes();
-    HRESULT                 Collect_WallCollisionCandidatesFromLayers(const vector<wstring>& layerTags);
-    HRESULT                 Append_WallCollisionInstanceFromActor(Shared<StaticMeshActor> actor);
-    Shared<Model>           Get_OrCreateWallCollisionModel(const string& modelGuid, const string& resolvedPath);
+    // proxy type에 따라 walkable / wall / world block cache에 분류해 넣는다.
+    HRESULT         Append_CollisionProxyInstance(Shared<CollisionProxyActor> actor);
 
-    void                    Draw_StaticMeshRender();
+    // proxy model의 월드 bounds를 계산해 broad phase에 사용할 수 있게 만든다.
+    static bool     Try_BuildWorldBoundsFromModel(
+                        Shared<Model> model,
+                        const Matrix& worldMatrix,
+                        BoundingBox& outBounds);
 
-private:
-    static bool Is_ExtraGroundNameCandidate(const string& candidateName);
-    HRESULT Rebuild_ExtraGroundCollisionFromPlacedMeshes();
-    HRESULT Append_ExtraGroundCollisionFromActor(Shared<StaticMeshActor> actor);
+    void            Draw_StaticMeshRender();
     
 private:
     Shared<UI_PlayerHUD> _playerHUD;
@@ -80,15 +73,18 @@ private:
     EGameplaySpawnMode  _spawnMode = EGameplaySpawnMode::END;
     bool                _enterGameSent = false;
 
-    vector<MovementComponent::FCollisionModelInstance> _groundCollisionModels;
-    vector<MovementComponent::FCollisionModelInstance> _wallCollisionModels;
-    vector<MovementComponent::FCollisionModelInstance> _extraGroundCollisionModels;
-
     bool            _konohaTransitionRequested = false;
 
-    umap<string, Shared<Model>> _wallCollisionModelCache;
-
     bool _showCollisionDebug = false;
+
+    // 플레이어 ground 판정에 사용하는 walkable proxy cache다.
+    vector<MovementComponent::FCollisionModelInstance> _walkableProxyModels;
+
+    // wall-run / wire dash 판정에 사용하는 wall proxy cache다.
+    vector<MovementComponent::FCollisionModelInstance> _wallProxyModels;
+
+    // 2차에서 world block 충돌용으로 확장할 proxy cache다.
+    vector<MovementComponent::FCollisionModelInstance> _worldBlockProxyModels;
 
 public:
     static Shared<Level_Gameplay> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode);

@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Scene_View.h"
-
+#include "Mesh.h"
 #include "Action_Command.h"
 #include "Camera.h"
 #include "GameObject.h"
@@ -10,10 +10,179 @@
 #include "EditorInstance.h"
 #include "Input_Manager.h"
 #include "Hierarchy.h"
-#include "Asset_Manager.h"
 #include "Camera_Free.h"
+#include "CollisionProxyActor.h"
 #include "Spawn_Helper.h"
 #include "StaticMeshActor.h"
+#include "Model.h"
+#include "Notification_Manager.h"
+
+static bool Try_BuildPickingLocalBounds(Shared<Model> model, BoundingBox& outBounds)
+{
+    if (!model)
+        return false;
+
+    Vec3 minPos = Vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+    Vec3 maxPos = Vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+    bool hasAnyVertex = false;
+
+    for (const auto& mesh : model->Get_Meshes())
+    {
+        if (!mesh)
+            continue;
+
+        const auto& positions = mesh->Get_CPUPositions();
+        if (positions.empty())
+            continue;
+
+        for (const auto& localPos : positions)
+        {
+            minPos.x = min(minPos.x, localPos.x);
+            minPos.y = min(minPos.y, localPos.y);
+            minPos.z = min(minPos.z, localPos.z);
+
+            maxPos.x = max(maxPos.x, localPos.x);
+            maxPos.y = max(maxPos.y, localPos.y);
+            maxPos.z = max(maxPos.z, localPos.z);
+
+            hasAnyVertex = true;
+        }
+    }
+
+    if (!hasAnyVertex)
+        return false;
+
+    outBounds.Center = (minPos + maxPos) * 0.5f;
+    outBounds.Extents = (maxPos - minPos) * 0.5f;
+
+    return true;
+}
+
+static wstring Get_CollisionUnitPlanePath()
+{
+    return fs::absolute(
+        L"../../Client/Bin/Resources/StaticMesh/CollisionProxy/Meshes/SM_Collision_UnitPlane.meshbin").wstring();
+}
+
+static string Resolve_CollisionUnitPlaneGuid()
+{
+    const wstring unitPlanePath = Get_CollisionUnitPlanePath();
+
+    if (!fs::exists(unitPlanePath))
+    {
+        LOG_ERROR("Collision unit plane missing: {}", Utils::ToString(unitPlanePath));
+        NOTIFY("Collision Unit Plane Missing");
+        return "";
+    }
+
+    string guid = GAME->Find_AssetGUID(unitPlanePath);
+    if (!guid.empty())
+        return guid;
+
+    guid = GAME->Register_Asset(unitPlanePath, "model");
+    if (guid.empty())
+    {
+        LOG_ERROR("Collision unit plane register failed: {}", Utils::ToString(unitPlanePath));
+        NOTIFY("Collision Unit Plane Register Failed");
+    }
+
+    return guid;
+}
+
+static bool Try_BuildProxyPlaneBaseSize(const string& modelGuid, Vec2& outPlaneSize)
+{
+    const wstring resolvedPath = GAME->Resolve_AssetPath(modelGuid);
+    if (resolvedPath.empty())
+        return false;
+
+    const Matrix preTransform =
+        Matrix::CreateScale(1.f) *
+        Matrix::CreateRotationY(XMConvertToRadians(180.f));
+
+    auto model = Model::Create(
+        GAME->Get_Device(),
+        GAME->Get_Context(),
+        EMeshVertexType::StaticMesh,
+        Utils::ToString(resolvedPath),
+        preTransform,
+        true);
+
+    if (!model)
+        return false;
+
+    BoundingBox localBounds{};
+    if (!Try_BuildPickingLocalBounds(model, localBounds))
+        return false;
+
+    const Vec3 size = Vec3(localBounds.Extents.x * 2.f, localBounds.Extents.y * 2.f, localBounds.Extents.z * 2.f);
+    outPlaneSize.x = max(size.x, 0.0001f);
+    outPlaneSize.y = max(size.z, 0.0001f);
+
+    return true;
+}
+
+static void Notify_CollisionProxyCreateResult(int32 createdCount, int32 skippedCount)
+{
+    if (createdCount <= 0)
+    {
+        NOTIFY("Collision Proxy Set Failed");
+        return;
+    }
+
+    if (skippedCount > 0)
+    {
+        NOTIFY("Collision Proxy Set Created (Some faces skipped)");
+        return;
+    }
+
+    NOTIFY("Collision Proxy Set Created");
+}
+
+static bool Try_BuildPickingWorldBounds(
+    Shared<Model> model,
+    const Matrix& worldMatrix,
+    BoundingBox& outBounds)
+{
+    if (!model)
+        return false;
+
+    Vec3 minPos = Vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+    Vec3 maxPos = Vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+    bool hasAnyVertex = false;
+
+    for (const auto& mesh : model->Get_Meshes())
+    {
+        if (!mesh)
+            continue;
+
+        const auto& positions = mesh->Get_CPUPositions();
+        if (positions.empty())
+            continue;
+
+        for (const auto& localPos : positions)
+        {
+            const Vec3 worldPos = Vec3::Transform(localPos, worldMatrix);
+
+            minPos.x = min(minPos.x, worldPos.x);
+            minPos.y = min(minPos.y, worldPos.y);
+            minPos.z = min(minPos.z, worldPos.z);
+
+            maxPos.x = max(maxPos.x, worldPos.x);
+            maxPos.y = max(maxPos.y, worldPos.y);
+            maxPos.z = max(maxPos.z, worldPos.z);
+
+            hasAnyVertex = true;
+        }
+    }
+
+    if (!hasAnyVertex)
+        return false;
+
+    outBounds.Center = (minPos + maxPos) * 0.5f;
+    outBounds.Extents = (maxPos - minPos) * 0.5f;
+
+    return true;
+}
 
 Scene_View::Scene_View()
     : EditorWindow(TEXT("Scene"))
@@ -114,6 +283,139 @@ void Scene_View::Update_CameraLerp(float timeDelta)
         _isCameraLerping = false;
 }
 
+Ray Scene_View::Build_PickingRay(Vec2 localMousePos) const
+{
+    float ndcX = (localMousePos.x / _viewportSize.x) * 2.f - 1.f;
+    float ndcY = 1.f - (localMousePos.y / _viewportSize.y) * 2.f;
+
+    const Matrix* invertView = GAME->Get_TransformInverse(ETransformState::View);
+    const Matrix* invertProj = GAME->Get_TransformInverse(ETransformState::Proj);
+
+    if (!invertView || !invertProj)
+    {
+        return Ray(Vec3::Zero, Vec3::Forward);
+    }
+
+    Vec3 nearNdc(ndcX, ndcY, 0.f);
+    Vec3 farNdc(ndcX, ndcY, 1.f);
+
+    Vec3 nearView = Vec3::Transform(nearNdc, *invertProj);
+    Vec3 farView = Vec3::Transform(farNdc, *invertProj);
+
+    Vec3 nearWorld = Vec3::Transform(nearView, *invertView);
+    Vec3 farWorld = Vec3::Transform(farView, *invertView);
+
+    Vec3 rayDir = farWorld - nearWorld;
+    rayDir = Utils::Safe_Normalize(rayDir, Vec3::Forward);
+
+    return Ray(nearWorld, rayDir);
+}
+
+Shared<GameObject> Scene_View::Pick_GameObject(const Ray& ray) const
+{
+    Shared<GameObject> pickedObject = nullptr;
+    float closestDist = FLT_MAX;
+
+    const auto gameObjects = GAME->Get_GameObjects(GAME->Current_Level());
+
+    for (const auto& obj : gameObjects)
+    {
+        if (!obj)
+            continue;
+
+        auto transform = obj->Get_Component<Transform>();
+        if (!transform)
+            continue;
+
+        Shared<Model> model = nullptr;
+
+        if (auto staticMesh = dynamic_pointer_cast<StaticMeshActor>(obj))
+        {
+            model = staticMesh->Get_Model();
+        }
+        else if (auto proxyActor = dynamic_pointer_cast<CollisionProxyActor>(obj))
+        {
+            model = proxyActor->Get_Model();
+        }
+        else
+        {
+            continue;
+        }
+
+        if (!model)
+            continue;
+
+        BoundingBox worldBounds{};
+        if (!Try_BuildPickingWorldBounds(model, transform->Get_WorldMatrix(), worldBounds))
+            continue;
+
+        float boundsHitDist = 0.f;
+        if (!ray.Intersects(worldBounds, boundsHitDist))
+            continue;
+
+        if (boundsHitDist > closestDist)
+            continue;
+
+        float hitDist = 0.f;
+        Vec3 hitPoint = Vec3::Zero;
+        Vec3 hitNormal = Vec3::Up;
+
+        if (!model->Raycast(ray, transform->Get_WorldMatrix(), hitDist, hitPoint, hitNormal))
+            continue;
+
+        if (hitDist < closestDist)
+        {
+            closestDist = hitDist;
+            pickedObject = obj;
+        }
+    }
+
+    return pickedObject;
+}
+
+void Scene_View::Handle_MousePicking()
+{
+    if (!_isHovered || !_isFocused)
+        return;
+
+    if (ImGuizmo::IsUsing())
+        return;
+
+    if (_previewObject)
+        return;
+
+    if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
+        return;
+
+    if (!ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+        return;
+
+    ImVec2 mousePos = ImGui::GetMousePos();
+
+    if (mousePos.x < _viewportTopLeft.x || mousePos.x > _viewportBottomRight.x ||
+        mousePos.y < _viewportTopLeft.y || mousePos.y > _viewportBottomRight.y)
+    {
+        return;
+    }
+
+    Vec2 localMousePos(
+        mousePos.x - _viewportTopLeft.x,
+        mousePos.y - _viewportTopLeft.y
+    );
+
+    Ray pickingRay = Build_PickingRay(localMousePos);
+    auto pickedObject = Pick_GameObject(pickingRay);
+    if (!pickedObject)
+        return;
+
+    auto hierarchy = dynamic_pointer_cast<Hierarchy>(EDITOR->Get_Window(TEXT("Hierarchy")));
+    if (!hierarchy)
+        return;
+
+    const bool isMultiSelect = ImGui::GetIO().KeyCtrl;
+    hierarchy->Select_Object(pickedObject, isMultiSelect);
+}
+
 void Scene_View::Clear_Drag()
 {
     _previewObject = nullptr;
@@ -145,6 +447,180 @@ Shared<GameObject> Scene_View::Create_StaticMesh(const string& guid, const Vec3&
         transform->Set_WorldPosition(position);
 
     return meshActor;
+}
+
+Shared<GameObject> Scene_View::Create_CollisionProxy(
+    const CollisionProxyActor::FCollisionProxyDesc& desc)
+{
+    auto proxyActor = CollisionProxyActor::Create(GAME->Get_Device(), GAME->Get_Context());
+    if (!proxyActor)
+        return nullptr;
+
+    auto proxyDesc = desc;
+
+    if (FAILED(proxyActor->Initialize(&proxyDesc)))
+        return nullptr;
+
+    return proxyActor;
+}
+
+void Scene_View::Create_CollisionProxySetFromStaticMesh(Shared<GameObject> sourceObj)
+{
+    auto staticMesh = dynamic_pointer_cast<StaticMeshActor>(sourceObj);
+    CHECK_NULL(staticMesh);
+
+    auto sourceTransform = staticMesh->Get_Component<Transform>();
+    if (!sourceTransform)
+        return;
+
+    auto sourceModel = staticMesh->Get_Model();
+    if (!sourceModel)
+        return;
+
+    const string unitPlaneGuid = Resolve_CollisionUnitPlaneGuid();
+    if (unitPlaneGuid.empty())
+        return;
+
+    Vec2 planeBaseSize(1.f, 1.f);
+    if (!Try_BuildProxyPlaneBaseSize(unitPlaneGuid, planeBaseSize))
+    {
+        LOG_ERROR("Collision unit plane base size build failed");
+        NOTIFY("Collision Unit Plane Invalid");
+        return;
+    }
+
+    BoundingBox localBounds{};
+    if (!Try_BuildPickingLocalBounds(sourceModel, localBounds))
+    {
+        LOG_ERROR(
+            "Create_CollisionProxySetFromStaticMesh: local bounds build failed for '{}'",
+            Utils::ToString(staticMesh->Get_Name()));
+        NOTIFY("Collision Proxy Bounds Failed");
+        return;
+    }
+
+    const Vec3 localMin = Vec3(localBounds.Center.x, localBounds.Center.y, localBounds.Center.z)
+                    - Vec3(localBounds.Extents.x, localBounds.Extents.y, localBounds.Extents.z);
+
+    const Vec3 localMax = Vec3(localBounds.Center.x, localBounds.Center.y, localBounds.Center.z)
+                    + Vec3(localBounds.Extents.x, localBounds.Extents.y, localBounds.Extents.z);
+
+    const Vec3 localCenter = localBounds.Center;
+
+    const Vec3 sourceWorldScaleRaw = sourceTransform->Get_WorldScale();
+    const Vec3 sourceWorldScale(
+        max(fabsf(sourceWorldScaleRaw.x), 0.0001f),
+        max(fabsf(sourceWorldScaleRaw.y), 0.0001f),
+        max(fabsf(sourceWorldScaleRaw.z), 0.0001f));
+
+    const float width = max((localMax.x - localMin.x) * sourceWorldScale.x, 0.f);
+    const float height = max((localMax.y - localMin.y) * sourceWorldScale.y, 0.f);
+    const float depth = max((localMax.z - localMin.z) * sourceWorldScale.z, 0.f);
+
+    const float outwardOffset = 0.05f;
+    const float roofOffset = 0.03f;
+    const float minWallWidth = 0.5f;
+    const float minWallHeight = 1.0f;
+    const float minRoofSize = 0.5f;
+
+    const Matrix sourceWorldMatrix = sourceTransform->Get_WorldMatrix();
+    const Quat sourceWorldRotation = sourceTransform->Get_WorldRotation();
+    const wstring baseName = staticMesh->Get_Name();
+
+    int32 createdCount = 0;
+    int32 skippedCount = 0;
+
+    auto createFaceProxy =
+        [&](const wstring& proxyName,
+            ECollisionProxyType proxyType,
+            const Vec3& localFaceCenter,
+            const Quat& localFaceRotation,
+            const Vec3& proxyScale,
+            bool shouldCreate)
+        {
+            if (!shouldCreate)
+            {
+                ++skippedCount;
+                return;
+            }
+
+            CollisionProxyActor::FCollisionProxyDesc desc{};
+            desc.name = proxyName;
+            desc.modelGuid = unitPlaneGuid;
+            desc.proxyType = proxyType;
+
+            auto proxyObj = Create_CollisionProxy(desc);
+            if (!proxyObj)
+            {
+                ++skippedCount;
+                return;
+            }
+
+            auto proxyTransform = proxyObj->Get_Component<Transform>();
+            if (!proxyTransform)
+            {
+                ++skippedCount;
+                return;
+            }
+
+            const Vec3 worldPos = Vec3::Transform(localFaceCenter, sourceWorldMatrix);
+            const Quat worldRot = sourceWorldRotation * localFaceRotation;
+
+            proxyTransform->Set_WorldPosition(worldPos);
+            proxyTransform->Set_WorldRotation(worldRot);
+            proxyTransform->Set_LocalScale(proxyScale);
+
+            GAME->Add_GameObject(GAME->Current_Level(), TEXT("Layer_CollisionProxy"), proxyObj);
+            ++createdCount;
+        };
+
+    createFaceProxy(
+        baseName + L"_WallFrontProxy",
+        ECollisionProxyType::WallRun,
+        Vec3(localCenter.x, localCenter.y, localMax.z + outwardOffset),
+        Quat::CreateFromYawPitchRoll(XMConvertToRadians(0.f), XMConvertToRadians(90.f), XMConvertToRadians(0.f)),
+        Vec3(width / planeBaseSize.x, 1.f, height / planeBaseSize.y),
+        width >= minWallWidth && height >= minWallHeight);
+
+    createFaceProxy(
+        baseName + L"_WallBackProxy",
+        ECollisionProxyType::WallRun,
+        Vec3(localCenter.x, localCenter.y, localMin.z - outwardOffset),
+        Quat::CreateFromYawPitchRoll(XMConvertToRadians(180.f), XMConvertToRadians(90.f), XMConvertToRadians(0.f)),
+        Vec3(width / planeBaseSize.x, 1.f, height / planeBaseSize.y),
+        width >= minWallWidth && height >= minWallHeight);
+
+    createFaceProxy(
+        baseName + L"_WallLeftProxy",
+        ECollisionProxyType::WallRun,
+        Vec3(localMin.x - outwardOffset, localCenter.y, localCenter.z),
+        Quat::CreateFromYawPitchRoll(XMConvertToRadians(-90.f), XMConvertToRadians(90.f), XMConvertToRadians(0.f)),
+        Vec3(depth / planeBaseSize.x, 1.f, height / planeBaseSize.y),
+        depth >= minWallWidth && height >= minWallHeight);
+
+    createFaceProxy(
+        baseName + L"_WallRightProxy",
+        ECollisionProxyType::WallRun,
+        Vec3(localMax.x + outwardOffset, localCenter.y, localCenter.z),
+        Quat::CreateFromYawPitchRoll(XMConvertToRadians(90.f), XMConvertToRadians(90.f), XMConvertToRadians(0.f)),
+        Vec3(depth / planeBaseSize.x, 1.f, height / planeBaseSize.y),
+        depth >= minWallWidth && height >= minWallHeight);
+
+    createFaceProxy(
+        baseName + L"_WalkableProxy",
+        ECollisionProxyType::Walkable,
+        Vec3(localCenter.x, localMax.y + roofOffset, localCenter.z),
+        Quat::Identity,
+        Vec3(width / planeBaseSize.x, 1.f, depth / planeBaseSize.y),
+        width >= minRoofSize && depth >= minRoofSize);
+
+    LOG_INFO(
+        "Collision proxy set created: actor='{}', created={}, skipped={}",
+        Utils::ToString(baseName),
+        createdCount,
+        skippedCount);
+
+    Notify_CollisionProxyCreateResult(createdCount, skippedCount);
 }
 
 void Scene_View::Handle_DragDrop(Shared<GameObject> previewObj, const Vec3& worldPos, const ImGuiPayload* payload)
@@ -217,39 +693,43 @@ void Scene_View::Render_Viewport()
             static_cast<uint32>(panelSize.y));
 
         if (_displayRenderTarget)
+        {
             _displayRenderTarget->Resize(static_cast<uint32>(panelSize.x),
                 static_cast<uint32>(panelSize.y));
+        }
 
         auto srv = _displayRenderTarget ? _displayRenderTarget->Get_SRV() : _renderTarget->Get_SRV();
 
+        ImVec2 imageTopLeft = ImGui::GetCursorScreenPos();
         ImGui::Image((ImTextureID)srv, panelSize);
 
-        // 드래그 드롭 타겟
+        _viewportTopLeft = imageTopLeft;
+        _viewportBottomRight = ImVec2(imageTopLeft.x + panelSize.x, imageTopLeft.y + panelSize.y);
+
         if (ImGui::BeginDragDropTarget())
         {
             ImVec2 mousePos = ImGui::GetMousePos();
-            ImVec2 windowPos = ImGui::GetWindowPos();
-            ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
 
             Vec2 localPos(
-                mousePos.x - windowPos.x - contentMin.x,
-                mousePos.y - windowPos.y - contentMin.y
+                mousePos.x - _viewportTopLeft.x,
+                mousePos.y - _viewportTopLeft.y
             );
+
             Vec3 worldPos = Screen_To_World(localPos);
 
-            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_PREFAB",
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(
+                "CONTENT_PREFAB",
                 ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_AcceptNoDrawDefaultRect))
             {
                 string guid = (const char*)payload->Data;
                 string prefabName = GUID_To_PrefabName(guid);
 
                 auto obj = _previewObject ? nullptr : GAME->Instantiate_Prefab(prefabName);
-
                 Handle_DragDrop(obj, worldPos, payload);
             }
 
-            // Content Mesh
-            if (auto* payload = ImGui::AcceptDragDropPayload("CONTENT_MESH",
+            if (auto* payload = ImGui::AcceptDragDropPayload(
+                "CONTENT_MESH",
                 ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_AcceptNoDrawDefaultRect))
             {
                 string guid = (const char*)payload->Data;
@@ -267,8 +747,9 @@ void Scene_View::Render_Viewport()
                 Clear_Drag();
             }
         }
+
+        Handle_MousePicking();
     }
-    
 }
 
 void Scene_View::Update_WindowState()

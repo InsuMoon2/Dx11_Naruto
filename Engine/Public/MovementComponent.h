@@ -22,9 +22,10 @@ public:
     struct FCollisionModelInstance
     {
         Shared<Model> model;
-
         Matrix worldMatrix = Matrix::Identity;
+
         BoundingBox worldBounds{};
+
         bool hasWorldBounds = false;
     };
 
@@ -187,6 +188,10 @@ private: /* Line Trace 방식으로 벽타기 리팩토링 */
     bool Detect_WallEntrySurface(const Vec3& currentPos, const Vec3& desiredDir, FSurfaceHit& outHit) const;
     bool Trace_WallSurface(const Ray& wallRay, float maxDistance, FSurfaceHit& outHit) const;
     static Vec3 Rotate_HorizontalDirection(const Vec3& dir, float degrees);
+
+    void Apply_WallBlock(
+        const Vec3& previousPos,
+        Shared<Transform> transform);
 
 private:
     FMovementDesc _moveDesc;

@@ -281,6 +281,16 @@ void Hierarchy::Draw_ObjectNode(shared_ptr<GameObject> gameObject, int index)
         if (!Is_Selected(gameObject))
             Select_Object(gameObject, false);
 
+        auto staticMesh = dynamic_pointer_cast<StaticMeshActor>(gameObject);
+        if (staticMesh && ImGui::MenuItem("충돌체 만들기"))
+        {
+            auto sceneView = dynamic_pointer_cast<Scene_View>(EDITOR->Get_Window(TEXT("Scene")));
+            if (sceneView)
+            {
+                sceneView->Create_CollisionProxySetFromStaticMesh(staticMesh);
+            }
+        }
+
         if (ImGui::MenuItem("복사"))
         {
             for (auto& obj : _selectedObjects)

@@ -3,7 +3,7 @@
         {
             "position": [
                 0.0,
-                0.0,
+                15.0,
                 0.0
             ],
             "rotation": [
@@ -53,13 +53,14 @@
             "Dash Duration": 0.18000000715255737,
             "Deceleration": 24.0,
             "Gravity": -20.0,
-            "Ground Y": 0.0,
+            "Ground Walkable Min Up Dot": 0.550000011920929,
+            "Ground Y": 15.0,
             "Jump Velocity": 10.0,
             "Max Sprint Speed": 20.0,
             "Max Walk Speed": 9.0,
             "Wall Attach Offset": 0.15000000596046448,
             "Wall Detect Distance": 1.0,
-            "Wall Jump Out Velocity": 25.0,
+            "Wall Jump Out Velocity": 50.0,
             "Wall Jump Up Velocity": 9.0,
             "Wall Runnable Max Up Dot": 0.25,
             "Wall Trace Start Offset Y": 1.0,
@@ -2523,7 +2524,7 @@
                             0.029999999329447746
                         ],
                         "rotation": [
-                            3.107999563217163,
+                            3.107999324798584,
                             -77.7699966430664,
                             178.99993896484375
                         ],
@@ -2637,7 +2638,7 @@
                     0.029999999329447746
                 ],
                 "rotation": [
-                    3.107999563217163,
+                    3.107999324798584,
                     -77.7699966430664,
                     178.99993896484375
                 ],
@@ -2650,7 +2651,7 @@
             }
         }
     },
-    "guid": "61484f58-0b30-4469-9834-a6d27cc226d5",
+    "guid": "0803b117-2ed4-401e-bac4-15d78429f794",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"

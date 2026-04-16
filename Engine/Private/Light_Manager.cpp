@@ -29,6 +29,17 @@ void Light_Manager::Clear_Lights()
     _lights.clear();
 }
 
+HRESULT Light_Manager::Render_Lights(Shared<Shader> shader, Shared<VIBuffer_Rect> viBuffer)
+{
+    for (auto& light : _lights)
+    {
+        if (light)
+            light->Render(shader, viBuffer);
+    }
+
+    return S_OK;
+}
+
 Unique<Light_Manager> Light_Manager::Create()
 {
     return make_unique<Light_Manager>();

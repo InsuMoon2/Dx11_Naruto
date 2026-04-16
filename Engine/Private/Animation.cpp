@@ -147,7 +147,6 @@ void Animation::Rebind_BoneIndices(const vector<Shared<Bone>>& bones)
         boneNameToIndex[bones[i]->Get_Name()] = static_cast<int32>(i);
     }
 
-    // animbin에 저장된 bone index를 신뢰하지 않고, 현재 모델 bone name 기준으로 다시 맞춘다.
     for (const auto& channel : _channels)
     {
         if (!channel)

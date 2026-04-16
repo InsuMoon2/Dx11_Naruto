@@ -1,6 +1,9 @@
 ﻿#include "pch.h"
 #include "RenderTarget.h"
 #include <wincodec.h>
+
+#include "Shader.h"
+#include "VIBuffer_Rect.h"
 #pragma comment(lib, "windowscodecs.lib")
 
 RenderTarget::RenderTarget()
@@ -11,7 +14,8 @@ RenderTarget::~RenderTarget()
 {
 }
 
-HRESULT RenderTarget::Initialize(ComPtr<Device> device, uint32 width, uint32 height)
+HRESULT RenderTarget::Initialize(ComPtr<Device> device, uint32 width, uint32 height,
+                        DXGI_FORMAT format, bool createDepth)
 {
     _device = device;
     _device->GetImmediateContext(_context.GetAddressOf());
@@ -25,7 +29,7 @@ HRESULT RenderTarget::Initialize(ComPtr<Device> device, uint32 width, uint32 hei
         desc.Height = _height;
         desc.MipLevels = 1;
         desc.ArraySize = 1;
-        desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        desc.Format = format;
         desc.SampleDesc.Count = 1;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -36,7 +40,7 @@ HRESULT RenderTarget::Initialize(ComPtr<Device> device, uint32 width, uint32 hei
     // RenderTargetView
     {
         D3D11_RENDER_TARGET_VIEW_DESC desc = {};
-        desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        desc.Format = format;
         desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
         if (FAILED(_device->CreateRenderTargetView(_texture.Get(), &desc, _renderTargetView.GetAddressOf())))
             return E_FAIL;
@@ -45,35 +49,38 @@ HRESULT RenderTarget::Initialize(ComPtr<Device> device, uint32 width, uint32 hei
     // ShaderResourceView (ImGui용)
     {
         D3D11_SHADER_RESOURCE_VIEW_DESC desc = {};
-        desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        desc.Format = format;
         desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
         desc.Texture2D.MipLevels = 1;
         if (FAILED(_device->CreateShaderResourceView(_texture.Get(), &desc, _shaderResourceView.GetAddressOf())))
             return E_FAIL;
     }
 
-    // Depth Texture
+    if (createDepth)
     {
-        D3D11_TEXTURE2D_DESC desc = {};
-        desc.Width = _width;
-        desc.Height = _height;
-        desc.MipLevels = 1;
-        desc.ArraySize = 1;
-        desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-        desc.SampleDesc.Count = 1;
-        desc.Usage = D3D11_USAGE_DEFAULT;
-        desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-        if (FAILED(_device->CreateTexture2D(&desc, nullptr, _depthTexture.GetAddressOf())))
-            return E_FAIL;
-    }
+        // Depth Texture
+        {
+            D3D11_TEXTURE2D_DESC desc = {};
+            desc.Width = _width;
+            desc.Height = _height;
+            desc.MipLevels = 1;
+            desc.ArraySize = 1;
+            desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+            desc.SampleDesc.Count = 1;
+            desc.Usage = D3D11_USAGE_DEFAULT;
+            desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+            if (FAILED(_device->CreateTexture2D(&desc, nullptr, _depthTexture.GetAddressOf())))
+                return E_FAIL;
+        }
 
-    // DepthStencilView
-    {
-        D3D11_DEPTH_STENCIL_VIEW_DESC desc = {};
-        desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-        desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-        if (FAILED(_device->CreateDepthStencilView(_depthTexture.Get(), &desc, _depthStencilView.GetAddressOf())))
-            return E_FAIL;
+        // DepthStencilView
+        {
+            D3D11_DEPTH_STENCIL_VIEW_DESC desc = {};
+            desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+            desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+            if (FAILED(_device->CreateDepthStencilView(_depthTexture.Get(), &desc, _depthStencilView.GetAddressOf())))
+                return E_FAIL;
+        }
     }
 
     // Viewport
@@ -87,7 +94,7 @@ HRESULT RenderTarget::Initialize(ComPtr<Device> device, uint32 width, uint32 hei
     return S_OK;
 }
 
-HRESULT RenderTarget::Resize(uint32 width, uint32 height)
+HRESULT RenderTarget::Resize(uint32 width, uint32 height, DXGI_FORMAT format, bool createDepth)
 {
     if (_width == width && _height == height)
         return S_OK;
@@ -97,7 +104,7 @@ HRESULT RenderTarget::Resize(uint32 width, uint32 height)
 
     Release();
 
-    return Initialize(_device, width, height);
+    return Initialize(_device, width, height, format, createDepth);
 }
 
 void RenderTarget::BindAsTarget()
@@ -109,8 +116,9 @@ void RenderTarget::BindAsTarget()
 void RenderTarget::Clear(const Color& color)
 {
     _context->ClearRenderTargetView(_renderTargetView.Get(), (float*)&color);
-    _context->ClearDepthStencilView(_depthStencilView.Get(),
-        D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+
+    if (_depthStencilView)
+        _context->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 }
 
 void RenderTarget::UnbindAll()
@@ -175,6 +183,31 @@ HRESULT RenderTarget::Save_To_File(const wstring& outputPath)
     return S_OK;
 }
 
+#ifdef _DEBUG
+HRESULT RenderTarget::Ready_Debug(float x, float y, float sizeX, float sizeY)
+{
+    _debugWorldMatrix = Matrix::Identity;
+    _debugWorldMatrix._11 = sizeX;
+    _debugWorldMatrix._22 = sizeY;
+    _debugWorldMatrix._41 = x;
+    _debugWorldMatrix._42 = y;
+
+    return S_OK;
+}
+
+HRESULT RenderTarget::Render(Shared<VIBuffer_Rect> viBuffer, Shared<Shader> shader)
+{
+    shader->Bind_Matrix("g_WorldMatrix", &_debugWorldMatrix);
+    shader->Bind_SRV("g_Texture", _shaderResourceView.Get());
+
+    shader->Begin_Pass(0);
+
+    viBuffer->Render();
+
+    return S_OK;
+}
+#endif
+
 void RenderTarget::Release()
 {
     _texture.Reset();
@@ -184,10 +217,11 @@ void RenderTarget::Release()
     _depthStencilView.Reset();
 }
 
-shared_ptr<RenderTarget> RenderTarget::Create(ComPtr<Device> device, uint32 width, uint32 height)
+Shared<RenderTarget> RenderTarget::Create(ComPtr<Device> device, uint32 width, uint32 height, DXGI_FORMAT format,
+    bool createDepth)
 {
     auto instance = make_shared<RenderTarget>();
-    if (FAILED(instance->Initialize(device, width, height)))
+    if (FAILED(instance->Initialize(device, width, height, format, createDepth)))
     {
         MSG_BOX("Failed to Create : RenderTarget");
         return nullptr;

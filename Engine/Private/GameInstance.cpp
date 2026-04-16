@@ -35,59 +35,15 @@
 #pragma push_macro("new")
 #undef new
 #include "Camera.h"
+#include "CollisionProxy_Manager.h"
 #include "Collision_Manager.h"
 #include "Debug_Manager.h"
 #include "imgui.h"
 #include "Sound_Manager.h"
+#include "Target_Manager.h"
 #pragma pop_macro("new")
 
 IMPLEMENT_SINGLETON(GameInstance)
-
-// 에디터/런타임 시작 직후 특정 모델 이름이 어떤 경로/GUID로 등록됐는지 빠르게 확인하기 위한 진단 로그를 남긴다.
-static void Log_SkeletalModelRegistrationState(GameInstance* gameInstance, const string& targetStemName)
-{
-    if (!gameInstance || targetStemName.empty())
-        return;
-
-    auto assets = gameInstance->Get_AssetByType("model");
-    if (assets.empty())
-        assets = gameInstance->Get_AssetByType("Model");
-
-    vector<const FAssetMeta*> matchedAssets;
-    for (const FAssetMeta* meta : assets)
-    {
-        if (!meta)
-            continue;
-
-        if (meta->modelType != "SkeletalMesh")
-            continue;
-
-        const fs::path assetPath(meta->fullPath);
-        if (Utils::ToLowerCopy(assetPath.stem().string()) != Utils::ToLowerCopy(targetStemName))
-            continue;
-
-        matchedAssets.push_back(meta);
-    }
-
-    if (matchedAssets.empty())
-    {
-        LOG_INFO("Skeletal model registration check - '{}' not found", targetStemName);
-        return;
-    }
-
-    LOG_INFO("Skeletal model registration check - '{}' count = {}", targetStemName, matchedAssets.size());
-
-    for (const FAssetMeta* meta : matchedAssets)
-    {
-        if (!meta)
-            continue;
-
-        LOG_INFO("  guid={} relativePath={} fullPath={}",
-            meta->guid,
-            Utils::ToString(meta->relativePath),
-            Utils::ToString(meta->fullPath));
-    }
-}
 
 GameInstance::GameInstance()
 {
@@ -134,7 +90,10 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _objectManager = Object_Manager::Create(desc.numLevels);
     CHECK_NULL(_objectManager, E_FAIL);
-    
+
+    _targetManager = Target_Manager::Create(Get_Device(), Get_Context());
+    CHECK_NULL(_targetManager, E_FAIL);
+
     _renderer = Renderer::Create(Get_Device(), Get_Context());
     CHECK_NULL(_renderer, E_FAIL);
 
@@ -158,7 +117,6 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _assetManager = Asset_Manager::Create(TEXT("../../Client/Bin/Resources"));
     CHECK_NULL(_assetManager, E_FAIL);
-    Log_SkeletalModelRegistrationState(this, "WhiteZetsu");
 
     _uiManager = UI_Manager::Create();
     CHECK_NULL(_uiManager, E_FAIL);
@@ -181,6 +139,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
 
     _debugManager = Debug_Manager::Create(Get_Device(), Get_Context());
     CHECK_NULL(_debugManager, E_FAIL);
+
+    _collisionProxyManager = CollisionProxy_Manager::Create();
+    CHECK_NULL(_collisionProxyManager, E_FAIL);
 
     return S_OK;
 }
@@ -253,6 +214,9 @@ void GameInstance::Clear_Resources(uint32 levelIndex)
     if (_debugManager)
         _debugManager->Clear();
 
+    if (_collisionProxyManager)
+        _collisionProxyManager->Clear();
+
     _cameraManager->Clear_InvalidCameras();
 }
 
@@ -297,6 +261,7 @@ HRESULT GameInstance::Resize_BackBuffer(uint32 width, uint32 height)
         _textRenderer->On_BeforeResize();
 
     CHECK_FAILED(_graphicDevice->Resize(width, height), E_FAIL);
+    CHECK_FAILED(_targetManager->Resize_MRTs(width, height), E_FAIL);
 
     if (_textRenderer)
         CHECK_FAILED(_textRenderer->On_AfterResize(), E_FAIL);
@@ -649,6 +614,11 @@ void GameInstance::Clear_Lights()
     return _lightManager->Clear_Lights();
 }
 
+HRESULT GameInstance::Render_Lights(Shared<Shader> shader, Shared<VIBuffer_Rect> viBuffer)
+{
+    return _lightManager->Render_Lights(shader, viBuffer);
+}
+
 string GameInstance::Find_AssetGUID(const wstring& filePath)
 {
     return _assetManager->Find_GUID(filePath);
@@ -983,6 +953,69 @@ HRESULT GameInstance::Render_DebugOverlay()
     return _debugManager->Render_Overlay();
 }
 
+void GameInstance::Ready_CollisionProxy(const vector<FProxyEntry>& entries)
+{
+     if (_collisionProxyManager)
+        _collisionProxyManager->Ready_CollisionProxy(entries);
+}
+
+void GameInstance::Query_ActiveCollisionProxy(const Vec3& focusPos,
+    vector<MovementComponent::FCollisionModelInstance>& outWalkable,
+    vector<MovementComponent::FCollisionModelInstance>& outWall) const
+{
+    if (_collisionProxyManager)
+        _collisionProxyManager->Query_ActiveCollisionProxy(focusPos, outWalkable, outWall);
+}
+
+void GameInstance::Clear_CollisionProxy()
+{
+    if (_collisionProxyManager)
+        _collisionProxyManager->Clear();
+}
+
+HRESULT GameInstance::Add_RenderTarget(const wstring& targetTag, uint32 sizeX, uint32 sizeY, DXGI_FORMAT format,
+    const Color& clearColor)
+{
+    return _targetManager->Add_RenderTarget(targetTag, sizeX, sizeY, format, clearColor);
+}
+
+HRESULT GameInstance::Add_MRT(const wstring& mrtTag, const wstring& targetTag)
+{
+    return _targetManager->Add_MRT(mrtTag, targetTag);
+}
+
+HRESULT GameInstance::Begin_MRT(const wstring& mrtTag)
+{
+    return _targetManager->Begin_MRT(mrtTag);
+}
+
+HRESULT GameInstance::End_MRT()
+{
+    return _targetManager->End_MRT();
+}
+
+HRESULT GameInstance::Bind_RT_ShaderResource(Shared<Shader> shader, const char* constantName, const wstring& targetTag)
+{
+    return _targetManager->Bind_ShaderResource(shader, constantName, targetTag);
+}
+
+HRESULT GameInstance::Resize_MRTs(uint32 width, uint32 height)
+{
+    return _targetManager->Resize_MRTs(width, height);
+}
+
+#ifdef _DEBUG
+HRESULT GameInstance::Ready_RT_Debug(const wstring& targetTag, float x, float y, float sizeX, float sizeY)
+{
+    return _targetManager->Ready_Debug(targetTag, x, y, sizeX, sizeY);
+}
+
+HRESULT GameInstance::Render_RT_Debug(Shared<VIBuffer_Rect> viBuffer, Shared<Shader> shader, const wstring& mrtTag)
+{
+    return _targetManager->Render_Debug(mrtTag, shader, viBuffer);
+}
+#endif
+
 #ifdef _DEBUG
 void GameInstance::Render_Colliders()
 {
@@ -1040,4 +1073,50 @@ void GameInstance::Free()
 
     _uiManager.reset();
     _assetManager.reset();
+}
+
+
+static void Log_SkeletalModelRegistrationState(GameInstance* gameInstance, const string& targetStemName)
+{
+    if (!gameInstance || targetStemName.empty())
+        return;
+
+    auto assets = gameInstance->Get_AssetByType("model");
+    if (assets.empty())
+        assets = gameInstance->Get_AssetByType("Model");
+
+    vector<const FAssetMeta*> matchedAssets;
+    for (const FAssetMeta* meta : assets)
+    {
+        if (!meta)
+            continue;
+
+        if (meta->modelType != "SkeletalMesh")
+            continue;
+
+        const fs::path assetPath(meta->fullPath);
+        if (Utils::ToLowerCopy(assetPath.stem().string()) != Utils::ToLowerCopy(targetStemName))
+            continue;
+
+        matchedAssets.push_back(meta);
+    }
+
+    if (matchedAssets.empty())
+    {
+        LOG_INFO("Skeletal model registration check - '{}' not found", targetStemName);
+        return;
+    }
+
+    LOG_INFO("Skeletal model registration check - '{}' count = {}", targetStemName, matchedAssets.size());
+
+    for (const FAssetMeta* meta : matchedAssets)
+    {
+        if (!meta)
+            continue;
+
+        LOG_INFO("  guid={} relativePath={} fullPath={}",
+            meta->guid,
+            Utils::ToString(meta->relativePath),
+            Utils::ToString(meta->fullPath));
+    }
 }

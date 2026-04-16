@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Level_Serializer.h"
 #include "GameObject.h"
 #include <fstream>
@@ -33,6 +33,9 @@ void Level_Serializer::Save_Level(const wstring& fileName, uint32 levelIndex, co
                 if (objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
                     objType == Protocol::OBJECT_TYPE_CAMERA_TARGET ||
                     objType == Protocol::OBJECT_TYPE_PLAYER)
+                    continue;
+
+                if (Is_ProxyObject(obj))
                     continue;
 
                 objectsArray.emplace_back(GameObjectToJson(obj, layerTag));
@@ -111,7 +114,14 @@ vector<wstring> Level_Serializer::Get_SaveFiles()
         if (entry.is_regular_file())
         {
             wstring fileName = entry.path().filename().wstring();
-            if (fileName.find(L".level.json") != wstring::npos)
+            if (fileName.size() >= wcslen(L".proxy.level.json") &&
+                fileName.rfind(L".proxy.level.json") == fileName.size() - wcslen(L".proxy.level.json"))
+            {
+                continue;
+            }
+
+            if (fileName.size() >= wcslen(L".level.json") &&
+                fileName.rfind(L".level.json") == fileName.size() - wcslen(L".level.json"))
             {
                 levelFiles.push_back(fileName);
             }
@@ -235,4 +245,88 @@ shared_ptr<GameObject> Level_Serializer::JsonToGameObject(const json& j, uint32 
 wstring Level_Serializer::Get_FullPath(const wstring& fileName)
 {
     return wstring(LEVEL_DIRECTORY) + fileName;
+}
+
+void Level_Serializer::Save_LevelProxy(const wstring& fileName, uint32 levelIndex, const wstring& levelName)
+{
+    const wstring fullPath = Get_ProxyFullPath(fileName);
+    json levelJson;
+    levelJson["levelName"] = Utils::ToString(levelName);
+    levelJson["levelIndex"] = levelIndex;
+
+    json objectsArray = json::array();
+    const auto& layers = GAME->Get_Layers(levelIndex);
+
+    for (auto& [layerTag, layer] : layers)
+    {
+        for (auto& obj : layer->Get_GameObjects())
+        {
+            if (!Is_ProxyObject(obj) || obj->Is_Destroy())
+                continue;
+
+            objectsArray.emplace_back(GameObjectToJson(obj, layerTag));
+        }
+    }
+
+    levelJson["gameObjects"] = objectsArray;
+
+    ofstream file(fullPath);
+    if (file.is_open())
+    {
+        file << levelJson.dump(4);
+        file.close();
+    }
+}
+
+vector<shared_ptr<GameObject>> Level_Serializer::Load_LevelProxy(const wstring& fileName)
+{
+    const wstring fullPath = Get_ProxyFullPath(fileName);
+    vector<shared_ptr<GameObject>> objects;
+
+    if (!filesystem::exists(fullPath))
+        return objects;
+
+    ifstream file(fullPath);
+    if (!file.is_open())
+        return objects;
+
+    json levelJson;
+    file >> levelJson;
+    file.close();
+
+    if (!levelJson.contains("gameObjects"))
+        return objects;
+
+    uint32 levelIndex = levelJson.value("levelIndex", GAME->Current_Level());
+
+    for (auto& objJson : levelJson["gameObjects"])
+    {
+        auto obj = JsonToGameObject(objJson, levelIndex);
+        if (obj)
+            objects.emplace_back(obj);
+    }
+
+    return objects;
+}
+
+wstring Level_Serializer::Get_ProxyFullPath(const wstring& fileName)
+{
+    fs::path path(fileName);
+    wstring fileNameOnly = path.filename().wstring();
+    const wstring levelSuffix = L".level.json";
+
+    if (fileNameOnly.size() >= levelSuffix.size() &&
+        fileNameOnly.rfind(levelSuffix) == fileNameOnly.size() - levelSuffix.size())
+    {
+        fileNameOnly.erase(fileNameOnly.size() - levelSuffix.size());
+    }
+
+    return wstring(LEVEL_DIRECTORY) + fileNameOnly + L".proxy.level.json";
+}
+
+bool Level_Serializer::Is_ProxyObject(shared_ptr<GameObject> obj)
+{
+    CHECK_NULL(obj, false);
+
+    return obj->Get_ObjectType() == Protocol::OBJECT_TYPE_COLLISION_PROXY;
 }
