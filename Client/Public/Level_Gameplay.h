@@ -66,6 +66,11 @@ private:
     Shared<Model>           Get_OrCreateWallCollisionModel(const string& modelGuid, const string& resolvedPath);
 
     void                    Draw_StaticMeshRender();
+
+private:
+    static bool Is_ExtraGroundNameCandidate(const string& candidateName);
+    HRESULT Rebuild_ExtraGroundCollisionFromPlacedMeshes();
+    HRESULT Append_ExtraGroundCollisionFromActor(Shared<StaticMeshActor> actor);
     
 private:
     Shared<UI_PlayerHUD> _playerHUD;
@@ -77,6 +82,7 @@ private:
 
     vector<MovementComponent::FCollisionModelInstance> _groundCollisionModels;
     vector<MovementComponent::FCollisionModelInstance> _wallCollisionModels;
+    vector<MovementComponent::FCollisionModelInstance> _extraGroundCollisionModels;
 
     bool            _konohaTransitionRequested = false;
 

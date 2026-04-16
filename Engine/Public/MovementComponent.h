@@ -83,6 +83,8 @@ public:
         float wallJumpUpVelocity = 8.f;
         float wallJumpOutVelocity = 6.f;
 
+        // 바닥으로 인정할 수 있는 표면 최소치
+        float groundWalkableMinUpDot = 0.55f;
     };
 
     struct FMoveCommand
@@ -98,8 +100,9 @@ public:
 
         Vec3  moveBasisForward = Vec3(0.f, 0.f, 1.f);
         Vec3  moveBasisRight = Vec3(1.f, 0.f, 0.f);
-    };
 
+      
+    };
   
 
 public:
@@ -179,6 +182,11 @@ private: /* 벽타기 */
     void Apply_WallRunRotation(float timeDelta, Shared<Transform> transform);
 
     void Restore_DefaultUpRotation(Shared<Transform> transform);
+
+private: /* Line Trace 방식으로 벽타기 리팩토링 */
+    bool Detect_WallEntrySurface(const Vec3& currentPos, const Vec3& desiredDir, FSurfaceHit& outHit) const;
+    bool Trace_WallSurface(const Ray& wallRay, float maxDistance, FSurfaceHit& outHit) const;
+    static Vec3 Rotate_HorizontalDirection(const Vec3& dir, float degrees);
 
 private:
     FMovementDesc _moveDesc;

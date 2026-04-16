@@ -43,6 +43,7 @@ HRESULT Level_Konoha::Initialize(EGameplaySpawnMode spawnMode)
     {
         CHECK_FAILED(Ready_GroundColliison(), E_FAIL);
         CHECK_FAILED(Rebuild_WallCollisionFromPlacedMeshes(), E_FAIL);
+        CHECK_FAILED(Rebuild_ExtraGroundCollisionFromPlacedMeshes(), E_FAIL);
     }
     
 
@@ -494,6 +495,137 @@ HRESULT Level_Konoha::Collect_WallCollisionCandidatesFromLayers(const vector<wst
     return S_OK;
 }
 
+bool Level_Konoha::Is_ExtraGroundNameCandidate(const string& candidateName)
+{
+    const string lowered = Utils::ToLowerCopy(candidateName);
+
+    static const vector<string> includeKeywords =
+    {
+        "roof",
+        "top",
+        "terrace",
+        "balcony",
+        "platform"
+    };
+
+    static const vector<string> excludeKeywords =
+    {
+        "curtain",
+        "lantern",
+        "banner",
+        "tree",
+        "bush",
+        "grass",
+        "plant"
+    };
+
+    for (const auto& keyword : excludeKeywords)
+    {
+        if (lowered.find(keyword) != string::npos)
+            return false;
+    }
+
+    for (const auto& keyword : includeKeywords)
+    {
+        if (lowered.find(keyword) != string::npos)
+            return true;
+    }
+
+    return false;
+}
+
+
+HRESULT Level_Konoha::Rebuild_ExtraGroundCollisionFromPlacedMeshes()
+{
+    _extraGroundCollisionModels.clear();
+
+    const vector<wstring> layerTags =
+    {
+        TEXT("Layer_Terrain"),
+        TEXT("Layer_Props")
+    };
+
+    const uint32 levelIndex = ETOI(ELevelType::Konoha);
+    const auto layers = GAME->Get_Layers(levelIndex);
+
+    for (const auto& layerTag : layerTags)
+    {
+        auto iter = layers.find(layerTag);
+        if (iter == layers.end() || !iter->second)
+            continue;
+
+        const auto& objects = iter->second->Get_GameObjects();
+        for (const auto& obj : objects)
+        {
+            if (!obj)
+                continue;
+
+            if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_STATIC_MESH)
+                continue;
+
+            auto actor = dynamic_pointer_cast<StaticMeshActor>(obj);
+            if (!actor)
+                continue;
+
+            CHECK_FAILED(Append_ExtraGroundCollisionFromActor(actor), E_FAIL);
+        }
+    }
+
+    LOG_INFO("[Level_Konoha] Extra ground collision rebuilt from placed meshes = {}",
+        _extraGroundCollisionModels.size());
+
+    return S_OK;
+}
+
+HRESULT Level_Konoha::Append_ExtraGroundCollisionFromActor(Shared<StaticMeshActor> actor)
+{
+    if (!actor)
+        return S_OK;
+
+    auto transform = actor->Get_Transform();
+    if (!transform)
+        return S_OK;
+
+    const string& modelGuid = actor->Get_ModelGuid();
+    if (modelGuid.empty())
+        return S_OK;
+
+    string resolvedPath = actor->Get_ResolvedPath();
+    if (resolvedPath.empty())
+    {
+        resolvedPath = Utils::ToString(GAME->Resolve_AssetPath(modelGuid));
+    }
+
+    const string candidateName =
+        Utils::ToString(actor->Get_Name()) + "|" + resolvedPath + "|" + modelGuid;
+
+    if (!Is_ExtraGroundNameCandidate(candidateName))
+        return S_OK;
+
+    Shared<Model> collisionModel = Get_OrCreateWallCollisionModel(modelGuid, resolvedPath);
+    if (!collisionModel)
+        return S_OK;
+
+    MovementComponent::FCollisionModelInstance collision{};
+    collision.model = collisionModel;
+    collision.worldMatrix = transform->Get_WorldMatrix();
+    collision.hasWorldBounds =
+        Try_BuildWorldBoundsFromModel(collisionModel, collision.worldMatrix, collision.worldBounds);
+
+    if (!collision.hasWorldBounds)
+        return S_OK;
+
+    const float width = collision.worldBounds.Extents.x * 2.f;
+    const float depth = collision.worldBounds.Extents.z * 2.f;
+
+    if (max(width, depth) < 1.5f)
+        return S_OK;
+
+    _extraGroundCollisionModels.push_back(collision);
+    return S_OK;
+}
+
+
 void Level_Konoha::Draw_StaticMeshRender()
 {
     // 플레이어 위치 기준으로 짤라보기
@@ -672,7 +804,7 @@ void Level_Konoha::Spawn_LocalPlayer()
 
 void Level_Konoha::On_PlayerObjectSpawned(Shared<GameObject> obj)
 {
-    if (!_playerHUD || !obj)
+      if (!_playerHUD || !obj)
         return;
 
     auto player = dynamic_pointer_cast<Player>(obj);
@@ -685,9 +817,15 @@ void Level_Konoha::On_PlayerObjectSpawned(Shared<GameObject> obj)
     if (!moveCom)
         return;
 
-    if (!_groundCollisionModels.empty())
+    vector<MovementComponent::FCollisionModelInstance> combinedGroundModels = _groundCollisionModels;
+    combinedGroundModels.insert(
+        combinedGroundModels.end(),
+        _extraGroundCollisionModels.begin(),
+        _extraGroundCollisionModels.end());
+
+    if (!combinedGroundModels.empty())
     {
-        moveCom->Set_GroundCollisionModels(_groundCollisionModels);
+        moveCom->Set_GroundCollisionModels(combinedGroundModels);
     }
 
     if (!_wallCollisionModels.empty())

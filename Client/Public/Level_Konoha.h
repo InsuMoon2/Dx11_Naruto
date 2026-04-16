@@ -63,6 +63,11 @@ private:
     HRESULT                 Collect_WallCollisionCandidatesFromLayers(const vector<wstring>& layerTags);
 
 private:
+    static bool Is_ExtraGroundNameCandidate(const string& candidateName);
+    HRESULT Rebuild_ExtraGroundCollisionFromPlacedMeshes();
+    HRESULT Append_ExtraGroundCollisionFromActor(Shared<StaticMeshActor> actor);
+
+private:
     void                    Draw_StaticMeshRender();
 
     void                    Spawn_LocalPlayer();
@@ -83,6 +88,8 @@ private:
 
     vector<MovementComponent::FCollisionModelInstance> _groundCollisionModels;
     vector<MovementComponent::FCollisionModelInstance> _wallCollisionModels;
+
+    vector<MovementComponent::FCollisionModelInstance> _extraGroundCollisionModels;
 
     umap<string, Shared<Model>> _wallCollisionModelCache;
 
