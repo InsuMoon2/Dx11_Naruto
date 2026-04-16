@@ -13,7 +13,6 @@
 #include "PlayerController.h"
 #include "PlayerStateMachine.h"
 #include "Client_PacketHandler.h"
-#include "SkillComponent.h"
 #include "AnimationStateComponent.h"
 #include "GameObject_Factory.h"
 #include "Debug_Manager.h"
@@ -49,10 +48,6 @@ HRESULT MyPlayer::Initialize(void* arg)
     // Set_PlayerName(name) 또는 프로토콜 패킷에 이름 포함
 
     // MyPlayer만 입력/이동 컴포넌트 보유
-    {
-        SkillComponent::FSkillDesc skillDesc{};
-        CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SKILL, _skill, &skillDesc), E_FAIL);
-    }
     {
         MovementComponent::FMovementDesc moveDesc;
         moveDesc.maxWalkSpeed = 40.f;
@@ -92,9 +87,6 @@ void MyPlayer::Priority_Update(float timeDelta)
 
     if (_playerController)
         _playerController->Update(timeDelta);
-
-    if (_skill)
-        _skill->Update(timeDelta);
 }
 
 void MyPlayer::Update(float timeDelta)

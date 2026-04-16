@@ -36,10 +36,15 @@ void AIController::BeginPlay()
     Controller::BeginPlay();
 
     auto pawn = Get_Pawn();
+    if (!pawn)
+        return;
 
     _movement = pawn->Get_Component<MovementComponent>();
     _behavior = pawn->Get_Component<BehaviorTree>();
     _animationState = pawn->Get_Component<AnimationStateComponent>();
+
+    if (_behavior && !_btFilePath.empty())
+        _behavior->Load_FromJson(_btFilePath);
 
     if (_behavior)
         _blackboard = _behavior->Get_Blackboard();

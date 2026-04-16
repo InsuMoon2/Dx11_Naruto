@@ -24,6 +24,8 @@ public:
 
     bool                 Is_Focused() const { return _isFocused; }
 
+    Shared<RenderTarget> Get_DisplayRenderTarget() { return _displayRenderTarget; }
+
 private:
     ImGuiWindowFlags    Get_WindowFlags() const;
     void                Render_Viewport();
@@ -31,6 +33,7 @@ private:
 
 private:
     Shared<RenderTarget>        _renderTarget;
+    Shared<RenderTarget>        _displayRenderTarget;
 
     Vec2                        _viewportSize = {};
     bool                        _isFocused = false;

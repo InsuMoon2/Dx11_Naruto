@@ -1,0 +1,25 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG02_Balloon_A",
+      "material_instance_guid": "8bf26c14-52ee-4369-9b56-795a4d599c79"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG02_Balloon_A_Blue",
+      "material_instance_guid": "4f3704ca-3401-4a42-a185-65a4ee0fd5e7"
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Metal_A",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_LKNVLD_Nbuta_RopeMetal",
+      "textures": []
+    },
+    {
+      "material_name": "Material_4",
+      "textures": []
+    }
+  ]
+}

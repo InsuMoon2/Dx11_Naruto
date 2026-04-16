@@ -54,6 +54,7 @@ void PlayerState_Skill::Enter(PlayerStateMachine* state)
         state->Get_AnimationState()->Play_State(stateName);
 
     _channelingTimer = 0.f;
+    _holdReleaseElapsed = 0.f;
     _isEnding        = false;
     _subPhase        = ESkillSubPhase::Charging;
 
@@ -163,6 +164,7 @@ void PlayerState_Skill::Exit(PlayerStateMachine* state)
     _startedOnGround = false;
     _hasLanded = false;
     _chargeReady = false;
+    _holdReleaseElapsed = 0.f;
 }
 
 void PlayerState_Skill::Update_Charging(PlayerStateMachine* state, float timeDelta)
@@ -246,7 +248,22 @@ void PlayerState_Skill::Update_Charging(PlayerStateMachine* state, float timeDel
         auto input = state->Get_Input();
         int32 currentSlot = state->Get_ActiveSkillSlot();
 
-        if (!input->Get_Frame().useSkillPress[currentSlot] || _channelingTimer >= maxDuration)
+        const bool isHoldingSkillKey =
+            input &&
+            currentSlot >= 0 &&
+            currentSlot < 2 &&
+            input->Get_Frame().useSkillPress[currentSlot];
+
+        if (isHoldingSkillKey)
+        {
+            _holdReleaseElapsed = 0.f;
+        }
+        else
+        {
+            _holdReleaseElapsed += timeDelta;
+        }
+
+        if (_holdReleaseElapsed >= 0.12f || _channelingTimer >= maxDuration)
             shouldEnd = true;
     }
     else

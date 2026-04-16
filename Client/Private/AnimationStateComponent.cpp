@@ -9,6 +9,19 @@
 #include "ComboProfile_Manager.h"
 #include "EquipmentComponent.h"
 
+// 애니메이션 이름 목록을 보기 좋게 정렬하기 위한 대소문자 무시 비교 함수다.
+static bool Compare_AnimationNameCaseInsensitive(const string& lhs, const string& rhs)
+{
+    return std::lexicographical_compare(
+        lhs.begin(), lhs.end(),
+        rhs.begin(), rhs.end(),
+        [](char l, char r)
+        {
+            return std::tolower(static_cast<unsigned char>(l)) <
+                   std::tolower(static_cast<unsigned char>(r));
+        });
+}
+
 AnimationStateComponent::AnimationStateComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
 {
@@ -229,6 +242,9 @@ vector<string> AnimationStateComponent::Get_ModelAnimationNames() const
 
         result.push_back(name);
     }
+
+    // 애니메이션 컴포넌트 리스트에서는 표시 순서만 정렬하고 실제 모델 인덱스는 바꾸지 않는다.
+    sort(result.begin(), result.end(), Compare_AnimationNameCaseInsensitive);
 
     return result;
 }

@@ -22,7 +22,7 @@
             "bounding": {
                 "center": [
                     0.0,
-                    0.6200000047683716,
+                    0.699999988079071,
                     0.0
                 ],
                 "radius": 0.7699999809265137
@@ -319,52 +319,6 @@
                             "playRate": 1.0
                         },
                         "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "key": "Attack_Air_01",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_cmb01",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
                             "animationName": "SK_CHR_Sasuke|Sasuke_ChakraJump_Charge_Start",
                             "loop": false,
                             "playRate": 1.0
@@ -427,26 +381,26 @@
                         }
                     },
                     "end": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Land",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "key": "DoubleJump",
-                    "loopClip": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
-                        "loop": true,
-                        "playRate": 1.5
-                    },
-                    "mode": "Sequence",
-                    "single": {
                         "animationName": "",
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "start": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_DoubleJump",
+                    "key": "Attack_Air_01",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_cmb01",
                         "loop": false,
-                        "playRate": 3.0
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
                     }
                 },
                 {
@@ -493,6 +447,52 @@
                         "animationName": "",
                         "loop": true,
                         "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Land",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "key": "DoubleJump",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
+                        "loop": true,
+                        "playRate": 1.5
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_DoubleJump",
+                        "loop": false,
+                        "playRate": 3.0
                     }
                 },
                 {
@@ -2523,9 +2523,9 @@
                             0.029999999329447746
                         ],
                         "rotation": [
-                            3.1080000400543213,
+                            3.107999563217163,
                             -77.7699966430664,
-                            178.99996948242188
+                            178.99993896484375
                         ],
                         "scale": [
                             9.999999747378752e-05,
@@ -2537,14 +2537,14 @@
                     {
                         "bounding": {
                             "center": [
-                                5.389999866485596,
-                                4.420000076293945,
-                                -75.25
+                                0.0,
+                                10000.0,
+                                0.0
                             ],
                             "extents": [
-                                300.0,
-                                300.0,
-                                300.0
+                                3000.0,
+                                10000.0,
+                                1000.0
                             ]
                         },
                         "channel": "Player_Attack",
@@ -2637,9 +2637,9 @@
                     0.029999999329447746
                 ],
                 "rotation": [
-                    3.1080000400543213,
+                    3.107999563217163,
                     -77.7699966430664,
-                    178.99996948242188
+                    178.99993896484375
                 ],
                 "scale": [
                     9.999999747378752e-05,
@@ -2650,7 +2650,7 @@
             }
         }
     },
-    "guid": "a0a432a6-2ae7-4bf5-8916-2e35cd596d4e",
+    "guid": "61484f58-0b30-4469-9834-a6d27cc226d5",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"

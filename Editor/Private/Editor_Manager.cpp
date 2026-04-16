@@ -2,6 +2,8 @@
 #include "GameInstance.h"
 #include "EditorInstance.h"
 #include "Editor_Manager.h"
+#include "Shader.h"
+#include "VIBuffer_Rect.h"
 
 #include "Animation_View.h"
 #include "BehaviorTree_View.h"
@@ -95,41 +97,37 @@ void Editor_Manager::Render()
         firstFrameCheck = false;
     }
 
-    Shared<RenderTarget> targetRT = nullptr;
+    Shared<RenderTarget> sceneRT = nullptr;
+    Shared<RenderTarget> displayRT = nullptr;
 
-    if (GAME->Get_GameState() == EGameState::Play)
-    {
-        auto gameView = dynamic_pointer_cast<Game_View>(Get_Window(TEXT("Game")));
-        if (gameView && gameView->IsActive())
-            targetRT = gameView->Get_RenderTarget();
-    }
-    else // Edit Mode
-    {
-        auto sceneView = dynamic_pointer_cast<Scene_View>(Get_Window(TEXT("Scene")));
-        if (sceneView && sceneView->IsActive())
-            targetRT = sceneView->Get_RenderTarget();
-    }
-    // 렌더링 수행
-    if (targetRT)
-    {
-        GAME->Set_UIViewportSize(targetRT->Get_Width(), targetRT->Get_Height());
+    Resolve_RuntimeRenderTargets(sceneRT, displayRT);
 
-        targetRT->BindAsTarget();
-        targetRT->Clear(Color(0.53f, 0.81f, 0.92f, 1.f));
+    if (sceneRT)
+    {
+        GAME->Set_UIViewportSize(sceneRT->Get_Width(), sceneRT->Get_Height());
 
-        CHECK_FAILED(GAME->Set_TextTarget_Texture(targetRT->Get_Texture2D()), );
+        sceneRT->BindAsTarget();
+        sceneRT->Clear(Color(0.53f, 0.81f, 0.92f, 1.f));
+
+        CHECK_FAILED(GAME->Set_TextTarget_Texture(sceneRT->Get_Texture2D()), );
 
         GAME->Draw();
 
-        targetRT->UnbindAll();
+        sceneRT->UnbindAll();
 
         CHECK_FAILED(GAME->Reset_TextTarget_BackBuffer(), );
+
+        if (displayRT)
+        {
+            CHECK_FAILED(Render_ViewportDisplayTarget(sceneRT, displayRT), );
+        }
 
         GAME->Set_UIViewportSize(GAME->Get_ViewportWidth(), GAME->Get_ViewportHeight());
     }
 
     GAME->BindBackBuffer();
 }
+
 
 void Editor_Manager::Add_Window(const wstring& key, shared_ptr<EditorWindow> window)
 {
@@ -788,6 +786,80 @@ void Editor_Manager::On_LoadLevel(const wstring& fileName)
     string pureName = path.stem().stem().string();
 
     LOG_WARN("Level Loaded: {}", pureName);
+}
+
+void Editor_Manager::Resolve_RuntimeRenderTargets(Shared<RenderTarget>& sceneRT, Shared<RenderTarget>& displayRT)
+{
+    sceneRT = nullptr;
+    displayRT = nullptr;
+
+    if (GAME->Get_GameState() == EGameState::Play)
+    {
+        auto gameView = dynamic_pointer_cast<Game_View>(Get_Window(TEXT("Game")));
+        if (gameView && gameView->IsActive())
+        {
+            sceneRT = gameView->Get_RenderTarget();
+            displayRT = gameView->Get_DisplayRenderTarget();
+        }
+    }
+    else
+    {
+        auto sceneView = dynamic_pointer_cast<Scene_View>(Get_Window(TEXT("Scene")));
+        if (sceneView && sceneView->IsActive())
+        {
+            sceneRT = sceneView->Get_RenderTarget();
+            displayRT = sceneView->Get_DisplayRenderTarget();
+        }
+    }
+}
+
+HRESULT Editor_Manager::Render_ViewportDisplayTarget(Shared<RenderTarget> sourceRT, Shared<RenderTarget> displayRT)
+{
+    CHECK_NULL(sourceRT, E_FAIL);
+    CHECK_NULL(displayRT, E_FAIL);
+
+    CHECK_FAILED(Ready_ViewportDisplayResources(), E_FAIL);
+
+    displayRT->BindAsTarget();
+    displayRT->Clear(Color(0.f, 0.f, 0.f, 1.f));
+
+    CHECK_FAILED(_viewportDisplayShader->Bind_Matrix("g_WorldMatrix", &_viewportDisplayWorld), E_FAIL);
+    CHECK_FAILED(_viewportDisplayShader->Bind_Matrix("g_ViewMatrix", &_viewportDisplayView), E_FAIL);
+    CHECK_FAILED(_viewportDisplayShader->Bind_Matrix("g_ProjMatrix", &_viewportDisplayProj), E_FAIL);
+
+    CHECK_FAILED(_viewportDisplayShader->Bind_SRV("g_Texture", sourceRT->Get_SRV_ComPtr()), E_FAIL);
+    CHECK_FAILED(_viewportDisplayRect->Bind_Resources(), E_FAIL);
+    CHECK_FAILED(_viewportDisplayShader->Begin_Pass(0), E_FAIL);
+    CHECK_FAILED(_viewportDisplayRect->Render(), E_FAIL);
+
+    // 다음 프레임에 sourceRT를 다시 RTV로 바인딩할 수 있게 SRV 바인딩을 해제한다.
+    CHECK_FAILED(_viewportDisplayShader->Bind_SRV("g_Texture", nullptr), E_FAIL);
+
+    displayRT->UnbindAll();
+
+    return S_OK;
+}
+
+HRESULT Editor_Manager::Ready_ViewportDisplayResources()
+{
+     if (!_viewportDisplayShader)
+    {
+        _viewportDisplayShader = Shader::Create(
+            GAME->Get_Device(),
+            GAME->Get_Context(),
+            L"../../Client/Bin/Shaders/Shader_EditorViewport.hlsl",
+            FVertexTex::Elements,
+            FVertexTex::numElements);
+        CHECK_NULL(_viewportDisplayShader, E_FAIL);
+    }
+
+    if (!_viewportDisplayRect)
+    {
+        _viewportDisplayRect = VIBuffer_Rect::Create(GAME->Get_Device(), GAME->Get_Context());
+        CHECK_NULL(_viewportDisplayRect, E_FAIL);
+    }
+
+    return S_OK;
 }
 
 unique_ptr<Editor_Manager> Editor_Manager::Create()

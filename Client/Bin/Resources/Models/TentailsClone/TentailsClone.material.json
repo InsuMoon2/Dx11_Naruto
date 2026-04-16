@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_TenTailsCloneLoser02",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_TenTailsCloneLoser01_BC.png"
+        }
+      ]
+    }
+  ]
+}

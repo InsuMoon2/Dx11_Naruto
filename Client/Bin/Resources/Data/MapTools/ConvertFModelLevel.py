@@ -19,14 +19,10 @@ DEFAULT_FMODEL_PATH = Path(
 DEFAULT_GUID_MAP_PATH = RESOURCE_JSON_DIR / "KonohaVilliage_mesh_guid_map.json"
 DEFAULT_OUT_PATH = RESOURCE_LEVELS_DIR / "LM_KonohaVillage_BORUTO_Environments_BackdropBuildings.level.json"
 DEFAULT_LEVEL_NAME = "LM_KonohaVillage_BORUTO_Environments_BackdropBuildings"
+# [변경] 특정 접미사만 고르면 KonohaVillage02처럼 추가 chunk JSON이 누락된다.
+# map-root 모드에서는 폴더 안의 모든 JSON을 변환 대상으로 수집한다.
 PREFERRED_MAP_PATTERNS = (
-    "*_Environments_BackdropBuildings.json",
-    "*_Environments_Props.json",
-    "*_Environments_Terrain.json",
-    "*_Props.json",
-    "*_Terrain.json",
-    "*_Floor.json",
-    "*_p.json",
+    "*.json",
 )
 
 

@@ -1,4 +1,6 @@
 {
+    "boneCount": 0,
+    "bones": [],
     "guid": "f09e7042-4888-4428-ab6e-751d6dcb508f",
     "modelType": "StaticMesh",
     "type": "model"

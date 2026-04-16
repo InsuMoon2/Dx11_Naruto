@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "name": "MI_ENV_KNVLLG02_WoodBoard_Natural_Lighter",
+  "profile": "generic_pbr",
+  "parent": "M_GenericPBR",
+  "base_color_factor": [
+    0.565,
+    0.346465,
+    0.243387,
+    1.0
+  ],
+  "normal_strength": 1.0,
+  "blend_mode": 0,
+  "textures": [],
+  "source": {
+    "fmodel_mi_json": "MI_ENV_KNVLLG02_WoodBoard_Natural_Lighter.props.txt"
+  }
+}

@@ -66,7 +66,6 @@ void StretchingMeshEffect::Update(float timeDelta)
     Vec3 handWorldPos = _spawnWorldPos;
 
     Vec3 ownerWorldPos = _ownerSpawnWorldPos;
-
     Quat ownerWorldRot = Quat::Identity;
 
     if (auto owner = _ownerObj.lock())

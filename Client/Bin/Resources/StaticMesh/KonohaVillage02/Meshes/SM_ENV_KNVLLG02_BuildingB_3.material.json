@@ -1,0 +1,69 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG02_Pipe_04",
+      "material_instance_guid": "1e908290-4c7d-4fc0-993b-a2737abebdfe"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG02_PipeDetails_01",
+      "material_instance_guid": "0547ba36-4f59-40b4-8072-bb6954e77de6"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG02_Pipe_01",
+      "material_instance_guid": "f21fd177-9bc7-4a0f-acf9-247e0e05b941"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_PlasterDarkGrey",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG02_MetalRoof_Red",
+      "material_instance_guid": "db49cd1b-33d9-4358-8b6f-8c3b8b6a0fea"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Duct_A",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Black",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Yellow",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Red",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG02_StoneTrim",
+      "material_instance_guid": "e3386f33-fe8a-4a7f-92c7-5aa00fdf2dad"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_A",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Light",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Window_Paper",
+      "textures": []
+    },
+    {
+      "material_name": "Material_15",
+      "textures": []
+    }
+  ]
+}

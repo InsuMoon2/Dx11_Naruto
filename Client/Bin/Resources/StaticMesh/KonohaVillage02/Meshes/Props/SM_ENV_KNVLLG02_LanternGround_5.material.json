@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG02_PropsAtlas",
+      "material_instance_guid": "dae1c951-a059-43a8-bf71-e4192331a363"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

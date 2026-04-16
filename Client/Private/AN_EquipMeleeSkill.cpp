@@ -49,7 +49,11 @@ void AN_EquipMeleeSkill::Execute(const FAnimNotifyContext& context)
             Matrix boneWorld = (*boneMatrix) * ownerTransform->Get_WorldMatrix();
             Vec3 scale, pos;
             Quat rot;
-            boneWorld.Decompose(scale, rot, pos);
+            if (!boneWorld.Decompose(scale, rot, pos))
+            {
+                pos = boneWorld.Translation();
+                rot = ownerTransform->Get_WorldRotation();
+            }
             
             Matrix rotMat = Matrix::CreateFromQuaternion(rot);
             Vec3 worldOffset = Vec3::TransformNormal(_attachOffset, rotMat);

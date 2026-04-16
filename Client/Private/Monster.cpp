@@ -75,8 +75,15 @@ void Monster::Update(float timeDelta)
 {
     Character::Update(timeDelta);
 
-    _aiController->Update(timeDelta);
-    _model->Play_Animation(timeDelta);
+    if (!_networkDriven && _aiController)
+    {
+        _aiController->Update(timeDelta);
+    }
+
+    if (_model)
+    {
+        _model->Play_Animation(timeDelta);
+    }
 }
 
 void Monster::Late_Update(float timeDelta)
@@ -191,6 +198,12 @@ void Monster::From_Json(const json& data)
 {
     Character::From_Json(data);
 
+}
+
+void Monster::Sync(const Protocol::ObjectInfo& info)
+{
+    _transformCom->Set_WorldPosition(info.pos().x(), info.pos().y(), info.pos().z());
+    _transformCom->Set_LocalRotation(0.f, info.rot_y(), 0.f);
 }
 
 HRESULT Monster::Ready_Components()

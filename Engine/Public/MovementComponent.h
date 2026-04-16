@@ -19,9 +19,21 @@ public:
         END
     };
 
+    struct FCollisionModelInstance
+    {
+        Shared<Model> model;
+
+        Matrix worldMatrix = Matrix::Identity;
+        BoundingBox worldBounds{};
+        bool hasWorldBounds = false;
+    };
+
     struct FSurfaceHit
     {
         Shared<Model> hitModel; // 어떤 CollisionModel에 맞았는지.
+
+        Matrix hitWorldMatrix = Matrix::Identity;
+
         Vec3 hitPoint = Vec3::Zero;
         Vec3 hitNormal = Vec3::Up;
 
@@ -71,6 +83,8 @@ public:
         float wallJumpUpVelocity = 8.f;
         float wallJumpOutVelocity = 6.f;
 
+        // 바닥으로 인정할 수 있는 표면 최소치
+        float groundWalkableMinUpDot = 0.55f;
     };
 
     struct FMoveCommand
@@ -86,7 +100,10 @@ public:
 
         Vec3  moveBasisForward = Vec3(0.f, 0.f, 1.f);
         Vec3  moveBasisRight = Vec3(1.f, 0.f, 0.f);
+
+      
     };
+  
 
 public:
     explicit MovementComponent(ComPtr<Device> device, ComPtr<DeviceContext> context);
@@ -121,7 +138,7 @@ public:
 
     bool Is_WallRunning() const { return _isWallRunning; }
     void Start_WallJump();
-    void Set_WallCollisionModels(const vector<Shared<Model>>& models) { _wallCollisionModels = models; }
+    void Set_WallCollisionModels(const vector<FCollisionModelInstance>& models) { _wallCollisionModels = models; }
     Vec3 Get_currentWallNormal() const { return _currentWallNormal; }
 
     void Set_Velocity(Vec3 velocity);
@@ -138,7 +155,7 @@ public:
     void Reset_DoubleJumpCount() { _canDoubleJump = true; }
 
     // 바닥 충돌 모델 리스트 세팅
-    void Set_GroundCollisionModels(const vector<Shared<Model>> models) { _groundCollisionModels = models; }
+    void Set_GroundCollisionModels(const vector<FCollisionModelInstance>& models) { _groundCollisionModels = models; }
 
     const FWireDashDesc& Get_WireDashDesc() const { return _wireDashDesc; }
 
@@ -166,6 +183,11 @@ private: /* 벽타기 */
 
     void Restore_DefaultUpRotation(Shared<Transform> transform);
 
+private: /* Line Trace 방식으로 벽타기 리팩토링 */
+    bool Detect_WallEntrySurface(const Vec3& currentPos, const Vec3& desiredDir, FSurfaceHit& outHit) const;
+    bool Trace_WallSurface(const Ray& wallRay, float maxDistance, FSurfaceHit& outHit) const;
+    static Vec3 Rotate_HorizontalDirection(const Vec3& dir, float degrees);
+
 private:
     FMovementDesc _moveDesc;
     FMoveCommand _commandDesc;
@@ -190,8 +212,11 @@ private:
     // 중력
     bool _gravityEnabled = true;
 
-    vector<Shared<Model>> _groundCollisionModels;
-    vector<Shared<Model>> _wallCollisionModels;
+    // 바닥 판정에 사용하는 충돌
+    vector<FCollisionModelInstance> _groundCollisionModels;
+
+    // 벽 감지/벽타기에 사용하는 충돌
+    vector<FCollisionModelInstance> _wallCollisionModels;
 
     bool    _isWallRunning = false;
 

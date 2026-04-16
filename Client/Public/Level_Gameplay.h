@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Level.h"
+#include "MovementComponent.h"
 
 NS_BEGIN(Engine)
 class Model;
@@ -10,6 +11,7 @@ NS_BEGIN(Client)
 
 class Loader;
 class UI_PlayerHUD;
+class StaticMeshActor;
 
 class Level_Gameplay final : public Level
 {
@@ -32,9 +34,9 @@ private:
 
     HRESULT         Ready_UI();
 
-    HRESULT         Ready_Effect();
-
     HRESULT         Ready_GroundColliison();
+
+    static Matrix Build_CollisionModelPreTransform();
 
 private:
     void            Spawn_LocalPlayer();
@@ -42,6 +44,34 @@ private:
 
     void            Try_SendEnterGamePacket();
 
+    // 서버에서 로컬 몬스터 제거하게
+    void            Remove_LocalMonsters_ForServerMode();
+
+    void            Request_EnterKonoha();
+
+private:
+    private:
+    static bool             Is_WallCollisionLayerTag(const wstring& layerTag);
+    static bool             Is_WallCollisionNameCandidate(const string& candidateName);
+    static bool             Is_WallCollisionSizeCandidate(const BoundingBox& bounds);
+
+    static bool             Try_BuildWorldBoundsFromModel(
+                                Shared<Model> model,
+                                const Matrix& worldMatrix,
+                                BoundingBox& outBounds);
+
+    HRESULT                 Rebuild_WallCollisionFromPlacedMeshes();
+    HRESULT                 Collect_WallCollisionCandidatesFromLayers(const vector<wstring>& layerTags);
+    HRESULT                 Append_WallCollisionInstanceFromActor(Shared<StaticMeshActor> actor);
+    Shared<Model>           Get_OrCreateWallCollisionModel(const string& modelGuid, const string& resolvedPath);
+
+    void                    Draw_StaticMeshRender();
+
+private:
+    static bool Is_ExtraGroundNameCandidate(const string& candidateName);
+    HRESULT Rebuild_ExtraGroundCollisionFromPlacedMeshes();
+    HRESULT Append_ExtraGroundCollisionFromActor(Shared<StaticMeshActor> actor);
+    
 private:
     Shared<UI_PlayerHUD> _playerHUD;
 
@@ -50,8 +80,15 @@ private:
     EGameplaySpawnMode  _spawnMode = EGameplaySpawnMode::END;
     bool                _enterGameSent = false;
 
-    vector<Shared<Model>> _groundCollisionModels;
-    vector<Shared<Model>> _wallCollisionModels;
+    vector<MovementComponent::FCollisionModelInstance> _groundCollisionModels;
+    vector<MovementComponent::FCollisionModelInstance> _wallCollisionModels;
+    vector<MovementComponent::FCollisionModelInstance> _extraGroundCollisionModels;
+
+    bool            _konohaTransitionRequested = false;
+
+    umap<string, Shared<Model>> _wallCollisionModelCache;
+
+    bool _showCollisionDebug = false;
 
 public:
     static Shared<Level_Gameplay> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode);

@@ -64,7 +64,7 @@ HRESULT Skill_Rasengan_Hit::Initialize(void* arg)
     EffectComponent::FPlayDesc playDesc{};
     playDesc.effectAssetName = "RasenShuriken_Hit";
 
-    CHECK_FAILED(_effectCom->Play_Effect(playDesc), E_FAIL);
+    //CHECK_FAILED(_effectCom->Play_Effect(playDesc), E_FAIL);
 
     return S_OK;
 }

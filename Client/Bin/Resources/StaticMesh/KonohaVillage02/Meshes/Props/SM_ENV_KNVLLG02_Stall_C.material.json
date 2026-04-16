@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG02_Stall_A",
+      "material_instance_guid": "1891621a-3655-406a-8c65-9af500945360"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

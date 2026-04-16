@@ -12,14 +12,13 @@ class GameSession;
 class GameRoom : public enable_shared_from_this<GameRoom>
 {
 public:
-    explicit GameRoom();
-    virtual ~GameRoom();
+    explicit GameRoom() = default;
+    virtual ~GameRoom() = default;
 
     Shared<GameRoom> GetRoomRef() { return shared_from_this(); }
 
 public: /* 입장, 퇴장 */
     void Enter_GameRoom(Shared<GameSession> session, const Protocol::C_EnterGame& pkt);
-
     void Leave_GameRoom(Shared<GameSession> session);
 
 public: /* 오브젝트 관리 */
@@ -31,7 +30,6 @@ public: /* 오브젝트 관리 */
     void            Remove_Monster(uint64 id)               { Remove(id, _monsters); }
     Shared<Monster> Find_Monster(uint64 id)                 { return Find(id, _monsters); }
 
-
 public: /* 패킷 핸들러 */
     void Handle_C_Move(Protocol::C_Move& pkt);
 
@@ -40,6 +38,23 @@ public: /* 네트워크 */
 
 public: /* 게임 로직 */
     void Update();
+
+private:
+    void Ensure_LevelMonstersSpawned();
+
+    struct FServerMonsterSpawnDesc
+    {
+        // 레벨에 저장된 몬스터 프리팹 이름
+        string prefabName;
+
+        Vec3 position = Vec3(0.f, 0.f, 0.f);
+        float yaw = 0.f;
+
+        // 소환할 레이어
+        wstring layerTag = L"Layer_GameObject";
+    };
+
+    static bool Load_MonsterSpawnData_FromLevel(const wstring& levelName, vector<FServerMonsterSpawnDesc>& outSpawns);
 
 private:
     template<typename T>
@@ -60,7 +75,6 @@ private:
         container[id] = obj;
         obj->room = GetRoomRef();
 
-        // 기존 플레이어들한테 신규 오브젝트 알림
         Protocol::S_AddObject pkt;
         *pkt.add_objects() = obj->info;
         Broadcast(Server_PacketHandler::Make_S_AddObject(pkt));
@@ -76,7 +90,6 @@ private:
         iter->second->room = nullptr;
         container.erase(iter);
 
-        // 남은 플레이어들에게 삭제 알림
         Protocol::S_RemoveObject pkt;
         pkt.add_ids(id);
         Broadcast(Server_PacketHandler::Make_S_RemoveObject(pkt));
@@ -86,6 +99,7 @@ private:
     map<uint64, Shared<Player>>     _players;
     map<uint64, Shared<Monster>>    _monsters;
 
+    bool                            _levelMonstersSpawned = false;
 };
 
 extern Shared<GameRoom> GRoom;

@@ -23,9 +23,9 @@
                 0.0
             ],
             "diffuseTextureGuid": "",
-            "duration": 0.5,
+            "duration": 0.6000000238418579,
             "emissiveGradationTextureGuid": "064f7dc0-470d-4872-adb4-cf428c53107d",
-            "emissiveStrength": 4.440000057220459,
+            "emissiveStrength": 4.199999809265137,
             "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
             "enabled": true,
             "endColorTint": [
@@ -35,16 +35,16 @@
                 1.0
             ],
             "endEmissiveStrength": 2.4800000190734863,
-            "endOpacity": 0.0,
+            "endOpacity": 0.8880000114440918,
             "endPosition": [
                 0.0,
                 0.0,
                 0.0
             ],
             "endScale": [
-                2.0,
-                2.0,
-                2.0
+                1.5,
+                1.5,
+                1.5
             ],
             "flipbook": {
                 "columns": 1,
@@ -70,9 +70,9 @@
                 0.0
             ],
             "localScale": [
-                1.5,
-                1.5,
-                1.5
+                0.800000011920929,
+                0.800000011920929,
+                0.800000011920929
             ],
             "loop": true,
             "maskTextureGuid": "",
@@ -101,7 +101,127 @@
             "useColorTintOverTime": false,
             "useEmissiveStrengthOverTime": false,
             "useOpacityAsTransparency": false,
-            "useOpacityOverTime": false,
+            "useOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useScaleOverTime": true,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "blendMode": 1,
+            "colorTint": [
+                0.09784047305583954,
+                0.7580006122589111,
+                0.9749103784561157,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "diffuseTextureGuid": "",
+            "duration": -1.0,
+            "emissiveGradationTextureGuid": "064f7dc0-470d-4872-adb4-cf428c53107d",
+            "emissiveStrength": 4.440000057220459,
+            "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "enabled": true,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endEmissiveStrength": 2.4800000190734863,
+            "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "flipbook": {
+                "columns": 2,
+                "enabled": true,
+                "endFrame": -1,
+                "fps": 2.0,
+                "loop": true,
+                "rows": 2,
+                "startFrame": 0
+            },
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "Outer_Copy",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                90.0,
+                0.0
+            ],
+            "localScale": [
+                0.800000011920929,
+                0.800000011920929,
+                0.800000011920929
+            ],
+            "loop": true,
+            "maskTextureGuid": "",
+            "modelGuid": "67ff36e8-ae61-45fd-9c6c-a47847d80b00",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "0a850b83-0091-4109-bff1-3bda17ae7de8",
+            "opacityTextureGuid": "60a61031-61c8-4bd5-911c-d52984c8f4e6",
+            "positionDuration": 1.0,
+            "rotationAxis": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotationSpeed": 390.6000061035156,
+            "roughness": 0.5,
+            "roughnessTextureGuid": "",
+            "shadingMode": 0,
+            "specularPower": 32.0,
+            "specularStrength": 1.0,
+            "specularTextureGuid": "",
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useColorTintOverTime": false,
+            "useEmissiveStrengthOverTime": true,
+            "useOpacityAsTransparency": false,
+            "useOpacityOverTime": true,
             "usePositionOverTime": false,
             "useScaleOverTime": false,
             "uvDistortionSpeed": [
@@ -143,7 +263,7 @@
                 0.0
             ],
             "diffuseTextureGuid": "",
-            "duration": 0.5,
+            "duration": -1.0,
             "emissiveGradationTextureGuid": "064f7dc0-470d-4872-adb4-cf428c53107d",
             "emissiveStrength": 4.440000057220459,
             "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
@@ -162,26 +282,26 @@
                 0.0
             ],
             "endScale": [
-                1.5,
-                1.5,
-                1.5
+                0.5,
+                0.5,
+                0.5
             ],
             "flipbook": {
-                "columns": 1,
-                "enabled": false,
+                "columns": 2,
+                "enabled": true,
                 "endFrame": -1,
-                "fps": 16.0,
+                "fps": 2.0,
                 "loop": true,
-                "rows": 1,
+                "rows": 2,
                 "startFrame": 0
             },
             "fresnelMultiplier": 1.0,
             "fresnelPower": 0.0,
             "kind": 1,
-            "layerName": "Outer_Copy",
+            "layerName": "Outer_Copy_Copy",
             "localPosition": [
                 0.0,
-                0.0,
+                0.019999999552965164,
                 0.0
             ],
             "localRotation": [
@@ -190,9 +310,9 @@
                 0.0
             ],
             "localScale": [
-                0.5,
-                0.5,
-                0.5
+                0.6499999761581421,
+                0.6499999761581421,
+                0.6499999761581421
             ],
             "loop": true,
             "maskTextureGuid": "",
@@ -201,15 +321,15 @@
             "normalTextureGuid": "",
             "opacity": 1.0,
             "opacityGradationTextureGuid": "",
-            "opacitySubUvTextureGuid": "",
-            "opacityTextureGuid": "7da97d58-d96d-4f2c-b8fc-1660a19f747d",
+            "opacitySubUvTextureGuid": "0a850b83-0091-4109-bff1-3bda17ae7de8",
+            "opacityTextureGuid": "60a61031-61c8-4bd5-911c-d52984c8f4e6",
             "positionDuration": 1.0,
             "rotationAxis": [
                 0.0,
                 0.0,
                 0.0
             ],
-            "rotationSpeed": 142.6999969482422,
+            "rotationSpeed": 390.6000061035156,
             "roughness": 0.5,
             "roughnessTextureGuid": "",
             "shadingMode": 0,
@@ -223,7 +343,7 @@
             "useOpacityAsTransparency": false,
             "useOpacityOverTime": true,
             "usePositionOverTime": false,
-            "useScaleOverTime": true,
+            "useScaleOverTime": false,
             "uvDistortionSpeed": [
                 0.0,
                 0.0

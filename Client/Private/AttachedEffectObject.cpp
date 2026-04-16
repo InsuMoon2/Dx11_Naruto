@@ -118,17 +118,21 @@ void AttachedEffectObject::Sync_AttachedTransform(
     Vec3 socketScale;
     Vec3 socketPosition;
     Quat socketRotation;
-
-    if (!socketWorld.Decompose(socketScale, socketRotation, socketPosition))
-        return;
-
-    const Matrix socketRotationMatrix = Matrix::CreateFromQuaternion(socketRotation);
-    const Vec3 rotatedOffset = Vec3::TransformNormal(localOffset, socketRotationMatrix);
-
     const Quat localRotationQuat = Quat::CreateFromYawPitchRoll(
         XMConvertToRadians(localRotation.y),
         XMConvertToRadians(localRotation.x),
         XMConvertToRadians(localRotation.z));
+
+    if (!socketWorld.Decompose(socketScale, socketRotation, socketPosition))
+    {
+        _transformCom->Set_WorldPosition(socketWorld.Translation() + localOffset);
+        _transformCom->Set_WorldRotation(localRotationQuat);
+        _transformCom->Set_LocalScale(localScale);
+        return;
+    }
+
+    const Matrix socketRotationMatrix = Matrix::CreateFromQuaternion(socketRotation);
+    const Vec3 rotatedOffset = Vec3::TransformNormal(localOffset, socketRotationMatrix);
 
     const Quat finalRotation = socketRotation * localRotationQuat;
     const Vec3 finalScale = localScale;
@@ -167,6 +171,10 @@ void AttachedEffectObject::Attach_To_Bone(Model* targetModel, Weak<Transform> ta
         {
             Matrix boneWorldMatrix = (*boneMatrix) * transform->Get_WorldMatrix();
             Sync_AttachedTransform(boneWorldMatrix, _targetLocalOffset, _targetLocalRotation, _targetLocalScale);
+        }
+        else
+        {
+            Sync_AttachedTransform(transform->Get_WorldMatrix(), _targetLocalOffset, _targetLocalRotation, _targetLocalScale);
         }
     }
 }

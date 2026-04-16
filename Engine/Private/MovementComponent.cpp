@@ -33,6 +33,8 @@ bool MovementComponent::Register_Properties()
     PROPERTY_FLOAT("Wall Jump Up Velocity", _moveDesc.wallJumpUpVelocity, 0.f, 30.f);
     PROPERTY_FLOAT("Wall Jump Out Velocity", _moveDesc.wallJumpOutVelocity, 0.f, 30.f);
 
+    PROPERTY_FLOAT("Ground Walkable Min Up Dot", _moveDesc.groundWalkableMinUpDot, 0.f, 1.f);
+
     return true;
 }
 
@@ -236,49 +238,16 @@ float MovementComponent::Get_DashNormalizedTime() const
     return ::clamp(_dashElapsed / _dashDuration, 0.f, 1.f);
 }
 
-bool MovementComponent::Try_WireDash_WallTrace(const Vec3& traceStart, const Vec3& traceDir, FSurfaceHit& outHit) const
+bool MovementComponent::Try_WireDash_WallTrace(
+    const Vec3& traceStart,
+    const Vec3& traceDir,
+    FSurfaceHit& outHit) const
 {
-    Vec3 dir = traceDir;
-    if (dir.LengthSquared() <= FLT_EPSILON)
-        dir = Vec3::Forward;
+    Vec3 dir = Utils::Safe_Normalize(traceDir, Vec3::Forward);
+    const Vec3 traceOrigin = traceStart + Vec3(0.f, _wireDashDesc.traceStartOffsetY, 0.f);
+    const Ray wallRay(traceOrigin, dir);
 
-    dir = Utils::Safe_Normalize(dir, Vec3::Forward);
-
-    Ray wallRay(traceStart, dir);
-
-    FSurfaceHit bestHit{};
-
-    for (const auto& colModel : _wallCollisionModels)
-    {
-        if (!colModel)
-            continue;
-
-        float hitDist = 0.f;
-        Vec3 hitPoint = Vec3::Zero;
-        Vec3 hitNormal = Vec3::Up;
-
-        if (!colModel->Raycast(wallRay, hitDist, hitPoint, hitNormal))
-            continue;
-
-        if (hitDist > _wireDashDesc.maxDistance)
-            continue;
-
-        const float upDotAbs = fabsf(hitNormal.Dot(Vec3::Up));
-        if (upDotAbs > _moveDesc.wallRunnableMaxUpDot)
-            continue;
-
-        if (!bestHit.isValid || hitDist < bestHit.hitDistance)
-        {
-            bestHit.hitModel = colModel;
-            bestHit.hitPoint = hitPoint;
-            bestHit.hitNormal = hitNormal;
-            bestHit.hitDistance = hitDist;
-            bestHit.isValid = true;
-        }
-    }
-
-    outHit = bestHit;
-    return bestHit.isValid;
+    return Trace_WallSurface(wallRay, _wireDashDesc.maxDistance, outHit);
 }
 
 void MovementComponent::Update_Rotation(float timeDelta, Shared<Transform> transform)
@@ -398,12 +367,10 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
     if (_isWallRunning)
     {
         FSurfaceHit wallHit{};
-
         if (Detect_WallSurface(currentPos, -_currentWallNormal, wallHit))
         {
             _currentWallNormal = wallHit.hitNormal;
             _currentWallHitPoint = wallHit.hitPoint;
-
             Apply_WallRunPosition(transform, wallHit);
             return;
         }
@@ -414,17 +381,15 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
     if (_velocity.y <= 0.f)
     {
         FSurfaceHit groundHit{};
-        bool foundGround = Detect_GroundSurface(currentPos, groundHit);
+        const bool foundGround = Detect_GroundSurface(currentPos, groundHit);
 
         if (foundGround && currentPos.y <= groundHit.hitPoint.y + _moveDesc.groundSnapTolerance)
         {
             currentPos.y = groundHit.hitPoint.y;
             transform->Set_WorldPosition(currentPos);
-
             _velocity.y = 0.f;
             _onGround = true;
             _canDoubleJump = false;
-
             return;
         }
 
@@ -432,11 +397,9 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
         {
             currentPos.y = _moveDesc.groundY;
             transform->Set_WorldPosition(currentPos);
-
             _velocity.y = 0.f;
             _onGround = true;
             _canDoubleJump = false;
-
             return;
         }
     }
@@ -444,39 +407,26 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
     _onGround = false;
 
     Vec3 desiredDir = Build_DesiredMoveDirection();
-    FSurfaceHit wallHit{};
+    Vec3 horizontalVelocity = _velocity;
+    horizontalVelocity.y = 0.f;
 
     if (_wallJumpCooldown <= 0.f &&
-        (Detect_WallSurface(transform->Get_WorldPosition(), desiredDir, wallHit) &&
-        Can_EnterWallRun(wallHit, desiredDir)))
+        !_isWallRunning &&
+        !_onGround &&
+        _commandDesc.moveAxis.Length() >= 0.2f &&
+        horizontalVelocity.Length() >= 2.0f)
     {
-        Enter_WallRun(wallHit);
-        Apply_WallRunPosition(transform, wallHit);
-
-        return;
-    }
-
-    // 공중이고, 벽타기 상태가 아닐 때
-    if (!_onGround && !_isWallRunning)
-    {
-        FSurfaceHit slideHit{};
-
-        // 현재 위치에서 이동하려는 velocity를 향해 레이를 쏴서 벽이 있는지 체크해보기
-        if (Detect_WallSurface(transform->Get_WorldPosition(), _velocity, slideHit))
+        FSurfaceHit wallHit{};
+        if (Detect_WallEntrySurface(currentPos, desiredDir, wallHit) &&
+            Can_EnterWallRun(wallHit, desiredDir))
         {
-            Vec3 moveDir = _velocity;
-            moveDir.Normalize();
-
-            // 내적했을 때 음수면 바깥방향
-            if (moveDir.Dot(slideHit.hitNormal) < 0.f)
-            {
-                // 벽으로 파고들어가는 힘 제거
-                _velocity = Utils::Project_OnPlane(_velocity, slideHit.hitNormal);
-
-            }
+            Enter_WallRun(wallHit);
+            Apply_WallRunPosition(transform, wallHit);
+            return;
         }
     }
 }
+
 
 Vec3 MovementComponent::Build_DesiredMoveDirection() const
 {
@@ -547,86 +497,63 @@ bool MovementComponent::Detect_GroundSurface(const Vec3& currentPos, FSurfaceHit
     FSurfaceHit bestHit{};
     float bestHeight = -FLT_MAX;
 
-    for (const auto& colModel : _groundCollisionModels)
+    for (const auto& collision : _groundCollisionModels)
     {
-        if (!colModel)
+        if (!collision.model)
             continue;
+
+        if (collision.hasWorldBounds)
+        {
+            float boundsHitDist = 0.f;
+            if (!downRay.Intersects(collision.worldBounds, boundsHitDist))
+                continue;
+        }
 
         float hitDist = 0.f;
         Vec3 hitPoint = Vec3::Zero;
         Vec3 hitNormal = Vec3::Up;
 
-        if (!colModel->Raycast(downRay, hitDist, hitPoint, hitNormal))
+        if (!collision.model->Raycast(downRay, collision.worldMatrix, hitDist, hitPoint, hitNormal))
+            continue;
+
+        const Vec3 surfaceNormal = Utils::Safe_Normalize(hitNormal, Vec3::Up);
+        const float upDot = surfaceNormal.Dot(Vec3::Up);
+
+        if (upDot < _moveDesc.groundWalkableMinUpDot)
             continue;
 
         if (hitPoint.y > bestHeight)
         {
             bestHeight = hitPoint.y;
-            bestHit.hitModel = colModel;
+            bestHit.hitModel = collision.model;
+            bestHit.hitWorldMatrix = collision.worldMatrix;
             bestHit.hitPoint = hitPoint;
-            bestHit.hitNormal = hitNormal;
+            bestHit.hitNormal = surfaceNormal;
             bestHit.hitDistance = hitDist;
             bestHit.isValid = true;
         }
     }
 
     outHit = bestHit;
-
     return bestHit.isValid;
 }
 
-bool MovementComponent::Detect_WallSurface(const Vec3& currentPos, const Vec3& castDir,
+
+bool MovementComponent::Detect_WallSurface(
+    const Vec3& currentPos,
+    const Vec3& castDir,
     FSurfaceHit& outHit) const
 {
     Vec3 dir = castDir;
     if (dir.LengthSquared() <= FLT_EPSILON)
-    {
-        if (_transform)
-            dir = _transform->Get_WorldForward();
-        else
-            dir = Vec3::Forward;
-    }
+        dir = _transform ? _transform->Get_WorldForward() : Vec3::Forward;
 
     dir = Utils::Safe_Normalize(dir, Vec3::Forward);
 
-    Vec3 rayOrigin = currentPos + Vec3(0.f, _moveDesc.wallTraceStartOffsetY, 0.f);
-    Ray wallRay(rayOrigin, dir);
+    const Vec3 rayOrigin = currentPos + Vec3(0.f, _moveDesc.wallTraceStartOffsetY, 0.f);
+    const Ray wallRay(rayOrigin, dir);
 
-    FSurfaceHit bestHit{};
-
-
-    for (const auto& colModel : _wallCollisionModels)
-    {
-        if (!colModel)
-            continue;
-
-        float hitDist = 0.f;
-        Vec3 hitPoint = Vec3::Zero;
-        Vec3 hitNormal = Vec3::Up;
-
-        if (!colModel->Raycast(wallRay, hitDist, hitPoint, hitNormal))
-            continue;
-
-        if (hitDist > _moveDesc.wallDetectDistance)
-            continue;
-
-       // Up과 너무 비슷하면 바닥 / 경사로 보고 wall에서 제외
-        const float upDotAbs = fabsf(hitNormal.Dot(Vec3::Up));
-        if (upDotAbs > _moveDesc.wallRunnableMaxUpDot)
-            continue;
-
-        if (!bestHit.isValid || hitDist < bestHit.hitDistance)
-        {
-            bestHit.hitModel = colModel;
-            bestHit.hitPoint = hitPoint;
-            bestHit.hitNormal = hitNormal;
-            bestHit.hitDistance = hitDist;
-            bestHit.isValid = true;
-        }
-    }
-
-    outHit = bestHit;
-    return bestHit.isValid;
+    return Trace_WallSurface(wallRay, _moveDesc.wallDetectDistance, outHit);
 }
 
 bool MovementComponent::Can_EnterWallRun(const FSurfaceHit& wallHit, const Vec3& desiredMoveDir) const
@@ -635,20 +562,13 @@ bool MovementComponent::Can_EnterWallRun(const FSurfaceHit& wallHit, const Vec3&
         return false;
 
     Vec3 moveDir = desiredMoveDir;
-    if (moveDir.LengthSquared() <= FLT_EPSILON)
-    {
-        moveDir = _velocity;
-        moveDir.y = 0.f;
-    }
+    moveDir.y = 0.f;
 
     if (moveDir.LengthSquared() <= FLT_EPSILON)
         return false;
 
     moveDir.Normalize();
-
-    const float intoWall = moveDir.Dot(-wallHit.hitNormal);
-
-    return intoWall > 0.15f;
+    return moveDir.Dot(-wallHit.hitNormal) > 0.15f;
 }
 
 void MovementComponent::Enter_WallRun(const FSurfaceHit& wallHit)
@@ -738,6 +658,111 @@ void MovementComponent::Restore_DefaultUpRotation(Shared<Transform> transform)
 
     Quat targetRot = Quat::CreateFromRotationMatrix(lookAtMatrix);
     transform->Set_WorldRotation(targetRot);
+}
+
+bool MovementComponent::Detect_WallEntrySurface(
+    const Vec3& currentPos,
+    const Vec3& desiredDir,
+    FSurfaceHit& outHit) const
+{
+    Vec3 baseDir = desiredDir;
+    baseDir.y = 0.f;
+
+    if (baseDir.LengthSquared() <= FLT_EPSILON)
+    {
+        outHit = FSurfaceHit{};
+        return false;
+    }
+
+    baseDir = Utils::Safe_Normalize(baseDir, Vec3::Forward);
+
+    const Vec3 rayOrigin = currentPos + Vec3(0.f, _moveDesc.wallTraceStartOffsetY, 0.f);
+    const Ray rays[3] =
+    {
+        Ray(rayOrigin, baseDir),
+        Ray(rayOrigin, Rotate_HorizontalDirection(baseDir, -15.f)),
+        Ray(rayOrigin, Rotate_HorizontalDirection(baseDir, 15.f))
+    };
+
+    FSurfaceHit bestHit{};
+    for (const Ray& ray : rays)
+    {
+        FSurfaceHit hit{};
+        if (!Trace_WallSurface(ray, _moveDesc.wallDetectDistance, hit))
+            continue;
+
+        if (!bestHit.isValid || hit.hitDistance < bestHit.hitDistance)
+            bestHit = hit;
+    }
+
+    outHit = bestHit;
+    return bestHit.isValid;
+}
+
+
+bool MovementComponent::Trace_WallSurface(
+    const Ray& wallRay,
+    float maxDistance,
+    FSurfaceHit& outHit) const
+{
+    FSurfaceHit bestHit{};
+
+    for (const auto& collision : _wallCollisionModels)
+    {
+        if (!collision.model)
+            continue;
+
+        if (collision.hasWorldBounds)
+        {
+            float boundsHitDist = 0.f;
+            if (!wallRay.Intersects(collision.worldBounds, boundsHitDist))
+                continue;
+
+            if (boundsHitDist > maxDistance)
+                continue;
+        }
+
+        float hitDist = 0.f;
+        Vec3 hitPoint = Vec3::Zero;
+        Vec3 hitNormal = Vec3::Up;
+
+        if (!collision.model->Raycast(wallRay, collision.worldMatrix, hitDist, hitPoint, hitNormal))
+            continue;
+
+        if (hitDist > maxDistance)
+            continue;
+
+        const float upDotAbs = fabsf(hitNormal.Dot(Vec3::Up));
+        if (upDotAbs > _moveDesc.wallRunnableMaxUpDot)
+            continue;
+
+        if (!bestHit.isValid || hitDist < bestHit.hitDistance)
+        {
+            bestHit.hitModel = collision.model;
+            bestHit.hitWorldMatrix = collision.worldMatrix;
+            bestHit.hitPoint = hitPoint;
+            bestHit.hitNormal = hitNormal;
+            bestHit.hitDistance = hitDist;
+            bestHit.isValid = true;
+        }
+    }
+
+    outHit = bestHit;
+    return bestHit.isValid;
+}
+
+
+Vec3 MovementComponent::Rotate_HorizontalDirection(const Vec3& dir, float degrees)
+{
+    Vec3 horizontalDir = dir;
+    horizontalDir.y = 0.f;
+    horizontalDir = Utils::Safe_Normalize(horizontalDir, Vec3::Forward);
+
+    const Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(degrees));
+    Vec3 rotatedDir = Vec3::TransformNormal(horizontalDir, rotationMatrix);
+    rotatedDir.y = 0.f;
+
+    return Utils::Safe_Normalize(rotatedDir, horizontalDir);
 }
 
 Shared<MovementComponent> MovementComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

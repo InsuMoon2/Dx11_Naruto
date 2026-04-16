@@ -79,6 +79,9 @@ private:
     set<Weak<Collider>, owner_less<>> _overlapSet;
 
 #ifdef _DEBUG
+    /* 각 Collider 인스턴스가 자기 디버그 렌더 자원을 독립적으로 가지도록 초기화할 때 호출한다. */
+    HRESULT                 Ready_DebugRenderResources();
+
     Shared<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>  _batch;
     Shared<DirectX::BasicEffect>                                   _effect;
     ComPtr<ID3D11InputLayout>                                      _inputLayout;

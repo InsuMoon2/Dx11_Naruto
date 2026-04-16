@@ -1,0 +1,17 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_Sticker_A",
+      "textures": []
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG02_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "36beaf84-0844-4866-8f29-db7981d43320"
+    },
+    {
+      "material_name": "Material_2",
+      "textures": []
+    }
+  ]
+}

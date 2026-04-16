@@ -15,7 +15,7 @@
     },
     {
       "material_name": "MI_ENV_KNVLLG03_Event_HL_WoodPlain_A",
-      "textures": []
+      "material_instance_guid": "38c6b02e-1391-4f43-aadf-a67144746cf1"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Lantern_A",
@@ -39,7 +39,7 @@
     },
     {
       "material_name": "MI_ENV_KNVLLG03_Event_HL_Metal_B",
-      "textures": []
+      "material_instance_guid": "5690997c-8137-4af3-bccb-d00d2b3a1a5e"
     },
     {
       "material_name": "MI_ENV_LKNVLD_Sticker_02",

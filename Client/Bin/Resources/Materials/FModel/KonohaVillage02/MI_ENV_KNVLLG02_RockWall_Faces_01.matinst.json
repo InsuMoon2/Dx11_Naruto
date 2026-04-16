@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "name": "MI_ENV_KNVLLG02_RockWall_Faces_01",
+  "profile": "flat_color_normal",
+  "parent": "M_ENV_FlatColorNormal",
+  "base_color_factor": [
+    0.48591389,
+    0.59417584,
+    0.5771,
+    1.0
+  ],
+  "shadow_color": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "normal_strength": 1.0,
+  "blend_mode": 0,
+  "textures": [],
+  "source": {
+    "fmodel_mi_json": "MI_ENV_KNVLLG02_RockWall_Faces_01.props.txt"
+  }
+}

@@ -1635,12 +1635,21 @@ bool Model::Raycast(const Ray& ray, float& outDist, Vec3& outHitPoint)
 {
     Vec3 dummyNormal = Vec3::Up;
 
-    return Raycast(ray, outDist, outHitPoint, dummyNormal);
+    return Raycast(ray, Matrix::Identity, outDist, outHitPoint, dummyNormal);
 }
 
 bool Model::Raycast(const Ray& ray, float& outDist, Vec3& outHitPoint, Vec3& outNormal) const
 {
-    // 모든 메시 삼각형을 순회하며 Ray-Triangle 교차검사 SimpleMath의 Ray 사용
+    return Raycast(ray, Matrix::Identity, outDist, outHitPoint, outNormal);
+}
+
+bool Model::Raycast(
+    const Ray& ray,
+    const Matrix& worldMatrix,
+    float& outDist,
+    Vec3& outHitPoint,
+    Vec3& outNormal) const
+{
     float closestDist = FLT_MAX;
     Vec3 bestNormal = Vec3::Up;
     bool hit = false;
@@ -1650,16 +1659,19 @@ bool Model::Raycast(const Ray& ray, float& outDist, Vec3& outHitPoint, Vec3& out
         const auto& positions = mesh->Get_CPUPositions();
         const auto& indices = mesh->Get_CPUIndices();
 
-        // CPU에 저장된 데이터가 없으면 스킵하기
+        // CPU에 저장된 데이터가 없으면 스킵한다.
         if (positions.empty() || indices.empty())
             continue;
 
-        // 삼각형 단위로 순회 (인덱스 3개 = 삼각형 1개다.)
         for (size_t i = 0; i + 2 < indices.size(); i += 3)
         {
-            const Vec3& v0 = positions[indices[i]];
-            const Vec3& v1 = positions[indices[i + 1]];
-            const Vec3& v2 = positions[indices[i + 2]];
+            const Vec3 localV0 = positions[indices[i]];
+            const Vec3 localV1 = positions[indices[i + 1]];
+            const Vec3 localV2 = positions[indices[i + 2]];
+
+            const Vec3 v0 = Vec3::Transform(localV0, worldMatrix);
+            const Vec3 v1 = Vec3::Transform(localV1, worldMatrix);
+            const Vec3 v2 = Vec3::Transform(localV2, worldMatrix);
 
             float dist = 0.f;
 
@@ -1694,6 +1706,7 @@ bool Model::Raycast(const Ray& ray, float& outDist, Vec3& outHitPoint, Vec3& out
 
     return hit;
 }
+
 
 HRESULT Model::Initialize_FromMeshBin(const string& modelFilePath)
 {

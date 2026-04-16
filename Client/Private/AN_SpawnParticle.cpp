@@ -44,10 +44,6 @@ void AN_SpawnParticle::Execute(const FAnimNotifyContext& context)
     {
         if (_boneName.empty())
             return;
-
-        const Matrix* socketMatrix = context.model->Get_SocketBoneMatrixPtr(_boneName);
-        if (!socketMatrix)
-            return;
     }
 
     AttachedEffectObject::FAttachedEffectObjectDesc desc{};
@@ -69,6 +65,12 @@ void AN_SpawnParticle::Execute(const FAnimNotifyContext& context)
 
     if (_attachToBone)
     {
+        attachedEffect->Apply_InitialTransform(
+            context.owner->Get_Transform()->Get_WorldMatrix(),
+            _localOffset,
+            _localRotation,
+            _localScale);
+
         attachedEffect->Attach_To_Bone(
             context.model,
             context.owner->Get_Transform(),
@@ -84,10 +86,9 @@ void AN_SpawnParticle::Execute(const FAnimNotifyContext& context)
     if (_useInitialBoneTransform)
     {
         const Matrix* socketMatrix = context.model->Get_SocketBoneMatrixPtr(_boneName);
-        if (!socketMatrix)
-            return;
-
-        Matrix boneWorldMatrix = (*socketMatrix) * context.owner->Get_Transform()->Get_WorldMatrix();
+        Matrix boneWorldMatrix = context.owner->Get_Transform()->Get_WorldMatrix();
+        if (socketMatrix)
+            boneWorldMatrix = (*socketMatrix) * boneWorldMatrix;
 
         attachedEffect->Apply_InitialTransform(
             boneWorldMatrix,

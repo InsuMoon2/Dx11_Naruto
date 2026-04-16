@@ -21,6 +21,7 @@ public:
 public:
     void    Sync(const Protocol::ObjectInfo& info) override;
 
+
 private:
     // 보간용 데이터
     Vec3  _targetPos = {};

@@ -61,6 +61,11 @@ public:
         outPkt.ParseFromArray(&header[1], header->size - sizeof(PacketHeader));
     }
 
+
+private:
+    static Shared<GameObject> Spawn_NetworkObject(const Protocol::ObjectInfo& info, uint32 levelIndex);
+    static void Apply_NetworkObjectInfo(Shared<GameObject> gameObject, const Protocol::ObjectInfo& info);
+
 };
 
 NS_END

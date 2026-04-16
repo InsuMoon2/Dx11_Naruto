@@ -6,6 +6,7 @@ namespace Server {};
 
 #include "Server_Macro.h"
 #include "Server_Typedef.h"
+#include "Server_SimpleMath.h"
 
 #include "Protocol.pb.h"
 #include "Enum.pb.h"

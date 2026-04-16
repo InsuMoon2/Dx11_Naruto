@@ -36,20 +36,16 @@ void AN_StretchingMesh_Start::Execute(const FAnimNotifyContext& context)
     if (context.isPreview || !context.owner || !context.model)
         return;
 
-    if (context.wrapped)
-        return;
-
     auto skillCom = context.owner->Get_Component<SkillComponent>();
     if (!skillCom)
         return;
 
-    const Matrix* socketMatrix = context.model->Get_SocketBoneMatrixPtr(_boneName);
-    if (!socketMatrix)
-        return;
-
     skillCom->Destroy_AllStretchingMeshes();
 
-    Matrix boneWorldMatrix = (*socketMatrix) * context.owner->Get_Transform()->Get_WorldMatrix();
+    Matrix boneWorldMatrix = context.owner->Get_Transform()->Get_WorldMatrix();
+    if (const Matrix* socketMatrix = context.model->Get_SocketBoneMatrixPtr(_boneName))
+        boneWorldMatrix = (*socketMatrix) * boneWorldMatrix;
+
     Vec3 startWorldPos = boneWorldMatrix.Translation();
 
     const int32 spawnCount = max(1, _spawnCount);

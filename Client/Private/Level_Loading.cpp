@@ -6,6 +6,7 @@
 #include "GameInstance.h"
 #include "Level_CharacterSetup.h"
 #include "Level_Gameplay.h"
+#include "Level_Konoha.h"
 #include "Level_MainTitle.h"
 #include "UI_LoadingSpinner.h"
 #include "UI_LoadingProgressBar.h"
@@ -74,6 +75,10 @@ void Level_Loading::Update(float timeDelta)
 
         case ELevelType::CharacterSetup:
             nextLevel = Level_CharacterSetup::Create(_device, _context);
+            break;
+
+        case ELevelType::Konoha:
+            nextLevel = Level_Konoha::Create(_device, _context, _gameplaySpawnMode);
             break;
         }
 

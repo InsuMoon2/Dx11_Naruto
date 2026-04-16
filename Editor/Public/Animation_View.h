@@ -113,6 +113,8 @@ private:
 
     void Handle_PlaybackShortcut();
     void Handle_DeleteShortcut();
+    // 애니메이션 뷰에서 Ctrl+C / Ctrl+V 단축키를 처리한다.
+    void Handle_CopyPasteShortcut();
 
     bool Passes_ClipSearch(const string& clipName) const;
     bool Passes_AnimStateClipFilter(const string& clipName) const;
@@ -129,6 +131,15 @@ private:
     void Clear_SelectedEntries();
     void Select_NotifyTrack(int32 trackIndex);
     void Select_NotifyStateTrack(int32 trackIndex);
+
+    // 현재 선택된 단일 Notify를 내부 복사 버퍼에 저장한다.
+    void Copy_SelectedNotify();
+    // 현재 선택된 Notify State를 내부 복사 버퍼에 저장한다.
+    void Copy_SelectedNotifyState();
+    // 복사 버퍼에 저장된 Notify를 현재 클립/프레임/트랙 기준으로 붙여넣는다.
+    void Paste_CopiedNotify();
+    // 복사 버퍼에 저장된 Notify State를 현재 클립/프레임/트랙 기준으로 붙여넣는다.
+    void Paste_CopiedNotifyState();
 
     FAnimNotifyClipData* Get_CurrentClip();
     const FAnimNotifyClipData* Get_CurrentClip() const;
@@ -205,6 +216,24 @@ private:
 
     string _newNotifyTrackName = "Notify Track";
     string _newNotifyStateTrackName = "Notify State Track";
+
+private:
+    // 복사 버퍼에 현재 무엇이 들어 있는지 구분하기 위한 타입이다.
+    enum class ENotifyClipboardKind
+    {
+        None,
+        Notify,
+        NotifyState
+    };
+
+    // 내부 복사 버퍼에 저장된 엔트리 종류를 기록한다.
+    ENotifyClipboardKind _copiedNotifyKind = ENotifyClipboardKind::None;
+    // 복사한 Notify / Notify State의 타입 이름을 저장한다.
+    string _copiedNotifyTypeName = "";
+    // 복사한 Notify / Notify State의 리플렉션 payload를 저장한다.
+    json _copiedNotifyPayload = json::object();
+    // 복사한 Notify State의 원본 duration을 유지하기 위한 값이다.
+    float _copiedNotifyStateDurationSec = 0.f;
 
 public:
     static Shared<Animation_View> Create();

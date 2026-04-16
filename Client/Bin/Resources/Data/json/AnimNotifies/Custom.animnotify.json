@@ -1375,12 +1375,12 @@
             "notifies": [
                 {
                     "payload": {
-                        "attach_to_bone": true,
+                        "attach_to_bone": false,
                         "bone_name": "CharacterRoot",
                         "effect_name": "RingEffect_Loop",
                         "local_offset": [
                             0.0,
-                            2.0,
+                            0.0,
                             0.0
                         ],
                         "local_rotation": [
@@ -1389,12 +1389,12 @@
                             0.0
                         ],
                         "local_scale": [
-                            1.0,
-                            1.0,
-                            1.0
+                            4.0,
+                            4.0,
+                            4.0
                         ],
-                        "loop_override": true,
-                        "use_initial_bone_transform": true
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
                     },
                     "time_sec": 0.10000000149011612,
                     "track_index": 0,
@@ -1569,6 +1569,15 @@
                     "time_sec": 0.10000000149011612,
                     "track_index": 0,
                     "type": "AN_BodyCollisionPreset_Change"
+                },
+                {
+                    "payload": {
+                        "effect_name": "RingEffect_Loop",
+                        "stop_all_from_owner": false
+                    },
+                    "time_sec": 0.0,
+                    "track_index": 1,
+                    "type": "AN_StopParticle"
                 }
             ],
             "notify_state_tracks": [
