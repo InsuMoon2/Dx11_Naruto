@@ -90,35 +90,156 @@ HRESULT StaticMeshActor::Render()
         auto material = _modelCom->Get_Material(matIdx);
 
         Vec4 baseColorFactor = Vec4(1.f, 1.f, 1.f, 1.f);
+        Vec4 shadowColor = Vec4(1.f, 1.f, 1.f, 1.f);
+
         int hasDiffuseTexture = 0;
+        int hasBlendDiffuseTexture = 0;
+        int hasMaskTexture = 0;
+        int hasBlendNormalTexture = 0;
+        int hasUnevenColorTexture = 0;
+
+        // [추가] slot별 UV 채널 인덱스를 shader로 넘겨 올바른 UV 세트를 선택하게 한다.
+        int baseColorUVChannel = 0;
+        int blendDiffuseUVChannel = 0;
+        int maskUVChannel = 0;
+        int blendNormalUVChannel = 0;
+        int unevenColorUVChannel = 0;
+
+        // [추가] slot별 UV 타일링 스케일을 shader로 넘겨 원본 material의 샘플링 비율을 복원한다.
+        float baseColorUVScale = 1.f;
+        float blendDiffuseUVScale = 1.f;
+        float maskUVScale = 1.f;
+        float blendNormalUVScale = 1.f;
+        float unevenColorUVScale = 1.f;
+
+        float maskScale = 1.f;
+        float maskThreshold = 1.f;
+
+        float blendNormalStrength = 1.f;
+        float unevenColorScale = 1.f;
 
         if (material)
         {
             baseColorFactor = material->Get_BaseColorFactor();
+            shadowColor = material->Get_ShadowColor();
+
             hasDiffuseTexture =
                 (material->Get_TextureCount(EMaterialTextureSlot::BaseColor) > 0) ? 1 : 0;
+
+            hasBlendDiffuseTexture =
+                (material->Get_TextureCount(EMaterialTextureSlot::BlendBaseColor) > 0) ? 1 : 0;
+
+            hasMaskTexture =
+                (material->Get_TextureCount(EMaterialTextureSlot::Mask) > 0) ? 1 : 0;
+
+            hasBlendNormalTexture =
+                (material->Get_TextureCount(EMaterialTextureSlot::BlendNormal) > 0) ? 1 : 0;
+
+            hasUnevenColorTexture =
+                (material->Get_TextureCount(EMaterialTextureSlot::UnevenColor) > 0) ? 1 : 0;
+
+            maskScale = material->Get_MaskScale();
+            maskThreshold = material->Get_MaskThreshold();
+            blendNormalStrength = material->Get_BlendNormalStrength();
+            unevenColorScale = material->Get_UnevenColorScale();
+
+            baseColorUVChannel = static_cast<int>(material->Get_TextureUVChannel(EMaterialTextureSlot::BaseColor, 0));
+            blendDiffuseUVChannel = static_cast<int>(material->Get_TextureUVChannel(EMaterialTextureSlot::BlendBaseColor, 0));
+            maskUVChannel = static_cast<int>(material->Get_TextureUVChannel(EMaterialTextureSlot::Mask, 0));
+            blendNormalUVChannel = static_cast<int>(material->Get_TextureUVChannel(EMaterialTextureSlot::BlendNormal, 0));
+            unevenColorUVChannel = static_cast<int>(material->Get_TextureUVChannel(EMaterialTextureSlot::UnevenColor, 0));
+
+            baseColorUVScale = material->Get_TextureSamplingScale(EMaterialTextureSlot::BaseColor, 0);
+            blendDiffuseUVScale = material->Get_TextureSamplingScale(EMaterialTextureSlot::BlendBaseColor, 0);
+            maskUVScale = material->Get_TextureSamplingScale(EMaterialTextureSlot::Mask, 0);
+            blendNormalUVScale = material->Get_TextureSamplingScale(EMaterialTextureSlot::BlendNormal, 0);
+            unevenColorUVScale = material->Get_TextureSamplingScale(EMaterialTextureSlot::UnevenColor, 0);
         }
 
         CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColorFactor", &baseColorFactor, sizeof(Vec4)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_ShadowColor", &shadowColor, sizeof(Vec4)), E_FAIL);
+
         CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasDiffuseTexture", &hasDiffuseTexture, sizeof(int)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasBlendDiffuseTexture", &hasBlendDiffuseTexture, sizeof(int)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasMaskTexture", &hasMaskTexture, sizeof(int)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasBlendNormalTexture", &hasBlendNormalTexture, sizeof(int)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasUnevenColorTexture", &hasUnevenColorTexture, sizeof(int)), E_FAIL);
+
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColorUVChannel", &baseColorUVChannel, sizeof(int)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_BlendDiffuseUVChannel", &blendDiffuseUVChannel, sizeof(int)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_MaskUVChannel", &maskUVChannel, sizeof(int)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_BlendNormalUVChannel", &blendNormalUVChannel, sizeof(int)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_UnevenColorUVChannel", &unevenColorUVChannel, sizeof(int)), E_FAIL);
+
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColorUVScale", &baseColorUVScale, sizeof(float)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_BlendDiffuseUVScale", &blendDiffuseUVScale, sizeof(float)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_MaskUVScale", &maskUVScale, sizeof(float)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_BlendNormalUVScale", &blendNormalUVScale, sizeof(float)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_UnevenColorUVScale", &unevenColorUVScale, sizeof(float)), E_FAIL);
+
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_MaskScale", &maskScale, sizeof(float)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_MaskThreshold", &maskThreshold, sizeof(float)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_BlendNormalStrength", &blendNormalStrength, sizeof(float)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_UnevenColorScale", &unevenColorScale, sizeof(float)), E_FAIL);
 
         if (hasDiffuseTexture != 0)
         {
             CHECK_FAILED(
-                _modelCom->Bind_Material(_shaderCom, "g_DiffuseTexture", static_cast<uint32>(i),
-                    EMaterialTextureSlot::BaseColor,0), E_FAIL);
+                _modelCom->Bind_Material(_shaderCom, "g_DiffuseTexture",
+                    static_cast<uint32>(i), EMaterialTextureSlot::BaseColor, 0), E_FAIL);
+        }
+        else
+        {
+            CHECK_FAILED(_shaderCom->Bind_SRV("g_DiffuseTexture", nullptr), E_FAIL);
+        }
+
+        if (hasBlendDiffuseTexture != 0)
+        {
+            CHECK_FAILED(
+                _modelCom->Bind_Material(_shaderCom, "g_BlendDiffuseTexture",
+                    static_cast<uint32>(i), EMaterialTextureSlot::BlendBaseColor, 0), E_FAIL);
+        }
+        else
+        {
+            CHECK_FAILED(_shaderCom->Bind_SRV("g_BlendDiffuseTexture", nullptr), E_FAIL);
+        }
+
+        if (hasMaskTexture != 0)
+        {
+            CHECK_FAILED(
+                _modelCom->Bind_Material(_shaderCom, "g_MaskTexture",
+                    static_cast<uint32>(i), EMaterialTextureSlot::Mask, 0), E_FAIL);
+        }
+        else
+        {
+            CHECK_FAILED(_shaderCom->Bind_SRV("g_MaskTexture", nullptr), E_FAIL);
+        }
+
+        if (hasBlendNormalTexture != 0)
+        {
+            CHECK_FAILED(
+                _modelCom->Bind_Material(_shaderCom, "g_BlendNormalTexture",
+                    static_cast<uint32>(i), EMaterialTextureSlot::BlendNormal, 0), E_FAIL);
+        }
+        else
+        {
+            CHECK_FAILED(_shaderCom->Bind_SRV("g_BlendNormalTexture", nullptr), E_FAIL);
+        }
+
+        if (hasUnevenColorTexture != 0)
+        {
+            CHECK_FAILED(
+                _modelCom->Bind_Material(_shaderCom, "g_UnevenColorTexture",
+                    static_cast<uint32>(i), EMaterialTextureSlot::UnevenColor, 0), E_FAIL);
+        }
+        else
+        {
+            CHECK_FAILED(_shaderCom->Bind_SRV("g_UnevenColorTexture", nullptr), E_FAIL);
         }
 
         CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
         CHECK_FAILED(_modelCom->Render(static_cast<uint32>(i)), E_FAIL);
-
-        if (_isOutlineEnabled)
-        {
-            CHECK_FAILED(_shaderCom->Begin_Pass(1), E_FAIL);
-            CHECK_FAILED(_modelCom->Render(static_cast<uint32>(i)), E_FAIL);
-        }
     }
-
     return S_OK;
 }
 

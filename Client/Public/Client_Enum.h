@@ -40,6 +40,8 @@ namespace Client
         // 쿠나이
         Kunai,
 
+        Apperence,
+
         // Attack 진입 판별용
         Attack, JumpAttack,
 
@@ -59,7 +61,7 @@ namespace Client
         Skill_Chidori,          Skill_Chidori_Air,      Skill_Chidori_End, Skill_Chidori_Landed, Skill_Chidori_Air_End,
         Skill_FireBall,         Skill_FireBall_Air,
 
-        // 스킬 수둔 or 목둔 추가 예정.
+        Skill_Ulti1, Skill_Ulti2,
 
         Dead,
         END

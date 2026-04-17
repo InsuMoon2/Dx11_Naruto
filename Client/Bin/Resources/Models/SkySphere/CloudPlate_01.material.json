@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_Sky_Cloud_01",
+      "profile": "sky_cloud",
+      "base_color_factor": [1.0, 1.0, 0.952021, 1.0],
+      "shadow_color": [0.635, 1.0, 0.955273, 0.8],
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_Cloud_middle_M.png",
+          "uv_channel": 0,
+          "sampling_scale": 1.0
+        }
+      ]
+    }
+  ]
+}

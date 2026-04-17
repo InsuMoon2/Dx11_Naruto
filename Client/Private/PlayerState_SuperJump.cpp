@@ -37,14 +37,45 @@ void PlayerState_SuperJump::Update(PlayerStateMachine* state, float timeDelta)
 {
     auto input = state->Get_Input();
     auto movement = state->Get_Movement();
+    if (!input || !movement)
+        return;
+
     const auto& frame = input->Get_Frame();
 
     auto cmd = state->Init_MoveCommand();
-    cmd.jump = false;   // 재점프 방지
+    cmd.jump = false;
 
     auto owner = state->Get_Owner();
     auto transform = owner->Get_Transform();
     CHECK_NULL(transform);
+
+    if (frame.jumpDash)
+    {
+        state->Change_State(EPlayerState::JumpDash);
+        return;
+    }
+
+    if (frame.jumpDown && movement->Can_DoubleJump())
+    {
+        cmd.doublejump = true;
+        state->Change_State(EPlayerState::DoubleJump);
+        return;
+    }
+
+    if (frame.wireDash)
+    {
+        state->Change_State(EPlayerState::WireDash);
+        return;
+    }
+
+    if (frame.attackDown && !movement->Is_OnGround())
+    {
+        state->Change_State(EPlayerState::JumpAttack);
+        return;
+    }
+
+    movement->Apply_Command(cmd);
+    movement->Update(timeDelta);
 
     if (movement->Is_WallRunning())
     {
@@ -52,14 +83,16 @@ void PlayerState_SuperJump::Update(PlayerStateMachine* state, float timeDelta)
         return;
     }
 
-    // 착지 후 HeightLand에서 사용할 방향 미리 세팅하기
+    // 착지 후 HeightLand에서 사용할 방향 미리 세팅
     Vec3 launchDir = transform->Get_WorldForward();
     launchDir.y = 0.f;
-    launchDir.Normalize();
-    state->Set_PendingLandingDir(launchDir);
 
-    movement->Apply_Command(cmd);
-    movement->Update(timeDelta);
+    if (launchDir.LengthSquared() > FLT_EPSILON)
+        launchDir.Normalize();
+    else
+        launchDir = Vec3::Forward;
+
+    state->Set_PendingLandingDir(launchDir);
 
     if (!movement->Is_OnGround())
         return;

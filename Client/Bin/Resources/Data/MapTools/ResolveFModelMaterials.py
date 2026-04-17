@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -57,6 +58,68 @@ DEFAULT_PROFILE_CONFIG = {
 
 DEFAULT_FLAT_COLOR = [0.77, 0.68, 0.58, 1.0]
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".tga", ".dds", ".bmp"}
+
+# [추가] KonohaVillage02 바닥 StaticMesh를 마스크 바닥으로 강제 치환할 대상 머티리얼 이름 목록이다.
+# [추가] 범위를 너무 넓히지 않기 위해 실제 Floor 청크에서 확인된 이름만 사용한다.
+GROUND_OVERRIDE_MATERIAL_NAMES = (
+    "MI_ENV_KNVLLG02_GROUNDSOIL_A",
+    "MI_ENV_KNVLLG02_DISTANCEGROUND_A",
+    "MI_ENV_KNVLLG02_SANDYFLOORTILES",
+)
+
+# [추가] 바닥 오버라이드에 사용할 기본 모래 텍스처 stem이다.
+GROUND_OVERRIDE_BASE_COLOR_STEM = "T_ENV_KNVLLG_Ground_Sand_BC"
+# [추가] 바닥 오버라이드에 사용할 잔디 블렌드 텍스처 stem이다.
+GROUND_OVERRIDE_BLEND_COLOR_STEM = "T_ENV_KNVLLG_GrassBase_BC"
+# [추가] 바닥 오버라이드에 사용할 분포 마스크 텍스처 stem이다.
+GROUND_OVERRIDE_MASK_STEM = "T_ENV_KNVLLG_Mask_01_M"
+
+# [추가] 바닥 오버라이드 텍스처의 기본 타일링 배율이다.
+GROUND_OVERRIDE_BASE_SCALE = 8.0
+# [추가] 바닥 오버라이드 블렌드 텍스처의 기본 타일링 배율이다.
+GROUND_OVERRIDE_BLEND_SCALE = 8.0
+# [추가] 바닥 오버라이드 마스크는 메시 UV를 그대로 쓰도록 기본 배율 1을 사용한다.
+GROUND_OVERRIDE_MASK_SCALE = 1.0
+
+
+# [추가] props.txt 안의 TextureStreamingData 블록에서 texture별 UV 메타를 복원하는 함수다.
+def parse_texture_streaming_entries(lines: list[str]):
+    entries = []
+    text = "\n".join(lines)
+
+    # [변경] 중첩 블록을 수동으로 세던 기존 방식 대신,
+    # [변경] SamplingScale / UVChannelIndex / TextureName 3줄 패턴을 직접 찾아
+    # [변경] 최상위 TextureStreamingData 배열 안쪽 항목들을 안정적으로 복원한다.
+    pattern = re.compile(
+        r"SamplingScale\s*=\s*([0-9.+-eE]+)\s+"
+        r"UVChannelIndex\s*=\s*(\d+)\s+"
+        r"TextureName\s*=\s*([^\s}]+)",
+        re.MULTILINE,
+    )
+
+    for match in pattern.finditer(text):
+        sampling_scale = 1.0
+        uv_channel = 0
+        texture_name = match.group(3).strip()
+
+        try:
+            sampling_scale = float(match.group(1))
+        except ValueError:
+            sampling_scale = 1.0
+
+        try:
+            uv_channel = int(match.group(2))
+        except ValueError:
+            uv_channel = 0
+
+        if texture_name:
+            entries.append({
+                "texture_name": texture_name,
+                "sampling_scale": sampling_scale,
+                "uv_channel": uv_channel,
+            })
+
+    return entries
 
 
 def parse_args():
@@ -130,11 +193,15 @@ def parse_props_txt(path: Path):
     scalars = {}
     colors = {}
     properties = {}
+    # [추가] props.txt 원문 줄 목록이다. TextureStreamingData 복원과 기존 파라미터 파싱에 함께 사용한다.
+    raw_lines = path.read_text(encoding="utf-8-sig", errors="ignore").splitlines()
+    # [추가] texture별 UV 채널/샘플링 스케일 메타를 별도로 수집한다.
+    texture_streaming_entries = parse_texture_streaming_entries(raw_lines)
 
     current_section = None
     current_entry = None
 
-    for raw_line in path.read_text(encoding="utf-8-sig", errors="ignore").splitlines():
+    for raw_line in raw_lines:
         line = raw_line.strip()
         if not line:
             continue
@@ -227,6 +294,7 @@ def parse_props_txt(path: Path):
             "HasTopEmissive": False,
             "IsTranslucent": False,
             "IsNull": False,
+            "TextureStreamingData": texture_streaming_entries,
         },
     }
 
@@ -375,6 +443,22 @@ def normalize_fmodel_material_instance(item: dict):
         properties["ParentObjectName"] = parent.get("ObjectName", "")
         properties["ParentObjectPath"] = parent.get("ObjectPath", "")
 
+    # [추가] FModel json의 TextureStreamingData를 props.txt와 같은 공통 포맷으로 정규화한다.
+    texture_streaming_entries = []
+    for entry in props.get("TextureStreamingData", []):
+        if not isinstance(entry, dict):
+            continue
+
+        texture_name = str(entry.get("TextureName", "")).strip()
+        if not texture_name:
+            continue
+
+        texture_streaming_entries.append({
+            "texture_name": texture_name,
+            "sampling_scale": float(entry.get("SamplingScale", 1.0)),
+            "uv_channel": int(entry.get("UVChannelIndex", 0)),
+        })
+
     return {
         "Textures": textures,
         "Parameters": {
@@ -390,6 +474,7 @@ def normalize_fmodel_material_instance(item: dict):
             "HasTopEmissive": False,
             "IsTranslucent": False,
             "IsNull": False,
+            "TextureStreamingData": texture_streaming_entries,
         },
     }
 
@@ -490,6 +575,48 @@ def get_scalars(mi_data: dict):
     return get_parameters(mi_data).get("Scalars", {})
 
 
+# [추가] texture별 UV 채널/샘플링 스케일 메타에 접근하는 helper다.
+def get_texture_streaming_entries(mi_data: dict):
+    return get_parameters(mi_data).get("TextureStreamingData", [])
+
+
+# [추가] texture name 기준으로 UV 메타 lookup을 만드는 함수다.
+def build_texture_streaming_lookup(mi_data: dict):
+    lookup = {}
+
+    for entry in get_texture_streaming_entries(mi_data):
+        if not isinstance(entry, dict):
+            continue
+
+        texture_name = str(entry.get("texture_name", "")).strip()
+        if not texture_name:
+            continue
+
+        key = texture_name.lower()
+        if key in lookup:
+            continue
+
+        lookup[key] = {
+            "uv_channel": int(entry.get("uv_channel", 0)),
+            "sampling_scale": float(entry.get("sampling_scale", 1.0)),
+        }
+
+    return lookup
+
+
+# [추가] unreal texture ref가 어떤 UV 채널/샘플링 스케일을 써야 하는지 복원한다.
+def resolve_texture_sampling_meta(unreal_ref: str, texture_streaming_lookup: dict):
+    texture_name = extract_texture_asset_name(unreal_ref)
+    if not texture_name:
+        return 0, 1.0
+
+    entry = texture_streaming_lookup.get(texture_name.lower())
+    if not entry:
+        return 0, 1.0
+
+    return int(entry.get("uv_channel", 0)), float(entry.get("sampling_scale", 1.0))
+
+
 def get_color4(colors: dict, key: str, default=None):
     if default is None:
         default = [1.0, 1.0, 1.0, 1.0]
@@ -562,6 +689,18 @@ def make_texture_path(src_path, owner_json_path: Path, copy_root, dry_run: bool)
     return copy_texture_and_make_relative(src_path, owner_json_path, copy_root, dry_run)
 
 
+def normalize_opaque_color_alpha(color: list[float], blend_mode: int) -> list[float]:
+    # [추가] Unreal 머티리얼의 BaseMixColor/ShadowColor 는 opaque 머티리얼이어도 A=0 으로 들어오는 경우가 있다.
+    # [추가] 우리 런타임은 base_color_factor.a 를 그대로 쓰므로, opaque(BlendMode 0)는 알파를 1로 강제해
+    # [추가] 합성 단계에서 불필요하게 discard 되거나 반투명처럼 보이는 문제를 막는다.
+    normalized = list(color)
+
+    if blend_mode == 0 and len(normalized) >= 4:
+        normalized[3] = 1.0
+
+    return normalized
+
+
 def normalize_generated_matinst_paths(matinst_root: Path, preferred_texture_root: Path, dry_run: bool):
     normalized = 0
     updated_files = 0
@@ -610,22 +749,108 @@ def normalize_generated_matinst_paths(matinst_root: Path, preferred_texture_root
     return normalized, updated_files
 
 
+def append_texture_slot(out_data: dict, slot_name: str, texture_path: str, texture_index: int = 0,
+                        uv_channel: int = 0, sampling_scale: float = 1.0):
+    # [추가] 공통 texture append helper.
+    # [추가] 비어 있는 경로는 건너뛰고, 생성 포맷을 한 곳에서 맞춘다.
+    if not texture_path:
+        return
+
+    out_data["textures"].append({
+        "slot": slot_name,
+        "index": texture_index,
+        "path": texture_path,
+        "uv_channel": uv_channel,
+        "sampling_scale": sampling_scale,
+    })
+
+
+# [추가] 현재 머티리얼이 KonohaVillage02 바닥 강제 마스킹 대상인지 판정하는 helper다.
+# [추가] 바닥 청크에 실제로 쓰이는 머티리얼 이름만 좁게 잡아서 다른 맵 재질까지 건드리지 않도록 한다.
+def is_ground_override_material(material_name: str) -> bool:
+    upper_name = material_name.upper().strip()
+    return upper_name in GROUND_OVERRIDE_MATERIAL_NAMES
+
+
+# [추가] 강제 주입용 texture stem을 texture_index에서 찾는 helper다.
+# [추가] FModel props를 거치지 않고도 지정된 텍스처를 바로 matinst에 심기 위해 사용한다.
+def resolve_forced_texture_path(texture_stem: str, texture_index: dict, owner_json_path: Path, copy_root, dry_run: bool) -> str:
+    source_path = texture_index.get(texture_stem.lower())
+    return make_texture_path(source_path, owner_json_path, copy_root, dry_run)
+
+
+# [추가] KonohaVillage02 바닥 머티리얼을 Sand + Grass + Mask 조합으로 강제 덮어쓰는 helper다.
+# [추가] Terrain으로 갈아타지 않고 기존 StaticMesh 바닥에 마스킹을 주기 위한 1차 규칙이다.
+def apply_ground_material_override(material_name: str, out_data: dict, texture_index: dict,
+                                   owner_json_path: Path, copy_root, dry_run: bool):
+    if not is_ground_override_material(material_name):
+        return
+
+    # [추가] 바닥 오버라이드에서는 원본 tint가 과하게 들어오지 않도록 베이스/그림자 색을 중립값으로 고정한다.
+    out_data["base_color_factor"] = [1.0, 1.0, 1.0, 1.0]
+    out_data["shadow_color"] = [1.0, 1.0, 1.0, 1.0]
+    # [변경] 바닥 오버라이드에서는 잔디 블렌드가 더 잘 보이도록 threshold를 올린다.
+    # [추가] 다른 건물 머티리얼에는 영향을 주지 않고, ground override 대상에만 적용된다.
+    out_data["mask_scale"] = 1.0
+    out_data["mask_threshold"] = 2.5
+
+    # [추가] 기존 FModel 텍스처 중 base/blend/mask 슬롯은 제거하고 바닥용 강제 텍스처로 교체한다.
+    out_data["textures"] = [
+        texture for texture in out_data["textures"]
+        if texture.get("slot") not in {"base_color", "blend_base_color", "mask"}
+    ]
+
+    # [추가] 모래/잔디/마스크 텍스처를 프로젝트용 상대경로로 복사/변환한다.
+    base_color_path = resolve_forced_texture_path(
+        GROUND_OVERRIDE_BASE_COLOR_STEM, texture_index, owner_json_path, copy_root, dry_run
+    )
+    blend_color_path = resolve_forced_texture_path(
+        GROUND_OVERRIDE_BLEND_COLOR_STEM, texture_index, owner_json_path, copy_root, dry_run
+    )
+    mask_path = resolve_forced_texture_path(
+        GROUND_OVERRIDE_MASK_STEM, texture_index, owner_json_path, copy_root, dry_run
+    )
+
+    append_texture_slot(
+        out_data, "base_color", base_color_path,
+        uv_channel=0, sampling_scale=GROUND_OVERRIDE_BASE_SCALE
+    )
+    append_texture_slot(
+        out_data, "blend_base_color", blend_color_path,
+        uv_channel=0, sampling_scale=GROUND_OVERRIDE_BLEND_SCALE
+    )
+    append_texture_slot(
+        out_data, "mask", mask_path,
+        uv_channel=0, sampling_scale=GROUND_OVERRIDE_MASK_SCALE
+    )
+
+
 def resolve_generic_pbr(material_name: str, mi_data: dict, texture_index: dict, owner_json_path: Path,
                         copy_root, dry_run: bool):
     textures = get_textures(mi_data)
     colors = get_colors(mi_data)
     scalars = get_scalars(mi_data)
+    # [추가] texture별 UV 채널/샘플링 스케일 lookup이다.
+    texture_streaming_lookup = build_texture_streaming_lookup(mi_data)
     params = get_parameters(mi_data)
+    # [추가] 생성 전에 blend mode 를 먼저 고정해 두면 opaque 알파 정규화를 같은 기준으로 재사용할 수 있다.
+    blend_mode = int(params.get("BlendMode", 0))
 
     base_color_ref = find_first_key(textures, [
         "AA_Override_BaseColorMap",
         "AA_BaseColorMap",
         "PM_Diffuse",
     ])
+    blend_base_color_ref = find_first_key(textures, [
+        "AB_BlendBaseColorMap",
+    ])
     normal_ref = find_first_key(textures, [
         "BA_NomalMap",
         "BA_NormalMap",
         "PM_Normals",
+    ])
+    blend_normal_ref = find_first_key(textures, [
+        "BB_BlendNormalMap",
     ])
     specular_ref = find_first_key(textures, [
         "PM_SpecularMasks",
@@ -637,34 +862,79 @@ def resolve_generic_pbr(material_name: str, mi_data: dict, texture_index: dict, 
         "Emissive",
         "Emission",
     ])
+    uneven_color_ref = find_first_key(textures, [
+        "DA_UnevenColorMap",
+    ])
+    mask_ref = find_first_key(textures, [
+        "EA_MaskMap",
+    ])
 
     out = {
         "version": 1,
         "name": material_name,
         "profile": "generic_pbr",
         "parent": "M_GenericPBR",
-        "base_color_factor": get_color4(colors, "AA_BaseMixColor", [1.0, 1.0, 1.0, 1.0]),
+        "base_color_factor": normalize_opaque_color_alpha(
+            get_color4(colors, "AA_BaseMixColor", [1.0, 1.0, 1.0, 1.0]),
+            blend_mode,
+        ),
+        "shadow_color": normalize_opaque_color_alpha(
+            get_color4(colors, "AA_ShadowColor", [1.0, 1.0, 1.0, 1.0]),
+            blend_mode,
+        ),
         "normal_strength": float(scalars.get("AA_NormalMapBoost", 1.0)),
-        "blend_mode": int(params.get("BlendMode", 0)),
+        "blend_normal_strength": float(scalars.get("AB_BlendNormalMapBoost", 1.0)),
+        "mask_scale": float(scalars.get("AA_MaskScale", 1.0)),
+        "mask_threshold": float(scalars.get("AC_Mask_Threshold", 1.0)),
+        "uneven_color_scale": float(scalars.get("AA_UnevenColorScale", 1.0)),
+        "blend_mode": blend_mode,
         "textures": [],
     }
 
     base_color_path = make_texture_path(resolve_source_texture_path(base_color_ref, texture_index), owner_json_path, copy_root, dry_run)
+    blend_base_color_path = make_texture_path(resolve_source_texture_path(blend_base_color_ref, texture_index), owner_json_path, copy_root, dry_run)
     normal_path = make_texture_path(resolve_source_texture_path(normal_ref, texture_index), owner_json_path, copy_root, dry_run)
+    blend_normal_path = make_texture_path(resolve_source_texture_path(blend_normal_ref, texture_index), owner_json_path, copy_root, dry_run)
     specular_path = make_texture_path(resolve_source_texture_path(specular_ref, texture_index), owner_json_path, copy_root, dry_run)
     roughness_path = make_texture_path(resolve_source_texture_path(roughness_ref, texture_index), owner_json_path, copy_root, dry_run)
     emissive_path = make_texture_path(resolve_source_texture_path(emissive_ref, texture_index), owner_json_path, copy_root, dry_run)
+    uneven_color_path = make_texture_path(resolve_source_texture_path(uneven_color_ref, texture_index), owner_json_path, copy_root, dry_run)
+    mask_path = make_texture_path(resolve_source_texture_path(mask_ref, texture_index), owner_json_path, copy_root, dry_run)
 
-    if base_color_path:
-        out["textures"].append({"slot": "base_color", "index": 0, "path": base_color_path})
-    if normal_path:
-        out["textures"].append({"slot": "normal", "index": 0, "path": normal_path})
-    if specular_path:
-        out["textures"].append({"slot": "specular", "index": 0, "path": specular_path})
-    if roughness_path:
-        out["textures"].append({"slot": "roughness", "index": 0, "path": roughness_path})
-    if emissive_path:
-        out["textures"].append({"slot": "emissive", "index": 0, "path": emissive_path})
+    # [추가] 슬롯별 UV 메타를 복원해 런타임 셰이더가 올바른 UV 채널을 선택할 수 있게 한다.
+    base_color_uv_channel, base_color_sampling_scale = resolve_texture_sampling_meta(base_color_ref, texture_streaming_lookup)
+    blend_base_uv_channel, blend_base_sampling_scale = resolve_texture_sampling_meta(blend_base_color_ref, texture_streaming_lookup)
+    normal_uv_channel, normal_sampling_scale = resolve_texture_sampling_meta(normal_ref, texture_streaming_lookup)
+    blend_normal_uv_channel, blend_normal_sampling_scale = resolve_texture_sampling_meta(blend_normal_ref, texture_streaming_lookup)
+    specular_uv_channel, specular_sampling_scale = resolve_texture_sampling_meta(specular_ref, texture_streaming_lookup)
+    roughness_uv_channel, roughness_sampling_scale = resolve_texture_sampling_meta(roughness_ref, texture_streaming_lookup)
+    emissive_uv_channel, emissive_sampling_scale = resolve_texture_sampling_meta(emissive_ref, texture_streaming_lookup)
+    uneven_uv_channel, uneven_sampling_scale = resolve_texture_sampling_meta(uneven_color_ref, texture_streaming_lookup)
+    mask_uv_channel, mask_sampling_scale = resolve_texture_sampling_meta(mask_ref, texture_streaming_lookup)
+
+    append_texture_slot(out, "base_color", base_color_path,
+                        uv_channel=base_color_uv_channel, sampling_scale=base_color_sampling_scale)
+    append_texture_slot(out, "blend_base_color", blend_base_color_path,
+                        uv_channel=blend_base_uv_channel, sampling_scale=blend_base_sampling_scale)
+    append_texture_slot(out, "normal", normal_path,
+                        uv_channel=normal_uv_channel, sampling_scale=normal_sampling_scale)
+    append_texture_slot(out, "blend_normal", blend_normal_path,
+                        uv_channel=blend_normal_uv_channel, sampling_scale=blend_normal_sampling_scale)
+    append_texture_slot(out, "specular", specular_path,
+                        uv_channel=specular_uv_channel, sampling_scale=specular_sampling_scale)
+    append_texture_slot(out, "roughness", roughness_path,
+                        uv_channel=roughness_uv_channel, sampling_scale=roughness_sampling_scale)
+    append_texture_slot(out, "emissive", emissive_path,
+                        uv_channel=emissive_uv_channel, sampling_scale=emissive_sampling_scale)
+    append_texture_slot(out, "uneven_color", uneven_color_path,
+                        uv_channel=uneven_uv_channel, sampling_scale=uneven_sampling_scale)
+    append_texture_slot(out, "mask", mask_path,
+                        uv_channel=mask_uv_channel, sampling_scale=mask_sampling_scale)
+
+    # [추가] KonohaVillage02 바닥 계열은 원본 머티리얼 대신 모래/잔디/마스크 조합으로 강제 치환한다.
+    apply_ground_material_override(
+        material_name, out, texture_index, owner_json_path, copy_root, dry_run
+    )
 
     return out
 
@@ -674,7 +944,11 @@ def resolve_flat_color_normal(material_name: str, mi_data: dict, texture_index: 
     textures = get_textures(mi_data)
     colors = get_colors(mi_data)
     scalars = get_scalars(mi_data)
+    # [추가] flat profile도 texture streaming 메타를 함께 보존한다.
+    texture_streaming_lookup = build_texture_streaming_lookup(mi_data)
     params = get_parameters(mi_data)
+    # [추가] flat_color_normal 도 generic_pbr 와 같은 opaque 알파 정규화 기준을 사용한다.
+    blend_mode = int(params.get("BlendMode", 0))
 
     normal_ref = find_first_key(textures, [
         "BA_NomalMap",
@@ -695,6 +969,9 @@ def resolve_flat_color_normal(material_name: str, mi_data: dict, texture_index: 
     if shadow_color is None:
         shadow_color = get_color4(colors, "AA_ShadowColor", [1.0, 1.0, 1.0, 1.0])
 
+    base_color = normalize_opaque_color_alpha(base_color, blend_mode)
+    shadow_color = normalize_opaque_color_alpha(shadow_color, blend_mode)
+
     out = {
         "version": 1,
         "name": material_name,
@@ -703,17 +980,31 @@ def resolve_flat_color_normal(material_name: str, mi_data: dict, texture_index: 
         "base_color_factor": base_color,
         "shadow_color": shadow_color,
         "normal_strength": float(scalars.get("AA_NormalMapBoost", 1.0)),
-        "blend_mode": int(params.get("BlendMode", 0)),
+        "blend_mode": blend_mode,
         "textures": [],
     }
 
     normal_path = make_texture_path(resolve_source_texture_path(normal_ref, texture_index), owner_json_path, copy_root, dry_run)
     specular_path = make_texture_path(resolve_source_texture_path(specular_ref, texture_index), owner_json_path, copy_root, dry_run)
+    normal_uv_channel, normal_sampling_scale = resolve_texture_sampling_meta(normal_ref, texture_streaming_lookup)
+    specular_uv_channel, specular_sampling_scale = resolve_texture_sampling_meta(specular_ref, texture_streaming_lookup)
 
     if normal_path:
-        out["textures"].append({"slot": "normal", "index": 0, "path": normal_path})
+        out["textures"].append({
+            "slot": "normal",
+            "index": 0,
+            "path": normal_path,
+            "uv_channel": normal_uv_channel,
+            "sampling_scale": normal_sampling_scale,
+        })
     if specular_path:
-        out["textures"].append({"slot": "specular", "index": 0, "path": specular_path})
+        out["textures"].append({
+            "slot": "specular",
+            "index": 0,
+            "path": specular_path,
+            "uv_channel": specular_uv_channel,
+            "sampling_scale": specular_sampling_scale,
+        })
 
     return out
 

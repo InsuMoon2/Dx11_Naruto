@@ -15,7 +15,15 @@ HRESULT ModelMaterial::Initialize_FromJson(const json& data, const string& mater
     {
         _baseColorFactor = Read_Vec4_Array(data, "base_color_factor", Vec4(1.f, 1.f, 1.f, 1.f));
         _shadowColor = Read_Vec4_Array(data, "shadow_color", Vec4(1.f, 1.f, 1.f, 1.f));
+
         _normalStrength = data.value("normal_strength", 1.f);
+
+        _blendNormalStrength = data.value("blend_normal_strength", 1.f);
+
+        _maskScale = data.value("mask_scale", 1.f);
+        _maskThreshold = data.value("mask_threshold", 1.f);
+        _unevenColorScale = data.value("uneven_color_scale", 1.f);
+
         _materialProfile = data.value("profile", string(""));
         _blendMode = data.value("blend_mode", 0);
     }
@@ -33,6 +41,10 @@ HRESULT ModelMaterial::Initialize_FromJson(const json& data, const string& mater
         string slotStr = textureItem.value("slot", "");
         uint32 index = textureItem.value("index", 0u);
         string path = textureItem.value("path", "");
+        // [추가] texture item이 참조하는 UV 채널 인덱스다.
+        uint32 uvChannel = textureItem.value("uv_channel", 0u);
+        // [추가] texture item의 원본 sampling scale이다.
+        float samplingScale = textureItem.value("sampling_scale", 1.f);
 
         if (path.empty())
             continue;
@@ -41,6 +53,7 @@ HRESULT ModelMaterial::Initialize_FromJson(const json& data, const string& mater
         if (slot == EMaterialTextureSlot::END)
             continue;
 
+        Set_TextureMeta(slot, index, uvChannel, samplingScale);
         CHECK_FAILED(Load_Texture_File(slot, index, path, materialFilePath), E_FAIL);
     }
 
@@ -85,6 +98,26 @@ string ModelMaterial::Get_TextureGuid(EMaterialTextureSlot slot, uint32 index) c
     return _textureGuids[idx][index];
 }
 
+uint32 ModelMaterial::Get_TextureUVChannel(EMaterialTextureSlot slot, uint32 index) const
+{
+    const uint32 idx = static_cast<uint32>(slot);
+
+    if (idx >= MATERIAL_TEXTURE_SLOT_COUNT || index >= _textureMetas[idx].size())
+        return 0u;
+
+    return _textureMetas[idx][index].uvChannel;
+}
+
+float ModelMaterial::Get_TextureSamplingScale(EMaterialTextureSlot slot, uint32 index) const
+{
+    const uint32 idx = static_cast<uint32>(slot);
+
+    if (idx >= MATERIAL_TEXTURE_SLOT_COUNT || index >= _textureMetas[idx].size())
+        return 1.f;
+
+    return _textureMetas[idx][index].samplingScale;
+}
+
 HRESULT ModelMaterial::Override_Texture(EMaterialTextureSlot slot, uint32 index, const string& guid)
 {
     const uint32 idx = static_cast<uint32>(slot);
@@ -114,10 +147,34 @@ HRESULT ModelMaterial::Override_Texture(EMaterialTextureSlot slot, uint32 index,
     if (_textureGuids[idx].size() <= index)
         _textureGuids[idx].resize(index + 1);
 
+    Ensure_TextureMetaStorage(slot, index);
+
     _textures[idx][index] = srv;
     _textureGuids[idx][index] = guid;
 
     return S_OK;
+}
+
+void ModelMaterial::Ensure_TextureMetaStorage(EMaterialTextureSlot slot, uint32 index)
+{
+    const uint32 slotIndex = static_cast<uint32>(slot);
+    if (slotIndex >= MATERIAL_TEXTURE_SLOT_COUNT)
+        return;
+
+    if (_textureMetas[slotIndex].size() <= index)
+        _textureMetas[slotIndex].resize(index + 1);
+}
+
+void ModelMaterial::Set_TextureMeta(EMaterialTextureSlot slot, uint32 index, uint32 uvChannel, float samplingScale)
+{
+    Ensure_TextureMetaStorage(slot, index);
+
+    const uint32 slotIndex = static_cast<uint32>(slot);
+    if (slotIndex >= MATERIAL_TEXTURE_SLOT_COUNT)
+        return;
+
+    _textureMetas[slotIndex][index].uvChannel = uvChannel;
+    _textureMetas[slotIndex][index].samplingScale = samplingScale;
 }
 
 EMaterialTextureSlot ModelMaterial::SlotString_To_Enum(const string& slot)
@@ -129,6 +186,11 @@ EMaterialTextureSlot ModelMaterial::SlotString_To_Enum(const string& slot)
     if (slot == "ambient_occlusion")  return EMaterialTextureSlot::AmbientOcclusion;
     if (slot == "metalness")          return EMaterialTextureSlot::Metalness;
     if (slot == "roughness")          return EMaterialTextureSlot::Roughness;
+
+    if (slot == "blend_base_color")   return EMaterialTextureSlot::BlendBaseColor;
+    if (slot == "blend_normal")       return EMaterialTextureSlot::BlendNormal;
+    if (slot == "mask")               return EMaterialTextureSlot::Mask;
+    if (slot == "uneven_color")       return EMaterialTextureSlot::UnevenColor;
 
     return EMaterialTextureSlot::END;
 }
@@ -144,6 +206,12 @@ string ModelMaterial::SlotEnum_To_String(EMaterialTextureSlot slot)
     case EMaterialTextureSlot::AmbientOcclusion:  return "ambient_occlusion";
     case EMaterialTextureSlot::Metalness:         return "metalness";
     case EMaterialTextureSlot::Roughness:         return "roughness";
+
+    case EMaterialTextureSlot::BlendBaseColor:    return "blend_base_color";
+    case EMaterialTextureSlot::BlendNormal:       return "blend_normal";
+    case EMaterialTextureSlot::Mask:              return "mask";
+    case EMaterialTextureSlot::UnevenColor:       return "uneven_color";
+
     default:                                      return "";
     }
 }
@@ -185,6 +253,8 @@ HRESULT ModelMaterial::Load_Texture_File(EMaterialTextureSlot slot, uint32 index
 
     if (_textureGuids[slotIndex].size() <= index)
         _textureGuids[slotIndex].resize(index + 1);
+
+    Ensure_TextureMetaStorage(slot, index);
 
     _textures[slotIndex][index] = srv;
     _textureGuids[slotIndex][index] = GAME->Find_AssetGUID(wPath);

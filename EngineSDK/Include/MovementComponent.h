@@ -162,6 +162,9 @@ public:
 
     bool Try_WireDash_WallTrace(const Vec3& traceStart, const Vec3& traceDir, FSurfaceHit& outHit) const;
 
+    void Enter_WallRun(const FSurfaceHit& wallHit);
+    void Exit_WallRun();
+
 private:
     void Update_Rotation(float timeDelta, Shared<Transform> transform);
     void Update_Velocity(float timeDelta, Shared<Transform> transform);
@@ -176,8 +179,7 @@ private: /* 벽타기 */
 
     bool Can_EnterWallRun(const FSurfaceHit& wallHit, const Vec3& desiredMoveDir) const;
 
-    void Enter_WallRun(const FSurfaceHit& wallHit);
-    void Exit_WallRun();
+
 
     void Apply_WallRunPosition(Shared<Transform> transform, const FSurfaceHit& wallHit);
     void Apply_WallRunRotation(float timeDelta, Shared<Transform> transform);

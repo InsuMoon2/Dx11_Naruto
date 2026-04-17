@@ -7,8 +7,20 @@
 namespace
 {
     constexpr uint32 MESHBIN_MAGIC = 0x4853454D; // 'MESH'
-    constexpr uint32 STATIC_MESHBIN_VERSION     = 1;
+    // [추가] 첫 번째 정적 meshbin 포맷은 UV0만 저장한다.
+    constexpr uint32 LEGACY_STATIC_MESHBIN_VERSION = 1;
+    // [변경] 최신 정적 meshbin 포맷은 UV1까지 저장한다.
+    constexpr uint32 STATIC_MESHBIN_VERSION     = 3;
     constexpr uint32 SKELETAL_MESHBIN_VERSION   = 2;
+
+    // [추가] 과거 v1 정적 meshbin을 읽기 위한 legacy vertex 레이아웃이다.
+    struct FLegacyMeshVertexRawV1
+    {
+        float px = 0.f, py = 0.f, pz = 0.f;
+        float nx = 0.f, ny = 0.f, nz = 0.f;
+        float tx = 0.f, ty = 0.f, tz = 0.f;
+        float u = 0.f, v = 0.f;
+    };
 }
 
 bool Model_BinaryLoader::Read_Bytes(ifstream& file, void* dst, size_t size)
@@ -36,6 +48,70 @@ bool Model_BinaryLoader::Read_String(ifstream& file, string& outValue)
 }
 
 bool Model_BinaryLoader::Read_V1_Static(ifstream& file, const string& filePath, const FStaticMeshFileHeader& header,
+    FModelBinaryData& outData)
+{
+    outData.materialCount = header.materialCount;
+    outData.modelType = EMeshVertexType::StaticMesh;
+    outData.meshes.reserve(header.meshCount);
+
+    for (uint32 meshIndex = 0; meshIndex < header.meshCount; ++meshIndex)
+    {
+        FMeshBinaryData meshData{};
+        meshData.isAnimated = false;
+
+        if (!Read_String(file, meshData.name))
+        {
+            LOG_ERROR("Failed to read static mesh name: {} ({})", filePath, meshIndex);
+            return false;
+        }
+
+        if (!Read_Value(file, meshData.materialIndex))
+            return false;
+
+        uint32 vertexCount = 0;
+        if (!Read_Value(file, vertexCount))
+            return false;
+
+        vector<FLegacyMeshVertexRawV1> legacyVertices;
+        legacyVertices.resize(vertexCount);
+
+        if (!Read_Bytes(file, legacyVertices.data(), sizeof(FLegacyMeshVertexRawV1) * vertexCount))
+            return false;
+
+        meshData.vertices.resize(vertexCount);
+        for (uint32 vertexIndex = 0; vertexIndex < vertexCount; ++vertexIndex)
+        {
+            const FLegacyMeshVertexRawV1& legacyRaw = legacyVertices[vertexIndex];
+            FMeshVertexRaw& raw = meshData.vertices[vertexIndex];
+
+            raw.px = legacyRaw.px;
+            raw.py = legacyRaw.py;
+            raw.pz = legacyRaw.pz;
+            raw.nx = legacyRaw.nx;
+            raw.ny = legacyRaw.ny;
+            raw.nz = legacyRaw.nz;
+            raw.tx = legacyRaw.tx;
+            raw.ty = legacyRaw.ty;
+            raw.tz = legacyRaw.tz;
+            raw.u = legacyRaw.u;
+            raw.v = legacyRaw.v;
+        }
+
+        uint32 indexCount = 0;
+        if (!Read_Value(file, indexCount))
+            return false;
+
+        meshData.indices.resize(indexCount);
+        if (!Read_Bytes(file, meshData.indices.data(), sizeof(uint32) * indexCount))
+            return false;
+
+        outData.meshes.push_back(std::move(meshData));
+    }
+
+    return true;
+}
+
+bool Model_BinaryLoader::Read_V3_Static(ifstream& file, const string& filePath, const FStaticMeshFileHeader& header,
     FModelBinaryData& outData)
 {
     outData.materialCount = header.materialCount;
@@ -231,13 +307,22 @@ bool Model_BinaryLoader::Load(const string& filePath, FModelBinaryData& outData)
 
     file.seekg(0, ios_base::beg);
 
-    if (version == STATIC_MESHBIN_VERSION)
+    if (version == LEGACY_STATIC_MESHBIN_VERSION)
     {
         FStaticMeshFileHeader header{};
         if (!Read_Value(file, header))
             return false;
 
         return Read_V1_Static(file, filePath, header, outData);
+    }
+
+    if (version == STATIC_MESHBIN_VERSION)
+    {
+        FStaticMeshFileHeader header{};
+        if (!Read_Value(file, header))
+            return false;
+
+        return Read_V3_Static(file, filePath, header, outData);
     }
 
     if (version == SKELETAL_MESHBIN_VERSION)

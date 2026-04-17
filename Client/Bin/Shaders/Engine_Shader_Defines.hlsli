@@ -26,7 +26,7 @@ cbuffer LightBuffer : register(b2)
 }
 
 // --- Material Default ---
-vector g_MtrlAmbient = vector(0.3f, 0.3f, 0.3f, 1.f);
+vector g_MtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
 vector g_MtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 // --- Textures ---

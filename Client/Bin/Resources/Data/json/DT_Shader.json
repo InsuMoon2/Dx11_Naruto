@@ -77,6 +77,12 @@
             "Path": "../../Client/Bin/Shaders/Shader_Sword_Trail.hlsl",
             "Level": "Static",
             "Extra": "VtxTex"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_SKYSPHERE",
+            "Path": "../../Client/Bin/Shaders/Shader_SkySphere.hlsl",
+            "Level": "Static",
+            "Extra": "VtxMesh"
         }
     ]
 }

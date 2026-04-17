@@ -36,6 +36,7 @@ public:
 
     void                Create_CollisionProxySetFromStaticMesh(Shared<GameObject> sourceObj);
 
+    bool Should_RenderRTDebug() const { return _showRenderTargetDebug; }
 
 private:
     ImGuiWindowFlags    Get_WindowFlags() const;
@@ -109,6 +110,8 @@ private: /* ImGuizmo */
     Quat                _gizmoStartRot;
     Vec3                _gizmoStartScale;
     bool                _gizmoWasUsing = false;
+
+    bool _showRenderTargetDebug = false;
 
 public:
     static shared_ptr<Scene_View> Create();

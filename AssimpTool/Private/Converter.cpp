@@ -133,6 +133,13 @@ bool Converter::Build_StaticMeshData()
                 vertex.v = srcMesh->mTextureCoords[0][v].y;
             }
 
+            // [추가] blend/macro texture가 사용하는 두 번째 UV 세트를 meshbin에 같이 저장한다.
+            if (srcMesh->HasTextureCoords(1))
+            {
+                vertex.u1 = srcMesh->mTextureCoords[1][v].x;
+                vertex.v1 = srcMesh->mTextureCoords[1][v].y;
+            }
+
             meshData.staticVertices.push_back(vertex);
         }
 

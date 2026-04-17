@@ -348,6 +348,10 @@
       <Filter>01. Levels</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CollisionProxyActor.h" />
+    <ClInclude Include="..\Public\UI_MonsterHp.h">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkySphereActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -679,6 +683,10 @@
       <Filter>01. Levels</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CollisionProxyActor.cpp" />
+    <ClCompile Include="..\Private\UI_MonsterHp.cpp">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkySphereActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -866,6 +874,9 @@
       <Filter>94. Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_Deferred.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_SkySphere.hlsl">
       <Filter>94. Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -46,6 +46,11 @@ namespace Engine
         Metalness,
         Roughness,
 
+        BlendBaseColor,
+        BlendNormal,
+        Mask,
+        UnevenColor,
+
         END
     };
 

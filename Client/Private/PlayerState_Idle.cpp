@@ -66,6 +66,12 @@ void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
 
+    if (!movement->Is_OnGround())
+    {
+        state->Change_State(EPlayerState::JumpFall);
+        return;
+    }
+
 }
 
 void PlayerState_Idle::Exit(PlayerStateMachine* state)

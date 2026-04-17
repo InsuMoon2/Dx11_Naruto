@@ -157,6 +157,18 @@
             "Level": "Static"
         },
         {
+            "Id": "COMPONENT_TYPE_MONSTER_HP",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Boss/T_UI_Boss_Gauge1.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_BOSS_HP",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Boss/T_UI_Boss_Gauge1.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
             "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
             "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle%d.png",
             "Count": 2,
@@ -231,7 +243,7 @@
         },
         {
             "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
-            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Title_BG_01_BC.png",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/CreateCharacterUI.png",
             "Count": 1,
             "Level": "Static"
         },
@@ -286,6 +298,78 @@
         {
             "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
             "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_UI_Roll_Selected_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_AMVLLG_DenseCloudySky_N.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_AMVLLG_RainStormSky_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_Cloud_middle_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_Cloud_middle_N.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_Cloud_side_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_Cloud_side_N.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_Cloud_Tile_01_M2.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_Cloud_Tile_01_N2.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_Clouds2_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_Moon_Mask_01.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_SKY_Base_01.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_Stars_BC_01.png",
             "Count": 1,
             "Level": "Static"
         },

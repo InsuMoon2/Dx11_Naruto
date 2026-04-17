@@ -19,32 +19,35 @@ HRESULT Light::Render(Shared<Shader> shader, Shared<VIBuffer_Rect> viBuffer)
 {
     uint32 type = static_cast<uint32>(_lightDesc.type);
 
-    if (FAILED(shader->Bind_RawValue("g_LightType", &type, sizeof(uint32))))
+    uint32 shaderPass = {};
+
+    if (_lightDesc.type == ELightType::Directional)
+    {
+        if (FAILED(shader->Bind_RawValue("g_LightDir", &_lightDesc.direction, sizeof _lightDesc.direction)))
+            return E_FAIL;
+
+        shaderPass = ETOI(EDeferred::Directinal);
+    }
+    else if (_lightDesc.type == ELightType::Point)
+	{
+		//if (FAILED(shader->Bind_RawValue("g_LightDir", &_lightDesc.direction, sizeof _lightDesc.direction)))
+        //    return E_FAIL;
+
+		shaderPass = ETOI(EDeferred::Point);
+	}
+
+    if (FAILED(shader->Bind_RawValue("g_LightDiffuse", &_lightDesc.diffuse, sizeof _lightDesc.diffuse)))
         return E_FAIL;
-    
-    if (FAILED(shader->Bind_RawValue("g_LightDir", &_lightDesc.direction, sizeof(Vec4))))
+
+    if (FAILED(shader->Bind_RawValue("g_LightAmbient", &_lightDesc.ambient, sizeof _lightDesc.ambient)))
         return E_FAIL;
 
-    if (FAILED(shader->Bind_RawValue("g_LightPos", &_lightDesc.position, sizeof(Vec4))))
+    if (FAILED(shader->Bind_RawValue("g_LightSpecular", &_lightDesc.specular, sizeof _lightDesc.specular)))
         return E_FAIL;
 
-    if (FAILED(shader->Bind_RawValue("g_LightRange", &_lightDesc.range, sizeof(float))))
-        return E_FAIL;
+    CHECK_FAILED(shader->Begin_Pass(shaderPass), E_FAIL);
 
-    if (FAILED(shader->Bind_RawValue("g_LightDiffuse", &_lightDesc.diffuse, sizeof(Vec4))))
-        return E_FAIL;
-
-    if (FAILED(shader->Bind_RawValue("g_LightAmbient", &_lightDesc.ambient, sizeof(Vec4))))
-        return E_FAIL;
-
-    if (FAILED(shader->Bind_RawValue("g_LightSpecular", &_lightDesc.specular, sizeof(Vec4))))
-        return E_FAIL;
-
-    shader->Begin_Pass(1);
-
-    viBuffer->Render();
-
-    return S_OK;
+    return viBuffer->Render();
 }
 
 Shared<Light> Light::Create(const FLightDesc& desc)

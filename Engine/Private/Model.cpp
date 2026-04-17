@@ -1761,6 +1761,8 @@ HRESULT Model::Ready_StaticMeshes(const FModelBinaryData& data)
             vertex.normal = Vec3(raw.nx, raw.ny, raw.nz);
             vertex.tangent = Vec3(raw.tx, raw.ty, raw.tz);
             vertex.texcoord = Vec2(raw.u, raw.v);
+            // [추가] 보조 UV 세트는 blend/base macro texture 샘플링에 사용된다.
+            vertex.texcoord1 = Vec2(raw.u1, raw.v1);
 
             Vec3 pos = vertex.position;
             Vec3 nor = vertex.normal;

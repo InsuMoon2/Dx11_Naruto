@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_Sky_Base_01",
+      "profile": "sky_base",
+      "base_color_factor": [0.266077, 0.544102, 0.765, 1.0],
+      "shadow_color": [0.131175, 0.464907, 0.795, 1.0],
+      "textures": [
+        {
+          "slot": "mask",
+          "index": 0,
+          "path": "Textures/T_SKY_Base_01.png",
+          "uv_channel": 1,
+          "sampling_scale": 1.0
+        }
+      ]
+    }
+  ]
+}

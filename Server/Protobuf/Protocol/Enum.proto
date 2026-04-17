@@ -25,6 +25,7 @@ enum ComponentID
     COMPONENT_TYPE_BEHAVIOR              = 100;
     COMPONENT_TYPE_CONTROLLER            = 101;
 
+   
 
     // Texture : 200+
     COMPONENT_TYPE_TEXTURE_START          = 200;
@@ -51,6 +52,12 @@ enum ComponentID
     COMPONENT_TYPE_TEXTURE_TRAIL        = 219;
 
     COMPONENT_TYPE_TEXTURE_SWORD_TRAIL = 220;
+        
+    COMPONENT_TYPE_MONSTER_HP           = 221;
+    COMPONENT_TYPE_BOSS_HP              = 222;
+
+    COMPONENT_TYPE_TEXTURE_SKY_SPHERE   = 223;
+  
 
     // Mesh
     COMPONENT_TYPE_MESH                 = 299;
@@ -76,6 +83,7 @@ enum ComponentID
     COMPONENT_TYPE_SHADER_BILLBOARD      = 411;
     COMPONENT_TYPE_SHADER_CHAKRA         = 412;
     COMPONENT_TYPE_SHADER_SWORD_TRAIL    = 413;
+    COMPONENT_TYPE_SHADER_SKYSPHERE      = 414;
 
     // Client ComponentID
     COMPONENT_TYPE_CLIENT_START         = 1000;
@@ -95,6 +103,7 @@ enum ComponentID
     COMPONENT_TYPE_TRAIL                = 1014;
     COMPONENT_TYPE_CHAKRA_MOVE          = 1015;
     COMPONENT_TYPE_SWORD_TRAIL          = 1016;
+
 }
 
 enum OBJECT_TYPE
@@ -142,6 +151,7 @@ enum OBJECT_TYPE
     OBJECT_TYPE_ATTACHED_EFFECT          = 80;
     OBJECT_TYPE_STRETCHING_MESH_EFFECT   = 81;
     OBJECT_TYPE_COLLISION_PROXY          = 82;
+    OBJECT_TYPE_SKY_SPHERE               = 83;
 
     // UI : 100+
     OBJECT_TYPE_UI_TEXT                 = 100;
@@ -158,6 +168,11 @@ enum OBJECT_TYPE
 
     OBJECT_TYPE_UI_ANNOUNCE_COMBO       = 111;
     OBJECT_TYPE_UI_TARGETING            = 112;
+
+    OBJECT_TYPE_UI_MONSTER_HP           = 113;
+    OBJECT_TYPE_UI_BOSS_HP              = 114;
+                
+    OBJECT_TYPE_UI_MULTIPLAYER_HP       = 115;
 }
 
 enum OBJECT_STATE_TYPE

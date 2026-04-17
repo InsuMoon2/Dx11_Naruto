@@ -105,6 +105,8 @@ void Editor_Manager::Render()
 
     if (sceneRT)
     {
+        CHECK_FAILED(GAME->Resize_DeferredViewport(sceneRT->Get_Width(), sceneRT->Get_Height()));
+
         GAME->Set_UIViewportSize(sceneRT->Get_Width(), sceneRT->Get_Height());
 
         sceneRT->BindAsTarget();
@@ -112,7 +114,23 @@ void Editor_Manager::Render()
 
         CHECK_FAILED(GAME->Set_TextTarget_Texture(sceneRT->Get_Texture2D()), );
 
-        GAME->Draw();
+        bool renderDebugPrimitives = false;
+        bool renderColliders = false;
+        bool renderRTDebug = false;
+
+        if (GAME->Get_GameState() != EGameState::Play)
+        {
+            auto sceneView = dynamic_pointer_cast<Scene_View>(Get_Window(TEXT("Scene")));
+
+            if (sceneView)
+            {
+                // Scene View 전용 MRT 디버그 토글
+                renderColliders = true;
+                renderRTDebug = sceneView->Should_RenderRTDebug();
+            }
+        }
+
+        GAME->Draw(true, true, renderRTDebug);
 
         sceneRT->UnbindAll();
 

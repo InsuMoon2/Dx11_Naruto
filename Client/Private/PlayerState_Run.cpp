@@ -68,6 +68,12 @@ void PlayerState_Run::Update(PlayerStateMachine* state, float timeDelta)
     movement->Apply_Command(cmd);
     movement->Update(timeDelta);
 
+    if (!movement->Is_OnGround())
+    {
+        state->Change_State(EPlayerState::JumpFall);
+        return;
+    }
+
     if (movement->Is_WallRunning())
     {
         state->Change_State(EPlayerState::Wall_Run);

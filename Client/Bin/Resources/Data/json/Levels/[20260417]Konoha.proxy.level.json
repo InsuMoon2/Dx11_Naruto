@@ -1,0 +1,241 @@
+{
+    "gameObjects": [
+        {
+            "components": [
+                {
+                    "position": [
+                        -23.586000442504883,
+                        25.29315185546875,
+                        -14.018003463745117
+                    ],
+                    "rotation": [
+                        89.9999771118164,
+                        0.0,
+                        -0.0
+                    ],
+                    "scale": [
+                        1.9595649242401123,
+                        1.0,
+                        1.3072569370269775
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "e95e6c73-923b-4a2b-a3cc-c611f4e67374",
+                            "material_name": "MI_ENV_LKNVLD_Soil_A_BG",
+                            "texture_overrides": {
+                                "base_color_0": "596c8301-f7f3-4df6-afeb-5d07ba73fffe",
+                                "normal_0": "c004591d-6d83-4d48-bf59-db992db692d1"
+                            }
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "41f9fc8d-e8c6-4c66-8247-fd48e9cabed2",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "SM_ENV_KNVLLG02_CommonBuilding_D_28_WallFrontProxy"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -23.586000442504883,
+                        25.29315185546875,
+                        -34.09917449951172
+                    ],
+                    "rotation": [
+                        89.9999771118164,
+                        0.0,
+                        179.9999542236328
+                    ],
+                    "scale": [
+                        1.9595649242401123,
+                        1.0,
+                        1.3072569370269775
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "e95e6c73-923b-4a2b-a3cc-c611f4e67374",
+                            "material_name": "MI_ENV_LKNVLD_Soil_A_BG",
+                            "texture_overrides": {
+                                "base_color_0": "596c8301-f7f3-4df6-afeb-5d07ba73fffe",
+                                "normal_0": "c004591d-6d83-4d48-bf59-db992db692d1"
+                            }
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "cd7e15dc-4fb8-4c4a-b1a0-aad120657a47",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "SM_ENV_KNVLLG02_CommonBuilding_D_28_WallBackProxy"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -33.66897201538086,
+                        25.29315185546875,
+                        -24.058589935302734
+                    ],
+                    "rotation": [
+                        89.99999237060547,
+                        0.0,
+                        90.00000762939453
+                    ],
+                    "scale": [
+                        1.9512861967086792,
+                        1.0,
+                        1.3072569370269775
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "e95e6c73-923b-4a2b-a3cc-c611f4e67374",
+                            "material_name": "MI_ENV_LKNVLD_Soil_A_BG",
+                            "texture_overrides": {
+                                "base_color_0": "596c8301-f7f3-4df6-afeb-5d07ba73fffe",
+                                "normal_0": "c004591d-6d83-4d48-bf59-db992db692d1"
+                            }
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "90550f43-1971-4615-984b-e6ca03e6af31",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "SM_ENV_KNVLLG02_CommonBuilding_D_28_WallLeftProxy"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -13.50302791595459,
+                        25.29315185546875,
+                        -24.058589935302734
+                    ],
+                    "rotation": [
+                        89.99999237060547,
+                        0.0,
+                        -90.00000762939453
+                    ],
+                    "scale": [
+                        1.9512861967086792,
+                        1.0,
+                        1.3072569370269775
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "e95e6c73-923b-4a2b-a3cc-c611f4e67374",
+                            "material_name": "MI_ENV_LKNVLD_Soil_A_BG",
+                            "texture_overrides": {
+                                "base_color_0": "596c8301-f7f3-4df6-afeb-5d07ba73fffe",
+                                "normal_0": "c004591d-6d83-4d48-bf59-db992db692d1"
+                            }
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "5c16670c-7ac6-4dfb-b520-dbfbcae4cf4b",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "SM_ENV_KNVLLG02_CommonBuilding_D_28_WallRightProxy"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -23.586000442504883,
+                        32.01630783081055,
+                        -24.058589935302734
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.9595649242401123,
+                        1.0,
+                        1.9512861967086792
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_instance_guid": "e95e6c73-923b-4a2b-a3cc-c611f4e67374",
+                            "material_name": "MI_ENV_LKNVLD_Soil_A_BG",
+                            "texture_overrides": {
+                                "base_color_0": "596c8301-f7f3-4df6-afeb-5d07ba73fffe",
+                                "normal_0": "c004591d-6d83-4d48-bf59-db992db692d1"
+                            }
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "e61b4ea0-876c-429c-a748-9cffed01aef1",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "Walkable",
+            "static_class": "SM_ENV_KNVLLG02_CommonBuilding_D_28_WalkableProxy"
+        }
+    ],
+    "levelIndex": 6,
+    "levelName": "[20260417]Konoha"
+}

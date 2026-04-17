@@ -627,13 +627,13 @@ HRESULT Loader::Loading_For_Konoha()
         };
 
     // 맵 리소스 로드
-    //pushChunk("BM_Konoha_Village02_Env_WaterTank");
     //pushChunk("BM_KonohaVillage02");
     //pushChunk("BM_KonohaVillage02_Env_Terrain");
     //pushChunk("BM_KonohaVillage02_Floor");
     //pushChunk("BM_KonohaVillage02_Props");
+    //pushChunk("BM_Konoha_Village02_Env_WaterTank");
 
-    pushChunk("[20260416]Konoha");
+    pushChunk("[20260417]Konoha");
 
     {
         scoped_lock lock(_jobMutex);

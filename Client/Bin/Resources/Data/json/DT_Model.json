@@ -300,6 +300,34 @@
             "Count": 1,
             "ModelType": "StaticMesh",
             "Level": "Static"
+        },
+        {
+            "Id": "Sky_SkySphere_Base",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/SkySphere.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Sky_SkySphere_01",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/SkySphere_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Sky_CloudPlate_01",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/CloudPlate_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Sky_Cloudy",
+            "Path": "../../Client/Bin/Resources/Models/SkySphere/SkySphere_cloudy.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
         }
     ]
 }

@@ -86,6 +86,11 @@
             "Level": "Static"
         },
         {
+            "Id": "SkySphere",
+            "ObjectType": "OBJECT_TYPE_SKY_SPHERE",
+            "Level": "Static"
+        },
+        {
             "Id": "Skill_Object",
             "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
             "Level": "Static"
@@ -203,6 +208,21 @@
         {
             "Id": "UI_Targeting",
             "ObjectType": "OBJECT_TYPE_UI_TARGETING",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_MonsterHp",
+            "ObjectType": "OBJECT_TYPE_UI_MONSTER_HP",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_BossHp",
+            "ObjectType": "OBJECT_TYPE_UI_BOSS_HP",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_MultiplayerHp",
+            "ObjectType": "OBJECT_TYPE_UI_MULTIPLAYER_HP",
             "Level": "Static"
         }
     ]

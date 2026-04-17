@@ -46,6 +46,8 @@ struct FMeshVertexRaw
     float nx = 0.f, ny = 0.f, nz = 0.f;
     float tx = 0.f, ty = 0.f, tz = 0.f;
     float u = 0.f, v = 0.f;
+    // [추가] 정적 메시 layered material이 참조할 보조 UV 채널 데이터다.
+    float u1 = 0.f, v1 = 0.f;
 };
 
 struct FMeshVertexAnimRaw

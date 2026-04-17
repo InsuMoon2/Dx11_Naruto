@@ -36,6 +36,8 @@ public:
 
     HRESULT Resize(uint32 width, uint32 height);
 
+    void Clear_DepthOnly();
+
 private:
     HRESULT Ready_SwapChain(HWND hWnd, EWinMode eWinMode, uint32 winSizeX, uint32 winSizeY);
     HRESULT Ready_BackBuffer_RenderTargetView();

@@ -13,8 +13,10 @@
 #include "Blackboard.h"
 #include "Bounding_Sphere.h"
 #include "Collider.h"
+#include "UI_MonsterHp.h"
 
 REGISTER_GAMEOBJECT(Monster, Protocol::OBJECT_TYPE_MONSTER)
+
 IMPLEMENT_REFLECTION(Monster);
 
 bool Monster::Register_Properties()
@@ -43,12 +45,18 @@ Monster::~Monster()
 
 HRESULT Monster::Initialize_Prototype()
 {
-    return Character::Initialize_Prototype();
+    CHECK_FAILED(Character::Initialize_Prototype(), E_FAIL);
+
+    return S_OK;
 }
 
 HRESULT Monster::Initialize(void* arg)
 {
-    return Character::Initialize(arg);
+    CHECK_FAILED(Character::Initialize(arg), E_FAIL);
+    
+    CHECK_FAILED(Ready_UI(), E_FAIL);
+
+    return S_OK;
 }
 
 void Monster::BeginPlay()
@@ -227,6 +235,28 @@ HRESULT Monster::Bind_ShaderResources()
     _shaderCom->Bind_Matrix("g_WorldMatrix", &worldMatrix);
     _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
     _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
+
+    return S_OK;
+}
+
+HRESULT Monster::Ready_UI()
+{
+    UI_MonsterHp::FPlayerHPDesc hpDesc;
+    hpDesc.posX = 0.f;
+    hpDesc.posY = 0.f;
+    hpDesc.zOrder = 0.5f; 
+    hpDesc.levelIndex = _levelIndex;
+    hpDesc.textureIndex = 0;
+    hpDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;
+
+    Shared<UIObject> uiObj = GAME->Add_UI(Protocol::OBJECT_TYPE_UI_MONSTER_HP, EUILayer::HUD, &hpDesc);
+    _hpBar = static_pointer_cast<UI_MonsterHp>(uiObj);
+
+    if (_hpBar)
+    {
+        _hpBar->Set_FillRange(98.f / 512.f, 413.f / 512.f);
+        _hpBar->Bind_Monster(GetSharedPtr<Monster>());
+    }
 
     return S_OK;
 }

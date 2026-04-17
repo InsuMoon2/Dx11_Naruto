@@ -197,9 +197,9 @@ void GameInstance::Update_CameraOnly(float timeDelta)
     _pipeLine->Update();
 }
 
-HRESULT GameInstance::Draw(bool renderDebugPrimitives, bool renderColliders)
+HRESULT GameInstance::Draw(bool renderDebugPrimitives, bool renderColliders, bool renderRTDebug)
 {
-    _renderer->Draw(renderDebugPrimitives, renderColliders);
+    _renderer->Draw(renderDebugPrimitives, renderColliders, renderRTDebug);
     _levelManager->Render();
 
     return S_OK;
@@ -346,6 +346,11 @@ Vec2 GameInstance::Get_UIViewportOffset() const
     return Vec2(offsetX, offsetY);
 }
 
+void GameInstance::Clear_DepthOnly()
+{
+    _graphicDevice->Clear_DepthStencil_View();
+}
+
 void GameInstance::Set_ImGuiContext(void* context)
 {
     ImGui::SetCurrentContext(static_cast<ImGuiContext*>(context));
@@ -475,6 +480,21 @@ void GameInstance::Backup_RenderGroup()
 void GameInstance::Restore_RenderGroup()
 {
     _renderer->Restore_RenderGroup();
+}
+
+HRESULT GameInstance::Resize_DeferredViewport(uint32 width, uint32 height)
+{
+    CHECK_FAILED(_targetManager->Resize_MRTs(width, height), E_FAIL);
+
+    if (_renderer)
+        _renderer->Resize_DeferredViewport(width, height);
+
+    return S_OK;
+}
+
+HRESULT GameInstance::Draw_Preview()
+{
+    return _renderer->Draw_Preview();
 }
 
 Shared<GameObject> GameInstance::Instantiate_Prefab(const string& prefabName, const json& overrides)

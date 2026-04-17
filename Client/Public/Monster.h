@@ -14,6 +14,7 @@ NS_BEGIN(Client)
 class CombatStat;
 class AIController;
 class AnimationStateComponent;
+class UI_MonsterHp;
 
 class Monster : public Character
 {
@@ -53,6 +54,8 @@ protected:
     HRESULT Ready_Components() override;
     HRESULT Bind_ShaderResources() override;
 
+    HRESULT Ready_UI();
+
 private:
     Shared<Model>                   _model;
 
@@ -63,6 +66,8 @@ private:
     Shared<AnimationStateComponent> _animState;
 
     Shared<Collider> _collider;
+
+    Shared<UI_MonsterHp> _hpBar;
 
     // AI/BT를 끄고 서버 상태 따르기
     bool _networkDriven = false;

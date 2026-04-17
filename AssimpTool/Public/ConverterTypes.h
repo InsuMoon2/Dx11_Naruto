@@ -3,7 +3,8 @@
 NS_BEGIN(Assimp)
 
 constexpr uint32 MESHBIN_MAGIC = 0x4853454D; // 'MESH'
-constexpr uint32 STATIC_MESHBIN_VERSION = 1;
+// [변경] 정적 메시가 UV1까지 저장할 수 있도록 meshbin 버전을 올린다.
+constexpr uint32 STATIC_MESHBIN_VERSION = 3;
 constexpr uint32 SKELETAL_MESHBIN_VERSION = 2;
 
 constexpr uint32 ANIMBIN_MAGIC = 0x4D494E41; // 'ANIM'
@@ -76,6 +77,8 @@ struct FMeshVertexBin
     float nx = 0.f,  ny = 1.f, nz = 0.f;
     float tx = 1.f,  ty = 0.f, tz = 0.f;
     float u = 0.f,   v = 0.f;
+    // [추가] layered material의 blend 텍스처가 참조하는 보조 UV 채널이다.
+    float u1 = 0.f,  v1 = 0.f;
 };
 
 struct FMeshVertexAnimBin

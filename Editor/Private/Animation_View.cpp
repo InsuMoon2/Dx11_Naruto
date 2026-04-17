@@ -212,6 +212,12 @@ void Animation_View::Pre_Render()
     Matrix savedView = *GAME->Get_Transform(ETransformState::View);
     Matrix savedProj = *GAME->Get_Transform(ETransformState::Proj);
 
+    // Preview 렌더 전, 기존 viewport 기준을 복원할 수 있게 백업한다.
+    const uint32 savedDeferredViewportWidth = static_cast<uint32>(max(1.f, GAME->Get_UIViewportWidth()));
+    const uint32 savedDeferredViewportHeight = static_cast<uint32>(max(1.f, GAME->Get_UIViewportHeight()));
+    const float savedUIViewportWidth = GAME->Get_UIViewportWidth();
+    const float savedUIViewportHeight = GAME->Get_UIViewportHeight();
+
     _previewView = _previewCamera->Get_ViewMatrix();
 
     const float aspect = static_cast<float>(_previewRT->GetWidth()) / max(1.f, static_cast<float>(_previewRT->GetHeight()));
@@ -219,6 +225,16 @@ void Animation_View::Pre_Render()
 
     GAME->Set_Transform(ETransformState::View, _previewView);
     GAME->Set_Transform(ETransformState::Proj, _previewProj);
+
+    // Preview 렌더 후 원래 조명을 되돌리기 위해 현재 조명을 백업한다.
+    FLightDesc savedLight{};
+    bool hasSavedLight = false;
+
+    if (const FLightDesc* lightDesc = GAME->Get_LightDesc(0))
+    {
+        savedLight = *lightDesc;
+        hasSavedLight = true;
+    }
 
     // 라이팅 세팅
     FLightDesc previewLight{};
@@ -244,6 +260,9 @@ void Animation_View::Pre_Render()
 
     _previewOwner->Priority_Update(0.f);
     _previewOwner->Update(0.f);
+
+    // Preview 오브젝트만 렌더 큐에 남기기 위해 기존 큐를 잠깐 백업한다.
+    GAME->Backup_RenderGroup();
     _previewOwner->Late_Update(0.f);
 
     if (_model)
@@ -254,15 +273,30 @@ void Animation_View::Pre_Render()
     GAME->Set_GameInputEnabled(wasEnableInput);
 
     _previewRT->Clear(Color(0.12f, 0.12f, 0.12f, 1.f));
+
+    // Preview RT 크기에 맞춰 deferred / UI viewport를 동기화한다.
+    if (FAILED(GAME->Resize_DeferredViewport(_previewRT->GetWidth(), _previewRT->GetHeight())))
+        return;
+
+    GAME->Set_UIViewportSize(static_cast<float>(_previewRT->GetWidth()), static_cast<float>(_previewRT->GetHeight()));
     _previewRT->BindAsTarget();
 
-    GAME->Draw(false, false);
+    GAME->Clear_DepthOnly();
+    GAME->Draw_Preview();
 
     _previewRT->BindAsTarget();
     Draw_PreviewGrid();
 
     GAME->BindBackBuffer();
     GAME->Clear_Lights();
+    GAME->Restore_RenderGroup();
+
+    if (hasSavedLight)
+        GAME->Add_Light(savedLight);
+
+    // Preview 렌더가 끝났으니 기존 viewport 기준을 복원한다.
+    GAME->Resize_DeferredViewport(savedDeferredViewportWidth, savedDeferredViewportHeight);
+    GAME->Set_UIViewportSize(savedUIViewportWidth, savedUIViewportHeight);
 
     GAME->Set_Transform(ETransformState::View, savedView);
     GAME->Set_Transform(ETransformState::Proj, savedProj);

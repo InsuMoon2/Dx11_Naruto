@@ -20,6 +20,7 @@
 #include "Event_Manager.h"
 #include "Layer.h"
 #include "CollisionProxyActor.h"
+#include "SkySphereActor.h"
 
 Level_Konoha::Level_Konoha(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -34,6 +35,8 @@ Level_Konoha::~Level_Konoha()
 HRESULT Level_Konoha::Initialize(EGameplaySpawnMode spawnMode)
 {
     _spawnMode = spawnMode;
+
+    CHECK_FAILED(Ready_Layer_SkySphere(), E_FAIL);
 
     CHECK_FAILED(Ready_Lights(), E_FAIL);
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
@@ -157,7 +160,7 @@ HRESULT Level_Konoha::Ready_Lights()
     lightDesc.type = ELightType::Directional;
     lightDesc.direction  = Vec4(1.f, -1.f, 1.f, 0.f);
     lightDesc.diffuse  = Vec4(1.f, 1.f, 1.f, 1.f);
-    lightDesc.ambient  = Vec4(1.f, 1.f, 1.f, 1.f);
+    lightDesc.ambient  = Vec4(0.4f, 0.4f, 0.4f, 1.f);
     lightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
 
     CHECK_FAILED(GAME->Add_Light(lightDesc), E_FAIL);
@@ -216,7 +219,7 @@ HRESULT Level_Konoha::Ready_Layer_PlayerStart(const wstring& layerTag)
     // TODO : Spawn Point Save&Load로 위치 세팅
     {
         PlayerStart::FPlayerStartDesc desc;
-        desc.position = Vec3(0.f, 15.f, 0.f);
+        desc.position = Vec3(0.f, 20.3f, -12.2f);
         desc.spawnIndex = 0;
 
         CHECK_FAILED(GAME->Add_GameObject(levelIndex, Protocol::OBJECT_TYPE_PLAYER_START, layerTag, &desc), E_FAIL);
@@ -228,6 +231,104 @@ HRESULT Level_Konoha::Ready_Layer_PlayerStart(const wstring& layerTag)
 HRESULT Level_Konoha::Ready_Layer_GameObject(const wstring& layerTag)
 {
     
+
+    return S_OK;
+}
+
+HRESULT Level_Konoha::Ready_Layer_SkySphere()
+{
+    const uint32 levelIndex = ETOI(ELevelType::Konoha);
+    const wstring& layerTag = TEXT("Layer_SkySphere");
+
+    {
+        SkySphereActor::FSkySphereDesc desc{};
+        desc.name = TEXT("Sky.Base");
+        desc.modelComponentName = "Sky_SkySphere_Base";
+        desc.followCamera = true;
+        desc.useBlend = false;
+        desc.twoSided = true;
+        desc.renderStyle = 1;
+        desc.uvTiling = Vec2(1.f, 1.f);
+        desc.uvScrollSpeed = Vec2::Zero;
+        desc.colorTint = Vec4(1.f, 1.f, 1.f, 1.f);
+        desc.horizonColor = Vec4(0.34111f, 0.569243f, 1.f, 1.f);
+        desc.zenithColor = Vec4(0.069653f, 0.295485f, 0.56f, 1.f);
+        desc.opacity = 1.f;
+        desc.emissiveStrength = 1.f;
+        desc.scale = Vec3(1.f, 1.f, 1.f);
+
+        CHECK_FAILED(GAME->Add_GameObject(levelIndex, Protocol::OBJECT_TYPE_SKY_SPHERE, layerTag, &desc), E_FAIL);
+    }
+
+    {
+        SkySphereActor::FSkySphereDesc desc{};
+        desc.name = TEXT("Sky.Cloud.Main");
+        desc.modelComponentName = "Sky_CloudPlate_01";
+        desc.followCamera = true;
+        desc.useBlend = true;
+        desc.twoSided = true;
+        desc.renderStyle = 2;
+        desc.pitch = -8.f;
+        desc.yaw = 18.f;
+        desc.roll = 6.f;
+        desc.uvTiling = Vec2(1.f, 1.f);
+        desc.uvScrollSpeed = Vec2::Zero;
+        desc.colorTint = Vec4(1.f, 1.f, 1.f, 1.f);
+        desc.subUVTiling = Vec2(1.f, 1.f);
+        desc.subUVScrollSpeed = Vec2::Zero;
+        desc.opacity = 0.32f;
+        desc.emissiveStrength = 1.f;
+        desc.scale = Vec3(1.f, 1.f, 1.f);
+
+        CHECK_FAILED(GAME->Add_GameObject(levelIndex, Protocol::OBJECT_TYPE_SKY_SPHERE, layerTag, &desc), E_FAIL);
+    }
+
+  /*  {
+        SkySphereActor::FSkySphereDesc desc{};
+        desc.name = TEXT("Sky.Cloud.FillA");
+        desc.modelComponentName = "Sky_CloudPlate_01";
+        desc.followCamera = true;
+        desc.useBlend = true;
+        desc.twoSided = true;
+        desc.renderStyle = 2;
+        desc.pitch = 5.f;
+        desc.yaw = 128.f;
+        desc.roll = -14.f;
+        desc.uvTiling = Vec2(1.15f, 1.15f);
+        desc.uvScrollSpeed = Vec2::Zero;
+        desc.colorTint = Vec4(1.f, 1.f, 1.f, 0.92f);
+        desc.subUVTiling = Vec2(1.f, 1.f);
+        desc.subUVScrollSpeed = Vec2::Zero;
+        desc.opacity = 0.22f;
+        desc.emissiveStrength = 1.f;
+        desc.scale = Vec3(1.f, 1.f, 1.f);
+
+        CHECK_FAILED(GAME->Add_GameObject(levelIndex, Protocol::OBJECT_TYPE_SKY_SPHERE, layerTag, &desc), E_FAIL);
+    }
+
+    {
+        SkySphereActor::FSkySphereDesc desc{};
+        desc.name = TEXT("Sky.Cloud.FillB");
+        desc.modelComponentName = "Sky_CloudPlate_01";
+        desc.followCamera = true;
+        desc.useBlend = true;
+        desc.twoSided = true;
+        desc.renderStyle = 2;
+        desc.pitch = -2.f;
+        desc.yaw = 242.f;
+        desc.roll = 18.f;
+        desc.uvTiling = Vec2(0.9f, 0.9f);
+        desc.uvScrollSpeed = Vec2::Zero;
+        desc.colorTint = Vec4(1.f, 1.f, 1.f, 0.88f);
+        desc.subUVTiling = Vec2(1.f, 1.f);
+        desc.subUVScrollSpeed = Vec2::Zero;
+        desc.opacity = 0.16f;
+        desc.emissiveStrength = 1.f;
+        desc.scale = Vec3(1.f, 1.f, 1.f);
+
+        CHECK_FAILED(GAME->Add_GameObject(levelIndex, Protocol::OBJECT_TYPE_SKY_SPHERE, layerTag, &desc), E_FAIL);
+    }*/
+
 
     return S_OK;
 }

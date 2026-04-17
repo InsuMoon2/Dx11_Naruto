@@ -228,6 +228,11 @@ void Scene_View::OnGui()
 
         Render_Viewport();
 
+        ImGui::SetCursorPos(ImVec2(12.f, 30.f));
+        ImGui::BeginChild("##SceneViewOverlay", ImVec2(170.f, 34.f), false, ImGuiWindowFlags_NoScrollbar);
+        ImGui::Checkbox("RT Debug", &_showRenderTargetDebug);
+        ImGui::EndChild();
+
         // Scene View에서만, Edit 모드일 때만 보여주기
         //if (GAME->Get_GameState() == EGameState::Edit)
         {

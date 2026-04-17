@@ -1380,7 +1380,7 @@
                         "effect_name": "RingEffect_Loop",
                         "local_offset": [
                             0.0,
-                            0.0,
+                            0.019999999552965164,
                             0.0
                         ],
                         "local_rotation": [

@@ -29,6 +29,10 @@ private:
     static bool Read_V1_Static(ifstream& file, const string& filePath,
         const FStaticMeshFileHeader& header, FModelBinaryData& outData);
 
+    // [추가] UV1이 포함된 최신 정적 meshbin(v3)을 읽는다.
+    static bool Read_V3_Static(ifstream& file, const string& filePath,
+        const FStaticMeshFileHeader& header, FModelBinaryData& outData);
+
     static bool Read_V2_Skeletal(ifstream& file, const string& filePath,
         const FSkeletalMeshFileHeader& header, FModelBinaryData& outData);
 };

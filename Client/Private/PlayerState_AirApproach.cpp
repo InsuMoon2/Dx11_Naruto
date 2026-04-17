@@ -75,8 +75,20 @@ void PlayerState_AirApproach::Update(PlayerStateMachine* state, float timeDelta)
         switch (_approachDesc.arriveAction)
         {
         case EArriveAction::WallAttach:
+            {
+            Vec3 wallNormal = Utils::Safe_Normalize(_approachDesc.wallNormal, Vec3::Backward);
+
+            MovementComponent::FSurfaceHit wallHit{};
+            wallHit.hitNormal = wallNormal;
+            wallHit.hitPoint = _approachDesc.targetPosition - wallNormal * movement->Get_MoveDesc().wallAttachOffset;
+            wallHit.isValid = true;
+
+            transform->Set_WorldPosition(_approachDesc.targetPosition);
+            movement->Enter_WallRun(wallHit);
+
             state->Change_State(EPlayerState::Wall_Idle);
             return;
+            }
 
         case EArriveAction::ChangeState:
             if (_approachDesc.nextStateOnArrive != EPlayerState::END)
@@ -94,12 +106,12 @@ void PlayerState_AirApproach::Update(PlayerStateMachine* state, float timeDelta)
         return;
     }
 
-    // 너무 오래 접근하면 탈주처리 -> 일단 기본 JumpFall로 세팅
-    if (_elapsedTime >= _approachDesc.maxApproachTime)
+    // 너무 오래 접근하면 탈주처리 -> 일단 기본 JumpFall로 세팅 -> 이거때매 문제가있던거같은데
+    /*if (_elapsedTime >= _approachDesc.maxApproachTime)
     {
         state->Change_State(_approachDesc.nextStateOnFail);
         return;
-    }
+    }*/
 
     // 타겟으로 회전처리
     Vec3 moveDir = Utils::Safe_Normalize(toTarget, Vec3::Forward);

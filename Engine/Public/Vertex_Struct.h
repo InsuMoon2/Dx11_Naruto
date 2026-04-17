@@ -40,15 +40,18 @@ namespace Engine
         Vec3    normal;
         Vec3    tangent;
         Vec2    texcoord;
+        // [추가] layered material의 blend 텍스처가 참조하는 보조 UV 세트다.
+        Vec2    texcoord1;
 
-        static const uint32 numElements = { 4 };
+        static const uint32 numElements = { 5 };
 
         static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] =
         {
             { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
             { "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
             { "TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0}
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0},
+            { "TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0}
         };
 
     } VTXMESH;

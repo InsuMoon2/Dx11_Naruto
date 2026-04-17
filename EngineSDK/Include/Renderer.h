@@ -19,10 +19,13 @@ public:
 public:
     HRESULT Initialize();
     void    Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject);
-    void    Draw(bool renderDebugPrimitives = true, bool renderColliders = true);
+    void    Draw(bool renderDebugPrimitives = true, bool renderColliders = true, bool renderRTDebug = false);
+    HRESULT Draw_Preview();
 
     void    Backup_RenderGroup();
     void    Restore_RenderGroup();
+
+    void    Resize_DeferredViewport(uint32 width, uint32 height);
 
 #ifdef _DEBUG
     void    Add_DebugRenderGroup(Shared<Component> debugComponent);

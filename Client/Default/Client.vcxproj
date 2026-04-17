@@ -335,6 +335,7 @@
     <ClInclude Include="..\Public\Skill_Rasengan_Hit.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken_Hit.h" />
+    <ClInclude Include="..\Public\SkySphereActor.h" />
     <ClInclude Include="..\Public\SmearEffect_Component.h" />
     <ClInclude Include="..\Public\Spawn_Helper.h" />
     <ClInclude Include="..\Public\Player.h" />
@@ -348,6 +349,7 @@
     <ClInclude Include="..\Public\UI_LoadingProgressBar.h" />
     <ClInclude Include="..\Public\UI_LoadingSpinner.h" />
     <ClInclude Include="..\Public\UI_MainTitleMenuButton.h" />
+    <ClInclude Include="..\Public\UI_MonsterHp.h" />
     <ClInclude Include="..\public\UI_PlayerHP.h" />
     <ClInclude Include="..\Public\UI_PlayerHUD.h" />
     <ClInclude Include="..\Public\UI_PlayerSkill.h" />
@@ -487,6 +489,7 @@
     <ClCompile Include="..\Private\Skill_Rasengan_Hit.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken_Hit.cpp" />
+    <ClCompile Include="..\Private\SkySphereActor.cpp" />
     <ClCompile Include="..\Private\SmearEffect_Component.cpp" />
     <ClCompile Include="..\Private\Spawn_Helper.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
@@ -500,6 +503,7 @@
     <ClCompile Include="..\Private\UI_LoadingProgressBar.cpp" />
     <ClCompile Include="..\Private\UI_LoadingSpinner.cpp" />
     <ClCompile Include="..\Private\UI_MainTitleMenuButton.cpp" />
+    <ClCompile Include="..\Private\UI_MonsterHp.cpp" />
     <ClCompile Include="..\Private\UI_PlayerHP.cpp" />
     <ClCompile Include="..\Private\UI_PlayerHUD.cpp" />
     <ClCompile Include="..\Private\UI_PlayerSkill.cpp" />
@@ -533,6 +537,10 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_GhostAfterImage.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_SkySphere.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>

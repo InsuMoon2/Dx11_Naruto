@@ -38,6 +38,16 @@ def validate_non_empty_path(path: Path, option_name: str):
         )
 
 
+def validate_unexpected_maptools_path(path: Path, option_name: str):
+    # [추가] 빈 문자열 인자가 normalize_path 이후 MapTools 폴더 절대경로로 바뀌는 경우를 막는다.
+    # [추가] mi/texture 입력이 MapTools 로 들어오면 대부분 배치 변수 누락이므로 즉시 실패시킨다.
+    if path == SCRIPT_DIR:
+        raise ValueError(
+            f"{option_name} resolved to MapTools directory '{SCRIPT_DIR}'. "
+            "Check for an empty batch variable or broken quoted path."
+        )
+
+
 def run_command(command: list[str], title: str):
     print("")
     print(f"[{title}]")
@@ -116,6 +126,12 @@ def main():
     validate_non_empty_path(args.guid_map_out, "--guid-map-out")
     validate_non_empty_path(args.level_out_dir, "--level-out-dir")
 
+    # [추가] normalize 후에도 MapTools 폴더로 떨어지는 비정상 입력을 한 번 더 검증한다.
+    validate_unexpected_maptools_path(args.mi_root, "--mi-root")
+    validate_unexpected_maptools_path(args.texture_root, "--texture-root")
+    for extra_texture_root in args.extra_texture_root:
+        validate_unexpected_maptools_path(extra_texture_root, "--extra-texture-root")
+
     resolve_script = SCRIPT_DIR / "ResolveFModelMaterials.py"
 
     if not args.assimp_tool.exists():
@@ -141,6 +157,14 @@ def main():
         raise FileNotFoundError(f"ResolveFModelMaterials.py not found: {resolve_script}")
 
     # [추가] 1. gltf/fbx -> meshbin/material/meta
+    # [추가] AssimpTool 과 후속 변환기는 출력 디렉터리가 없으면 즉시 실패할 수 있다.
+    # [추가] 파이프라인 시작 전에 필요한 출력 폴더를 모두 생성해 둔다.
+    args.mesh_dst.mkdir(parents=True, exist_ok=True)
+    args.copy_textures_to.mkdir(parents=True, exist_ok=True)
+    args.matinst_root.mkdir(parents=True, exist_ok=True)
+    args.level_out_dir.mkdir(parents=True, exist_ok=True)
+    args.guid_map_out.parent.mkdir(parents=True, exist_ok=True)
+
     assimp_command = [
         str(args.assimp_tool),
         str(args.mesh_src),

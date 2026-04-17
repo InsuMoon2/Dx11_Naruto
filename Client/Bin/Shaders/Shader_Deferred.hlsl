@@ -64,7 +64,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
-    Out.vShade = max(dot(normalize(g_LightDir) * -1.f, normalize(vNormal)), 0.f);
+    Out.vShade = g_LightDiffuse * (max(dot(normalize(g_LightDir) * -1.f, normalize(vNormal)), 0.f) + (g_LightAmbient * g_MtrlAmbient));
     
     return Out;
 }
@@ -76,8 +76,8 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
     
-    Out.vShade = max(dot(normalize(g_LightDir) * -1.f, normalize(vNormal)), 0.f);
-    
+    Out.vShade = g_LightDiffuse * (max(dot(normalize(g_LightDir) * -1.f, normalize(vNormal)), 0.f) + (g_LightAmbient * g_MtrlAmbient));
+
     return Out;
 }
 

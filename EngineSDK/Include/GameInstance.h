@@ -83,7 +83,7 @@ public:
     // 에디터용 Camera Free만 업데이트
     void                    Update_CameraOnly(float timeDelta);
 
-	HRESULT                 Draw(bool renderDebugPrimitives = true, bool renderColliders = true);
+	HRESULT                 Draw(bool renderDebugPrimitives = true, bool renderColliders = true, bool renderRTDebug = false);
 	void	                Clear_Resources(uint32 levelIndex);
 
 public: /* Game State */
@@ -125,6 +125,8 @@ public: /* Graphic Device */
     // UI 비율 유지 스케일 + 중앙 오프셋
     float                    Get_UIScale() const;
     Vec2                     Get_UIViewportOffset() const;
+
+    void                     Clear_DepthOnly();
 
 
 public: /* ImGui */
@@ -182,6 +184,10 @@ public: /* Renderer */
     int32                   Get_DrawCallCount();
     void                    Backup_RenderGroup();
     void                    Restore_RenderGroup();
+
+    HRESULT                 Resize_DeferredViewport(uint32 width, uint32 height);
+
+    HRESULT                 Draw_Preview();
 
 public: /* Prefeb */
     Shared<GameObject>      Instantiate_Prefab(const string& prefabName, const json& overrides = {});

@@ -90,6 +90,16 @@ void Renderer::Restore_RenderGroup()
     }
 }
 
+void Renderer::Resize_DeferredViewport(uint32 width, uint32 height)
+{
+	if (width == 0 || height == 0)
+        return;
+
+    _worldMatrix = Matrix::CreateScale(static_cast<float>(width), static_cast<float>(height), 1.f);
+    _viewMatrix = Matrix::Identity;
+    _projMatrix = XMMatrixOrthographicLH(static_cast<float>(width), static_cast<float>(height), 0.f, 1.f);
+}
+
 #ifdef _DEBUG
 void Renderer::Add_DebugRenderGroup(Shared<Component> debugComponent)
 {
@@ -97,13 +107,13 @@ void Renderer::Add_DebugRenderGroup(Shared<Component> debugComponent)
 }
 #endif
 
-void Renderer::Draw(bool renderDebugPrimitives, bool renderColliders)
+void Renderer::Draw(bool renderDebugPrimitives, bool renderColliders, bool renderRTDebug)
 {
     _drawCallCount = 0;
 
     Render_BackgroundUI();
     Apply_Default3DState();
-    Render_Priority(); // SkyBox
+    Render_Priority();
 
     Render_NonBlend();
 
@@ -121,14 +131,8 @@ void Renderer::Draw(bool renderDebugPrimitives, bool renderColliders)
     Apply_UIState();
 
 #ifdef _DEBUG
-
-  if (renderColliders)
-    {
-        //Apply_Default3DState(); 
+    if (renderColliders)
         GAME->Render_Colliders();
-        //Apply_UIState1(); 
-    }
-    
 #endif
 
     if (renderDebugPrimitives)
@@ -139,9 +143,44 @@ void Renderer::Draw(bool renderDebugPrimitives, bool renderColliders)
     Render_UI();
 
 #ifdef _DEBUG
-    Render_Debug();
+    if (renderRTDebug)
+        Render_Debug();
 #endif
+}
 
+HRESULT Renderer::Draw_Preview()
+{
+    _drawCallCount = 0;
+
+    Apply_Default3DState();
+    Render_Priority();
+    
+    for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::NonBlend)])
+    {
+        if (renderObject)
+        {
+            renderObject->Render();
+            _drawCallCount++;
+        }
+    }
+    _renderObjects[ETOI(ERenderGroup::NonBlend)].clear();
+
+    for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::NonLight)])
+    {
+        if (renderObject)
+        {
+            renderObject->Render();
+            _drawCallCount++;
+        }
+    }
+    _renderObjects[ETOI(ERenderGroup::NonLight)].clear();
+
+    Render_Blend();
+
+    _renderObjects[ETOI(ERenderGroup::BackgroundUI)].clear();
+    _renderObjects[ETOI(ERenderGroup::UI)].clear();
+    
+    return S_OK;
 }
 
 void Renderer::Render_BackgroundUI()
