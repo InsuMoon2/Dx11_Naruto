@@ -74,6 +74,8 @@ void InputComponent::Update_Input(float timeDelta)
     const bool rawCtrlPress = INPUT->KeyPress(KEY_TYPE::LCTRL);
     const bool rawCtrlUp = INPUT->KeyUp(KEY_TYPE::LCTRL);
 
+    const bool rawReplacementDown = INPUT->KeyDown(KEY_TYPE::LCTRL);
+
     const bool rawJumpDash = INPUT->KeyDown(KEY_TYPE::SHIFT);
 
     const bool rawAttackDown = INPUT->KeyDown(KEY_TYPE::LBUTTON);
@@ -143,6 +145,8 @@ void InputComponent::Update_Input(float timeDelta)
     }
 
     _frame.wireDash = rawCtrlDown;
+
+    _frame.replacementDown = rawReplacementDown;
 
     if (_inputGate.allowJumpDash)
     {

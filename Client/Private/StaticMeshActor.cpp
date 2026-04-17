@@ -98,14 +98,12 @@ HRESULT StaticMeshActor::Render()
         int hasBlendNormalTexture = 0;
         int hasUnevenColorTexture = 0;
 
-        // [추가] slot별 UV 채널 인덱스를 shader로 넘겨 올바른 UV 세트를 선택하게 한다.
         int baseColorUVChannel = 0;
         int blendDiffuseUVChannel = 0;
         int maskUVChannel = 0;
         int blendNormalUVChannel = 0;
         int unevenColorUVChannel = 0;
 
-        // [추가] slot별 UV 타일링 스케일을 shader로 넘겨 원본 material의 샘플링 비율을 복원한다.
         float baseColorUVScale = 1.f;
         float blendDiffuseUVScale = 1.f;
         float maskUVScale = 1.f;
@@ -239,6 +237,13 @@ HRESULT StaticMeshActor::Render()
 
         CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
         CHECK_FAILED(_modelCom->Render(static_cast<uint32>(i)), E_FAIL);
+
+        if (_isOutlineEnabled)
+        {
+            CHECK_FAILED(_shaderCom->Begin_Pass(1), E_FAIL);
+            CHECK_FAILED(_modelCom->Render(static_cast<uint32>(i)), E_FAIL);
+        }
+
     }
     return S_OK;
 }

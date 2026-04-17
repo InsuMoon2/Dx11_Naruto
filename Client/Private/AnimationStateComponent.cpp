@@ -701,6 +701,10 @@ bool AnimationStateComponent::Requires_ForceRestart(EPlayerState state)
     case EPlayerState::AirApproach:
     case EPlayerState::Hit:
     case EPlayerState::JumpAttack:
+
+    case EPlayerState::Replacement:
+    case EPlayerState::Shuriken:
+
     case EPlayerState::Skill_Rasengan:
     case EPlayerState::Skill_Rasengan_Air:
     case EPlayerState::Skill_Rasengan_End:
@@ -728,7 +732,12 @@ Protocol::OBJECT_STATE_TYPE AnimationStateComponent::To_ReplicatedState(EPlayerS
     case EPlayerState::Run:                 return Protocol::OBJECT_STATE_TYPE_RUN;
     case EPlayerState::Wall_Run:            return Protocol::OBJECT_STATE_TYPE_WALL_RUN;
     case EPlayerState::Jump:                return Protocol::OBJECT_STATE_TYPE_JUMP;
+
+    case EPlayerState::Replacement:
     case EPlayerState::JumpFall:            return Protocol::OBJECT_STATE_TYPE_JUMP_FALL;
+
+        // 수리검 추가해야함
+
     case EPlayerState::DoubleJump:          return Protocol::OBJECT_STATE_TYPE_DOUBLE_JUMP;
     case EPlayerState::JumpDash:            return Protocol::OBJECT_STATE_TYPE_JUMP_DASH;
     case EPlayerState::SuperJumpCharge:     return Protocol::OBJECT_STATE_TYPE_SUPER_JUMP_CHARGE;

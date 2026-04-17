@@ -77,6 +77,16 @@ HRESULT Player_CustomPart::Render()
 
     CHECK_FAILED(Bind_ShaderResources(), E_FAIL);
     size_t numMeshes = _model->Get_NumMeshes();
+
+    
+    // 툰 셰이딩
+    {
+        const Vec4 outlineColor = Vec4(0.04f, 0.05f, 0.08f, 1.f);
+        const float outlineThickness = 0.0035f;
+
+        CHECK_FAILED(_shader->Bind_RawValue("g_OutlineColor", &outlineColor, sizeof(Vec4)), E_FAIL);
+        CHECK_FAILED(_shader->Bind_RawValue("g_OutlineThickness", &outlineThickness, sizeof(float)), E_FAIL);
+    }
   
     for (size_t i = 0; i < numMeshes; i++)
     {
@@ -85,6 +95,9 @@ HRESULT Player_CustomPart::Render()
         _model->Bind_Material(_shader, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
     
         CHECK_FAILED(_shader->Begin_Pass(0), E_FAIL);
+        CHECK_FAILED(_model->Render(i), E_FAIL);
+
+        CHECK_FAILED(_shader->Begin_Pass(1), E_FAIL);
         CHECK_FAILED(_model->Render(i), E_FAIL);
     }
 

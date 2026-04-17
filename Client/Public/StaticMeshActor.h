@@ -66,8 +66,8 @@ private:
     string                  _resolvedPath;    // resolve한 실제 경로
     Shared<Shader>          _shaderCom;
     Shared<Model>           _modelCom;
-    bool                    _isOutlineEnabled = false;
-    Vec4                    _outlineColor = Vec4(0.1f, 1.f, 0.1f, 1.f);
+    bool                    _isOutlineEnabled = true;
+    Vec4                    _outlineColor = Vec4(0.04f, 0.05f, 0.08f, 1.f);
     float                   _outlineThickness = 0.0035f;
 
 public:

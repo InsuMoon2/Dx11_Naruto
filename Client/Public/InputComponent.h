@@ -30,6 +30,8 @@ public:
 
         bool  toggleWeaponDown = false;
 
+        bool  replacementDown = false;
+
         bool  useSkillDown[2] = { false, false };
         bool  useSkillPress[2] = {};
     };

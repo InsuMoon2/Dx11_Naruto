@@ -2,6 +2,24 @@
 
 Texture2D g_Texture;
 
+// 1차 경계값 -> 이거보다 낮으면 어두운 단계
+float g_ToonShadeThreshold0 = 0.30f;
+// 2차 경계값 -> 중간 단계
+float g_ToonShadeThreshold1 = 0.68f;
+
+float ComputeToonShade(float ndotl)
+{
+    float lightAmount = saturate(ndotl + (g_LightAmbient.r * g_MtrlAmbient.r));
+
+    if (lightAmount < g_ToonShadeThreshold0)
+        return 0.18f;
+
+    if (lightAmount < g_ToonShadeThreshold1)
+        return 0.55f;
+
+    return 1.0f;
+}
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -64,7 +82,12 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
-    Out.vShade = g_LightDiffuse * (max(dot(normalize(g_LightDir) * -1.f, normalize(vNormal)), 0.f) + (g_LightAmbient * g_MtrlAmbient));
+    float ndotl = max(dot(normalize(g_LightDir.xyz) * -1.f, normalize(vNormal.xyz)), 0.f);
+
+    // 3단 툰 분리
+    float toonShade = ComputeToonShade(ndotl);
+
+    Out.vShade = vector(g_LightDiffuse.rgb * toonShade, 1.f);
     
     return Out;
 }
@@ -75,8 +98,12 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
-    
-    Out.vShade = g_LightDiffuse * (max(dot(normalize(g_LightDir) * -1.f, normalize(vNormal)), 0.f) + (g_LightAmbient * g_MtrlAmbient));
+
+    float ndotl = max(dot(normalize(g_LightDir.xyz) * -1.f, normalize(vNormal.xyz)), 0.f);
+
+    float toonShade = ComputeToonShade(ndotl);
+
+    Out.vShade = vector(g_LightDiffuse.rgb * toonShade, 1.f);
 
     return Out;
 }

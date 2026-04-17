@@ -4,6 +4,7 @@
 #include "MovementComponent.h"
 #include "InputComponent.h"
 #include "MyPlayer.h"
+#include "PlayerState_Replacement.h"
 #include "Weapon.h"
 
 void PlayerState_Hit::Enter(PlayerStateMachine* state)
@@ -39,6 +40,26 @@ void PlayerState_Hit::Enter(PlayerStateMachine* state)
 
 void PlayerState_Hit::Update(PlayerStateMachine* state, float timeDelta)
 {
+    if (!state)
+        return;
+
+    auto input = state->Get_Input();
+    auto movement = state->Get_Movement();
+    if (!input || !movement)
+        return;
+
+    const auto& frame = input->Get_Frame();
+
+    if (frame.replacementDown)
+    {
+        auto replacementState = state->Get_State<PlayerState_Replacement>(EPlayerState::Replacement);
+        if (replacementState && replacementState->Prepare_Replacement(state))
+        {
+            state->Change_State(EPlayerState::Replacement);
+            return;
+        }
+    }
+
     if (state->Is_AnimStateFinished())
     {
         state->Change_State(EPlayerState::Idle);

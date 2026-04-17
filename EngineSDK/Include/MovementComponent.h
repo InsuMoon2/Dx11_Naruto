@@ -172,7 +172,7 @@ private:
 
     Vec3 Build_DesiredMoveDirection() const;
 
-private: /* 벽타기 */
+public: /* 벽타기 */
     Vec3 Build_WallRunMoveDirection() const;
     bool Detect_GroundSurface(const Vec3& currentPos, FSurfaceHit& outHit) const;
     bool Detect_WallSurface(const Vec3& currentPos, const Vec3& castDir, FSurfaceHit& outHit) const;

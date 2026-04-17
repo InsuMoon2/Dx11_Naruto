@@ -160,7 +160,7 @@ HRESULT Level_Konoha::Ready_Lights()
     lightDesc.type = ELightType::Directional;
     lightDesc.direction  = Vec4(1.f, -1.f, 1.f, 0.f);
     lightDesc.diffuse  = Vec4(1.f, 1.f, 1.f, 1.f);
-    lightDesc.ambient  = Vec4(0.4f, 0.4f, 0.4f, 1.f);
+    lightDesc.ambient  = Vec4(0.18f, 0.18f, 0.18f, 1.f);
     lightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
 
     CHECK_FAILED(GAME->Add_Light(lightDesc), E_FAIL);

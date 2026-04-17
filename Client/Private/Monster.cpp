@@ -53,7 +53,7 @@ HRESULT Monster::Initialize_Prototype()
 HRESULT Monster::Initialize(void* arg)
 {
     CHECK_FAILED(Character::Initialize(arg), E_FAIL);
-    
+
     CHECK_FAILED(Ready_UI(), E_FAIL);
 
     return S_OK;
@@ -70,7 +70,7 @@ void Monster::BeginPlay()
 
         auto model = Get_Component<Model>();
         if (model)
-            model->Play_Animation(0.f); 
+            model->Play_Animation(0.f);
     }
 }
 
@@ -121,11 +121,27 @@ HRESULT Monster::Render()
     if (FAILED(_model->Bind_BoneMatrices(_shaderCom, "g_BoneMatrices")))
         return S_OK;
 
+    // 툰 셰이딩
+    {
+        // 외곽선 색
+        const Vec4 outlineColor = Vec4(0.04f, 0.05f, 0.08f, 1.f);
+
+        // 외곽선 두께
+        const float outlineThickness = 0.0035f;
+
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_OutlineColor", &outlineColor, sizeof(Vec4)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_OutlineThickness", &outlineThickness, sizeof(float)), E_FAIL);
+    }
+
     for (size_t i = 0; i < numMeshes; i++)
     {
         _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
 
         CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
+        CHECK_FAILED(_model->Render(static_cast<uint32>(i)), E_FAIL);
+
+        // 기본 패스 그리고, 아웃라인 패스 한번 더 그려주기
+        CHECK_FAILED(_shaderCom->Begin_Pass(1), E_FAIL);
         CHECK_FAILED(_model->Render(static_cast<uint32>(i)), E_FAIL);
     }
 
@@ -244,7 +260,7 @@ HRESULT Monster::Ready_UI()
     UI_MonsterHp::FPlayerHPDesc hpDesc;
     hpDesc.posX = 0.f;
     hpDesc.posY = 0.f;
-    hpDesc.zOrder = 0.5f; 
+    hpDesc.zOrder = 0.5f;
     hpDesc.levelIndex = _levelIndex;
     hpDesc.textureIndex = 0;
     hpDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;

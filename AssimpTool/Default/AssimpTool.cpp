@@ -56,9 +56,9 @@ static fs::path ResolveDefaultMeshDir(const wchar_t* executablePath)
         //LR"(Client\Bin\Resources\Models\LeafNinja)";
         //LR"(Client\Bin\Resources\Models\WhiteZetsu)";
         //LR"(Client\Bin\Resources\Models\Custom\Animation)";
-        //LR"(Client\Bin\Resources\Models\Weapon\Samehada)";
+        LR"(Client\Bin\Resources\Models\WindmilShuriken)";
         //LR"(Client\Bin\Resources\Skills\ETC\Meshes\Temp)";
-        LR"(Client\Bin\Resources\Models\SkySphere)";
+        //LR"(Client\Bin\Resources\Models\SkySphere)";
 
     if (fs::path fromWorkingDir = FindExistingPathFromAncestors(fs::current_path(), kDefaultRelativePath);
         !fromWorkingDir.empty())

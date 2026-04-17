@@ -38,7 +38,7 @@ namespace Client
         Replacement,
 
         // 쿠나이
-        Kunai,
+        Shuriken,
 
         Apperence,
 

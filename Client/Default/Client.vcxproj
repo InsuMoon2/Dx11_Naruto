@@ -305,7 +305,9 @@
     <ClInclude Include="..\Public\PlayerState_JumpAttack.h" />
     <ClInclude Include="..\Public\PlayerState_JumpDash.h" />
     <ClInclude Include="..\Public\PlayerState_JumpFall.h" />
+    <ClInclude Include="..\Public\PlayerState_Replacement.h" />
     <ClInclude Include="..\Public\PlayerState_Run.h" />
+    <ClInclude Include="..\Public\PlayerState_Shuriken.h" />
     <ClInclude Include="..\Public\PlayerState_Skill.h" />
     <ClInclude Include="..\Public\PlayerState_SuperJump.h" />
     <ClInclude Include="..\Public\PlayerState_SuperJumpCharge.h" />
@@ -460,7 +462,9 @@
     <ClCompile Include="..\Private\PlayerState_JumpAttack.cpp" />
     <ClCompile Include="..\Private\PlayerState_JumpDash.cpp" />
     <ClCompile Include="..\Private\PlayerState_JumpFall.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Replacement.cpp" />
     <ClCompile Include="..\Private\PlayerState_Run.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Shuriken.cpp" />
     <ClCompile Include="..\Private\PlayerState_Skill.cpp" />
     <ClCompile Include="..\Private\PlayerState_SuperJump.cpp" />
     <ClCompile Include="..\Private\PlayerState_SuperJumpCharge.cpp" />

@@ -352,6 +352,12 @@
       <Filter>02. GameObject\02. UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SkySphereActor.h" />
+    <ClInclude Include="..\Public\PlayerState_Replacement.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Shuriken.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -687,6 +693,12 @@
       <Filter>02. GameObject\02. UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SkySphereActor.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Replacement.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Shuriken.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

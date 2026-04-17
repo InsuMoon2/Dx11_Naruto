@@ -387,7 +387,7 @@
         },
         {
             "Id": "COMPONENT_TYPE_TEXTURE_SKILL_SUB",
-            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_ShinobiTool_Kunai_BC.png",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_ShinobiTool_WindmillShuriken_BC.png",
             "Count": 1,
             "Level": "Static"
         },

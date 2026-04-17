@@ -27,6 +27,8 @@
 #include "PlayerState_JumpAttack.h"
 #include "PlayerState_JumpFall.h"
 #include "PlayerState_Hit.h"
+#include "PlayerState_Replacement.h"
+#include "PlayerState_Shuriken.h"
 #include "PlayerState_WallRun.h"
 #include "PlayerState_Wall_Idle.h"
 #include "PlayerState_WireDash.h"
@@ -84,12 +86,15 @@ void PlayerStateMachine::Register_DefaultStates()
 
     Register_State(EPlayerState::WireDash, PlayerState_WireDash::Create());
     Register_State(EPlayerState::AirApproach, PlayerState_AirApproach::Create());
-}
 
+    Register_State(EPlayerState::Replacement, PlayerState_Replacement::Create());
+    Register_State(EPlayerState::Shuriken, PlayerState_Shuriken::Create());
+}
 
 HRESULT PlayerStateMachine::Initialize_Prototype()
 {
     Component::Initialize_Prototype();
+
     Register_DefaultStates();
 
     return S_OK;

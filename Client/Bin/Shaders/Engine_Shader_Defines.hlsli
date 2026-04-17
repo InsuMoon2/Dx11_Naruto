@@ -33,6 +33,8 @@ vector g_MtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 Texture2D g_DiffuseTexture : register(t0);
 Texture2D g_MaskTexture : register(t1);
 
+//
+
 // --- Common Sampler ---
 sampler DefaultSampler = sampler_state
 {
