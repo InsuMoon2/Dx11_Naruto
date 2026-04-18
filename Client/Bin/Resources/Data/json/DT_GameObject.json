@@ -91,6 +91,11 @@
             "Level": "Static"
         },
         {
+            "Id": "WindmillShuriken",
+            "ObjectType": "OBJECT_TYPE_SHURIKEN",
+            "Level": "Static"
+        },
+        {
             "Id": "Skill_Object",
             "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
             "Level": "Static"
@@ -133,6 +138,16 @@
         {
             "Id": "Skill_Chidori_Hit",
             "ObjectType": "OBJECT_TYPE_SKILL_CHIDORI_HIT",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_Jinsutansu",
+            "ObjectType": "OBJECT_TYPE_JINSUTANSU",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_Kirin",
+            "ObjectType": "OBJECT_TYPE_KIRIN",
             "Level": "Static"
         },
         {

@@ -360,7 +360,31 @@ void Renderer::Render_Combined()
     if (FAILED(_deferredShader->Bind_Matrix("g_ProjMatrix",  &_projMatrix)))  return;
 
     if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_DiffuseTexture", L"Target_Diffuse"))) return;
+    if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_NormalTexture", L"Target_Normal"))) return;
     if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_ShadeTexture",   L"Target_Shade")))   return;
+
+    // 포스트 프로세스 외곽선 처리
+    const float outlineInvViewportSize[2] =
+    {
+        1.f / max(1.f, static_cast<float>(GAME->Get_ViewportWidth())),
+        1.f / max(1.f, static_cast<float>(GAME->Get_ViewportHeight()))
+    };
+
+    const float outlineNormalThreshold = 0.32f;
+    const float outlineStrength = 0.45f;
+    const Vec4 outlineColor = Vec4(0.04f, 0.05f, 0.08f, 1.f);
+
+    if (FAILED(_deferredShader->Bind_RawValue("g_OutlineInvViewportSize", outlineInvViewportSize, sizeof(outlineInvViewportSize))))
+        return;
+
+    if (FAILED(_deferredShader->Bind_RawValue("g_PostOutlineNormalThreshold", &outlineNormalThreshold, sizeof(float))))
+        return;
+
+    if (FAILED(_deferredShader->Bind_RawValue("g_PostOutlineStrength", &outlineStrength, sizeof(float))))
+        return;
+
+    if (FAILED(_deferredShader->Bind_RawValue("g_PostOutlineColor", &outlineColor, sizeof(Vec4))))
+        return;
 
     _deferredShader->Begin_Pass(ETOI(EDeferred::Combined));
 

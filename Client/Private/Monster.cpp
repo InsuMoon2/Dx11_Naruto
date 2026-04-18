@@ -13,6 +13,7 @@
 #include "Blackboard.h"
 #include "Bounding_Sphere.h"
 #include "Collider.h"
+#include "SkillObject.h"
 #include "UI_MonsterHp.h"
 
 REGISTER_GAMEOBJECT(Monster, Protocol::OBJECT_TYPE_MONSTER)
@@ -141,8 +142,8 @@ HRESULT Monster::Render()
         CHECK_FAILED(_model->Render(static_cast<uint32>(i)), E_FAIL);
 
         // 기본 패스 그리고, 아웃라인 패스 한번 더 그려주기
-        CHECK_FAILED(_shaderCom->Begin_Pass(1), E_FAIL);
-        CHECK_FAILED(_model->Render(static_cast<uint32>(i)), E_FAIL);
+        //CHECK_FAILED(_shaderCom->Begin_Pass(1), E_FAIL);
+        //CHECK_FAILED(_model->Render(static_cast<uint32>(i)), E_FAIL);
     }
 
     return S_OK;
@@ -171,6 +172,14 @@ void Monster::TakeDamage(const FDamageEvent& damageEvent)
 void Monster::OnDamaged(const FDamageEvent& damageEvent)
 {
     Character::OnDamaged(damageEvent);
+
+    if (damageEvent.damage > 0.f && _transformCom)
+    {
+        Vec3 hitEffectPosition = _transformCom->Get_WorldPosition();
+        hitEffectPosition.y += 1.f;
+
+        SkillObject::Spawn_Effect_Once("HitParticle", hitEffectPosition);
+    }
 
     if (_behavior)
     {

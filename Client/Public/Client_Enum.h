@@ -117,5 +117,19 @@ namespace Client
         END
     };
 
-    
+    enum class ESkillCategory
+    {
+        Main,   // 메인 스킬 -> 궁도 넣어야하는데
+        Sub,    // 서브 -> 바꿔치기, 수리검
+        END
+    };
+
+    enum class ESubSkillType
+    {
+        Replacement = 0,
+        Shuriken = 1,
+
+        END
+    };
+
 }

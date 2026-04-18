@@ -349,7 +349,9 @@ PS_OUT ResolvePixel(PS_IN In, bool useOpacityMask)
         finalColor = BuildLitColor(scrolledUV, surfaceNormal, In.vWorldPos, baseColor, emissiveColor);
     }
 
-    Out.vColor.rgb = finalColor;
+    // Mesh effects also use black-background emissive sheets, so premultiply
+    // the resolved color by alpha to suppress dark fringe around masked edges.
+    Out.vColor.rgb = finalColor * finalAlpha;
     Out.vColor.a = finalAlpha;
     Out.vColor.rgb += (g_CustomParams0.rgb + g_CustomParams1.rgb) * 0.f;
 

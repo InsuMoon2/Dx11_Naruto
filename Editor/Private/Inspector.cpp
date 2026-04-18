@@ -8,6 +8,18 @@
 #include "Inspector_Factory.h"
 #include "Player.h"
 #include "Customizer_Manager.h"
+#include "AttachedEffectObject.h"
+#include "EffectComponent.h"
+
+// 런타임 이펙트 레이어 타입 이름을 인스펙터에 짧게 표시할 때 호출한다.
+static string Get_EffectLayerKindLabel(Engine::EEffectLayerKind kind)
+{
+    const auto enumName = magic_enum::enum_name(kind);
+    if (!enumName.empty())
+        return string(enumName);
+
+    return "Unknown";
+}
 
 Inspector::Inspector()
     : EditorWindow(TEXT("Inspector"))
@@ -215,11 +227,133 @@ void Inspector::Draw_Components(Shared<GameObject> target)
         ImGui::Spacing();
     }
 
+    Draw_RuntimeEffectDebug(target);
+
     for (auto& [id, comp] : target->Get_Components())
     {
         if (!comp) continue;
         Draw_Component(id, comp);
     }
+}
+
+void Inspector::Draw_RuntimeEffectDebug(Shared<GameObject> target)
+{
+    if (!target)
+        return;
+
+    auto selfEffectCom = target->Get_Component<Engine::EffectComponent>();
+    vector<Shared<Client::AttachedEffectObject>> attachedEffects;
+
+    const auto objects = GAME->Get_GameObjects(GAME->Current_Level());
+    attachedEffects.reserve(objects.size());
+
+    for (auto& obj : objects)
+    {
+        auto attachedEffect = dynamic_pointer_cast<Client::AttachedEffectObject>(obj);
+        if (!attachedEffect)
+            continue;
+
+        auto owner = attachedEffect->Get_Owner();
+        if (!owner || owner.get() != target.get())
+            continue;
+
+        attachedEffects.push_back(attachedEffect);
+    }
+
+    if (!selfEffectCom && attachedEffects.empty())
+        return;
+
+    ImGui::TextColored(ImVec4(1.f, 0.85f, 0.35f, 1.f), ICON_FA_BOLT " Runtime Effects");
+    ImGui::Separator();
+
+    if (selfEffectCom)
+    {
+        const string currentAssetName = selfEffectCom->Get_CurrentAssetName().empty()
+            ? "(None)"
+            : selfEffectCom->Get_CurrentAssetName();
+        const auto& activeLayers = selfEffectCom->Get_ActiveLayers();
+
+        if (ImGui::TreeNodeEx("Self EffectComponent", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::Text("Asset : %s", currentAssetName.c_str());
+            ImGui::Text("Playing : %s", selfEffectCom->Is_Playing() ? "true" : "false");
+            ImGui::Text("LifeSpan : %.3f", selfEffectCom->Get_LifeSpan());
+            ImGui::Text("Active Layers : %zu", activeLayers.size());
+
+            for (size_t i = 0; i < activeLayers.size(); ++i)
+            {
+                const auto& layer = activeLayers[i];
+                const string layerLabel = "[" + to_string(i) + "] " + layer.desc.base.layerName;
+
+                if (ImGui::TreeNode(layerLabel.c_str()))
+                {
+                    const string kindLabel = Get_EffectLayerKindLabel(layer.desc.base.kind);
+                    ImGui::Text("Kind : %s", kindLabel.c_str());
+                    ImGui::Text("Started : %s", layer.started ? "true" : "false");
+                    ImGui::Text("Finished : %s", layer.finished ? "true" : "false");
+                    ImGui::Text("Elapsed : %.3f", layer.elapsed);
+                    ImGui::Text("Start Delay : %.3f", layer.desc.base.startDelay);
+                    ImGui::Text("Duration : %.3f", layer.desc.base.duration);
+                    ImGui::Text("Loop : %s", layer.desc.base.loop ? "true" : "false");
+                    ImGui::Text("Object Alive : %s", layer.obj ? "true" : "false");
+                    ImGui::TreePop();
+                }
+            }
+
+            ImGui::TreePop();
+        }
+    }
+
+    const string attachedHeader = "Attached Effects (" + to_string(attachedEffects.size()) + ")";
+    if (ImGui::TreeNodeEx(attachedHeader.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (attachedEffects.empty())
+        {
+            ImGui::TextDisabled("(AttachedEffectObject 없음)");
+        }
+        else
+        {
+            for (size_t i = 0; i < attachedEffects.size(); ++i)
+            {
+                const auto& attachedEffect = attachedEffects[i];
+                const string effectName = attachedEffect->Get_EffectAssetName().empty()
+                    ? "(None)"
+                    : attachedEffect->Get_EffectAssetName();
+                const string rowLabel = "[" + to_string(i) + "] " + effectName;
+                auto effectCom = attachedEffect->Get_EffectComponent();
+
+                if (ImGui::TreeNode(rowLabel.c_str()))
+                {
+                    ImGui::Text("Asset : %s", effectName.c_str());
+                    ImGui::Text("Playing : %s", (effectCom && effectCom->Is_Playing()) ? "true" : "false");
+                    ImGui::Text("Loop Override : %s", attachedEffect->Get_LoopOverride() ? "true" : "false");
+                    ImGui::Text("Tracking Bone : %s", attachedEffect->Is_TrackingBone() ? "true" : "false");
+
+                    const string boneName = attachedEffect->Get_TargetBoneName().empty()
+                        ? "(None)"
+                        : attachedEffect->Get_TargetBoneName();
+                    ImGui::Text("Bone : %s", boneName.c_str());
+
+                    const Vec3 worldPos = attachedEffect->Get_Transform()->Get_WorldPosition();
+                    ImGui::Text("World Pos : %.2f, %.2f, %.2f", worldPos.x, worldPos.y, worldPos.z);
+
+                    if (effectCom)
+                    {
+                        ImGui::Text("LifeSpan : %.3f", effectCom->Get_LifeSpan());
+                        ImGui::Text("Layer Count : %zu", effectCom->Get_ActiveLayers().size());
+                    }
+
+                    ImGui::TreePop();
+                }
+            }
+        }
+
+        ImGui::TreePop();
+    }
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
 }
 
 shared_ptr<Inspector> Inspector::Create()

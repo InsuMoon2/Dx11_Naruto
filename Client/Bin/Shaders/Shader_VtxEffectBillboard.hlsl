@@ -241,7 +241,10 @@ float4 BuildDecalColor(
     if (finalAlpha < 0.01f)
         discard;
 
+    // Decal-style effect atlases often keep dark RGB values around masked edges,
+    // so premultiply by the resolved alpha to prevent black fringe in preview/runtime.
     float3 finalRgb = colorSample.rgb * tint.rgb * emissiveStrength;
+    finalRgb *= finalAlpha;
     return float4(finalRgb, finalAlpha);
 }
 

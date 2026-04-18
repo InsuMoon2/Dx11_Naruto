@@ -227,6 +227,13 @@ void Effect_View::Pre_Render()
     Matrix savedView = *GAME->Get_Transform(ETransformState::View);
     Matrix savedProj = *GAME->Get_Transform(ETransformState::Proj);
 
+    // 프리뷰 RT가 별도 크기를 가지므로, 렌더 전 기존 deferred viewport 기준을 백업한다.
+    const uint32 savedDeferredViewportWidth = static_cast<uint32>(max(1.f, GAME->Get_UIViewportWidth()));
+    const uint32 savedDeferredViewportHeight = static_cast<uint32>(max(1.f, GAME->Get_UIViewportHeight()));
+    // UI 배치 복원을 위해 현재 UI viewport 기준도 함께 저장한다.
+    const float savedUIViewportWidth = GAME->Get_UIViewportWidth();
+    const float savedUIViewportHeight = GAME->Get_UIViewportHeight();
+
     _previewView = _previewCamera->Get_ViewMatrix();
     float aspect = static_cast<float>(_prevRT->GetWidth()) / _prevRT->GetHeight();
     _previewProj = XMMatrixPerspectiveFovLH(XM_PIDIV4, aspect, 0.1f, 100.f);
@@ -262,14 +269,24 @@ void Effect_View::Pre_Render()
 
     //_prevRT->Clear(Color(0.f, 0.f, 1.15f, 1.f));
     _prevRT->Clear(Color(0.12f, 0.12f, 0.15f, 1.f));
-    _prevRT->BindAsTarget();
 
-    GAME->Draw(false, false);
+    // Effect View도 Scene/Game View와 동일하게 프리뷰 RT 크기로 deferred MRT를 맞춘다.
+    const bool canRenderPreviewViewport =
+        SUCCEEDED(GAME->Resize_DeferredViewport(_prevRT->GetWidth(), _prevRT->GetHeight()));
 
-    _prevRT->BindAsTarget();
+    if (canRenderPreviewViewport)
+    {
+        GAME->Set_UIViewportSize(static_cast<float>(_prevRT->GetWidth()), static_cast<float>(_prevRT->GetHeight()));
 
-    Ensure_PreviewGridResources();
-    Draw_PreviewGrid();
+        _prevRT->BindAsTarget();
+
+        GAME->Draw(false, false);
+
+        _prevRT->BindAsTarget();
+
+        Ensure_PreviewGridResources();
+        Draw_PreviewGrid();
+    }
 
     GAME->BindBackBuffer();
     GAME->Restore_RenderGroup();
@@ -277,6 +294,10 @@ void Effect_View::Pre_Render()
 
     if (hasSavedLight)
         GAME->Add_Light(savedLight);
+
+    // 프리뷰 전용 viewport 상태를 끝냈으니 메인 에디터 기준으로 복원한다.
+    GAME->Resize_DeferredViewport(savedDeferredViewportWidth, savedDeferredViewportHeight);
+    GAME->Set_UIViewportSize(savedUIViewportWidth, savedUIViewportHeight);
 
     GAME->Set_Transform(ETransformState::View, savedView);
     GAME->Set_Transform(ETransformState::Proj, savedProj);
@@ -1324,6 +1345,12 @@ void Effect_View::Draw_Inspector()
             }
 
             if (ImGui::DragFloat3("Rotation Axis", (float*)&layer.mesh.rotationAxis, 0.05f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::Checkbox("Rotate In Local Space", &layer.mesh.rotateInLocalSpace))
             {
                 MarkDirty();
                 materialChanged = true;

@@ -73,6 +73,15 @@ struct GS_OUT
     float2 vLifeTime : TEXCOORD1;
 };
 
+// Point 파티클의 short/long 축 스트레치 값을 customParams에서 읽을 때 0이면 기본 1배를 쓰도록 정리한다.
+float ResolvePointStretchScale(float rawValue)
+{
+    if (abs(rawValue) < 0.0001f)
+        return 1.f;
+
+    return max(rawValue, 0.01f);
+}
+
 [maxvertexcount(6)]
 void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 {
@@ -105,11 +114,15 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
     else
         rollDir = normalize(rollDir);
 
+    // customParams0.x = short axis width scale, customParams0.y = long axis length scale
+    const float widthStretch = ResolvePointStretchScale(g_CustomParams0.x);
+    const float lengthStretch = ResolvePointStretchScale(g_CustomParams0.y);
+
     float3 longAxis = normalize(cameraRight * rollDir.x + cameraUp * rollDir.y);
     float3 shortAxis = normalize(cameraRight * rollDir.y - cameraUp * rollDir.x);
 
-    float3 vRight = shortAxis * In[0].vPSize.x * 0.5f;
-    float3 vUp = longAxis * In[0].vPSize.y * 0.5f;
+    float3 vRight = shortAxis * In[0].vPSize.x * 0.5f * widthStretch;
+    float3 vUp = longAxis * In[0].vPSize.y * 0.5f * lengthStretch;
 
     matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
 

@@ -33,8 +33,8 @@ static Vec3 Rotate_HorizontalDirectionY(const Vec3& dir, float degrees)
 
 void PlayerState_Replacement::Enter(PlayerStateMachine* state)
 {
-	if (!state)
-		return;
+    if (!state)
+        return;
 
     auto owner = state->Get_Owner();
     auto movement = state->Get_Movement();
@@ -51,12 +51,11 @@ void PlayerState_Replacement::Enter(PlayerStateMachine* state)
     movement->Set_Velocity(Vec3::Zero);
 
     Vec3 teleportPos = _teleportDestination;
-    teleportPos.y += 0.5f;
+    teleportPos.y += 2.5f;
     transform->Set_WorldPosition(teleportPos);
 
     state->Set_PendingLandingDir(_landingDirection);
     state->Play_AnimState(EPlayerState::JumpFall);
-
 
     auto myPlayer = dynamic_pointer_cast<MyPlayer>(owner);
     if (myPlayer)
@@ -71,15 +70,20 @@ void PlayerState_Replacement::Enter(PlayerStateMachine* state)
         if (weapon)
             weapon->Set_ColliderActive(false);
     }
-    
+
 }
 
 void PlayerState_Replacement::Update(PlayerStateMachine* state, float timeDelta)
 {
-      if (!state)
+    if (!state)
         return;
 
     auto movement = state->Get_Movement();
+    auto input = state->Get_Input();
+
+    if (!movement || !input)
+        return;
+
     if (movement)
     {
         auto cmd = state->Init_MoveCommand();
@@ -87,11 +91,21 @@ void PlayerState_Replacement::Update(PlayerStateMachine* state, float timeDelta)
         movement->Update(timeDelta);
     }
 
-    if (state->Is_AnimStateFinished())
+    if (movement->Is_OnGround())
     {
-        state->Change_State(EPlayerState::HeightLand);
-        return;
+        if (input->Has_MoveInput())
+        {
+            state->Change_State(EPlayerState::Run);
+            return;
+
+        }
+        else
+        {
+            state->Change_State(EPlayerState::Idle);
+            return;
+        }
     }
+
 }
 
 void PlayerState_Replacement::Exit(PlayerStateMachine* state)
@@ -152,12 +166,12 @@ Vec3 PlayerState_Replacement::Compute_BaseDirection(PlayerStateMachine* state)
     Vec3 worldDir = Vec3::Zero;
     EMoveInputDirection inputDir = EMoveInputDirection::Forward;
 
-      const bool hasMoveInput = state->Set_CameraRelativeMoveDirection(
+    const bool hasMoveInput = state->Set_CameraRelativeMoveDirection(
         input->Get_MoveAxis(),
         inputDir,
         worldDir);
 
-      if (hasMoveInput)
+    if (hasMoveInput)
         return worldDir;
 
     auto transform = owner->Get_Transform();

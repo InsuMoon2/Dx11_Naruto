@@ -7,6 +7,7 @@
 #include "Utils.h"
 #include "SkillObject.h"
 #include "Client_Defines.h"
+#include "Model.h"
 
 REGISTER_ANIM_NOTIFY(AN_SpawnAttack)
 IMPLEMENT_REFLECTION(AN_SpawnAttack)
@@ -19,10 +20,11 @@ bool AN_SpawnAttack::Register_Properties()
 
     PROPERTY_ENUM_JSON("스킬 오브젝트 타입", "spawn_object_type", _spawnObjectType, Protocol::OBJECT_TYPE);
     PROPERTY_ENUM_JSON("충돌 프리셋", "collision_preset", _collisionPreset, Collision_Preset);
+    PROPERTY_STRING_JSON("기준 뼈", "bone_name", _boneName);
     PROPERTY_VEC3_JSON("로컬 오프셋", "local_offset", _localOffset, 0.1f);
     PROPERTY_FLOAT_JSON("충돌 반지름", "collider_radius", _colliderRadius, 0.1f, 10.f);
     PROPERTY_FLOAT_JSON("수명(초)", "lifetime", _lifetime, 0.05f, 10.f);
-    PROPERTY_BOOL_JSON("Forward 사용", "use_owner_forward", _useOwnerForward);
+    PROPERTY_BOOL_JSON("Owner Forward 사용", "use_owner_forward", _useOwnerForward);
     PROPERTY_STRING_JSON("레이어 태그", "layer_tag", _layerTag);
 
     return true;
@@ -41,18 +43,21 @@ void AN_SpawnAttack::Execute(const FAnimNotifyContext& context)
     if (!ownerTransform)
         return;
 
+    const Matrix spawnBasisMatrix = Calculate_SpawnBasisMatrix(context, ownerTransform, _boneName);
+
     SkillObject::FSkillObjectDesc desc{};
+    desc.ownerObject = context.owner->GetSharedPtr<GameObject>();
     desc.collisionPreset = _collisionPreset;
     desc.colliderRadius = _colliderRadius;
     desc.lifetime = _lifetime;
-    desc.spawnPosition = Calculate_WorldSpawnPosition(ownerTransform, _localOffset);
+    desc.spawnPosition = Calculate_WorldSpawnPosition(spawnBasisMatrix, _localOffset);
     desc.spawnRotation = Vec3::Zero;
     desc.scale = Vec3::One;
 
     if (_useOwnerForward)
         desc.direction = ownerTransform->Get_WorldForward();
     else
-        desc.direction = Vec3::Forward;
+        desc.direction = Calculate_ForwardFromBasis(spawnBasisMatrix);
 
     const wstring layerTag = Utils::ToWString(_layerTag);
 
@@ -75,15 +80,45 @@ void AN_SpawnAttack::Execute(const FAnimNotifyContext& context)
         skill->Set_Owner(context.owner->GetSharedPtr<GameObject>());
 }
 
-Vec3 AN_SpawnAttack::Calculate_WorldSpawnPosition(Shared<Transform> transform, const Vec3& localOffset)
+Matrix AN_SpawnAttack::Calculate_SpawnBasisMatrix(const FAnimNotifyContext& context, Shared<Transform> transform, const string& boneName)
 {
-    const Vec3 worldPos = transform->Get_WorldPosition();
-    const Vec3 right = transform->Get_WorldRight();
-    const Vec3 up = transform->Get_WorldUp();
-    const Vec3 forward = transform->Get_WorldForward();
+    if (!transform)
+        return Matrix::Identity;
+
+    Matrix basisMatrix = transform->Get_WorldMatrix();
+
+    if (boneName.empty() || !context.model)
+        return basisMatrix;
+
+    const Matrix* boneMatrix = context.model->Get_SocketBoneMatrixPtr(boneName);
+    if (!boneMatrix)
+        return basisMatrix;
+
+    return (*boneMatrix) * transform->Get_WorldMatrix();
+}
+
+Vec3 AN_SpawnAttack::Calculate_WorldSpawnPosition(const Matrix& basisMatrix, const Vec3& localOffset)
+{
+    const Vec3 worldPos = basisMatrix.Translation();
+
+    Vec3 right = Vec3::TransformNormal(Vec3(1.f, 0.f, 0.f), basisMatrix);
+    Vec3 up = Vec3::TransformNormal(Vec3(0.f, 1.f, 0.f), basisMatrix);
+    Vec3 forward = Vec3::TransformNormal(Vec3(0.f, 0.f, 1.f), basisMatrix);
+
+    right.Normalize();
+    up.Normalize();
+    forward.Normalize();
 
     return worldPos
         + right * localOffset.x
         + up * localOffset.y
         + forward * localOffset.z;
+}
+
+Vec3 AN_SpawnAttack::Calculate_ForwardFromBasis(const Matrix& basisMatrix)
+{
+    Vec3 forward = Vec3::TransformNormal(Vec3(0.f, 0.f, 1.f), basisMatrix);
+    forward.Normalize();
+
+    return forward;
 }

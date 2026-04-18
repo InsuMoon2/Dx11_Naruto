@@ -1,11 +1,19 @@
 #include "Engine_Shader_Defines.hlsli"
 
 Texture2D g_Texture;
+Texture2D g_NormalTexture;
+Texture2D g_ShadeTexture;
 
 // 1차 경계값 -> 이거보다 낮으면 어두운 단계
 float g_ToonShadeThreshold0 = 0.30f;
 // 2차 경계값 -> 중간 단계
 float g_ToonShadeThreshold1 = 0.68f;
+
+float4 g_PostOutlineColor = float4(0.04f, 0.05f, 0.08f, 1.f);
+// 화면 해상도 역수. 1픽셀 옆 샘플링에 사용한다.
+float2 g_OutlineInvViewportSize = float2(1.f / 1280.f, 1.f / 720.f);
+float g_PostOutlineNormalThreshold = 0.32f;
+float g_PostOutlineStrength = 0.45f;
 
 float ComputeToonShade(float ndotl)
 {
@@ -19,6 +27,34 @@ float ComputeToonShade(float ndotl)
 
     return 1.0f;
 }
+
+// GBUffer 노멀을 실제 노멀 범위로 복원하기
+float3 DecodeWorldNormal(float2 uv)
+{
+    float3 encoded = g_NormalTexture.Sample(DefaultSampler, uv).xyz;
+    return normalize(encoded * 2.f - 1.f);
+}
+
+float ComputePostOutlineMask(float2 uv)
+{
+    float2 texel = g_OutlineInvViewportSize;
+
+    float3 centerN = DecodeWorldNormal(uv);
+    float edge = 0.f;
+
+    edge = max(edge, distance(centerN, DecodeWorldNormal(uv + float2(texel.x, 0.f))));
+    edge = max(edge, distance(centerN, DecodeWorldNormal(uv + float2(-texel.x, 0.f))));
+    edge = max(edge, distance(centerN, DecodeWorldNormal(uv + float2(0.f, texel.y))));
+    edge = max(edge, distance(centerN, DecodeWorldNormal(uv + float2(0.f, -texel.y))));
+
+    float mask = smoothstep(
+        g_PostOutlineNormalThreshold,
+        g_PostOutlineNormalThreshold + 0.08f,
+        edge);
+
+    return mask * g_PostOutlineStrength;
+}
+
 
 struct VS_IN
 {
@@ -72,9 +108,6 @@ struct PS_OUT_LIGHT
     vector vShade : SV_TARGET0;
 };
 
-Texture2D g_NormalTexture;
-Texture2D g_ShadeTexture;
-
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
     PS_OUT_LIGHT Out;
@@ -117,8 +150,13 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
         discard;
     
     vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
-    
-    Out.vColor = vDiffuse * vShade;
+
+    vector toonColor = vDiffuse * vShade;
+
+    float outlineMask = ComputePostOutlineMask(In.vTexcoord);
+
+    Out.vColor = lerp(toonColor, g_PostOutlineColor, outlineMask);
+    Out.vColor.a = 1.f;
     
     return Out;
 }

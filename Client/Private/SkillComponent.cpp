@@ -14,7 +14,7 @@ SkillComponent::SkillComponent(ComPtr<Device> device, ComPtr<DeviceContext> cont
 }
 
 SkillComponent::SkillComponent(const SkillComponent& rhs)
-    : Component(rhs)    
+    : Component(rhs)
 {
     memcpy(_slotSkill_Id, rhs._slotSkill_Id, sizeof(_slotSkill_Id));
     memcpy(_cooldownRemain, rhs._cooldownRemain, sizeof(_cooldownRemain));
@@ -37,6 +37,12 @@ HRESULT SkillComponent::Initialize(void* arg)
         _cooldownRemain[i] = 0.f;
     }
 
+    for (int i = 0; i < SUB_SKILL_COUNT; ++i)
+    {
+        _subSkillIds[i] = 0;
+        _subSkillCooldownRemain[i] = 0.f;
+    }
+
     return S_OK;
 }
 
@@ -54,7 +60,23 @@ void SkillComponent::BeginPlay()
     Apply_WeaponSkillSet(_equipment.lock()->Get_CurrentWeaponType());
 
     _combatStat = owner->Get_Component<CombatStat>();
-    CHECK_NULL(_equipment.lock());
+    CHECK_NULL(_combatStat.lock());
+
+    // Sub SKill
+    {
+        const FSkillData* replacementData =
+            GET_SINGLE(SkillDataManager)->Find_SkillByCategoryAndSlot(ESkillCategory::Sub, 0);
+
+        if (replacementData)
+            _subSkillIds[To_SubSkillIndex(ESubSkillType::Replacement)] = static_cast<int32>(replacementData->skill_Id);
+
+        const FSkillData* shurikenData =
+            GET_SINGLE(SkillDataManager)->Find_SkillByCategoryAndSlot(ESkillCategory::Sub, 1);
+
+        if (shurikenData)
+            _subSkillIds[To_SubSkillIndex(ESubSkillType::Shuriken)] = static_cast<int32>(shurikenData->skill_Id);
+    }
+
 }
 
 void SkillComponent::Update(float timeDelta)
@@ -68,6 +90,17 @@ void SkillComponent::Update(float timeDelta)
 
         if (_cooldownRemain[i] < 0.f)
             _cooldownRemain[i] = 0.f;
+    }
+
+    for (int i = 0; i < SUB_SKILL_COUNT; ++i)
+    {
+        if (_subSkillCooldownRemain[i] <= 0.f)
+            continue;
+
+        _subSkillCooldownRemain[i] -= timeDelta;
+
+        if (_subSkillCooldownRemain[i] < 0.f)
+            _subSkillCooldownRemain[i] = 0.f;
     }
 
     auto meleeSkill = _attachedMeleeSkill.lock();
@@ -128,7 +161,7 @@ float SkillComponent::Get_CooldownRatio(int slot) const
         return 0.f;
 
     const int id = _slotSkill_Id[slot];
-     
+
     auto skillDataPtr = GET_SINGLE(SkillDataManager)->Get_SkillData(id);
     if (!skillDataPtr || skillDataPtr->coolDown <= 0.f)
         return 0.f;
@@ -154,6 +187,68 @@ void SkillComponent::Clear_MeleeSkill()
     }
 
     _attachedMeleeSkill.reset();
+}
+
+bool SkillComponent::Can_ActivateSubSkill(ESubSkillType type) const
+{
+    const int32 index = To_SubSkillIndex(type);
+    if (index < 0)
+        return false;
+
+    const int32 skill_ID = _subSkillIds[index];
+    if (skill_ID == 0)
+        return false;
+
+    if (_subSkillCooldownRemain[index] > 0.f)
+        return false;
+
+    return true;
+}
+
+void SkillComponent::Start_SubSkillCooldown(ESubSkillType type)
+{
+    const int32 index = To_SubSkillIndex(type);
+    if (index < 0)
+        return;
+
+    const int32 skillID = _subSkillIds[index];
+    if (skillID == 0)
+        return;
+
+    const FSkillData* skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(skillID);
+    if (!skillData)
+    {
+        LOG_WARN("SubSkillData not found. id={}", skillID);
+        return;
+    }
+
+    _subSkillCooldownRemain[index] = max(0.f, skillData->coolDown);
+}
+
+int32 SkillComponent::Get_SubSkillID(ESubSkillType type) const
+{
+    const int32 index = To_SubSkillIndex(type);
+    if (index < 0)
+        return 0;
+
+    return _subSkillIds[index];
+}
+
+float SkillComponent::Get_SubSkillCooldownRatio(ESubSkillType type) const
+{
+    const int32 index = To_SubSkillIndex(type);
+    if (index < 0)
+        return 0.f;
+
+    const int32 skillID = _subSkillIds[index];
+    if (skillID == 0)
+        return 0.f;
+
+    const FSkillData* skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(skillID);
+    if (!skillData || skillData->coolDown <= 0.f)
+        return 0.f;
+
+    return ::clamp(_subSkillCooldownRemain[index] / skillData->coolDown, 0.f, 1.f);
 }
 
 void SkillComponent::Set_PendingSkill(Protocol::OBJECT_TYPE type, Shared<SkillObject_Projectile> skill)
@@ -256,7 +351,7 @@ void SkillComponent::Set_EquippedSkill_ID(int slot, int skill_Id)
 
 void SkillComponent::Add_ActiveStretchingMesh(Shared<GameObject> effect)
 {
-     if (!effect)
+    if (!effect)
         return;
 
     Cleanup_ActiveStretchingMeshes();
@@ -278,7 +373,7 @@ void SkillComponent::Cleanup_ActiveStretchingMeshes()
 
 void SkillComponent::Destroy_AllStretchingMeshes()
 {
-     Cleanup_ActiveStretchingMeshes();
+    Cleanup_ActiveStretchingMeshes();
 
     for (auto& weakObj : _activeStretchingMeshes)
     {
@@ -309,6 +404,16 @@ void SkillComponent::From_Json(const json& data)
         _slotSkill_Id[0] = data["slotSkillID"][0].get<int>();
         _slotSkill_Id[1] = data["slotSkillID"][1].get<int>();
     }
+}
+
+int32 SkillComponent::To_SubSkillIndex(ESubSkillType type)
+{
+    const int32 index = static_cast<int32>(type);
+
+    if (index < 0 || index >= SUB_SKILL_COUNT)
+        return -1;
+
+    return index;
 }
 
 Shared<SkillComponent> SkillComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

@@ -7,20 +7,62 @@
     0.595,
     0.595,
     0.595,
-    0.0
+    1.0
+  ],
+  "shadow_color": [
+    0.008332,
+    0.0,
+    0.5,
+    1.0
   ],
   "normal_strength": 1.5,
+  "blend_normal_strength": 0.5,
+  "mask_scale": 3.0,
+  "mask_threshold": 2.0,
+  "uneven_color_scale": 3.0,
   "blend_mode": 0,
   "textures": [
     {
       "slot": "base_color",
       "index": 0,
-      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Ground_03_BC.png"
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Ground_03_BC.png",
+      "uv_channel": 0,
+      "sampling_scale": 1.0
+    },
+    {
+      "slot": "blend_base_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_KNFRST_Ground_01_BC.png",
+      "uv_channel": 1,
+      "sampling_scale": 1.0
     },
     {
       "slot": "normal",
       "index": 0,
-      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Ground_03_N.png"
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Ground_03_N.png",
+      "uv_channel": 0,
+      "sampling_scale": 1.0
+    },
+    {
+      "slot": "blend_normal",
+      "index": 0,
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Ground_02_N.png",
+      "uv_channel": 1,
+      "sampling_scale": 1.0
+    },
+    {
+      "slot": "uneven_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Noize_02_UC.png",
+      "uv_channel": 0,
+      "sampling_scale": 1.0
+    },
+    {
+      "slot": "mask",
+      "index": 0,
+      "path": "../../../Textures/FModel/ExamStadium/T_ENV_LKNVLD_Mask_01_M.png",
+      "uv_channel": 0,
+      "sampling_scale": 3.0
     }
   ],
   "source": {

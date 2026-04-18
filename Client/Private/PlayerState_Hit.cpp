@@ -5,6 +5,7 @@
 #include "InputComponent.h"
 #include "MyPlayer.h"
 #include "PlayerState_Replacement.h"
+#include "SkillComponent.h"
 #include "Weapon.h"
 
 void PlayerState_Hit::Enter(PlayerStateMachine* state)
@@ -51,14 +52,21 @@ void PlayerState_Hit::Update(PlayerStateMachine* state, float timeDelta)
     const auto& frame = input->Get_Frame();
 
     if (frame.replacementDown)
+{
+    auto skillCom = state->Get_Owner()->Get_Component<SkillComponent>();
+    auto replacementState = state->Get_State<PlayerState_Replacement>(EPlayerState::Replacement);
+
+    if (skillCom && replacementState &&
+        skillCom->Can_ActivateSubSkill(ESubSkillType::Replacement))
     {
-        auto replacementState = state->Get_State<PlayerState_Replacement>(EPlayerState::Replacement);
-        if (replacementState && replacementState->Prepare_Replacement(state))
+        if (replacementState->Prepare_Replacement(state))
         {
+            skillCom->Start_SubSkillCooldown(ESubSkillType::Replacement);
             state->Change_State(EPlayerState::Replacement);
             return;
         }
     }
+}
 
     if (state->Is_AnimStateFinished())
     {

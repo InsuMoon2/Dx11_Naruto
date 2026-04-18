@@ -50,6 +50,22 @@ uint32 SkillDataManager::Get_SkillIconSrvIndex(int32 skill_Id) const
     return iter->second;
 }
 
+const FSkillData* SkillDataManager::Find_SkillByCategoryAndSlot(ESkillCategory category, int32 uiSlotIndex) const
+{
+    for (const auto& [skill_ID, skill_Data] : _skillMap)
+    {
+        if (skill_Data.skillCategory != category)
+            continue;
+
+        if (skill_Data.uiSlotIndex != uiSlotIndex)
+            continue;
+
+        return &skill_Data;
+    }
+
+    return nullptr;
+}
+
 void SkillDataManager::Clear()
 {
     _skillMap.clear();

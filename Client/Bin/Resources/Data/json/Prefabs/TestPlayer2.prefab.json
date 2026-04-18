@@ -54,7 +54,7 @@
             "Deceleration": 24.0,
             "Gravity": -20.0,
             "Ground Walkable Min Up Dot": 0.550000011920929,
-            "Ground Y": 0.0,
+            "Ground Y": 5.0,
             "Jump Velocity": 10.0,
             "Max Sprint Speed": 20.0,
             "Max Walk Speed": 9.0,
@@ -82,6 +82,52 @@
         },
         {
             "animation_states": [
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Land",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "key": "Idle",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Idle_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
                 {
                     "directional": {
                         "backward": {
@@ -152,52 +198,6 @@
                         }
                     },
                     "end": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Land",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "key": "Idle",
-                    "loopClip": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Idle_Loop",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_Run_End",
                         "loop": false,
                         "playRate": 1.0
@@ -218,52 +218,6 @@
                         "animationName": "",
                         "loop": true,
                         "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Land",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "key": "Jump",
-                    "loopClip": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
-                        "loop": true,
-                        "playRate": 1.5
-                    },
-                    "mode": "Sequence",
-                    "single": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Jump_Front",
-                        "loop": false,
-                        "playRate": 1.5
                     }
                 },
                 {
@@ -320,8 +274,8 @@
                             "playRate": 1.0
                         },
                         "forward": {
-                            "animationName": "SK_CHR_Sasuke|Sasuke_ChakraJump_Charge_Start",
-                            "loop": false,
+                            "animationName": "",
+                            "loop": true,
                             "playRate": 1.0
                         },
                         "left": {
@@ -336,15 +290,15 @@
                         }
                     },
                     "end": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_End",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Land",
                         "loop": false,
                         "playRate": 1.0
                     },
-                    "key": "SuperJumpCharge",
+                    "key": "Jump",
                     "loopClip": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_Loop",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
                         "loop": true,
-                        "playRate": 1.0
+                        "playRate": 1.5
                     },
                     "mode": "Sequence",
                     "single": {
@@ -353,55 +307,9 @@
                         "playRate": 1.0
                     },
                     "start": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_Start",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Jump_Front",
                         "loop": false,
-                        "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "key": "Attack_Air_01",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_cmb01",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
+                        "playRate": 1.5
                     }
                 },
                 {
@@ -520,25 +428,71 @@
                         }
                     },
                     "end": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_HeightLand",
-                        "loop": false,
+                        "animationName": "",
+                        "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "SuperJump",
+                    "key": "Attack_Air_01",
                     "loopClip": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
+                        "animationName": "",
                         "loop": true,
                         "playRate": 1.0
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
-                        "loop": true,
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_cmb01",
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "start": {
                         "animationName": "",
                         "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "SK_CHR_Sasuke|Sasuke_ChakraJump_Charge_Start",
+                            "loop": false,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_End",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "key": "SuperJumpCharge",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_Start",
+                        "loop": false,
                         "playRate": 1.0
                     }
                 },
@@ -580,6 +534,52 @@
                     "single": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Rasengun_Attack_Lv1_End",
                         "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_HeightLand",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "key": "SuperJump",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
+                        "loop": true,
                         "playRate": 1.0
                     },
                     "start": {
@@ -750,25 +750,71 @@
                         }
                     },
                     "end": {
-                        "animationName": "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_Loop",
-                        "loop": true,
-                        "playRate": 1.0
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_End",
+                        "loop": false,
+                        "playRate": 2.5
                     },
-                    "key": "Skill_Rasengan_Air",
+                    "key": "JumpDash",
                     "loopClip": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv2toLv3_Loop",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Sequence",
-                    "single": {
                         "animationName": "",
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "start": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv1",
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Loop",
                         "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Start",
+                        "loop": false,
+                        "playRate": 2.5
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "BigSword_Idle",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Idle_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
                         "playRate": 1.0
                     }
                 },
@@ -842,117 +888,25 @@
                         }
                     },
                     "end": {
-                        "animationName": "",
+                        "animationName": "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_Loop",
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "BigSword_Idle",
+                    "key": "Skill_Rasengan_Air",
                     "loopClip": {
-                        "animationName": "",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv2toLv3_Loop",
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "mode": "Single",
+                    "mode": "Sequence",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Idle_Loop",
+                        "animationName": "",
                         "loop": true,
                         "playRate": 1.0
                     },
                     "start": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_End",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv1",
                         "loop": false,
-                        "playRate": 2.5
-                    },
-                    "key": "JumpDash",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Loop",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Start",
-                        "loop": false,
-                        "playRate": 2.5
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "key": "Skill_Chidori_End",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Attack_Lv3_End",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "",
-                        "loop": true,
                         "playRate": 1.0
                     }
                 },
@@ -1030,6 +984,52 @@
                         "loop": true,
                         "playRate": 1.0
                     },
+                    "key": "Skill_Chidori_End",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Attack_Lv3_End",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
                     "key": "Attack_2",
                     "loopClip": {
                         "animationName": "",
@@ -1041,6 +1041,52 @@
                         "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Hand_StraightPunch",
                         "loop": false,
                         "playRate": 1.7000000476837158
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_3",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_SSp_KWKSciwep_cmb_03",
+                        "loop": false,
+                        "playRate": 1.0
                     },
                     "start": {
                         "animationName": "",
@@ -1091,52 +1137,6 @@
                     "start": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Charge_Lv1",
                         "loop": false,
-                        "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "key": "Attack_3",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_SSp_KWKSciwep_cmb_03",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "",
-                        "loop": true,
                         "playRate": 1.0
                     }
                 },
@@ -1532,20 +1532,20 @@
                         }
                     },
                     "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "key": "Attack_Sword_02",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_TurnSlashing_Right",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Run_End",
                         "loop": false,
+                        "playRate": 1.0
+                    },
+                    "key": "WallRun",
+                    "loopClip": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Run_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
                         "playRate": 1.0
                     },
                     "start": {
@@ -1578,20 +1578,20 @@
                         }
                     },
                     "end": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Run_End",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "key": "WallRun",
-                    "loopClip": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Run_Loop",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Sequence",
-                    "single": {
                         "animationName": "",
                         "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_Sword_02",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_TurnSlashing_Right",
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "start": {
@@ -1716,25 +1716,25 @@
                         }
                     },
                     "end": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_End",
-                        "loop": false,
+                        "animationName": "",
+                        "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Skill_BlastBoomDance",
+                    "key": "Skill_Rasengan_Air_End",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "mode": "Sequence",
+                    "mode": "Single",
                     "single": {
-                        "animationName": "",
-                        "loop": true,
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_End",
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "start": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_Start",
-                        "loop": false,
+                        "animationName": "",
+                        "loop": true,
                         "playRate": 1.0
                     }
                 },
@@ -1808,11 +1808,57 @@
                         }
                     },
                     "end": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_End",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "key": "Skill_BlastBoomDance",
+                    "loopClip": {
                         "animationName": "",
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Skill_Rasengan_Air_End",
+                    "mode": "Sequence",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_BombBlastDance_Start",
+                        "loop": false,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_Sword_04",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -1820,9 +1866,9 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_End",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_BothHandsSlashingHorizontally",
                         "loop": false,
-                        "playRate": 1.0
+                        "playRate": 1.2999999523162842
                     },
                     "start": {
                         "animationName": "",
@@ -1869,52 +1915,6 @@
                         "animationName": "SK_CHR_NormalModel|CustomMan_Idle_Loop",
                         "loop": true,
                         "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "key": "Attack_Sword_04",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_BothHandsSlashingHorizontally",
-                        "loop": false,
-                        "playRate": 1.2999999523162842
                     },
                     "start": {
                         "animationName": "",
@@ -2088,7 +2088,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Hit",
+                    "key": "Skill_FireBall",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -2096,9 +2096,9 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Left",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Fireball_Lv3",
                         "loop": false,
-                        "playRate": 1.5
+                        "playRate": 1.0
                     },
                     "start": {
                         "animationName": "",
@@ -2134,7 +2134,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Skill_FireBall",
+                    "key": "Hit",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -2142,9 +2142,9 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Fireball_Lv3",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Left",
                         "loop": false,
-                        "playRate": 1.0
+                        "playRate": 1.5
                     },
                     "start": {
                         "animationName": "",
@@ -2280,9 +2280,9 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Throw_WindmillShuriken",
                         "loop": false,
-                        "playRate": 1.0
+                        "playRate": 1.5
                     },
                     "start": {
                         "animationName": "",
@@ -2698,7 +2698,7 @@
             }
         }
     },
-    "guid": "2e835813-98fc-499e-ae5a-17ad21d3850e",
+    "guid": "8dc90036-c4b6-402f-8c9f-899a2e778b0e",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"

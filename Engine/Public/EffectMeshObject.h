@@ -46,6 +46,8 @@ public:
     void Set_RuntimeOpacityOverride(float opacity, bool enabled);
     void Set_RuntimeEmissiveStrengthOverride(float emissiveStrength, bool enabled);
 
+    // EffectComponent가 오너/런타임 오프셋까지 포함한 현재 로컬 회전을 "회전 기준 자세"로 다시 잡아야 할 때 호출한다.
+    void Sync_RotationBaseFromCurrentTransform();
     void Update_Rotation(float timeDelta);
 
     const FEffectLayerDesc& Get_LayerDesc() const { return _layerDesc; }
@@ -73,8 +75,9 @@ private:
     FEffectLayerDesc _layerDesc;
 
     float _elapsed = 0.f;                     
-    float _accumulatedRotation = 0.f;         
+    float _accumulatedRotation = 0.f;         // 누적 회전 각도(radian)다. 매 프레임 delta를 곱적하지 않고 안정적으로 기준 자세에서 다시 계산할 때 쓴다.
     bool  _hasOpacity = false;                
+    Quat  _rotationBaseLocal = Quat::Identity; // Local Rotation + 오너 오프셋까지 반영된 "회전 시작 자세"를 기억해 owner/local 축 회전을 안정적으로 재구성한다.
     // 이펙트 뷰 진단용으로만 쓰는 강제 가시화 플래그다. 런타임 기본 동작은 false를 유지한다.
     bool  _forceVisiblePreview = false;
     bool  _useRuntimeColorTintOverride = false;        // true면 layerDesc의 기본 tint 대신 런타임 보간 tint를 셰이더에 바인딩한다.

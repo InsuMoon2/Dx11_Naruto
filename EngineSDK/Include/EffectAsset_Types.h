@@ -163,6 +163,7 @@ struct FEffectMeshLayerDesc
 
     Vec3 rotationAxis = Vec3(0.f, 1.f, 0.f);   
     float rotationSpeed = 0.f;                 
+    bool rotateInLocalSpace = true;            // true면 기울어진 레이어 자신의 로컬 축 기준으로 자전하고, false면 오너/부모 기준 고정 축으로 회전한다.
 
     /* --- 프레넬 (가장자리 투명 효과) --- */
     float fresnelPower = 0.f;                  

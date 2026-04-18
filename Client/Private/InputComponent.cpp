@@ -80,6 +80,8 @@ void InputComponent::Update_Input(float timeDelta)
 
     const bool rawAttackDown = INPUT->KeyDown(KEY_TYPE::LBUTTON);
 
+    const bool rawShurikenDown = INPUT->KeyDown(KEY_TYPE::RBUTTON);
+
     // 무기 교체
     const bool rawToggleWeaponDown = INPUT->KeyDown(KEY_TYPE::TAB);
 
@@ -145,8 +147,8 @@ void InputComponent::Update_Input(float timeDelta)
     }
 
     _frame.wireDash = rawCtrlDown;
-
     _frame.replacementDown = rawReplacementDown;
+    _frame.shurikenDown = rawShurikenDown;
 
     if (_inputGate.allowJumpDash)
     {

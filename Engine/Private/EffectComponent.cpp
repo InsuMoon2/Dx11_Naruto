@@ -528,6 +528,15 @@ void EffectComponent::Apply_LayerTransformInternal(FActiveLayer& layer)
         finalLocalRotation.y,
         finalLocalRotation.z);
     childTransform->Set_LocalScale(finalLocalScale);
+
+    // Mesh 레이어는 런타임/오너 오프셋까지 합쳐진 현재 자세를 회전 기준으로 다시 잡아야
+    // Local Space / Owner Space 회전이 에디터 값과 동일한 기준으로 유지된다.
+    if (layer.desc.base.kind == EEffectLayerKind::Mesh)
+    {
+        auto meshObj = dynamic_pointer_cast<EffectMeshObject>(layer.obj);
+        if (meshObj)
+            meshObj->Sync_RotationBaseFromCurrentTransform();
+    }
 }
 
 void EffectComponent::Apply_LayerPositionInternal(FActiveLayer& layer)

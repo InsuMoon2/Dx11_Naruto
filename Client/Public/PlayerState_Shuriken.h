@@ -18,8 +18,6 @@ public:
     EPlayerState Get_StateID() const override { return EPlayerState::Shuriken; }
 
 private:
-    float _elapsedTime = 0.f;      
-    bool _arrived = false;        
 
 public:
     static Shared<PlayerState_Shuriken> Create();

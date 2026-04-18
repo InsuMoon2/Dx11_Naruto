@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "GameObject.h"
 #include "Debug_Manager.h"
+#include "SkillComponent.h"
 
 PlayerState_Shuriken::PlayerState_Shuriken()
 {
@@ -17,8 +18,8 @@ PlayerState_Shuriken::~PlayerState_Shuriken()
 
 void PlayerState_Shuriken::Enter(PlayerStateMachine* state)
 {
-	if (!state)
-		return;
+    if (!state)
+        return;
 
     auto owner = state->Get_Owner();
     auto movement = state->Get_Movement();
@@ -33,11 +34,14 @@ void PlayerState_Shuriken::Enter(PlayerStateMachine* state)
     input->Set_InputMode(EPlayerInputMode::LookOnly);
     movement->Set_OrientRotationToMovement(false);
 
-    Vec3 velocity = movement->Get_Velocity();
-    velocity.y = 0.f;
-    movement->Set_Velocity(velocity);
+    auto skillCom = owner ? owner->Get_Component<SkillComponent>() : nullptr;
+    if (skillCom)
+    {
+        skillCom->Start_SubSkillCooldown(ESubSkillType::Shuriken);
+    }
 
-  
+
+    state->Play_AnimState(EPlayerState::Shuriken);
 }
 
 void PlayerState_Shuriken::Update(PlayerStateMachine* state, float timeDelta)
@@ -54,9 +58,24 @@ void PlayerState_Shuriken::Update(PlayerStateMachine* state, float timeDelta)
     if (!transform)
         return;
 
-    _elapsedTime += timeDelta;
+    if (state->Is_AnimStateFinished())
+    {
+        if (input->Has_MoveInput())
+        {
+            state->Change_State(EPlayerState::Run);
 
-    
+            return;
+        }
+
+        else
+        {
+            state->Change_State(EPlayerState::Idle);
+
+            return;
+        }
+
+    }
+
 }
 
 void PlayerState_Shuriken::Exit(PlayerStateMachine* state)

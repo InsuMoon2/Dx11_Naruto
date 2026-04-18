@@ -358,6 +358,13 @@
     <ClInclude Include="..\Public\PlayerState_Shuriken.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Skill_WindmillShuriken.h" />
+    <ClInclude Include="..\Public\Skill_Jinsutansu.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_Kirin.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -698,6 +705,13 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Shuriken.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_WindmillShuriken.cpp" />
+    <ClCompile Include="..\Private\Skill_Jinsutansu.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_Kirin.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,9 +5,9 @@
         {
             "blendMode": 1,
             "colorTint": [
-                0.05896635353565216,
-                0.11488940566778183,
-                0.1827957034111023,
+                0.060430869460105896,
+                0.0671318918466568,
+                0.07526880502700806,
                 1.0
             ],
             "customParams0": [
@@ -79,7 +79,7 @@
             "modelGuid": "1cb1422e-0df3-4ff5-b0c8-4ee61b423351",
             "normalStrength": 1.0,
             "normalTextureGuid": "",
-            "opacity": 1.0,
+            "opacity": 0.6019999980926514,
             "opacityGradationTextureGuid": "",
             "opacitySubUvTextureGuid": "",
             "opacityTextureGuid": "",

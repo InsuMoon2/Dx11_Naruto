@@ -6,6 +6,7 @@
 #include "Character.h"
 #include "MyPlayer.h"
 #include "EffectComponent.h"
+#include "Skill_Rasengan_Hit.h"
 
 REGISTER_GAMEOBJECT_CATEGORY(Skill_Rasengan, Protocol::OBJECT_TYPE_SKILL_RASENGAN, "SkillSpawn");
 
@@ -16,17 +17,18 @@ Skill_Rasengan::Skill_Rasengan(ComPtr<Device> device, ComPtr<DeviceContext> cont
 
 Skill_Rasengan::Skill_Rasengan(const Skill_Rasengan& rhs)
     : SkillObject(rhs)
+    , _hasSpawnedImpact(rhs._hasSpawnedImpact)
 {
 }
 
 HRESULT Skill_Rasengan::Initialize_Prototype()
 {
     _lifetime        = 15.f;
-    _maxHitCount     = 6;
-    _hitInterval     = 0.1f;   
+    _maxHitCount     = 1;
+    _hitInterval     = 0.f;   
     _hitLaunchForce  = 0.f; 
 
-    _colliderRadius  = 0.3f;
+    _colliderRadius  = 0.5f;
     _collisionPreset = Collision_Preset::Player_Attack;
 
     return SkillObject::Initialize_Prototype();
@@ -59,36 +61,15 @@ void Skill_Rasengan::OnBeginOverlap(Shared<Collider> self, Shared<Collider> othe
 {
     SkillObject::OnBeginOverlap(self, other);
 
-    if (Is_Destroy())
-        return;
-    auto character = Find_HitCharacter(other);
-    if (!character)
-        return;
-
-    auto otherOwner = other->Get_Owner();
-
-    CHECK_NULL(otherOwner);
-
-    Spawn_Effect_Once("Rasengan_Hit", _transformCom->Get_WorldPosition());
-
-    Process_MultiHit(character, otherOwner.get());
+    //Try_TriggerImpact(other);
 }
 
 void Skill_Rasengan::OnStayOverlap(Shared<Collider> self, Shared<Collider> other)
 {
     SkillObject::OnStayOverlap(self, other);
 
-    if (Is_Destroy())
-        return;
-    auto character = Find_HitCharacter(other);
-    if (!character)
-        return;
+    
 
-    auto otherOwner = other->Get_Owner();
-
-    CHECK_NULL(otherOwner);
-
-    Process_MultiHit(character, otherOwner.get());
 }
 
 void Skill_Rasengan::OnEndOverlap(Shared<Collider> self, Shared<Collider> other)
@@ -120,22 +101,43 @@ Character* Skill_Rasengan::Find_HitCharacter(Shared<Collider> other)
     return dynamic_cast<Character*>(otherOwner.get());
 }
 
-void Skill_Rasengan::Process_MultiHit(Character* hitted, GameObject* targetKey)
+bool Skill_Rasengan::Try_TriggerImpact(Shared<Collider> other)
 {
-    CHECK_NULL(hitted);
-    CHECK_NULL(targetKey);
+    if (_hasSpawnedImpact || Is_Destroy())
+        return false;
 
-    if (_hitCooldowns[targetKey] > 0.f)
-        return;
+    auto character = Find_HitCharacter(other);
+    if (!character)
+        return false;
 
-    if (_hitCount >= _maxHitCount)
-        return;
+    auto otherOwner = other->Get_Owner();
+    if (!otherOwner)
+        return false;
 
-    if (!Apply_Skill_Hit(hitted, 10.f, _hitLaunchForce, 0.f))
-        return;
+    if (!Apply_Skill_Hit(character, 10.f, _hitLaunchForce, 0.f))
+        return false;
 
-    _hitCooldowns[targetKey] = _hitInterval;
-    _hitCount++;
+    _hasSpawnedImpact = true;
+
+    Spawn_RasenganHitActor();
+    Set_Destroy(true);
+
+    return true;
+}
+
+void Skill_Rasengan::Spawn_RasenganHitActor()
+{
+    Skill_Rasengan_Hit::FHitDesc desc{};
+    desc.ownerObject = Get_Owner();
+    desc.spawnPosition = _transformCom->Get_WorldPosition();
+    desc.collisionPreset = Collision_Preset::Player_Attack;
+
+    GAME->Clone_And_Add_GameObject(
+        ETOI(ELevelType::Static),
+        Protocol::OBJECT_TYPE_SKILL_RASENGAN_HIT,
+        GAME->Current_Level(),
+        TEXT("Layer_Skill"),
+        &desc);
 }
 
 Shared<GameObject> Skill_Rasengan::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

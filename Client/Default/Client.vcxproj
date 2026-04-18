@@ -333,10 +333,13 @@
     <ClInclude Include="..\Public\Skill_Chidori.h" />
     <ClInclude Include="..\Public\Skill_Chidori_Hit.h" />
     <ClInclude Include="..\Public\Skill_FireBall.h" />
+    <ClInclude Include="..\Public\Skill_Jinsutansu.h" />
+    <ClInclude Include="..\Public\Skill_Kirin.h" />
     <ClInclude Include="..\Public\Skill_Rasengan.h" />
     <ClInclude Include="..\Public\Skill_Rasengan_Hit.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken_Hit.h" />
+    <ClInclude Include="..\Public\Skill_WindmillShuriken.h" />
     <ClInclude Include="..\Public\SkySphereActor.h" />
     <ClInclude Include="..\Public\SmearEffect_Component.h" />
     <ClInclude Include="..\Public\Spawn_Helper.h" />
@@ -489,10 +492,13 @@
     <ClCompile Include="..\Private\Skill_Chidori.cpp" />
     <ClCompile Include="..\Private\Skill_Chidori_Hit.cpp" />
     <ClCompile Include="..\Private\Skill_FireBall.cpp" />
+    <ClCompile Include="..\Private\Skill_Jinsutansu.cpp" />
+    <ClCompile Include="..\Private\Skill_Kirin.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan_Hit.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken_Hit.cpp" />
+    <ClCompile Include="..\Private\Skill_WindmillShuriken.cpp" />
     <ClCompile Include="..\Private\SkySphereActor.cpp" />
     <ClCompile Include="..\Private\SmearEffect_Component.cpp" />
     <ClCompile Include="..\Private\Spawn_Helper.cpp" />

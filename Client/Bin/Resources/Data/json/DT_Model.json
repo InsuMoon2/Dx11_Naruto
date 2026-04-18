@@ -43,6 +43,13 @@
             "Level": "Static"
         },
         {
+            "Id": "Model_Shuriken",
+            "Path": "../../Client/Bin/Resources/Models/WindmilShuriken/WindmilShuriken.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
             "Id": "Model_Headgear_Man_Cap1",
             "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_Cap1.meshbin",
             "Count": 1,

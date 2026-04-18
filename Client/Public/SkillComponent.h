@@ -50,6 +50,13 @@ public:
     void    Clear_MeleeSkill();
 
 public:
+    // 서브스킬
+    bool Can_ActivateSubSkill(ESubSkillType type) const;
+    void Start_SubSkillCooldown(ESubSkillType type);
+    int32 Get_SubSkillID(ESubSkillType type) const;
+    float Get_SubSkillCooldownRatio(ESubSkillType type) const;
+
+public:
     void    Set_PendingSkill(Protocol::OBJECT_TYPE type, Shared<SkillObject_Projectile> skill);
     bool    Launch_PendingSkill(Protocol::OBJECT_TYPE type, const Vec3& direction);
     void    Clear_PendingSkill(Protocol::OBJECT_TYPE type);
@@ -72,10 +79,17 @@ protected:
     void    From_Json(const json& data) override;
 
 private:
-    static constexpr int32 SLOT_COUNT = 2; // 스킬은 일단 2개만
+    static int32 To_SubSkillIndex(ESubSkillType type);
+
+private:
+    static constexpr int32 SLOT_COUNT = 2; // 스킬은 일단 2개만 -> 궁까지 늘리면 3개
+    static constexpr int32 SUB_SKILL_COUNT = static_cast<int32>(ESubSkillType::END);
 
     int32   _slotSkill_Id[SLOT_COUNT] = {};
     float   _cooldownRemain[SLOT_COUNT] = {};
+
+    int32 _subSkillIds[SUB_SKILL_COUNT] = {};  
+    float _subSkillCooldownRemain[SUB_SKILL_COUNT] = {}; 
 
     Weak<CombatStat> _combatStat;
     Weak<EquipmentComponent> _equipment;

@@ -1,0 +1,201 @@
+{
+    "autoPlay": true,
+    "effectName": "SuperJump_GPT",
+    "layers": [
+        {
+            "baseEmissiveStrength": 1.0,
+            "baseFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "baseMaskTextureGuid": "",
+            "baseOpacity": 0.92,
+            "baseOpacityGradationTextureGuid": "e225aa07-cc30-45cc-b91e-4d7f0cb95700",
+            "baseOpacityTextureGuid": "76a7e73d-d857-455f-b980-8fab7b34c4a4",
+            "baseTextureGuid": "76a7e73d-d857-455f-b980-8fab7b34c4a4",
+            "baseTint": [
+                0.10,
+                0.78,
+                0.98,
+                1.0
+            ],
+            "billboardToCamera": false,
+            "blendMode": 1,
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "duration": -1.0,
+            "enabled": true,
+            "endBaseOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endRingOpacity": 0.0,
+            "endScale": [
+                2.15,
+                2.15,
+                1.0
+            ],
+            "kind": 2,
+            "layerName": "Ring_A_04_DataBased",
+            "localPosition": [
+                0.0,
+                0.05,
+                0.0
+            ],
+            "localRotation": [
+                90.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                2.15,
+                2.15,
+                1.0
+            ],
+            "loop": true,
+            "positionDuration": 1.0,
+            "renderMode": 1,
+            "ringEmissiveStrength": 1.0,
+            "ringFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "ringOpacity": 0.0,
+            "ringOpacityGradationTextureGuid": "",
+            "ringOpacityTextureGuid": "",
+            "ringTextureGuid": "",
+            "ringTint": [
+                0.85,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "startDelay": 0.0,
+            "useBaseOpacityOverTime": false,
+            "usePositionOverTime": false,
+            "useRing": false,
+            "useRingOpacityOverTime": false,
+            "useScaleOverTime": false
+        },
+        {
+            "baseEmissiveStrength": 1.0,
+            "baseFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "baseMaskTextureGuid": "",
+            "baseOpacity": 0.9,
+            "baseOpacityGradationTextureGuid": "2c89d91a-a364-4082-a3cb-71f1bc01a689",
+            "baseOpacityTextureGuid": "dd0ac1a8-49c4-4dcd-9396-1521f7ff5c49",
+            "baseTextureGuid": "dd0ac1a8-49c4-4dcd-9396-1521f7ff5c49",
+            "baseTint": [
+                0.08,
+                0.82,
+                0.98,
+                1.0
+            ],
+            "billboardToCamera": true,
+            "blendMode": 1,
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "duration": -1.0,
+            "enabled": true,
+            "endBaseOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endRingOpacity": 0.0,
+            "endScale": [
+                0.16,
+                3.8,
+                1.0
+            ],
+            "kind": 2,
+            "layerName": "LineBeam_GPT",
+            "localPosition": [
+                0.0,
+                1.15,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                90.0
+            ],
+            "localScale": [
+                0.16,
+                3.8,
+                1.0
+            ],
+            "loop": true,
+            "positionDuration": 1.0,
+            "renderMode": 2,
+            "ringEmissiveStrength": 1.0,
+            "ringFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "ringOpacity": 0.0,
+            "ringOpacityGradationTextureGuid": "",
+            "ringOpacityTextureGuid": "",
+            "ringTextureGuid": "",
+            "ringTint": [
+                0.85,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "startDelay": 0.0,
+            "useBaseOpacityOverTime": false,
+            "usePositionOverTime": false,
+            "useRing": false,
+            "useRingOpacityOverTime": false,
+            "useScaleOverTime": false
+        }
+    ],
+    "totalDuration": -1.0
+}

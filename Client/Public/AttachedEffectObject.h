@@ -34,8 +34,12 @@ public:
     bool    Should_ExcludeFromEditorSnapshot() const override { return true; }
 
     const string& Get_EffectAssetName() const { return _effectAssetName; }
+    // 이 AttachedEffectObject가 루프 강제 옵션으로 생성됐는지 인스펙터에서 확인할 때 호출한다.
+    bool Get_LoopOverride() const { return _loopOverride; }
 
     bool Is_TrackingBone() const { return _isTrackingBone; }
+    // 현재 추적 중인 타겟 본 이름을 런타임 디버그 표시에서 확인할 때 호출한다.
+    const string& Get_TargetBoneName() const { return _targetBoneName; }
 
 public:
     Shared<EffectComponent> Get_EffectComponent() const { return _effectCom; }

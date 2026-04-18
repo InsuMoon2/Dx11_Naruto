@@ -108,16 +108,20 @@ void PlayerSession_Manager::Stop_AllSession()
 void PlayerSession_Manager::Begin_PlaySession()
 {
     const uint32 levelIndex = GAME->Current_Level();
+    _snapshotLevelIndex = levelIndex;
+    _snapshotLevel = GAME->Get_Current_Level();
+
     // 원래 엔진의 정상적인 메모리 스냅샷 백업 시스템
     Save_SceneSnapshot();
-    Capture_PlaySessionObjectGuids(levelIndex);
-    if (levelIndex != ETOI(ELevelType::GamePlay))
+
+    if (!Should_SpawnPlaySessionPlayer(levelIndex))
         return;
+
     Remove_PlaySessionPlayers(levelIndex);
     auto playerObj = Spawn_PlaySessionPlayer(levelIndex);
     if (!playerObj)
     {
-        LOG_WARN("플레이어 생성 안됐음. 왜?");
+        LOG_WARN("PlaySession player spawn failed. levelIndex={}", levelIndex);
     }
 }
 
@@ -125,8 +129,21 @@ void PlayerSession_Manager::Begin_PlaySession()
 
 void PlayerSession_Manager::End_PlaySession()
 {
-    Merge_RuntimeSpawnedObjects_IntoSnapshot(GAME->Current_Level());
+    const uint32 currentLevelIndex = GAME->Current_Level();
+
+    // 플레이 중 다른 레벨로 이동했으면, Stop 시 원래 편집 레벨을 다시 활성화한 뒤 스냅샷을 복원한다.
+    if (_snapshotLevel && currentLevelIndex != _snapshotLevelIndex)
+    {
+        GAME->Change_Level(_snapshotLevelIndex, _snapshotLevel);
+    }
+
     Restore_SceneSnapshot();
+}
+
+bool PlayerSession_Manager::Should_SpawnPlaySessionPlayer(uint32 levelIndex) const
+{
+    return levelIndex == ETOI(ELevelType::GamePlay) ||
+        levelIndex == ETOI(ELevelType::Konoha);
 }
 
 bool PlayerSession_Manager::Launch_Server()
@@ -287,66 +304,6 @@ void PlayerSession_Manager::Save_SceneSnapshot()
     _hasSnapShot = true;
 }
 
-void PlayerSession_Manager::Capture_PlaySessionObjectGuids(uint32 levelIndex)
-{
-    _playSessionObjectGuids.clear();
-
-    const auto& layers = GAME->Get_Layers(levelIndex);
-
-    for (const auto& [layerTag, layer] : layers)
-    {
-        if (!layer)
-            continue;
-
-        for (const auto& obj : layer->Get_GameObjects())
-        {
-            if (!obj || obj->Is_Destroy())
-                continue;
-
-            _playSessionObjectGuids.insert(obj->Get_GUID());
-        }
-    }
-}
-
-bool PlayerSession_Manager::Can_Persist_RuntimeObject(const Shared<GameObject>& obj) const
-{
-    if (!obj || obj->Is_Destroy())
-        return false;
-
-    return obj->Get_ObjectType() == Protocol::OBJECT_TYPE_MONSTER;
-}
-
-void PlayerSession_Manager::Merge_RuntimeSpawnedObjects_IntoSnapshot(uint32 levelIndex)
-{
-    if (!_hasSnapShot)
-        return;
-
-    if (!_sceneSnapshot.contains("gameObjects") || !_sceneSnapshot["gameObjects"].is_array())
-        _sceneSnapshot["gameObjects"] = json::array();
-
-    const auto& layers = GAME->Get_Layers(levelIndex);
-
-    for (const auto& [layerTag, layer] : layers)
-    {
-        if (!layer)
-            continue;
-
-        for (const auto& obj : layer->Get_GameObjects())
-        {
-            if (!Can_Persist_RuntimeObject(obj))
-                continue;
-
-            if (_playSessionObjectGuids.contains(obj->Get_GUID()))
-                continue;
-
-            json objJson = obj->To_Json();
-            objJson["layerTag"] = Utils::ToString(layerTag);
-
-            _sceneSnapshot["gameObjects"].push_back(objJson);
-        }
-    }
-}
-
 void PlayerSession_Manager::Remove_PlaySessionPlayers(uint32 levelIndex)
 {
     const auto& layers = GAME->Get_Layers(levelIndex);
@@ -496,6 +453,7 @@ void PlayerSession_Manager::Restore_SceneSnapshot()
 
     // 현재 월드 다 비우고
     GAME->Clear_Layers(levelIndex);
+    GAME->Clear_UI_ByLevel(levelIndex);
 
     // 카메라만 다시 세팅
     for (auto& [obj, layerTag] : preserved)
@@ -579,7 +537,8 @@ void PlayerSession_Manager::Restore_SceneSnapshot()
     }
 
     _hasSnapShot = false;
-    _playSessionObjectGuids.clear();
+    _snapshotLevelIndex = ETOI(ELevelType::Static);
+    _snapshotLevel.reset();
 }
 
 unique_ptr<PlayerSession_Manager> PlayerSession_Manager::Create()

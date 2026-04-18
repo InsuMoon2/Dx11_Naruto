@@ -564,7 +564,28 @@ HRESULT ResourceLoader::Build_AllResourceJobs(const wstring& tablePath, vector<F
             job.skillData.airLandedAnimStateName = item.value("airLandedAnimStateName", string{});
             job.skillData.airAttackEndAnimStateName = item.value("airAttackEndAnimStateName", string{});
 
-            job.skillIconSrvIndex = iconSrvIndex;
+            {
+                const string categoryStr = item.value("skillCategory", string("Main"));
+                const auto categoryEnum = magic_enum::enum_cast<ESkillCategory>(categoryStr);
+
+                if (categoryEnum.has_value())
+                {
+                    job.skillData.skillCategory = categoryEnum.value();
+                }
+                else
+                {
+                     job.skillData.skillCategory = ESkillCategory::Main;
+                }
+            }
+
+            job.skillData.uiSlotIndex = item.value("uiSlotIndex", -1);
+            job.skillData.uiIconSrvIndex = item.value("uiIconSrvIndex", iconSrvIndex);
+
+            // 메인은 기존 순차 아이콘 유지, 서브는 테이블 명시값을 사용
+            job.skillIconSrvIndex =
+                (job.skillData.skillCategory == ESkillCategory::Sub)
+                ? job.skillData.uiIconSrvIndex
+                : iconSrvIndex;
 
             outJobs.push_back(job);
             ++iconSrvIndex;

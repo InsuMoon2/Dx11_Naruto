@@ -39,6 +39,8 @@ HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
     CHECK_FAILED(Ready_UI(), E_FAIL);
 
+    // ExamStadium은 별도 proxy 레이어가 없어도 기본 바닥 collision이 항상 준비되어야 한다.
+    CHECK_FAILED(Ready_DefaultGroundCollision(), E_FAIL);
     CHECK_FAILED(Rebuild_CollisionProxyCache(), E_FAIL);
 
     CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
@@ -227,6 +229,138 @@ Matrix Level_Gameplay::Build_CollisionModelPreTransform()
     return scaleMatrix * rotationMatrix;
 }
 
+// ExamStadium에서 replacement/ground 판정에 사용할 기본 바닥 collision mesh를 준비한다.
+HRESULT Level_Gameplay::Ready_DefaultGroundCollision()
+{
+    _defaultGroundModels.clear();
+
+    const fs::path groundDirectory =
+        L"../../Client/Bin/Resources/StaticMesh/ExamStadium/Meshes";
+
+    CHECK_FAILED(Append_CollisionInstancesFromDirectory(groundDirectory, _defaultGroundModels), E_FAIL);
+
+    LOG_INFO("[Level_Gameplay] Default Ground = {}", _defaultGroundModels.size());
+
+    return S_OK;
+}
+
+// ExamStadium Meshes 폴더에서 ground collision 용도로 쓸 meshbin만 골라 cache에 추가한다.
+HRESULT Level_Gameplay::Append_CollisionInstancesFromDirectory(
+    const fs::path& directoryPath,
+    vector<MovementComponent::FCollisionModelInstance>& outInstances)
+{
+    if (!fs::exists(directoryPath) || !fs::is_directory(directoryPath))
+    {
+        LOG_ERROR("[Level_Gameplay] Ground collision directory not found: {}", directoryPath.string());
+        return E_FAIL;
+    }
+
+    const Matrix preTransform = Build_CollisionModelPreTransform();
+    vector<fs::path> collisionGroundMeshes;
+    vector<fs::path> fallbackGroundMeshes;
+
+    for (const auto& entry : fs::directory_iterator(directoryPath))
+    {
+        if (!entry.is_regular_file())
+            continue;
+
+        const fs::path meshPath = entry.path();
+        if (Utils::ToLowerCopy(meshPath.extension().string()) != ".meshbin")
+            continue;
+
+        const string fileNameLower = Utils::ToLowerCopy(meshPath.filename().string());
+        const bool isGroundMesh = (fileNameLower.find("ground") != string::npos);
+        if (!isGroundMesh)
+            continue;
+
+        const bool isCollisionMesh = (fileNameLower.find("_col") != string::npos);
+        if (isCollisionMesh)
+        {
+            collisionGroundMeshes.push_back(meshPath);
+        }
+        else
+        {
+            fallbackGroundMeshes.push_back(meshPath);
+        }
+    }
+
+    const vector<fs::path>& targetMeshes =
+        !collisionGroundMeshes.empty() ? collisionGroundMeshes : fallbackGroundMeshes;
+
+    if (targetMeshes.empty())
+    {
+        LOG_ERROR("[Level_Gameplay] No ground collision meshes found in: {}", directoryPath.string());
+        return E_FAIL;
+    }
+
+    for (const auto& meshPath : targetMeshes)
+    {
+        auto model = Model::Create(
+            _device,
+            _context,
+            EMeshVertexType::StaticMesh,
+            meshPath.string(),
+            preTransform,
+            true);
+
+        if (!model)
+        {
+            LOG_WARN("[Level_Gameplay] Failed to load default ground mesh: {}", meshPath.string());
+            continue;
+        }
+
+        MovementComponent::FCollisionModelInstance instance{};
+        instance.model = model;
+        instance.worldMatrix = Matrix::Identity;
+        instance.hasWorldBounds = Try_BuildWorldBoundsFromModel(
+            model,
+            instance.worldMatrix,
+            instance.worldBounds);
+
+        if (!instance.hasWorldBounds)
+        {
+            LOG_WARN("[Level_Gameplay] Failed to build bounds for default ground mesh: {}", meshPath.string());
+            continue;
+        }
+
+        outInstances.push_back(instance);
+    }
+
+    if (outInstances.empty())
+    {
+        LOG_ERROR("[Level_Gameplay] Ground collision meshes were found but no valid bounds were built.");
+        return E_FAIL;
+    }
+
+    return S_OK;
+}
+
+// Gameplay 레벨에서 사용할 collision proxy entry를 Konoha와 같은 방식으로 구성한다.
+void Level_Gameplay::Build_CollisionProxyEntries(vector<FProxyEntry>& outEntries) const
+{
+    outEntries.clear();
+    outEntries.reserve(
+        _defaultGroundModels.size() +
+        _walkableProxyModels.size() +
+        _worldBlockProxyModels.size());
+
+    const auto appendEntries =
+        [&outEntries](const vector<MovementComponent::FCollisionModelInstance>& instances, ECollisionProxyType proxyType)
+        {
+            for (const auto& instance : instances)
+            {
+                FProxyEntry entry{};
+                entry.instance = instance;
+                entry.proxyType = static_cast<uint8>(proxyType);
+                outEntries.push_back(entry);
+            }
+        };
+
+    appendEntries(_defaultGroundModels, ECollisionProxyType::Walkable);
+    appendEntries(_walkableProxyModels, ECollisionProxyType::Walkable);
+    appendEntries(_worldBlockProxyModels, ECollisionProxyType::WorldBlock);
+}
+
 HRESULT Level_Gameplay::Rebuild_CollisionProxyCache()
 {
     _walkableProxyModels.clear();
@@ -235,6 +369,12 @@ HRESULT Level_Gameplay::Rebuild_CollisionProxyCache()
 
     CHECK_FAILED(Collect_CollisionProxyActorsFromLayer(TEXT("Layer_CollisionProxy")), E_FAIL);
 
+    vector<FProxyEntry> proxyEntries;
+    Build_CollisionProxyEntries(proxyEntries);
+
+    GAME->Ready_CollisionProxy(proxyEntries);
+
+    LOG_INFO("[Level_Gameplay] Default Ground = {}", _defaultGroundModels.size());
     LOG_INFO("[Level_Gameplay] Walkable Proxy = {}", _walkableProxyModels.size());
     LOG_INFO("[Level_Gameplay] Wall Proxy = {}", _wallProxyModels.size());
     LOG_INFO("[Level_Gameplay] WorldBlock Proxy = {}", _worldBlockProxyModels.size());
@@ -362,15 +502,13 @@ void Level_Gameplay::On_PlayerObjectSpawned(Shared<GameObject> obj)
     if (!moveCom)
         return;
 
-    if (!_walkableProxyModels.empty())
-    {
-        moveCom->Set_GroundCollisionModels(_walkableProxyModels);
-    }
+    vector<MovementComponent::FCollisionModelInstance> combinedGroundModels = _defaultGroundModels;
+    combinedGroundModels.insert(
+        combinedGroundModels.end(),
+        _walkableProxyModels.begin(),
+        _walkableProxyModels.end());
 
-    if (!_wallProxyModels.empty())
-    {
-        moveCom->Set_WallCollisionModels(_wallProxyModels);
-    }
+    moveCom->Set_GroundCollisionModels(combinedGroundModels);
 }
 
 void Level_Gameplay::Try_SendEnterGamePacket()
@@ -486,56 +624,118 @@ bool Level_Gameplay::Try_BuildWorldBoundsFromModel(Shared<Model> model, const Ma
 
 void Level_Gameplay::Draw_StaticMeshRender()
 {
-    // 플레이어 위치 기준으로 짤라보기
     if (INPUT->KeyDown(KEY_TYPE::F3))
     {
         _showCollisionDebug = !_showCollisionDebug;
     }
 
-    if (_showCollisionDebug)
+    if (!_showCollisionDebug)
+        return;
+
+    const uint32 levelIndex = ETOI(ELevelType::GamePlay);
+
+    Vec3 debugCenter = Vec3::Zero;
+    bool hasDebugCenter = false;
+
+    const auto gameObjects = GAME->Get_GameObjects(levelIndex);
+    for (const auto& obj : gameObjects)
     {
-        const uint32 levelIndex = ETOI(ELevelType::GamePlay);
+        if (!obj)
+            continue;
 
-        Vec3 debugCenter = Vec3::Zero;
-        bool hasDebugCenter = false;
+        if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_PLAYER)
+            continue;
 
-        auto gameObjects = GAME->Get_GameObjects(levelIndex);
-        for (const auto& obj : gameObjects)
-        {
-            if (!obj)
-                continue;
+        auto transform = obj->Get_Transform();
+        if (!transform)
+            continue;
 
-            if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_PLAYER)
-                continue;
-
-            auto transform = obj->Get_Transform();
-            if (!transform)
-                continue;
-
-            debugCenter = transform->Get_WorldPosition();
-            hasDebugCenter = true;
-            break;
-        }
-
-        if (!hasDebugCenter)
-        {
-            auto activeCamera = GAME->Get_ActiveCamera();
-            if (activeCamera && activeCamera->Get_Transform())
-            {
-                debugCenter = activeCamera->Get_Transform()->Get_WorldPosition();
-                hasDebugCenter = true;
-            }
-        }
-
-        const float debugRadius = 35.f;
-        const float debugRadiusSq = debugRadius * debugRadius;
-
-        int32 groundDrawCount = 0;
-        int32 wallDrawCount = 0;
-
-        const int32 maxGroundDrawCount = 80;
-        const int32 maxWallDrawCount = 80;
+        debugCenter = transform->Get_WorldPosition();
+        hasDebugCenter = true;
+        break;
     }
+
+    if (!hasDebugCenter)
+    {
+        auto activeCamera = GAME->Get_ActiveCamera();
+        if (activeCamera && activeCamera->Get_Transform())
+        {
+            debugCenter = activeCamera->Get_Transform()->Get_WorldPosition();
+            hasDebugCenter = true;
+        }
+    }
+
+    if (!hasDebugCenter)
+        return;
+
+    const float debugRadius = 35.f;
+    const float debugRadiusSq = debugRadius * debugRadius;
+    const int32 maxDefaultGroundDrawCount = 120;
+    const int32 maxWalkableDrawCount = 80;
+    const int32 maxWorldBlockDrawCount = 80;
+
+    int32 defaultGroundDrawCount = 0;
+    int32 walkableDrawCount = 0;
+    int32 worldBlockDrawCount = 0;
+
+    const auto drawProxyBoxes =
+        [debugCenter, debugRadiusSq](
+            const vector<MovementComponent::FCollisionModelInstance>& instances,
+            const Color& color,
+            int32 maxDrawCount,
+            int32& drawCount)
+        {
+            for (const auto& instance : instances)
+            {
+                if (drawCount >= maxDrawCount)
+                    break;
+
+                if (!instance.hasWorldBounds)
+                    continue;
+
+                const Vec3 toCenter = instance.worldBounds.Center - debugCenter;
+                if (toCenter.LengthSquared() > debugRadiusSq)
+                    continue;
+
+                FDebugBoxDesc debugBoxDesc{};
+                debugBoxDesc.center = instance.worldBounds.Center;
+                debugBoxDesc.extents = instance.worldBounds.Extents;
+                debugBoxDesc.rotation = Quat::Identity;
+                debugBoxDesc.style.color = color;
+                debugBoxDesc.style.duration = 0.f;
+                debugBoxDesc.style.depthEnabled = true;
+
+                GAME->Draw_DebugBox(debugBoxDesc);
+                ++drawCount;
+            }
+        };
+
+    drawProxyBoxes(
+        _defaultGroundModels,
+        Color(1.f, 0.f, 0.2f, 1.f),
+        maxDefaultGroundDrawCount,
+        defaultGroundDrawCount);
+
+    drawProxyBoxes(
+        _walkableProxyModels,
+        Color(0.f, 1.f, 0.f, 1.f),
+        maxWalkableDrawCount,
+        walkableDrawCount);
+
+    drawProxyBoxes(
+        _worldBlockProxyModels,
+        Color(0.f, 0.6f, 1.f, 1.f),
+        maxWorldBlockDrawCount,
+        worldBlockDrawCount);
+
+    FDebugSphereDesc debugSphereDesc{};
+    debugSphereDesc.center = debugCenter;
+    debugSphereDesc.radius = 0.3f;
+    debugSphereDesc.style.color = Color(1.f, 1.f, 0.f, 1.f);
+    debugSphereDesc.style.duration = 0.f;
+    debugSphereDesc.style.depthEnabled = false;
+
+    GAME->Draw_DebugSphere(debugSphereDesc);
 }
 
 shared_ptr<Level_Gameplay> Level_Gameplay::Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode)

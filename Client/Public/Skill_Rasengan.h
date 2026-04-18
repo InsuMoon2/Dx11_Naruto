@@ -24,9 +24,11 @@ public:
 
 private:
     class Character* Find_HitCharacter(Shared<Collider> other);
-    void             Process_MultiHit(class Character* hitted, GameObject* targetKey);
+    bool Try_TriggerImpact(Shared<Collider> other);
+    void Spawn_RasenganHitActor();
 
-
+private:
+     bool _hasSpawnedImpact = false;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

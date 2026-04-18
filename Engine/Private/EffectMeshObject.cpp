@@ -77,6 +77,7 @@ void EffectMeshObject::Apply_BaseTransform(const FEffectLayerBase& baseDesc)
         baseDesc.localRotation.y,
         baseDesc.localRotation.z);
     _transformCom->Set_LocalScale(baseDesc.localScale);
+    Sync_RotationBaseFromCurrentTransform();
 }
 
 void EffectMeshObject::Priority_Update(float timeDelta)
@@ -571,6 +572,15 @@ void EffectMeshObject::Set_RuntimeEmissiveStrengthOverride(float emissiveStrengt
     _runtimeEmissiveStrength = emissiveStrength;
 }
 
+void EffectMeshObject::Sync_RotationBaseFromCurrentTransform()
+{
+    CHECK_NULL(_transformCom);
+
+    _rotationBaseLocal = _transformCom->Get_LocalRotation();
+    _rotationBaseLocal.Normalize();
+    _accumulatedRotation = 0.f;
+}
+
 void EffectMeshObject::Update_Rotation(float timeDelta)
 {
     if (abs(_layerDesc.mesh.rotationSpeed) <= 0.0001f)
@@ -582,9 +592,21 @@ void EffectMeshObject::Update_Rotation(float timeDelta)
 
     axis.Normalize();
 
-    const float radians = XMConvertToRadians(_layerDesc.mesh.rotationSpeed) * timeDelta;
-    Quat deltaRot = Quat::CreateFromAxisAngle(axis, radians);
-    _transformCom->Add_LocalRotation(deltaRot);
+    _accumulatedRotation += XMConvertToRadians(_layerDesc.mesh.rotationSpeed) * timeDelta;
+
+    const float wrappedRotation = fmod(_accumulatedRotation, XM_2PI);
+    Quat axisRotation = Quat::CreateFromAxisAngle(axis, wrappedRotation);
+    Quat finalRotation = Quat::Identity;
+
+    // Local Space면 "기울어진 레이어 자신의 축"으로 자전하고,
+    // Owner Space면 "오너 기준 고정 축"을 먼저 적용한 뒤 배치 자세를 덧입힌다.
+    if (_layerDesc.mesh.rotateInLocalSpace)
+        finalRotation = _rotationBaseLocal * axisRotation;
+    else
+        finalRotation = axisRotation * _rotationBaseLocal;
+
+    finalRotation.Normalize();
+    _transformCom->Set_LocalRotation(finalRotation);
 }
 
 HRESULT EffectMeshObject::Ready_Components()

@@ -506,13 +506,10 @@ HRESULT Loader::Loading_For_GamePlay()
         };
 
     // 맵 리소스 로드
-    //pushChunk("BM_KonohaVillage03_Environments_BackdropBuildings");
-    //pushChunk("BM_KonohaVillage03_Environments_Props");
-    //pushChunk("BM_KonohaVillage03_Environments_Terrain");
     //pushChunk("BM_ExamStadium_Env_Terrain");
     //pushChunk("BM_ExamStadium_p");
 
-    pushChunk("[20260412]Tutorial");
+    pushChunk("[20260418]Tutorial");
 
     {
         scoped_lock lock(_jobMutex);

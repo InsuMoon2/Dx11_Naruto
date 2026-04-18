@@ -33,8 +33,9 @@ public:
     static void Draw_Components(Shared<GameObject> target);
 
 private:
-    void Draw_PartObjects(Shared<Engine::ContainerObject> container);
-    void Draw_SelectedPartObject(Shared<Engine::ContainerObject> container);
+    static void Draw_RuntimeEffectDebug(Shared<GameObject> target);
+    void Draw_PartObjects(Shared<ContainerObject> container);
+    void Draw_SelectedPartObject(Shared<ContainerObject> container);
 
 private:
     Shared<GameObject> _targetObject;

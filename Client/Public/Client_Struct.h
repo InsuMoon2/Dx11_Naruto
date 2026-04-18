@@ -40,6 +40,10 @@ namespace Client
 
         string  airLandedAnimStateName = "";
         string  airAttackEndAnimStateName = "";
+
+        ESkillCategory skillCategory = ESkillCategory::Main;
+        int32 uiSlotIndex = -1;
+        uint32 uiIconSrvIndex = 0;
     };
 
     struct FComboEntry

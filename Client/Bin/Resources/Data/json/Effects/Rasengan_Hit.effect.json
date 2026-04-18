@@ -5,8 +5,8 @@
         {
             "blendMode": 0,
             "colorTint": [
-                0.26523298025131226,
-                0.9604966044425964,
+                0.6487455368041992,
+                0.9811155200004578,
                 1.0,
                 1.0
             ],
@@ -22,11 +22,11 @@
                 0.0,
                 0.0
             ],
-            "diffuseTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "diffuseTextureGuid": "e2a33c52-2d2b-41a1-8cad-6cf004c304a2",
             "duration": 1.0,
             "emissiveGradationTextureGuid": "",
             "emissiveStrength": 1.2799999713897705,
-            "emissiveTextureGuid": "769547a8-5c88-427c-a2bf-bb1992b9d08a",
+            "emissiveTextureGuid": "",
             "enabled": true,
             "endColorTint": [
                 1.0,
@@ -74,15 +74,15 @@
                 1.0,
                 1.0
             ],
-            "loop": false,
+            "loop": true,
             "maskTextureGuid": "",
-            "modelGuid": "95690e34-b04f-4a03-911d-6b15c502fac0",
+            "modelGuid": "db784895-3a6b-4c62-a545-9d3935c49b11",
             "normalStrength": 1.0,
             "normalTextureGuid": "",
             "opacity": 1.0,
             "opacityGradationTextureGuid": "",
             "opacitySubUvTextureGuid": "",
-            "opacityTextureGuid": "",
+            "opacityTextureGuid": "6f67b946-6275-4daf-95e5-a3b7c0005768",
             "positionDuration": 1.0,
             "rotationAxis": [
                 0.0,
@@ -97,7 +97,7 @@
             "specularStrength": 1.0,
             "specularTextureGuid": "",
             "startDelay": 0.0,
-            "twoSided": false,
+            "twoSided": true,
             "useColorTintOverTime": false,
             "useEmissiveStrengthOverTime": false,
             "useOpacityAsTransparency": false,

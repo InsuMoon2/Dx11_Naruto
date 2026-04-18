@@ -112,7 +112,14 @@ float2 SelectMaterialUV(float2 uv0, float2 uv1, int uvChannel, float uvScale)
     return selectedUV * uvScale;
 }
 
-float ComputeMaskValue(float2 uv0, float2 uv1)
+float ComputeUpFacingMask(float3 worldNormal)
+{
+    float upDot = saturate(dot(normalize(worldNormal), float3(0.f, 1.f, 0.f)));
+
+    return smoothstep(0.65f, 0.9f, upDot);
+}
+
+float ComputeMaskValue(float2 uv0, float2 uv1, float3 worldNormal)
 {
     if (g_HasMaskTexture == 0)
         return 0.f;
@@ -132,12 +139,13 @@ float ComputeMaskValue(float2 uv0, float2 uv1)
 
     maskValue = smoothstep(0.20f, 0.75f, maskValue);
     maskValue = saturate(maskValue * 2.5f);
+    maskValue *= ComputeUpFacingMask(worldNormal);
 
 
     return maskValue;
 }
 
-vector ComputeLayeredBaseColor(float2 uv0, float2 uv1)
+vector ComputeLayeredBaseColor(float2 uv0, float2 uv1, float3 worldNormal)
 {
     float2 baseUV = SelectMaterialUV(uv0, uv1, g_BaseColorUVChannel, g_BaseColorUVScale);
     vector baseDiffuse = g_BaseColorFactor;
@@ -151,7 +159,7 @@ vector ComputeLayeredBaseColor(float2 uv0, float2 uv1)
     {
         float2 blendUV = SelectMaterialUV(uv0, uv1, g_BlendDiffuseUVChannel, g_BlendDiffuseUVScale);
         vector blendDiffuse = g_BlendDiffuseTexture.Sample(DefaultSampler, blendUV);
-        float maskValue = ComputeMaskValue(uv0, uv1);
+        float maskValue = ComputeMaskValue(uv0, uv1, worldNormal);
 
         vector softenedBlendDiffuse = lerp(baseDiffuse, blendDiffuse, 0.65f);
         finalDiffuse = lerp(baseDiffuse, softenedBlendDiffuse, maskValue);
@@ -166,9 +174,25 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
 
-    vector mtrlDiffuse = ComputeLayeredBaseColor(In.vTexcoord, In.vTexcoord1);
+    vector mtrlDiffuse = ComputeLayeredBaseColor(In.vTexcoord, In.vTexcoord1, In.vNormal.xyz);
 
     Out.vDiffuse = vector(mtrlDiffuse.rgb, 1.f);
+    Out.vNormal = vector(normalize(In.vNormal.xyz) * 0.5f + 0.5f, 0.f);
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_SIMPLE(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 baseUV = SelectMaterialUV(In.vTexcoord, In.vTexcoord1, g_BaseColorUVChannel, g_BaseColorUVScale);
+    vector baseDiffuse = g_BaseColorFactor;
+
+    if (g_HasDiffuseTexture != 0)
+        baseDiffuse *= g_DiffuseTexture.Sample(DefaultSampler, baseUV);
+
+    Out.vDiffuse = vector(baseDiffuse.rgb, 1.f);
     Out.vNormal = vector(normalize(In.vNormal.xyz) * 0.5f + 0.5f, 0.f);
 
     return Out;
@@ -207,5 +231,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_OUTLINE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_OUTLINE();
+    }
+
+    pass SimplePass
+    {
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetRasterizerState(RS_Default);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SIMPLE();
     }
 }

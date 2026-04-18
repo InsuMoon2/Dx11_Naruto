@@ -5,9 +5,9 @@
         {
             "blendMode": 1,
             "colorTint": [
-                0.7799999713897705,
-                0.9399999976158142,
-                1.0,
+                0.0,
+                0.15816861391067505,
+                0.8172042965888977,
                 1.0
             ],
             "customParams0": [
@@ -23,128 +23,8 @@
                 0.0
             ],
             "diffuseTextureGuid": "",
-            "duration": 0.36000001430511475,
-            "emissiveGradationTextureGuid": "7da97d58-d96d-4f2c-b8fc-1660a19f747d",
-            "emissiveStrength": 3.4000000953674316,
-            "emissiveTextureGuid": "a1258fe9-622e-4d0e-a721-a56dac158837",
-            "enabled": false,
-            "endColorTint": [
-                0.9300000071525574,
-                0.9800000190734863,
-                1.0,
-                1.0
-            ],
-            "endEmissiveStrength": 0.0,
-            "endOpacity": 0.0,
-            "endPosition": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "endScale": [
-                1.649999976158142,
-                1.649999976158142,
-                1.649999976158142
-            ],
-            "flipbook": {
-                "columns": 1,
-                "enabled": false,
-                "endFrame": -1,
-                "fps": 16.0,
-                "loop": true,
-                "rows": 1,
-                "startFrame": 0
-            },
-            "fresnelMultiplier": 1.0,
-            "fresnelPower": 0.0,
-            "kind": 1,
-            "layerName": "MainRing_Base",
-            "localPosition": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "localRotation": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "localScale": [
-                1.350000023841858,
-                1.350000023841858,
-                1.350000023841858
-            ],
-            "loop": false,
-            "maskTextureGuid": "",
-            "modelGuid": "67ff36e8-ae61-45fd-9c6c-a47847d80b00",
-            "normalStrength": 1.0,
-            "normalTextureGuid": "",
-            "opacity": 0.30000001192092896,
-            "opacityGradationTextureGuid": "",
-            "opacitySubUvTextureGuid": "",
-            "opacityTextureGuid": "",
-            "positionDuration": 1.0,
-            "rotationAxis": [
-                0.0,
-                1.0,
-                0.0
-            ],
-            "rotationSpeed": 0.0,
-            "roughness": 0.5,
-            "roughnessTextureGuid": "",
-            "shadingMode": 0,
-            "specularPower": 32.0,
-            "specularStrength": 1.0,
-            "specularTextureGuid": "",
-            "startDelay": 0.0,
-            "twoSided": true,
-            "useColorTintOverTime": false,
-            "useEmissiveStrengthOverTime": true,
-            "useOpacityAsTransparency": false,
-            "useOpacityOverTime": true,
-            "usePositionOverTime": false,
-            "useScaleOverTime": true,
-            "uvDistortionSpeed": [
-                0.0,
-                0.0
-            ],
-            "uvDistortionStrength": [
-                0.0,
-                0.0
-            ],
-            "uvDistortionTextureGuid": "",
-            "uvScrollSpeed": [
-                0.0,
-                0.0
-            ],
-            "uvTiling": [
-                1.0,
-                1.0
-            ]
-        },
-        {
-            "blendMode": 1,
-            "colorTint": [
-                0.09803921729326248,
-                0.7568627595901489,
-                0.9764705896377563,
-                1.0
-            ],
-            "customParams0": [
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ],
-            "customParams1": [
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ],
-            "diffuseTextureGuid": "",
-            "duration": 0.23999999463558197,
-            "emissiveGradationTextureGuid": "064f7dc0-470d-4872-adb4-cf428c53107d",
+            "duration": 0.5,
+            "emissiveGradationTextureGuid": "",
             "emissiveStrength": 5.199999809265137,
             "emissiveTextureGuid": "a1258fe9-622e-4d0e-a721-a56dac158837",
             "enabled": true,
@@ -162,9 +42,9 @@
                 0.0
             ],
             "endScale": [
-                1.75,
-                1.75,
-                1.75
+                1.2999999523162842,
+                1.2999999523162842,
+                1.2999999523162842
             ],
             "flipbook": {
                 "columns": 1,
@@ -202,8 +82,9 @@
             "opacity": 0.949999988079071,
             "opacityGradationTextureGuid": "",
             "opacitySubUvTextureGuid": "",
-            "opacityTextureGuid": "a1258fe9-622e-4d0e-a721-a56dac158837",
+            "opacityTextureGuid": "76a7e73d-d857-455f-b980-8fab7b34c4a4",
             "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
             "rotationAxis": [
                 0.0,
                 1.0,
@@ -263,7 +144,7 @@
                 0.0
             ],
             "diffuseTextureGuid": "",
-            "duration": 0.25999999046325684,
+            "duration": 0.5,
             "emissiveGradationTextureGuid": "064f7dc0-470d-4872-adb4-cf428c53107d",
             "emissiveStrength": 4.440000057220459,
             "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
@@ -282,9 +163,9 @@
                 0.0
             ],
             "endScale": [
-                2.0,
-                2.0,
-                2.0
+                1.5,
+                1.5,
+                1.5
             ],
             "flipbook": {
                 "columns": 1,
@@ -310,9 +191,9 @@
                 0.0
             ],
             "localScale": [
-                0.5,
-                0.5,
-                0.5
+                0.6000000238418579,
+                0.6000000238418579,
+                0.6000000238418579
             ],
             "loop": true,
             "maskTextureGuid": "",
@@ -324,12 +205,13 @@
             "opacitySubUvTextureGuid": "",
             "opacityTextureGuid": "7da97d58-d96d-4f2c-b8fc-1660a19f747d",
             "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
             "rotationAxis": [
                 0.0,
                 1.0,
                 0.0
             ],
-            "rotationSpeed": 0.0,
+            "rotationSpeed": 100.0,
             "roughness": 0.5,
             "roughnessTextureGuid": "",
             "shadingMode": 0,
@@ -343,7 +225,7 @@
             "useOpacityAsTransparency": false,
             "useOpacityOverTime": true,
             "usePositionOverTime": false,
-            "useScaleOverTime": true,
+            "useScaleOverTime": false,
             "uvDistortionSpeed": [
                 0.0,
                 0.0

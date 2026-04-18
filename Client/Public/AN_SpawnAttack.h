@@ -21,6 +21,7 @@ private:
     Protocol::OBJECT_TYPE _spawnObjectType = Protocol::OBJECT_TYPE_SKILL_MONSTER_ATTACK;
     Collision_Preset _collisionPreset = Collision_Preset::Monster_Attack;
 
+    string _boneName = "";
     Vec3 _localOffset = Vec3(0.f, 1.0f, 1.5f);
     float _colliderRadius = 1.0f;
 
@@ -31,7 +32,9 @@ private:
     string _layerTag = "Layer_MonsterAttack";
 
 private:
-    static Vec3 Calculate_WorldSpawnPosition(Shared<Transform> transform, const Vec3& localOffset);
+    static Matrix Calculate_SpawnBasisMatrix(const FAnimNotifyContext& context, Shared<Transform> transform, const string& boneName);
+    static Vec3 Calculate_WorldSpawnPosition(const Matrix& basisMatrix, const Vec3& localOffset);
+    static Vec3 Calculate_ForwardFromBasis(const Matrix& basisMatrix);
 };
 
 NS_END

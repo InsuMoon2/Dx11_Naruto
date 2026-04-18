@@ -7,9 +7,19 @@
     0.170511,
     0.175,
     0.13742,
-    0.0
+    1.0
+  ],
+  "shadow_color": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
   ],
   "normal_strength": 3.0,
+  "blend_normal_strength": 1.0,
+  "mask_scale": 1.0,
+  "mask_threshold": 1.0,
+  "uneven_color_scale": 2.0,
   "blend_mode": 0,
   "textures": [],
   "source": {

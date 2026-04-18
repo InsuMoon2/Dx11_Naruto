@@ -168,6 +168,7 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["endEmissiveStrength"] = mesh.endEmissiveStrength;
         j["rotationAxis"] = { mesh.rotationAxis.x, mesh.rotationAxis.y, mesh.rotationAxis.z };
         j["rotationSpeed"] = mesh.rotationSpeed;
+        j["rotateInLocalSpace"] = mesh.rotateInLocalSpace;
         j["fresnelPower"] = mesh.fresnelPower;
         j["fresnelMultiplier"] = mesh.fresnelMultiplier;
         j["twoSided"] = mesh.twoSided;
@@ -335,6 +336,7 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("endEmissiveStrength")) mesh.endEmissiveStrength = j["endEmissiveStrength"];
         if (j.contains("rotationAxis")) mesh.rotationAxis = Vec3(j["rotationAxis"][0], j["rotationAxis"][1], j["rotationAxis"][2]);
         if (j.contains("rotationSpeed")) mesh.rotationSpeed = j["rotationSpeed"];
+        if (j.contains("rotateInLocalSpace")) mesh.rotateInLocalSpace = j["rotateInLocalSpace"];
         if (j.contains("fresnelPower")) mesh.fresnelPower = j["fresnelPower"];
         if (j.contains("fresnelMultiplier")) mesh.fresnelMultiplier = j["fresnelMultiplier"];
         if (j.contains("twoSided")) mesh.twoSided = j["twoSided"];

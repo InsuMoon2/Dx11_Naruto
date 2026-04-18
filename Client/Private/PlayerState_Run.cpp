@@ -4,6 +4,8 @@
 #include "InputComponent.h"
 #include "MovementComponent.h"
 #include "Model.h"
+#include "SkillComponent.h"
+#include "GameObject.h"
 
 PlayerState_Run::PlayerState_Run()
 {
@@ -63,6 +65,16 @@ void PlayerState_Run::Update(PlayerStateMachine* state, float timeDelta)
             state->Change_State(EPlayerState::Attack);
 
         return;
+    }
+
+    if (frame.shurikenDown)
+    {
+        auto skillCom = state->Get_Owner()->Get_Component<SkillComponent>();
+        if (skillCom && skillCom->Can_ActivateSubSkill(ESubSkillType::Shuriken))
+        {
+            state->Change_State(EPlayerState::Shuriken);
+            return;
+        }
     }
 
     movement->Apply_Command(cmd);

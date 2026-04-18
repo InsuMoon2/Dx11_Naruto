@@ -5,6 +5,7 @@
 #include "MovementComponent.h"
 #include "Model.h"
 #include "GameObject.h"
+#include "SkillComponent.h"
 
 PlayerState_Idle::PlayerState_Idle()
 {
@@ -53,6 +54,16 @@ void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
             state->Change_State(EPlayerState::Attack);
 
         return;
+    }
+
+    if (frame.shurikenDown)
+    {
+        auto skillCom = state->Get_Owner()->Get_Component<SkillComponent>();
+        if (skillCom && skillCom->Can_ActivateSubSkill(ESubSkillType::Shuriken))
+        {
+            state->Change_State(EPlayerState::Shuriken);
+            return;
+        }
     }
 
     if (input->Has_MoveInput())

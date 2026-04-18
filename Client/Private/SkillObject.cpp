@@ -72,6 +72,9 @@ HRESULT SkillObject::Initialize(void* arg)
         }
 
         CHECK_FAILED(Ready_Components(*desc), E_FAIL);
+
+        if (desc->ownerObject)
+            Set_Owner(desc->ownerObject);
     }
 
     else

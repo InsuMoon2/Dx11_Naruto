@@ -135,8 +135,8 @@ HRESULT Weapon::Render()
         CHECK_FAILED(_shader->Begin_Pass(0), E_FAIL);
         CHECK_FAILED(_model->Render(i), E_FAIL);
 
-        CHECK_FAILED(_shader->Begin_Pass(1), E_FAIL);
-        CHECK_FAILED(_model->Render(i), E_FAIL);
+        //CHECK_FAILED(_shader->Begin_Pass(1), E_FAIL);
+        //CHECK_FAILED(_model->Render(i), E_FAIL);
     }
 
     return S_OK;

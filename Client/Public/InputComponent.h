@@ -28,6 +28,8 @@ public:
 
         bool  wireDash = false;
 
+        bool  shurikenDown = false;
+
         bool  toggleWeaponDown = false;
 
         bool  replacementDown = false;

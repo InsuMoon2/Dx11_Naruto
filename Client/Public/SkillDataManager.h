@@ -17,8 +17,10 @@ public:
 
     void                Register_Skill_IconIndex(int32 skill_Id, uint32 iconSrvIndex);
     uint32              Get_SkillIconSrvIndex(int32 skill_Id) const;
+    const FSkillData*   Find_SkillByCategoryAndSlot(ESkillCategory category, int32 uiSlotIndex) const;
 
     void                Clear();
+
 
 private:
     umap<int32, FSkillData> _skillMap;

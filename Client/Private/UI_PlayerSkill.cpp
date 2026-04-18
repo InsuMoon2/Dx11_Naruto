@@ -55,6 +55,7 @@ void UI_PlayerSkill::Update(float timeDelta)
     if (!skillCom)
         return;
 
+    // Main Skill
     for (int i = 0; i < 2; ++i)
     {
         int skill_Id = skillCom->Get_EquippedSkillID(i);
@@ -73,6 +74,24 @@ void UI_PlayerSkill::Update(float timeDelta)
         _skillSlots[i]->Set_SrvIndex(iconSrvIndex);
         _skillSlots[i]->Set_CooldownRatio(skillCom->Get_CooldownRatio(i));
     }
+
+    // Sub Skill
+    for (int i = 0; i < 2; ++i)
+    {
+        const ESubSkillType subSkillType = static_cast<ESubSkillType>(i);
+        const int32 subSkill_ID = skillCom->Get_SubSkillID(subSkillType);
+        const FSkillData* subSkillData = GET_SINGLE(SkillDataManager)->Get_SkillData(subSkill_ID);
+
+        if (!subSkillData)
+        {
+            _subSkillSlot[i]->Set_CooldownRatio(0.f);
+            continue;
+        }
+
+        _subSkillSlot[i]->Set_SrvIndex(subSkillData->uiIconSrvIndex);
+        _subSkillSlot[i]->Set_CooldownRatio(skillCom->Get_SubSkillCooldownRatio(subSkillType));
+    }
+
 }
 
 void UI_PlayerSkill::On_WeaponTypeChanged(int32 weaponTypeIndex)

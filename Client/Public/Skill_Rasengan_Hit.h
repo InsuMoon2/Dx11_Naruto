@@ -11,7 +11,6 @@ class Skill_Rasengan_Hit : public SkillObject
 public:
     struct FHitDesc : public FSkillObjectDesc
     {
-        Shared<GameObject> damageCauser = nullptr;
     };
 
 public:
@@ -33,22 +32,18 @@ private:
     Character*  Find_HitCharacter(Shared<Collider> other);
 
     void        Process_MultiHit(Character* hitted, GameObject* targetKey);
-    void        Trigger_FinalHit(Character* character, GameObject* targetKey);
 
 private:
-    float       _baseScale = 1.0f;
-    float       _maxScale = 2.4f;
-    float       _scaleGrowSpeed = 2.8f;
+    float _baseDamage = 10.f;
+    float _finalDamage = 20.f;
 
-    float       _midHitLaunchUp = 4.5f;
+    float _midHitLaunchUp = 0.0f;
+    float _finalHitLaunchForce = 15.f;
 
-    // 터질 때
-    float       _finalBlastRadius = 2.5f;
-    float       _finalBlastLaunchPower = 140.f;
-    float       _finalBlastLaunchUp = 3.5f;
+    float _finalHitLaunchUp = 4.f;
 
-    // 터졌는지?
-    bool        _isFinalBlast = false;
+    int32 _currentHitStep = 0;
+    umap<GameObject*, int32> _lastAppliedStepByTarget;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

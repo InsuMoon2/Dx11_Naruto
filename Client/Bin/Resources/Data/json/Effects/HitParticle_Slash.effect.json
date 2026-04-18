@@ -1,0 +1,217 @@
+{
+    "autoPlay": true,
+    "effectName": "HitParticle",
+    "layers": [
+        {
+            "blendMode": 1,
+            "center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "colorTint": [
+                0.43928009271621704,
+                0.6309828162193298,
+                0.9964157938957214,
+                1.0
+            ],
+            "customParams0": [
+                0.30000001192092896,
+                1.6399999856948853,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "duration": 0.5,
+            "emissiveStrength": 3.6500000953674316,
+            "enabled": true,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "flipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "isLoop": false,
+            "kind": 0,
+            "layerName": "CoreHit",
+            "lifeTime": [
+                0.029999999329447746,
+                0.05000000074505806
+            ],
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                180.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "lockWorldOnSpawn": false,
+            "loop": false,
+            "maskTextureGuid": "",
+            "moveMode": 1,
+            "numInstances": 20,
+            "opacity": 0.7760000228881836,
+            "opacityTextureGuid": "",
+            "pivot": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "positionDuration": 1.0,
+            "range": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.20000000298023224,
+                0.07999999821186066
+            ],
+            "spawnHeight": 1.0,
+            "spawnInnerRadius": 0.05000000074505806,
+            "spawnRadius": 1.3799999952316284,
+            "spawnShape": 1,
+            "speed": [
+                2.0,
+                4.0
+            ],
+            "startDelay": 0.0,
+            "textureGuid": "6bdf42d5-3c70-42a5-967c-7e7706a49dd1",
+            "useColorTintOverTime": false,
+            "useOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useScaleOverTime": true
+        },
+        {
+            "baseEmissiveStrength": 2.369999885559082,
+            "baseFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "baseMaskTextureGuid": "",
+            "baseOpacity": 1.0,
+            "baseOpacityGradationTextureGuid": "",
+            "baseOpacityTextureGuid": "fe2a5a3b-0767-47fd-9be7-35aa07d36a78",
+            "baseTextureGuid": "7ff3e9e3-4413-431c-8f63-3c320e450a81",
+            "baseTint": [
+                0.4516128897666931,
+                0.711064875125885,
+                1.0,
+                1.0
+            ],
+            "billboardToCamera": true,
+            "blendMode": 1,
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "duration": -1.0,
+            "enabled": true,
+            "endBaseOpacity": 1.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endRingOpacity": 0.0,
+            "endScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "kind": 2,
+            "layerName": "Slash",
+            "localPosition": [
+                0.0,
+                0.10000000149011612,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                6.849999904632568,
+                0.5199999809265137,
+                1.0
+            ],
+            "loop": false,
+            "positionDuration": 1.0,
+            "renderMode": 1,
+            "ringEmissiveStrength": 1.0,
+            "ringFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "ringOpacity": 0.3499999940395355,
+            "ringOpacityGradationTextureGuid": "",
+            "ringOpacityTextureGuid": "",
+            "ringTextureGuid": "",
+            "ringTint": [
+                0.8500000238418579,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "startDelay": 0.0,
+            "useBaseOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useRing": false,
+            "useRingOpacityOverTime": false,
+            "useScaleOverTime": false
+        }
+    ],
+    "totalDuration": -1.0
+}

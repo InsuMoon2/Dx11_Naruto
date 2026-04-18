@@ -22,6 +22,7 @@
 #include "CollisionProxyActor.h"
 #include "SkySphereActor.h"
 
+
 Level_Konoha::Level_Konoha(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
 {
@@ -85,7 +86,6 @@ void Level_Konoha::Late_Update(float timeDelta)
     Level::Late_Update(timeDelta);
 
     Draw_StaticMeshRender();
-
 }
 
 HRESULT Level_Konoha::Render()
