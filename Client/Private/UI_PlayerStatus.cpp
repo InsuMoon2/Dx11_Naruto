@@ -8,6 +8,8 @@
 #include "UI_PlayerHP.h"
 #include "CombatStat.h"
 #include "GameObject_Factory.h"
+#include "SkillComponent.h"
+#include "SkillDataManager.h"
 
 REGISTER_GAMEOBJECT(UI_PlayerStatus, Protocol::OBJECT_TYPE_UI_PLAYER_STATUS)
 
@@ -23,6 +25,7 @@ UI_PlayerStatus::UI_PlayerStatus(const UI_PlayerStatus& rhs)
     _player.reset();
     _combat.reset();
     _hpBar = nullptr;
+    _ultimateSlot = nullptr;
 }
 
 HRESULT UI_PlayerStatus::Initialize_Prototype()
@@ -49,6 +52,30 @@ HRESULT UI_PlayerStatus::Initialize(void* arg)
     _hpBar->Set_FillRange(98.f / 512.f, 413.f / 512.f);
     _hpBar->Get_Transform()->Set_LocalPosition(53.5f, 25.2f, 0.f);
 
+    // 궁 슬롯
+    {
+        UI_SkillSlot::FSkillSlotDesc ultiDesc;
+        ultiDesc.posX = 0.f;
+        ultiDesc.posY = 0.f;
+        ultiDesc.sizeX = 82.f;
+        ultiDesc.sizeY = 82.f;
+        ultiDesc.zOrder = _zOrder + 0.02f;
+        ultiDesc.levelIndex = _levelIndex;
+
+        ultiDesc.baseSrvIndex = 0;
+        ultiDesc.maskSrvIndex = 1;
+        ultiDesc.iconSrvIndex = 0;
+        ultiDesc.textureComponentType = Protocol::COMPONENT_TYPE_TEXTURE_SKILL_ICON;
+
+        _ultimateSlot = Create_Child<UI_SkillSlot>(
+            Protocol::OBJECT_TYPE_UI_SKILL_SLOT,
+            EUILayer::HUD,
+            &ultiDesc);
+
+        CHECK_NULL(_ultimateSlot, E_FAIL);
+
+        _ultimateSlot->Get_Transform()->Set_LocalPosition(-157.7f, 4.6f, 0.f);
+    }
 
     return S_OK;
 }
@@ -69,6 +96,27 @@ void UI_PlayerStatus::Update(float timeDelta)
         return;
 
     _hpBar->Set_Ratio(combat->Get_HpRatio());
+
+    auto skill = _skill.lock();
+    if (!skill || !_ultimateSlot)
+        return;
+
+    const int32 ultimateSkill_ID = skill->Get_EquippedSkillID(2);
+    const FSkillData* ultimateSkillData =
+        GET_SINGLE(SkillDataManager)->Get_SkillData(ultimateSkill_ID);
+
+    if (!ultimateSkillData)
+    {
+        _ultimateSlot->Set_SrvIndex(0);
+        _ultimateSlot->Set_CooldownRatio(0.f);
+        return;
+    }
+
+    const uint32 iconSrvIndex =
+        GET_SINGLE(SkillDataManager)->Get_SkillIconSrvIndex(ultimateSkill_ID);
+
+    _ultimateSlot->Set_SrvIndex(iconSrvIndex);
+    _ultimateSlot->Set_CooldownRatio(skill->Get_CooldownRatio(2));
 }
 
 void UI_PlayerStatus::Late_Update(float timeDelta)
@@ -104,9 +152,15 @@ void UI_PlayerStatus::Bind_Player(Shared<Player> player)
     _player = player;
 
     if (player)
+    {
         _combat = player->Get_Component<CombatStat>();
+        _skill = player->Get_Component<SkillComponent>();
+    }
     else
+    {
         _combat.reset();
+        _skill.reset();
+    }
 }
 
 HRESULT UI_PlayerStatus::Ready_Components()

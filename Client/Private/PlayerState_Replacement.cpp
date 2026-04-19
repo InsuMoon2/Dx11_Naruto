@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "PlayerState_Replacement.h"
+
+#include "AttachedEffectObject.h"
 #include "PlayerStateMachine.h"
 #include "InputComponent.h"
 #include "MovementComponent.h"
@@ -31,6 +33,38 @@ static Vec3 Rotate_HorizontalDirectionY(const Vec3& dir, float degrees)
     return rotated;
 }
 
+static void Spawn_ReplacementEffectOnce(const Shared<GameObject>& owner, const Shared<Transform>& sourceTransform)
+{
+    if (!owner || !sourceTransform)
+        return;
+
+    AttachedEffectObject::FAttachedEffectObjectDesc effectDesc{};
+    effectDesc.effectAssetName = "Replacement";
+    effectDesc.loopOverride = false;
+
+    auto spawned = GAME->Clone_And_Add_GameObject(
+        ETOI(ELevelType::Static),
+        Protocol::OBJECT_TYPE_ATTACHED_EFFECT,
+        GAME->Current_Level(),
+        TEXT("Layer_Effect"),
+        &effectDesc);
+
+    auto attachedEffect = dynamic_pointer_cast<AttachedEffectObject>(spawned);
+    if (!attachedEffect)
+        return;
+
+    attachedEffect->Set_Owner(owner);
+
+    auto effectTransform = attachedEffect->Get_Transform();
+    if (!effectTransform)
+        return;
+
+    Vec3 effectPos = sourceTransform->Get_WorldPosition();
+    effectPos.y += 0.2f;
+
+    effectTransform->Set_WorldPosition(effectPos);
+}
+
 void PlayerState_Replacement::Enter(PlayerStateMachine* state)
 {
     if (!state)
@@ -46,6 +80,11 @@ void PlayerState_Replacement::Enter(PlayerStateMachine* state)
     if (!transform)
         return;
 
+    Vec3 effectPos = transform->Get_WorldPosition();
+    effectPos.y += 2.5f;
+
+    _requestedLandingEnd = false;
+
     input->Set_InputMode(EPlayerInputMode::LookOnly);
     movement->Set_OrientRotationToMovement(false);
     movement->Set_Velocity(Vec3::Zero);
@@ -55,7 +94,9 @@ void PlayerState_Replacement::Enter(PlayerStateMachine* state)
     transform->Set_WorldPosition(teleportPos);
 
     state->Set_PendingLandingDir(_landingDirection);
-    state->Play_AnimState(EPlayerState::JumpFall);
+    state->Play_AnimState(EPlayerState::Replacement);
+
+    Spawn_ReplacementEffectOnce(owner, transform);
 
     auto myPlayer = dynamic_pointer_cast<MyPlayer>(owner);
     if (myPlayer)
@@ -70,7 +111,6 @@ void PlayerState_Replacement::Enter(PlayerStateMachine* state)
         if (weapon)
             weapon->Set_ColliderActive(false);
     }
-
 }
 
 void PlayerState_Replacement::Update(PlayerStateMachine* state, float timeDelta)
@@ -80,32 +120,36 @@ void PlayerState_Replacement::Update(PlayerStateMachine* state, float timeDelta)
 
     auto movement = state->Get_Movement();
     auto input = state->Get_Input();
-
     if (!movement || !input)
         return;
 
-    if (movement)
+    auto cmd = state->Init_MoveCommand();
+    movement->Apply_Command(cmd);
+    movement->Update(timeDelta);
+
+    if (!movement->Is_OnGround())
+        return;
+
+    input->Set_InputMode(EPlayerInputMode::Normal);
+
+    if (!_requestedLandingEnd)
     {
-        auto cmd = state->Init_MoveCommand();
-        movement->Apply_Command(cmd);
-        movement->Update(timeDelta);
+        movement->Set_Velocity(Vec3::Zero);
+        state->Request_AnimStateEnd();
+        _requestedLandingEnd = true;
     }
 
-    if (movement->Is_OnGround())
+    if (input->Has_MoveInput())
     {
-        if (input->Has_MoveInput())
-        {
-            state->Change_State(EPlayerState::Run);
-            return;
-
-        }
-        else
-        {
-            state->Change_State(EPlayerState::Idle);
-            return;
-        }
+        state->Change_State(EPlayerState::Run);
+        return;
     }
 
+    if (state->Is_AnimSequenceFinished())
+    {
+        state->Change_State(EPlayerState::Idle);
+        return;
+    }
 }
 
 void PlayerState_Replacement::Exit(PlayerStateMachine* state)
@@ -124,6 +168,7 @@ void PlayerState_Replacement::Exit(PlayerStateMachine* state)
 
     _teleportDestination = Vec3::Zero;
     _landingDirection = Vec3::Forward;
+    _requestedLandingEnd = false;
     _isPrepared = false;
 }
 

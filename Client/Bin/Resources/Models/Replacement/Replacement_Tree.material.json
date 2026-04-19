@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_EFF_Tree_A_01",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/Wood/T_EFF_Tree_01_BC.png"
+        }
+      ]
+    }
+  ]
+}

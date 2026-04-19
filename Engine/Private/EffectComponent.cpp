@@ -109,7 +109,8 @@ void EffectComponent::Update(float timeDelta)
         {
             layer.obj->Update(timeDelta);
 
-            if (layer.desc.base.kind == EEffectLayerKind::Mesh)
+            if (layer.desc.base.kind == EEffectLayerKind::Mesh ||
+                layer.desc.base.kind == EEffectLayerKind::SkeletalMesh)
             {
                 auto meshObj = static_pointer_cast<EffectMeshObject>(layer.obj);
                 if (meshObj)
@@ -232,7 +233,8 @@ void EffectComponent::Set_ForceVisiblePreview(bool enabled)
 
     for (auto& layer : _layers)
     {
-        if (layer.desc.base.kind != EEffectLayerKind::Mesh || !layer.obj)
+        if ((layer.desc.base.kind != EEffectLayerKind::Mesh &&
+            layer.desc.base.kind != EEffectLayerKind::SkeletalMesh) || !layer.obj)
             continue;
 
         auto meshObj = dynamic_pointer_cast<EffectMeshObject>(layer.obj);
@@ -317,7 +319,8 @@ bool EffectComponent::Apply_LayerDesc(int32 layerIndex, const FEffectLayerDesc& 
         return SUCCEEDED(Create_LayerObject(layer));
     }
 
-    if (layer.desc.base.kind == EEffectLayerKind::Mesh)
+    if (layer.desc.base.kind == EEffectLayerKind::Mesh ||
+        layer.desc.base.kind == EEffectLayerKind::SkeletalMesh)
     {
         auto meshObj = dynamic_pointer_cast<EffectMeshObject>(layer.obj);
         if (meshObj)
@@ -369,7 +372,8 @@ HRESULT EffectComponent::Create_LayerObject(FActiveLayer& layer)
     if (!layer.desc.base.enabled)
         return S_FALSE; // 스킵
 
-    if (layer.desc.base.kind == EEffectLayerKind::Mesh)
+    if (layer.desc.base.kind == EEffectLayerKind::Mesh ||
+        layer.desc.base.kind == EEffectLayerKind::SkeletalMesh)
     {
         EffectMeshObject::FEffectMeshDesc meshDesc{};
         meshDesc.name = Utils::ToWString(layer.desc.base.layerName);
@@ -531,7 +535,8 @@ void EffectComponent::Apply_LayerTransformInternal(FActiveLayer& layer)
 
     // Mesh 레이어는 런타임/오너 오프셋까지 합쳐진 현재 자세를 회전 기준으로 다시 잡아야
     // Local Space / Owner Space 회전이 에디터 값과 동일한 기준으로 유지된다.
-    if (layer.desc.base.kind == EEffectLayerKind::Mesh)
+    if (layer.desc.base.kind == EEffectLayerKind::Mesh ||
+        layer.desc.base.kind == EEffectLayerKind::SkeletalMesh)
     {
         auto meshObj = dynamic_pointer_cast<EffectMeshObject>(layer.obj);
         if (meshObj)
@@ -645,7 +650,8 @@ void EffectComponent::Apply_LayerAnimatedMaterialInternal(FActiveLayer& layer)
 
     const float layerProgress = Resolve_LayerProgress(layer);
 
-    if (layer.desc.base.kind == EEffectLayerKind::Mesh)
+    if (layer.desc.base.kind == EEffectLayerKind::Mesh ||
+        layer.desc.base.kind == EEffectLayerKind::SkeletalMesh)
     {
         auto meshObj = dynamic_pointer_cast<EffectMeshObject>(layer.obj);
         if (!meshObj)

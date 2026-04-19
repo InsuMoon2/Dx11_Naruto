@@ -330,12 +330,14 @@ void SkillComponent::Apply_WeaponSkillSet(EWeaponType weaponType)
     case EWeaponType::BigSwrod:
         Set_EquippedSkill_ID(0, ETOI(ESkillType::Chidori));
         Set_EquippedSkill_ID(1, ETOI(ESkillType::FireBall));
+        Set_EquippedSkill_ID(2, ETOI(ESkillType::Kirin));
         break;
 
     case EWeaponType::Hand:
     default:
         Set_EquippedSkill_ID(0, ETOI(ESkillType::Rasengan));
         Set_EquippedSkill_ID(1, ETOI(ESkillType::Rasen_Shuriken));
+        Set_EquippedSkill_ID(2, ETOI(ESkillType::ShinsuSenju));
         break;
     }
 }
@@ -390,7 +392,7 @@ void SkillComponent::Destroy_AllStretchingMeshes()
 json SkillComponent::To_Json() const
 {
     json root = Component::To_Json();
-    root["slotSkillID"] = { _slotSkill_Id[0], _slotSkill_Id[1] };
+    root["slotSkillID"] = { _slotSkill_Id[0], _slotSkill_Id[1], _slotSkill_Id[2] };
 
     return root;
 }
@@ -399,10 +401,19 @@ void SkillComponent::From_Json(const json& data)
 {
     Component::From_Json(data);
 
-    if (data.contains("slotSkillID") && data["slotSkillID"].is_array() && data["slotSkillID"].size() >= 2)
+    if (!data.contains("slotSkillID"))
+        return;
+
+    const auto& slotData = data["slotSkillID"];
+
+    for (int32 i = 0; i < SLOT_COUNT; ++i)
     {
-        _slotSkill_Id[0] = data["slotSkillID"][0].get<int>();
-        _slotSkill_Id[1] = data["slotSkillID"][1].get<int>();
+        if (i < static_cast<int32>(slotData.size()))
+            _slotSkill_Id[i] = slotData[i].get<int32>();
+        else
+            _slotSkill_Id[i] = 0;
+
+        _cooldownRemain[i] = 0.f;
     }
 }
 

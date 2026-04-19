@@ -34,8 +34,8 @@ public:
 
         bool  replacementDown = false;
 
-        bool  useSkillDown[2] = { false, false };
-        bool  useSkillPress[2] = {};
+        bool  useSkillDown[3] = { false, false, false };
+        bool  useSkillPress[3] = {};
     };
 
     // 입력 제어용
@@ -93,8 +93,6 @@ public:
 
 public:
     void                Update_Input(float timeDelta);
-    void                Reset_FrameInput();
-
 
 public:
     const FInputFrame&  Get_Frame() const { return _frame; }

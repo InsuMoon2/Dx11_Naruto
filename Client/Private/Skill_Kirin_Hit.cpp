@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "Skill_Jinsutansu.h"
+#include "Skill_Kirin_Hit.h"
 #include "GameObject_Factory.h"
 #include "GameObject.h"
 #include "Collider.h"
@@ -7,23 +7,23 @@
 #include "MyPlayer.h"
 #include "EffectComponent.h"
 
-REGISTER_GAMEOBJECT_CATEGORY(Skill_Jinsutansu, Protocol::OBJECT_TYPE_JINSUTANSU, "SkillSpawn");
+REGISTER_GAMEOBJECT_CATEGORY(Skill_Kirin_Hit, Protocol::OBJECT_TYPE_KIRIN, "SkillSpawn");
 
-Skill_Jinsutansu::Skill_Jinsutansu(ComPtr<Device> device, ComPtr<DeviceContext> context)
+Skill_Kirin_Hit::Skill_Kirin_Hit(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : SkillObject(device, context)
 {
 }
 
-Skill_Jinsutansu::Skill_Jinsutansu(const Skill_Jinsutansu& rhs)
+Skill_Kirin_Hit::Skill_Kirin_Hit(const Skill_Kirin_Hit& rhs)
     : SkillObject(rhs)
 {
 }
 
-HRESULT Skill_Jinsutansu::Initialize_Prototype()
+HRESULT Skill_Kirin_Hit::Initialize_Prototype()
 {
     _lifetime        = 15.f;
     _maxHitCount     = 6;
-    _hitInterval     = 0.1f;   
+    _hitInterval     = 0.1f;
     _hitLaunchForce  = 0.f; 
 
     _colliderRadius  = 0.3f;
@@ -32,20 +32,23 @@ HRESULT Skill_Jinsutansu::Initialize_Prototype()
     return SkillObject::Initialize_Prototype();
 }
 
-HRESULT Skill_Jinsutansu::Initialize(void* arg)
+HRESULT Skill_Kirin_Hit::Initialize(void* arg)
 {
     CHECK_FAILED(SkillObject::Initialize(arg), E_FAIL);
 
     EffectComponent::FPlayDesc playDesc{};
-    playDesc.effectAssetName = "Rasengan";
-    playDesc.loopOverride = true;
+    playDesc.effectAssetName = "Kirin_Hit";
+    playDesc.loopOverride = false;
+
+    _collider->Set_IsActive(false);
 
     CHECK_FAILED(_effectCom->Play_Effect(playDesc), E_FAIL);
+
 
     return S_OK;
 }
 
-void Skill_Jinsutansu::Update(float timeDelta)
+void Skill_Kirin_Hit::Update(float timeDelta)
 {
     SkillObject::Update(timeDelta);
 
@@ -55,7 +58,7 @@ void Skill_Jinsutansu::Update(float timeDelta)
 
 }
 
-void Skill_Jinsutansu::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
+void Skill_Kirin_Hit::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
 {
     SkillObject::OnBeginOverlap(self, other);
 
@@ -74,7 +77,7 @@ void Skill_Jinsutansu::OnBeginOverlap(Shared<Collider> self, Shared<Collider> ot
     Process_MultiHit(character, otherOwner.get());
 }
 
-void Skill_Jinsutansu::OnStayOverlap(Shared<Collider> self, Shared<Collider> other)
+void Skill_Kirin_Hit::OnStayOverlap(Shared<Collider> self, Shared<Collider> other)
 {
     SkillObject::OnStayOverlap(self, other);
 
@@ -91,7 +94,7 @@ void Skill_Jinsutansu::OnStayOverlap(Shared<Collider> self, Shared<Collider> oth
     Process_MultiHit(character, otherOwner.get());
 }
 
-void Skill_Jinsutansu::OnEndOverlap(Shared<Collider> self, Shared<Collider> other)
+void Skill_Kirin_Hit::OnEndOverlap(Shared<Collider> self, Shared<Collider> other)
 {
     SkillObject::OnEndOverlap(self, other);
 
@@ -105,7 +108,7 @@ void Skill_Jinsutansu::OnEndOverlap(Shared<Collider> self, Shared<Collider> othe
     _hitCooldowns.erase(otherOwner.get());
 }
 
-Character* Skill_Jinsutansu::Find_HitCharacter(Shared<Collider> other)
+Character* Skill_Kirin_Hit::Find_HitCharacter(Shared<Collider> other)
 {
     if (!other || Is_Destroy())
         return nullptr;
@@ -120,7 +123,7 @@ Character* Skill_Jinsutansu::Find_HitCharacter(Shared<Collider> other)
     return dynamic_cast<Character*>(otherOwner.get());
 }
 
-void Skill_Jinsutansu::Process_MultiHit(Character* hitted, GameObject* targetKey)
+void Skill_Kirin_Hit::Process_MultiHit(Character* hitted, GameObject* targetKey)
 {
     CHECK_NULL(hitted);
     CHECK_NULL(targetKey);
@@ -138,13 +141,13 @@ void Skill_Jinsutansu::Process_MultiHit(Character* hitted, GameObject* targetKey
     _hitCount++;
 }
 
-Shared<GameObject> Skill_Jinsutansu::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
+Shared<GameObject> Skill_Kirin_Hit::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {
-    auto instance = make_shared<Skill_Jinsutansu>(device, context);
+    auto instance = make_shared<Skill_Kirin_Hit>(device, context);
 
     if (FAILED(instance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Create : Skill_Jinsutansu");
+        MSG_BOX("Failed to Create : Skill_Kirin_Hit");
 
         return nullptr;
     }
@@ -152,13 +155,13 @@ Shared<GameObject> Skill_Jinsutansu::Create(ComPtr<Device> device, ComPtr<Device
     return instance;
 }
 
-Shared<GameObject> Skill_Jinsutansu::Clone(void* arg)
+Shared<GameObject> Skill_Kirin_Hit::Clone(void* arg)
 {
-    auto clone = make_shared<Skill_Jinsutansu>(*this);
+    auto clone = make_shared<Skill_Kirin_Hit>(*this);
 
     if (FAILED(clone->Initialize(arg)))
     {
-        MSG_BOX("Failed to Clone : Skill_Jinsutansu");
+        MSG_BOX("Failed to Clone : Skill_Kirin_Hit");
 
         return nullptr;
     }
@@ -166,7 +169,7 @@ Shared<GameObject> Skill_Jinsutansu::Clone(void* arg)
     return clone;
 }
 
-void Skill_Jinsutansu::Free()
+void Skill_Kirin_Hit::Free()
 {
     SkillObject::Free();
 }

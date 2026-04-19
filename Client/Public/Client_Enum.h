@@ -61,7 +61,7 @@ namespace Client
         Skill_Chidori,          Skill_Chidori_Air,      Skill_Chidori_End, Skill_Chidori_Landed, Skill_Chidori_Air_End,
         Skill_FireBall,         Skill_FireBall_Air,
 
-        Skill_Ulti1, Skill_Ulti2,
+        Skill_ShinsuSenju,      Skill_Kirin,
 
         Dead,
         END
@@ -120,7 +120,11 @@ namespace Client
     enum class ESkillCategory
     {
         Main,   // 메인 스킬 -> 궁도 넣어야하는데
+        Ultimate,
+
         Sub,    // 서브 -> 바꿔치기, 수리검
+
+
         END
     };
 

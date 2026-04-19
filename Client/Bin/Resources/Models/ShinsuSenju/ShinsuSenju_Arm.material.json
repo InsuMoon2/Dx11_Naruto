@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ITM_WoodArm_Short_VerticalDissolve_A",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_ITM_WoodArm_BC.png"
+        }
+      ]
+    }
+  ]
+}

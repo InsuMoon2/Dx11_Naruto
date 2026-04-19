@@ -3,6 +3,9 @@
     "effectName": "Rasengan_Hit(2)",
     "layers": [
         {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
             "blendMode": 1,
             "colorTint": [
                 0.09784047305583954,
@@ -76,6 +79,66 @@
             ],
             "loop": false,
             "maskTextureGuid": "",
+            "materialOverrides": [
+                {
+                    "blendMode": 1,
+                    "colorTint": [
+                        0.09784047305583954,
+                        0.7580006122589111,
+                        0.9749103784561157,
+                        1.0
+                    ],
+                    "diffuseTextureGuid": "",
+                    "emissiveGradationTextureGuid": "",
+                    "emissiveStrength": 4.440000057220459,
+                    "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+                    "enabled": true,
+                    "flipbook": {
+                        "columns": 2,
+                        "enabled": true,
+                        "endFrame": -1,
+                        "fps": 2.0,
+                        "loop": true,
+                        "rows": 2,
+                        "startFrame": 0
+                    },
+                    "fresnelMultiplier": 1.0,
+                    "fresnelPower": 0.0,
+                    "maskTextureGuid": "",
+                    "materialName": "WorldGridMaterial",
+                    "normalStrength": 1.0,
+                    "normalTextureGuid": "",
+                    "opacity": 0.8999999761581421,
+                    "opacityGradationTextureGuid": "",
+                    "opacitySubUvTextureGuid": "0a850b83-0091-4109-bff1-3bda17ae7de8",
+                    "opacityTextureGuid": "60a61031-61c8-4bd5-911c-d52984c8f4e6",
+                    "roughness": 0.5,
+                    "roughnessTextureGuid": "",
+                    "shadingMode": 0,
+                    "specularPower": 32.0,
+                    "specularStrength": 1.0,
+                    "specularTextureGuid": "",
+                    "twoSided": true,
+                    "useOpacityAsTransparency": false,
+                    "uvDistortionSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionStrength": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionTextureGuid": "",
+                    "uvScrollSpeed": [
+                        1.600000023841858,
+                        0.0
+                    ],
+                    "uvTiling": [
+                        1.0,
+                        1.0
+                    ]
+                }
+            ],
             "modelGuid": "db784895-3a6b-4c62-a545-9d3935c49b11",
             "normalStrength": 1.0,
             "normalTextureGuid": "",
@@ -124,6 +187,9 @@
             ]
         },
         {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
             "blendMode": 1,
             "colorTint": [
                 0.09784047305583954,
@@ -197,6 +263,66 @@
             ],
             "loop": false,
             "maskTextureGuid": "",
+            "materialOverrides": [
+                {
+                    "blendMode": 1,
+                    "colorTint": [
+                        0.09784047305583954,
+                        0.7580006122589111,
+                        0.9749103784561157,
+                        1.0
+                    ],
+                    "diffuseTextureGuid": "",
+                    "emissiveGradationTextureGuid": "",
+                    "emissiveStrength": 4.440000057220459,
+                    "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+                    "enabled": true,
+                    "flipbook": {
+                        "columns": 2,
+                        "enabled": true,
+                        "endFrame": -1,
+                        "fps": 2.0,
+                        "loop": true,
+                        "rows": 2,
+                        "startFrame": 0
+                    },
+                    "fresnelMultiplier": 1.0,
+                    "fresnelPower": 0.0,
+                    "maskTextureGuid": "",
+                    "materialName": "WorldGridMaterial",
+                    "normalStrength": 1.0,
+                    "normalTextureGuid": "",
+                    "opacity": 1.0,
+                    "opacityGradationTextureGuid": "",
+                    "opacitySubUvTextureGuid": "0a850b83-0091-4109-bff1-3bda17ae7de8",
+                    "opacityTextureGuid": "60a61031-61c8-4bd5-911c-d52984c8f4e6",
+                    "roughness": 0.5,
+                    "roughnessTextureGuid": "",
+                    "shadingMode": 0,
+                    "specularPower": 32.0,
+                    "specularStrength": 1.0,
+                    "specularTextureGuid": "",
+                    "twoSided": true,
+                    "useOpacityAsTransparency": false,
+                    "uvDistortionSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionStrength": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionTextureGuid": "",
+                    "uvScrollSpeed": [
+                        1.2000000476837158,
+                        0.0
+                    ],
+                    "uvTiling": [
+                        1.0,
+                        1.0
+                    ]
+                }
+            ],
             "modelGuid": "db784895-3a6b-4c62-a545-9d3935c49b11",
             "normalStrength": 1.0,
             "normalTextureGuid": "",
@@ -245,6 +371,9 @@
             ]
         },
         {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
             "blendMode": 1,
             "colorTint": [
                 0.09784047305583954,
@@ -318,6 +447,66 @@
             ],
             "loop": false,
             "maskTextureGuid": "",
+            "materialOverrides": [
+                {
+                    "blendMode": 1,
+                    "colorTint": [
+                        0.09784047305583954,
+                        0.7580006122589111,
+                        0.9749103784561157,
+                        1.0
+                    ],
+                    "diffuseTextureGuid": "",
+                    "emissiveGradationTextureGuid": "",
+                    "emissiveStrength": 4.440000057220459,
+                    "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+                    "enabled": true,
+                    "flipbook": {
+                        "columns": 2,
+                        "enabled": true,
+                        "endFrame": -1,
+                        "fps": 2.0,
+                        "loop": true,
+                        "rows": 2,
+                        "startFrame": 0
+                    },
+                    "fresnelMultiplier": 1.0,
+                    "fresnelPower": 0.0,
+                    "maskTextureGuid": "",
+                    "materialName": "WorldGridMaterial",
+                    "normalStrength": 1.0,
+                    "normalTextureGuid": "",
+                    "opacity": 1.0,
+                    "opacityGradationTextureGuid": "",
+                    "opacitySubUvTextureGuid": "0a850b83-0091-4109-bff1-3bda17ae7de8",
+                    "opacityTextureGuid": "60a61031-61c8-4bd5-911c-d52984c8f4e6",
+                    "roughness": 0.5,
+                    "roughnessTextureGuid": "",
+                    "shadingMode": 0,
+                    "specularPower": 32.0,
+                    "specularStrength": 1.0,
+                    "specularTextureGuid": "",
+                    "twoSided": true,
+                    "useOpacityAsTransparency": false,
+                    "uvDistortionSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionStrength": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionTextureGuid": "",
+                    "uvScrollSpeed": [
+                        1.2000000476837158,
+                        0.0
+                    ],
+                    "uvTiling": [
+                        1.0,
+                        1.0
+                    ]
+                }
+            ],
             "modelGuid": "db784895-3a6b-4c62-a545-9d3935c49b11",
             "normalStrength": 1.0,
             "normalTextureGuid": "",
@@ -366,6 +555,9 @@
             ]
         },
         {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
             "blendMode": 1,
             "colorTint": [
                 0.09784047305583954,
@@ -439,6 +631,66 @@
             ],
             "loop": false,
             "maskTextureGuid": "",
+            "materialOverrides": [
+                {
+                    "blendMode": 1,
+                    "colorTint": [
+                        0.09784047305583954,
+                        0.7580006122589111,
+                        0.9749103784561157,
+                        1.0
+                    ],
+                    "diffuseTextureGuid": "",
+                    "emissiveGradationTextureGuid": "",
+                    "emissiveStrength": 4.440000057220459,
+                    "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+                    "enabled": true,
+                    "flipbook": {
+                        "columns": 2,
+                        "enabled": true,
+                        "endFrame": -1,
+                        "fps": 2.0,
+                        "loop": true,
+                        "rows": 2,
+                        "startFrame": 0
+                    },
+                    "fresnelMultiplier": 1.0,
+                    "fresnelPower": 0.0,
+                    "maskTextureGuid": "",
+                    "materialName": "WorldGridMaterial",
+                    "normalStrength": 1.0,
+                    "normalTextureGuid": "",
+                    "opacity": 1.0,
+                    "opacityGradationTextureGuid": "",
+                    "opacitySubUvTextureGuid": "0a850b83-0091-4109-bff1-3bda17ae7de8",
+                    "opacityTextureGuid": "60a61031-61c8-4bd5-911c-d52984c8f4e6",
+                    "roughness": 0.5,
+                    "roughnessTextureGuid": "",
+                    "shadingMode": 0,
+                    "specularPower": 32.0,
+                    "specularStrength": 1.0,
+                    "specularTextureGuid": "",
+                    "twoSided": true,
+                    "useOpacityAsTransparency": false,
+                    "uvDistortionSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionStrength": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionTextureGuid": "",
+                    "uvScrollSpeed": [
+                        1.2000000476837158,
+                        0.0
+                    ],
+                    "uvTiling": [
+                        1.0,
+                        1.0
+                    ]
+                }
+            ],
             "modelGuid": "db784895-3a6b-4c62-a545-9d3935c49b11",
             "normalStrength": 1.0,
             "normalTextureGuid": "",
@@ -487,6 +739,9 @@
             ]
         },
         {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
             "blendMode": 1,
             "colorTint": [
                 0.09784047305583954,
@@ -560,6 +815,66 @@
             ],
             "loop": false,
             "maskTextureGuid": "",
+            "materialOverrides": [
+                {
+                    "blendMode": 1,
+                    "colorTint": [
+                        0.09784047305583954,
+                        0.7580006122589111,
+                        0.9749103784561157,
+                        1.0
+                    ],
+                    "diffuseTextureGuid": "",
+                    "emissiveGradationTextureGuid": "",
+                    "emissiveStrength": 4.440000057220459,
+                    "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+                    "enabled": true,
+                    "flipbook": {
+                        "columns": 2,
+                        "enabled": true,
+                        "endFrame": -1,
+                        "fps": 2.0,
+                        "loop": true,
+                        "rows": 2,
+                        "startFrame": 0
+                    },
+                    "fresnelMultiplier": 1.0,
+                    "fresnelPower": 0.0,
+                    "maskTextureGuid": "",
+                    "materialName": "WorldGridMaterial",
+                    "normalStrength": 1.0,
+                    "normalTextureGuid": "",
+                    "opacity": 1.0,
+                    "opacityGradationTextureGuid": "",
+                    "opacitySubUvTextureGuid": "0a850b83-0091-4109-bff1-3bda17ae7de8",
+                    "opacityTextureGuid": "60a61031-61c8-4bd5-911c-d52984c8f4e6",
+                    "roughness": 0.5,
+                    "roughnessTextureGuid": "",
+                    "shadingMode": 0,
+                    "specularPower": 32.0,
+                    "specularStrength": 1.0,
+                    "specularTextureGuid": "",
+                    "twoSided": true,
+                    "useOpacityAsTransparency": false,
+                    "uvDistortionSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionStrength": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionTextureGuid": "",
+                    "uvScrollSpeed": [
+                        1.2000000476837158,
+                        0.0
+                    ],
+                    "uvTiling": [
+                        1.0,
+                        1.0
+                    ]
+                }
+            ],
             "modelGuid": "db784895-3a6b-4c62-a545-9d3935c49b11",
             "normalStrength": 1.0,
             "normalTextureGuid": "",
@@ -608,6 +923,9 @@
             ]
         },
         {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
             "blendMode": 1,
             "colorTint": [
                 0.09803921729326248,
@@ -681,6 +999,66 @@
             ],
             "loop": false,
             "maskTextureGuid": "",
+            "materialOverrides": [
+                {
+                    "blendMode": 1,
+                    "colorTint": [
+                        0.09803921729326248,
+                        0.5882353186607361,
+                        1.0,
+                        1.0
+                    ],
+                    "diffuseTextureGuid": "",
+                    "emissiveGradationTextureGuid": "",
+                    "emissiveStrength": 4.440000057220459,
+                    "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+                    "enabled": true,
+                    "flipbook": {
+                        "columns": 2,
+                        "enabled": true,
+                        "endFrame": -1,
+                        "fps": 2.0,
+                        "loop": true,
+                        "rows": 2,
+                        "startFrame": 0
+                    },
+                    "fresnelMultiplier": 1.0,
+                    "fresnelPower": 0.0,
+                    "maskTextureGuid": "",
+                    "materialName": "WorldGridMaterial",
+                    "normalStrength": 1.0,
+                    "normalTextureGuid": "",
+                    "opacity": 1.0,
+                    "opacityGradationTextureGuid": "",
+                    "opacitySubUvTextureGuid": "0a850b83-0091-4109-bff1-3bda17ae7de8",
+                    "opacityTextureGuid": "60a61031-61c8-4bd5-911c-d52984c8f4e6",
+                    "roughness": 0.5,
+                    "roughnessTextureGuid": "",
+                    "shadingMode": 0,
+                    "specularPower": 32.0,
+                    "specularStrength": 1.0,
+                    "specularTextureGuid": "",
+                    "twoSided": true,
+                    "useOpacityAsTransparency": false,
+                    "uvDistortionSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionStrength": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionTextureGuid": "",
+                    "uvScrollSpeed": [
+                        1.2000000476837158,
+                        0.0
+                    ],
+                    "uvTiling": [
+                        1.0,
+                        1.0
+                    ]
+                }
+            ],
             "modelGuid": "db784895-3a6b-4c62-a545-9d3935c49b11",
             "normalStrength": 1.0,
             "normalTextureGuid": "",

@@ -66,9 +66,11 @@ void InputComponent::Update_Input(float timeDelta)
 
     const bool rawSkill1Down = INPUT->KeyDown(KEY_TYPE::KEY_1);
     const bool rawSkill2Down = INPUT->KeyDown(KEY_TYPE::KEY_2);
+    const bool rawSkill3Down = INPUT->KeyDown(KEY_TYPE::KEY_3);
 
     const bool rawSkill1Press = INPUT->KeyPress(KEY_TYPE::KEY_1);
     const bool rawSkill2Press = INPUT->KeyPress(KEY_TYPE::KEY_2);
+    const bool rawSkill3Press = INPUT->KeyPress(KEY_TYPE::KEY_3);
 
     const bool rawCtrlDown = INPUT->KeyDown(KEY_TYPE::LCTRL);
     const bool rawCtrlPress = INPUT->KeyPress(KEY_TYPE::LCTRL);
@@ -128,9 +130,11 @@ void InputComponent::Update_Input(float timeDelta)
     {
         _frame.useSkillDown[0] = rawSkill1Down;
         _frame.useSkillDown[1] = rawSkill2Down;
+        _frame.useSkillDown[2] = rawSkill3Down;
 
         _frame.useSkillPress[0] = rawSkill1Press;
         _frame.useSkillPress[1] = rawSkill2Press;
+        _frame.useSkillPress[2] = rawSkill3Press;
     }
 
     if (_inputGate.allowSuperJump)
@@ -164,16 +168,6 @@ void InputComponent::Update_Input(float timeDelta)
     {
         _frame.toggleWeaponDown = rawToggleWeaponDown;
     }
-}
-
-void InputComponent::Reset_FrameInput()
-{
-    _frame.jumpDown = false;
-    _frame.dashDown = false;
-    _frame.superJumpUp = false;
-
-    _frame.useSkillDown[0] = false;
-    _frame.useSkillDown[1] = false;
 }
 
 bool InputComponent::Has_MoveInput() const

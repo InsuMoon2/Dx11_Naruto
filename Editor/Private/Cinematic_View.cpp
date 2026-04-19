@@ -808,6 +808,8 @@ void Cinematic_View::Handle_PlaybackShortcut()
 {
     if (!_isFocused) return;
 
+    const bool isSavePopupOpen = ImGui::IsPopupOpen("Save Cinematic");
+
     if (ImGui::IsKeyPressed(ImGuiKey_Space))
     {
         if (_isPlaying)
@@ -825,7 +827,7 @@ void Cinematic_View::Handle_PlaybackShortcut()
         }
     }
 
-    if (ImGui::IsKeyPressed(ImGuiKey_K) && !_isPlaying)
+    if (!isSavePopupOpen && ImGui::IsKeyPressed(ImGuiKey_K) && !_isPlaying)
         Capture_KeyAtCurrentFrame();
 
     if (ImGui::IsKeyPressed(ImGuiKey_LeftArrow) && !_isPlaying)

@@ -1,0 +1,320 @@
+{
+    "boneCount": 52,
+    "bones": [
+        {
+            "depth": 0,
+            "index": 0,
+            "name": "RootNode",
+            "parentIndex": -1
+        },
+        {
+            "depth": 1,
+            "index": 1,
+            "name": "SK_WEP_Eff_Kirin_01",
+            "parentIndex": 0
+        },
+        {
+            "depth": 2,
+            "index": 2,
+            "name": "Root_01",
+            "parentIndex": 1
+        },
+        {
+            "depth": 3,
+            "index": 3,
+            "name": "BONE_00",
+            "parentIndex": 2
+        },
+        {
+            "depth": 4,
+            "index": 4,
+            "name": "BONE_01",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 5,
+            "name": "BONE_02",
+            "parentIndex": 4
+        },
+        {
+            "depth": 6,
+            "index": 6,
+            "name": "BONE_03",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 7,
+            "name": "BONE_04",
+            "parentIndex": 6
+        },
+        {
+            "depth": 8,
+            "index": 8,
+            "name": "BONE_05",
+            "parentIndex": 7
+        },
+        {
+            "depth": 9,
+            "index": 9,
+            "name": "BONE_06",
+            "parentIndex": 8
+        },
+        {
+            "depth": 10,
+            "index": 10,
+            "name": "BONE_07",
+            "parentIndex": 9
+        },
+        {
+            "depth": 11,
+            "index": 11,
+            "name": "BONE_08",
+            "parentIndex": 10
+        },
+        {
+            "depth": 6,
+            "index": 12,
+            "name": "BONE_09",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 13,
+            "name": "BONE_10",
+            "parentIndex": 12
+        },
+        {
+            "depth": 8,
+            "index": 14,
+            "name": "BONE_11",
+            "parentIndex": 13
+        },
+        {
+            "depth": 6,
+            "index": 15,
+            "name": "BONE_015",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 16,
+            "name": "BONE_016",
+            "parentIndex": 15
+        },
+        {
+            "depth": 8,
+            "index": 17,
+            "name": "BONE_017",
+            "parentIndex": 16
+        },
+        {
+            "depth": 4,
+            "index": 18,
+            "name": "BONE_012",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 19,
+            "name": "BONE_013",
+            "parentIndex": 18
+        },
+        {
+            "depth": 6,
+            "index": 20,
+            "name": "BONE_014",
+            "parentIndex": 19
+        },
+        {
+            "depth": 7,
+            "index": 21,
+            "name": "BONE_029",
+            "parentIndex": 20
+        },
+        {
+            "depth": 8,
+            "index": 22,
+            "name": "BONE_030",
+            "parentIndex": 21
+        },
+        {
+            "depth": 9,
+            "index": 23,
+            "name": "BONE_031",
+            "parentIndex": 22
+        },
+        {
+            "depth": 10,
+            "index": 24,
+            "name": "BONE_028",
+            "parentIndex": 23
+        },
+        {
+            "depth": 7,
+            "index": 25,
+            "name": "BONE_026",
+            "parentIndex": 20
+        },
+        {
+            "depth": 8,
+            "index": 26,
+            "name": "BONE_024",
+            "parentIndex": 25
+        },
+        {
+            "depth": 9,
+            "index": 27,
+            "name": "BONE_025",
+            "parentIndex": 26
+        },
+        {
+            "depth": 10,
+            "index": 28,
+            "name": "BONE_027",
+            "parentIndex": 27
+        },
+        {
+            "depth": 7,
+            "index": 29,
+            "name": "BONE_045",
+            "parentIndex": 20
+        },
+        {
+            "depth": 5,
+            "index": 30,
+            "name": "BONE_047",
+            "parentIndex": 18
+        },
+        {
+            "depth": 6,
+            "index": 31,
+            "name": "BONE_042",
+            "parentIndex": 30
+        },
+        {
+            "depth": 7,
+            "index": 32,
+            "name": "BONE_044",
+            "parentIndex": 31
+        },
+        {
+            "depth": 8,
+            "index": 33,
+            "name": "BONE_043",
+            "parentIndex": 32
+        },
+        {
+            "depth": 5,
+            "index": 34,
+            "name": "BONE_048",
+            "parentIndex": 18
+        },
+        {
+            "depth": 6,
+            "index": 35,
+            "name": "BONE_039",
+            "parentIndex": 34
+        },
+        {
+            "depth": 7,
+            "index": 36,
+            "name": "BONE_040",
+            "parentIndex": 35
+        },
+        {
+            "depth": 8,
+            "index": 37,
+            "name": "BONE_041",
+            "parentIndex": 36
+        },
+        {
+            "depth": 4,
+            "index": 38,
+            "name": "BONE_036",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 39,
+            "name": "BONE_037",
+            "parentIndex": 38
+        },
+        {
+            "depth": 6,
+            "index": 40,
+            "name": "BONE_038",
+            "parentIndex": 39
+        },
+        {
+            "depth": 4,
+            "index": 41,
+            "name": "BONE_033",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 42,
+            "name": "BONE_034",
+            "parentIndex": 41
+        },
+        {
+            "depth": 6,
+            "index": 43,
+            "name": "BONE_035",
+            "parentIndex": 42
+        },
+        {
+            "depth": 4,
+            "index": 44,
+            "name": "BONE_023",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 45,
+            "name": "BONE_021",
+            "parentIndex": 44
+        },
+        {
+            "depth": 6,
+            "index": 46,
+            "name": "BONE_022",
+            "parentIndex": 45
+        },
+        {
+            "depth": 4,
+            "index": 47,
+            "name": "BONE_020",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 48,
+            "name": "BONE_018",
+            "parentIndex": 47
+        },
+        {
+            "depth": 6,
+            "index": 49,
+            "name": "BONE_019",
+            "parentIndex": 48
+        },
+        {
+            "depth": 3,
+            "index": 50,
+            "name": "body_003",
+            "parentIndex": 2
+        },
+        {
+            "depth": 1,
+            "index": 51,
+            "name": "SK_WEP_Eff_Kirin_01.001",
+            "parentIndex": 0
+        }
+    ],
+    "guid": "63da285f-6669-498f-827c-26e23a11c904",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

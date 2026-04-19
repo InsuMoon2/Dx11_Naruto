@@ -15,7 +15,9 @@ enum class ESkillType
     Rasen_Shuriken  = 1002,
     FireBall        = 1003,
     Chidori         = 1004,
-    Big_Rasengan,
+
+    ShinsuSenju     = 1005,
+    Kirin           = 1006,
 
     END
 };
@@ -27,7 +29,7 @@ class SkillComponent : public Component
 public:
     struct FSkillDesc
     {
-        int slotSkill_Id[2] = { 0, 0 };
+        int slotSkill_Id[3] = { 0, 0, 0 };
     };
 
 public:
@@ -72,7 +74,9 @@ public:
     void Cleanup_ActiveStretchingMeshes();
     void Destroy_AllStretchingMeshes();
 
-     const vector<Weak<GameObject>>& Get_ActiveStretchingMeshes() const { return _activeStretchingMeshes; }
+    const vector<Weak<GameObject>>& Get_ActiveStretchingMeshes() const { return _activeStretchingMeshes; }
+
+    static int32 Get_SlotCount() { return SLOT_COUNT; }
 
 protected:
     json    To_Json() const override;
@@ -82,7 +86,7 @@ private:
     static int32 To_SubSkillIndex(ESubSkillType type);
 
 private:
-    static constexpr int32 SLOT_COUNT = 2; // 스킬은 일단 2개만 -> 궁까지 늘리면 3개
+    static constexpr int32 SLOT_COUNT = 3;
     static constexpr int32 SUB_SKILL_COUNT = static_cast<int32>(ESubSkillType::END);
 
     int32   _slotSkill_Id[SLOT_COUNT] = {};

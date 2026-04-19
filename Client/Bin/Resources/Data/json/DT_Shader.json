@@ -83,6 +83,12 @@
             "Path": "../../Client/Bin/Shaders/Shader_SkySphere.hlsl",
             "Level": "Static",
             "Extra": "VtxMesh"
+        },
+        {
+            "Id": "COMPONENT_TYPE_SHADER_EFFECT_SKELETAL_MESH",
+            "Path": "../../Client/Bin/Shaders/Shader_VtxEffectSkeletalMesh.hlsl",
+            "Level": "Static",
+            "Extra": "VtxAnim"
         }
     ]
 }

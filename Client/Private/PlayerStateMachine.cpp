@@ -156,6 +156,9 @@ void PlayerStateMachine::BeginPlay()
     Register_Skill(ETOI(ESkillType::Chidori));
     Register_Skill(ETOI(ESkillType::FireBall));
 
+    Register_Skill(ETOI(ESkillType::ShinsuSenju));
+    Register_Skill(ETOI(ESkillType::Kirin));
+
     Change_State(EPlayerState::Idle);
 }
 
@@ -241,8 +244,7 @@ bool PlayerStateMachine::Check_Skill_Input()
 
     bool isAir = movement && !movement->Is_OnGround();
 
-    // 나중에, 바꿔치기도 스킬로 세팅해줄지. 우클릭, 바꿔치기도 넣을거면 여기서 슬롯을 늘려야 할듯?
-    for (int slot = 0; slot < 2; ++slot)
+    for (int slot = 0; slot < SkillComponent::Get_SlotCount(); ++slot)
     {
         if (frame.useSkillDown[slot])
         {

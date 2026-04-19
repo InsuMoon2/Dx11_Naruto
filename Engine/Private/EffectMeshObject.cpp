@@ -1,14 +1,15 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "EffectMeshObject.h"
 #include "Shader.h"
 #include "Model.h"
+#include "ModelMaterial.h"
 #include "Texture.h"
 #include "GameObject_Factory.h"
 
 REGISTER_GAMEOBJECT(EffectMeshObject, Protocol::OBJECT_TYPE_EFFECT_MESH)
 
 /* Additive 메쉬 레이어라도 opacity를 일반 알파처럼 느끼게 하고 싶을 때 런타임 블렌드 모드를 바꿔준다. */
-static EEffectBlendMode Resolve_RuntimeBlendMode(const FEffectMeshLayerDesc& meshDesc)
+static EEffectBlendMode Resolve_RuntimeBlendMode(const EffectMeshObject::FEffectMeshMaterialRuntimeDesc& meshDesc)
 {
     if (meshDesc.blendMode == EEffectBlendMode::Additive &&
         meshDesc.useOpacityAsTransparency)
@@ -37,6 +38,10 @@ EffectMeshObject::EffectMeshObject(const EffectMeshObject& rhs)
     , _opacityGradationTexture(rhs._opacityGradationTexture)
     , _emissiveGradationTexture(rhs._emissiveGradationTexture)
     , _uvDistortionTexture(rhs._uvDistortionTexture)
+    , _normalTexture(rhs._normalTexture)
+    , _roughnessTexture(rhs._roughnessTexture)
+    , _specularTexture(rhs._specularTexture)
+    , _materialOverrideResources(rhs._materialOverrideResources)
     , _hasOpacity(rhs._hasOpacity)
 {
 }
@@ -57,6 +62,7 @@ HRESULT EffectMeshObject::Initialize(void* arg)
     _layerDesc = desc->layerDesc;
     CHECK_FAILED(Ready_Components(), E_FAIL);
     Apply_BaseTransform(_layerDesc.base);
+    CHECK_FAILED(Apply_AnimationSettings(), E_FAIL);
 
     return S_OK;
 }
@@ -65,6 +71,8 @@ void EffectMeshObject::Apply_LayerDesc(const FEffectLayerDesc& layerDesc)
 {
     _layerDesc = layerDesc;
     Apply_BaseTransform(_layerDesc.base);
+    Resolve_OverrideResources();
+    Apply_AnimationSettings();
 }
 
 void EffectMeshObject::Apply_BaseTransform(const FEffectLayerBase& baseDesc)
@@ -90,6 +98,12 @@ void EffectMeshObject::Update(float timeDelta)
     GameObject::Update(timeDelta);
 
     _elapsed += timeDelta;
+
+    if (_modelCom && Is_SkeletalLayer() && _modelCom->Has_Animations())
+    {
+        _modelCom->Play_Animation(timeDelta, false);
+    }
+
     Update_Rotation(timeDelta);
 }
 
@@ -97,12 +111,10 @@ void EffectMeshObject::Late_Update(float timeDelta)
 {
     GameObject::Late_Update(timeDelta);
 
-    const EEffectBlendMode runtimeBlendMode = Resolve_RuntimeBlendMode(_layerDesc.mesh);
-
-    if (runtimeBlendMode == EEffectBlendMode::Opaque)
-        GAME->Add_RenderGroup(ERenderGroup::NonBlend, GetSharedPtr());
-    else
+    if (Has_NonOpaquePass())
         GAME->Add_RenderGroup(ERenderGroup::Blend, GetSharedPtr());
+    else
+        GAME->Add_RenderGroup(ERenderGroup::NonBlend, GetSharedPtr());
 }
 
 HRESULT EffectMeshObject::Render()
@@ -112,11 +124,14 @@ HRESULT EffectMeshObject::Render()
     if (!_modelCom || !_shaderCom)
         return S_OK;
 
-    CHECK_FAILED(Bind_ShaderResources(), E_FAIL);
-
     for (size_t i = 0; i < _modelCom->Get_NumMeshes(); ++i)
     {
-        CHECK_FAILED(_shaderCom->Begin_Pass(Resolve_PassIndex()), E_FAIL);
+        CHECK_FAILED(Bind_ShaderResources(static_cast<uint32>(i)), E_FAIL);
+
+        if (Is_SkeletalLayer())
+            CHECK_FAILED(_modelCom->Bind_BoneMatrices(_shaderCom, "g_BoneMatrices"), E_FAIL);
+
+        CHECK_FAILED(_shaderCom->Begin_Pass(Resolve_PassIndex(Resolve_RuntimeMeshDesc(static_cast<uint32>(i)))), E_FAIL);
         CHECK_FAILED(_modelCom->Render(static_cast<uint32>(i)), E_FAIL);
     }
 
@@ -125,25 +140,42 @@ HRESULT EffectMeshObject::Render()
 
 HRESULT EffectMeshObject::Bind_ShaderResources()
 {
-    Vec2 uvOffset = _layerDesc.mesh.uvScrollSpeed * _elapsed;
-    Vec2 uvDistortionOffset = _layerDesc.mesh.uvDistortionSpeed * _elapsed;
+    return Bind_ShaderResources(0);
+}
+
+HRESULT EffectMeshObject::Bind_ShaderResources(uint32 meshIndex)
+{
+    const FEffectMeshMaterialRuntimeDesc meshDesc = Resolve_RuntimeMeshDesc(meshIndex);
+    const FResolvedMaterialResources* materialResources = Resolve_RuntimeMaterialResources(meshIndex);
+    Shared<Texture> diffuseTexture = materialResources ? materialResources->diffuseTexture : _diffuseTexture;
+    Shared<Texture> maskTexture = materialResources ? materialResources->maskTexture : _maskTexture;
+    Shared<Texture> emissiveTexture = materialResources ? materialResources->emissiveTexture : _emissiveTexture;
+    Shared<Texture> opacityTexture = materialResources ? materialResources->opacityTexture : _opacityTexture;
+    Shared<Texture> opacitySubUvTexture = materialResources ? materialResources->opacitySubUvTexture : _opacitySubUvTexture;
+    Shared<Texture> opacityGradationTexture = materialResources ? materialResources->opacityGradationTexture : _opacityGradationTexture;
+    Shared<Texture> emissiveGradationTexture = materialResources ? materialResources->emissiveGradationTexture : _emissiveGradationTexture;
+    Shared<Texture> uvDistortionTexture = materialResources ? materialResources->uvDistortionTexture : _uvDistortionTexture;
+    Shared<Texture> normalTexture = materialResources ? materialResources->normalTexture : _normalTexture;
+    Shared<Texture> roughnessTexture = materialResources ? materialResources->roughnessTexture : _roughnessTexture;
+    Shared<Texture> specularTexture = materialResources ? materialResources->specularTexture : _specularTexture;
+    Vec2 uvOffset = meshDesc.uvScrollSpeed * _elapsed;
+    Vec2 uvDistortionOffset = meshDesc.uvDistortionSpeed * _elapsed;
 
     const int forceVisiblePreview = _forceVisiblePreview ? 1 : 0;
-    const int shadingMode = static_cast<int>(_layerDesc.mesh.shadingMode);
-    const int hasDiffuseTexture = _diffuseTexture ? 1 : 0;
-    const int hasOpacityTexture = _opacityTexture ? 1 : 0;
-    const int hasOpacitySubUvTexture = _opacitySubUvTexture ? 1 : 0;
-    const int hasOpacityGradationTexture = _opacityGradationTexture ? 1 : 0;
-    const int hasEmissiveGradationTexture = _emissiveGradationTexture ? 1 : 0;
-    const int hasUvDistortionTexture = _uvDistortionTexture ? 1 : 0;
-    const int hasNormalTexture = _normalTexture ? 1 : 0;
-    const int hasRoughnessTexture = _roughnessTexture ? 1 : 0;
-    const int hasSpecularTexture = _specularTexture ? 1 : 0;
-    // Mesh SubUV 애니메이션은 원본 Cascade의 ParticleModuleSubUV처럼 현재 레이어 시간으로 프레임을 고른다.
-    const int useFlipbook = _layerDesc.mesh.flipbook.enabled ? 1 : 0;
-    const int flipbookColumns = (std::max)(_layerDesc.mesh.flipbook.columns, 1);
-    const int flipbookRows = (std::max)(_layerDesc.mesh.flipbook.rows, 1);
-    const int flipbookLoop = _layerDesc.mesh.flipbook.loop ? 1 : 0;
+    const int shadingMode = static_cast<int>(meshDesc.shadingMode);
+    const int hasDiffuseTexture = diffuseTexture ? 1 : 0;
+    const int hasOpacityTexture = opacityTexture ? 1 : 0;
+    const int hasOpacitySubUvTexture = opacitySubUvTexture ? 1 : 0;
+    const int hasOpacityGradationTexture = opacityGradationTexture ? 1 : 0;
+    const int hasEmissiveGradationTexture = emissiveGradationTexture ? 1 : 0;
+    const int hasUvDistortionTexture = uvDistortionTexture ? 1 : 0;
+    const int hasNormalTexture = normalTexture ? 1 : 0;
+    const int hasRoughnessTexture = roughnessTexture ? 1 : 0;
+    const int hasSpecularTexture = specularTexture ? 1 : 0;
+    const int useFlipbook = meshDesc.flipbook.enabled ? 1 : 0;
+    const int flipbookColumns = (std::max)(meshDesc.flipbook.columns, 1);
+    const int flipbookRows = (std::max)(meshDesc.flipbook.rows, 1);
+    const int flipbookLoop = meshDesc.flipbook.loop ? 1 : 0;
 
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix()), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View)), E_FAIL);
@@ -152,19 +184,21 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
     CHECK_FAILED(GAME->Bind_CamPosition(_shaderCom, "g_CamPosition"), E_FAIL);
 
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVOffset", &uvOffset, sizeof(Vec2)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVTiling", &_layerDesc.mesh.uvTiling, sizeof(Vec2)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVTiling", &meshDesc.uvTiling, sizeof(Vec2)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVDistortionOffset", &uvDistortionOffset, sizeof(Vec2)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVDistortionStrength", &_layerDesc.mesh.uvDistortionStrength, sizeof(Vec2)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_UVDistortionStrength", &meshDesc.uvDistortionStrength, sizeof(Vec2)), E_FAIL);
     
-    const Vec4 colorTint = _useRuntimeColorTintOverride ? _runtimeColorTint : _layerDesc.mesh.colorTint;
-    const float opacity = _useRuntimeOpacityOverride ? _runtimeOpacity : _layerDesc.mesh.opacity;
-    const float emissiveStrength = _useRuntimeEmissiveStrengthOverride ? _runtimeEmissiveStrength : _layerDesc.mesh.emissiveStrength;
+    const Vec4 colorTint = _useRuntimeColorTintOverride ? _runtimeColorTint : meshDesc.colorTint;
+    const float opacity = _useRuntimeOpacityOverride ? _runtimeOpacity : meshDesc.opacity;
+    const float emissiveStrength = _useRuntimeEmissiveStrengthOverride ? _runtimeEmissiveStrength : meshDesc.emissiveStrength;
 
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_ColorTint", &colorTint, sizeof(Vec4)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_Opacity", &opacity, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_EmissiveStrength", &emissiveStrength, sizeof(float)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FresnelPower", &_layerDesc.mesh.fresnelPower, sizeof(float)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FresnelMultiplier", &_layerDesc.mesh.fresnelMultiplier, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FresnelPower", &meshDesc.fresnelPower, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FresnelMultiplier", &meshDesc.fresnelMultiplier, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_CustomParams0", &meshDesc.customParams0, sizeof(Vec4)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_CustomParams1", &meshDesc.customParams1, sizeof(Vec4)), E_FAIL);
 
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_ForceVisiblePreview", &forceVisiblePreview, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_ShadingMode", &shadingMode, sizeof(int)), E_FAIL);
@@ -181,63 +215,63 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_UseFlipbook", &useFlipbook, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookColumns", &flipbookColumns, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookRows", &flipbookRows, sizeof(int)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookFps", &_layerDesc.mesh.flipbook.fps, sizeof(float)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookStartFrame", &_layerDesc.mesh.flipbook.startFrame, sizeof(int)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookEndFrame", &_layerDesc.mesh.flipbook.endFrame, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookFps", &meshDesc.flipbook.fps, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookStartFrame", &meshDesc.flipbook.startFrame, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookEndFrame", &meshDesc.flipbook.endFrame, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookLoop", &flipbookLoop, sizeof(int)), E_FAIL);
 
-    if (_diffuseTexture)
-        {CHECK_FAILED(_diffuseTexture->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);}
+    if (diffuseTexture)
+        {CHECK_FAILED(diffuseTexture->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_DiffuseTexture", nullptr), E_FAIL);}
 
-    if (_maskTexture)
-        {CHECK_FAILED(_maskTexture->Bind_SRV(_shaderCom, "g_MaskTexture", 0), E_FAIL);}
+    if (maskTexture)
+        {CHECK_FAILED(maskTexture->Bind_SRV(_shaderCom, "g_MaskTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_MaskTexture", nullptr), E_FAIL);}
 
-    if (_emissiveTexture)
-        {CHECK_FAILED(_emissiveTexture->Bind_SRV(_shaderCom, "g_EmissiveTexture", 0), E_FAIL);}
+    if (emissiveTexture)
+        {CHECK_FAILED(emissiveTexture->Bind_SRV(_shaderCom, "g_EmissiveTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_EmissiveTexture", nullptr), E_FAIL);}
 
-    if (_opacityTexture)
-        {CHECK_FAILED(_opacityTexture->Bind_SRV(_shaderCom, "g_OpacityTexture", 0), E_FAIL);}
+    if (opacityTexture)
+        {CHECK_FAILED(opacityTexture->Bind_SRV(_shaderCom, "g_OpacityTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_OpacityTexture", nullptr), E_FAIL);}
 
-    if (_opacitySubUvTexture)
-        {CHECK_FAILED(_opacitySubUvTexture->Bind_SRV(_shaderCom, "g_OpacitySubUvTexture", 0), E_FAIL);}
+    if (opacitySubUvTexture)
+        {CHECK_FAILED(opacitySubUvTexture->Bind_SRV(_shaderCom, "g_OpacitySubUvTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_OpacitySubUvTexture", nullptr), E_FAIL);}
 
-    if (_opacityGradationTexture)
-        {CHECK_FAILED(_opacityGradationTexture->Bind_SRV(_shaderCom, "g_OpacityGradationTexture", 0), E_FAIL);}
+    if (opacityGradationTexture)
+        {CHECK_FAILED(opacityGradationTexture->Bind_SRV(_shaderCom, "g_OpacityGradationTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_OpacityGradationTexture", nullptr), E_FAIL);}
 
-    if (_emissiveGradationTexture)
-        {CHECK_FAILED(_emissiveGradationTexture->Bind_SRV(_shaderCom, "g_EmissiveGradationTexture", 0), E_FAIL);}
+    if (emissiveGradationTexture)
+        {CHECK_FAILED(emissiveGradationTexture->Bind_SRV(_shaderCom, "g_EmissiveGradationTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_EmissiveGradationTexture", nullptr), E_FAIL);}
 
-    if (_uvDistortionTexture)
-        {CHECK_FAILED(_uvDistortionTexture->Bind_SRV(_shaderCom, "g_UVDistortionTexture", 0), E_FAIL);}
+    if (uvDistortionTexture)
+        {CHECK_FAILED(uvDistortionTexture->Bind_SRV(_shaderCom, "g_UVDistortionTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_UVDistortionTexture", nullptr), E_FAIL);}
 
-    if (_normalTexture)
-        {CHECK_FAILED(_normalTexture->Bind_SRV(_shaderCom, "g_NormalTexture", 0), E_FAIL);}
+    if (normalTexture)
+        {CHECK_FAILED(normalTexture->Bind_SRV(_shaderCom, "g_NormalTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_NormalTexture", nullptr), E_FAIL);}
 
-    if (_roughnessTexture)
-        {CHECK_FAILED(_roughnessTexture->Bind_SRV(_shaderCom, "g_RoughnessTexture", 0), E_FAIL);}
+    if (roughnessTexture)
+        {CHECK_FAILED(roughnessTexture->Bind_SRV(_shaderCom, "g_RoughnessTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_RoughnessTexture", nullptr), E_FAIL);}
 
-    if (_specularTexture)
-        {CHECK_FAILED(_specularTexture->Bind_SRV(_shaderCom, "g_SpecularTexture", 0), E_FAIL);}
+    if (specularTexture)
+        {CHECK_FAILED(specularTexture->Bind_SRV(_shaderCom, "g_SpecularTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_SpecularTexture", nullptr), E_FAIL);}
 
@@ -246,6 +280,8 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
 
 HRESULT EffectMeshObject::Resolve_Resources()
 {
+    _materialOverrideResources.clear();
+
     _hasOpacity =
         !_layerDesc.mesh.opacityTextureGuid.empty() ||
         !_layerDesc.mesh.maskTextureGuid.empty() ||
@@ -274,8 +310,11 @@ HRESULT EffectMeshObject::Resolve_Resources()
                 Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
                 Matrix preTransform = scaleMatrix * rotationMatrix;
 
+                const EMeshVertexType meshType =
+                    Is_SkeletalLayer() ? EMeshVertexType::SkeletalMesh : EMeshVertexType::StaticMesh;
+
                 auto proto = Model::Create(
-                    _device, _context, EMeshVertexType::StaticMesh, Utils::ToString(resolvedPath), preTransform);
+                    _device, _context, meshType, Utils::ToString(resolvedPath), preTransform);
 
                 if (proto)
                 {
@@ -552,8 +591,82 @@ HRESULT EffectMeshObject::Resolve_Resources()
         }
     }
 
+    CHECK_FAILED(Resolve_OverrideResources(), E_FAIL);
+
     return S_OK;
 
+}
+
+HRESULT EffectMeshObject::Resolve_TextureByGuid(const string& guid, Shared<Texture>& outTexture)
+{
+    outTexture = nullptr;
+
+    if (guid.empty())
+        return S_OK;
+
+    const uint32 texKey = static_cast<uint32>(hash<string>{}(guid));
+    auto component = GAME->Clone_Component(texKey);
+    if (component)
+    {
+        outTexture = static_pointer_cast<Texture>(component);
+        return S_OK;
+    }
+
+    const wstring resolvedPath = GAME->Resolve_AssetPath(guid);
+    if (resolvedPath.empty())
+        return E_FAIL;
+
+    auto proto = Texture::Create(_device, _context, resolvedPath, 1);
+    CHECK_NULL(proto, E_FAIL);
+    CHECK_FAILED(GAME->Add_Component_Prototype(0, texKey, proto), E_FAIL);
+
+    component = GAME->Clone_Component(texKey);
+    CHECK_NULL(component, E_FAIL);
+
+    outTexture = static_pointer_cast<Texture>(component);
+    return S_OK;
+}
+
+HRESULT EffectMeshObject::Resolve_OverrideResources()
+{
+    _materialOverrideResources.clear();
+
+    for (const auto& overrideDesc : _layerDesc.mesh.materialOverrides)
+    {
+        if (overrideDesc.materialName.empty())
+            continue;
+
+        FResolvedMaterialResources resources{};
+        resources.materialName = overrideDesc.materialName;
+
+        CHECK_FAILED(Resolve_TextureByGuid(overrideDesc.diffuseTextureGuid, resources.diffuseTexture), E_FAIL);
+        CHECK_FAILED(Resolve_TextureByGuid(overrideDesc.maskTextureGuid, resources.maskTexture), E_FAIL);
+        CHECK_FAILED(Resolve_TextureByGuid(overrideDesc.emissiveTextureGuid, resources.emissiveTexture), E_FAIL);
+        CHECK_FAILED(Resolve_TextureByGuid(overrideDesc.opacityTextureGuid, resources.opacityTexture), E_FAIL);
+        CHECK_FAILED(Resolve_TextureByGuid(overrideDesc.opacitySubUvTextureGuid, resources.opacitySubUvTexture), E_FAIL);
+        CHECK_FAILED(Resolve_TextureByGuid(overrideDesc.opacityGradationTextureGuid, resources.opacityGradationTexture), E_FAIL);
+        CHECK_FAILED(Resolve_TextureByGuid(overrideDesc.emissiveGradationTextureGuid, resources.emissiveGradationTexture), E_FAIL);
+        CHECK_FAILED(Resolve_TextureByGuid(overrideDesc.uvDistortionTextureGuid, resources.uvDistortionTexture), E_FAIL);
+        CHECK_FAILED(Resolve_TextureByGuid(overrideDesc.normalTextureGuid, resources.normalTexture), E_FAIL);
+        CHECK_FAILED(Resolve_TextureByGuid(overrideDesc.roughnessTextureGuid, resources.roughnessTexture), E_FAIL);
+        CHECK_FAILED(Resolve_TextureByGuid(overrideDesc.specularTextureGuid, resources.specularTexture), E_FAIL);
+
+        if (!resources.diffuseTexture) resources.diffuseTexture = _diffuseTexture;
+        if (!resources.maskTexture) resources.maskTexture = _maskTexture;
+        if (!resources.emissiveTexture) resources.emissiveTexture = _emissiveTexture;
+        if (!resources.opacityTexture) resources.opacityTexture = _opacityTexture;
+        if (!resources.opacitySubUvTexture) resources.opacitySubUvTexture = _opacitySubUvTexture;
+        if (!resources.opacityGradationTexture) resources.opacityGradationTexture = _opacityGradationTexture;
+        if (!resources.emissiveGradationTexture) resources.emissiveGradationTexture = _emissiveGradationTexture;
+        if (!resources.uvDistortionTexture) resources.uvDistortionTexture = _uvDistortionTexture;
+        if (!resources.normalTexture) resources.normalTexture = _normalTexture;
+        if (!resources.roughnessTexture) resources.roughnessTexture = _roughnessTexture;
+        if (!resources.specularTexture) resources.specularTexture = _specularTexture;
+
+        _materialOverrideResources.push_back(resources);
+    }
+
+    return S_OK;
 }
 
 void EffectMeshObject::Set_RuntimeColorTintOverride(const Vec4& colorTint, bool enabled)
@@ -624,12 +737,14 @@ HRESULT EffectMeshObject::Ready_Components()
     }
 
     // 메쉬 이펙트 전용 셰이더 프로토타입이 없거나 생성 실패했는지 확인하기 위한 로그
-    if (FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_EFFECT_MESH, _shaderCom)))
+    const uint32 shaderComponentId = Resolve_ShaderComponentId();
+
+    if (FAILED(Add_Component(shaderComponentId, _shaderCom)))
     {
         LOG_ERROR(
             "EffectMeshObject failed to add shader component. layer='{}', shaderTypeId={}",
             _layerDesc.base.layerName,
-            static_cast<uint32>(Protocol::COMPONENT_TYPE_SHADER_EFFECT_MESH));
+            shaderComponentId);
 
         return E_FAIL;
     }
@@ -637,18 +752,81 @@ HRESULT EffectMeshObject::Ready_Components()
     return S_OK;
 }
 
+HRESULT EffectMeshObject::Apply_AnimationSettings()
+{
+    if (!_modelCom || !Is_SkeletalLayer())
+        return S_OK;
+
+    _modelCom->Set_EnableNotifies(false);
+    _modelCom->Set_AnimationPlayRate(_layerDesc.mesh.animationPlayRate);
+
+    if (!_layerDesc.mesh.animationName.empty() &&
+        _modelCom->Find_AnimationIndex_ByName(_layerDesc.mesh.animationName) < 0)
+    {
+        if (auto animation = GAME->Get_Animation(_layerDesc.mesh.animationName))
+        {
+            _modelCom->Add_Animation(animation);
+        }
+        else if (!_layerDesc.mesh.modelGuid.empty())
+        {
+            const wstring modelPath = GAME->Resolve_AssetPath(_layerDesc.mesh.modelGuid);
+
+            if (!modelPath.empty())
+            {
+                const string animationFolder = fs::path(modelPath).parent_path().string();
+                const auto animations = GAME->Get_Animations_InFolder(animationFolder);
+
+                for (const auto& animation : animations)
+                {
+                    _modelCom->Add_Animation(animation);
+                }
+            }
+        }
+    }
+
+    if (!_modelCom->Has_Animations())
+        return S_OK;
+
+    if (!_layerDesc.mesh.animationName.empty())
+    {
+        _modelCom->Set_Animation(_layerDesc.mesh.animationName, _layerDesc.mesh.animationLoop);
+        return S_OK;
+    }
+
+    _modelCom->Set_Animation(0, _layerDesc.mesh.animationLoop);
+    return S_OK;
+}
+
+bool EffectMeshObject::Is_SkeletalLayer() const
+{
+    return _layerDesc.base.kind == EEffectLayerKind::SkeletalMesh;
+}
+
+uint32 EffectMeshObject::Resolve_ShaderComponentId() const
+{
+    if (!Is_SkeletalLayer())
+        return static_cast<uint32>(Protocol::COMPONENT_TYPE_SHADER_EFFECT_MESH);
+
+    return static_cast<uint32>(Protocol::COMPONENT_TYPE_SHADER_EFFECT_SKELETAL_MESH);
+}
+
 uint32 EffectMeshObject::Resolve_PassIndex() const
 {
-    const bool twoSided = _layerDesc.mesh.twoSided;
-    /* 실제 렌더링 시 사용할 블렌드 모드다. Additive를 강제로 Translucent처럼 보정할 수 있다. */
-    const EEffectBlendMode runtimeBlendMode = Resolve_RuntimeBlendMode(_layerDesc.mesh);
+    return Resolve_PassIndex(Resolve_RuntimeMeshDesc(0));
+}
+
+uint32 EffectMeshObject::Resolve_PassIndex(const FEffectMeshMaterialRuntimeDesc& meshDesc) const
+{
+    const bool twoSided = meshDesc.twoSided;
+    const EEffectBlendMode runtimeBlendMode = Resolve_RuntimeBlendMode(meshDesc);
+    const bool hasOpacity = Has_OpacityTexture(meshDesc);
 
     if (!twoSided)
     {
         if (runtimeBlendMode == EEffectBlendMode::Opaque)
             return 2;
 
-        if (_hasOpacity)
+        if (hasOpacity)
             return static_cast<uint32>(runtimeBlendMode);
 
         return 3 + static_cast<uint32>(runtimeBlendMode);
@@ -657,10 +835,156 @@ uint32 EffectMeshObject::Resolve_PassIndex() const
     if (runtimeBlendMode == EEffectBlendMode::Opaque)
         return 7;
 
-    if (_hasOpacity)
+    if (hasOpacity)
         return 5 + static_cast<uint32>(runtimeBlendMode);
 
     return 8 + static_cast<uint32>(runtimeBlendMode);
+}
+
+bool EffectMeshObject::Has_OpacityTexture(const FEffectMeshMaterialRuntimeDesc& meshDesc) const
+{
+    return
+        !meshDesc.opacityTextureGuid.empty() ||
+        !meshDesc.maskTextureGuid.empty() ||
+        !meshDesc.opacitySubUvTextureGuid.empty();
+}
+
+bool EffectMeshObject::Has_NonOpaquePass() const
+{
+    if (!_modelCom || _modelCom->Get_NumMeshes() == 0)
+        return Resolve_RuntimeBlendMode(Resolve_RuntimeMeshDesc(0)) != EEffectBlendMode::Opaque;
+
+    for (uint32 i = 0; i < static_cast<uint32>(_modelCom->Get_NumMeshes()); ++i)
+    {
+        if (Resolve_RuntimeBlendMode(Resolve_RuntimeMeshDesc(i)) != EEffectBlendMode::Opaque)
+            return true;
+    }
+
+    return false;
+}
+
+EffectMeshObject::FEffectMeshMaterialRuntimeDesc EffectMeshObject::Resolve_RuntimeMeshDesc(uint32 meshIndex) const
+{
+    FEffectMeshMaterialRuntimeDesc result{};
+    result.diffuseTextureGuid = _layerDesc.mesh.diffuseTextureGuid;
+    result.maskTextureGuid = _layerDesc.mesh.maskTextureGuid;
+    result.emissiveTextureGuid = _layerDesc.mesh.emissiveTextureGuid;
+    result.opacityTextureGuid = _layerDesc.mesh.opacityTextureGuid;
+    result.opacitySubUvTextureGuid = _layerDesc.mesh.opacitySubUvTextureGuid;
+    result.opacityGradationTextureGuid = _layerDesc.mesh.opacityGradationTextureGuid;
+    result.emissiveGradationTextureGuid = _layerDesc.mesh.emissiveGradationTextureGuid;
+    result.uvDistortionTextureGuid = _layerDesc.mesh.uvDistortionTextureGuid;
+    result.normalTextureGuid = _layerDesc.mesh.normalTextureGuid;
+    result.roughnessTextureGuid = _layerDesc.mesh.roughnessTextureGuid;
+    result.specularTextureGuid = _layerDesc.mesh.specularTextureGuid;
+    result.blendMode = _layerDesc.mesh.blendMode;
+    result.shadingMode = _layerDesc.mesh.shadingMode;
+    result.uvScrollSpeed = _layerDesc.mesh.uvScrollSpeed;
+    result.uvTiling = _layerDesc.mesh.uvTiling;
+    result.uvDistortionStrength = _layerDesc.mesh.uvDistortionStrength;
+    result.uvDistortionSpeed = _layerDesc.mesh.uvDistortionSpeed;
+    result.flipbook = _layerDesc.mesh.flipbook;
+    result.colorTint = _layerDesc.mesh.colorTint;
+    result.opacity = _layerDesc.mesh.opacity;
+    result.normalStrength = _layerDesc.mesh.normalStrength;
+    result.roughness = _layerDesc.mesh.roughness;
+    result.specularStrength = _layerDesc.mesh.specularStrength;
+    result.specularPower = _layerDesc.mesh.specularPower;
+    result.emissiveStrength = _layerDesc.mesh.emissiveStrength;
+    result.fresnelPower = _layerDesc.mesh.fresnelPower;
+    result.fresnelMultiplier = _layerDesc.mesh.fresnelMultiplier;
+    result.customParams0 = _layerDesc.mesh.customParams0;
+    result.customParams1 = _layerDesc.mesh.customParams1;
+    result.twoSided = _layerDesc.mesh.twoSided;
+    result.useOpacityAsTransparency = _layerDesc.mesh.useOpacityAsTransparency;
+
+    if (!_modelCom)
+        return result;
+
+    const uint32 materialIndex = _modelCom->Get_MeshMaterialIndex(meshIndex);
+    const auto material = _modelCom->Get_Material(materialIndex);
+    if (!material)
+        return result;
+
+    const string materialName = material->Get_MaterialName();
+
+    for (const auto& overrideDesc : _layerDesc.mesh.materialOverrides)
+    {
+        if (!overrideDesc.enabled || overrideDesc.materialName != materialName)
+            continue;
+
+        if (!overrideDesc.diffuseTextureGuid.empty()) result.diffuseTextureGuid = overrideDesc.diffuseTextureGuid;
+        if (!overrideDesc.maskTextureGuid.empty()) result.maskTextureGuid = overrideDesc.maskTextureGuid;
+        if (!overrideDesc.emissiveTextureGuid.empty()) result.emissiveTextureGuid = overrideDesc.emissiveTextureGuid;
+        if (!overrideDesc.opacityTextureGuid.empty()) result.opacityTextureGuid = overrideDesc.opacityTextureGuid;
+        if (!overrideDesc.opacitySubUvTextureGuid.empty()) result.opacitySubUvTextureGuid = overrideDesc.opacitySubUvTextureGuid;
+        if (!overrideDesc.opacityGradationTextureGuid.empty()) result.opacityGradationTextureGuid = overrideDesc.opacityGradationTextureGuid;
+        if (!overrideDesc.emissiveGradationTextureGuid.empty()) result.emissiveGradationTextureGuid = overrideDesc.emissiveGradationTextureGuid;
+        if (!overrideDesc.uvDistortionTextureGuid.empty()) result.uvDistortionTextureGuid = overrideDesc.uvDistortionTextureGuid;
+        if (!overrideDesc.normalTextureGuid.empty()) result.normalTextureGuid = overrideDesc.normalTextureGuid;
+        if (!overrideDesc.roughnessTextureGuid.empty()) result.roughnessTextureGuid = overrideDesc.roughnessTextureGuid;
+        if (!overrideDesc.specularTextureGuid.empty()) result.specularTextureGuid = overrideDesc.specularTextureGuid;
+
+        result.blendMode = overrideDesc.blendMode;
+        result.shadingMode = overrideDesc.shadingMode;
+        result.uvScrollSpeed = overrideDesc.uvScrollSpeed;
+        result.uvTiling = overrideDesc.uvTiling;
+        result.uvDistortionStrength = overrideDesc.uvDistortionStrength;
+        result.uvDistortionSpeed = overrideDesc.uvDistortionSpeed;
+        result.flipbook = overrideDesc.flipbook;
+        result.colorTint = overrideDesc.colorTint;
+        result.opacity = overrideDesc.opacity;
+        result.normalStrength = overrideDesc.normalStrength;
+        result.roughness = overrideDesc.roughness;
+        result.specularStrength = overrideDesc.specularStrength;
+        result.specularPower = overrideDesc.specularPower;
+        result.emissiveStrength = overrideDesc.emissiveStrength;
+        result.fresnelPower = overrideDesc.fresnelPower;
+        result.fresnelMultiplier = overrideDesc.fresnelMultiplier;
+        result.twoSided = overrideDesc.twoSided;
+        result.useOpacityAsTransparency = overrideDesc.useOpacityAsTransparency;
+        break;
+    }
+
+    return result;
+}
+
+const EffectMeshObject::FResolvedMaterialResources* EffectMeshObject::Resolve_RuntimeMaterialResources(uint32 meshIndex) const
+{
+    if (!_modelCom)
+        return nullptr;
+
+    const uint32 materialIndex = _modelCom->Get_MeshMaterialIndex(meshIndex);
+    const auto material = _modelCom->Get_Material(materialIndex);
+    if (!material)
+        return nullptr;
+
+    const string materialName = material->Get_MaterialName();
+
+    bool hasEnabledOverride = false;
+
+    for (const auto& overrideDesc : _layerDesc.mesh.materialOverrides)
+    {
+        if (overrideDesc.materialName != materialName)
+            continue;
+
+        if (!overrideDesc.enabled)
+            return nullptr;
+
+        hasEnabledOverride = true;
+        break;
+    }
+
+    if (!hasEnabledOverride)
+        return nullptr;
+
+    for (const auto& resources : _materialOverrideResources)
+    {
+        if (resources.materialName == materialName)
+            return &resources;
+    }
+
+    return nullptr;
 }
 
 Shared<GameObject> EffectMeshObject::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

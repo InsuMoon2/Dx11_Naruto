@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_WEP_Eff_Kirin_Body_02",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_WEP_Eff_Kirin_Eyes_01",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_WEP_Kirin_Mane_01",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_WEP_Kirin_Beard_01",
+      "textures": [
+      ]
+    }
+  ]
+}

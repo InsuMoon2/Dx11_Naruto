@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_Hashirama_Kanon_Nimbus",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_Hashirama_Kanon_nimbus_BC.png"
+        }
+      ]
+    }
+  ]
+}

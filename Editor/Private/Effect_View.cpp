@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Effect_View.h"
-
+#include <fstream>
 #include "DebugDraw.h"
 #include "EffectAsset_Serializer.h"
 #include "GameInstance.h"
@@ -102,6 +102,108 @@ static string Build_EffectAssetPickerCacheKey(const char* popupId, const char* e
     key += "|";
     key += allowedRelativePrefix ? Utils::ToLowerCopy(string(allowedRelativePrefix)) : "";
     return key;
+}
+
+static vector<string> Load_EffectModelMaterialNames(const string& modelGuid)
+{
+    vector<string> materialNames;
+
+    if (modelGuid.empty())
+        return materialNames;
+
+    const wstring modelPath = GAME->Resolve_AssetPath(modelGuid);
+    if (modelPath.empty())
+        return materialNames;
+
+    fs::path materialJsonPath(modelPath);
+    materialJsonPath.replace_extension(".material.json");
+
+    ifstream file(materialJsonPath);
+    if (!file.is_open())
+        return materialNames;
+
+    json root;
+    file >> root;
+
+    if (!root.contains("materials") || !root["materials"].is_array())
+        return materialNames;
+
+    for (const auto& materialItem : root["materials"])
+    {
+        const string materialName = materialItem.value("material_name", "");
+        if (!materialName.empty())
+            materialNames.push_back(materialName);
+    }
+
+    return materialNames;
+}
+
+static Engine::FEffectMeshMaterialOverrideDesc Build_EffectMeshMaterialOverrideFromDefaults(
+    const Engine::FEffectMeshLayerDesc& meshDesc,
+    const string& materialName)
+{
+    Engine::FEffectMeshMaterialOverrideDesc overrideDesc{};
+    overrideDesc.materialName = materialName;
+    overrideDesc.enabled = true;
+    overrideDesc.diffuseTextureGuid = meshDesc.diffuseTextureGuid;
+    overrideDesc.maskTextureGuid = meshDesc.maskTextureGuid;
+    overrideDesc.emissiveTextureGuid = meshDesc.emissiveTextureGuid;
+    overrideDesc.opacityTextureGuid = meshDesc.opacityTextureGuid;
+    overrideDesc.opacitySubUvTextureGuid = meshDesc.opacitySubUvTextureGuid;
+    overrideDesc.opacityGradationTextureGuid = meshDesc.opacityGradationTextureGuid;
+    overrideDesc.emissiveGradationTextureGuid = meshDesc.emissiveGradationTextureGuid;
+    overrideDesc.uvDistortionTextureGuid = meshDesc.uvDistortionTextureGuid;
+    overrideDesc.normalTextureGuid = meshDesc.normalTextureGuid;
+    overrideDesc.roughnessTextureGuid = meshDesc.roughnessTextureGuid;
+    overrideDesc.specularTextureGuid = meshDesc.specularTextureGuid;
+    overrideDesc.blendMode = meshDesc.blendMode;
+    overrideDesc.shadingMode = meshDesc.shadingMode;
+    overrideDesc.uvScrollSpeed = meshDesc.uvScrollSpeed;
+    overrideDesc.uvTiling = meshDesc.uvTiling;
+    overrideDesc.uvDistortionStrength = meshDesc.uvDistortionStrength;
+    overrideDesc.uvDistortionSpeed = meshDesc.uvDistortionSpeed;
+    overrideDesc.flipbook = meshDesc.flipbook;
+    overrideDesc.colorTint = meshDesc.colorTint;
+    overrideDesc.opacity = meshDesc.opacity;
+    overrideDesc.normalStrength = meshDesc.normalStrength;
+    overrideDesc.roughness = meshDesc.roughness;
+    overrideDesc.specularStrength = meshDesc.specularStrength;
+    overrideDesc.specularPower = meshDesc.specularPower;
+    overrideDesc.emissiveStrength = meshDesc.emissiveStrength;
+    overrideDesc.fresnelPower = meshDesc.fresnelPower;
+    overrideDesc.fresnelMultiplier = meshDesc.fresnelMultiplier;
+    overrideDesc.twoSided = meshDesc.twoSided;
+    overrideDesc.useOpacityAsTransparency = meshDesc.useOpacityAsTransparency;
+    return overrideDesc;
+}
+
+static vector<Engine::FEffectMeshMaterialOverrideDesc> Sync_EffectMeshMaterialOverrides(
+    const Engine::FEffectMeshLayerDesc& meshDesc)
+{
+    vector<Engine::FEffectMeshMaterialOverrideDesc> syncedOverrides;
+    const vector<string> materialNames = Load_EffectModelMaterialNames(meshDesc.modelGuid);
+
+    syncedOverrides.reserve(materialNames.size());
+
+    for (const auto& materialName : materialNames)
+    {
+        bool found = false;
+
+        for (const auto& existingOverride : meshDesc.materialOverrides)
+        {
+            if (existingOverride.materialName != materialName)
+                continue;
+
+            syncedOverrides.push_back(existingOverride);
+            found = true;
+            break;
+        }
+
+        if (!found)
+            syncedOverrides.push_back(Build_EffectMeshMaterialOverrideFromDefaults(meshDesc, materialName));
+    }
+
+    return syncedOverrides;
 }
 
 Effect_View::Effect_View()
@@ -725,6 +827,8 @@ void Effect_View::Draw_LayerList()
         string layerKindLabel = "Point";
         if (layer.base.kind == Engine::EEffectLayerKind::Mesh)
             layerKindLabel = "Mesh";
+        else if (layer.base.kind == Engine::EEffectLayerKind::SkeletalMesh)
+            layerKindLabel = "Skeletal";
         else if (layer.base.kind == Engine::EEffectLayerKind::BillboardRect)
             layerKindLabel = "Billboard";
 
@@ -744,6 +848,22 @@ void Effect_View::Draw_LayerList()
         newLayer.base.layerName = "NewMeshEmitter";
         newLayer.base.kind = Engine::EEffectLayerKind::Mesh;
         newLayer.base.localScale = Vec3(1.f, 1.f, 1.f);
+
+        _currentAsset.layers.push_back(newLayer);
+        _selectedLayerIdx = static_cast<int32>(_currentAsset.layers.size()) - 1;
+
+        MarkDirty();
+        Restart_PreviewEffect();
+    }
+
+    if (ImGui::Button("+ Add Skeletal Emitter", ImVec2(-1.f, 30.f)))
+    {
+        Engine::FEffectLayerDesc newLayer{};
+        newLayer.base.layerName = "NewSkeletalEmitter";
+        newLayer.base.kind = Engine::EEffectLayerKind::SkeletalMesh;
+        newLayer.base.localScale = Vec3(1.f, 1.f, 1.f);
+        newLayer.mesh.animationLoop = true;
+        newLayer.mesh.animationPlayRate = 1.f;
 
         _currentAsset.layers.push_back(newLayer);
         _selectedLayerIdx = static_cast<int32>(_currentAsset.layers.size()) - 1;
@@ -972,7 +1092,8 @@ void Effect_View::Draw_Inspector()
 
     }
 
-    if (layer.base.kind == Engine::EEffectLayerKind::Mesh)
+    if (layer.base.kind == Engine::EEffectLayerKind::Mesh ||
+        layer.base.kind == Engine::EEffectLayerKind::SkeletalMesh)
     {
         if (ImGui::CollapsingHeader(ICON_FA_CUBE " Render Settings", ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -985,6 +1106,49 @@ void Effect_View::Draw_Inspector()
                 nullptr,
                 layer.mesh.modelGuid,
                 resourceChanged);
+
+            ImGui::Spacing();
+
+            if (layer.base.kind == Engine::EEffectLayerKind::SkeletalMesh)
+            {
+                char animationNameBuf[256] = {};
+                strcpy_s(animationNameBuf, layer.mesh.animationName.c_str());
+
+                if (ImGui::InputText("Animation Name", animationNameBuf, IM_ARRAYSIZE(animationNameBuf)))
+                {
+                    layer.mesh.animationName = animationNameBuf;
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::Checkbox("Animation Loop", &layer.mesh.animationLoop))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                if (ImGui::DragFloat("Animation Play Rate", &layer.mesh.animationPlayRate, 0.01f, 0.f, 10.f))
+                {
+                    MarkDirty();
+                    materialChanged = true;
+                }
+
+                ImGui::Spacing();
+            }
+
+            if (ImGui::Button("Sync Material Slots", ImVec2(-1.f, 0.f)))
+            {
+                layer.mesh.materialOverrides = Sync_EffectMeshMaterialOverrides(layer.mesh);
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (layer.mesh.modelGuid.empty())
+                ImGui::TextDisabled("Select a model first.");
+            else if (layer.mesh.materialOverrides.empty())
+                ImGui::TextDisabled("No synced material slots.");
+            else
+                ImGui::TextDisabled("Synced Slots: %d", static_cast<int>(layer.mesh.materialOverrides.size()));
 
             ImGui::Spacing();
 
@@ -1372,6 +1536,305 @@ void Effect_View::Draw_Inspector()
             {
                 MarkDirty();
                 materialChanged = true;
+            }
+        }
+
+        if (ImGui::CollapsingHeader(ICON_FA_LAYER_GROUP " Material Slot Overrides", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            if (layer.mesh.materialOverrides.empty())
+            {
+                ImGui::TextDisabled("Sync Material Slots first.");
+            }
+            else
+            {
+                for (size_t overrideIdx = 0; overrideIdx < layer.mesh.materialOverrides.size(); ++overrideIdx)
+                {
+                    auto& materialOverride = layer.mesh.materialOverrides[overrideIdx];
+                    const string sectionLabel =
+                        materialOverride.materialName.empty()
+                        ? "Material Slot " + to_string(overrideIdx)
+                        : materialOverride.materialName;
+
+                    ImGui::PushID(static_cast<int>(overrideIdx));
+
+                    if (ImGui::TreeNodeEx(sectionLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        if (ImGui::Checkbox("Enabled", &materialOverride.enabled))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        Draw_AssetSlotPicker(
+                            "Diffuse",
+                            "##OverrideDiffusePicker",
+                            ICON_FA_IMAGE " Select Diffuse Texture",
+                            "CONTENT_TEXTURE",
+                            "texture",
+                            "Effects/;Skills/;Weapons/",
+                            materialOverride.diffuseTextureGuid,
+                            resourceChanged);
+
+                        Draw_AssetSlotPicker(
+                            "Emissive",
+                            "##OverrideEmissivePicker",
+                            ICON_FA_IMAGE " Select Emissive Texture",
+                            "CONTENT_TEXTURE",
+                            "texture",
+                            "Effects/;Skills/;Weapons/",
+                            materialOverride.emissiveTextureGuid,
+                            resourceChanged);
+
+                        Draw_AssetSlotPicker(
+                            "Normal",
+                            "##OverrideNormalPicker",
+                            ICON_FA_IMAGE " Select Normal Texture",
+                            "CONTENT_TEXTURE",
+                            "texture",
+                            "Effects/;Skills/;Weapons/",
+                            materialOverride.normalTextureGuid,
+                            resourceChanged);
+
+                        Draw_AssetSlotPicker(
+                            "Roughness",
+                            "##OverrideRoughnessPicker",
+                            ICON_FA_IMAGE " Select Roughness Texture",
+                            "CONTENT_TEXTURE",
+                            "texture",
+                            "Effects/;Skills/;Weapons/",
+                            materialOverride.roughnessTextureGuid,
+                            resourceChanged);
+
+                        Draw_AssetSlotPicker(
+                            "Specular",
+                            "##OverrideSpecularPicker",
+                            ICON_FA_IMAGE " Select Specular Texture",
+                            "CONTENT_TEXTURE",
+                            "texture",
+                            "Effects/;Skills/;Weapons/",
+                            materialOverride.specularTextureGuid,
+                            resourceChanged);
+
+                        Draw_AssetSlotPicker(
+                            "Emissive Gradation",
+                            "##OverrideEmissiveGradationPicker",
+                            ICON_FA_IMAGE " Select Emissive Gradation Texture",
+                            "CONTENT_TEXTURE",
+                            "texture",
+                            "Effects/;Skills/;Weapons/",
+                            materialOverride.emissiveGradationTextureGuid,
+                            resourceChanged);
+
+                        Draw_AssetSlotPicker(
+                            "Opacity",
+                            "##OverrideOpacityPicker",
+                            ICON_FA_IMAGE " Select Opacity Texture",
+                            "CONTENT_TEXTURE",
+                            "texture",
+                            "Effects/;Skills/;Weapons/",
+                            materialOverride.opacityTextureGuid,
+                            resourceChanged);
+
+                        Draw_AssetSlotPicker(
+                            "Opacity SubUV",
+                            "##OverrideOpacitySubUvPicker",
+                            ICON_FA_IMAGE " Select Opacity SubUV Texture",
+                            "CONTENT_TEXTURE",
+                            "texture",
+                            "Effects/;Skills/;Weapons/",
+                            materialOverride.opacitySubUvTextureGuid,
+                            resourceChanged);
+
+                        Draw_AssetSlotPicker(
+                            "Opacity Gradation",
+                            "##OverrideOpacityGradationPicker",
+                            ICON_FA_IMAGE " Select Opacity Gradation Texture",
+                            "CONTENT_TEXTURE",
+                            "texture",
+                            "Effects/;Skills/;Weapons/",
+                            materialOverride.opacityGradationTextureGuid,
+                            resourceChanged);
+
+                        Draw_AssetSlotPicker(
+                            "Legacy Mask",
+                            "##OverrideMaskPicker",
+                            ICON_FA_IMAGE " Select Legacy Mask Texture",
+                            "CONTENT_TEXTURE",
+                            "texture",
+                            "Effects/;Skills/;Weapons/",
+                            materialOverride.maskTextureGuid,
+                            resourceChanged);
+
+                        Draw_AssetSlotPicker(
+                            "UV Distortion",
+                            "##OverrideUvDistortionPicker",
+                            ICON_FA_IMAGE " Select UV Distortion Texture",
+                            "CONTENT_TEXTURE",
+                            "texture",
+                            "Effects/;Skills/;Weapons/",
+                            materialOverride.uvDistortionTextureGuid,
+                            resourceChanged);
+
+                        int overrideBlend = static_cast<int>(materialOverride.blendMode);
+                        if (ImGui::Combo("BlendMode", &overrideBlend, "Translucent\0Additive\0Opaque\0"))
+                        {
+                            materialOverride.blendMode = static_cast<Engine::EEffectBlendMode>(overrideBlend);
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        int overrideShading = static_cast<int>(materialOverride.shadingMode);
+                        if (ImGui::Combo("Shading Mode", &overrideShading, "Unlit\0Lit\0"))
+                        {
+                            materialOverride.shadingMode = static_cast<Engine::EEffectMeshShadingMode>(overrideShading);
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::Checkbox("Two Sided", &materialOverride.twoSided))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::Checkbox("Use Opacity As Transparency", &materialOverride.useOpacityAsTransparency))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::ColorEdit4("Color Tint", (float*)&materialOverride.colorTint))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::DragFloat2("UV Tiling", (float*)&materialOverride.uvTiling, 0.05f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::DragFloat2("UV Speed", (float*)&materialOverride.uvScrollSpeed, 0.05f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::DragFloat2("Distortion Strength", (float*)&materialOverride.uvDistortionStrength, 0.005f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::DragFloat2("Distortion Speed", (float*)&materialOverride.uvDistortionSpeed, 0.05f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::Checkbox("Use Mesh Flipbook", &materialOverride.flipbook.enabled))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (materialOverride.flipbook.enabled)
+                        {
+                            ImGui::Indent();
+
+                            if (ImGui::DragInt("Mesh Flipbook Columns", &materialOverride.flipbook.columns, 1.f, 1, 64))
+                            {
+                                MarkDirty();
+                                materialChanged = true;
+                            }
+
+                            if (ImGui::DragInt("Mesh Flipbook Rows", &materialOverride.flipbook.rows, 1.f, 1, 64))
+                            {
+                                MarkDirty();
+                                materialChanged = true;
+                            }
+
+                            if (ImGui::DragFloat("Mesh Flipbook FPS", &materialOverride.flipbook.fps, 0.1f, 0.01f, 120.f))
+                            {
+                                MarkDirty();
+                                materialChanged = true;
+                            }
+
+                            if (ImGui::DragInt("Mesh Flipbook Start Frame", &materialOverride.flipbook.startFrame, 1.f, 0, 4096))
+                            {
+                                MarkDirty();
+                                materialChanged = true;
+                            }
+
+                            if (ImGui::DragInt("Mesh Flipbook End Frame", &materialOverride.flipbook.endFrame, 1.f, -1, 4096))
+                            {
+                                MarkDirty();
+                                materialChanged = true;
+                            }
+
+                            if (ImGui::Checkbox("Mesh Flipbook Loop", &materialOverride.flipbook.loop))
+                            {
+                                MarkDirty();
+                                materialChanged = true;
+                            }
+
+                            ImGui::Unindent();
+                        }
+
+                        if (ImGui::SliderFloat("Opacity", &materialOverride.opacity, 0.f, 1.f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::DragFloat("Normal Strength", &materialOverride.normalStrength, 0.01f, 0.f, 8.f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::SliderFloat("Roughness", &materialOverride.roughness, 0.f, 1.f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::DragFloat("Specular Strength", &materialOverride.specularStrength, 0.01f, 0.f, 8.f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::DragFloat("Specular Power", &materialOverride.specularPower, 0.5f, 1.f, 256.f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::DragFloat("Emissive Strength", &materialOverride.emissiveStrength, 0.01f, 0.f, 16.f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::DragFloat("Fresnel Power", &materialOverride.fresnelPower, 0.1f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        if (ImGui::DragFloat("Fresnel Mul", &materialOverride.fresnelMultiplier, 0.1f))
+                        {
+                            MarkDirty();
+                            materialChanged = true;
+                        }
+
+                        ImGui::TreePop();
+                    }
+
+                    ImGui::PopID();
+                }
             }
         }
     }

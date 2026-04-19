@@ -583,7 +583,8 @@ HRESULT ResourceLoader::Build_AllResourceJobs(const wstring& tablePath, vector<F
 
             // 메인은 기존 순차 아이콘 유지, 서브는 테이블 명시값을 사용
             job.skillIconSrvIndex =
-                (job.skillData.skillCategory == ESkillCategory::Sub)
+                (job.skillData.skillCategory == ESkillCategory::Sub
+                    || job.skillData.skillCategory == ESkillCategory::Ultimate)
                 ? job.skillData.uiIconSrvIndex
                 : iconSrvIndex;
 

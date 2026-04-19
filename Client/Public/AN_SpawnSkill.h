@@ -27,6 +27,8 @@ private:
     bool    _useOwnerForward = true;
     bool    _aimAtTarget = false;
 
+    bool _launchIfProjectile = true;
+
 private:
     // owner의 Transform 기준 로컬 오프셋을 월드 좌표로 변환해서 사용하게
     static Vec3 Calculate_WorldSpawnPosition(Shared<Transform> transform, const Vec3& localOffset);

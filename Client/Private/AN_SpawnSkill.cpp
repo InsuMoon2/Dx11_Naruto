@@ -1,14 +1,15 @@
 ﻿#include "pch.h"
 #include "AN_SpawnSkill.h"
-#include "GameObject_Factory.h"
+
 #include "AnimNotify_Factory.h"
+#include "GameObject_Factory.h"
 #include "Transform.h"
 #include "GameObject.h"
 #include "Utils.h"
+#include "SkillObject.h"
 #include "SkillObject_Projectile.h"
 #include "Client_Defines.h"
 #include "MyPlayer.h"
-#include "SkillComponent.h"
 #include "TargetComponent.h"
 
 REGISTER_ANIM_NOTIFY(AN_SpawnSkill)
@@ -26,6 +27,7 @@ bool AN_SpawnSkill::Register_Properties()
     PROPERTY_VEC3_JSON("로컬 오프셋", "local_offset", _localOffset, 0.1f);
     PROPERTY_BOOL_JSON("Forward 사용", "use_owner_forward", _useOwnerForward);
     PROPERTY_BOOL_JSON("타겟을 향해 던질지", "aim_at_target", _aimAtTarget);
+    PROPERTY_BOOL_JSON("Projectile이면 즉시 발사", "launch_if_projectile", _launchIfProjectile);
 
     return true;
 }
@@ -50,14 +52,11 @@ void AN_SpawnSkill::Execute(const FAnimNotifyContext& context)
     if (!ownerTransform)
         return;
 
-    SkillObject_Projectile::FProjectileSkillDesc desc;
-    desc.collisionPreset = _collisionPreset; 
-    desc.startAttached = true;
-    desc.spawnPosition = Calculate_WorldSpawnPosition(ownerTransform, _localOffset);
-    desc.spawnRotation = Vec3::Zero;
-    desc.scale = Vec3::One;
+    const Vec3 spawnPosition = Calculate_WorldSpawnPosition(ownerTransform, _localOffset);
 
-    Vec3 launchDir = (_useOwnerForward) ? ownerTransform->Get_WorldForward() : Vec3::Forward;
+    Vec3 spawnDirection = (_useOwnerForward)
+        ? ownerTransform->Get_WorldForward()
+        : Vec3::Forward;
 
     if (_aimAtTarget)
     {
@@ -71,15 +70,26 @@ void AN_SpawnSkill::Execute(const FAnimNotifyContext& context)
                 if (lockedTarget)
                 {
                     Vec3 targetPos = lockedTarget->Get_Transform()->Get_WorldPosition();
-                    targetPos.y += 0.5f; //
-                    launchDir = targetPos - desc.spawnPosition;
-                    launchDir.Normalize();
+                    targetPos.y += 0.5f;
+
+                    spawnDirection = targetPos - spawnPosition;
+
+                    if (spawnDirection.LengthSquared() > 0.0001f)
+                        spawnDirection.Normalize();
+                    else
+                        spawnDirection = ownerTransform->Get_WorldForward();
                 }
             }
         }
     }
 
-    desc.direction = launchDir;
+    SkillObject::FSkillObjectDesc desc{};
+    desc.ownerObject = context.owner->GetSharedPtr<GameObject>();
+    desc.collisionPreset = _collisionPreset;
+    desc.spawnPosition = spawnPosition;
+    desc.spawnRotation = Vec3::Zero;
+    desc.scale = Vec3::One;
+    desc.direction = spawnDirection;
 
     auto spawned = GAME->Clone_And_Add_GameObject(
         ETOI(ELevelType::Static),
@@ -88,15 +98,24 @@ void AN_SpawnSkill::Execute(const FAnimNotifyContext& context)
         TEXT("Layer_Skill"),
         &desc);
 
-    auto skill = dynamic_pointer_cast<SkillObject_Projectile>(spawned);
-    if (skill)
+    if (!spawned)
+        return;
+
+    spawned->Set_Owner(context.owner->GetSharedPtr<GameObject>());
+
+    auto projectile = dynamic_pointer_cast<SkillObject_Projectile>(spawned);
+    if (!projectile)
+        return;
+
+    auto projectileTransform = projectile->Get_Transform();
+    if (projectileTransform)
     {
-        skill->Set_Owner(context.owner->GetSharedPtr<GameObject>());
+        projectileTransform->LookAt(projectileTransform->Get_WorldPosition() + spawnDirection);
+    }
 
-        auto projTransform = skill->Get_Transform();
-        projTransform->LookAt(projTransform->Get_WorldPosition() + launchDir);
-
-        skill->Launch(launchDir);
+    if (_launchIfProjectile)
+    {
+        projectile->Launch(spawnDirection);
     }
 }
 
@@ -111,5 +130,4 @@ Vec3 AN_SpawnSkill::Calculate_WorldSpawnPosition(Shared<Transform> transform, co
         + right * localOffset.x
         + up * localOffset.y
         + forward * localOffset.z;
-
 }

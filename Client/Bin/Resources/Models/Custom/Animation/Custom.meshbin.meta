@@ -1,5 +1,5 @@
 {
-    "boneCount": 89,
+    "boneCount": 90,
     "bones": [
         {
             "depth": 0,
@@ -533,6 +533,12 @@
             "depth": 1,
             "index": 88,
             "name": "SK_CHR_NormalModel.001",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 89,
+            "name": "아이코스피어",
             "parentIndex": 0
         }
     ],

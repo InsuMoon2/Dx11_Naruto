@@ -1,0 +1,62 @@
+{
+    "boneCount": 9,
+    "bones": [
+        {
+            "depth": 0,
+            "index": 0,
+            "name": "RootNode",
+            "parentIndex": -1
+        },
+        {
+            "depth": 1,
+            "index": 1,
+            "name": "SK_CHR_Hashirama_KanonSitting",
+            "parentIndex": 0
+        },
+        {
+            "depth": 2,
+            "index": 2,
+            "name": "CharacterRoot",
+            "parentIndex": 1
+        },
+        {
+            "depth": 3,
+            "index": 3,
+            "name": "Hips",
+            "parentIndex": 2
+        },
+        {
+            "depth": 4,
+            "index": 4,
+            "name": "Spine",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 5,
+            "name": "Spine1",
+            "parentIndex": 4
+        },
+        {
+            "depth": 6,
+            "index": 6,
+            "name": "Neck",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 7,
+            "name": "Head",
+            "parentIndex": 6
+        },
+        {
+            "depth": 1,
+            "index": 8,
+            "name": "SK_CHR_Hashirama_KanonSitting.001",
+            "parentIndex": 0
+        }
+    ],
+    "guid": "d7f34d57-6100-487b-b5f5-1a7a20d9f821",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

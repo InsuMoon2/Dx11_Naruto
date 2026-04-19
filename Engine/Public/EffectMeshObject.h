@@ -17,6 +17,61 @@ public:
         FEffectLayerDesc layerDesc;
     };
 
+    struct FEffectMeshMaterialRuntimeDesc
+    {
+        string diffuseTextureGuid;
+        string maskTextureGuid;
+        string emissiveTextureGuid;
+        string opacityTextureGuid;
+        string opacitySubUvTextureGuid;
+        string opacityGradationTextureGuid;
+        string emissiveGradationTextureGuid;
+        string uvDistortionTextureGuid;
+        string normalTextureGuid;
+        string roughnessTextureGuid;
+        string specularTextureGuid;
+
+        EEffectBlendMode blendMode = EEffectBlendMode::Translucent;
+        EEffectMeshShadingMode shadingMode = EEffectMeshShadingMode::Unlit;
+
+        Vec2 uvScrollSpeed = Vec2(0.f, 0.f);
+        Vec2 uvTiling = Vec2(1.f, 1.f);
+        Vec2 uvDistortionStrength = Vec2(0.f, 0.f);
+        Vec2 uvDistortionSpeed = Vec2(0.f, 0.f);
+        FEffectFlipbookDesc flipbook;
+
+        Vec4 colorTint = Vec4(1.f, 1.f, 1.f, 1.f);
+        float opacity = 1.f;
+        float normalStrength = 1.f;
+        float roughness = 0.5f;
+        float specularStrength = 1.f;
+        float specularPower = 32.f;
+        float emissiveStrength = 1.f;
+        float fresnelPower = 0.f;
+        float fresnelMultiplier = 1.f;
+        Vec4 customParams0 = Vec4::Zero; // 장벽/림 같은 Mesh 전용 셰이더 옵션을 런타임에 넘길 사용자 정의 파라미터 0번 슬롯이다.
+        Vec4 customParams1 = Vec4::Zero; // 장벽/림 같은 Mesh 전용 셰이더 옵션을 런타임에 넘길 사용자 정의 파라미터 1번 슬롯이다.
+
+        bool twoSided = false;
+        bool useOpacityAsTransparency = false;
+    };
+
+    struct FResolvedMaterialResources
+    {
+        string materialName;
+        Shared<Texture> diffuseTexture;
+        Shared<Texture> maskTexture;
+        Shared<Texture> emissiveTexture;
+        Shared<Texture> opacityTexture;
+        Shared<Texture> opacitySubUvTexture;
+        Shared<Texture> opacityGradationTexture;
+        Shared<Texture> emissiveGradationTexture;
+        Shared<Texture> uvDistortionTexture;
+        Shared<Texture> normalTexture;
+        Shared<Texture> roughnessTexture;
+        Shared<Texture> specularTexture;
+    };
+
 public:
     explicit EffectMeshObject(ComPtr<Device> device, ComPtr<DeviceContext> context);
     explicit EffectMeshObject(const EffectMeshObject& rhs);
@@ -32,6 +87,7 @@ public:
     virtual bool    Should_ExcludeFromEditorSnapshot() const override { return true; }
 
     virtual HRESULT Bind_ShaderResources() override;
+    HRESULT Bind_ShaderResources(uint32 meshIndex);
 
     HRESULT Resolve_Resources();
 
@@ -54,8 +110,18 @@ public:
 
 private:
     HRESULT Ready_Components();
+    HRESULT Apply_AnimationSettings();
+    HRESULT Resolve_TextureByGuid(const string& guid, Shared<Texture>& outTexture);
+    HRESULT Resolve_OverrideResources();
 
     uint32 Resolve_PassIndex() const;
+    uint32 Resolve_PassIndex(const FEffectMeshMaterialRuntimeDesc& meshDesc) const;
+    bool   Is_SkeletalLayer() const;
+    uint32 Resolve_ShaderComponentId() const;
+    bool   Has_OpacityTexture(const FEffectMeshMaterialRuntimeDesc& meshDesc) const;
+    bool   Has_NonOpaquePass() const;
+    FEffectMeshMaterialRuntimeDesc Resolve_RuntimeMeshDesc(uint32 meshIndex) const;
+    const FResolvedMaterialResources* Resolve_RuntimeMaterialResources(uint32 meshIndex) const;
 
 private:
     Shared<Shader>  _shaderCom;
@@ -71,6 +137,7 @@ private:
     Shared<Texture> _normalTexture;            // Lit 모드에서 노멀맵 샘플링에 사용할 텍스처 컴포넌트다.
     Shared<Texture> _roughnessTexture;         // Lit 모드에서 러프니스 값을 읽어올 텍스처 컴포넌트다.
     Shared<Texture> _specularTexture;          // Lit 모드에서 스페큘러 마스크를 읽어올 텍스처 컴포넌트다.
+    vector<FResolvedMaterialResources> _materialOverrideResources;
 
     FEffectLayerDesc _layerDesc;
 

@@ -227,6 +227,22 @@ float ResolveFresnel(float3 normal, float3 worldPos)
     return saturate(fresnel);
 }
 
+// CustomParams 기반 장벽 모드에서 평면 UV 반경으로 림 강도를 계산한다.
+float ResolveBarrierUvRimMask(float2 uv, float rimPower)
+{
+    float2 centeredUV = uv * 2.f - 1.f;
+    float radial = saturate(length(centeredUV));
+    float safePower = max(rimPower, 0.0001f);
+    return saturate(pow(radial, safePower));
+}
+
+// CustomParams 기반 장벽 모드에서 Sphere 실루엣 Fresnel을 다시 가공해 림 강도를 계산한다.
+float ResolveBarrierFresnelMask(float fresnelValue, float rimPower)
+{
+    float safePower = max(rimPower, 0.0001f);
+    return saturate(pow(saturate(fresnelValue), safePower));
+}
+
 // Builds the final alpha mask from explicit opacity, SubUV opacity, and gradation slots.
 float ApplyOpacityPipeline(float2 uv, float2 flipbookUV)
 {
@@ -323,20 +339,39 @@ PS_OUT ResolvePixel(PS_IN In, bool useOpacityMask)
     float emissiveAlpha = SampleEmissiveMask(emissive);
     float maskValue = useOpacityMask ? ApplyOpacityPipeline(scrolledUV, flipbookUV) : emissiveAlpha;
 
-    float finalAlpha = saturate(maskValue * g_Opacity * fresnel * g_ColorTint.a);
-
-    if (finalAlpha <= 0.001f)
-        discard;
-
     float3 baseColor = emissive.rgb;
     if (g_HasDiffuseTexture != 0)
     {
         baseColor = g_DiffuseTexture.Sample(DefaultSampler, mainSampleUV).rgb;
     }
 
-    baseColor *= g_ColorTint.rgb;
+    float3 finalTint = g_ColorTint.rgb;
+    float finalAlphaScale = fresnel;
+    const bool useBarrierMode = (g_CustomParams0.x > 0.5f);
+    const bool useSphereBarrierMode = (g_CustomParams0.x > 1.5f);
 
-    float3 emissiveColor = emissive.rgb * g_ColorTint.rgb;
+    if (useBarrierMode)
+    {
+        const float centerAlphaScale = saturate(g_CustomParams0.y);
+        const float edgeAlphaScale = saturate(g_CustomParams0.z);
+        const float rimPower = max(g_CustomParams0.w, 0.0001f);
+        const float rimMask = useSphereBarrierMode
+            ? ResolveBarrierFresnelMask(fresnel, rimPower)
+            : ResolveBarrierUvRimMask(In.vTexcoord, rimPower);
+        const float edgeTintBlend = saturate(g_CustomParams1.a) * rimMask;
+
+        finalAlphaScale = lerp(centerAlphaScale, edgeAlphaScale, rimMask);
+        finalTint = lerp(g_ColorTint.rgb, g_CustomParams1.rgb, edgeTintBlend);
+    }
+
+    float finalAlpha = saturate(maskValue * g_Opacity * finalAlphaScale * g_ColorTint.a);
+
+    if (finalAlpha <= 0.001f)
+        discard;
+
+    baseColor *= finalTint;
+
+    float3 emissiveColor = emissive.rgb * finalTint;
     float3 finalColor = emissiveColor;
 
     if (g_HasDiffuseTexture != 0)
@@ -349,9 +384,10 @@ PS_OUT ResolvePixel(PS_IN In, bool useOpacityMask)
         finalColor = BuildLitColor(scrolledUV, surfaceNormal, In.vWorldPos, baseColor, emissiveColor);
     }
 
-    // Mesh effects also use black-background emissive sheets, so premultiply
-    // the resolved color by alpha to suppress dark fringe around masked edges.
-    Out.vColor.rgb = finalColor * finalAlpha;
+    // 일반 Mesh 이펙트는 검은 배경 가장자리 억제를 위해 premultiply를 유지한다.
+    // 다만 Sphere 장벽 모드는 중앙 알파가 낮아도 색이 살아 있어야 하므로
+    // barrier mode에서만 premultiply를 끄고 표준 alpha blend로 출력한다.
+    Out.vColor.rgb = useBarrierMode ? finalColor : (finalColor * finalAlpha);
     Out.vColor.a = finalAlpha;
     Out.vColor.rgb += (g_CustomParams0.rgb + g_CustomParams1.rgb) * 0.f;
 

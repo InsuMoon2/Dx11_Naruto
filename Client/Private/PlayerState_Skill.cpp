@@ -251,7 +251,7 @@ void PlayerState_Skill::Update_Charging(PlayerStateMachine* state, float timeDel
         const bool isHoldingSkillKey =
             input &&
             currentSlot >= 0 &&
-            currentSlot < 2 &&
+            currentSlot < SkillComponent::Get_SlotCount() &&
             input->Get_Frame().useSkillPress[currentSlot];
 
         if (isHoldingSkillKey)

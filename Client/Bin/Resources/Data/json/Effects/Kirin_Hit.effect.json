@@ -1,0 +1,246 @@
+{
+    "autoPlay": true,
+    "effectName": "GPT_Ring",
+    "layers": [
+        {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
+            "blendMode": 1,
+            "colorTint": [
+                0.18000000715255737,
+                0.37397873401641846,
+                1.0,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "diffuseTextureGuid": "",
+            "duration": 0.8500000238418579,
+            "emissiveGradationTextureGuid": "3cd76d67-a1ba-4bbf-ad3a-b7fc2a54e841",
+            "emissiveStrength": 10.619999885559082,
+            "emissiveTextureGuid": "0eafba46-3dcc-4337-b221-737c75bfd0ad",
+            "enabled": true,
+            "endColorTint": [
+                0.30000001192092896,
+                0.9200000166893005,
+                1.0,
+                1.0
+            ],
+            "endEmissiveStrength": 2.799999952316284,
+            "endOpacity": 0.4000000059604645,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                13.0,
+                13.0,
+                13.0
+            ],
+            "flipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "fresnelMultiplier": 1.350000023841858,
+            "fresnelPower": 1.9500000476837158,
+            "kind": 1,
+            "layerName": "GPT_Sphere_Rim",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                8.0,
+                8.0,
+                8.0
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "b6a50817-0863-4b90-96e3-9cebd84c3ffc",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
+            "opacity": 0.5979999899864197,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "",
+            "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
+            "rotationAxis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "rotationSpeed": 0.0,
+            "roughness": 0.5,
+            "roughnessTextureGuid": "",
+            "scaleDuration": 0.8500000238418579,
+            "shadingMode": 0,
+            "specularPower": 32.0,
+            "specularStrength": 1.0,
+            "specularTextureGuid": "",
+            "startDelay": 0.0,
+            "twoSided": false,
+            "useColorTintOverTime": false,
+            "useEmissiveStrengthOverTime": true,
+            "useOpacityAsTransparency": false,
+            "useOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useScaleOverTime": true,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "blendMode": 1,
+            "center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "colorTint": [
+                0.03942650556564331,
+                0.12205666303634644,
+                1.0,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "duration": 2.0,
+            "emissiveStrength": 7.400000095367432,
+            "enabled": true,
+            "endColorTint": [
+                0.800000011920929,
+                1.0,
+                1.0,
+                0.0
+            ],
+            "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "flipbook": {
+                "columns": 2,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 18.0,
+                "loop": false,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "isLoop": false,
+            "kind": 0,
+            "layerName": "GPT_Ring_Spread",
+            "lifeTime": [
+                1.0,
+                2.0
+            ],
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                2.0,
+                2.0,
+                2.0
+            ],
+            "lockWorldOnSpawn": false,
+            "loop": false,
+            "maskTextureGuid": "",
+            "moveMode": 1,
+            "numInstances": 60,
+            "opacity": 0.8500000238418579,
+            "opacityTextureGuid": "5e5be3ac-7058-4629-acbd-8e96a3b6e451",
+            "pivot": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "positionDuration": 1.0,
+            "range": [
+                0.20000000298023224,
+                0.20000000298023224,
+                0.20000000298023224
+            ],
+            "scale": [
+                0.15000000596046448,
+                0.30000001192092896
+            ],
+            "scaleDuration": 1.0,
+            "spawnHeight": 1.0,
+            "spawnInnerRadius": 1.100000023841858,
+            "spawnRadius": 2.0,
+            "spawnShape": 1,
+            "speed": [
+                5.0,
+                8.0
+            ],
+            "startDelay": 0.03999999910593033,
+            "textureGuid": "a3972492-b8a6-480b-b08b-e544ca00d935",
+            "useColorTintOverTime": true,
+            "useOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useScaleOverTime": false
+        }
+    ],
+    "totalDuration": -1.0
+}

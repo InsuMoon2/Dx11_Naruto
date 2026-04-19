@@ -141,13 +141,23 @@
             "Level": "Static"
         },
         {
-            "Id": "Skill_Jinsutansu",
-            "ObjectType": "OBJECT_TYPE_JINSUTANSU",
+            "Id": "Skill_ShinsuSenju",
+            "ObjectType": "OBJECT_TYPE_SHINSUSENJU",
             "Level": "Static"
         },
         {
             "Id": "Skill_Kirin",
             "ObjectType": "OBJECT_TYPE_KIRIN",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_ShinsuSenju_Arm",
+            "ObjectType": "OBJECT_TYPE_SHINSUSENJU_ARM",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_Kirin_Hit",
+            "ObjectType": "OBJECT_TYPE_KIRIN_HIT",
             "Level": "Static"
         },
         {

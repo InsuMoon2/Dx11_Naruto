@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Panel.h"
+#include "UI_SkillSlot.h"
 
 NS_BEGIN(Engine)
 class Shader;
@@ -14,6 +15,7 @@ NS_BEGIN(Client)
 class Player;
 class UI_PlayerHP;
 class CombatStat;
+class SkillComponent;
 
 class UI_PlayerStatus : public Panel
 {
@@ -41,14 +43,16 @@ protected:
 private:
     Weak<Player>            _player;
     Weak<CombatStat>        _combat;
+    Weak<SkillComponent>    _skill;
 
     Shared<UI_PlayerHP>     _hpBar;
-
+    Shared<UI_SkillSlot>    _ultimateSlot;
 
 private:
     Shared<Shader>          _shaderCom;
     Shared<Texture>         _textureCom;
     Shared<VIBuffer_Rect>   _bufferCom;
+
 
 
 public:

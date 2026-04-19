@@ -1,0 +1,366 @@
+{
+    "autoPlay": true,
+    "effectName": "Kirin",
+    "layers": [
+        {
+            "animationLoop": false,
+            "animationName": "SK_WEP_Eff_Kirin_01|SK_WEP_Eff_Kirin_01_Anim",
+            "animationPlayRate": 1.0,
+            "blendMode": 0,
+            "colorTint": [
+                0.3499999940395355,
+                0.949999988079071,
+                1.0,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "diffuseTextureGuid": "ea7d9fa9-e709-4380-ba53-92543d99bd01",
+            "duration": -1.0,
+            "emissiveGradationTextureGuid": "6e07ff27-129b-430f-9b9a-0619fa752cdc",
+            "emissiveStrength": 4.5,
+            "emissiveTextureGuid": "98eb7943-5c50-4b63-ad1c-1e15a412bffd",
+            "enabled": true,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endEmissiveStrength": 0.0,
+            "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "flipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "fresnelMultiplier": 18.0,
+            "fresnelPower": 6.0,
+            "kind": 3,
+            "layerName": "KirinSkeletalEmitter",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "materialOverrides": [
+                {
+                    "blendMode": 0,
+                    "colorTint": [
+                        0.3499999940395355,
+                        0.949999988079071,
+                        1.0,
+                        1.0
+                    ],
+                    "diffuseTextureGuid": "ea7d9fa9-e709-4380-ba53-92543d99bd01",
+                    "emissiveGradationTextureGuid": "6e07ff27-129b-430f-9b9a-0619fa752cdc",
+                    "emissiveStrength": 4.5,
+                    "emissiveTextureGuid": "98eb7943-5c50-4b63-ad1c-1e15a412bffd",
+                    "enabled": true,
+                    "flipbook": {
+                        "columns": 1,
+                        "enabled": false,
+                        "endFrame": -1,
+                        "fps": 16.0,
+                        "loop": true,
+                        "rows": 1,
+                        "startFrame": 0
+                    },
+                    "fresnelMultiplier": 18.0,
+                    "fresnelPower": 6.0,
+                    "maskTextureGuid": "",
+                    "materialName": "MI_WEP_Eff_Kirin_Body_02",
+                    "normalStrength": 1.0,
+                    "normalTextureGuid": "",
+                    "opacity": 1.0,
+                    "opacityGradationTextureGuid": "a510c709-1dc8-4735-86e9-6f32d9a46c66",
+                    "opacitySubUvTextureGuid": "",
+                    "opacityTextureGuid": "e71670e5-60d3-4bc4-a113-436b1e04a574",
+                    "roughness": 0.5,
+                    "roughnessTextureGuid": "",
+                    "shadingMode": 0,
+                    "specularPower": 32.0,
+                    "specularStrength": 1.0,
+                    "specularTextureGuid": "",
+                    "twoSided": false,
+                    "useOpacityAsTransparency": false,
+                    "uvDistortionSpeed": [
+                        1.0,
+                        1.0
+                    ],
+                    "uvDistortionStrength": [
+                        0.10000000149011612,
+                        0.10000000149011612
+                    ],
+                    "uvDistortionTextureGuid": "df9ce6c5-4591-4420-9875-67f23f37fd46",
+                    "uvScrollSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvTiling": [
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "blendMode": 1,
+                    "colorTint": [
+                        0.6000000238418579,
+                        1.0,
+                        0.550000011920929,
+                        1.0
+                    ],
+                    "diffuseTextureGuid": "ea7d9fa9-e709-4380-ba53-92543d99bd01",
+                    "emissiveGradationTextureGuid": "d72270ca-b2ff-493a-9fb1-db4d87cc38d9",
+                    "emissiveStrength": 4.0,
+                    "emissiveTextureGuid": "ea7d9fa9-e709-4380-ba53-92543d99bd01",
+                    "enabled": true,
+                    "flipbook": {
+                        "columns": 1,
+                        "enabled": false,
+                        "endFrame": -1,
+                        "fps": 16.0,
+                        "loop": true,
+                        "rows": 1,
+                        "startFrame": 0
+                    },
+                    "fresnelMultiplier": 20.0,
+                    "fresnelPower": 4.0,
+                    "maskTextureGuid": "",
+                    "materialName": "MI_WEP_Eff_Kirin_Eyes_01",
+                    "normalStrength": 1.0,
+                    "normalTextureGuid": "",
+                    "opacity": 1.0,
+                    "opacityGradationTextureGuid": "a510c709-1dc8-4735-86e9-6f32d9a46c66",
+                    "opacitySubUvTextureGuid": "",
+                    "opacityTextureGuid": "e71670e5-60d3-4bc4-a113-436b1e04a574",
+                    "roughness": 0.5,
+                    "roughnessTextureGuid": "",
+                    "shadingMode": 0,
+                    "specularPower": 32.0,
+                    "specularStrength": 1.0,
+                    "specularTextureGuid": "",
+                    "twoSided": false,
+                    "useOpacityAsTransparency": false,
+                    "uvDistortionSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionStrength": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionTextureGuid": "ea7d9fa9-e709-4380-ba53-92543d99bd01",
+                    "uvScrollSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvTiling": [
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "blendMode": 1,
+                    "colorTint": [
+                        0.30000001192092896,
+                        0.9200000166893005,
+                        1.0,
+                        1.0
+                    ],
+                    "diffuseTextureGuid": "",
+                    "emissiveGradationTextureGuid": "0d0e73c8-e114-4883-8e8c-a78388c72782",
+                    "emissiveStrength": 2.0,
+                    "emissiveTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+                    "enabled": true,
+                    "flipbook": {
+                        "columns": 1,
+                        "enabled": false,
+                        "endFrame": -1,
+                        "fps": 16.0,
+                        "loop": true,
+                        "rows": 1,
+                        "startFrame": 0
+                    },
+                    "fresnelMultiplier": 1.0,
+                    "fresnelPower": 0.0,
+                    "maskTextureGuid": "",
+                    "materialName": "MI_WEP_Kirin_Mane_01",
+                    "normalStrength": 1.0,
+                    "normalTextureGuid": "",
+                    "opacity": 1.0,
+                    "opacityGradationTextureGuid": "",
+                    "opacitySubUvTextureGuid": "",
+                    "opacityTextureGuid": "8bdbe6ff-0f6b-4676-80be-ab2da2d5c308",
+                    "roughness": 0.5,
+                    "roughnessTextureGuid": "",
+                    "shadingMode": 0,
+                    "specularPower": 32.0,
+                    "specularStrength": 1.0,
+                    "specularTextureGuid": "",
+                    "twoSided": true,
+                    "useOpacityAsTransparency": false,
+                    "uvDistortionSpeed": [
+                        1.0,
+                        0.5
+                    ],
+                    "uvDistortionStrength": [
+                        0.10000000149011612,
+                        0.10000000149011612
+                    ],
+                    "uvDistortionTextureGuid": "4bf78e6f-0e6e-4ccc-9d34-b83d82c2e384",
+                    "uvScrollSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvTiling": [
+                        0.20000000298023224,
+                        1.0
+                    ]
+                },
+                {
+                    "blendMode": 1,
+                    "colorTint": [
+                        0.30000001192092896,
+                        0.949999988079071,
+                        1.0,
+                        1.0
+                    ],
+                    "diffuseTextureGuid": "",
+                    "emissiveGradationTextureGuid": "",
+                    "emissiveStrength": 2.0,
+                    "emissiveTextureGuid": "8bdbe6ff-0f6b-4676-80be-ab2da2d5c308",
+                    "enabled": true,
+                    "flipbook": {
+                        "columns": 1,
+                        "enabled": false,
+                        "endFrame": -1,
+                        "fps": 16.0,
+                        "loop": true,
+                        "rows": 1,
+                        "startFrame": 0
+                    },
+                    "fresnelMultiplier": 1.0,
+                    "fresnelPower": 0.0,
+                    "maskTextureGuid": "",
+                    "materialName": "MI_WEP_Kirin_Beard_01",
+                    "normalStrength": 1.0,
+                    "normalTextureGuid": "",
+                    "opacity": 1.0,
+                    "opacityGradationTextureGuid": "",
+                    "opacitySubUvTextureGuid": "",
+                    "opacityTextureGuid": "8bdbe6ff-0f6b-4676-80be-ab2da2d5c308",
+                    "roughness": 0.5,
+                    "roughnessTextureGuid": "",
+                    "shadingMode": 0,
+                    "specularPower": 32.0,
+                    "specularStrength": 1.0,
+                    "specularTextureGuid": "",
+                    "twoSided": true,
+                    "useOpacityAsTransparency": false,
+                    "uvDistortionSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionStrength": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionTextureGuid": "",
+                    "uvScrollSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvTiling": [
+                        1.0,
+                        1.0
+                    ]
+                }
+            ],
+            "modelGuid": "63da285f-6669-498f-827c-26e23a11c904",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "a510c709-1dc8-4735-86e9-6f32d9a46c66",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "e71670e5-60d3-4bc4-a113-436b1e04a574",
+            "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
+            "rotationAxis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "rotationSpeed": 0.0,
+            "roughness": 0.5,
+            "roughnessTextureGuid": "",
+            "scaleDuration": 1.0,
+            "shadingMode": 0,
+            "specularPower": 32.0,
+            "specularStrength": 1.0,
+            "specularTextureGuid": "",
+            "startDelay": 0.0,
+            "twoSided": false,
+            "useColorTintOverTime": false,
+            "useEmissiveStrengthOverTime": false,
+            "useOpacityAsTransparency": false,
+            "useOpacityOverTime": false,
+            "usePositionOverTime": false,
+            "useScaleOverTime": false,
+            "uvDistortionSpeed": [
+                1.0,
+                1.0
+            ],
+            "uvDistortionStrength": [
+                0.10000000149011612,
+                0.10000000149011612
+            ],
+            "uvDistortionTextureGuid": "df9ce6c5-4591-4420-9875-67f23f37fd46",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "totalDuration": -1.0
+}

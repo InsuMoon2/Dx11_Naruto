@@ -7,7 +7,7 @@
 #include "MyPlayer.h"
 #include "EffectComponent.h"
 
-REGISTER_GAMEOBJECT_CATEGORY(Skill_Kirin, Protocol::OBJECT_TYPE_KIRIN, "SkillSpawn");
+REGISTER_GAMEOBJECT_CATEGORY(Skill_Kirin, Protocol::OBJECT_TYPE_KIRIN_HIT, "SkillSpawn");
 
 Skill_Kirin::Skill_Kirin(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : SkillObject(device, context)
@@ -21,10 +21,8 @@ Skill_Kirin::Skill_Kirin(const Skill_Kirin& rhs)
 
 HRESULT Skill_Kirin::Initialize_Prototype()
 {
-    _lifetime        = 15.f;
-    _maxHitCount     = 6;
-    _hitInterval     = 0.1f;   
-    _hitLaunchForce  = 0.f; 
+    _lifetime        = 5.f;
+    _maxHitCount     = 0;
 
     _colliderRadius  = 0.3f;
     _collisionPreset = Collision_Preset::Player_Attack;
@@ -37,10 +35,13 @@ HRESULT Skill_Kirin::Initialize(void* arg)
     CHECK_FAILED(SkillObject::Initialize(arg), E_FAIL);
 
     EffectComponent::FPlayDesc playDesc{};
-    playDesc.effectAssetName = "Rasengan";
-    playDesc.loopOverride = true;
+    playDesc.effectAssetName = "Kirin2";
+    playDesc.loopOverride = false;
 
     CHECK_FAILED(_effectCom->Play_Effect(playDesc), E_FAIL);
+
+    // 노티파이로 해도 되긴하는데
+    GAME->Play_Cinematic(L"Skill_Kirin", Get_Owner()->Get_Transform(), true);
 
     return S_OK;
 }

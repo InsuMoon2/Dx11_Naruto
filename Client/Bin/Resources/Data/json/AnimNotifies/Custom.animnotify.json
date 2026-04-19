@@ -669,7 +669,35 @@
         {
             "clip_name": "SK_CHR_NormalModel|CustomMan_DashStep_Front",
             "display_fps": 30,
-            "notifies": [],
+            "notifies": [
+                {
+                    "payload": {
+                        "attach_to_bone": false,
+                        "bone_name": "CharacterRoot",
+                        "effect_name": "SmokeRing",
+                        "local_offset": [
+                            0.0,
+                            -1.5,
+                            -0.5
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            1.5,
+                            1.0,
+                            1.5
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": true
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "AN_SpawnParticle"
+                }
+            ],
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
@@ -971,6 +999,7 @@
                     "payload": {
                         "aim_at_target": true,
                         "collision_preset": 3,
+                        "launch_if_projectile": true,
                         "local_offset": [
                             0.0,
                             1.2000000476837158,
@@ -1248,6 +1277,7 @@
                     "payload": {
                         "aim_at_target": true,
                         "collision_preset": 3,
+                        "launch_if_projectile": true,
                         "local_offset": [
                             0.0,
                             1.2000000476837158,
@@ -1801,16 +1831,120 @@
             ]
         },
         {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
+            "clip_name": "SK_CHR_NormalModel|Hashirama_Ninjutsu_ShinsuSenju",
             "display_fps": 30,
             "notifies": [
                 {
                     "payload": {
-                        "effect_name": "RingEffect",
+                        "block_game_input": true,
+                        "sequence_name": "Skill_ShinsuSenju"
+                    },
+                    "time_sec": 0.1666666716337204,
+                    "track_index": 0,
+                    "type": "AN_PlayCinematic"
+                },
+                {
+                    "payload": {
+                        "aim_at_target": false,
+                        "collision_preset": 11,
+                        "launch_if_projectile": false,
+                        "local_offset": [
+                            0.0,
+                            1.2000000476837158,
+                            1.7999999523162842
+                        ],
+                        "spawn_type": 25,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 1.0,
+                    "track_index": 0,
+                    "type": "AN_SpawnSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Kirin",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "aim_at_target": false,
+                        "collision_preset": 3,
+                        "launch_if_projectile": false,
+                        "local_offset": [
+                            0.0,
+                            2.0,
+                            5.0
+                        ],
+                        "spawn_type": 28,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.800000011920929,
+                    "track_index": 0,
+                    "type": "AN_SpawnSkill"
+                },
+                {
+                    "payload": {
+                        "aim_at_target": false,
+                        "collision_preset": 3,
+                        "launch_if_projectile": false,
+                        "local_offset": [
+                            0.0,
+                            0.0,
+                            5.0
+                        ],
+                        "spawn_type": 26,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 5.599999904632568,
+                    "track_index": 0,
+                    "type": "AN_SpawnSkill"
+                },
+                {
+                    "payload": {
+                        "attach_to_bone": true,
+                        "bone_name": "L_Hand_Weapon_cnt_tr",
+                        "effect_name": "Chidori_Charging",
+                        "local_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            0.5,
+                            0.5,
+                            0.5
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
+                    },
+                    "time_sec": 2.366666555404663,
+                    "track_index": 1,
+                    "type": "AN_SpawnParticle"
+                },
+                {
+                    "payload": {
+                        "effect_name": "Chidori_Charging",
                         "stop_all_from_owner": false
                     },
-                    "time_sec": 0.06666667014360428,
-                    "track_index": 0,
+                    "time_sec": 6.699999809265137,
+                    "track_index": 1,
                     "type": "AN_StopParticle"
                 }
             ],
@@ -1823,6 +1957,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         }

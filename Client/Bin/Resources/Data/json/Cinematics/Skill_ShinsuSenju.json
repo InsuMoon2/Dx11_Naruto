@@ -1,0 +1,118 @@
+{
+    "name": "Skill_ShinsuSenju",
+    "track": {
+        "fps": 30,
+        "keys": [
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 1.0471975803375244,
+                "frame": 0,
+                "pitch": 0.0,
+                "position": [
+                    0.13699999451637268,
+                    1.628999948501587,
+                    2.0339999198913574
+                ],
+                "rotation": [
+                    -0.000453499291324988,
+                    0.9995101094245911,
+                    0.01744646020233631,
+                    0.025981057435274124
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "EaseInOut",
+                "fov_y": 1.0471975803375244,
+                "frame": 30,
+                "pitch": 0.0,
+                "position": [
+                    0.0,
+                    1.2289999723434448,
+                    1.2339999675750732
+                ],
+                "rotation": [
+                    0.0004534994950518012,
+                    -0.9995101094245911,
+                    -0.01744646206498146,
+                    -0.02598106861114502
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 1.0471975803375244,
+                "frame": 36,
+                "pitch": 0.0,
+                "position": [
+                    3.7370002269744873,
+                    14.628998756408691,
+                    -9.86600112915039
+                ],
+                "rotation": [
+                    -0.011898025870323181,
+                    0.8887169361114502,
+                    0.45771926641464233,
+                    0.02310144156217575
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 1.0471975803375244,
+                "frame": 53,
+                "pitch": 0.0,
+                "position": [
+                    3.736999988555908,
+                    14.628999710083008,
+                    -9.866000175476074
+                ],
+                "rotation": [
+                    -0.011898025870323181,
+                    0.888716995716095,
+                    0.4577192962169647,
+                    0.0231014434248209
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            }
+        ],
+        "total_frames": 60,
+        "track_name": "Camera"
+    }
+}

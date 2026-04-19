@@ -19,11 +19,9 @@ public:
 
     bool Has_SuperArmor() const override { return true; }
 
-    // 도착위치 계산
     bool Prepare_Replacement(PlayerStateMachine* state);
 
 private:
-    // 입력 방향 기준
     Vec3 Compute_BaseDirection(PlayerStateMachine* state);
 
     bool Try_FindReplacementDestination(
@@ -39,8 +37,10 @@ private:
 
 private:
     Vec3 _teleportDestination = Vec3::Zero;
-
     Vec3 _landingDirection = Vec3::Forward;
+
+    bool _requestedLandingEnd = false;
+
     bool _isPrepared = false;
 
 public:

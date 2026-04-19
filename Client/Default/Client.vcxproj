@@ -333,7 +333,8 @@
     <ClInclude Include="..\Public\Skill_Chidori.h" />
     <ClInclude Include="..\Public\Skill_Chidori_Hit.h" />
     <ClInclude Include="..\Public\Skill_FireBall.h" />
-    <ClInclude Include="..\Public\Skill_Jinsutansu.h" />
+    <ClInclude Include="..\Public\Skill_Kirin_Hit.h" />
+    <ClInclude Include="..\Public\Skill_ShinsuSenju.h" />
     <ClInclude Include="..\Public\Skill_Kirin.h" />
     <ClInclude Include="..\Public\Skill_Rasengan.h" />
     <ClInclude Include="..\Public\Skill_Rasengan_Hit.h" />
@@ -492,7 +493,8 @@
     <ClCompile Include="..\Private\Skill_Chidori.cpp" />
     <ClCompile Include="..\Private\Skill_Chidori_Hit.cpp" />
     <ClCompile Include="..\Private\Skill_FireBall.cpp" />
-    <ClCompile Include="..\Private\Skill_Jinsutansu.cpp" />
+    <ClCompile Include="..\Private\Skill_Kirin_Hit.cpp" />
+    <ClCompile Include="..\Private\Skill_ShinsuSenju.cpp" />
     <ClCompile Include="..\Private\Skill_Kirin.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan_Hit.cpp" />
@@ -577,6 +579,10 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_VtxEffectMesh.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_VtxEffectSkeletalMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>

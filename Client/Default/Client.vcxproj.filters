@@ -359,10 +359,13 @@
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Skill_WindmillShuriken.h" />
-    <ClInclude Include="..\Public\Skill_Jinsutansu.h">
+    <ClInclude Include="..\Public\Skill_ShinsuSenju.h">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Skill_Kirin.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_Kirin_Hit.h">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClInclude>
   </ItemGroup>
@@ -707,10 +710,13 @@
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Skill_WindmillShuriken.cpp" />
-    <ClCompile Include="..\Private\Skill_Jinsutansu.cpp">
+    <ClCompile Include="..\Private\Skill_ShinsuSenju.cpp">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Skill_Kirin.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_Kirin_Hit.cpp">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClCompile>
   </ItemGroup>
@@ -903,6 +909,9 @@
       <Filter>94. Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Shaders\Shader_SkySphere.hlsl">
+      <Filter>94. Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shaders\Shader_VtxEffectSkeletalMesh.hlsl">
       <Filter>94. Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -6,6 +6,7 @@
 #include "SkillDataManager.h"
 #include "GameObject_Factory.h"
 #include "UI_WeaponType.h"
+#include "EquipmentComponent.h"
 
 REGISTER_GAMEOBJECT(UI_PlayerSkill, Protocol::OBJECT_TYPE_UI_PLAYER_SKILL)
 
@@ -91,6 +92,7 @@ void UI_PlayerSkill::Update(float timeDelta)
         _subSkillSlot[i]->Set_SrvIndex(subSkillData->uiIconSrvIndex);
         _subSkillSlot[i]->Set_CooldownRatio(skillCom->Get_SubSkillCooldownRatio(subSkillType));
     }
+    
 
 }
 
@@ -117,6 +119,11 @@ void UI_PlayerSkill::Bind_Player(Shared<Player> player)
 
     _weaponTypeHandle = GAME->Get_DelegateHub().OnWeaponTypeChanged.Add(
         this, &UI_PlayerSkill::On_WeaponTypeChanged);
+
+    // HUD 바인드 시점에 현재 전투 타입을 즉시 반영해서 초기 표기와 실제 장착 상태를 맞춘다.
+    auto equipment = player ? player->Get_Component<EquipmentComponent>() : nullptr;
+    if (equipment)
+        On_WeaponTypeChanged(static_cast<int32>(equipment->Get_CurrentWeaponType()));
 }
 
 HRESULT UI_PlayerSkill::Ready_Skill(void* arg)

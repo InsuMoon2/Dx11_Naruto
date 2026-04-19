@@ -50,6 +50,20 @@
             "Level": "Static"
         },
         {
+            "Id": "Model_Replacement",
+            "Path": "../../Client/Bin/Resources/Models/Replacement/Replacement_Tree.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Replacement_Text",
+            "Path": "../../Client/Bin/Resources/Models/Replacement/Replacement_Text.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
             "Id": "Model_Headgear_Man_Cap1",
             "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_Cap1.meshbin",
             "Count": 1,
@@ -201,6 +215,27 @@
             "Path": "../../Client/Bin/Resources/Skills/FireBall/Meshes/FireBall_D.meshbin",
             "Count": 1,
             "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "ShinsuSenju",
+            "Path": "../../Client/Bin/Resources/Models/ShinsuSenju/ShinsuSenju.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "ShinsuSenju_Arm",
+            "Path": "../../Client/Bin/Resources/Models/ShinsuSenju/ShinsuSenju_Arm.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Kirin",
+            "Path": "../../Client/Bin/Resources/Models/Kirin/Kirin.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
             "Level": "Static"
         },
         {

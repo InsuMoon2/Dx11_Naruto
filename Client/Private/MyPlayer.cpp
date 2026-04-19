@@ -18,6 +18,7 @@
 #include "Debug_Manager.h"
 #include "TargetComponent.h"
 #include "Customizer_Manager.h"
+#include "SkillComponent.h"
 
 REGISTER_GAMEOBJECT(MyPlayer, Protocol::OBJECT_TYPE_PLAYER)
 
@@ -79,6 +80,14 @@ void MyPlayer::BeginPlay()
 {
     Player::BeginPlay();
 
+    if (_equipment)
+        _equipment->Set_WeaponType(EWeaponType::Hand);
+
+    if (_skill)
+        _skill->Apply_WeaponSkillSet(EWeaponType::Hand);
+
+    Refresh_WeaponAttachment_ByCurrentState();
+    GAME->Get_DelegateHub().OnWeaponTypeChanged.Broadcast(static_cast<int32>(EWeaponType::Hand));
 }
 
 void MyPlayer::Priority_Update(float timeDelta)

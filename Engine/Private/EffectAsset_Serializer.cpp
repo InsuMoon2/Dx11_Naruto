@@ -120,11 +120,16 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         layerDesc.base.endScale.y,
         layerDesc.base.endScale.z
     };
+    j["scaleDuration"] = layerDesc.base.scaleDuration;
 
-    if (layerDesc.base.kind == EEffectLayerKind::Mesh)
+    if (layerDesc.base.kind == EEffectLayerKind::Mesh ||
+        layerDesc.base.kind == EEffectLayerKind::SkeletalMesh)
     {
         const auto& mesh = layerDesc.mesh;
         j["modelGuid"] = mesh.modelGuid;
+        j["animationName"] = mesh.animationName;
+        j["animationLoop"] = mesh.animationLoop;
+        j["animationPlayRate"] = mesh.animationPlayRate;
         j["diffuseTextureGuid"] = mesh.diffuseTextureGuid;
         j["maskTextureGuid"] = mesh.maskTextureGuid;
         j["emissiveTextureGuid"] = mesh.emissiveTextureGuid;
@@ -175,6 +180,58 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["useOpacityAsTransparency"] = mesh.useOpacityAsTransparency;
         j["customParams0"] = { mesh.customParams0.x, mesh.customParams0.y, mesh.customParams0.z, mesh.customParams0.w };
         j["customParams1"] = { mesh.customParams1.x, mesh.customParams1.y, mesh.customParams1.z, mesh.customParams1.w };
+
+        if (!mesh.materialOverrides.empty())
+        {
+            json materialOverrides = json::array();
+
+            for (const auto& overrideDesc : mesh.materialOverrides)
+            {
+                json overrideJson;
+                overrideJson["materialName"] = overrideDesc.materialName;
+                overrideJson["enabled"] = overrideDesc.enabled;
+                overrideJson["diffuseTextureGuid"] = overrideDesc.diffuseTextureGuid;
+                overrideJson["maskTextureGuid"] = overrideDesc.maskTextureGuid;
+                overrideJson["emissiveTextureGuid"] = overrideDesc.emissiveTextureGuid;
+                overrideJson["opacityTextureGuid"] = overrideDesc.opacityTextureGuid;
+                overrideJson["opacitySubUvTextureGuid"] = overrideDesc.opacitySubUvTextureGuid;
+                overrideJson["opacityGradationTextureGuid"] = overrideDesc.opacityGradationTextureGuid;
+                overrideJson["emissiveGradationTextureGuid"] = overrideDesc.emissiveGradationTextureGuid;
+                overrideJson["uvDistortionTextureGuid"] = overrideDesc.uvDistortionTextureGuid;
+                overrideJson["normalTextureGuid"] = overrideDesc.normalTextureGuid;
+                overrideJson["roughnessTextureGuid"] = overrideDesc.roughnessTextureGuid;
+                overrideJson["specularTextureGuid"] = overrideDesc.specularTextureGuid;
+                overrideJson["blendMode"] = static_cast<int>(overrideDesc.blendMode);
+                overrideJson["shadingMode"] = static_cast<int>(overrideDesc.shadingMode);
+                overrideJson["uvScrollSpeed"] = { overrideDesc.uvScrollSpeed.x, overrideDesc.uvScrollSpeed.y };
+                overrideJson["uvTiling"] = { overrideDesc.uvTiling.x, overrideDesc.uvTiling.y };
+                overrideJson["uvDistortionStrength"] = { overrideDesc.uvDistortionStrength.x, overrideDesc.uvDistortionStrength.y };
+                overrideJson["uvDistortionSpeed"] = { overrideDesc.uvDistortionSpeed.x, overrideDesc.uvDistortionSpeed.y };
+                overrideJson["flipbook"] = {
+                    { "enabled", overrideDesc.flipbook.enabled },
+                    { "columns", overrideDesc.flipbook.columns },
+                    { "rows", overrideDesc.flipbook.rows },
+                    { "fps", overrideDesc.flipbook.fps },
+                    { "startFrame", overrideDesc.flipbook.startFrame },
+                    { "endFrame", overrideDesc.flipbook.endFrame },
+                    { "loop", overrideDesc.flipbook.loop }
+                };
+                overrideJson["colorTint"] = { overrideDesc.colorTint.x, overrideDesc.colorTint.y, overrideDesc.colorTint.z, overrideDesc.colorTint.w };
+                overrideJson["opacity"] = overrideDesc.opacity;
+                overrideJson["normalStrength"] = overrideDesc.normalStrength;
+                overrideJson["roughness"] = overrideDesc.roughness;
+                overrideJson["specularStrength"] = overrideDesc.specularStrength;
+                overrideJson["specularPower"] = overrideDesc.specularPower;
+                overrideJson["emissiveStrength"] = overrideDesc.emissiveStrength;
+                overrideJson["fresnelPower"] = overrideDesc.fresnelPower;
+                overrideJson["fresnelMultiplier"] = overrideDesc.fresnelMultiplier;
+                overrideJson["twoSided"] = overrideDesc.twoSided;
+                overrideJson["useOpacityAsTransparency"] = overrideDesc.useOpacityAsTransparency;
+                materialOverrides.push_back(overrideJson);
+            }
+
+            j["materialOverrides"] = materialOverrides;
+        }
     }
     else if (layerDesc.base.kind == EEffectLayerKind::Point)
     {
@@ -286,11 +343,16 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
     if (j.contains("localScale")) layer.base.localScale = Vec3(j["localScale"][0], j["localScale"][1], j["localScale"][2]);
     if (j.contains("useScaleOverTime")) layer.base.useScaleOverTime = j["useScaleOverTime"];
     if (j.contains("endScale")) layer.base.endScale = Vec3(j["endScale"][0], j["endScale"][1], j["endScale"][2]);
+    if (j.contains("scaleDuration")) layer.base.scaleDuration = j["scaleDuration"];
 
-    if (layer.base.kind == EEffectLayerKind::Mesh)
+    if (layer.base.kind == EEffectLayerKind::Mesh ||
+        layer.base.kind == EEffectLayerKind::SkeletalMesh)
     {
         auto& mesh = layer.mesh;
         if (j.contains("modelGuid")) mesh.modelGuid = j["modelGuid"];
+        if (j.contains("animationName")) mesh.animationName = j["animationName"];
+        if (j.contains("animationLoop")) mesh.animationLoop = j["animationLoop"];
+        if (j.contains("animationPlayRate")) mesh.animationPlayRate = j["animationPlayRate"];
         if (j.contains("diffuseTextureGuid")) mesh.diffuseTextureGuid = j["diffuseTextureGuid"];
         if (j.contains("maskTextureGuid")) mesh.maskTextureGuid = j["maskTextureGuid"];
         if (j.contains("emissiveTextureGuid")) mesh.emissiveTextureGuid = j["emissiveTextureGuid"];
@@ -343,6 +405,57 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("useOpacityAsTransparency")) mesh.useOpacityAsTransparency = j["useOpacityAsTransparency"];
         if (j.contains("customParams0")) mesh.customParams0 = Vec4(j["customParams0"][0], j["customParams0"][1], j["customParams0"][2], j["customParams0"][3]);
         if (j.contains("customParams1")) mesh.customParams1 = Vec4(j["customParams1"][0], j["customParams1"][1], j["customParams1"][2], j["customParams1"][3]);
+
+        mesh.materialOverrides.clear();
+        if (j.contains("materialOverrides") && j["materialOverrides"].is_array())
+        {
+            for (const auto& overrideJson : j["materialOverrides"])
+            {
+                FEffectMeshMaterialOverrideDesc overrideDesc{};
+                if (overrideJson.contains("materialName")) overrideDesc.materialName = overrideJson["materialName"];
+                if (overrideJson.contains("enabled")) overrideDesc.enabled = overrideJson["enabled"];
+                if (overrideJson.contains("diffuseTextureGuid")) overrideDesc.diffuseTextureGuid = overrideJson["diffuseTextureGuid"];
+                if (overrideJson.contains("maskTextureGuid")) overrideDesc.maskTextureGuid = overrideJson["maskTextureGuid"];
+                if (overrideJson.contains("emissiveTextureGuid")) overrideDesc.emissiveTextureGuid = overrideJson["emissiveTextureGuid"];
+                if (overrideJson.contains("opacityTextureGuid")) overrideDesc.opacityTextureGuid = overrideJson["opacityTextureGuid"];
+                if (overrideJson.contains("opacitySubUvTextureGuid")) overrideDesc.opacitySubUvTextureGuid = overrideJson["opacitySubUvTextureGuid"];
+                if (overrideJson.contains("opacityGradationTextureGuid")) overrideDesc.opacityGradationTextureGuid = overrideJson["opacityGradationTextureGuid"];
+                if (overrideJson.contains("emissiveGradationTextureGuid")) overrideDesc.emissiveGradationTextureGuid = overrideJson["emissiveGradationTextureGuid"];
+                if (overrideJson.contains("uvDistortionTextureGuid")) overrideDesc.uvDistortionTextureGuid = overrideJson["uvDistortionTextureGuid"];
+                if (overrideJson.contains("normalTextureGuid")) overrideDesc.normalTextureGuid = overrideJson["normalTextureGuid"];
+                if (overrideJson.contains("roughnessTextureGuid")) overrideDesc.roughnessTextureGuid = overrideJson["roughnessTextureGuid"];
+                if (overrideJson.contains("specularTextureGuid")) overrideDesc.specularTextureGuid = overrideJson["specularTextureGuid"];
+                if (overrideJson.contains("blendMode")) overrideDesc.blendMode = static_cast<EEffectBlendMode>(overrideJson["blendMode"].get<int>());
+                if (overrideJson.contains("shadingMode")) overrideDesc.shadingMode = static_cast<EEffectMeshShadingMode>(overrideJson["shadingMode"].get<int>());
+                if (overrideJson.contains("uvScrollSpeed")) overrideDesc.uvScrollSpeed = Vec2(overrideJson["uvScrollSpeed"][0], overrideJson["uvScrollSpeed"][1]);
+                if (overrideJson.contains("uvTiling")) overrideDesc.uvTiling = Vec2(overrideJson["uvTiling"][0], overrideJson["uvTiling"][1]);
+                if (overrideJson.contains("uvDistortionStrength")) overrideDesc.uvDistortionStrength = Vec2(overrideJson["uvDistortionStrength"][0], overrideJson["uvDistortionStrength"][1]);
+                if (overrideJson.contains("uvDistortionSpeed")) overrideDesc.uvDistortionSpeed = Vec2(overrideJson["uvDistortionSpeed"][0], overrideJson["uvDistortionSpeed"][1]);
+                if (overrideJson.contains("flipbook"))
+                {
+                    const auto& flipbook = overrideJson["flipbook"];
+                    if (flipbook.contains("enabled")) overrideDesc.flipbook.enabled = flipbook["enabled"];
+                    if (flipbook.contains("columns")) overrideDesc.flipbook.columns = flipbook["columns"];
+                    if (flipbook.contains("rows")) overrideDesc.flipbook.rows = flipbook["rows"];
+                    if (flipbook.contains("fps")) overrideDesc.flipbook.fps = flipbook["fps"];
+                    if (flipbook.contains("startFrame")) overrideDesc.flipbook.startFrame = flipbook["startFrame"];
+                    if (flipbook.contains("endFrame")) overrideDesc.flipbook.endFrame = flipbook["endFrame"];
+                    if (flipbook.contains("loop")) overrideDesc.flipbook.loop = flipbook["loop"];
+                }
+                if (overrideJson.contains("colorTint")) overrideDesc.colorTint = Vec4(overrideJson["colorTint"][0], overrideJson["colorTint"][1], overrideJson["colorTint"][2], overrideJson["colorTint"][3]);
+                if (overrideJson.contains("opacity")) overrideDesc.opacity = overrideJson["opacity"];
+                if (overrideJson.contains("normalStrength")) overrideDesc.normalStrength = overrideJson["normalStrength"];
+                if (overrideJson.contains("roughness")) overrideDesc.roughness = overrideJson["roughness"];
+                if (overrideJson.contains("specularStrength")) overrideDesc.specularStrength = overrideJson["specularStrength"];
+                if (overrideJson.contains("specularPower")) overrideDesc.specularPower = overrideJson["specularPower"];
+                if (overrideJson.contains("emissiveStrength")) overrideDesc.emissiveStrength = overrideJson["emissiveStrength"];
+                if (overrideJson.contains("fresnelPower")) overrideDesc.fresnelPower = overrideJson["fresnelPower"];
+                if (overrideJson.contains("fresnelMultiplier")) overrideDesc.fresnelMultiplier = overrideJson["fresnelMultiplier"];
+                if (overrideJson.contains("twoSided")) overrideDesc.twoSided = overrideJson["twoSided"];
+                if (overrideJson.contains("useOpacityAsTransparency")) overrideDesc.useOpacityAsTransparency = overrideJson["useOpacityAsTransparency"];
+                mesh.materialOverrides.push_back(overrideDesc);
+            }
+        }
     }
     else if (layer.base.kind == EEffectLayerKind::Point)
     {

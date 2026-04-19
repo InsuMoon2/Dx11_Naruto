@@ -4,14 +4,14 @@
 
 NS_BEGIN(Client)
 
-class Skill_Jinsutansu : public SkillObject
+class Skill_Kirin_Hit : public SkillObject
 {
-    GENERATED_BODY(Skill_Jinsutansu)
+    GENERATED_BODY(Skill_Kirin_Hit)
 
 public:
-    explicit Skill_Jinsutansu(ComPtr<Device> device, ComPtr<DeviceContext> context);
-    explicit Skill_Jinsutansu(const Skill_Jinsutansu& rhs);
-    virtual ~Skill_Jinsutansu() = default;
+    explicit Skill_Kirin_Hit(ComPtr<Device> device, ComPtr<DeviceContext> context);
+    explicit Skill_Kirin_Hit(const Skill_Kirin_Hit& rhs);
+    virtual ~Skill_Kirin_Hit() = default;
     
 public:
     HRESULT Initialize_Prototype() override;

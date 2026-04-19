@@ -17,6 +17,7 @@ enum class EEffectLayerKind : uint8
     Point = 0,                                  // VIBuffer_Particle_Point 기반 빌보드 파티클
     Mesh,                                       // 3D 메쉬 기반 이펙트 (나선환 등)
     BillboardRect,
+    SkeletalMesh,                               // 본 애니메이션이 필요한 스켈레탈 메쉬 이펙트 레이어
     END
 };
 
@@ -54,6 +55,46 @@ struct FEffectFlipbookDesc
     int startFrame = 0;                         // 재생 시작 프레임 인덱스다.
     int endFrame = -1;                          // -1이면 시트 마지막 프레임까지 사용하고, 아니면 이 프레임에서 끝난다.
     bool loop = true;                           // 마지막 프레임까지 갔을 때 다시 처음으로 돌릴지 결정한다.
+};
+
+struct FEffectMeshMaterialOverrideDesc
+{
+    string materialName;
+    bool enabled = true;
+
+    string diffuseTextureGuid;
+    string maskTextureGuid;
+    string emissiveTextureGuid;
+    string opacityTextureGuid;
+    string opacitySubUvTextureGuid;
+    string opacityGradationTextureGuid;
+    string emissiveGradationTextureGuid;
+    string uvDistortionTextureGuid;
+    string normalTextureGuid;
+    string roughnessTextureGuid;
+    string specularTextureGuid;
+
+    EEffectBlendMode blendMode = EEffectBlendMode::Translucent;
+    EEffectMeshShadingMode shadingMode = EEffectMeshShadingMode::Unlit;
+
+    Vec2 uvScrollSpeed = Vec2(0.f, 0.f);
+    Vec2 uvTiling = Vec2(1.f, 1.f);
+    Vec2 uvDistortionStrength = Vec2(0.f, 0.f);
+    Vec2 uvDistortionSpeed = Vec2(0.f, 0.f);
+    FEffectFlipbookDesc flipbook;
+
+    Vec4 colorTint = Vec4(1.f, 1.f, 1.f, 1.f);
+    float opacity = 1.f;
+    float normalStrength = 1.f;
+    float roughness = 0.5f;
+    float specularStrength = 1.f;
+    float specularPower = 32.f;
+    float emissiveStrength = 1.f;
+    float fresnelPower = 0.f;
+    float fresnelMultiplier = 1.f;
+
+    bool twoSided = false;
+    bool useOpacityAsTransparency = false;
 };
 
 struct FEffectLayerBase
@@ -124,6 +165,9 @@ struct FEffectPointLayerDesc
 struct FEffectMeshLayerDesc
 {
     string modelGuid;                          // Asset_Manager GUID로 메쉬 참조
+    string animationName;                      // SkeletalMesh 레이어에서 재생할 애니메이션 이름이다.
+    bool animationLoop = true;                 // SkeletalMesh 레이어의 애니메이션 루프 여부다.
+    float animationPlayRate = 1.f;             // SkeletalMesh 레이어의 애니메이션 재생 속도다.
 
     string diffuseTextureGuid;                
     string maskTextureGuid;
@@ -173,6 +217,8 @@ struct FEffectMeshLayerDesc
     bool useOpacityAsTransparency = false;     // Additive 메쉬라도 opacity를 일반 알파 투명도처럼 처리하고 싶을 때 켜는 옵션이다.
     Vec4 customParams0 = Vec4::Zero;           // 셰이더에서 자유롭게 읽을 수 있는 사용자 정의 파라미터 0번 슬롯이다.
     Vec4 customParams1 = Vec4::Zero;           // 셰이더에서 자유롭게 읽을 수 있는 사용자 정의 파라미터 1번 슬롯이다.
+
+    vector<FEffectMeshMaterialOverrideDesc> materialOverrides;
 };
 
 struct FEffectBillboardLayerDesc

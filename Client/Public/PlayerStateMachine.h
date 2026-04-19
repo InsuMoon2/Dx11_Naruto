@@ -112,6 +112,7 @@ public:
     void Set_ForceGroundAttack(bool val) { _forceGroundAttack = val; }
     bool Is_ForceGroundAttack() const    { return _forceGroundAttack; }
 
+
 private:
     void                        Register_DefaultStates();
 
@@ -124,8 +125,6 @@ private:
     bool                        Check_Death();
     bool                        Check_Cinematic();
     bool                        Check_HitReaction(); // 슈퍼아머 아닐 때
-
-    
 
 private:
     Shared<InputComponent>                      _input;
