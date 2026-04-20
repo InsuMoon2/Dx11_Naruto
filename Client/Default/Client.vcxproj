@@ -286,6 +286,7 @@
     <ClInclude Include="..\Public\Level_Gameplay.h" />
     <ClInclude Include="..\Public\Level_Konoha.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
+    <ClInclude Include="..\Public\Level_Lobby.h" />
     <ClInclude Include="..\Public\Level_MainTitle.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\CharkraMove_Component.h" />
@@ -452,6 +453,7 @@
     <ClCompile Include="..\Private\Level_Gameplay.cpp" />
     <ClCompile Include="..\Private\Level_Konoha.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
+    <ClCompile Include="..\Private\Level_Lobby.cpp" />
     <ClCompile Include="..\Private\Level_MainTitle.cpp" />
     <ClCompile Include="..\Private\CharkraMove_Component.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />

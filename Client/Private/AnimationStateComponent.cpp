@@ -492,7 +492,14 @@ void AnimationStateComponent::Capture_FromStateMachine(const Shared<PlayerStateM
         return;
 
     // 현재 FSM 기준 먼저 읽기
-    const EPlayerState localState = stateMachine->Get_CurrentStateID();
+    EPlayerState localState = stateMachine->Get_CurrentStateID();
+
+    // 현재 재생 중인 애니메이션 상태명이 EPlayerState와 매칭이 된다면,
+    // 해다ㅇ 애니메이션 상태를 object_state로 전달해서 ->End 애니메이션이 나와야 노티파이가 정상적으로 실행된다.
+    auto currentAnimState = magic_enum::enum_cast<EPlayerState>(_currentStateName);
+    if (currentAnimState.has_value())
+        localState = currentAnimState.value();
+
     const Protocol::OBJECT_STATE_TYPE replicatedState = To_ReplicatedState(localState);
 
     const EMoveInputDirection nextDir = stateMachine->Get_PendingMoveInputDirection();
@@ -504,6 +511,7 @@ void AnimationStateComponent::Capture_FromStateMachine(const Shared<PlayerStateM
     _replicatedState.dir = nextDir;
     _replicatedState.phase = nextPhase;
 
+    // 현재 재생 애니메이션 기준으로 상태가 바뀐 경우에도 원격 클라에서 재시작되도록
     _replicatedState.forceRestart = stateChanged && Requires_ForceRestart(localState);
 
     // 다음 변경 상태가 Attack일 때에만 프로파일 체크

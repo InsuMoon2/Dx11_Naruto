@@ -278,6 +278,11 @@ Protocol::ObjectInfo MyPlayer::Build_NetworkInfo() const
         _animState->Write_ToObjectInfo(info);
     }
 
+    info.set_name(Utils::ToString(Get_PlayerName()));
+
+    if (_combatStat)
+        _combatStat->Serialize_ToProtobuf(*info.mutable_stat());
+
     return info;
 }
 

@@ -376,6 +376,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\MeshDebrisObject.h" />
     <ClInclude Include="..\Public\EnemyCharacter.h" />
+    <ClInclude Include="..\Public\Level_Lobby.h">
+      <Filter>01. Levels\04. Lobby</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -735,6 +738,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\MeshDebrisObject.cpp" />
     <ClCompile Include="..\Private\EnemyCharacter.cpp" />
+    <ClCompile Include="..\Private\Level_Lobby.cpp">
+      <Filter>01. Levels\04. Lobby</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">
@@ -871,6 +877,9 @@
     </Filter>
     <Filter Include="06. Behavior\Task">
       <UniqueIdentifier>{6f724b98-d1cd-49eb-aa92-aea4c03e5e27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\04. Lobby">
+      <UniqueIdentifier>{8daca4d6-7298-4fd5-bd83-d6f84bb002ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

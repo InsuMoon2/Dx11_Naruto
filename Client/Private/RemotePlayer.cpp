@@ -2,6 +2,7 @@
 #include "RemotePlayer.h"
 
 #include "AnimationStateComponent.h"
+#include "CombatStat.h"
 #include "GameObject_Factory.h"
 
 REGISTER_GAMEOBJECT(RemotePlayer, Protocol::OBJECT_TYPE_REMOTE_PLAYER)
@@ -83,6 +84,12 @@ void RemotePlayer::Sync(const Protocol::ObjectInfo& info)
     if (_animState)
     {
         _animState->Read_FromObjectInfo(info);
+    }
+
+    if (_combatStat && info.has_stat())
+    {
+        Protocol::CombatStat stat = info.stat();
+        _combatStat->Sync_FromProtobuf(stat);
     }
 }
 

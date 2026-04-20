@@ -35,9 +35,19 @@ public: /* 패킷 핸들러 */
 
 public: /* 네트워크 */
     void Broadcast(SendBufferRef sendBuffer);
+    void Broadcast_Lobby(SendBufferRef sendBuffer);
 
 public: /* 게임 로직 */
     void Update(float timeDelta);
+
+public:
+    void Join_Lobby(Shared<GameSession> session, const Protocol::C_LobbyJoin& pkt);
+
+    void Handle_LobbyChat(Shared<GameSession> session, const Protocol::C_LobbyChat& pkt);
+    void Handle_LobbyStartGame(Shared<GameSession> session);
+
+    void Send_LobbySnapshot(Shared<GameSession> session);
+    void Broadcast_LobbySnapshot();
 
 private:
     // [추가] 현재 몬스터 BT 결과를 서버로 릴레이할 권한 플레이어 id를 계산할 때 호출한다.
@@ -58,6 +68,20 @@ private:
     };
 
     static bool Load_MonsterSpawnData_FromLevel(const wstring& levelName, vector<FServerMonsterSpawnDesc>& outSpawns);
+
+    struct FLobbyPlayer
+    {
+        // 로비에서만 사용할 임시 Id
+        uint64 lobbyId = 0;
+
+        uint32 slot = 0;
+
+        Protocol::ObjectInfo info;
+        Weak<GameSession> session;
+    };
+
+    uint64 _nextLobbyId = 1;
+    map<uint64, FLobbyPlayer> _lobbyPlayers;
 
 private:
     template<typename T>

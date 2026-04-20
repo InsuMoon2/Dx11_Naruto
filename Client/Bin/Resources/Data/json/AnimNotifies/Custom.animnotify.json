@@ -1338,7 +1338,7 @@
                 },
                 {
                     "payload": {},
-                    "time_sec": 0.2666666805744171,
+                    "time_sec": 0.1666666716337204,
                     "track_index": 0,
                     "type": "AN_ClearMeleeSkill"
                 },
@@ -1357,7 +1357,7 @@
                         "spawn_object_type": 23,
                         "use_owner_forward": true
                     },
-                    "time_sec": 0.30000001192092896,
+                    "time_sec": 0.1666666716337204,
                     "track_index": 1,
                     "type": "AN_SpawnAttack"
                 }

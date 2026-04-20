@@ -15,9 +15,15 @@ enum PacketID
     S_AddObject     = 4,
     S_RemoveObject  = 5,
     S_Move          = 6,
+    S_LobbySnapshot = 7,
+    S_LobbyChat     = 8,
+    S_LobbyStartGame = 9,
 
     C_EnterGame     = 49,
     C_Move          = 50,
+    C_LobbyJoin     = 51,
+    C_LobbyChat     = 52,
+    C_LobbyStartGame = 53,
 };
 
 class Client_PacketHandler
@@ -32,9 +38,20 @@ public:
     static void Handle_S_RemoveObject(Shared<ServerSession> session, BYTE* buffer, int32 len);
     static void Handle_S_Move(Shared<ServerSession> session, BYTE* buffer, int32 len);
 
+    // 로비 참가자 목록을 받기
+    static void Handle_S_LobbySnapshot(Shared<ServerSession> session, BYTE* buffer, int32 len);
+
+    // 로비 채팅 메시지를 받기
+    static void Handle_S_LobbyChat(Shared<ServerSession> session, BYTE* buffer, int32 len);
+    static void Handle_S_LobbyStartGame(Shared<ServerSession> session, BYTE* buffer, int32 len);
+
 	// 보내기
 	static SendBufferRef Make_C_Move(const Protocol::ObjectInfo& objectInfo);
     static SendBufferRef Make_C_EnterGame(const Vec3& spawnPos, float rotY);
+
+    static SendBufferRef Make_C_LobbyJoin();
+    static SendBufferRef Make_C_LobbyChat(const wstring& message);
+    static SendBufferRef Make_C_LobbyStartGame();
 
 public:
 	template<typename T>

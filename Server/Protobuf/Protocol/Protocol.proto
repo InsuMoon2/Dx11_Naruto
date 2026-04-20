@@ -55,3 +55,42 @@ message S_UpdateStat
     uint64 player_id = 1;
     CombatStat stat = 2;
 }
+
+message LobbyPlayerInfo
+{
+    uint64      lobby_id = 1;
+    uint32      slot = 2;
+    ObjectInfo  info = 3;
+    bool        is_host = 4;
+}
+message C_LobbyJoin
+{
+    ObjectInfo info = 1;
+}
+
+message S_LobbySnapshot
+{
+    repeated LobbyPlayerInfo players = 1;
+    uint64 my_lobby_id = 2;
+}
+
+message C_LobbyChat
+{
+    string message = 1;
+}
+
+message S_LobbyChat
+{
+    uint64 lobby_id = 1;
+    string name = 2;
+    string message = 3;
+}
+
+message C_LobbyStartGame
+{
+}
+
+message S_LobbyStartGame
+{
+}
+

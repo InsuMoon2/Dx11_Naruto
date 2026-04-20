@@ -1,12 +1,12 @@
 ﻿#include "pch.h"
 #include "TargetComponent.h"
 
-#include "Bounding_Sphere.h""
+#include "Bounding_Sphere.h"
 #include "GameObject.h"
 #include "Transform.h"
 #include "Input_Manager.h" 
 #include "Collider.h"
-#include "Monster.h"
+#include "EnemyCharacter.h"
 
 TargetComponent::TargetComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Component(device, context)
@@ -182,20 +182,20 @@ void TargetComponent::Update_Candiates()
         if (otherObj == nullptr || otherObj->Is_Destroy())
             continue;
 
-        Shared<Character> monsterObj = dynamic_pointer_cast<Monster>(otherObj);
+        Shared<Character> enemyObj = dynamic_pointer_cast<EnemyCharacter>(otherObj);
 
-        if (monsterObj)
+        if (enemyObj)
         {
             // 중복 방지 
             auto iter = find_if(_candidates.begin(), _candidates.end(),
-                [&monsterObj](const Weak<Character> a)
+                [&enemyObj](const Weak<Character> a)
                 {
-                    return !a.expired() && a.lock() == monsterObj;
+                    return !a.expired() && a.lock() == enemyObj;
                 });
 
             if (iter == _candidates.end())
             {
-                _candidates.push_back(monsterObj);
+                _candidates.push_back(enemyObj);
             }
         }
 

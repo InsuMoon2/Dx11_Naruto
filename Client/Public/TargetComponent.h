@@ -4,7 +4,7 @@
 
 NS_BEGIN(Client)
 
-class Monster;
+class EnemyCharacter;
 
 class TargetComponent : public Component
 {

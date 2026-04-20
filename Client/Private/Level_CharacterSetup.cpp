@@ -854,7 +854,7 @@ void Level_CharacterSetup::Finish_CharacterSetup()
 
     GAME->Change_Level(
         ETOI(ELevelType::Loading),
-        Level_Loading::Create(_device, _context, ELevelType::GamePlay, true, spawnMode));
+        Level_Loading::Create(_device, _context, ELevelType::Lobby, true, spawnMode));
 }
 
 void Level_CharacterSetup::On_CharInput(wchar_t ch)

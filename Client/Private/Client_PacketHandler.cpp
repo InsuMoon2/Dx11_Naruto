@@ -9,6 +9,8 @@
 #include "Spawn_Helper.h"
 #include "Customizer_Manager.h"
 #include "EnemyCharacter.h"
+#include "Customizer_Manager.h"
+#include "NetworkManager.h"
 
 #include <algorithm>
 #include <limits>
@@ -70,18 +72,33 @@ void Client_PacketHandler::HandlePacket(Shared<ServerSession> session, BYTE* buf
     case S_TEST:
         Handle_S_TEST(session, buffer, len);
         break;
+
     case S_MyPlayer:
         Handle_S_MyPlayer(session, buffer, len);
         break;
+
     case S_AddObject:
         Handle_S_AddObject(session, buffer, len);
         break;
+
     case S_RemoveObject:
         Handle_S_RemoveObject(session, buffer, len);
         break;
 
     case S_Move:
         Handle_S_Move(session, buffer, len);
+        break;
+
+    case S_LobbySnapshot:
+        Handle_S_LobbySnapshot(session, buffer, len);
+        break;
+
+    case S_LobbyChat:
+        Handle_S_LobbyChat(session, buffer, len);
+        break;
+
+    case S_LobbyStartGame:
+        Handle_S_LobbyStartGame(session, buffer, len);
         break;
     }
 
@@ -148,6 +165,7 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
 
     }
 
+    player->Set_PlayerName(Utils::ToWString(pkt.info().name()));
     player->Set_NetworkId(myId);
     player->Sync(pkt.info());
 
@@ -196,8 +214,12 @@ void Client_PacketHandler::Handle_S_AddObject(Shared<ServerSession> session, BYT
                 remotePlayer->Apply_CustomizingPart(slot, assetTag);
             }
 
+            remotePlayer->Set_PlayerName(Utils::ToWString(info.name()));
+
             remotePlayer->Set_Local(false);
             remotePlayer->Set_NetworkId(objectId);
+
+            GAME->Get_DelegateHub().OnRemotePlayerObjectSpawned.Broadcast(remotePlayer);
         }
 
         // 네트워크 몬스터면, 로컬 AI를 끄고 서버 상태에 따라서 움직이도록 -> Behavior Tree 동기화 어떻게 할지?
@@ -269,6 +291,30 @@ void Client_PacketHandler::Handle_S_Move(Shared<ServerSession> session, BYTE* bu
     Apply_NetworkObjectInfo(gameObject, pkt.info());
 }
 
+void Client_PacketHandler::Handle_S_LobbySnapshot(Shared<ServerSession> session, BYTE* buffer, int32 len)
+{
+    Protocol::S_LobbySnapshot pkt;
+    ParsePacket(buffer, pkt);
+
+    GAME->Get_DelegateHub().OnLobbySnapshotReceived.Broadcast(pkt);
+}
+
+void Client_PacketHandler::Handle_S_LobbyChat(Shared<ServerSession> session, BYTE* buffer, int32 len)
+{
+    Protocol::S_LobbyChat pkt;
+    ParsePacket(buffer, pkt);
+
+    GAME->Get_DelegateHub().OnLobbyChatReceived.Broadcast(pkt);
+}
+
+void Client_PacketHandler::Handle_S_LobbyStartGame(Shared<ServerSession> session, BYTE* buffer, int32 len)
+{
+    Protocol::S_LobbyStartGame pkt;
+    ParsePacket(buffer, pkt);
+
+    GAME->Get_DelegateHub().OnLobbyStartGameReceived.Broadcast();
+}
+
 SendBufferRef Client_PacketHandler::Make_C_Move(const Protocol::ObjectInfo& objectInfo)
 {
     Protocol::C_Move pkt;
@@ -290,6 +336,8 @@ SendBufferRef Client_PacketHandler::Make_C_EnterGame(const Vec3& spawnPos, float
     pkt.set_rot_y(rotY);
 
     auto custom = GET_SINGLE(Customizer_Manager);
+    pkt.mutable_info()->set_name(Utils::ToString(custom->Get_PlayerName()));
+
     const auto& customDesc = custom->Get_CustomizerDesc();
 
     for (int32 i = 0; i < ETOI(ContainerObject::EPartSlot::END); ++i)
@@ -302,6 +350,48 @@ SendBufferRef Client_PacketHandler::Make_C_EnterGame(const Vec3& spawnPos, float
     }
 
     return MakeSendBuffer(pkt, C_EnterGame);
+}
+
+SendBufferRef Client_PacketHandler::Make_C_LobbyJoin()
+{
+    Protocol::C_LobbyJoin pkt;
+
+    auto custom = GET_SINGLE(Customizer_Manager);
+    auto* info = pkt.mutable_info();
+
+    info->set_objecttype(Protocol::OBJECT_TYPE_PLAYER);
+    info->set_name(Utils::ToString(custom->Get_PlayerName()));
+
+    const auto& customDesc = custom->Get_CustomizerDesc();
+    for (int32 i = 0; i < ETOI(ContainerObject::EPartSlot::END); ++i)
+    {
+        const wstring& partTag = customDesc.partTags[i];
+        if (!partTag.empty())
+        {
+            (*info->mutable_equipparts())[i] = Utils::ToString(partTag);
+        }
+    }
+
+    return MakeSendBuffer(pkt, C_LobbyJoin);
+}
+
+SendBufferRef Client_PacketHandler::Make_C_LobbyChat(const wstring& message)
+{
+    Protocol::C_LobbyChat pkt;
+
+    wstring trimmed = message;
+    if (trimmed.size() > 80)
+        trimmed = trimmed.substr(0, 80);
+
+    pkt.set_message(Utils::ToString(trimmed));
+    return MakeSendBuffer(pkt, C_LobbyChat);
+}
+
+SendBufferRef Client_PacketHandler::Make_C_LobbyStartGame()
+{
+    Protocol::C_LobbyStartGame pkt;
+
+    return MakeSendBuffer(pkt, C_LobbyStartGame);
 }
 
 Shared<GameObject> Client_PacketHandler::Spawn_NetworkObject(const Protocol::ObjectInfo& info, uint32 levelIndex)

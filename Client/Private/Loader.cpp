@@ -146,6 +146,10 @@ HRESULT Loader::Loading()
     case ELevelType::Konoha:
         hr = Loading_For_Konoha();
         break;
+
+    case ELevelType::Lobby:
+        hr = Loading_For_Lobby();
+        break;
     }
 
     if (FAILED(hr))
@@ -642,6 +646,26 @@ HRESULT Loader::Loading_For_Konoha()
     _completedJobs = 0;
     _prepareFinished = true;
 
+    _isFinished = (_totalJobs.load() == 0);
+
+    return S_OK;
+}
+
+HRESULT Loader::Loading_For_Lobby()
+{
+    vector<FLoadJob> jobs;
+
+    lstrcpy(_loadingText, TEXT("로비 리소스 작업 준비 중"));
+
+    {
+        scoped_lock lock(_jobMutex);
+        for (auto& job : jobs)
+            _pendingJobs.push(std::move(job));
+    }
+
+    _totalJobs = static_cast<int32>(jobs.size());
+    _completedJobs = 0;
+    _prepareFinished = true;
     _isFinished = (_totalJobs.load() == 0);
 
     return S_OK;

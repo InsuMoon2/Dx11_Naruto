@@ -160,6 +160,19 @@ void Player::OnDead(const FDamageEvent& damageEvent)
 void Player::Sync(const Protocol::ObjectInfo& info)
 {
     _transformCom->Set_LocalPosition(info.pos().x(), info.pos().y(), info.pos().z());
+
+    // 서버에서 이름 세팅한거 로컬에도 세팅되게
+    if (!info.name().empty())
+    {
+        Set_PlayerName(Utils::ToWString(info.name()));
+    }
+
+    // Hp 갱신도
+    if (_combatStat && info.has_stat())
+    {
+        Protocol::CombatStat stat = info.stat();
+        _combatStat->Sync_FromProtobuf(stat);
+    }
 }
 
 HRESULT Player::Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetTag)

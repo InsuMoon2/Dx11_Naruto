@@ -13,11 +13,16 @@ enum PacketID
     S_AddObject     = 4,
     S_RemoveObject  = 5,
     S_Move          = 6,
+    S_LobbySnapshot = 7,
+    S_LobbyChat     = 8,
+    S_LobbyStartGame = 9,
                        
     // Client -> Server
     C_EnterGame     = 49,
     C_Move          = 50,
-
+    C_LobbyJoin     = 51,
+    C_LobbyChat     = 52,
+    C_LobbyStartGame = 53,
 };
 
 struct BuffData
@@ -39,11 +44,19 @@ public:
     static void Handle_C_Move(shared_ptr<GameSession> session, BYTE* buffer, int32 len);
     static void Handle_C_EnterGame(shared_ptr<GameSession> session, BYTE* buffer, int32 len);
 
+    static void Handle_C_LobbyJoin(shared_ptr<GameSession> session, BYTE* buffer, int32 len);
+    static void Handle_C_LobbyChat(shared_ptr<GameSession> session, BYTE* buffer, int32 len);
+    static void Handle_C_LobbyStartGame(shared_ptr<GameSession> session, BYTE* buffer, int32 len);
+
     // 보내기
     static SendBufferRef Make_S_MyPlayer(Protocol::ObjectInfo& info);
     static SendBufferRef Make_S_AddObject(Protocol::S_AddObject& pkt);
     static SendBufferRef Make_S_RemoveObject(Protocol::S_RemoveObject& pkt);
     static SendBufferRef Make_S_Move(Protocol::ObjectInfo& info);
+
+    static SendBufferRef Make_S_LobbySnapshot(Protocol::S_LobbySnapshot& pkt);
+    static SendBufferRef Make_S_LobbyChat(Protocol::S_LobbyChat& pkt);
+    static SendBufferRef Make_S_LobbyStartGame();
 
     template<typename T>
     static SendBufferRef MakeSendBuffer(T& pkt, uint16 pktId)

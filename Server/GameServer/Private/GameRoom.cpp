@@ -83,7 +83,10 @@ void GameRoom::Enter_GameRoom(Shared<GameSession> session, const Protocol::C_Ent
     player->Set_Session(session);
     session->Set_PlayerId(player->Get_ObjectID());
 
-    //player->info = pkt.info();
+    if (!pkt.info().name().empty())
+    {
+        player->info.set_name(pkt.info().name());
+    }
 
     for (auto& pair : pkt.info().equipparts())
     {
@@ -131,6 +134,23 @@ void GameRoom::Leave_GameRoom(Shared<GameSession> session)
     if (session == nullptr)
         return;
 
+    bool lobbyChanged = false;
+    for (auto iter = _lobbyPlayers.begin(); iter != _lobbyPlayers.end(); )
+    {
+        auto lobbySession = iter->second.session.lock();
+        if (lobbySession == session || !lobbySession)
+        {
+            iter = _lobbyPlayers.erase(iter);
+            lobbyChanged = true;
+            continue;
+        }
+
+        ++iter;
+    }
+
+    if (lobbyChanged)
+        Broadcast_LobbySnapshot();
+
     Shared<Player> player = Find_Player(session->Get_PlayerId());
     if (player == nullptr)
         return;
@@ -140,7 +160,6 @@ void GameRoom::Leave_GameRoom(Shared<GameSession> session)
 
     cout << "[Room] Player " << id
         << " Left (" << _players.size() << " players)" << endl;
-
 }
 
 uint64 GameRoom::Get_MonsterAuthorityPlayerId() const
@@ -203,6 +222,18 @@ void GameRoom::Broadcast(SendBufferRef sendBuffer)
     }
 }
 
+void GameRoom::Broadcast_Lobby(SendBufferRef sendBuffer)
+{
+    for (auto& [lobbyId, lobbyPlayer] : _lobbyPlayers)
+    {
+        auto session = lobbyPlayer.session.lock();
+        if (!session)
+            continue;
+
+        session->Send(sendBuffer);
+    }
+}
+
 void GameRoom::Update(float timeDelta)
 {
     for (auto& [id, player] : _players)
@@ -210,7 +241,116 @@ void GameRoom::Update(float timeDelta)
         player->Update();
     }
 
-    // [변경] 몬스터는 권한 클라이언트가 기존 BT를 그대로 돌리고, 서버는 릴레이만 담당한다.
+}
+
+void GameRoom::Join_Lobby(Shared<GameSession> session, const Protocol::C_LobbyJoin& pkt)
+{
+    CHECK_NULL(session);
+
+    for (auto& [lobbyId, lobbyPlayer] : _lobbyPlayers)
+    {
+        auto existingSession = lobbyPlayer.session.lock();
+        if (existingSession == session)
+        {
+            lobbyPlayer.info = pkt.info();
+            Broadcast_LobbySnapshot();
+            return;
+        }
+    }
+
+    if (_lobbyPlayers.size() >= 2)
+        return;
+
+    FLobbyPlayer lobbyPlayer{};
+    lobbyPlayer.lobbyId = _nextLobbyId++;
+    lobbyPlayer.slot = static_cast<uint32>(_lobbyPlayers.size()) + 1;
+    lobbyPlayer.info = pkt.info();
+    lobbyPlayer.session = session;
+
+    _lobbyPlayers[lobbyPlayer.lobbyId] = lobbyPlayer;
+
+    Broadcast_LobbySnapshot();
+}
+
+void GameRoom::Handle_LobbyChat(Shared<GameSession> session, const Protocol::C_LobbyChat& pkt)
+{
+    CHECK_NULL(session);
+
+    if (pkt.message().empty())
+        return;
+
+    string message = pkt.message();
+    if (message.size() > 80)
+        message = message.substr(0, 80);
+
+    for (auto& [lobbyId, lobbyPlayer] : _lobbyPlayers)
+    {
+        auto existingSession = lobbyPlayer.session.lock();
+        if (existingSession != session)
+            continue;
+
+        Protocol::S_LobbyChat chatPkt;
+        chatPkt.set_lobby_id(lobbyId);
+        chatPkt.set_name(lobbyPlayer.info.name().empty() ? "Player" : lobbyPlayer.info.name());
+        chatPkt.set_message(message);
+
+        Broadcast_Lobby(Server_PacketHandler::Make_S_LobbyChat(chatPkt));
+        return;
+    }
+}
+
+void GameRoom::Handle_LobbyStartGame(Shared<GameSession> session)
+{
+    CHECK_NULL(session);
+
+    for (auto& [lobbyId, lobbyPlayer] : _lobbyPlayers)
+    {
+        auto existingSession = lobbyPlayer.session.lock();
+        if (existingSession != session)
+            continue;
+
+        if (lobbyPlayer.slot != 1)
+            return;
+
+        Broadcast_Lobby(Server_PacketHandler::Make_S_LobbyStartGame());
+        return;
+    }
+}
+
+void GameRoom::Send_LobbySnapshot(Shared<GameSession> session)
+{
+    CHECK_NULL(session);
+
+    uint64 myLobbyId = 0;
+    Protocol::S_LobbySnapshot pkt;
+
+    for (auto& [lobbyId, lobbyPlayer] : _lobbyPlayers)
+    {
+        auto lobbySession = lobbyPlayer.session.lock();
+        if (lobbySession == session)
+            myLobbyId = lobbyId;
+
+        auto* info = pkt.add_players();
+        info->set_lobby_id(lobbyPlayer.lobbyId);
+        info->set_slot(lobbyPlayer.slot);
+        info->set_is_host(lobbyPlayer.slot == 1);
+        *info->mutable_info() = lobbyPlayer.info;
+    }
+
+    pkt.set_my_lobby_id(myLobbyId);
+    session->Send(Server_PacketHandler::Make_S_LobbySnapshot(pkt));
+}
+
+void GameRoom::Broadcast_LobbySnapshot()
+{
+    for (auto& [lobbyId, lobbyPlayer] : _lobbyPlayers)
+    {
+        auto session = lobbyPlayer.session.lock();
+        if (!session)
+            continue;
+
+        Send_LobbySnapshot(session);
+    }
 }
 
 void GameRoom::Ensure_LevelMonstersSpawned()

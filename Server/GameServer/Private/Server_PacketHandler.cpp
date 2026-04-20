@@ -19,6 +19,19 @@ void Server_PacketHandler::HandlePacket(shared_ptr<GameSession> session, BYTE* b
 
     case C_EnterGame:
         Handle_C_EnterGame(session, buffer, len);
+        break;
+
+    case C_LobbyJoin:
+        Handle_C_LobbyJoin(session, buffer, len);
+        break;
+
+    case C_LobbyChat:
+        Handle_C_LobbyChat(session, buffer, len);
+        break;
+
+    case C_LobbyStartGame:
+        Handle_C_LobbyStartGame(session, buffer, len);
+        break;
 
     default:
         break;
@@ -52,6 +65,30 @@ void Server_PacketHandler::Handle_C_EnterGame(shared_ptr<GameSession> session, B
     GRoom->Enter_GameRoom(session, pkt);
 }
 
+void Server_PacketHandler::Handle_C_LobbyJoin(shared_ptr<GameSession> session, BYTE* buffer, int32 len)
+{
+    Protocol::C_LobbyJoin pkt;
+    ParsePacket(buffer, pkt);
+
+    GRoom->Join_Lobby(session, pkt);
+}
+
+void Server_PacketHandler::Handle_C_LobbyChat(shared_ptr<GameSession> session, BYTE* buffer, int32 len)
+{
+    Protocol::C_LobbyChat pkt;
+    ParsePacket(buffer, pkt);
+
+    GRoom->Handle_LobbyChat(session, pkt);
+}
+
+void Server_PacketHandler::Handle_C_LobbyStartGame(shared_ptr<GameSession> session, BYTE* buffer, int32 len)
+{
+    Protocol::C_LobbyStartGame pkt;
+    ParsePacket(buffer, pkt);
+
+    GRoom->Handle_LobbyStartGame(session);
+}
+
 SendBufferRef Server_PacketHandler::Make_S_MyPlayer(Protocol::ObjectInfo& info)
 {
     Protocol::S_MyPlayer pkt;
@@ -76,4 +113,21 @@ SendBufferRef Server_PacketHandler::Make_S_Move(Protocol::ObjectInfo& info)
     *pkt.mutable_info() = info;
 
     return MakeSendBuffer(pkt, S_Move);
+}
+
+SendBufferRef Server_PacketHandler::Make_S_LobbySnapshot(Protocol::S_LobbySnapshot& pkt)
+{
+    return MakeSendBuffer(pkt, S_LobbySnapshot);
+}
+
+SendBufferRef Server_PacketHandler::Make_S_LobbyChat(Protocol::S_LobbyChat& pkt)
+{
+    return MakeSendBuffer(pkt, S_LobbyChat);
+}
+
+SendBufferRef Server_PacketHandler::Make_S_LobbyStartGame()
+{
+    Protocol::S_LobbyStartGame pkt;
+
+    return MakeSendBuffer(pkt, S_LobbyStartGame);
 }

@@ -8,6 +8,7 @@
 #include "Level_Gameplay.h"
 #include "Level_Konoha.h"
 #include "Level_MainTitle.h"
+#include "Level_Lobby.h"
 #include "UI_LoadingSpinner.h"
 #include "UI_LoadingProgressBar.h"
 
@@ -79,6 +80,10 @@ void Level_Loading::Update(float timeDelta)
 
         case ELevelType::Konoha:
             nextLevel = Level_Konoha::Create(_device, _context, _gameplaySpawnMode);
+            break;
+
+        case ELevelType::Lobby:
+            nextLevel = Level_Lobby::Create(_device, _context);
             break;
         }
 

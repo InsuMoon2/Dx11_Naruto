@@ -43,7 +43,7 @@ private: /* Loading Level */
     HRESULT Loading_For_CharacterSetup();
     HRESULT Loading_For_Konoha();
 
-
+    HRESULT Loading_For_Lobby();
 
 private:
     ComPtr<Device>          _device;

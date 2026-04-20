@@ -50,6 +50,10 @@ public:
 
     void    Refresh_WeaponAttachment_ByCurrentState();
 
+    // 서버에서 이름 세팅용
+    void    Set_PlayerName(const wstring& name) { _playerName = name; }
+    const wstring& Get_PlayerName() const { return _playerName; }
+
 protected:
     HRESULT Ready_Components() override;
     HRESULT Bind_ShaderResources() override;
@@ -63,8 +67,6 @@ protected:
 
     void  On_WeaponTypeChagned(int32 weaponTypeIndex);
 
-
-
 protected:
     Shared<CombatStat>                  _combatStat;
     Shared<AnimationStateComponent>     _animState;
@@ -76,11 +78,12 @@ protected:
 
     Shared<SkillComponent>				_skill;
 
-
 protected:
     uint64                          _networkId = 0;
 
     FDelegateHandle                 _weaponTypeChangedHandle = {};
+
+    wstring _playerName = L"Player";
 
 public:
     static Shared<GameObject>  Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
