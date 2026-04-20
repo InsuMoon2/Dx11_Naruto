@@ -33,9 +33,9 @@ static Vec3 Rotate_HorizontalDirectionY(const Vec3& dir, float degrees)
     return rotated;
 }
 
-static void Spawn_ReplacementEffectOnce(const Shared<GameObject>& owner, const Shared<Transform>& sourceTransform)
+static void Spawn_ReplacementEffectOnce(const Shared<GameObject>& owner, const Vec3& sourcePosition)
 {
-    if (!owner || !sourceTransform)
+    if (!owner)
         return;
 
     AttachedEffectObject::FAttachedEffectObjectDesc effectDesc{};
@@ -59,11 +59,12 @@ static void Spawn_ReplacementEffectOnce(const Shared<GameObject>& owner, const S
     if (!effectTransform)
         return;
 
-    Vec3 effectPos = sourceTransform->Get_WorldPosition();
+    Vec3 effectPos = sourcePosition;
     effectPos.y += 0.2f;
-
     effectTransform->Set_WorldPosition(effectPos);
 }
+
+
 
 void PlayerState_Replacement::Enter(PlayerStateMachine* state)
 {
@@ -80,6 +81,8 @@ void PlayerState_Replacement::Enter(PlayerStateMachine* state)
     if (!transform)
         return;
 
+    const Vec3 sourcePosition = transform->Get_WorldPosition();
+
     Vec3 effectPos = transform->Get_WorldPosition();
     effectPos.y += 2.5f;
 
@@ -89,6 +92,10 @@ void PlayerState_Replacement::Enter(PlayerStateMachine* state)
     movement->Set_OrientRotationToMovement(false);
     movement->Set_Velocity(Vec3::Zero);
 
+    // 이팩트 소환하고,
+    Spawn_ReplacementEffectOnce(owner, sourcePosition);
+
+    // 플레이어 이동 시키기
     Vec3 teleportPos = _teleportDestination;
     teleportPos.y += 2.5f;
     transform->Set_WorldPosition(teleportPos);
@@ -96,7 +103,6 @@ void PlayerState_Replacement::Enter(PlayerStateMachine* state)
     state->Set_PendingLandingDir(_landingDirection);
     state->Play_AnimState(EPlayerState::Replacement);
 
-    Spawn_ReplacementEffectOnce(owner, transform);
 
     auto myPlayer = dynamic_pointer_cast<MyPlayer>(owner);
     if (myPlayer)

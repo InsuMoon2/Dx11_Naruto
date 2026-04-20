@@ -1,22 +1,12 @@
-﻿#pragma once
+#pragma once
 
-#include "Character.h"
-
-NS_BEGIN(Engine)
-class BehaviorTree;
-class Model;
-class Collider;
-class MovementComponent;
-NS_END
+#include "EnemyCharacter.h"
 
 NS_BEGIN(Client)
 
-class CombatStat;
-class AIController;
-class AnimationStateComponent;
 class UI_MonsterHp;
 
-class Monster : public Character
+class Monster : public EnemyCharacter
 {
     GENERATED_BODY(Monster)
 
@@ -28,51 +18,23 @@ public:
 public:
     HRESULT Initialize_Prototype() override;
     HRESULT Initialize(void* arg) override;
-    void    BeginPlay() override;
-    void    Priority_Update(float timeDelta) override;
-    void    Update(float timeDelta) override;
-    void    Late_Update(float timeDelta) override;
-    HRESULT Render() override;
 
-    void    OnBeginOverlap(Shared<Collider> self, Shared<Collider> other) override;
-    void    TakeDamage(const FDamageEvent& damageEvent) override;
-
-    void    OnDamaged(const FDamageEvent& damageEvent) override;
-    void    OnDead(const FDamageEvent& damageEvent) override;
-
-public:
     json    To_Json() const override;
     void    From_Json(const json& data) override;
 
-public:
-    void Set_NetworkDriven(bool enabled) { _networkDriven = enabled; }
-
-    // 서버 ObjectInfo를 현재 몬스터 transform에 반영
-    void Sync(const Protocol::ObjectInfo& info);
-
 protected:
     HRESULT Ready_Components() override;
-    HRESULT Bind_ShaderResources() override;
+
+    // Returns the object type used by regular monsters in HUD and packets.
+    Protocol::OBJECT_TYPE Get_EnemyObjectType() const override;
+
+    // Maps regular monster BT animation names to replicated object states.
+    Protocol::OBJECT_STATE_TYPE To_EnemyObjectState(const string& animStateName) const override;
 
     HRESULT Ready_UI();
 
 private:
-    Shared<Model>                   _model;
-
-    Shared<CombatStat>              _combatStat;
-    Shared<MovementComponent>       _movement;
-    Shared<AIController>            _aiController;
-    Shared<BehaviorTree>            _behavior;
-    Shared<AnimationStateComponent> _animState;
-
-    Shared<Collider> _collider;
-
-    Shared<UI_MonsterHp> _hpBar;
-
-    // AI/BT를 끄고 서버 상태 따르기
-    bool _networkDriven = false;
-
-    float _test = 10.f;
+    Shared<UI_MonsterHp> _hpBar; // HP UI used only by regular monsters.
 
 public:
     static Shared<Monster> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

@@ -393,6 +393,89 @@ Game/
 - `Server/Protobuf/include`는 상당히 크며, 대부분 protobuf 배포본이다.
 - 보통 실제 작업 포인트는 `Server/Protobuf/Protocol/*.proto`와 생성된 `Bin/*.pb.*`다.
 
+### [추가] 현재 서버/동기화 실제 흐름 메모
+
+#### [추가] 1. ServerCore 계층 역할
+
+- `Server/ServerCore/Public/Session.h`, `Server/ServerCore/Private/Session.cpp`
+  - `Session`이 소켓 송수신, `PacketSession`이 `[size][id][payload]` 패킷 조립을 담당한다.
+- `Server/ServerCore/Public/Service.h`, `Server/ServerCore/Private/Service.cpp`
+  - `ClientService`, `ServerService`가 세션 팩토리와 IOCP 등록을 관리한다.
+- `Server/ServerCore/Public/Listener.h`, `Server/ServerCore/Private/Listener.cpp`
+  - 서버 accept 등록과 새 세션 연결 완료 처리를 담당한다.
+- `Server/ServerCore/Public/IocpCore.h`, `Server/ServerCore/Private/IocpCore.cpp`
+  - `GetQueuedCompletionStatus` 기반 이벤트 디스패치 코어다.
+
+#### [추가] 2. GameServer 진입 흐름
+
+- `Server/GameServer/Default/GameServer.cpp`
+  - `127.0.0.1:7777`로 `ServerService`를 열고, 메인 루프에서 `IocpCore::Dispatch(0)`와 `GRoom->Update(timeDelta)`를 반복한다.
+- `Server/GameServer/Private/GameSession.cpp`
+  - 세션 연결 후 바로 룸 입장시키지 않고, 패킷 수신 시 `Server_PacketHandler::HandlePacket()`으로 위임한다.
+- `Server/GameServer/Private/Server_PacketHandler.cpp`
+  - 현재 실제 수신 패킷은 `C_EnterGame`, `C_Move` 두 개가 중심이다.
+- `Server/GameServer/Private/GameRoom.cpp`
+  - 실제 플레이어 생성, 기존 오브젝트 전송, 브로드캐스트, 퇴장 처리, 몬스터 스폰/권한 판정을 담당한다.
+
+#### [추가] 3. 현재 입장/생성 동기화 순서
+
+1. 클라이언트가 `C_EnterGame` 전송
+   - `Client/Private/Level_Gameplay.cpp`
+   - `Client/Private/Client_PacketHandler.cpp`
+2. 서버가 `GameRoom::Enter_GameRoom()` 호출
+   - `Server/GameServer/Private/Server_PacketHandler.cpp`
+   - `Server/GameServer/Private/GameRoom.cpp`
+3. 서버가 새 플레이어를 만들고 세션의 `playerId`를 배정
+   - `Server/GameServer/Private/Player.cpp`
+4. 서버가 본인용 `S_MyPlayer` 전송 후, 기존 플레이어/몬스터 목록을 `S_AddObject`로 전송
+5. 마지막에 `Add_Player()`를 호출해 다른 클라이언트들에게도 새 플레이어를 브로드캐스트
+
+#### [추가] 4. 현재 이동/상태 동기화 방식
+
+- 플레이어
+  - `Client/Private/MyPlayer.cpp`에서 주기적으로 `Build_NetworkInfo()` 후 `C_Move`를 전송한다.
+  - `Server/GameServer/Private/Server_PacketHandler.cpp`에서 플레이어 패킷은 항상 `session->Get_PlayerId()`로 objectId를 강제한다.
+  - `Server/GameServer/Private/GameRoom.cpp`에서 받은 `ObjectInfo`를 그대로 저장하고 `S_Move`로 전체 브로드캐스트한다.
+  - `Client/Private/RemotePlayer.cpp`에서 수신 위치/회전을 보간 적용한다.
+
+- 애니메이션 상태
+  - `Client/Private/AnimationStateComponent.cpp`가 `ObjectInfo.object_state`, `move_dir`, `anim_phase`, `anim_force_restart`, `attack_profile`, `attack_combo_index`를 쓰고 읽는다.
+  - 즉 현재 애니메이션 동기화는 별도 패킷이 아니라 `S_Move/C_Move` 안의 `ObjectInfo` 필드에 합쳐져 있다.
+
+- 몬스터
+  - 현재 서버 authoritative BT가 아니라, "권한 클라이언트 1명"이 몬스터 BT/애니 상태를 계산하고 서버로 릴레이한다.
+  - 권한 판정 기준은 `Client/Private/Client_PacketHandler.cpp`의 "가장 작은 playerId를 가진 플레이어"다.
+  - `Client/Private/Monster.cpp`
+    - 권한 클라는 `_networkDriven == false` 상태로 로컬 BT를 계속 돌린다.
+    - 일정 주기마다 `Build_NetworkInfo()` + `C_Move`로 몬스터 상태를 서버에 보낸다.
+  - `Server/GameServer/Private/GameRoom.cpp`
+    - 몬스터 `C_Move`는 권한 플레이어가 아니면 무시한다.
+    - 통과하면 몬스터 `ObjectInfo`를 갱신하고 `S_Move`로 브로드캐스트한다.
+  - 비권한 클라는 `Client/Private/Monster.cpp::Sync()`로 서버 값만 따라가는 꼭두각시 모드다.
+
+#### [추가] 5. 현재 서버 몬스터 스폰 구조
+
+- `Server/GameServer/Private/GameRoom.cpp`
+  - 첫 `Enter_GameRoom()` 시 `Ensure_LevelMonstersSpawned()`를 호출한다.
+  - `../../../Client/Bin/Resources/Data/json/Levels/[20260420]Tutorial.level.json`에서 몬스터 배치 정보를 읽는다.
+  - JSON `gameObjects` 중 `object_type == MONSTER`만 골라 서버 `Monster`를 생성한다.
+- `Server/GameServer/Private/Monster.cpp`
+  - 서버용 `Monster` 클래스에는 자체 상태 머신/회전/원운동 예제 구현이 남아 있다.
+- [변경]
+  - 하지만 현재 `GameRoom::Update()`에서는 서버 몬스터 AI를 실제로 돌리지 않고 있다.
+  - 따라서 지금 메인 경로 기준 몬스터 동기화는 "서버 시뮬레이션"보다 "권한 클라 릴레이"가 맞다.
+
+#### [추가] 6. 현재 구조상 주의 포인트
+
+- `Server/ServerCore/Private/Service.cpp`
+  - `CloseService()`가 아직 TODO 상태라 종료/정리 루틴이 완성되지 않았다.
+- `Client/Public/Replicator.h`, `Client/Private/Replicator.cpp`
+  - `Replicator` 컴포넌트는 존재하지만 transform 동기화 TODO가 남아 있어 현재 멀티플레이 주 동기화 경로는 아니다.
+- `Client/Private/Level_Gameplay.cpp`
+  - 서버 모드 진입 시 로컬 몬스터를 먼저 제거하고 서버 `S_AddObject` 기준으로 다시 생성하는 구조다.
+- `Server/Protobuf/Protocol/Struct.proto`
+  - 현재 네트워크 핵심 복제 단위는 `ObjectInfo` 하나이며, 위치/회전/스탯/상태/장비 파츠가 모두 여기에 모여 있다.
+
 ---
 
 ## EngineSDK 구조
@@ -577,3 +660,6 @@ Client/Bin/Resources/
 4. 이 문서 `PROJECT_STRUCTURE.md`
 
 문서와 실제 파일이 다르면 항상 실제 파일을 기준으로 다시 확인하고 이 문서를 갱신할 것.
+
+- [추가] Codex가 직접 실제 코드 파일을 수정할 때는, 사용자가 따로 요청하지 않은 설명용 주석이나 장황한 안내 주석을 임의로 덧붙이지 않는다.
+- [추가] 다만 이 레포의 `AGENTS.md`처럼 새 변수/함수 주석을 강제하는 상위 작업 규칙이 있는 경우에는 그 규칙을 우선 적용한다.

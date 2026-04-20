@@ -61,10 +61,10 @@ HRESULT SkillObject::Initialize(void* arg)
         if (_transformCom)
         {
             _transformCom->Set_LocalPosition(desc->spawnPosition);
-            _transformCom->Set_LocalRotation(desc->spawnRotation.x, desc->spawnRotation.y, desc->spawnRotation.z);
+            _transformCom->Set_WorldRotation(desc->spawnRotation.x, desc->spawnRotation.y, desc->spawnRotation.z);
             _transformCom->Set_LocalScale(desc->scale);
 
-            if (desc->direction.LengthSquared() > 0.001f)
+            if (desc->useDirectionLookAt && desc->direction.LengthSquared() > 0.001f)
             {
                 const Vec3 lookTarget = desc->spawnPosition + desc->direction;
                 _transformCom->LookAt(lookTarget);

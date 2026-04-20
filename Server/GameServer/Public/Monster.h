@@ -4,8 +4,6 @@
 
 NS_BEGIN(Server)
 
-class GameSession;
-
 class Monster : public GameObject
 {
 public:
@@ -13,11 +11,39 @@ public:
     virtual ~Monster();
 
 public:
-    Shared<GameSession>  Get_Session() const { return _session; }
-    void                 Set_Session(Shared<GameSession> session) { _session = session; }
+    void Update(float timeDelta);
+
+    void Initialize_FromSpawn(const Vec3& spawnPos, float spawnYaw);
 
 private:
-    Shared<GameSession> _session;
+    static float Convert_RadiansToDegrees(float radians);
+
+    void Enter_State(Protocol::OBJECT_STATE_TYPE state, float durationSec);
+
+    void Update_Idle(float timeDelta);
+    void Update_Run(float timeDelta);
+    void Update_Attack(float timeDelta);
+
+    void Write_DefaultStat();
+
+private:
+    Vec3  _spawnPos = Vec3(0.f, 0.f, 0.f);
+    float _spawnYaw = 0.f;
+
+    float _stateElapsed = 0.f;
+    float _stateDuration = 0.f;
+
+    float _idleDuration = 1.5f;
+    float _runDuration = 2.5f;
+    float _attackDuration = 1.0f;
+
+    float _runRadius = 3.5f;
+    float _runAngularSpeed = 1.2f;
+    float _circleAngle = 0.f;
+
+    bool _pendingForceRestart = true;
+
+    Protocol::OBJECT_STATE_TYPE _currentState = Protocol::OBJECT_STATE_TYPE_IDLE;
 
 public:
     static Shared<Monster> Create();

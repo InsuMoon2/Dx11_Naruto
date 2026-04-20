@@ -130,6 +130,7 @@ enum OBJECT_TYPE
     OBJECT_TYPE_SKILL_OBJECT            = 16;
     OBJECT_TYPE_SKILL_PROJECTILE        = 17;
 
+    
 
     // 실제 사용 스킬
     OBJECT_TYPE_SKILL_RASENGAN          = 18;
@@ -145,6 +146,7 @@ enum OBJECT_TYPE
     OBJECT_TYPE_KIRIN = 26;
     OBJECT_TYPE_SHINSUSENJU_ARM = 27;
     OBJECT_TYPE_KIRIN_HIT = 28;
+    OBJECT_TYPE_SHINSUSENJU_IMPACT = 29;
 
     OBJECT_TYPE_SKILL_MONSTER_ATTACK    = 40;
 
@@ -160,6 +162,11 @@ enum OBJECT_TYPE
     OBJECT_TYPE_SKY_SPHERE               = 83;
 
     OBJECT_TYPE_SHURIKEN                 = 84;
+   
+    // 메쉬 파티클
+    OBJECT_TYPE_MESH_DEBRIS = 85;
+
+    OBJECT_TYPE_BOSS_PAIN = 86;
 
     // UI : 100+
     OBJECT_TYPE_UI_TEXT                 = 100;

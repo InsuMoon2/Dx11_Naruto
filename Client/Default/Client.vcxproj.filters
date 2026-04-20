@@ -368,6 +368,14 @@
     <ClInclude Include="..\Public\Skill_Kirin_Hit.h">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Skill_ShinsuSenju_Arm.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_ShinsuSenju_Impact.h">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MeshDebrisObject.h" />
+    <ClInclude Include="..\Public\EnemyCharacter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -719,6 +727,14 @@
     <ClCompile Include="..\Private\Skill_Kirin_Hit.cpp">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Skill_ShinsuSenju_Arm.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_ShinsuSenju_Impact.cpp">
+      <Filter>02. GameObject\07. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MeshDebrisObject.cpp" />
+    <ClCompile Include="..\Private\EnemyCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

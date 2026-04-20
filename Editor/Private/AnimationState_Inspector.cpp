@@ -309,6 +309,44 @@ void AnimationState_Inspector::Draw_StateList(Shared<AnimationStateComponent> an
         _selectedStateName = stateName;
     else if (_selectedStateName == stateName)
         _selectedStateName.clear();
+
+    ImGui::Spacing();
+
+    // [추가] 몬스터/보스처럼 PlayerStateMachine이 없는 경우에도 이미 등록된 상태 목록을 바로 볼 수 있게 한다.
+    Draw_ExistingStateList(animState);
+}
+
+void AnimationState_Inspector::Draw_ExistingStateList(Shared<AnimationStateComponent> animState)
+{
+    if (!animState)
+        return;
+
+    const vector<string> stateNames = animState->Get_StateNames();
+
+    ImGui::Text("Added States");
+    ImGui::BeginChild("##ExistingAnimStateList", ImVec2(0.f, 120.f), true);
+
+    if (stateNames.empty())
+    {
+        ImGui::TextDisabled("(추가된 상태가 없음)");
+        ImGui::EndChild();
+        return;
+    }
+
+    for (const string& stateName : stateNames)
+    {
+        const bool isSelected = (_selectedStateName == stateName);
+
+        // [추가] 현재 편집 중인 상태가 무엇인지 바로 보이게 선택 가능한 목록으로 표시한다.
+        if (ImGui::Selectable(stateName.c_str(), isSelected, ImGuiSelectableFlags_SpanAvailWidth))
+        {
+            _selectedStateName = stateName;
+
+            strcpy_s(_newStateNameBuffer, stateName.c_str());
+        }
+    }
+
+    ImGui::EndChild();
 }
 
 

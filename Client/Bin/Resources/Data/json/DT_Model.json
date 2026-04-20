@@ -64,6 +64,13 @@
             "Level": "Static"
         },
         {
+            "Id": "Model_Pain",
+            "Path": "../../Client/Bin/Resources/Models/Pain/Pain.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
             "Id": "Model_Headgear_Man_Cap1",
             "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_Cap1.meshbin",
             "Count": 1,
@@ -239,6 +246,13 @@
             "Level": "Static"
         },
         {
+            "Id": "ShinsuSenju_Arm_Long",
+            "Path": "../../Client/Bin/Resources/Models/ShinsuSenju/ShinsuSenju_Arm_Long.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
             "Id": "Circle_01",
             "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Circle_01.meshbin",
             "Count": 1,
@@ -367,6 +381,69 @@
         {
             "Id": "Sky_Cloudy",
             "Path": "../../Client/Bin/Resources/Models/SkySphere/SkySphere_cloudy.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "GuardBreak_A",
+            "Path": "../../Client/Bin/Resources/Models/Earth/GuardBreak_A.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "GuardBreak_B",
+            "Path": "../../Client/Bin/Resources/Models/Earth/GuardBreak_B.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "GuardBreak_C",
+            "Path": "../../Client/Bin/Resources/Models/Earth/GuardBreak_C.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Rock_2",
+            "Path": "../../Client/Bin/Resources/Models/Earth/Rock_2.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "SmallRock_01",
+            "Path": "../../Client/Bin/Resources/Models/Earth/SmallRock_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Stone_01",
+            "Path": "../../Client/Bin/Resources/Models/Earth/Stone_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Stone_02",
+            "Path": "../../Client/Bin/Resources/Models/Earth/Stone_02.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Stone_03",
+            "Path": "../../Client/Bin/Resources/Models/Earth/Stone_03.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Stone_04",
+            "Path": "../../Client/Bin/Resources/Models/Earth/Stone_04.meshbin",
             "Count": 1,
             "ModelType": "StaticMesh",
             "Level": "Static"

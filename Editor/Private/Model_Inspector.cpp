@@ -70,6 +70,48 @@ bool Model_Inspector::Is_ModelAssetOfType(const FAssetMeta* meta, const string& 
     return Utils::ToLowerCopy(assetPath.extension().string()) == ".meshbin";
 }
 
+vector<Shared<Animation>> Model_Inspector::Collect_FilteredAnimBins(const json& data)
+{
+    vector<Shared<Animation>> filteredAnims;
+
+    const string modelGuid = data.value("model_guid", string(""));
+    if (modelGuid.empty())
+        return filteredAnims;
+
+    const wstring resolvedPath = GAME->Resolve_AssetPath(modelGuid);
+    if (resolvedPath.empty())
+        return filteredAnims;
+
+    const fs::path modelFolder = fs::path(resolvedPath).parent_path();
+    return GAME->Get_Animations_InFolder(modelFolder.string());
+}
+
+void Model_Inspector::Add_AllFilteredAnimBins(Shared<Model> model, const vector<Shared<Animation>>& filteredAnims, const string& searchText)
+{
+    if (!model)
+        return;
+
+    for (const auto& anim : filteredAnims)
+    {
+        if (!anim)
+            continue;
+
+        const string animName = anim->Get_Name();
+        if (!Editor_Helper::Passes_AnimationDisplayFilter(animName, searchText))
+            continue;
+
+        model->Add_Animation(anim);
+    }
+}
+
+bool Model_Inspector::Is_AnimBinAlreadyAttached(Shared<Model> model, const string& animName)
+{
+    if (!model || animName.empty())
+        return false;
+
+    return model->Find_AnimationIndex_ByName(animName) >= 0;
+}
+
 void Model_Inspector::Draw_Inspector(shared_ptr<Component> component)
 {
     auto model = static_pointer_cast<Model>(component);
@@ -266,33 +308,27 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
             }
         }
         ImGui::EndChild();
-        
+
+        // [추가] 현재 모델 폴더 기준으로 검색 필터를 통과한 AnimBin 전체를 한 번에 붙이는 버튼이다.
+        static char searchBuf[128] = "";
+        const vector<Shared<Animation>> filteredAnims = Collect_FilteredAnimBins(data);
+
         if (ImGui::Button("Add AnimBin..."))
             ImGui::OpenPopup("Add AnimBin Popup");
+
+        ImGui::SameLine();
+        if (ImGui::Button("All Add AnimBin"))
+        {
+            Add_AllFilteredAnimBins(model, filteredAnims, searchBuf);
+            data = model->To_Json();
+        }
 
         ImGui::SetNextWindowSize(ImVec2(560.f, 360.f), ImGuiCond_Appearing);
 
         if (ImGui::BeginPopup("Add AnimBin Popup"))
         {
-            static char searchBuf[128] = "";
-
             ImGui::InputText("Search", searchBuf, IM_ARRAYSIZE(searchBuf));
             ImGui::Separator();
-
-            auto allAnims = GAME->Get_All_Animations();
-
-            string modelGuid = data.value("model_guid", string(""));
-            vector<Shared<Animation>> filteredAnims;
-
-            if (!modelGuid.empty())
-            {
-                wstring resolvedPath = GAME->Resolve_AssetPath(modelGuid);
-                if (!resolvedPath.empty())
-                {
-                    fs::path modelFolder = fs::path(resolvedPath).parent_path();
-                    filteredAnims = GAME->Get_Animations_InFolder(modelFolder.string());
-                }
-            }
 
             int32 visibleIndex = 0;
 
@@ -302,6 +338,7 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
 
                 const string animName = anim->Get_Name();
                 const string displayAnimName = Editor_Helper::Build_AnimatoinDisplayName(animName);
+                const bool isAlreadyAttached = Is_AnimBinAlreadyAttached(model, animName);
 
                 if (!Editor_Helper::Passes_AnimationDisplayFilter(animName, searchBuf))
                     continue;
@@ -309,12 +346,19 @@ void Model_Inspector::Draw_ModelPicker(Shared<Model> model, json& data)
                 // 화면에는 짧은 이름을 보여주고, 숨은 ID로 raw name을 붙여 중복 충돌 방지
                 const string itemLabel = displayAnimName + "##AnimBin_" + to_string(visibleIndex++);
 
+                // [추가] 이미 모델에 붙어 있는 AnimBin은 팝업 목록에서 초록색으로 강조해 다시 붙은 상태를 바로 보이게 한다.
+                if (isAlreadyAttached)
+                    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 0.85f, 0.3f, 1.f));
+
                 if (ImGui::Selectable(itemLabel.c_str(), false, ImGuiSelectableFlags_SpanAvailWidth))
                 {
                     model->Add_Animation(anim);
 
                     data = model->To_Json();
                 }
+
+                if (isAlreadyAttached)
+                    ImGui::PopStyleColor();
 
                 // 원본 이름은 tooltip으로 확인
                 if (ImGui::IsItemHovered() && displayAnimName != animName)

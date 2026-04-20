@@ -96,6 +96,16 @@
             "Level": "Static"
         },
         {
+            "Id": "MeshDebrisObject",
+            "ObjectType": "OBJECT_TYPE_MESH_DEBRIS",
+            "Level": "Static"
+        },
+        {
+            "Id": "Boss_Pain",
+            "ObjectType": "OBJECT_TYPE_BOSS_PAIN",
+            "Level": "Static"
+        },
+        {
             "Id": "Skill_Object",
             "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
             "Level": "Static"

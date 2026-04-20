@@ -31,10 +31,14 @@ void Server_PacketHandler::Handle_C_Move(shared_ptr<GameSession> session, BYTE* 
     Protocol::C_Move pkt;
     ParsePacket(buffer, pkt);
 
-    // objectId를 세션의 playerId로 설정 -> 클라 조작 방지용
-    pkt.mutable_info()->set_objectid(session->Get_PlayerId());
+    // [변경] 플레이어 이동만 세션의 playerId로 강제하고, 몬스터는 권한 클라이언트가 보낸 objectId를 유지한다.
+    if (pkt.info().objecttype() != Protocol::OBJECT_TYPE_MONSTER &&
+        pkt.info().objecttype() != Protocol::OBJECT_TYPE_BOSS_PAIN)
+    {
+        pkt.mutable_info()->set_objectid(session->Get_PlayerId());
+    }
 
-    GRoom->Handle_C_Move(pkt);
+    GRoom->Handle_C_Move(session, pkt);
 }
 
 void Server_PacketHandler::Handle_C_EnterGame(shared_ptr<GameSession> session, BYTE* buffer, int32 len)

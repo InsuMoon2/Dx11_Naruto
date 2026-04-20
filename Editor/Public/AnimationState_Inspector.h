@@ -30,6 +30,8 @@ private:
     static bool        Is_PlayerAnimationState(Shared<AnimationStateComponent> animState);
 
     void    Draw_StateList(Shared<AnimationStateComponent> animState);
+    // [추가] 현재 AnimationStateComponent에 등록된 상태 목록을 눈으로 확인하고 선택할 수 있게 그릴 때 호출한다.
+    void    Draw_ExistingStateList(Shared<AnimationStateComponent> animState);
     void    Draw_ModeCombo(FStateAnimationDesc& desc);
 
     void    Draw_AnimationList(Shared<AnimationStateComponent> animState, string* targetClipName);

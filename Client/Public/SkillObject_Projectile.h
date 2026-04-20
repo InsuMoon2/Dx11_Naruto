@@ -21,7 +21,10 @@ public:
         bool    useGravity = false;
 
         // true면 Launch 노티파이 호출 전까지 발사 ㄴㄴ
-        bool    startAttached = false; 
+        bool    startAttached = false;
+
+        Vec3 targetPoint = Vec3::Zero;
+        bool hasTargetPoint = false;
     };
 
 public:
@@ -50,6 +53,8 @@ protected:
 
     float   _speed = 20.f;              
     float   _maxDistance = 50.f;
+
+    float   _damage = 10.f;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

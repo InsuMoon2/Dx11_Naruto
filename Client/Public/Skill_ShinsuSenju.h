@@ -30,22 +30,42 @@ private:
     HRESULT Ready_Components();
     HRESULT Bind_ShaderResources();
 
-    void    Spawn_ShinsuSenju(const Vec3 targetPos);
-    void    Spawn_Arm(const Vec3& targetDirection);
+    void    Resolve_BurstCenter();
+    Vec3    Build_ArmImpactPoint(int32 burstIndex);
+
+    void    Fire_NextArm();
+
+    bool    Resolve_GroundPoint(const Vec3& samplePosition, Vec3& outGroundPoint) const;
+
+
+    Vec3    Build_ArmSpawnPoint(int32 burstIndex) const;
+
+    Vec2    Get_ArmSpawnPattern(int32 burstIndex) const;
+    void    Spawn_Arm(const Vec3& spawnPoint, const Vec3& impactPoint);
 
 private:
     Shared<Shader> _shader;
     Shared<Model>  _model;
 
 private:
-    float   _burstInterval = 0.14f;
+    float  _initialFireDelay = 0.25f;
+    float   _burstInterval = 1.12f;
+
     int32   _maxBurstCount = 5;
 
-    float   _delayElapsed = 0.f;
-    float   _burstElapsed = 0.f;
+    float   _forwardRange = 14.f;
+    float   _impactRadius = 10.f;
+    float   _armSpeed = 130.f;
 
+    Vec3    _burstCenter = Vec3::Zero;
+
+    float   _delayElapsed = 0.f; // 소환 후 경과시간
     int32   _burstCount = 0;
+
     bool    _isBurstFinished = false;
+
+    float _armSpawnRadius = 10.f;
+    float _armSpawnHeight = 8.f;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

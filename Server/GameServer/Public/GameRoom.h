@@ -31,21 +31,24 @@ public: /* 오브젝트 관리 */
     Shared<Monster> Find_Monster(uint64 id)                 { return Find(id, _monsters); }
 
 public: /* 패킷 핸들러 */
-    void Handle_C_Move(Protocol::C_Move& pkt);
+    void Handle_C_Move(Shared<GameSession> session, Protocol::C_Move& pkt);
 
 public: /* 네트워크 */
     void Broadcast(SendBufferRef sendBuffer);
 
 public: /* 게임 로직 */
-    void Update();
+    void Update(float timeDelta);
 
 private:
+    // [추가] 현재 몬스터 BT 결과를 서버로 릴레이할 권한 플레이어 id를 계산할 때 호출한다.
+    uint64 Get_MonsterAuthorityPlayerId() const;
     void Ensure_LevelMonstersSpawned();
 
     struct FServerMonsterSpawnDesc
     {
         // 레벨에 저장된 몬스터 프리팹 이름
         string prefabName;
+        Protocol::OBJECT_TYPE objectType = Protocol::OBJECT_TYPE_MONSTER; // 레벨에 저장된 적 오브젝트 타입
 
         Vec3 position = Vec3(0.f, 0.f, 0.f);
         float yaw = 0.f;

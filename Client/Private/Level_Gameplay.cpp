@@ -554,7 +554,8 @@ void Level_Gameplay::Remove_LocalMonsters_ForServerMode()
         if (!obj)
             continue;
 
-        if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_MONSTER)
+        if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_MONSTER &&
+            obj->Get_ObjectType() != Protocol::OBJECT_TYPE_BOSS_PAIN)
             continue;
 
         EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));

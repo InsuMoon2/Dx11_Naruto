@@ -8,12 +8,55 @@
 #include "RemotePlayer.h"
 #include "Spawn_Helper.h"
 #include "Customizer_Manager.h"
-#include "Monster.h"
+#include "EnemyCharacter.h"
+
+#include <algorithm>
+#include <limits>
 
 static uint64 s_MyNetworkId = 0;
 
 // 네트워크로 생성된 플레이어/몬스터를 objectId 기준으로 추적해보기
 static umap<uint64, Weak<GameObject>> s_NetworkObjects;
+
+static bool Is_PlayerNetworkObject(const Shared<GameObject>& gameObject)
+{
+    return gameObject && dynamic_pointer_cast<Player>(gameObject) != nullptr;
+}
+
+static bool Is_CurrentClientMonsterAuthority()
+{
+    if (s_MyNetworkId == 0)
+        return false;
+
+    uint64 authorityPlayerId = (std::numeric_limits<uint64>::max)();
+
+    for (const auto& [objectId, weakObject] : s_NetworkObjects)
+    {
+        auto gameObject = weakObject.lock();
+        if (!Is_PlayerNetworkObject(gameObject))
+            continue;
+
+        authorityPlayerId = (std::min)(authorityPlayerId, objectId);
+    }
+
+    return authorityPlayerId != (std::numeric_limits<uint64>::max)() && authorityPlayerId == s_MyNetworkId;
+}
+
+static void Refresh_MonsterAuthority()
+{
+    const bool isAuthority = Is_CurrentClientMonsterAuthority();
+
+    for (auto& [objectId, weakObject] : s_NetworkObjects)
+    {
+        auto gameObject = weakObject.lock();
+        auto enemy = dynamic_pointer_cast<EnemyCharacter>(gameObject);
+        if (!enemy)
+            continue;
+
+        enemy->Set_NetworkDriven(!isAuthority);
+        enemy->Set_Local(isAuthority);
+    }
+}
 
 void Client_PacketHandler::HandlePacket(Shared<ServerSession> session, BYTE* buffer, int32 len)
 {
@@ -76,7 +119,10 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
     {
         auto existing = existingIt->second.lock();
         if (existing)
+        {
+            Refresh_MonsterAuthority();
             return;
+        }
     }
 
     uint32 levelIndex = GAME->Current_Level();
@@ -106,6 +152,7 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
     player->Sync(pkt.info());
 
     s_NetworkObjects[myId] = player;
+    Refresh_MonsterAuthority();
 
     GAME->Get_DelegateHub().OnPlayerSpawned.Broadcast(player->Get_Component<Transform>());
     GAME->Get_DelegateHub().OnPlayerObjectSpawned.Broadcast(player);
@@ -154,11 +201,12 @@ void Client_PacketHandler::Handle_S_AddObject(Shared<ServerSession> session, BYT
         }
 
         // 네트워크 몬스터면, 로컬 AI를 끄고 서버 상태에 따라서 움직이도록 -> Behavior Tree 동기화 어떻게 할지?
-        auto monster = dynamic_pointer_cast<Monster>(gameObject);
-        if (monster)
+        auto enemy = dynamic_pointer_cast<EnemyCharacter>(gameObject);
+        if (enemy)
         {
-            monster->Set_Local(false);
-            monster->Set_NetworkDriven(true);
+            enemy->Set_Local(false);
+            enemy->Set_NetworkDriven(true);
+            enemy->Set_NetworkObjectId(objectId);
         }
 
         // 패킷의 위치/회전/상태를 실제 오브젝트에 반영
@@ -166,8 +214,9 @@ void Client_PacketHandler::Handle_S_AddObject(Shared<ServerSession> session, BYT
 
         // 이후 S_Move / S_RemoveObject에서 찾을 수 있게 저장한다.
         s_NetworkObjects[objectId] = gameObject;
-        
     }
+
+    Refresh_MonsterAuthority();
 }
 
 
@@ -192,6 +241,8 @@ void Client_PacketHandler::Handle_S_RemoveObject(Shared<ServerSession> session, 
 
         s_NetworkObjects.erase(it);
     }
+
+    Refresh_MonsterAuthority();
 }
 
 void Client_PacketHandler::Handle_S_Move(Shared<ServerSession> session, BYTE* buffer, int32 len)
@@ -269,6 +320,12 @@ Shared<GameObject> Client_PacketHandler::Spawn_NetworkObject(const Protocol::Obj
             .InLayer(TEXT("Layer_GameObject"))
             .Spawn();
 
+    case Protocol::OBJECT_TYPE_BOSS_PAIN:
+        return Spawn_Helper::Prefab("Boss")
+            .AtLevel(levelIndex)
+            .InLayer(TEXT("Layer_GameObject"))
+            .Spawn();
+
     default:
         return nullptr;
     }
@@ -284,9 +341,12 @@ void Client_PacketHandler::Apply_NetworkObjectInfo(Shared<GameObject> gameObject
         return;
     }
 
-    if (auto monster = dynamic_pointer_cast<Monster>(gameObject))
+    if (auto enemy = dynamic_pointer_cast<EnemyCharacter>(gameObject))
     {
-        monster->Sync(info);
+        if (!enemy->Is_NetworkDriven())
+            return;
+
+        enemy->Sync(info);
         return;
     }
 }

@@ -16,7 +16,7 @@ HRESULT Bounding_AABB::Initialize(const FBoundingDesc& desc)
 {
     CHECK_FAILED(Bounding::Initialize(desc), E_FAIL);
 
-    const FBoundingAABBDesc& aabbDesc = static_cast<const FBoundingAABBDesc>(desc);
+    const FBoundingAABBDesc& aabbDesc = static_cast<const FBoundingAABBDesc&>(desc);
 
     _originAABB = BoundingBox(aabbDesc.center, aabbDesc.extents);
     _aabb = _originAABB;

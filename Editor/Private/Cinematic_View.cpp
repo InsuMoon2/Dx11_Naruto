@@ -33,8 +33,6 @@ static Quat Convert_WorldRotation_ToAnchorLocal(const Quat& worldRot, Shared<Tra
     return worldRot * anchorInverse;
 }
 
-// target_tag 문자열로 현재 레벨의 실제 오브젝트를 찾을 때 사용한다.
-// 현재 시네마틱 데이터는 별도 Tag 시스템이 아니라 이름 문자열 기반으로 사용되고 있다.
 static Shared<GameObject> Find_CinematicTargetObject(const string& targetTag)
 {
     if (targetTag.empty())
@@ -53,8 +51,6 @@ static Shared<GameObject> Find_CinematicTargetObject(const string& targetTag)
     return nullptr;
 }
 
-// 현재 프레임 카메라 키 설정을 Preview 카메라에 반영할 때 호출한다.
-// OwnerRelative + Target / LookAt 조합에서도 실제 gameplay 카메라와 비슷한 동작을 만들기 위해 사용한다.
 static void Apply_TrackPlayerState_ToPreviewCamera(
     const Shared<CameraTrack_Player>& player,
     const Shared<Camera_Cinematic>& previewCamera,
@@ -82,8 +78,6 @@ static void Apply_TrackPlayerState_ToPreviewCamera(
                 targetTransform = targetObject->Get_Transform();
         }
 
-        // target_tag가 비어 있으면 anchor를 기본 타겟으로 사용한다.
-        // 이렇게 해야 OwnerRelative 카메라가 플레이어에 장착됐을 때 실제 플레이 화면처럼 플레이어 근처를 따라간다.
         if (!targetTransform && anchorObject)
             targetTransform = anchorObject->Get_Transform();
     }
@@ -227,7 +221,7 @@ void Cinematic_View::Create_NewSequence()
 {
     _asset = {};
     _asset.name = "NewSequence";
-    _asset.track.fps = 30;
+    _asset.track.fps = 60;
     _asset.track.totalFrame = 300;
     _selectedKeyIndex = -1;
     _currentFilePath.clear();

@@ -1,0 +1,508 @@
+{
+    "attack": 35.0,
+    "body_collider_center": [
+        0.0,
+        1.5,
+        0.0
+    ],
+    "body_collider_extents": [
+        1.5,
+        2.0,
+        1.5
+    ],
+    "components": [
+        {
+            "position": [
+                0.488596647977829,
+                5.0,
+                -2.8092899322509766
+            ],
+            "rotation": [
+                -0.0,
+                -139.3087615966797,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "bounding": {
+                "center": [
+                    0.0,
+                    1.5,
+                    0.0
+                ],
+                "extents": [
+                    1.5,
+                    2.0,
+                    1.5
+                ]
+            },
+            "channel": "Monster_Body",
+            "collision_preset": "Monster_Body",
+            "is_active": true,
+            "shape": "OBB",
+            "type": "COMPONENT_TYPE_COLLIDER"
+        },
+        {
+            "bt_guid": "2575718b-9aad-494a-8aa2-5818c2730ac5",
+            "type": "COMPONENT_TYPE_BEHAVIOR"
+        },
+        {
+            "type": "COMPONENT_TYPE_SHADER"
+        },
+        {
+            "Attack": 35.0,
+            "Defense": 5.0,
+            "HP": 1500.0,
+            "MP": 100.0,
+            "Max HP": 1500.0,
+            "Max MP": 100.0,
+            "Speed": 5.0,
+            "type": "COMPONENT_TYPE_COMBAT_STAT"
+        },
+        {
+            "type": "COMPONENT_TYPE_AI_CONTROLLER"
+        },
+        {
+            "Acceleration": 20.0,
+            "Dash Distance": 6.0,
+            "Dash Duration": 0.18000000715255737,
+            "Deceleration": 24.0,
+            "Gravity": -20.0,
+            "Ground Walkable Min Up Dot": 0.550000011920929,
+            "Ground Y": 0.0,
+            "Jump Velocity": 11.0,
+            "Max Sprint Speed": 4.0,
+            "Max Walk Speed": 2.0,
+            "Wall Attach Offset": 0.15000000596046448,
+            "Wall Detect Distance": 1.0,
+            "Wall Jump Out Velocity": 6.0,
+            "Wall Jump Up Velocity": 8.0,
+            "Wall Runnable Max Up Dot": 0.3499999940395355,
+            "Wall Trace Start Offset Y": 1.0,
+            "Yaw Speed": 360.0,
+            "type": "COMPONENT_TYPE_MOVEMENT"
+        },
+        {
+            "animation_states": [
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Idle",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_Pain|Pain_Idle_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_04",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_Pain|Pain_Attack_supa_01",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Run",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_Pain|Pain_Run_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_Pain|Pain_Beaten_Left",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                }
+            ],
+            "current_state": "Idle",
+            "type": "COMPONENT_TYPE_ANIMATION_STATE"
+        },
+        {
+            "animations": [
+                "SK_CHR_Pain|Pain_Idle_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Fall_Behind_Loop",
+                "SK_CHR_Pain|Pain_Beaten_D45NJ3_End",
+                "SK_CHR_Pain|Pain_Beaten_D29NJ1_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_Small_Conect_toFall",
+                "SK_CHR_Pain|Pain_Throw_Kunai_JumpTwist",
+                "SK_CHR_Pain|Pain_Beaten_Down_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Left",
+                "SK_CHR_Pain|Pain_ChakraJump_Charge_Loop",
+                "SK_CHR_Pain|Pain_Attack_DoubleTurnKick_Type02",
+                "SK_CHR_Pain|Pain_Beaten_BellyDown_Large_End",
+                "SK_CHR_Pain|Pain_Beaten_OneHitDown_Long",
+                "SK_CHR_Pain|Pain_Dodge_Right_Type01",
+                "SK_CHR_Pain|Pain_HandSeal_RecoveryChakra_Loop",
+                "SK_CHR_Pain|Pain_Beaten_GuardReverseBlowOff",
+                "SK_CHR_Pain|Pain_Ninjutsu_PlanetaryDevastation_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_Large_Front_Conect_toFall",
+                "SK_CHR_Pain|Pain_Attack_supa_01",
+                "SK_CHR_Pain|Pain_Beaten_Fall_Front_Loop",
+                "SK_CHR_Pain|Pain_RecoveryChakra_End",
+                "SK_CHR_Pain|Pain_Walk_TurnRight180_Start",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_Conect_toFall",
+                "SK_CHR_Pain|Pain_Attack_JumpSpinKick",
+                "SK_CHR_Pain|Pain_Dodge_Left",
+                "SK_CHR_Pain|Pain_HandSeal_RecoveryChakra_End",
+                "SK_CHR_Pain|Pain_ChakraJump_Charge_End",
+                "SK_CHR_Pain|Pain_Beaten_SpinBlowOff_D52NJ3",
+                "SK_CHR_Pain|Pain_Beaten_DownHit",
+                "SK_CHR_Pain|Pain_Beaten_SpinBlowOff_Bound_Loop",
+                "SK_CHR_Pain|Pain_Attack_Aerial_DownStrike",
+                "SK_CHR_Pain|Pain_Run_TurnRight90_Start",
+                "SK_CHR_Pain|Pain_Attack_DownStrike",
+                "SK_CHR_Pain|Pain_Beaten_BellyDown_Large_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Kamui_Loop",
+                "SK_CHR_Pain|Pain_Throw_Aerial_Kunai_Left",
+                "SK_CHR_Pain|Pain_Attack_Kunai_SlashingShoulderTurnKick_Left",
+                "SK_CHR_Pain|Pain_Ninjutsu_UniversalPull",
+                "SK_CHR_Pain|Pain_Guard_Aerial_GuardHit_Front",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_D45NJ3_Loop",
+                "SK_CHR_Pain|Pain_Dying_Aerial_Fall_Behind_Loop",
+                "SK_CHR_Pain|Pain_Beaten_D51NJ3_Start",
+                "SK_CHR_Pain|Pain_Fall_Vertical_Loop",
+                "SK_CHR_Pain|Pain_Ninjutsu_PlanetaryDevastation_End",
+                "SK_CHR_Pain|Pain_GetUp",
+                "SK_CHR_Pain|Pain_Land",
+                "SK_CHR_Pain|Pain_Beaten_SpinBlowOff_Bound_Conect_toFall",
+                "SK_CHR_Pain|Pain_Beaten_Restrict_Loop",
+                "SK_CHR_Pain|Pain_ChakraJump_Vertical_Charge_Loop",
+                "SK_CHR_Pain|Pain_Walk_Loop",
+                "SK_CHR_Pain|Pain_Beaten_BellyDown_Small_End",
+                "SK_CHR_Pain|FM_Pain_Blink",
+                "SK_CHR_Pain|Pain_Beaten_D45NJ3_Start",
+                "SK_CHR_Pain|Pain_Beaten_Bind_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Struggle_Loop",
+                "SK_CHR_Pain|Pain_Rolling_GetUp",
+                "SK_CHR_Pain|Pain_Lobby_GetSet_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_BlowOff_toFall",
+                "SK_CHR_Pain|Pain_Guard_GuardBreak_End",
+                "SK_CHR_Pain|Pain_RangeAttack_Punch",
+                "SK_CHR_Pain|Pain_Aerial_RecoveryChakra_Loop",
+                "SK_CHR_Pain|Pain_Attack_PalmJumpSpinKick",
+                "SK_CHR_Pain|Pain_Fall_Front_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Fall_ChaseAttack_Loop",
+                "SK_CHR_Pain|Pain_Throw_Aerial_Kunai_Right",
+                "SK_CHR_Pain|Pain_DoubleJump",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_DownToFloor_Conect_toStand",
+                "SK_CHR_Pain|Pain_Beaten_SpinBlowOff_Bound_Start",
+                "SK_CHR_Pain|Pain_Attack_Palm",
+                "SK_CHR_Pain|Pain_Dying_Blasted",
+                "SK_CHR_Pain|Pain_Beaten_D29NJ1_End",
+                "SK_CHR_Pain|Pain_Beaten_Frozen_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Down_Sleep_Type01_Loop",
+                "SK_CHR_Pain|Pain_WallStop",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_UniversalPull_Start",
+                "SK_CHR_Pain|Pain_Guard_GuardHit_Front",
+                "SK_CHR_Pain|Pain_Beaten_UpLeft_Shoulder",
+                "SK_CHR_Pain|Pain_Guard_Aerial_Loop",
+                "SK_CHR_Pain|Pain_Throw_Aerial_Kunai",
+                "SK_CHR_Pain|Pain_Run_Loop",
+                "SK_CHR_Pain|Pain_Beaten_BellyDown_Small_Start",
+                "SK_CHR_Pain|Pain_Beaten_Fall_ChaseAttack_Behind_Loop",
+                "SK_CHR_Pain|Pain_Beaten_SpinBlowOff_Conect_toDown",
+                "SK_CHR_Pain|Pain_Guard_Aerial_GuardReverse",
+                "SK_CHR_Pain|Pain_Beaten_Left_Low",
+                "SK_CHR_Pain|Pain_Beaten_D29NJ1_LostEnd",
+                "SK_CHR_Pain|Pain_Walk_TurnRight90_Start",
+                "SK_CHR_Pain|Pain_Beaten_D45NJ3_Loop",
+                "SK_CHR_Pain|FM_Pain_Hurt",
+                "SK_CHR_Pain|Pain_Run_TurnLeft180_Start",
+                "SK_CHR_Pain|Pain_WireJump_Ready",
+                "SK_CHR_Pain|Pain_Beaten_Hide_Loop",
+                "SK_CHR_Pain|Pain_Beaten_BellyDown_Small_Loop",
+                "SK_CHR_Pain|Pain_Beaten_BellyDown_Middle_End",
+                "SK_CHR_Pain|Pain_etc_Exit",
+                "SK_CHR_Pain|Pain_Guard_GuardBreak_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Burn_Type01",
+                "SK_CHR_Pain|Pain_Beaten_DownToFloor_Type01",
+                "SK_CHR_Pain|Pain_GetUp_Type01",
+                "SK_CHR_Pain|Pain_Beaten_Down_Type01_Loop",
+                "SK_CHR_Pain|FM_Pain_ScreamS",
+                "SK_CHR_Pain|Pain_Beaten_Stagger_Belly",
+                "SK_CHR_Pain|Pain_Dodge_Right",
+                "SK_CHR_Pain|FM_Pain_Default",
+                "SK_CHR_Pain|FM_Pain_Down",
+                "SK_CHR_Pain|Pain_Aerial_Dash_End",
+                "SK_CHR_Pain|Pain_Aerial_Dash_Loop",
+                "SK_CHR_Pain|Pain_Aerial_Dash_Start",
+                "SK_CHR_Pain|Pain_Aerial_RecoveryChakra_End",
+                "SK_CHR_Pain|Pain_Aerial_RecoveryChakra_Start",
+                "SK_CHR_Pain|Pain_RecoveryChakra_Start",
+                "SK_CHR_Pain|Pain_Attack_Aerial_Hand_Punch",
+                "SK_CHR_Pain|Pain_Attack_BodyBlow",
+                "SK_CHR_Pain|Pain_Attack_Kunai_Uppercut",
+                "SK_CHR_Pain|Pain_Attack_supa_02",
+                "SK_CHR_Pain|Pain_Jump_Vertical",
+                "SK_CHR_Pain|Pain_Attack_TurnKick_Left",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_D45NJ3_Start",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_D51NJ3_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_D51NJ3_Start",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_ReaperDeathSeal",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_Stagger_Belly",
+                "SK_CHR_Pain|Pain_Beaten_Aerial_UniversalPull_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Right",
+                "SK_CHR_Pain|Pain_Beaten_BellyDown_Large_Start",
+                "SK_CHR_Pain|Pain_Beaten_BellyDown_Middle_Start",
+                "SK_CHR_Pain|Pain_Beaten_Blasted",
+                "SK_CHR_Pain|Pain_Beaten_BlowOff_ChaseAttack",
+                "SK_CHR_Pain|Pain_Beaten_D29NJ1_Start",
+                "SK_CHR_Pain|Pain_Beaten_D43NJ1",
+                "SK_CHR_Pain|Pain_Beaten_D51NJ3_Loop",
+                "SK_CHR_Pain|Pain_ChakraJump_Charge_Start",
+                "SK_CHR_Pain|Pain_Beaten_D55NJ2",
+                "SK_CHR_Pain|Pain_Beaten_DownToFloor",
+                "SK_CHR_Pain|Pain_Beaten_DownToWall",
+                "SK_CHR_Pain|Pain_Beaten_Earthquake_Loop",
+                "SK_CHR_Pain|Pain_Beaten_ElectricShock_End",
+                "SK_CHR_Pain|Pain_Beaten_ElectricShock_Loop",
+                "SK_CHR_Pain|Pain_Beaten_Kunai",
+                "SK_CHR_Pain|Pain_Beaten_Left_Head",
+                "SK_CHR_Pain|Pain_Beaten_LowFront_Chin",
+                "SK_CHR_Pain|Pain_Beaten_OneHitDown_Short",
+                "SK_CHR_Pain|Pain_Beaten_Paralysis",
+                "SK_CHR_Pain|Pain_Beaten_ReaperDeathSeal",
+                "SK_CHR_Pain|Pain_Beaten_ShadowPossession_Loop",
+                "SK_CHR_Pain|Pain_Beaten_SpinBlowOff",
+                "SK_CHR_Pain|Pain_Beaten_SpinBlowOff_Behind",
+                "SK_CHR_Pain|Pain_Beaten_SpinBlowOff_Bound_End",
+                "SK_CHR_Pain|Pain_Beaten_SpinBlowOff_Conect_toStand",
+                "SK_CHR_Pain|Pain_Beaten_SpinBlowOff_Large_Up",
+                "SK_CHR_Pain|Pain_Beaten_Struggle_Start",
+                "SK_CHR_Pain|Pain_Beaten_UpFront_Head",
+                "SK_CHR_Pain|Pain_ChakraJump_Vertical_Charge_End",
+                "SK_CHR_Pain|Pain_ChakraJump_Vertical_Charge_Start",
+                "SK_CHR_Pain|Pain_Dodge_Behind",
+                "SK_CHR_Pain|Pain_Dodge_Front",
+                "SK_CHR_Pain|Pain_Dodge_Left_Type01",
+                "SK_CHR_Pain|Pain_Dying_Type01",
+                "SK_CHR_Pain|Pain_etc_Appearance",
+                "SK_CHR_Pain|Pain_etc_Win_Type01_Loop",
+                "SK_CHR_Pain|Pain_Guard_GuardBreak_Start",
+                "SK_CHR_Pain|Pain_Guard_GuardReverse",
+                "SK_CHR_Pain|Pain_Guard_Loop",
+                "SK_CHR_Pain|Pain_HandSeal_RecoveryChakra_Start",
+                "SK_CHR_Pain|Pain_HeightLand",
+                "SK_CHR_Pain|Pain_Jump_Front",
+                "SK_CHR_Pain|Pain_Land_toRecoveryChakra",
+                "SK_CHR_Pain|Pain_Lobby_Win_Loop",
+                "SK_CHR_Pain|Pain_Ninjutsu_Aerial_AlmightyPush_Start",
+                "SK_CHR_Pain|Pain_Ninjutsu_Aerial_PlanetaryDevastation_Start",
+                "SK_CHR_Pain|Pain_Ninjutsu_Aerial_UniversalPull",
+                "SK_CHR_Pain|Pain_Ninjutsu_AlmightyPush_Start",
+                "SK_CHR_Pain|Pain_Ninjutsu_PlanetaryDevastation_Attack",
+                "SK_CHR_Pain|Pain_RecoveryChakra_Loop",
+                "SK_CHR_Pain|Pain_Run_End",
+                "SK_CHR_Pain|Pain_Run_TurnLeft180",
+                "SK_CHR_Pain|Pain_Run_TurnLeft90_Start",
+                "SK_CHR_Pain|Pain_Run_TurnRight180",
+                "SK_CHR_Pain|Pain_Run_TurnRight180_Start",
+                "SK_CHR_Pain|Pain_Throw_Kunai",
+                "SK_CHR_Pain|Pain_Walk_End",
+                "SK_CHR_Pain|Pain_Walk_TurnLeft180_Start",
+                "SK_CHR_Pain|Pain_Walk_TurnLeft90_Start",
+                "SK_CHR_Pain|Pain_WallJump_Loop"
+            ],
+            "materials": [
+                {
+                    "material_name": "MI_CHR_Pain",
+                    "texture_overrides": {
+                        "base_color_0": "0df7ebfe-5ba6-4b13-909c-9bcec493cee4"
+                    }
+                },
+                {
+                    "material_name": "MI_CHR_Pain_EyeL",
+                    "texture_overrides": {
+                        "base_color_0": "6886567c-ebb7-472c-b8df-d590989b3d0c"
+                    }
+                },
+                {
+                    "material_name": "MI_CHR_Pain_EyeR",
+                    "texture_overrides": {
+                        "base_color_0": "6886567c-ebb7-472c-b8df-d590989b3d0c"
+                    }
+                },
+                {
+                    "material_name": "MI_CHR_Pain_Metal"
+                },
+                {
+                    "material_name": "M_Line"
+                }
+            ],
+            "model_guid": "b8a19dfa-0185-43b8-8c67-b52c52d787d8",
+            "model_type": "SkeletalMesh",
+            "type": "COMPONENT_TYPE_MODEL"
+        }
+    ],
+    "guid": "5ad1c544-b8d0-456f-a634-2d4e229a718b",
+    "hit_effect_asset_name": "HitParticle",
+    "idle_state_name": "Idle",
+    "max_hp": 1500.0,
+    "max_sprint_speed": 4.0,
+    "max_walk_speed": 2.0,
+    "network_driven": false,
+    "object_type": "OBJECT_TYPE_BOSS_PAIN",
+    "prefab_name": "Boss",
+    "static_class": "Boss"
+}

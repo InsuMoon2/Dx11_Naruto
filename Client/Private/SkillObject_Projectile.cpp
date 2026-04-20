@@ -17,7 +17,8 @@ SkillObject_Projectile::SkillObject_Projectile(const SkillObject_Projectile& rhs
     : SkillObject(rhs)
     , _isMoving(rhs._isMoving)             
     , _speed(rhs._speed)                   
-    , _maxDistance(rhs._maxDistance)       
+    , _maxDistance(rhs._maxDistance)
+    , _damage(rhs._damage)
 {
 }
 
@@ -103,7 +104,7 @@ void SkillObject_Projectile::OnBeginOverlap(Shared<Collider> self, Shared<Collid
 
     _hitCooldowns[otherOwner.get()] = _hitInterval;
 
-    if (!Apply_Skill_Hit(character, 10.f, _hitLaunchForce, 0.f))
+    if (!Apply_Skill_Hit(character, _damage, _hitLaunchForce, 0.f))
         return;
 
     _hitCount++;
@@ -124,6 +125,7 @@ void SkillObject_Projectile::Launch(const Vec3& direction)
 
     if (_collider)
         _collider->Set_IsActive(true); // 발사 시 콜라이더 활성화
+
     _isMoving = true;
 }
 

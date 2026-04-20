@@ -143,21 +143,52 @@ void GameRoom::Leave_GameRoom(Shared<GameSession> session)
 
 }
 
-void GameRoom::Handle_C_Move(Protocol::C_Move& pkt)
+uint64 GameRoom::Get_MonsterAuthorityPlayerId() const
 {
+    if (_players.empty())
+        return 0;
+
+    return _players.begin()->first;
+}
+
+void GameRoom::Handle_C_Move(Shared<GameSession> session, Protocol::C_Move& pkt)
+{
+    CHECK_NULL(session);
+
     uint64 id = pkt.info().objectid();
 
-    Shared<GameObject> gameObject = Find_Player(id);
-    if (gameObject == nullptr)
+    if (pkt.info().objecttype() == Protocol::OBJECT_TYPE_MONSTER ||
+        pkt.info().objecttype() == Protocol::OBJECT_TYPE_BOSS_PAIN)
+    {
+        const uint64 authorityPlayerId = Get_MonsterAuthorityPlayerId();
+        if (authorityPlayerId == 0 || session->Get_PlayerId() != authorityPlayerId)
+            return;
+
+        Shared<Monster> monster = Find_Monster(id);
+        if (monster == nullptr)
+            return;
+
+        const Protocol::OBJECT_TYPE networkObjectType = monster->info.objecttype();
+        monster->info = pkt.info();
+        monster->info.set_objectid(monster->Get_ObjectID());
+        monster->info.set_objecttype(networkObjectType);
+
+        SendBufferRef sendBuffer = Server_PacketHandler::Make_S_Move(monster->info);
+        Broadcast(sendBuffer);
+        return;
+    }
+
+    Shared<Player> player = Find_Player(id);
+    if (player == nullptr)
         return;
 
     // 서버 측 위치 갱신
-    gameObject->info = pkt.info();
-    gameObject->info.set_objectid(id);
+    player->info = pkt.info();
+    player->info.set_objectid(id);
 
     // 모든 플레이어들에게 이동 패킷 전달
     {
-        SendBufferRef sendBuffer = Server_PacketHandler::Make_S_Move(gameObject->info);
+        SendBufferRef sendBuffer = Server_PacketHandler::Make_S_Move(player->info);
         Broadcast(sendBuffer);
     }
 
@@ -172,18 +203,14 @@ void GameRoom::Broadcast(SendBufferRef sendBuffer)
     }
 }
 
-void GameRoom::Update()
+void GameRoom::Update(float timeDelta)
 {
     for (auto& [id, player] : _players)
     {
         player->Update();
     }
 
-    for (auto& [id, monster] : _monsters)
-    {
-        monster->Update();
-        monster->BroadcastMove();
-    }
+    // [변경] 몬스터는 권한 클라이언트가 기존 BT를 그대로 돌리고, 서버는 릴레이만 담당한다.
 }
 
 void GameRoom::Ensure_LevelMonstersSpawned()
@@ -192,7 +219,7 @@ void GameRoom::Ensure_LevelMonstersSpawned()
        return;
 
     vector<FServerMonsterSpawnDesc> spawnDescs;
-    if (!Load_MonsterSpawnData_FromLevel(L"[20260412]Tutorial", spawnDescs))
+    if (!Load_MonsterSpawnData_FromLevel(L"[20260420]Tutorial", spawnDescs))
         return;
 
     for (const auto& spawnDesc : spawnDescs)
@@ -200,13 +227,9 @@ void GameRoom::Ensure_LevelMonstersSpawned()
         auto monster = Monster::Create();
         CHECK_NULL(monster);
 
-        auto* pos = monster->info.mutable_pos();
-        pos->set_x(spawnDesc.position.x);
-        pos->set_y(spawnDesc.position.y);
-        pos->set_z(spawnDesc.position.z);
-        monster->info.set_rot_y(spawnDesc.yaw);
+        monster->Initialize_FromSpawn(spawnDesc.position, spawnDesc.yaw);
+        monster->info.set_objecttype(spawnDesc.objectType);
 
-        // 몬스터 종류가 늘어날 때마다 분기해줘야할듯
         Add_Monster(monster);
     }
 
@@ -234,10 +257,12 @@ bool GameRoom::Load_MonsterSpawnData_FromLevel(const wstring& levelName, vector<
         if (!Try_ReadyObjectType(objJson, objectType))
             continue;
 
-        if (objectType != Protocol::OBJECT_TYPE_MONSTER)
+        if (objectType != Protocol::OBJECT_TYPE_MONSTER &&
+            objectType != Protocol::OBJECT_TYPE_BOSS_PAIN)
             continue;
 
         FServerMonsterSpawnDesc desc{};
+        desc.objectType = objectType;
 
         if (objJson.contains("prefab_name") && objJson["prefab_name"].is_string())
             desc.prefabName = objJson["prefab_name"].get<string>();

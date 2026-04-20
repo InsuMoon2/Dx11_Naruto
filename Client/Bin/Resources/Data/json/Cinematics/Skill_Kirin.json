@@ -1,7 +1,7 @@
 {
     "name": "Skill_Kirin",
     "track": {
-        "fps": 30,
+        "fps": 60,
         "keys": [
             {
                 "anchor_space": "OwnerRelative",

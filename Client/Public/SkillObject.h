@@ -35,6 +35,8 @@ public:
         string  effectAssetName = "";
         Collision_Preset collisionPreset = Collision_Preset::Projectile;
         Shared<GameObject> ownerObject = nullptr;
+
+        bool useDirectionLookAt = true;
     };
 
 public:

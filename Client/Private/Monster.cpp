@@ -1,5 +1,6 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Monster.h"
+
 #include "CombatStat.h"
 #include "MovementComponent.h"
 #include "AIController.h"
@@ -10,10 +11,8 @@
 #include "Model.h"
 #include "AnimationStateComponent.h"
 #include "GameObject_Factory.h"
-#include "Blackboard.h"
 #include "Bounding_Sphere.h"
 #include "Collider.h"
-#include "SkillObject.h"
 #include "UI_MonsterHp.h"
 
 REGISTER_GAMEOBJECT(Monster, Protocol::OBJECT_TYPE_MONSTER)
@@ -25,18 +24,18 @@ bool Monster::Register_Properties()
     auto& info = GetStaticReflectionInfo();
     info.className = "Monster";
 
-    PROPERTY_FLOAT("Test Value : ", _test, 1.f, 9999.f);
-
     return true;
 }
 
+NS_BEGIN(Client)
+
 Monster::Monster(ComPtr<Device> device, ComPtr<DeviceContext> context)
-    : Character(device, context)
+    : EnemyCharacter(device, context)
 {
 }
 
 Monster::Monster(const Monster& rhs)
-    : Character(rhs)
+    : EnemyCharacter(rhs)
 {
 }
 
@@ -46,156 +45,17 @@ Monster::~Monster()
 
 HRESULT Monster::Initialize_Prototype()
 {
-    CHECK_FAILED(Character::Initialize_Prototype(), E_FAIL);
+    CHECK_FAILED(EnemyCharacter::Initialize_Prototype(), E_FAIL);
 
     return S_OK;
 }
 
 HRESULT Monster::Initialize(void* arg)
 {
-    CHECK_FAILED(Character::Initialize(arg), E_FAIL);
-
+    CHECK_FAILED(EnemyCharacter::Initialize(arg), E_FAIL);
     CHECK_FAILED(Ready_UI(), E_FAIL);
 
     return S_OK;
-}
-
-void Monster::BeginPlay()
-{
-    Character::BeginPlay();
-
-    auto animState = Get_Component<AnimationStateComponent>();
-    if (animState)
-    {
-        animState->Play_State("Idle");
-
-        auto model = Get_Component<Model>();
-        if (model)
-            model->Play_Animation(0.f);
-    }
-}
-
-void Monster::Priority_Update(float timeDelta)
-{
-    Character::Priority_Update(timeDelta);
-}
-
-void Monster::Update(float timeDelta)
-{
-    Character::Update(timeDelta);
-
-    if (!_networkDriven && _aiController)
-    {
-        _aiController->Update(timeDelta);
-    }
-
-    if (_model)
-    {
-        _model->Play_Animation(timeDelta);
-    }
-}
-
-void Monster::Late_Update(float timeDelta)
-{
-    Character::Late_Update(timeDelta);
-
-    if (_collider)
-    {
-        _collider->Update_Collider(_transformCom->Get_WorldMatrix());
-        GAME->Add_Collider(_collider);
-    }
-
-    GAME->Add_RenderGroup(ERenderGroup::NonBlend, this->GetSharedPtr());
-}
-
-HRESULT Monster::Render()
-{
-    if (!_model || !_shaderCom || Is_Destroy())
-        return S_OK;
-
-    CHECK_FAILED(Character::Render(), E_FAIL);
-
-    const size_t numMeshes = _model->Get_NumMeshes();
-    if (numMeshes == 0)
-        return S_OK;
-
-    if (FAILED(_model->Bind_BoneMatrices(_shaderCom, "g_BoneMatrices")))
-        return S_OK;
-
-    // 툰 셰이딩
-    {
-        // 외곽선 색
-        const Vec4 outlineColor = Vec4(0.04f, 0.05f, 0.08f, 1.f);
-
-        // 외곽선 두께
-        const float outlineThickness = 0.0035f;
-
-        CHECK_FAILED(_shaderCom->Bind_RawValue("g_OutlineColor", &outlineColor, sizeof(Vec4)), E_FAIL);
-        CHECK_FAILED(_shaderCom->Bind_RawValue("g_OutlineThickness", &outlineThickness, sizeof(float)), E_FAIL);
-    }
-
-    for (size_t i = 0; i < numMeshes; i++)
-    {
-        _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
-
-        CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
-        CHECK_FAILED(_model->Render(static_cast<uint32>(i)), E_FAIL);
-
-        // 기본 패스 그리고, 아웃라인 패스 한번 더 그려주기
-        //CHECK_FAILED(_shaderCom->Begin_Pass(1), E_FAIL);
-        //CHECK_FAILED(_model->Render(static_cast<uint32>(i)), E_FAIL);
-    }
-
-    return S_OK;
-}
-
-void Monster::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
-{
-    Character::OnBeginOverlap(self, other);
-
-
-}
-
-void Monster::TakeDamage(const FDamageEvent& damageEvent)
-{
-    Character::TakeDamage(damageEvent);
-
-    if (_combatStat && _combatStat->Is_Dead())
-        return;
-
-    if (_combatStat)
-        _combatStat->Take_Damage(damageEvent);
-
-
-}
-
-void Monster::OnDamaged(const FDamageEvent& damageEvent)
-{
-    Character::OnDamaged(damageEvent);
-
-    if (damageEvent.damage > 0.f && _transformCom)
-    {
-        Vec3 hitEffectPosition = _transformCom->Get_WorldPosition();
-        hitEffectPosition.y += 1.f;
-
-        SkillObject::Spawn_Effect_Once("HitParticle", hitEffectPosition);
-    }
-
-    if (_behavior)
-    {
-        auto blackboard = _behavior->Get_Blackboard();
-        if (blackboard)
-        {
-            blackboard->Set_ValueAsBool("IsHit", true);
-        }
-    }
-}
-
-void Monster::OnDead(const FDamageEvent& damageEvent)
-{
-    Character::OnDead(damageEvent);
-
-    // TODO : 상태 전환 -> 몬스터는 비헤이비어 트리에서 상태값 변경해주기
 }
 
 json Monster::To_Json() const
@@ -208,19 +68,12 @@ json Monster::To_Json() const
 void Monster::From_Json(const json& data)
 {
     Character::From_Json(data);
-
-}
-
-void Monster::Sync(const Protocol::ObjectInfo& info)
-{
-    _transformCom->Set_WorldPosition(info.pos().x(), info.pos().y(), info.pos().z());
-    _transformCom->Set_LocalRotation(0.f, info.rot_y(), 0.f);
 }
 
 HRESULT Monster::Ready_Components()
 {
     {
-        CombatStat::FCombatStatDesc desc;
+        CombatStat::FCombatStatDesc desc{};
         desc.maxHp = 100.f;
         desc.attack = 10.f;
 
@@ -228,23 +81,20 @@ HRESULT Monster::Ready_Components()
     }
 
     {
-        MovementComponent::FMovementDesc desc;
+        MovementComponent::FMovementDesc desc{};
         desc.maxWalkSpeed = 2.f;
         desc.maxSprintSpeed = 4.f;
 
         CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MOVEMENT, _movement, &desc), E_FAIL);
     }
 
-    // AI
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_AI_CONTROLLER, _aiController), E_FAIL);;
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_AI_CONTROLLER, _aiController), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_BEHAVIOR, _behavior), E_FAIL);
-
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_ANIMATION_STATE, _animState), E_FAIL);
 
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXANIMMESH, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_MONSTER, _model), E_FAIL);
 
-    // 충돌체 추가
     Bounding_Sphere::FBoundingSphereDesc sphereDesc{};
     sphereDesc.radius = 1.5f;
 
@@ -254,19 +104,34 @@ HRESULT Monster::Ready_Components()
     return S_OK;
 }
 
-HRESULT Monster::Bind_ShaderResources()
+Protocol::OBJECT_TYPE Monster::Get_EnemyObjectType() const
 {
-    Matrix worldMatrix = _transformCom->Get_WorldMatrix();
-    _shaderCom->Bind_Matrix("g_WorldMatrix", &worldMatrix);
-    _shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View));
-    _shaderCom->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj));
+    return Protocol::OBJECT_TYPE_MONSTER;
+}
 
-    return S_OK;
+Protocol::OBJECT_STATE_TYPE Monster::To_EnemyObjectState(const string& animStateName) const
+{
+    if (animStateName == "Run" || animStateName.rfind("Run_", 0) == 0)
+        return Protocol::OBJECT_STATE_TYPE_RUN;
+
+    if (animStateName == "Attack" || animStateName.rfind("Attack_", 0) == 0)
+        return Protocol::OBJECT_STATE_TYPE_ATTACK;
+
+    if (animStateName == "Hit" || animStateName.rfind("Hit_", 0) == 0)
+        return Protocol::OBJECT_STATE_TYPE_HIT;
+
+    if (animStateName == "Dead" || animStateName == "Die" ||
+        animStateName.rfind("Dead_", 0) == 0 || animStateName.rfind("Die_", 0) == 0)
+    {
+        return Protocol::OBJECT_STATE_TYPE_DEAD;
+    }
+
+    return Protocol::OBJECT_STATE_TYPE_IDLE;
 }
 
 HRESULT Monster::Ready_UI()
 {
-    UI_MonsterHp::FPlayerHPDesc hpDesc;
+    UI_MonsterHp::FPlayerHPDesc hpDesc{};
     hpDesc.posX = 0.f;
     hpDesc.posY = 0.f;
     hpDesc.zOrder = 0.5f;
@@ -293,7 +158,6 @@ Shared<Monster> Monster::Create(ComPtr<Device> device, ComPtr<DeviceContext> con
     if (FAILED(instance->Initialize_Prototype()))
     {
         MSG_BOX("Failed to Created : Monster");
-
         return nullptr;
     }
 
@@ -307,7 +171,6 @@ shared_ptr<GameObject> Monster::Clone(void* arg)
     if (FAILED(clone->Initialize(arg)))
     {
         MSG_BOX("Failed to Cloned : Monster");
-
         return nullptr;
     }
 
@@ -316,5 +179,7 @@ shared_ptr<GameObject> Monster::Clone(void* arg)
 
 void Monster::Free()
 {
-    Character::Free();
+    EnemyCharacter::Free();
 }
+
+NS_END

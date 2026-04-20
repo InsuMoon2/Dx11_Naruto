@@ -15,7 +15,7 @@ HRESULT Bounding_OBB::Initialize(const FBoundingDesc& desc)
 {
     CHECK_FAILED(Bounding::Initialize(desc), E_FAIL);
 
-    const FBoundingOBBDesc& obbDesc = static_cast<const FBoundingOBBDesc>(desc);
+    const FBoundingOBBDesc& obbDesc = static_cast<const FBoundingOBBDesc&>(desc);
 
     Quat rotation = Quat::CreateFromYawPitchRoll(obbDesc.radians.y, obbDesc.radians.x, obbDesc.radians.z);
 
