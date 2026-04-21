@@ -24,8 +24,8 @@ enum class ECharacterSetupTexture
     SelectDesc,
     TitleBG,
     Title_Symbol,
-    SelectButton,
-    TabButton,
+    SelectButton, // 결정
+    TabButton,    // 하얀색 탭
     TabSelectedButton,
     SelectedButton,
 
@@ -34,6 +34,16 @@ enum class ECharacterSetupTexture
     PlayerTextBG,
     PlayerTextInput,
     Roll_Selected,
+
+    ChattingChang,
+    ChattingChang_Front,
+    Lobby_Cloud1,
+    Lobby_Cloud2,
+    Lobby_Cloud3,
+    Lobby_Cloud4,
+
+    Lobby_Background,
+
 
     END
 };

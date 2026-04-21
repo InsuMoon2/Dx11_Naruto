@@ -1262,6 +1262,9 @@ void Model::Sample_CurrentPose()
             bone->Update_Combined(nullptr, Matrix::Identity);
         }
     }
+
+    // 수동 pose 샘플링 이후 즉시 렌더할 수 있도록 셰이더용 skinning matrix도 함께 갱신한다.
+    Update_BoneMatrices_FromBones();
 }
 
 float Model::Convert_TrackTicks_ToSeconds(const FPlayingClipState& clipState, float trackTicks) const

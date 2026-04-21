@@ -7,6 +7,7 @@
 NS_BEGIN(Engine)
 class ICommand;
 class Camera;
+class GameObject;
 NS_END
 
 NS_BEGIN(Editor)
@@ -69,6 +70,12 @@ public: /* Command History */
 public: /* AnimNotify_Inspector_Factory */
     Shared<AnimNotify_Inspector>        Get_NotifyInspector(const string& typeName);
     Shared<AnimNotifyState_Inspector>   Get_NotifyStateInspector(const string& typeName);
+
+private:
+    void    Reload_CurrentLevelMonsterAssets();
+    vector<Shared<GameObject>> Collect_CurrentLevelMonsterObjects() const;
+    bool    Is_PlayHotReloadMonster(const Shared<GameObject>& gameObject) const;
+    void    Reload_MonsterAssets(const Shared<GameObject>& gameObject, bool allowPrefabReapply);
 
 private: /* Manager */
     Unique<ImGui_Manager>           _imguiManager;

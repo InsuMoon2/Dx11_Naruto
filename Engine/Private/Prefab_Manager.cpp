@@ -192,6 +192,23 @@ void Prefab_Manager::Reapply_Prefabs_InLevel(uint32 levelIndex)
     }
 }
 
+HRESULT Prefab_Manager::Reapply_Prefab_ToObject(Shared<GameObject> gameObject)
+{
+    if (!gameObject)
+        return E_FAIL;
+
+    const string& prefabName = gameObject->Get_SourcePrefabName();
+    if (prefabName.empty())
+        return E_FAIL;
+
+    auto prefabDesc = Get_PrefabData(prefabName);
+    if (!prefabDesc)
+        return E_FAIL;
+
+    Reapply_Prefab_ToObject(*prefabDesc, gameObject);
+    return S_OK;
+}
+
 json Prefab_Manager::Serialize_GameObject(shared_ptr<GameObject> gameObject)
 {
     json root = gameObject->To_Json();
@@ -236,6 +253,11 @@ shared_ptr<GameObject> Prefab_Manager::Deserialize_GameObject(const FPrefabDesc&
     }
 
     Apply_ComponentDataToObject(desc.components, gameObject, false);
+
+    if (desc.custom_properties.is_object())
+    {
+        gameObject->From_Json(desc.custom_properties);
+    }
 
     // Override 적용
     if (!overrides.empty())
@@ -284,6 +306,11 @@ void Prefab_Manager::Reapply_Prefab_ToObject(const FPrefabDesc& desc, Shared<Gam
         return;
 
     Apply_ComponentDataToObject(desc.components, gameObject, true);
+
+    if (desc.custom_properties.is_object())
+    {
+        gameObject->From_Json(desc.custom_properties);
+    }
 
     if (auto container = dynamic_pointer_cast<ContainerObject>(gameObject))
     {

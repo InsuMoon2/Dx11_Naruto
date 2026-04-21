@@ -203,6 +203,8 @@
     </ClInclude>
     <ClInclude Include="..\Public\Effect_View.h" />
     <ClInclude Include="..\Public\EffectPreviewRoot.h" />
+    <ClInclude Include="..\Public\Effect_Inspector.h" />
+    <ClInclude Include="..\Public\WaveTrigger_Inspector.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -359,6 +361,8 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_View.cpp" />
     <ClCompile Include="..\Private\EffectPreviewRoot.cpp" />
+    <ClCompile Include="..\Private\Effect_Inspector.cpp" />
+    <ClCompile Include="..\Private\WaveTrigger_Inspector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

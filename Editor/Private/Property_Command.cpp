@@ -45,6 +45,10 @@ void Property_Command::Apply(const json& val)
         *static_cast<bool*>(_memberPtr) = val.get<bool>();
         break;
 
+    case EPropertyType::String:
+        *static_cast<string*>(_memberPtr) = val.get<string>();
+        break;
+
     case EPropertyType::Vec3:
     {
         float* v = static_cast<float*>(_memberPtr);

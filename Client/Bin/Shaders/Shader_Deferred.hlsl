@@ -1,16 +1,27 @@
 #include "Engine_Shader_Defines.hlsli"
 
 Texture2D g_Texture;
+
 Texture2D g_NormalTexture;
 Texture2D g_ShadeTexture;
 
-// 1차 경계값 -> 이거보다 낮으면 어두운 단계
+Texture2D g_DepthTexture;
+Texture2D g_SpecularTexture;
+
+// depth 기반 월드 위치 복원용 inverse matrix
+float4x4 g_ViewMatrixInverse;
+float4x4 g_ProjMatrixInverse;
+
+// point light 계산용 데이터
+float4 g_LightPos;
+float g_LightRange;
+
+// 1차 경계값
 float g_ToonShadeThreshold0 = 0.30f;
-// 2차 경계값 -> 중간 단계
+// 2차 경계값
 float g_ToonShadeThreshold1 = 0.68f;
 
 float4 g_PostOutlineColor = float4(0.04f, 0.05f, 0.08f, 1.f);
-// 화면 해상도 역수. 1픽셀 옆 샘플링에 사용한다.
 float2 g_OutlineInvViewportSize = float2(1.f / 1280.f, 1.f / 720.f);
 float g_PostOutlineNormalThreshold = 0.32f;
 float g_PostOutlineStrength = 0.45f;
@@ -28,7 +39,6 @@ float ComputeToonShade(float ndotl)
     return 1.0f;
 }
 
-// GBUffer 노멀을 실제 노멀 범위로 복원하기
 float3 DecodeWorldNormal(float2 uv)
 {
     float3 encoded = g_NormalTexture.Sample(DefaultSampler, uv).xyz;
@@ -55,6 +65,29 @@ float ComputePostOutlineMask(float2 uv)
     return mask * g_PostOutlineStrength;
 }
 
+// Depth RT에 저장된 clipZ/viewZ로 월드 위치를 복원한다.
+// depth.x = clip z/w
+// depth.y = view z (원본)
+float3 ReconstructWorldPos(float2 uv)
+{
+    float4 depthDesc = g_DepthTexture.Sample(DefaultSampler, uv);
+
+    float clipZ = depthDesc.x;
+    float viewZ = depthDesc.y;
+
+    float4 projPos;
+    projPos.x = uv.x * 2.f - 1.f;
+    projPos.y = uv.y * -2.f + 1.f;
+    projPos.z = clipZ;
+    projPos.w = 1.f;
+
+    projPos *= viewZ;
+
+    float4 viewPos = mul(projPos, g_ProjMatrixInverse);
+    float4 worldPos = mul(viewPos, g_ViewMatrixInverse);
+
+    return worldPos.xyz / max(worldPos.w, 0.0001f);
+}
 
 struct VS_IN
 {
@@ -77,7 +110,7 @@ VS_OUT VS_MAIN(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP); 
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     Out.vTexcoord = In.vTexcoord;
     
     return Out;
@@ -86,42 +119,46 @@ VS_OUT VS_MAIN(VS_IN In)
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
-    float2 vTexcoord : TEXCOORD0;    
+    float2 vTexcoord : TEXCOORD0;
 };
 
 struct PS_OUT_BACKBUFFER
 {
-    vector vColor : SV_TARGET0;
+    float4 vColor : SV_TARGET0;
 };
 
 PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
-
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-
     return Out;
 }
 
 struct PS_OUT_LIGHT
 {
-    vector vShade : SV_TARGET0;
+    float4 vShade : SV_TARGET0;
+    float4 vSpecular : SV_TARGET1;
 };
 
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
     PS_OUT_LIGHT Out;
 
-    vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
-    vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+    float3 normalWS = DecodeWorldNormal(In.vTexcoord);
+    float3 worldPos = ReconstructWorldPos(In.vTexcoord);
 
-    float ndotl = max(dot(normalize(g_LightDir.xyz) * -1.f, normalize(vNormal.xyz)), 0.f);
+    float3 lightDir = normalize(-g_LightDir.xyz);
+    float3 viewDir = normalize(g_CamPosition.xyz - worldPos);
+    float3 reflectDir = reflect(-lightDir, normalWS);
 
-    // 3단 툰 분리
+    float ndotl = max(dot(lightDir, normalWS), 0.f);
     float toonShade = ComputeToonShade(ndotl);
 
-    Out.vShade = vector(g_LightDiffuse.rgb * toonShade, 1.f);
-    
+    float spec = pow(max(dot(viewDir, reflectDir), 0.f), 50.f);
+
+    Out.vShade = float4(g_LightDiffuse.rgb * toonShade, 1.f);
+    Out.vSpecular = float4(g_LightSpecular.rgb * spec, 0.f);
+
     return Out;
 }
 
@@ -129,14 +166,25 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
     PS_OUT_LIGHT Out;
     
-    vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
-    vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+    float3 normalWS = DecodeWorldNormal(In.vTexcoord);
+    float3 worldPos = ReconstructWorldPos(In.vTexcoord);
 
-    float ndotl = max(dot(normalize(g_LightDir.xyz) * -1.f, normalize(vNormal.xyz)), 0.f);
+    float3 lightVec = g_LightPos.xyz - worldPos;
+    float distanceToLight = length(lightVec);
+    float3 lightDir = normalize(lightVec);
 
+    float attenuation = saturate((g_LightRange - distanceToLight) / max(g_LightRange, 0.0001f));
+
+    float ndotl = max(dot(lightDir, normalWS), 0.f);
     float toonShade = ComputeToonShade(ndotl);
 
-    Out.vShade = vector(g_LightDiffuse.rgb * toonShade, 1.f);
+    float3 viewDir = normalize(g_CamPosition.xyz - worldPos);
+    float3 reflectDir = reflect(-lightDir, normalWS);
+
+    float spec = pow(max(dot(viewDir, reflectDir), 0.f), 50.f) * attenuation;
+
+    Out.vShade = float4(g_LightDiffuse.rgb * toonShade * attenuation, 1.f);
+    Out.vSpecular = float4(g_LightSpecular.rgb * spec, 0.f);
 
     return Out;
 }
@@ -145,21 +193,42 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
     
-    vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (vDiffuse.a == 0.f)
         discard;
     
-    vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vSpecular = g_SpecularTexture.Sample(DefaultSampler, In.vTexcoord);
 
-    vector toonColor = vDiffuse * vShade;
+    float3 litColor = vDiffuse.rgb * vShade.rgb + vSpecular.rgb;
 
     float outlineMask = ComputePostOutlineMask(In.vTexcoord);
 
-    Out.vColor = lerp(toonColor, g_PostOutlineColor, outlineMask);
-    Out.vColor.a = 1.f;
+    Out.vColor = float4(lerp(litColor, g_PostOutlineColor.rgb, outlineMask), 1.f);
     
     return Out;
 }
+
+BlendState BS_LightAccumulate
+{
+    BlendEnable[0] = true;
+    SrcBlend[0] = One;
+    DestBlend[0] = One;
+    BlendOp[0] = Add;
+    SrcBlendAlpha[0] = One;
+    DestBlendAlpha[0] = One;
+    BlendOpAlpha[0] = Add;
+    RenderTargetWriteMask[0] = 0x0F;
+
+    BlendEnable[1] = true;
+    SrcBlend[1] = One;
+    DestBlend[1] = One;
+    BlendOp[1] = Add;
+    SrcBlendAlpha[1] = One;
+    DestBlendAlpha[1] = One;
+    BlendOpAlpha[1] = Add;
+    RenderTargetWriteMask[1] = 0x0F;
+};
 
 technique11 DefaultTechnique
 {
@@ -177,7 +246,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_LightAccumulate, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
@@ -187,7 +256,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_LightAccumulate, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_POINT();

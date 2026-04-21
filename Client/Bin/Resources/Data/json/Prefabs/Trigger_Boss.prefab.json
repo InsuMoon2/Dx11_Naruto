@@ -1,0 +1,60 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "type": "COMPONENT_TYPE_EFFECT"
+        },
+        {
+            "bounding": {
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "extents": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            },
+            "channel": "",
+            "collision_preset": "Trigger",
+            "is_active": true,
+            "shape": "OBB",
+            "type": "COMPONENT_TYPE_COLLIDER"
+        }
+    ],
+    "custom_properties": {
+        "clear_delay_sec": 1.0,
+        "default_effect_asset_name": "",
+        "play_default_effect_on_begin_play": true,
+        "play_trigger_effect_on_trigger": true,
+        "spawn_entries": [],
+        "spawn_layer_tag": "Layer_Builder",
+        "stop_default_effect_on_trigger": true,
+        "trigger_effect_asset_name": "",
+        "trigger_once": false,
+        "wave_tag": "GamePlayClearWave"
+    },
+    "guid": "40909624-5dfe-4d2f-94ce-fdf01d60ffbb",
+    "object_type": "OBJECT_TYPE_WAVE_TRIGGER",
+    "prefab_name": "Trigger_Boss",
+    "static_class": "WaveTrigger"
+}

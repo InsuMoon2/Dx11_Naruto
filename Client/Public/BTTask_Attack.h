@@ -18,7 +18,16 @@ public:
     EBTNodeResult Update(float timeDelta) override;
 
     string _targetObjectKey = "TargetObjectKey";
-    string _attackAnimState = "Attack_04";
+
+    // 리플렉션, 에디터에서 세팅이 편하게 그냥 배열로 안만들기
+    string _attackAnimState01 = "Attack_01";
+    string _attackAnimState02 = "Attack_02";
+    string _attackAnimState03 = "Attack_03";
+    string _attackAnimState04 = "Attack_04";
+
+    string _attackCycleIndexKey = "AttackCycleIndex";
+    bool _useRoundRobin = true; // 단일공격 vs 순환공격 체크
+    string _selectedAttackAnimState = ""; // 이번 공격 진입에서 확정된 애니메이션 상태 유지
 
     float _attackRange = 2.5f;
 
@@ -29,6 +38,10 @@ public:
 
     // Sequence 애니메이션이면 End 요청을 줄지
     bool _requestAnimEnd = false;
+
+private:
+    vector<string> Build_AttackAnimStateList() const;
+    string Select_AttackAnimState(const Shared<Blackboard>& blackboard);
 
 public:
     static Shared<BTTask_Attack> Create();

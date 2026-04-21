@@ -970,9 +970,12 @@ void BehaviorTree_View::Delete_Node(ed::NodeId nodeId)
 
 void BehaviorTree_View::Create_Link(ed::PinId startPin, ed::PinId endPin)
 {
-    // 트리의 정합성(Single Parent)을 위해 이미 목적지 핀에 연결된 링크가 있다면 제거
+    // 트리의 정합성을 위해 같은 입력 핀 또는 같은 출력 핀에 연결된 기존 링크는 제거한다.
     auto it = remove_if(_links.begin(), _links.end(),
-        [endPin](const FBTEditorLink& link) { return link.endPinId == endPin; });
+        [startPin, endPin](const FBTEditorLink& link)
+        {
+            return link.startPinId == startPin || link.endPinId == endPin;
+        });
     
     if (it != _links.end())
         _links.erase(it, _links.end());

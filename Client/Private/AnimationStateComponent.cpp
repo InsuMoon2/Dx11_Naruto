@@ -323,7 +323,6 @@ bool AnimationStateComponent::Remove_State(const string& stateName)
     return true;
 }
 
-
 json AnimationStateComponent::To_Json() const
 {
     json root = Component::To_Json();

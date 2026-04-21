@@ -9,7 +9,9 @@
 #include "Player.h"
 #include "Customizer_Manager.h"
 #include "AttachedEffectObject.h"
+#include "AnimationStateComponent.h"
 #include "EffectComponent.h"
+#include "Model.h"
 
 // 런타임 이펙트 레이어 타입 이름을 인스펙터에 짧게 표시할 때 호출한다.
 static string Get_EffectLayerKindLabel(Engine::EEffectLayerKind kind)
@@ -19,6 +21,23 @@ static string Get_EffectLayerKindLabel(Engine::EEffectLayerKind kind)
         return string(enumName);
 
     return "Unknown";
+}
+
+// 메인 Inspector 창에서 선택 오브젝트를 그릴 때 무거운 컴포넌트를 제외할지 판별한다.
+// Model/AnimationState는 몬스터처럼 애니메이션이 많은 오브젝트를 선택했을 때
+// 매 프레임 큰 데이터를 다시 만들면서 프레임 드랍을 유발하므로 메인 Inspector에서는 숨긴다.
+static bool Should_SkipHeavyComponentInMainInspector(Shared<Component> component)
+{
+    if (!component)
+        return true;
+
+    if (dynamic_pointer_cast<Model>(component))
+        return true;
+
+    if (dynamic_pointer_cast<Client::AnimationStateComponent>(component))
+        return true;
+
+    return false;
 }
 
 Inspector::Inspector()
@@ -231,7 +250,12 @@ void Inspector::Draw_Components(Shared<GameObject> target)
 
     for (auto& [id, comp] : target->Get_Components())
     {
-        if (!comp) continue;
+        if (!comp)
+            continue;
+
+        if (Should_SkipHeavyComponentInMainInspector(comp))
+            continue;
+
         Draw_Component(id, comp);
     }
 }

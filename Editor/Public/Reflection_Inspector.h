@@ -25,6 +25,7 @@ private:
     bool    _capturedBool       = false;
     float   _capturedVec3[3]    = {};
     float   _capturedColor[4]   = {};
+    string  _capturedString;
 
 };
 

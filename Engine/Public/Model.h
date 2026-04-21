@@ -127,6 +127,9 @@ public: /* 지형타기 */
 
     const vector<Shared<Mesh>>& Get_Meshes() const { return _meshes; }
 
+    // bone local이 반영된 뒤 combined/skiing matrix 갱신
+    void    Update_BoneMatrices_FromBones();
+
 private:
     // .meshbin 확장자일 때 들어오는 초기화 경로
     HRESULT Initialize_FromMeshBin(const string& modelFilePath);
@@ -183,8 +186,7 @@ private: /* blend */
     // 샘플링된 local pose를 실제 bone local transform에 반영
     void    Apply_LocalPoses_ToBones(const vector<FAnimationLocalPose>& poses);
 
-    // bone local이 반영된 뒤 combined/skiing matrix 갱신
-    void    Update_BoneMatrices_FromBones();
+    
 
     void    Sync_LegacyAnimationState();
 

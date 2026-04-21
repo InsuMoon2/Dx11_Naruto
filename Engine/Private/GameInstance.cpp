@@ -517,6 +517,11 @@ void GameInstance::Reapply_Prefabs_InCurrentLevel()
     _prefabManager->Reapply_Prefabs_InLevel(Current_Level());
 }
 
+HRESULT GameInstance::Reapply_Prefab_ToObject(Shared<GameObject> gameObject)
+{
+    return _prefabManager->Reapply_Prefab_ToObject(gameObject);
+}
+
 const Matrix* GameInstance::Get_Transform(ETransformState state) const
 {
     return _pipeLine->Get_Transform(state);

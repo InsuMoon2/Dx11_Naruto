@@ -58,6 +58,16 @@ public:
     int32 Pixel_ToFrame_InSequencer(float pixelX, float trackMinX, float trackMaxX) const;
 
 private:
+    // 애니메이션 뷰를 닫거나 대상 모델을 바꿀 때 전용 프리뷰 clone과 프리팹 뷰 연동 상태를 정리할 때 호출한다.
+    void Close_ViewSession();
+    // 전달받은 소스 모델 owner를 기반으로 애니메이션 뷰 전용 프리뷰 clone을 만들 때 호출한다.
+    Shared<GameObject> Create_PreviewOwnerFromSourceModel(Shared<Model> sourceModel);
+    // 애니메이션 뷰가 같은 프리팹을 보고 있는 동안 프리팹 뷰 live preview를 일시정지/해제할 때 호출한다.
+    void Update_PrefabPreviewSuspension(bool suspend);
+    // 현재 프리뷰 패널 크기를 다음 Pre_Render에서 사용할 RT 크기로 반영할 때 호출한다.
+    void Update_PreviewRenderTargetRequest(const ImVec2& panelSize);
+
+private:
     void Draw_ToolBar();
     void Draw_TopLayout();
     void Draw_BottomLayout();
@@ -188,10 +198,18 @@ private:
 
     ImVec2 _previewScreenPos = ImVec2(0.f, 0.f);
     ImVec2 _previewImGuiSize = ImVec2(0.f, 0.f);
+    // 다음 프레임 Pre_Render에서 사용할 애니메이션 프리뷰 RT 목표 크기다.
+    ImVec2 _previewRTRequestedSize = ImVec2(0.f, 0.f);
 
     string _clipSearchText;
     unordered_set<string> _animStateClipNames;
     bool _showAllClips = false;
+    // 애니메이션 뷰가 현재 점유 중인 원본 프리팹 이름이다.
+    string _sourcePrefabName;
+    // ImGui가 현재 프레임 draw list를 소비하기 전 GPU 자원을 해제하지 않도록 close cleanup을 다음 프레임으로 미룰 때 사용한다.
+    bool _pendingCloseViewSession = false;
+    // pending close를 처리한 프레임에는 OnGui를 건너뛰어 이미 종료된 창을 다시 그리지 않도록 제어한다.
+    bool _skipGuiThisFrame = false;
 
 private:
     // 시퀀서 우클릭 컨텍스트 메뉴를 다음 프레임에 열기 위한 플래그다.

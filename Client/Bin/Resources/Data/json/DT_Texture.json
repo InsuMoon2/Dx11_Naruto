@@ -169,6 +169,30 @@
             "Level": "Static"
         },
         {
+            "Id": "COMPONENT_TYPE_TEXTURE_ANNOUNCE_HIT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_Announce_RadialLine_01_Additive_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_ANNOUNCE_HIT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_Announce_RadialLine_02_Additive_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_ANNOUNCE_HIT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_Announce_RadialLineAdditive_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_SWORD_TRAIL",
+            "Path": "../../Client/Bin/Resources/Textures/Noise/T_EFF_Noise_Line_07_M.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
             "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
             "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle%d.png",
             "Count": 2,
@@ -243,7 +267,7 @@
         },
         {
             "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
-            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/CreateCharacterUI.png",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_ui_Title_BG_01_BC.png",
             "Count": 1,
             "Level": "Static"
         },
@@ -299,6 +323,30 @@
             "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
             "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_UI_Roll_Selected_BC.png",
             "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Dialog/Textures/T_UI_RewardList_Base_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Dialog/Textures/T_UI_RewardList_TxtBase_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Dialog/Textures/T_UI_RewardList_Kumo%d_BC.png",
+            "Count": 4,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_UI_Fcility_Customize.png",
+            "Count": 4,
             "Level": "Static"
         },
         {
@@ -370,6 +418,30 @@
         {
             "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
             "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_Stars_BC_01.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MISSION",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/MissionTitle_Base.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MISSION",
+            "Path": "../../Client/Bin/Resources/Textures/UI/TextUI/ingame/Announce/Textures/Mission_Start.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MISSION",
+            "Path": "../../Client/Bin/Resources/Textures/UI/TextUI/ingame/Announce/Textures/Fight_Start.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MISSION",
+            "Path": "../../Client/Bin/Resources/Textures/UI/TextUI/ingame/Announce/Textures/Fight_End.png",
             "Count": 1,
             "Level": "Static"
         },

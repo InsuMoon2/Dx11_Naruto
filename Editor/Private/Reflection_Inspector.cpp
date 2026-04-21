@@ -95,6 +95,33 @@ void Reflection_Inspector::Draw_Property(void* basePtr, const Engine::FPropertyI
         }
         break;
     }
+    case EPropertyType::String:
+    {
+        string* val = static_cast<string*>(memberPtr);
+        ImGui::Text("%s", prop.name.c_str());
+        ImGui::SameLine(120.f);
+        ImGui::PushItemWidth(-1);
+
+        char buf[256] = {};
+        strncpy_s(buf, val->c_str(), sizeof(buf) - 1);
+
+        if (ImGui::IsItemActivated())
+            _capturedString = *val;
+
+        if (ImGui::InputText(label.c_str(), buf, sizeof(buf)))
+            *val = buf;
+
+        if (ImGui::IsItemDeactivatedAfterEdit() && _capturedString != *val)
+        {
+            auto cmd = Property_Command::Create(
+                memberPtr, prop.type, json(_capturedString), json(*val));
+
+            EDITOR->ExecuteCommand(cmd);
+        }
+
+        ImGui::PopItemWidth();
+        break;
+    }
     case EPropertyType::Vec3:
     {
         float* val = static_cast<float*>(memberPtr); 

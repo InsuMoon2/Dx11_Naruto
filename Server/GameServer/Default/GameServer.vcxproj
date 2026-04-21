@@ -230,6 +230,7 @@
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Server_PacketHandler.cpp" />
+    <ClCompile Include="..\Private\Utils.cpp" />
     <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -250,6 +251,7 @@
     <ClInclude Include="..\Public\Server_Macro.h" />
     <ClInclude Include="..\Public\Server_PacketHandler.h" />
     <ClInclude Include="..\Public\Server_Typedef.h" />
+    <ClInclude Include="..\Public\Utils.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>

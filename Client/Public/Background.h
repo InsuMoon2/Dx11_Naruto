@@ -30,6 +30,7 @@ public:
     {
         uint32 textureIndex = 0;
         uint32 textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;
+        uint32 shaderPassIndex = 0;
 
         FBackgroundTextDesc textDesc{};
     };
@@ -56,6 +57,7 @@ public:
     void        Set_LabelText(const wstring& text);
 
     void        Set_BackgroundTextureIndex(uint32 textureIndex) { _textureIndex = textureIndex; }
+    void        Set_ShaderPassIndex(uint32 shaderPassIndex) { _shaderPassIndex = shaderPassIndex; }
 
 protected:
     HRESULT     Ready_Components() override;
@@ -73,6 +75,7 @@ private:
 private:
     uint32                  _textureIndex = 0;
     uint32                  _textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;
+    uint32                  _shaderPassIndex = 0;
     FBackgroundTextDesc     _textDesc;
 
 public:

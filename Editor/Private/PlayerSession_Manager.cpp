@@ -240,10 +240,10 @@ void PlayerSession_Manager::Calculate_WindowLayout(int32 playerIndex, int32 tota
     }
     else if (totalPlayers == 2)
     {
-        outWidth = screenWidth / 2 - 40;
-        outHeight = screenHeight - 150;
-        outX = playerIndex * (screenWidth / 2) + 10;
-        outY = 50;
+        outWidth = 1280;
+        outHeight = 720;
+        outX = (screenWidth - outWidth) / 2;
+        outY = (screenHeight - outHeight) / 2;
     }
     else if (totalPlayers <= 4)
     {
@@ -503,6 +503,11 @@ void PlayerSession_Manager::Restore_SceneSnapshot()
             continue;
 
         gameObject->From_Json(objJson);
+
+        if (objJson.contains("custom_properties") && objJson["custom_properties"].is_object())
+        {
+            gameObject->From_Json(objJson["custom_properties"]);
+        }
 
         if (objJson.contains("components"))
         {

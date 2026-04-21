@@ -6,6 +6,7 @@
             "notifies": [
                 {
                     "payload": {
+                        "bone_name": "",
                         "collider_radius": 1.0,
                         "collision_preset": 6,
                         "layer_tag": "Layer_MonsterAttack",
@@ -34,7 +35,98 @@
                     "name": "Notifies"
                 }
             ]
+        },
+        {
+            "clip_name": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Attack_JumpTurnKick",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "spawn_object_type": 40,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.8333333134651184,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "spawn_object_type": 40,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 1.2666666507720947,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Attack_DownStrike",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "spawn_object_type": 40,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.6666666865348816,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
         }
     ],
-    "model_guid": "6b9eee4c-928a-4015-9759-b29753246960"
+    "model_guid": "d5afa3e3-33d8-4b70-8472-7764588c471d"
 }

@@ -33,6 +33,11 @@ message S_RemoveObject
 	repeated uint64 ids = 1;
 }
 
+message S_WaveCleared
+{
+    string wave_tag = 1;
+}
+
 message C_EnterGame
 {
     Vec3  spawn_pos = 1;

@@ -25,6 +25,8 @@ DECLARE_DELEGATE(FOnLobbySnapshotReceived, const Protocol::S_LobbySnapshot&);
 DECLARE_DELEGATE(FOnLobbyChatReceived, const Protocol::S_LobbyChat&);
 DECLARE_DELEGATE(FOnLobbyStartGameReceived);
 
+DECLARE_DELEGATE(FOnWaveCleared, const string&);
+
 // 델리게이트들을 모아놓을 허브 : 매니저 역할이긴하네..
 class ENGINE_DLL DelegateHub : public Base
 {
@@ -54,6 +56,8 @@ public:
 	FOnLobbySnapshotReceived	OnLobbySnapshotReceived;
 	FOnLobbyChatReceived		OnLobbyChatReceived;
 	FOnLobbyStartGameReceived	OnLobbyStartGameReceived;
+
+    FOnWaveCleared              OnWaveCleared;
 
     // 추후 확장 할 것들
     // LevelChanged, OnBossKill, MonsterKill .. etc

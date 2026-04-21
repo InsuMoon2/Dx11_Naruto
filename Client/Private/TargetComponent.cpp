@@ -6,6 +6,7 @@
 #include "Transform.h"
 #include "Input_Manager.h" 
 #include "Collider.h"
+#include "CombatStat.h"
 #include "EnemyCharacter.h"
 
 TargetComponent::TargetComponent(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -184,20 +185,22 @@ void TargetComponent::Update_Candiates()
 
         Shared<Character> enemyObj = dynamic_pointer_cast<EnemyCharacter>(otherObj);
 
-        if (enemyObj)
-        {
-            // 중복 방지 
-            auto iter = find_if(_candidates.begin(), _candidates.end(),
-                [&enemyObj](const Weak<Character> a)
-                {
-                    return !a.expired() && a.lock() == enemyObj;
-                });
+         if (!enemyObj)
+            continue;
 
-            if (iter == _candidates.end())
+        // 죽은 적은 락온 후보에서 제외한다.
+        auto combatStat = enemyObj->Get_Component<CombatStat>();
+        if (combatStat && combatStat->Is_Dead())
+            continue;
+
+        auto iter = find_if(_candidates.begin(), _candidates.end(),
+            [&enemyObj](const Weak<Character> a)
             {
-                _candidates.push_back(enemyObj);
-            }
-        }
+                return !a.expired() && a.lock() == enemyObj;
+            });
+
+        if (iter == _candidates.end())
+            _candidates.push_back(enemyObj);
 
     }
 

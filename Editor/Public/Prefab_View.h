@@ -39,8 +39,12 @@ public:
 public:
     void Open_Prefab(const string& prefabName, const string& prefabPath);
     void Close_Prefab();
+    // 애니메이션 뷰가 같은 프리팹을 전용 프리뷰로 점유하는 동안 실시간 프리뷰 렌더를 멈출 때 호출한다.
+    void Set_PreviewSuspendedByAnimationView(bool suspended) { _isPreviewSuspendedByAnimationView = suspended; }
 
     bool Is_Open() const { return _isOpen; }
+    // 현재 프리팹 뷰가 특정 프리팹을 열어 둔 상태인지 확인할 때 호출한다.
+    bool Is_PreviewingPrefab(const string& prefabName) const { return _isOpen && _prefabName == prefabName; }
     void Pre_Render() override;
 
     void Draw_PreviewCameraInspector();
@@ -81,6 +85,8 @@ public:
 
 private:
     bool    _isOpen = false;
+    // 애니메이션 뷰가 전용 프리뷰 clone을 쓰는 동안 프리팹 뷰의 중복 업데이트/렌더를 막기 위한 플래그다.
+    bool    _isPreviewSuspendedByAnimationView = false;
 
     string  _prefabName;
     string  _prefabPath;

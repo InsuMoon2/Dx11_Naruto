@@ -30,8 +30,12 @@ HRESULT Light::Render(Shared<Shader> shader, Shared<VIBuffer_Rect> viBuffer)
     }
     else if (_lightDesc.type == ELightType::Point)
 	{
-		//if (FAILED(shader->Bind_RawValue("g_LightDir", &_lightDesc.direction, sizeof _lightDesc.direction)))
-        //    return E_FAIL;
+        // 정광원은 위치, 범위가 있어야한다.
+		if (FAILED(shader->Bind_RawValue("g_LightPos", &_lightDesc.position, sizeof _lightDesc.position)))
+            return E_FAIL;
+
+        if (FAILED(shader->Bind_RawValue("g_LightRange", &_lightDesc.range, sizeof _lightDesc.range)))
+            return E_FAIL;
 
 		shaderPass = ETOI(EDeferred::Point);
 	}

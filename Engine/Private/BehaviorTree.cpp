@@ -269,6 +269,35 @@ HRESULT BehaviorTree::Load_FromJson(const wstring& filePath)
     return S_OK;
 }
 
+HRESULT BehaviorTree::Reload_FromBoundAsset()
+{
+    if (!_btGuid.empty())
+    {
+        const wstring resolvedPath = GAME->Resolve_AssetPath(_btGuid);
+        if (resolvedPath.empty())
+        {
+            LOG_WARN("BehaviorTree reload skipped because the bound guid could not be resolved: {}", _btGuid);
+            return E_FAIL;
+        }
+
+        CHECK_FAILED(Load_FromJson(resolvedPath), E_FAIL);
+        _pendingInitialize = true;
+        _cachedNodeResults.clear();
+        return S_OK;
+    }
+
+    if (_btFilePath != "(None)" && !_btFilePath.empty())
+    {
+        CHECK_FAILED(Load_FromJson(Utils::ToWString(_btFilePath)), E_FAIL);
+        _pendingInitialize = true;
+        _cachedNodeResults.clear();
+        return S_OK;
+    }
+
+    LOG_WARN("BehaviorTree reload skipped because no bound asset path exists.");
+    return E_FAIL;
+}
+
 map<int, EBTNodeResult> BehaviorTree::Get_AllNodeResults() const
 {
     map<int, EBTNodeResult> result;

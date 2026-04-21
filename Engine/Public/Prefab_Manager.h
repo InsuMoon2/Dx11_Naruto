@@ -33,6 +33,7 @@ public:
     Shared<FPrefabDesc> Get_PrefabData(const string& prefabName);
 
     void Reapply_Prefabs_InLevel(uint32 levelIndex);
+    HRESULT Reapply_Prefab_ToObject(Shared<GameObject> gameObject);
 
 private:
     // 직렬화

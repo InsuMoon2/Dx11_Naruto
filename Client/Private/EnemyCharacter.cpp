@@ -82,7 +82,6 @@ void EnemyCharacter::Update(float timeDelta)
 {
     Character::Update(timeDelta);
 
-    // Remote enemies follow the replicated target transform and animation state.
     if (_networkDriven)
     {
         const Vec3 currentPos = _transformCom->Get_WorldPosition();
@@ -105,7 +104,6 @@ void EnemyCharacter::Update(float timeDelta)
     if (_model)
         _model->Play_Animation(timeDelta);
 
-    // The authority client relays local BT results to the server on a fixed interval.
     if (!_networkDriven && _networkObjectId != 0)
     {
         _syncTimer += timeDelta;
@@ -121,7 +119,9 @@ void EnemyCharacter::Late_Update(float timeDelta)
 {
     Character::Late_Update(timeDelta);
 
-    if (_collider)
+    const bool isDead = (_combatStat && _combatStat->Is_Dead());
+
+    if (_collider && !isDead)
     {
         _collider->Update_Collider(_transformCom->Get_WorldMatrix());
         GAME->Add_Collider(_collider);
@@ -174,7 +174,14 @@ void EnemyCharacter::TakeDamage(const FDamageEvent& damageEvent)
         return;
 
     if (_combatStat)
+    {
+        const bool wasAlive = !_combatStat->Is_Dead();
+
         _combatStat->Take_Damage(damageEvent);
+
+        if (wasAlive && _combatStat->Is_Dead())
+            OnDead(damageEvent);
+    }
 }
 
 void EnemyCharacter::OnDamaged(const FDamageEvent& damageEvent)
@@ -200,6 +207,9 @@ void EnemyCharacter::OnDamaged(const FDamageEvent& damageEvent)
 void EnemyCharacter::OnDead(const FDamageEvent& damageEvent)
 {
     Character::OnDead(damageEvent);
+
+    if (_collider)
+        _collider->Set_IsActive(false);
 
     if (_behavior)
     {

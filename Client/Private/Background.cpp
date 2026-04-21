@@ -33,6 +33,7 @@ HRESULT Background::Initialize(void* arg)
 
     _textureIndex = desc->textureIndex;
     _textureType = desc->textureType;
+    _shaderPassIndex = desc->shaderPassIndex;
     _textDesc = desc->textDesc;
 
     CHECK_FAILED(UIObject::Initialize(desc), E_FAIL);
@@ -80,8 +81,9 @@ HRESULT Background::Render()
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", _textureIndex), E_FAIL);
 
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &_opacity, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColor", &_tintColor, sizeof(Color)), E_FAIL);
 
-    CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
+    CHECK_FAILED(_shaderCom->Begin_Pass(_shaderPassIndex), E_FAIL);
     CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
     CHECK_FAILED(_bufferCom->Render(), E_FAIL);
 

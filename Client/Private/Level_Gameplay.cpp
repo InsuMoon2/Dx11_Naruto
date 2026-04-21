@@ -21,6 +21,7 @@
 #include "Layer.h"
 #include "Mesh.h"
 #include "CollisionProxyActor.h"
+#include "WaveTrigger.h"
 
 Level_Gameplay::Level_Gameplay(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -49,6 +50,7 @@ HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
     if (_spawnMode == EGameplaySpawnMode::Server)
     {
         Remove_LocalMonsters_ForServerMode();
+        Disable_LocalWaveTriggers_ForServerMode();
     }
 
     if (_spawnMode == EGameplaySpawnMode::LocalOnly)
@@ -64,8 +66,9 @@ HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
         Try_SendEnterGamePacket();
     }
 
+    _konohaTransitionRequested = false;
 
-   
+    _waveClearedHandle = GAME->Get_DelegateHub().OnWaveCleared.Add(this, &Level_Gameplay::On_WaveCleared);
 
     return S_OK;
 }
@@ -74,16 +77,24 @@ void Level_Gameplay::Update(float timeDelta)
 {
     Level::Update(timeDelta);
 
+    if (_konohaTransitionRequested)
+    {
+        const EGameplaySpawnMode spawnMode =
+            (_spawnMode == EGameplaySpawnMode::Server)
+            ? EGameplaySpawnMode::Server
+            : EGameplaySpawnMode::LocalOnly;
+
+        GAME->Change_Level(
+            ETOI(ELevelType::Loading),
+            Level_Loading::Create(_device, _context, ELevelType::Konoha, true, spawnMode));
+
+        return;
+    }
+
     if (_spawnMode == EGameplaySpawnMode::Server && !_enterGameSent)
     {
         Try_SendEnterGamePacket();
     }
-
-    if (INPUT->KeyDown(KEY_TYPE::KEY_4))
-    {
-        Request_EnterKonoha();
-    }
-
 }
 
 void Level_Gameplay::Late_Update(float timeDelta)
@@ -103,19 +114,39 @@ HRESULT Level_Gameplay::Render()
     return S_OK;
 }
 
+void Level_Gameplay::On_WaveCleared(const string& waveTag)
+{
+    if (waveTag != "GamePlayClearWave")
+        return;
+
+    Request_EnterKonoha();
+}
+
 HRESULT Level_Gameplay::Ready_Lights()
 {
     FLightDesc lightDesc{};
 
     lightDesc.type = ELightType::Directional;
-    lightDesc.direction  = Vec4(1.f, -1.f, 1.f, 0.f);
-    lightDesc.diffuse  = Vec4(1.f, 1.f, 1.f, 1.f);
-    lightDesc.ambient  = Vec4(0.18f, 0.18f, 0.18f, 1.f);
+    lightDesc.direction = Vec4(1.f, -1.f, 1.f, 0.f);
+    lightDesc.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
+    lightDesc.ambient = Vec4(0.18f, 0.18f, 0.18f, 1.f);
     lightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
 
     CHECK_FAILED(GAME->Add_Light(lightDesc), E_FAIL);
 
-    return S_OK; 
+#if 1
+    //FLightDesc pointLightDesc{};
+    //pointLightDesc.type = ELightType::Point;
+    //pointLightDesc.position = Vec4(5.f, 6.f, -5.f, 1.f);
+    //pointLightDesc.range = 20.f;
+    //pointLightDesc.diffuse = Vec4(1.f, 0.85f, 0.75f, 1.f);
+    //pointLightDesc.ambient = Vec4(0.05f, 0.04f, 0.04f, 1.f);
+    //pointLightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+    //
+    //CHECK_FAILED(GAME->Add_Light(pointLightDesc), E_FAIL);
+#endif
+
+    return S_OK;
 }
 
 HRESULT Level_Gameplay::Ready_Layer_Camera(const wstring& layerTag)
@@ -204,7 +235,7 @@ HRESULT Level_Gameplay::Ready_UI()
         desc.sizeX = 1.f;
         desc.sizeY = 1.f;
         desc.zOrder = 0.5f;
-        desc.levelIndex = ETOI(ELevelType::Static);
+        desc.levelIndex = ETOI(ELevelType::GamePlay);
 
         _playerHUD = static_pointer_cast<UI_PlayerHUD>(
             GAME->Add_UI(
@@ -229,7 +260,20 @@ Matrix Level_Gameplay::Build_CollisionModelPreTransform()
     return scaleMatrix * rotationMatrix;
 }
 
-// ExamStadium에서 replacement/ground 판정에 사용할 기본 바닥 collision mesh를 준비한다.
+void Level_Gameplay::Disable_LocalWaveTriggers_ForServerMode()
+{
+    const auto gameObjects = GAME->Get_GameObjects(ETOI(ELevelType::GamePlay));
+
+    for (const auto& obj : gameObjects)
+    {
+        auto waveTrigger = dynamic_pointer_cast<WaveTrigger>(obj);
+        if (!waveTrigger)
+            continue;
+
+        waveTrigger->Set_ServerAuthoritative(true);
+    }
+}
+
 HRESULT Level_Gameplay::Ready_DefaultGroundCollision()
 {
     _defaultGroundModels.clear();
@@ -568,15 +612,6 @@ void Level_Gameplay::Request_EnterKonoha()
         return;
 
     _konohaTransitionRequested = true;
-
-    const EGameplaySpawnMode spawnMode =
-        (_spawnMode == EGameplaySpawnMode::Server)
-            ? EGameplaySpawnMode::Server
-            : EGameplaySpawnMode::LocalOnly;
-
-    GAME->Change_Level(
-        ETOI(ELevelType::Loading),
-        Level_Loading::Create(_device, _context, ELevelType::Konoha, true, spawnMode));
 }
 
 bool Level_Gameplay::Try_BuildWorldBoundsFromModel(Shared<Model> model, const Matrix& worldMatrix,
@@ -759,6 +794,12 @@ void Level_Gameplay::Free()
     {
         GAME->Get_DelegateHub().OnPlayerObjectSpawned.Remove(_playerObjectSpawnedHandle);
         _playerObjectSpawnedHandle.Reset();
+    }
+
+    if (_waveClearedHandle.IsValid())
+    {
+        GAME->Get_DelegateHub().OnWaveCleared.Remove(_waveClearedHandle);
+        _waveClearedHandle.Reset();
     }
 
     Level::Free();

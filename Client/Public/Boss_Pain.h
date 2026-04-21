@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EnemyCharacter.h"
 
@@ -23,22 +23,19 @@ public:
 protected:
     HRESULT Ready_Components() override;
 
-    // Returns the boss object type written by Pain packets.
     Protocol::OBJECT_TYPE Get_EnemyObjectType() const override;
-
-    // Maps Pain BT animation names to boss replication states.
     Protocol::OBJECT_STATE_TYPE To_EnemyObjectState(const string& animStateName) const override;
 
 private:
-    float _maxHp = 1500.f; // Base max HP for Pain.
-    float _attack = 35.f; // Base attack power for Pain.
-    float _maxWalkSpeed = 2.f; // Base walk speed for Pain.
-    float _maxSprintSpeed = 4.f; // Base sprint speed for Pain.
+    float _maxHp = 1500.f; 
+    float _attack = 35.f; 
+    float _maxWalkSpeed = 2.f;
+    float _maxSprintSpeed = 4.f;
 
-    Vec3 _bodyColliderCenter = Vec3(0.f, 1.5f, 0.f); // Body collider center for Pain.
-    Vec3 _bodyColliderExtents = Vec3(1.f, 1.5f, 1.f); // Body collider half extents for Pain.
+    Vec3 _bodyColliderCenter = Vec3(0.f, 1.5f, 0.f);
+    Vec3 _bodyColliderExtents = Vec3(1.f, 1.5f, 1.f);
 
-    uint32 _modelComponentID = static_cast<uint32>(std::hash<string>{}("Model_Pain")); // Model component key for Pain.
+    uint32 _modelComponentID = static_cast<uint32>(std::hash<string>{}("Model_Pain")); 
 
 public:
     static Shared<Boss_Pain> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

@@ -7,7 +7,7 @@
                 0.0
             ],
             "rotation": [
-                0.0,
+                -0.0,
                 0.0,
                 0.0
             ],
@@ -19,24 +19,164 @@
             "type": "COMPONENT_TYPE_TRANSFORM"
         },
         {
-            "bt_guid": "",
-            "type": "COMPONENT_TYPE_AI"
+            "bounding": {
+                "center": [
+                    0.0,
+                    0.44999998807907104,
+                    0.0
+                ],
+                "radius": 0.699999988079071
+            },
+            "channel": "Monster_Body",
+            "collision_preset": "Monster_Body",
+            "is_active": true,
+            "shape": "Sphere",
+            "type": "COMPONENT_TYPE_COLLIDER"
         },
         {
+            "bt_guid": "9bdc9660-aad2-485e-b1a5-5fec691590e0",
+            "type": "COMPONENT_TYPE_BEHAVIOR"
+        },
+        {
+            "animations": [
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Idle_Type02_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_Conect_toFall",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Fall_Vertical_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_DownToFloor",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_DashStep_Far_Right",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_D51NJ3_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_D55NJ2",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Struggle_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_SpinBlowOff_Bound_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_D51NJ3_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_Stagger_Belly",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_RangeAttack_SlashingShoulder",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_SpinBlowOff_Bound_Conect_toFall",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_Large_Front_Conect_toFall",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_GetUp",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Walk_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_D45NJ3_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Throw_Aerial_Kunai_Right",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_D51NJ3_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Front_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Dying_Type01",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_ShadowPossession_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_BellyDown_Middle_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_GuardReverseBlowOff",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Struggle_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_SpinBlowOff",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Behind_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Hide_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_D45NJ3_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_BellyDown_Small_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Earthquake_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_SpinBlowOff_Large_Up",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Burn_Type01",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Left_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Stagger_Belly",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_BellyDown_Large_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Behind_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_DownToFloor_Type01",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_UniversalPull_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_ElectricShock_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_etc_Appearance_Type03",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_BellyDown_Large_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Rolling_GetUp",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Restrict_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Frozen_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_SpinBlowOff_Behind",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Left_Low",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Down_Sleep_Type01_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Guard_GuardHit_Front",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Blasted",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_UniversalPull_Front_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Down_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Guard_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Guard_GuardReverse",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_GetUp_Type01",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Down_Type01_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_OneHitDown_Short",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_UpLeft_Shoulder",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_LowFront_Chin",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Aerial_Dash_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_TurnSlashing",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_SpinBlowOff_Conect_toDown",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Front_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_BellyDown_Middle_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_Rush",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_D45NJ3_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Kunai",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_SpinBlowOff_Bound_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_BellyDown_Small_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Left_Head",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Aerial_Dash_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Aerial_Dash_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_Punch_Right",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Behind_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Front_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Fall_ChaseAttack_Behind_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Left_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Left_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Right_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Right_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_AimWalk_Right_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_DownStrike",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_Kick",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_Punch_Left",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_SideDoubleSlashing",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_BlowOff_toFall",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_DownToFloor_Conect_toStand",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_Small_Conect_toFall",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_UniversalPull_Behind_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_UniversalPull_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_BellyDown_Large_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_BellyDown_Middle_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Fall_Behind_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_BellyDown_Small_Start",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Bind_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_BlowOff_ChaseAttack",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_D51NJ3_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_DownHit",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_DownToWall",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_ElectricShock_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Fall_ChaseAttack_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Fall_Front_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_HideBlowOff",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Kamui_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Left",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_OneHitDown_Long",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Paralysis",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Right",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_SpinBlowOff_Bound_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_SpinBlowOff_Conect_toStand",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_SpinBlowOff_D52NJ3",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_UpFront_Head",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_DashStep_Far_Left",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_DashStep_Left",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_DashStep_Right",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Dying_Aerial_Fall_Behind_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Dying_Blasted",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_etc_Appearance_Type01",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_etc_Appearance_Type02",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_etc_Exit",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Fall_Front_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Throw_Aerial_Kunai_Left",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Land",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Run_End",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Run_Loop",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Throw_Aerial_Kunai",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Throw_Kunai",
+                "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Walk_Loop"
+            ],
             "materials": [
                 {
-                    "material_name": "MI_CHR_Boruto"
-                },
-                {
-                    "material_name": "MI_CHR_Boruto_EyeL"
-                },
-                {
-                    "material_name": "MI_CHR_Boruto_EyeR"
-                },
-                {
-                    "material_name": "MI_CHR_Boruto_Metal"
+                    "material_name": "MI_CHR_TenTailsCloneLoser02",
+                    "texture_overrides": {
+                        "base_color_0": "34fbe664-bebf-47c4-b710-94cc9a4a2f84"
+                    }
                 }
             ],
+            "model_guid": "a4b9b038-035f-44d2-bd0c-b5992e2745fb",
             "model_type": "SkeletalMesh",
             "type": "COMPONENT_TYPE_MODEL"
         },
@@ -46,9 +186,9 @@
         {
             "Attack": 10.0,
             "Defense": 5.0,
-            "HP": 100.0,
+            "HP": 30.0,
             "MP": 100.0,
-            "Max HP": 100.0,
+            "Max HP": 30.0,
             "Max MP": 100.0,
             "Speed": 5.0,
             "type": "COMPONENT_TYPE_COMBAT_STAT"
@@ -58,18 +198,447 @@
         },
         {
             "Acceleration": 20.0,
+            "Dash Distance": 6.0,
+            "Dash Duration": 0.18000000715255737,
             "Deceleration": 24.0,
             "Gravity": -20.0,
-            "Ground Y": 5.0,
+            "Ground Walkable Min Up Dot": 0.550000011920929,
+            "Ground Y": 0.0,
             "Jump Velocity": 8.0,
             "Max Sprint Speed": 4.0,
             "Max Walk Speed": 2.0,
+            "Wall Attach Offset": 0.15000000596046448,
+            "Wall Detect Distance": 1.0,
+            "Wall Jump Out Velocity": 6.0,
+            "Wall Jump Up Velocity": 8.0,
+            "Wall Runnable Max Up Dot": 0.3499999940395355,
+            "Wall Trace Start Offset Y": 1.0,
             "Yaw Speed": 0.20000000298023224,
             "type": "COMPONENT_TYPE_MOVEMENT"
+        },
+        {
+            "animation_states": [
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Dead",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Dying_Blasted",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Appearance",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_etc_Appearance_Type03",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_01",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_Punch_Left",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Retreat",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Walk_Loop",
+                        "loop": true,
+                        "playRate": 1.2999999523162842
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_02",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_Punch_Right",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_03",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_DownStrike",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Run",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Run_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Left",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_04",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_Rush",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                }
+            ],
+            "current_state": "",
+            "type": "COMPONENT_TYPE_ANIMATION_STATE"
         }
     ],
-    "guid": "c5446012-fce2-4e67-b807-0dae75bae63a",
+    "guid": "2462b767-6e7a-4a9b-af82-b70dbae1b674",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster2",
-    "static_class": "Monster"
+    "static_class": "Monster2"
 }

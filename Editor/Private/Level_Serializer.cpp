@@ -181,6 +181,11 @@ shared_ptr<GameObject> Level_Serializer::JsonToGameObject(const json& j, uint32 
     // 데이터 세팅
     gameObject->From_Json(j); // static_class, object_type, guid는 알아서 세팅됨
 
+    if (j.contains("custom_properties") && j["custom_properties"].is_object())
+    {
+        gameObject->From_Json(j["custom_properties"]);
+    }
+
     // 그러면 컴포넌트 세팅 진행
     if (j.contains("components"))
     {

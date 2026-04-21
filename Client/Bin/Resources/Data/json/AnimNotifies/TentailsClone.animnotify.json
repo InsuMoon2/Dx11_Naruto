@@ -1,0 +1,77 @@
+{
+    "clips": [
+        {
+            "clip_name": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_Punch_Left",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "spawn_object_type": 40,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.4000000059604645,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_Punch_Right",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "spawn_object_type": 40,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.46666666865348816,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        }
+    ],
+    "model_guid": "a4b9b038-035f-44d2-bd0c-b5992e2745fb"
+}

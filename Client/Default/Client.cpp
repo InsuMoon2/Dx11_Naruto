@@ -241,7 +241,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         _tfreopen_s(&debug, _T("CONOUT$"), _T("w"), stdout);
         _tfreopen_s(&debug, _T("CONIN$"), _T("r"), stdin);
-        _tfreopen_s(&debug, _T("CONERR"), _T("w"), stderr);
+        _tfreopen_s(&debug, _T("CONOUT$"), _T("w"), stderr);
         _tsetlocale(LC_ALL, _T(""));
     }
     break;

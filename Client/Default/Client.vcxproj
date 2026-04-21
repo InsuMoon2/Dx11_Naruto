@@ -263,8 +263,11 @@
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Boss_Pain.h" />
     <ClInclude Include="..\Public\BTTask_Attack.h" />
+    <ClInclude Include="..\Public\BTTask_DodgeAndWait.h" />
+    <ClInclude Include="..\Public\BTTask_RetreatAndWait.h" />
     <ClInclude Include="..\Public\BTTask_FindClosestTarget.h" />
     <ClInclude Include="..\Public\BTTask_Hit.h" />
+    <ClInclude Include="..\Public\BTTask_PlayStateAndWait.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
     <ClInclude Include="..\Public\Camera_Target.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
@@ -369,6 +372,7 @@
     <ClInclude Include="..\Public\UI_TabButton.h" />
     <ClInclude Include="..\Public\UI_Targeting.h" />
     <ClInclude Include="..\Public\UI_WeaponType.h" />
+    <ClInclude Include="..\Public\WaveTrigger.h" />
     <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="pch.h" />
@@ -435,8 +439,11 @@
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Boss_Pain.cpp" />
     <ClCompile Include="..\Private\BTTask_Attack.cpp" />
+    <ClCompile Include="..\Private\BTTask_DodgeAndWait.cpp" />
+    <ClCompile Include="..\Private\BTTask_RetreatAndWait.cpp" />
     <ClCompile Include="..\Private\BTTask_FindClosestTarget.cpp" />
     <ClCompile Include="..\Private\BTTask_Hit.cpp" />
+    <ClCompile Include="..\Private\BTTask_PlayStateAndWait.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Target.cpp" />
     <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
@@ -535,6 +542,7 @@
     <ClCompile Include="..\Private\UI_TabButton.cpp" />
     <ClCompile Include="..\Private\UI_Targeting.cpp" />
     <ClCompile Include="..\Private\UI_WeaponType.cpp" />
+    <ClCompile Include="..\Private\WaveTrigger.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
     <ClCompile Include="IReplicable.cpp" />
     <ClCompile Include="pch.cpp">

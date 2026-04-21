@@ -43,9 +43,6 @@
 #include "UI_PlayerStatus.h"
 #include "UI_SkillSlot.h"
 #include "AnimationStateComponent.h"
-#include "BTTask_Attack.h"
-#include "BTTask_FindClosestTarget.h"
-#include "BTTask_Hit.h"
 #include "Player_CustomPart.h"
 
 #include "ComboProfile_Manager.h"
@@ -64,6 +61,14 @@
 #include "Particle_Point.h"
 #include "Trail_Component.h"
 #include "VIBuffer_Trail.h"
+
+// Behavior
+#include "BTTask_Attack.h"
+#include "BTTask_FindClosestTarget.h"
+#include "BTTask_Hit.h"
+#include "BTTask_PlayStateAndWait.h"
+#include "BTTask_DodgeAndWait.h"
+#include "BTTask_RetreatAndWait.h"
 
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -232,6 +237,15 @@ void Loader::Initialize_BT_Nodes()
 
     GAME->Register_BTNode("Task", "Task_Hit",
         []() { return BTTask_Hit::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_PlayStateAndWait",
+    []() { return BTTask_PlayStateAndWait::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_DodgeAndWait",
+    []() { return BTTask_DodgeAndWait::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_RetreatAndWait",
+    []() { return BTTask_RetreatAndWait::Create(); });
 }
 
 float Loader::Get_ProgressRatio() const
@@ -513,7 +527,7 @@ HRESULT Loader::Loading_For_GamePlay()
     //pushChunk("BM_ExamStadium_Env_Terrain");
     //pushChunk("BM_ExamStadium_p");
 
-    pushChunk("[20260420]Tutorial");
+    pushChunk("[20260422]Tutorial");
 
     {
         scoped_lock lock(_jobMutex);

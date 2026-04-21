@@ -98,7 +98,7 @@ HRESULT MainApp::Render()
     Color clearColor = { 0.1f, 0.3f, 1.0f, 1.f };
 
     CHECK_FAILED(GAME->Clear_Buffers(clearColor), E_FAIL);
-    CHECK_FAILED(GAME->Draw(), E_FAIL);
+    CHECK_FAILED(GAME->Draw(false, true, false), E_FAIL);
     CHECK_FAILED(GAME->Present(), E_FAIL);
 
     return S_OK;

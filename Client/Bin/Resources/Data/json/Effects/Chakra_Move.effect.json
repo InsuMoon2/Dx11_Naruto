@@ -100,6 +100,7 @@
                 0.1599999964237213,
                 0.2800000011920929
             ],
+            "scaleDuration": 1.0,
             "spawnHeight": 1.0,
             "spawnInnerRadius": 0.0,
             "spawnRadius": 0.029999999329447746,
@@ -213,6 +214,7 @@
                 0.23999999463558197,
                 0.41999998688697815
             ],
+            "scaleDuration": 1.0,
             "spawnHeight": 1.0,
             "spawnInnerRadius": 0.0,
             "spawnRadius": 0.05999999865889549,

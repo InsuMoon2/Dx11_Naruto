@@ -12,11 +12,13 @@
 #include "Editor_Camera_Free.h"
 #include "GameObject.h"
 #include "GameInstance.h"
+#include "MovementComponent.h"
 #include "Transform.h"
 #include "DebugDraw.h"
 
 #include "ContainerObject.h"
 #include "PartObject.h"
+#include "Prefab_View.h"
 #include "Reflection_Inspector.h"
 
 #include "AnimNotify_Inspector_Factory.h"
@@ -130,6 +132,15 @@ void Animation_View::Update(float timeDelta)
 {
     EditorWindow::Update(timeDelta);
 
+    if (_pendingCloseViewSession)
+    {
+        Close_ViewSession();
+        _pendingCloseViewSession = false;
+        _skipGuiThisFrame = true;
+        _isActive = false;
+        return;
+    }
+
     if (_previewCamera && _isPreviewHovered)
         _previewCamera->Priority_Update(timeDelta);
 
@@ -162,12 +173,23 @@ void Animation_View::Update(float timeDelta)
 
 void Animation_View::OnGui()
 {
+    if (_skipGuiThisFrame)
+    {
+        _skipGuiThisFrame = false;
+        return;
+    }
+
     string title = Utils::ToString(Get_Name());
 
     if (!ImGui::Begin(title.c_str(), &_isActive, ImGuiWindowFlags_NoDocking))
     {
         _isFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
         ImGui::End();
+        if (!_isActive)
+        {
+            _pendingCloseViewSession = true;
+            _isActive = true;
+        }
         return;
     }
 
@@ -188,17 +210,25 @@ void Animation_View::OnGui()
     Handle_CreateStatePopup();
 
     ImGui::End();
+
+    if (!_isActive)
+    {
+        _pendingCloseViewSession = true;
+        _isActive = true;
+    }
 }
 
 void Animation_View::Pre_Render()
 {
     EditorWindow::Pre_Render();
 
-    if (!_model || !_previewOwner)
+    if (_pendingCloseViewSession || !_model || !_previewOwner)
         return;
 
-    const uint32 rtWidth = static_cast<uint32>(max(1.f, GAME->Get_ViewportWidth()));
-    const uint32 rtHeight = static_cast<uint32>(max(1.f, GAME->Get_ViewportHeight()));
+    const float requestedWidth = (_previewRTRequestedSize.x > 0.f) ? _previewRTRequestedSize.x : 640.f;
+    const float requestedHeight = (_previewRTRequestedSize.y > 0.f) ? _previewRTRequestedSize.y : Get_TopChildHeight();
+    const uint32 rtWidth = static_cast<uint32>(max(1.f, requestedWidth));
+    const uint32 rtHeight = static_cast<uint32>(max(1.f, requestedHeight));
 
     if (!_previewRT)
         _previewRT = RenderTarget::Create(GAME->Get_Device(), rtWidth, rtHeight);
@@ -211,12 +241,6 @@ void Animation_View::Pre_Render()
 
     Matrix savedView = *GAME->Get_Transform(ETransformState::View);
     Matrix savedProj = *GAME->Get_Transform(ETransformState::Proj);
-
-    // Preview 렌더 전, 기존 viewport 기준을 복원할 수 있게 백업한다.
-    const uint32 savedDeferredViewportWidth = static_cast<uint32>(max(1.f, GAME->Get_UIViewportWidth()));
-    const uint32 savedDeferredViewportHeight = static_cast<uint32>(max(1.f, GAME->Get_UIViewportHeight()));
-    const float savedUIViewportWidth = GAME->Get_UIViewportWidth();
-    const float savedUIViewportHeight = GAME->Get_UIViewportHeight();
 
     _previewView = _previewCamera->Get_ViewMatrix();
 
@@ -246,8 +270,6 @@ void Animation_View::Pre_Render()
     GAME->Clear_Lights();
     GAME->Add_Light(previewLight);
 
-    float dt = ImGui::GetIO().DeltaTime;
-
     bool wasEnableInput = GAME->Is_GameInputEnabled();
     GAME->Set_GameInputEnabled(false);
 
@@ -259,7 +281,7 @@ void Animation_View::Pre_Render()
     }
 
     _previewOwner->Priority_Update(0.f);
-    _previewOwner->Update(0.f);
+    Apply_CurrentFrame_ToPreview();
 
     // Preview 오브젝트만 렌더 큐에 남기기 위해 기존 큐를 잠깐 백업한다.
     GAME->Backup_RenderGroup();
@@ -274,11 +296,6 @@ void Animation_View::Pre_Render()
 
     _previewRT->Clear(Color(0.12f, 0.12f, 0.12f, 1.f));
 
-    // Preview RT 크기에 맞춰 deferred / UI viewport를 동기화한다.
-    if (FAILED(GAME->Resize_DeferredViewport(_previewRT->GetWidth(), _previewRT->GetHeight())))
-        return;
-
-    GAME->Set_UIViewportSize(static_cast<float>(_previewRT->GetWidth()), static_cast<float>(_previewRT->GetHeight()));
     _previewRT->BindAsTarget();
 
     GAME->Clear_DepthOnly();
@@ -293,10 +310,6 @@ void Animation_View::Pre_Render()
 
     if (hasSavedLight)
         GAME->Add_Light(savedLight);
-
-    // Preview 렌더가 끝났으니 기존 viewport 기준을 복원한다.
-    GAME->Resize_DeferredViewport(savedDeferredViewportWidth, savedDeferredViewportHeight);
-    GAME->Set_UIViewportSize(savedUIViewportWidth, savedUIViewportHeight);
 
     GAME->Set_Transform(ETransformState::View, savedView);
     GAME->Set_Transform(ETransformState::Proj, savedProj);
@@ -314,12 +327,16 @@ void Animation_View::Save()
 
 void Animation_View::Open_Model(Shared<Model> model)
 {
-    _model = model;
+    Close_ViewSession();
+
+    _model = nullptr;
     _previewOwner.reset();
     _modelGuid.clear();
     _clipSearchText.clear();
     _animStateClipNames.clear();
     _showAllClips = false;
+    _sourcePrefabName.clear();
+    _skipGuiThisFrame = false;
 
     _selectedClipIndex = -1;
     Clear_SelectedEntries();
@@ -332,13 +349,21 @@ void Animation_View::Open_Model(Shared<Model> model)
     _sequencerState.firstFrame = 0;
     _sequencerState.expanded = true;
 
-    if (_model)
+    if (model)
     {
-        _previewOwner = _model->Get_Owner();
+        auto sourceOwner = model->Get_Owner();
+        if (sourceOwner)
+            _sourcePrefabName = sourceOwner->Get_SourcePrefabName();
+
+        _previewOwner = sourceOwner;
+        _model = model;
 
         json data = _model->To_Json();
         _modelGuid = data.value("model_guid", "");
     }
+
+    if (_model)
+        Update_PrefabPreviewSuspension(true);
 
     Refresh_ClipFilter();
 
@@ -366,6 +391,7 @@ void Animation_View::Open_Model(Shared<Model> model)
     if (_previewOwner)
     {
         _previewOwner->Priority_Update(0.f);
+        Apply_CurrentFrame_ToPreview();
         _previewOwner->Late_Update(0.f);
     }
 
@@ -799,11 +825,12 @@ void Animation_View::Draw_PreviewPanel()
 
     {
         ImVec2 avail = ImGui::GetContentRegionAvail();
+        Update_PreviewRenderTargetRequest(avail);
 
         if (_previewRT)
         {
-            const float texWidth = max(1.f, GAME->Get_ViewportWidth());
-            const float texHeight = max(1.f, GAME->Get_ViewportHeight());
+            const float texWidth = max(1.f, static_cast<float>(_previewRT->GetWidth()));
+            const float texHeight = max(1.f, static_cast<float>(_previewRT->GetHeight()));
             const float texAspect = texWidth / max(1.f, texHeight);
 
             ImVec2 drawSize = avail;
@@ -1627,8 +1654,7 @@ void Animation_View::Apply_CurrentFrame_ToPreview()
             auto partModel = partObj->Get_Component<Model>();
             if (partModel)
             {
-                partModel->Set_CurrentTrackPositionTicks(trackPosition);
-                partModel->Sample_CurrentPose();
+                partModel->Update_BoneMatrices_FromBones();
             }
         }
     }
@@ -2247,6 +2273,69 @@ int32 Animation_View::Get_CurrentClipFps() const
     }
 
     return 30;
+}
+
+void Animation_View::Close_ViewSession()
+{
+    Update_PrefabPreviewSuspension(false);
+
+    _sourcePrefabName.clear();
+    _previewOwner.reset();
+    _model.reset();
+    _previewRT.reset();
+    _previewRTRequestedSize = ImVec2(0.f, 0.f);
+    _isPlaying = false;
+    _previewPlaybackTimeSec = 0.f;
+    _pendingCloseViewSession = false;
+}
+
+Shared<GameObject> Animation_View::Create_PreviewOwnerFromSourceModel(Shared<Model> sourceModel)
+{
+    if (!sourceModel)
+        return nullptr;
+
+    auto sourceOwner = sourceModel->Get_Owner();
+    if (!sourceOwner)
+        return nullptr;
+
+    Shared<GameObject> previewOwner = nullptr;
+    const string sourcePrefabName = sourceOwner->Get_SourcePrefabName();
+
+    if (!sourcePrefabName.empty())
+        previewOwner = GAME->Instantiate_Prefab(sourcePrefabName, {});
+
+    if (!previewOwner)
+        previewOwner = sourceOwner->Clone(nullptr);
+
+    if (!previewOwner)
+        return nullptr;
+
+    previewOwner->Set_LevelIndex(ETOI(ELevelType::Prefab));
+
+    auto sourceTransform = sourceOwner->Get_Transform();
+    auto previewTransform = previewOwner->Get_Transform();
+    if (sourceTransform && previewTransform)
+        previewTransform->From_Json(sourceTransform->To_Json());
+
+    if (auto movement = previewOwner->Get_Component<MovementComponent>())
+        movement->Set_GravityEnabled(false);
+
+    return previewOwner;
+}
+
+void Animation_View::Update_PrefabPreviewSuspension(bool suspend)
+{
+    auto prefabView = dynamic_pointer_cast<Prefab_View>(EDITOR->Get_Window(TEXT("Prefab")));
+    if (!prefabView)
+        return;
+
+    prefabView->Set_PreviewSuspendedByAnimationView(suspend);
+}
+
+void Animation_View::Update_PreviewRenderTargetRequest(const ImVec2& panelSize)
+{
+    _previewRTRequestedSize.x = max(1.f, panelSize.x);
+    _previewRTRequestedSize.y = max(1.f, panelSize.y);
 }
 
 FAnimNotifyClipData* Animation_View::Get_CurrentClip()

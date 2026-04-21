@@ -836,11 +836,11 @@ void Level_CharacterSetup::Finish_CharacterSetup()
         }
     }
 
-    // 에디터면 싱글, 서버가 실제 연결되어 있으면 멀티플레이 판정
-    const bool isServerConnected = NetworkManager::GetInstance()->IsConnected();
-    EGameplaySpawnMode spawnMode =
-        (GAME->Is_EditorRuntime() || !isServerConnected) ? EGameplaySpawnMode::LocalOnly
-                                                         : EGameplaySpawnMode::Server;
+    // 로비 진입은 실제 연결 완료 여부가 아니라 네트워크 사용 의도 기준으로 판단한다.
+    // 서버를 같이 켠 직후에는 아직 IsConnected()가 false일 수 있어서 LocalOnly로 빠지면 안 된다.
+    const EGameplaySpawnMode spawnMode =
+        GAME->Is_EditorRuntime() ? EGameplaySpawnMode::LocalOnly
+                                 : EGameplaySpawnMode::Server;
 
     if (spawnMode == EGameplaySpawnMode::Server)
     {

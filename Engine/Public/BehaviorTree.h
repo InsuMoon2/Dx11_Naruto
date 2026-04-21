@@ -33,6 +33,7 @@ public:
     Shared<Blackboard> Get_Blackboard() const { return _blackboard; }
 
     HRESULT Load_FromJson(const wstring& filePath);
+    HRESULT Reload_FromBoundAsset();
 
     map<int, EBTNodeResult> Get_AllNodeResults() const;
 

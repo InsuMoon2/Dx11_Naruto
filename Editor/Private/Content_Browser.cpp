@@ -603,6 +603,12 @@ void Content_Browser::Draw_AssetView()
             // Factory에 등록된 이름 가져오기
             auto names = GAME->Get_RegisteredGameObjects();
 
+            sort(names.begin(), names.end(),
+                [](const auto& lhs, const auto& rhs)
+                {
+                    return Utils::ToString(lhs.second) < Utils::ToString(rhs.second);
+                });
+
             for (const auto& [objectID, nameW] : names)
             {
                 string typeName = Utils::ToString(nameW);

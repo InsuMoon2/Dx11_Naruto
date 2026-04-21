@@ -32,6 +32,7 @@
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>03. GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. Main">
@@ -91,6 +92,7 @@
     <ClInclude Include="..\Public\Player.h">
       <Filter>03. GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Protobuf\Protocol\Protocol.proto">

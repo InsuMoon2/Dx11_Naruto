@@ -14,7 +14,7 @@
 using namespace nlohmann;
 
 NS_BEGIN(Server)
-    Shared<GameRoom> GRoom = make_shared<GameRoom>();
+Shared<GameRoom> GRoom = make_shared<GameRoom>();
 NS_END
 
 static bool Try_ReadyObjectType(const json& objJson, Protocol::OBJECT_TYPE& outType)
@@ -75,19 +75,107 @@ static bool Try_ReadTransform(const json& objJson, Vec3& outPos, float& outYaw)
     return false;
 }
 
+static Vec3 Json_ToVec3(const json& value, const Vec3& fallback = Vec3(0.f, 0.f, 0.f))
+{
+    if (!value.is_array() || value.size() < 3)
+        return fallback;
+
+    return Vec3(
+        value[0].get<float>(),
+        value[1].get<float>(),
+        value[2].get<float>());
+}
+
+static bool Try_ReadTriggerExtents(const json& objJson, Vec3& outExtents)
+{
+    if (!objJson.contains("components") || !objJson["components"].is_array())
+        return false;
+
+    for (const auto& compJson : objJson["components"])
+    {
+        if (!compJson.contains("type"))
+            continue;
+
+        if (!compJson["type"].is_string())
+            continue;
+
+        if (compJson["type"].get<string>() != "COMPONENT_TYPE_COLLIDER_OBB")
+            continue;
+
+        if (compJson.contains("extents") && compJson["extents"].is_array() && compJson["extents"].size() >= 3)
+        {
+            outExtents = Json_ToVec3(compJson["extents"], Vec3(2.f, 2.f, 2.f));
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static Vec3 Rotate_AroundY(const Vec3& value, float yawDegree)
+{
+    constexpr float DegToRad = 3.14159265358979323846f / 180.f;
+
+    const float radian = yawDegree * DegToRad;
+    const float cosValue = cosf(radian);
+    const float sinValue = sinf(radian);
+
+    return Vec3(
+        value.x * cosValue + value.z * sinValue,
+        value.y,
+        -value.x * sinValue + value.z * cosValue);
+}
+
+static Vec3 Resolve_WaveTriggerWorldPosition(const Vec3& triggerPosition, float triggerYaw, const Vec3& localPosition)
+{
+    return triggerPosition + Rotate_AroundY(localPosition, triggerYaw);
+}
+
+static float Resolve_WaveTriggerWorldYaw(float triggerYaw, const Vec3& localRotation)
+{
+    return triggerYaw + localRotation.y;
+}
+
+static bool IsPointInsideWaveTrigger(const Vec3& point, const GameRoom::FServerWaveTriggerDesc& trigger)
+{
+    const Vec3 delta = point - trigger.position;
+    const Vec3 localPoint = Rotate_AroundY(delta, -trigger.yaw);
+
+    return fabsf(localPoint.x) <= trigger.extents.x &&
+           fabsf(localPoint.y) <= trigger.extents.y &&
+           fabsf(localPoint.z) <= trigger.extents.z;
+}
+
+
 void GameRoom::Enter_GameRoom(Shared<GameSession> session, const Protocol::C_EnterGame& pkt)
 {
     Ensure_LevelMonstersSpawned();
+    Ensure_LevelWaveTriggersLoaded();
 
-    auto player = Player::Create();
+    Shared<Player> player = nullptr;
+    const uint64 existingPlayerId = session->Get_PlayerId();
+
+    if (existingPlayerId != 0)
+    {
+        player = Find_Player(existingPlayerId);
+    }
+
+    const bool isReenter = (player != nullptr);
+
+    if (!player)
+    {
+        player = Player::Create();
+        session->Set_PlayerId(player->Get_ObjectID());
+    }
+
     player->Set_Session(session);
-    session->Set_PlayerId(player->Get_ObjectID());
 
     if (!pkt.info().name().empty())
     {
         player->info.set_name(pkt.info().name());
     }
 
+    player->info.mutable_equipparts()->clear();
     for (auto& pair : pkt.info().equipparts())
     {
         (*player->info.mutable_equipparts())[pair.first] = pair.second;
@@ -126,7 +214,14 @@ void GameRoom::Enter_GameRoom(Shared<GameSession> session, const Protocol::C_Ent
         }
     }
 
-    Add_Player(player);
+    if (!isReenter)
+    {
+        Add_Player(player);
+        return;
+    }
+
+    SendBufferRef moveBuffer = Server_PacketHandler::Make_S_Move(player->info);
+    Broadcast(moveBuffer);
 }
 
 void GameRoom::Leave_GameRoom(Shared<GameSession> session)
@@ -188,9 +283,23 @@ void GameRoom::Handle_C_Move(Shared<GameSession> session, Protocol::C_Move& pkt)
             return;
 
         const Protocol::OBJECT_TYPE networkObjectType = monster->info.objecttype();
+        const string prefabName = monster->info.name();
         monster->info = pkt.info();
         monster->info.set_objectid(monster->Get_ObjectID());
         monster->info.set_objecttype(networkObjectType);
+        if (!prefabName.empty())
+            monster->info.set_name(prefabName);
+
+        const bool isDeadByState =
+            monster->info.object_state() == Protocol::OBJECT_STATE_TYPE_DEAD;
+        const bool isDeadByHp =
+            monster->info.has_stat() && monster->info.stat().current_hp() <= 0.f;
+
+        if (isDeadByState || isDeadByHp)
+        {
+            Remove_Monster(monster->Get_ObjectID());
+            return;
+        }
 
         SendBufferRef sendBuffer = Server_PacketHandler::Make_S_Move(monster->info);
         Broadcast(sendBuffer);
@@ -241,6 +350,7 @@ void GameRoom::Update(float timeDelta)
         player->Update();
     }
 
+    Update_WaveTriggers();
 }
 
 void GameRoom::Join_Lobby(Shared<GameSession> session, const Protocol::C_LobbyJoin& pkt)
@@ -359,7 +469,7 @@ void GameRoom::Ensure_LevelMonstersSpawned()
        return;
 
     vector<FServerMonsterSpawnDesc> spawnDescs;
-    if (!Load_MonsterSpawnData_FromLevel(L"[20260420]Tutorial", spawnDescs))
+    if (!Load_MonsterSpawnData_FromLevel(MAPNAME, spawnDescs))
         return;
 
     for (const auto& spawnDesc : spawnDescs)
@@ -369,6 +479,8 @@ void GameRoom::Ensure_LevelMonstersSpawned()
 
         monster->Initialize_FromSpawn(spawnDesc.position, spawnDesc.yaw);
         monster->info.set_objecttype(spawnDesc.objectType);
+        if (!spawnDesc.prefabName.empty())
+            monster->info.set_name(spawnDesc.prefabName);
 
         Add_Monster(monster);
     }
@@ -416,6 +528,185 @@ bool GameRoom::Load_MonsterSpawnData_FromLevel(const wstring& levelName, vector<
         Try_ReadTransform(objJson, desc.position, desc.yaw);
 
         outSpawns.push_back(desc);
+    }
+
+    return true;
+}
+
+void GameRoom::Ensure_LevelWaveTriggersLoaded()
+{
+    if (_levelWaveTriggersLoaded)
+        return;
+
+    _waveTriggers.clear();
+
+    if (Load_WaveTriggerData_FromLevel(MAPNAME, _waveTriggers))
+        _levelWaveTriggersLoaded = true;
+}
+
+void GameRoom::Update_WaveTriggers()
+{
+    for (auto& trigger : _waveTriggers)
+    {
+        if (trigger.hasTriggered)
+        {
+            if (!trigger.clearBroadcasted && Is_WaveTriggerCleared(trigger))
+            {
+                trigger.clearBroadcasted = true;
+                Broadcast_WaveCleared(trigger.waveTag);
+            }
+
+            continue;
+        }
+
+        if (_players.empty())
+            continue;
+
+        for (const auto& [playerId, player] : _players)
+        {
+            const auto& pos = player->info.pos();
+            const Vec3 playerPos(pos.x(), pos.y(), pos.z());
+
+            if (!IsPointInsideWaveTrigger(playerPos, trigger))
+                continue;
+
+            Trigger_Wave(trigger);
+            break;
+        }
+    }
+}
+
+void GameRoom::Trigger_Wave(FServerWaveTriggerDesc& trigger)
+{
+    if (trigger.hasTriggered)
+        return;
+
+    trigger.hasTriggered = true;
+    trigger.clearBroadcasted = false;
+    trigger.spawnedMonsterIds.clear();
+
+    for (const auto& spawnEntry : trigger.spawnEntries)
+    {
+        auto monster = Monster::Create();
+        CHECK_NULL(monster);
+
+        const Vec3 spawnWorldPosition =
+            Resolve_WaveTriggerWorldPosition(trigger.position, trigger.yaw, spawnEntry.localPosition);
+
+        const float spawnWorldYaw =
+            Resolve_WaveTriggerWorldYaw(trigger.yaw, spawnEntry.localRotation);
+
+        monster->Initialize_FromSpawn(spawnWorldPosition, spawnWorldYaw);
+        monster->info.set_objecttype(spawnEntry.objectType);
+        if (!spawnEntry.prefabName.empty())
+            monster->info.set_name(spawnEntry.prefabName);
+
+        Add_Monster(monster);
+        trigger.spawnedMonsterIds.push_back(monster->Get_ObjectID());
+    }
+}
+
+void GameRoom::Broadcast_WaveCleared(const string& waveTag)
+{
+    Protocol::S_WaveCleared pkt;
+    pkt.set_wave_tag(waveTag);
+
+    Broadcast(Server_PacketHandler::Make_S_WaveCleared(pkt));
+}
+
+bool GameRoom::Is_WaveTriggerCleared(const FServerWaveTriggerDesc& trigger) const
+{
+    if (trigger.spawnedMonsterIds.empty())
+        return false;
+
+    for (const uint64 monsterId : trigger.spawnedMonsterIds)
+    {
+        if (_monsters.find(monsterId) != _monsters.end())
+            return false;
+    }
+
+    return true;
+}
+
+bool GameRoom::Load_WaveTriggerData_FromLevel(const wstring& levelName, vector<FServerWaveTriggerDesc>& outTriggers)
+{
+    const wstring fullPath =
+        L"../../../Client/Bin/Resources/Data/json/Levels/" + levelName + L".level.json";
+
+    ifstream file(fullPath);
+    if (!file.is_open())
+        return false;
+
+    json levelJson;
+    file >> levelJson;
+
+    if (!levelJson.contains("gameObjects") || !levelJson["gameObjects"].is_array())
+        return false;
+
+    for (const auto& objJson : levelJson["gameObjects"])
+    {
+        Protocol::OBJECT_TYPE objectType = Protocol::OBJECT_TYPE_NONE;
+        if (!Try_ReadyObjectType(objJson, objectType))
+            continue;
+
+        if (objectType != Protocol::OBJECT_TYPE_WAVE_TRIGGER)
+            continue;
+
+        FServerWaveTriggerDesc trigger{};
+
+        Try_ReadTransform(objJson, trigger.position, trigger.yaw);
+        Try_ReadTriggerExtents(objJson, trigger.extents);
+
+        if (objJson.contains("custom_properties") && objJson["custom_properties"].is_object())
+        {
+            const auto& custom = objJson["custom_properties"];
+
+            if (custom.contains("wave_tag") && custom["wave_tag"].is_string())
+                trigger.waveTag = custom["wave_tag"].get<string>();
+
+            if (custom.contains("trigger_once"))
+                trigger.triggerOnce = custom["trigger_once"].get<bool>();
+
+            if (custom.contains("spawn_entries") && custom["spawn_entries"].is_array())
+            {
+                for (const auto& entryJson : custom["spawn_entries"])
+                {
+                    FServerWaveSpawnEntry entry{};
+
+                    if (entryJson.contains("prefab_name") && entryJson["prefab_name"].is_string())
+                        entry.prefabName = entryJson["prefab_name"].get<string>();
+
+                    if (entryJson.contains("position"))
+                        entry.localPosition = Json_ToVec3(entryJson["position"], Vec3(0.f, 0.f, 0.f));
+
+                    if (entryJson.contains("rotation"))
+                        entry.localRotation = Json_ToVec3(entryJson["rotation"], Vec3(0.f, 0.f, 0.f));
+
+                    if (entryJson.contains("object_type_override"))
+                    {
+                        if (entryJson["object_type_override"].is_string())
+                        {
+                            auto enumValue = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
+                                entryJson["object_type_override"].get<string>());
+
+                            if (enumValue.has_value())
+                                entry.objectType = enumValue.value();
+                        }
+                        else if (entryJson["object_type_override"].is_number_integer())
+                        {
+                            entry.objectType = static_cast<Protocol::OBJECT_TYPE>(
+                                entryJson["object_type_override"].get<int32>());
+                        }
+                    }
+
+                    if (!entry.prefabName.empty())
+                        trigger.spawnEntries.push_back(std::move(entry));
+                }
+            }
+        }
+
+        if (!trigger.spawnEntries.empty())
+            outTriggers.push_back(std::move(trigger));
     }
 
     return true;

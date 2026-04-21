@@ -11,6 +11,7 @@
 #include "PlayerStateMachine_Inspector.h"
 #include "AnimationState_Inspector.h"
 #include "Collider_Inspector.h"
+#include "Effect_Inspector.h"
 
 IMPLEMENT_SINGLETON(Inspector_Factory)
 
@@ -35,6 +36,7 @@ void Inspector_Factory::Initialize()
     Register_Inspector(Protocol::COMPONENT_TYPE_COLLIDER_SPHERE, colliderInspector);
     Register_Inspector(Protocol::COMPONENT_TYPE_COLLIDER_CAPSULE, colliderInspector);
 
+    Register_Inspector(Protocol::COMPONENT_TYPE_EFFECT, make_shared<Effect_Inspector>());
 }
 
 void Inspector_Factory::Register_Inspector(uint32 typeId, shared_ptr<Component_Inspector> insepctor)

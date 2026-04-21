@@ -21,6 +21,7 @@
 #include "Layer.h"
 #include "CollisionProxyActor.h"
 #include "SkySphereActor.h"
+#include "WaveTrigger.h"
 
 
 Level_Konoha::Level_Konoha(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -53,6 +54,7 @@ HRESULT Level_Konoha::Initialize(EGameplaySpawnMode spawnMode)
     if (_spawnMode == EGameplaySpawnMode::Server)
     {
         Remove_LocalMonsters_ForServerMode();
+        Disable_LocalWaveTriggers_ForServerMode();
     }
 
     if (_spawnMode == EGameplaySpawnMode::LocalOnly)
@@ -335,6 +337,7 @@ HRESULT Level_Konoha::Ready_Layer_SkySphere()
 
 HRESULT Level_Konoha::Ready_UI()
 {
+    // 플레이어 허드 생성 -> 레벨 전환 시 문제. 기존꺼 제대로 안비워지는거같은데 왜지
     {
         UIObject::FUIDesc desc;
         desc.posX = 0.f;
@@ -342,7 +345,7 @@ HRESULT Level_Konoha::Ready_UI()
         desc.sizeX = 1.f;
         desc.sizeY = 1.f;
         desc.zOrder = 0.5f;
-        desc.levelIndex = ETOI(ELevelType::Static);
+        desc.levelIndex = ETOI(ELevelType::Konoha);
 
         _playerHUD = static_pointer_cast<UI_PlayerHUD>(
             GAME->Add_UI(
@@ -357,6 +360,21 @@ HRESULT Level_Konoha::Ready_UI()
         this, &Level_Konoha::On_PlayerObjectSpawned);
 
     return S_OK;
+}
+
+void Level_Konoha::Disable_LocalWaveTriggers_ForServerMode()
+{
+    const uint32 levelIndex = ETOI(ELevelType::Konoha);
+    const auto gameObjects = GAME->Get_GameObjects(levelIndex);
+
+    for (const auto& obj : gameObjects)
+    {
+        auto waveTrigger = dynamic_pointer_cast<WaveTrigger>(obj);
+        if (!waveTrigger)
+            continue;
+
+        waveTrigger->Set_ServerAuthoritative(true);
+    }
 }
 
 void Level_Konoha::Build_CollisionProxyEntries(vector<FProxyEntry>& outEntries) const

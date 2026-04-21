@@ -194,6 +194,7 @@ public: /* Prefeb */
     HRESULT                 Save_Prefab(const string& prefabPath, Shared<GameObject> gameObject);
     HRESULT                 Load_Prefab(const string& prefabPath);
     void                    Reapply_Prefabs_InCurrentLevel();
+    HRESULT                 Reapply_Prefab_ToObject(Shared<GameObject> gameObject);
 
 public: /* PipeLine */
     const Matrix*           Get_Transform(ETransformState state) const;

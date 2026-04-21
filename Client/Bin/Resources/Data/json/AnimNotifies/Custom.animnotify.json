@@ -1962,6 +1962,32 @@
                     "name": "Notify Track"
                 }
             ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Fall_Front_Loop",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "effect_name": "RingEffect",
+                        "stop_all_from_owner": false
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_StopParticle"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
         }
     ],
     "model_guid": "1fc2f5c1-a7a7-4dbb-9524-382920f0ba69"

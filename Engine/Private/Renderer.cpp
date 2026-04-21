@@ -154,6 +154,8 @@ HRESULT Renderer::Draw_Preview()
 
     Apply_Default3DState();
     Render_Priority();
+
+    GAME->Render_Colliders();
     
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::NonBlend)])
     {
@@ -324,11 +326,22 @@ void Renderer::Render_Lights()
     if (FAILED(_deferredShader->Bind_Matrix("g_ProjMatrix", &_projMatrix)))
         canRender = false;
 
-    if (canRender &&
-        FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_NormalTexture", L"Target_Normal")))
-    {
+    // Depth 기반 월드 위치 복원을 위한 역행렬 넘겨주기
+    if (canRender && FAILED(_deferredShader->Bind_Matrix("g_ViewMatrixInverse", GAME->Get_TransformInverse(ETransformState::View))))
         canRender = false;
-    }
+
+    if (canRender && FAILED(_deferredShader->Bind_Matrix("g_ProjMatrixInverse", GAME->Get_TransformInverse(ETransformState::Proj))))
+        canRender = false;
+
+    if (canRender && FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_NormalTexture", L"Target_Normal")))
+        canRender = false;
+
+    if (canRender && FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_DepthTexture", L"Target_Depth")))
+        canRender = false;
+
+    // 카메라 위치
+    if (canRender && FAILED(_deferredShader->Bind_RawValue("g_CamPosition", GAME->Get_CamPosition(), sizeof(Vec4))))
+        canRender = false;
 
     if (canRender)
     {
@@ -362,6 +375,8 @@ void Renderer::Render_Combined()
     if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_DiffuseTexture", L"Target_Diffuse"))) return;
     if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_NormalTexture", L"Target_Normal"))) return;
     if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_ShadeTexture",   L"Target_Shade")))   return;
+
+    if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_SpecularTexture", L"Target_Specular"))) return;
 
     // 포스트 프로세스 외곽선 처리
     const float outlineInvViewportSize[2] =
@@ -435,10 +450,18 @@ HRESULT Renderer::Ready_RenderTarget()
     CHECK_FAILED(GAME->Add_RenderTarget(L"Target_Shade",
         width, height, DXGI_FORMAT_R16G16B16A16_UNORM, Color(0,0,0,0)), E_FAIL);
 
+    CHECK_FAILED(GAME->Add_RenderTarget(L"Target_Depth",
+        width, height, DXGI_FORMAT_R32G32B32A32_FLOAT, Color(0, 0, 0, 0)), E_FAIL);
+
+    CHECK_FAILED(GAME->Add_RenderTarget(L"Target_Specular",
+        width, height, DXGI_FORMAT_R16G16B16A16_UNORM, Color(0, 0, 0, 0)), E_FAIL);
 
     CHECK_FAILED(GAME->Add_MRT(L"MRT_GameObjects", L"Target_Diffuse"), E_FAIL); // SV_TARGET0
     CHECK_FAILED(GAME->Add_MRT(L"MRT_GameObjects", L"Target_Normal"),  E_FAIL); // SV_TARGET1
+    CHECK_FAILED(GAME->Add_MRT(L"MRT_GameObjects", L"Target_Depth"),   E_FAIL); // SV_TARGET2
+
     CHECK_FAILED(GAME->Add_MRT(L"MRT_LightAcc",    L"Target_Shade"),   E_FAIL); // SV_TARGET0
+    CHECK_FAILED(GAME->Add_MRT(L"MRT_LightAcc", L"Target_Specular"),   E_FAIL); // SV_TARGET1
 
     // Deferred Shader, 풀스크린 Rect 생성
     _viBuffer = VIBuffer_Rect::Create(_device, _context);
@@ -455,9 +478,10 @@ HRESULT Renderer::Ready_RenderTarget()
     _projMatrix = XMMatrixOrthographicLH(width, height, 0.f, 1.f);
 
 #ifdef _DEBUG
-    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Diffuse", 150.f, 150.f, 300.f, 300.f), E_FAIL);
-    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Normal",  150.f, 450.f, 300.f, 300.f), E_FAIL);
-    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Shade",   450.f, 150.f, 300.f, 300.f), E_FAIL);
+    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Diffuse", 150.f, 300.f, 150.f, 150.f), E_FAIL);
+    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Normal",  150.f, 450.f, 150.f, 150.f), E_FAIL);
+    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Shade",   300.f, 300.f, 150.f, 150.f), E_FAIL);
+    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Specular", 300.f, 450.f, 150.f, 150.f), E_FAIL);
 #endif
 
     return S_OK;

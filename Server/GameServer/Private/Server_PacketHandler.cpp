@@ -56,9 +56,6 @@ void Server_PacketHandler::Handle_C_Move(shared_ptr<GameSession> session, BYTE* 
 
 void Server_PacketHandler::Handle_C_EnterGame(shared_ptr<GameSession> session, BYTE* buffer, int32 len)
 {
-    if (session->Get_PlayerId() != 0)
-        return;
-
     Protocol::C_EnterGame pkt;
     ParsePacket(buffer, pkt);
 
@@ -113,6 +110,11 @@ SendBufferRef Server_PacketHandler::Make_S_Move(Protocol::ObjectInfo& info)
     *pkt.mutable_info() = info;
 
     return MakeSendBuffer(pkt, S_Move);
+}
+
+SendBufferRef Server_PacketHandler::Make_S_WaveCleared(Protocol::S_WaveCleared& pkt)
+{
+    return MakeSendBuffer(pkt, S_WaveCleared);
 }
 
 SendBufferRef Server_PacketHandler::Make_S_LobbySnapshot(Protocol::S_LobbySnapshot& pkt)

@@ -379,6 +379,16 @@
     <ClInclude Include="..\Public\Level_Lobby.h">
       <Filter>01. Levels\04. Lobby</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BTTask_PlayStateAndWait.h">
+      <Filter>06. Behavior\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BTTask_DodgeAndWait.h">
+      <Filter>06. Behavior\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BTTask_RetreatAndWait.h">
+      <Filter>06. Behavior\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WaveTrigger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -741,6 +751,16 @@
     <ClCompile Include="..\Private\Level_Lobby.cpp">
       <Filter>01. Levels\04. Lobby</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\BTTask_PlayStateAndWait.cpp">
+      <Filter>06. Behavior\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BTTask_DodgeAndWait.cpp">
+      <Filter>06. Behavior\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BTTask_RetreatAndWait.cpp">
+      <Filter>06. Behavior\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WaveTrigger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

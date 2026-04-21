@@ -15,6 +15,7 @@
 #include "ContainerObject.h"
 #include "MovementComponent.h"
 #include "PartObject.h"
+#include "WaveTrigger_Inspector.h"
 
 Prefab_View::Prefab_View()
     : EditorWindow(TEXT("Prefab"))
@@ -105,7 +106,13 @@ void Prefab_View::OnGui()
                     _isGizmoHovered = false;
                     _isGizmoUsing = false;
 
-                    if (_prevRT)
+                    if (_isPreviewSuspendedByAnimationView)
+                    {
+                        ImGui::Dummy(ImVec2(0.f, previewChildSize.y * 0.35f));
+                        ImGui::TextDisabled("Animation View is using the live preview.");
+                        ImGui::TextDisabled("Prefab preview rendering is paused.");
+                    }
+                    else if (_prevRT)
                     {
                         const ImVec2 imagePos = ImGui::GetCursorScreenPos();
                         const ImVec2 imageSize = ImGui::GetContentRegionAvail();
@@ -220,18 +227,12 @@ void Prefab_View::Pre_Render()
 {
     EditorWindow::Pre_Render();
 
-    if (!_isOpen || !_previewObject || !_prevRT)
+    if (!_isOpen || !_previewObject || !_prevRT || _isPreviewSuspendedByAnimationView)
         return;
 
     // 기존 View/Proj 백업
     Matrix savedView = *GAME->Get_Transform(ETransformState::View);
     Matrix savedProj = *GAME->Get_Transform(ETransformState::Proj);
-
-    // Preview 렌더 전, 기존 viewport 기준을 복원할 수 있게 백업한다.
-    const uint32 savedDeferredViewportWidth = static_cast<uint32>(max(1.f, GAME->Get_UIViewportWidth()));
-    const uint32 savedDeferredViewportHeight = static_cast<uint32>(max(1.f, GAME->Get_UIViewportHeight()));
-    const float savedUIViewportWidth = GAME->Get_UIViewportWidth();
-    const float savedUIViewportHeight = GAME->Get_UIViewportHeight();
 
     if (!_previewCamera)
         return;
@@ -295,12 +296,6 @@ void Prefab_View::Pre_Render()
 
     _prevRT->Clear(Color(0.15f, 0.15f, 0.15f, 1.f));
 
-    // Preview RT 크기에 맞춰 deferred / UI viewport를 동기화한다.
-    if (FAILED(GAME->Resize_DeferredViewport(_prevRT->GetWidth(), _prevRT->GetHeight())))
-        return;
-
-    GAME->Set_UIViewportSize(static_cast<float>(_prevRT->GetWidth()), static_cast<float>(_prevRT->GetHeight()));
-
     _prevRT->BindAsTarget();
     GAME->Clear_DepthOnly();
     GAME->Draw_Preview();
@@ -318,10 +313,6 @@ void Prefab_View::Pre_Render()
 
     if (hasSavedLight)
         GAME->Add_Light(savedLight);
-
-    // Preview 렌더가 끝났으니 기존 viewport 기준을 복원한다.
-    GAME->Resize_DeferredViewport(savedDeferredViewportWidth, savedDeferredViewportHeight);
-    GAME->Set_UIViewportSize(savedUIViewportWidth, savedUIViewportHeight);
 
     // 기존 View/Proj 복원
     GAME->Set_Transform(ETransformState::View, savedView);
@@ -483,7 +474,10 @@ void Prefab_View::Draw_ComponentList()
         }
     }
 
-    Draw_PartObjectList();
+    if (Get_PreviewContainer())
+    {
+        Draw_PartObjectList();
+    }
 
     ImGui::EndChild();
 
@@ -536,9 +530,27 @@ void Prefab_View::Draw_ComponentInspector()
         ImGui::Spacing();
     }
 
+    if (auto waveTrigger = dynamic_pointer_cast<Client::WaveTrigger>(_previewObject))
+    {
+        static WaveTrigger_Inspector waveTriggerInspector;
+
+        if (waveTriggerInspector.Draw_Inspector(waveTrigger))
+        {
+            MarkDirty();
+        }
+
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
+    }
+
     if (_selectionType == ESelectionType::PartObject)
     {
-        Draw_PartObjectInspector();
+        if (Get_PreviewContainer())
+        {
+            Draw_PartObjectInspector();
+        }
+
         return;
     }
 
@@ -918,7 +930,8 @@ void Prefab_View::Open_AnimationView()
 void Prefab_View::Draw_PartObjectList()
 {
     auto container = Get_PreviewContainer();
-    CHECK_NULL(container);
+    if (!container)
+        return;
 
     ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
     ImGui::Text(ICON_FA_CUBES " Part Objects");
@@ -953,7 +966,8 @@ void Prefab_View::Draw_PartObjectList()
 void Prefab_View::Draw_PartObjectInspector()
 {
     auto container = Get_PreviewContainer();
-    if (!container) return;
+    if (!container)
+        return;
 
     auto slot = static_cast<ContainerObject::EPartSlot>(_selectedPartSlot);
     auto part = container->Get_PartObject(slot);

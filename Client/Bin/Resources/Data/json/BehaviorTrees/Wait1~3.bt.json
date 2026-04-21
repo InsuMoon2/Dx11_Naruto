@@ -1,6 +1,8 @@
 {
     "blackboard": {
         "bools": {
+            "HasAppeared": false,
+            "IsDead": false,
             "IsHit": false
         },
         "floats": {},
@@ -57,31 +59,6 @@
             "start": 2
         },
         {
-            "end": 171,
-            "id": 186,
-            "start": 50
-        },
-        {
-            "end": 69,
-            "id": 187,
-            "start": 52
-        },
-        {
-            "end": 72,
-            "id": 188,
-            "start": 54
-        },
-        {
-            "end": 60,
-            "id": 189,
-            "start": 180
-        },
-        {
-            "end": 63,
-            "id": 190,
-            "start": 183
-        },
-        {
             "end": 211,
             "id": 212,
             "start": 209
@@ -89,17 +66,62 @@
         {
             "end": 208,
             "id": 213,
-            "start": 156
+            "start": 154
         },
         {
             "end": 47,
             "id": 214,
-            "start": 157
+            "start": 156
         },
         {
-            "end": 174,
-            "id": 215,
-            "start": 160
+            "end": 223,
+            "id": 224,
+            "start": 218
+        },
+        {
+            "end": 226,
+            "id": 227,
+            "start": 221
+        },
+        {
+            "end": 220,
+            "id": 228,
+            "start": 153
+        },
+        {
+            "end": 217,
+            "id": 229,
+            "start": 155
+        },
+        {
+            "end": 60,
+            "id": 232,
+            "start": 48
+        },
+        {
+            "end": 63,
+            "id": 248,
+            "start": 49
+        },
+        {
+            "end": 171,
+            "id": 249,
+            "start": 51
+        },
+        {
+            "end": 239,
+            "id": 250,
+            "start": 53
+        },
+        {
+            "end": 243,
+            "id": 251,
+            "start": 56
+        },
+        {
+            "end": 72,
+            "id": 252,
+            "start": 57
         }
     ],
     "nodes": [
@@ -132,8 +154,8 @@
                 57
             ],
             "parameters": {},
-            "pos_x": 185.0,
-            "pos_y": 566.0,
+            "pos_x": 471.0,
+            "pos_y": 700.0,
             "type": "Sequence"
         },
         {
@@ -142,8 +164,8 @@
             "name": "Task_FindClosestTarget",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 536.0,
-            "pos_y": 764.0,
+            "pos_x": 114.0,
+            "pos_y": 972.0,
             "type": "Task_FindClosestTarget"
         },
         {
@@ -155,8 +177,8 @@
             "name": "Task_Move",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 728.0,
-            "pos_y": 764.0,
+            "pos_x": 210.0,
+            "pos_y": 1052.0,
             "target_location": "TargetLocationKey",
             "target_object": "TargetObjectKey",
             "type": "Task_Move",
@@ -165,28 +187,16 @@
             "write_anim_direction": true
         },
         {
-            "State Name": "Idle",
-            "id": 68,
-            "input_pin_id": 69,
-            "name": "Task_SetAnimState",
-            "output_pin_ids": [],
-            "parameters": {},
-            "pos_x": 136.0,
-            "pos_y": 764.0,
-            "state_name": "Idle",
-            "type": "Task_SetAnimState"
-        },
-        {
-            "Wiat Time": 1.2000000476837158,
+            "Wiat Time": 0.5,
             "id": 71,
             "input_pin_id": 72,
             "name": "Task_Wait",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 312.0,
-            "pos_y": 764.0,
+            "pos_x": 850.0,
+            "pos_y": 972.0,
             "type": "Task_Wait",
-            "wait_time": 1.2000000476837158
+            "wait_time": 0.5
         },
         {
             "id": 151,
@@ -210,7 +220,10 @@
             "type": "Selector"
         },
         {
-            "attack_anim_state": "Attack_04",
+            "attack_anim_state_01": "Attack_01",
+            "attack_anim_state_02": "Attack_02",
+            "attack_anim_state_03": "Attack_03",
+            "attack_cycle_index_key": "AttackCycleIndex",
             "attack_range": 2.5,
             "face_target": true,
             "id": 170,
@@ -218,32 +231,12 @@
             "name": "Task_Attack",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": -40.0,
-            "pos_y": 764.0,
+            "pos_x": 354.0,
+            "pos_y": 972.0,
             "request_anim_end": false,
             "target_object_key": "TargetObjectKey",
-            "type": "Task_Attack"
-        },
-        {
-            "id": 173,
-            "input_pin_id": 174,
-            "name": "Sequence",
-            "output_pin_ids": [
-                175,
-                176,
-                177,
-                178,
-                179,
-                180,
-                181,
-                182,
-                183,
-                184
-            ],
-            "parameters": {},
-            "pos_x": 565.0,
-            "pos_y": 572.0,
-            "type": "Sequence"
+            "type": "Task_Attack",
+            "use_round_robin": true
         },
         {
             "expected_value": true,
@@ -254,8 +247,8 @@
                 209
             ],
             "parameters": {},
-            "pos_x": -126.0,
-            "pos_y": 476.0,
+            "pos_x": 82.0,
+            "pos_y": 524.0,
             "target_bb_key": "IsHit",
             "type": "Decorator_Blackboard"
         },
@@ -267,10 +260,100 @@
             "name": "Task_Hit",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": -142.0,
-            "pos_y": 610.0,
+            "pos_x": 82.0,
+            "pos_y": 668.0,
             "request_anim_end": false,
             "type": "Task_Hit"
+        },
+        {
+            "expected_value": false,
+            "id": 216,
+            "input_pin_id": 217,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                218
+            ],
+            "parameters": {},
+            "pos_x": -110.0,
+            "pos_y": 524.0,
+            "target_bb_key": "HasAppeared",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "expected_value": true,
+            "id": 219,
+            "input_pin_id": 220,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                221
+            ],
+            "parameters": {},
+            "pos_x": -302.0,
+            "pos_y": 524.0,
+            "target_bb_key": "IsDead",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "hold_on_finished": false,
+            "id": 222,
+            "input_pin_id": 223,
+            "name": "Task_PlayStateAndWait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -110.0,
+            "pos_y": 668.0,
+            "request_anim_end": true,
+            "set_false_flag_key": "",
+            "set_true_flag_key": "HasAppeared",
+            "state_name": "Appearance",
+            "stop_movement": true,
+            "type": "Task_PlayStateAndWait"
+        },
+        {
+            "hold_on_finished": true,
+            "id": 225,
+            "input_pin_id": 226,
+            "name": "Task_PlayStateAndWait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -302.0,
+            "pos_y": 668.0,
+            "request_anim_end": true,
+            "set_false_flag_key": "",
+            "set_true_flag_key": "",
+            "state_name": "Dead",
+            "stop_movement": true,
+            "type": "Task_PlayStateAndWait"
+        },
+        {
+            "face_target": true,
+            "id": 238,
+            "input_pin_id": 239,
+            "lock_facing_to_target": true,
+            "name": "Task_RetreatAndWait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 530.0,
+            "pos_y": 972.0,
+            "request_anim_end": false,
+            "retreat_anim_state": "Retreat",
+            "retreat_duration": 0.6499999761581421,
+            "stop_movement_on_finish": true,
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_RetreatAndWait",
+            "use_sprint": false
+        },
+        {
+            "State Name": "Idle",
+            "id": 242,
+            "input_pin_id": 243,
+            "name": "Task_SetAnimState",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 690.0,
+            "pos_y": 972.0,
+            "state_name": "Idle",
+            "type": "Task_SetAnimState"
         }
     ],
     "root_node_id": 1

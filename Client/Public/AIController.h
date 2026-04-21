@@ -25,6 +25,7 @@ public:
     HRESULT Initialize(void* arg) override;
     void    BeginPlay() override;
     void    Update(float timeDelta) override;
+    void    Refresh_RuntimeBindings();
 
 protected:
     json    To_Json() const override;

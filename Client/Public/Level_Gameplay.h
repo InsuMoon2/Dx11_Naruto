@@ -46,6 +46,8 @@ private:
     static Matrix Build_CollisionModelPreTransform();
 
 private:
+    void Disable_LocalWaveTriggers_ForServerMode();
+
     void            Spawn_LocalPlayer();
     void            On_PlayerObjectSpawned(Shared<GameObject> obj);
 
@@ -54,29 +56,25 @@ private:
     // 서버에서 로컬 몬스터 제거하게
     void            Remove_LocalMonsters_ForServerMode();
 
+    void            On_WaveCleared(const string& waveTag);
     void            Request_EnterKonoha();
 
-private:
-    // Gameplay 레벨에서 사용할 ground/world-block collision entry를 manager 형식으로 구성한다.
-    void            Build_CollisionProxyEntries(vector<FProxyEntry>& outEntries) const;
 
-    // 레벨에 배치된 CollisionProxyActor를 다시 읽어 proxy cache를 재구성한다.
+private:
+    void            Build_CollisionProxyEntries(vector<FProxyEntry>& outEntries) const;
     HRESULT         Rebuild_CollisionProxyCache();
 
-    // 지정한 layer에서 collision proxy actor를 수집한다.
     HRESULT         Collect_CollisionProxyActorsFromLayer(const wstring& layerTag);
-
-    // proxy type에 따라 walkable / wall / world block cache에 분류해 넣는다.
     HRESULT         Append_CollisionProxyInstance(Shared<CollisionProxyActor> actor);
 
-    // proxy model의 월드 bounds를 계산해 broad phase에 사용할 수 있게 만든다.
     static bool     Try_BuildWorldBoundsFromModel(
                         Shared<Model> model,
                         const Matrix& worldMatrix,
                         BoundingBox& outBounds);
 
     void            Draw_StaticMeshRender();
-    
+
+
 private:
     Shared<UI_PlayerHUD> _playerHUD;
 
@@ -85,21 +83,18 @@ private:
     EGameplaySpawnMode  _spawnMode = EGameplaySpawnMode::END;
     bool                _enterGameSent = false;
 
+    FDelegateHandle _waveClearedHandle = {};
+
     bool            _konohaTransitionRequested = false;
 
     bool _showCollisionDebug = false;
 
-    // ExamStadium 기본 바닥 판정에 사용하는 ground collision cache다.
     vector<MovementComponent::FCollisionModelInstance> _defaultGroundModels;
-
-    // 플레이어 ground 판정에 사용하는 walkable proxy cache다.
     vector<MovementComponent::FCollisionModelInstance> _walkableProxyModels;
-
-    // wall-run / wire dash 판정에 사용하는 wall proxy cache다.
     vector<MovementComponent::FCollisionModelInstance> _wallProxyModels;
-
-    // 2차에서 world block 충돌용으로 확장할 proxy cache다.
     vector<MovementComponent::FCollisionModelInstance> _worldBlockProxyModels;
+
+
 
 public:
     static Shared<Level_Gameplay> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode);

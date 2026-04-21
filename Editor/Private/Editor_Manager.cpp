@@ -4,7 +4,7 @@
 #include "Editor_Manager.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
-
+#include <fstream>
 #include "Animation_View.h"
 #include "BehaviorTree_View.h"
 #include "Cinematic_View.h"
@@ -790,6 +790,22 @@ void Editor_Manager::On_SaveLevel(const wstring& fileName)
 
 void Editor_Manager::On_LoadLevel(const wstring& fileName)
 {
+    uint32 targetLevelIndex = GAME->Current_Level();
+
+    const wstring fullPath = Level_Serializer::Get_FullPath(fileName);
+    ifstream file(fullPath);
+    if (file.is_open())
+    {
+        json levelJson;
+        file >> levelJson;
+        file.close();
+
+        targetLevelIndex = levelJson.value("levelIndex", targetLevelIndex);
+    }
+
+    GAME->Clear_Layers(targetLevelIndex);
+    GAME->Clear_UI_ByLevel(targetLevelIndex);
+
     auto objects = Level_Serializer::Load_Level(fileName);
     auto proxyObjects = Level_Serializer::Load_LevelProxy(fileName);
 

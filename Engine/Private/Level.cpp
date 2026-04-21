@@ -110,6 +110,11 @@ HRESULT Level::Load_LevelChunkToLevel(uint32 targetLevelIndex, uint32 prototypeL
 
                 gameObject->From_Json(objJson);
 
+                if (objJson.contains("custom_properties") && objJson["custom_properties"].is_object())
+                {
+                    gameObject->From_Json(objJson["custom_properties"]);
+                }
+
                 if (objJson.contains("components"))
                 {
                     for (const auto& compData : objJson["components"])

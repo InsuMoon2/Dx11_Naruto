@@ -40,6 +40,8 @@ private:
     HRESULT         Ready_UI();
 
 private:
+    void Disable_LocalWaveTriggers_ForServerMode();
+
     HRESULT Ready_DefaultGroundCollision();
     HRESULT Append_CollisionInstancesFromDirectory(
         const fs::path& directoryPath,

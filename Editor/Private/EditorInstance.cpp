@@ -10,6 +10,12 @@
 #include "Camera_Target.h"
 #include "Camera_Free.h"
 #include "CommandHistory.h"
+#include "AIController.h"
+#include "BehaviorTree.h"
+#include "GameObject.h"
+#include "WaveTrigger.h"
+
+#include <set>
 
 IMPLEMENT_SINGLETON(EditorInstance)
 
@@ -78,6 +84,8 @@ void EditorInstance::Release()
 
 void EditorInstance::Play()
 {
+    Reload_CurrentLevelMonsterAssets();
+
     _pausedPreviousCamera.reset();
     GAME->Stop_Cinematic();
     GAME->Set_GameInputEnabled(true);
@@ -92,6 +100,122 @@ void EditorInstance::Play()
     if (targetCam)
         GAME->Set_ActiveCamera(targetCam);
 
+}
+
+void EditorInstance::Reload_CurrentLevelMonsterAssets()
+{
+    const auto monsters = Collect_CurrentLevelMonsterObjects();
+    if (monsters.empty())
+        return;
+
+    set<string> reloadedPrefabNames;
+    set<string> failedPrefabNames;
+
+    for (const auto& monster : monsters)
+    {
+        if (!monster || monster->Is_Destroy())
+            continue;
+
+        const string& prefabName = monster->Get_SourcePrefabName();
+        bool allowPrefabReapply = false;
+
+        if (!prefabName.empty() && failedPrefabNames.contains(prefabName))
+        {
+            allowPrefabReapply = false;
+        }
+        else if (!prefabName.empty() && reloadedPrefabNames.contains(prefabName))
+        {
+            allowPrefabReapply = true;
+        }
+        else if (!prefabName.empty())
+        {
+            const string prefabPath =
+                "../../Client/Bin/Resources/Data/json/Prefabs/" + prefabName + ".prefab.json";
+
+            if (FAILED(GAME->Load_Prefab(prefabPath)))
+            {
+                LOG_WARN("Editor Play hot reload skipped prefab reload: {}", prefabPath);
+                failedPrefabNames.insert(prefabName);
+            }
+            else
+            {
+                reloadedPrefabNames.insert(prefabName);
+                allowPrefabReapply = true;
+            }
+        }
+
+        Reload_MonsterAssets(monster, allowPrefabReapply);
+    }
+}
+
+vector<Shared<GameObject>> EditorInstance::Collect_CurrentLevelMonsterObjects() const
+{
+    vector<Shared<GameObject>> monsters;
+    set<GameObject*> seenObjects;
+
+    for (uint32 levelIndex = 0; levelIndex < ETOI(ELevelType::END); ++levelIndex)
+    {
+        const auto objects = GAME->Get_GameObjects(levelIndex);
+
+        for (const auto& gameObject : objects)
+        {
+            if (!Is_PlayHotReloadMonster(gameObject))
+                continue;
+
+            if (!seenObjects.insert(gameObject.get()).second)
+                continue;
+
+            monsters.push_back(gameObject);
+        }
+    }
+
+    return monsters;
+}
+
+bool EditorInstance::Is_PlayHotReloadMonster(const Shared<GameObject>& gameObject) const
+{
+    if (!gameObject || gameObject->Is_Destroy())
+        return false;
+
+    const Protocol::OBJECT_TYPE objectType = gameObject->Get_ObjectType();
+    return objectType == Protocol::OBJECT_TYPE_MONSTER ||
+        objectType == Protocol::OBJECT_TYPE_BOSS_PAIN ||
+        objectType == Protocol::OBJECT_TYPE_WAVE_TRIGGER;
+}
+
+void EditorInstance::Reload_MonsterAssets(const Shared<GameObject>& gameObject, bool allowPrefabReapply)
+{
+    if (!gameObject)
+        return;
+
+    const string& prefabName = gameObject->Get_SourcePrefabName();
+    if (prefabName.empty())
+    {
+        LOG_WARN("Editor Play hot reload skipped monster without source prefab name.");
+    }
+    else if (!allowPrefabReapply)
+    {
+        LOG_WARN("Editor Play hot reload skipped prefab reapply because the latest prefab file could not be loaded: {}",
+            prefabName);
+    }
+    else if (FAILED(GAME->Reapply_Prefab_ToObject(gameObject)))
+    {
+        LOG_WARN("Editor Play hot reload failed to reapply prefab: {}", prefabName);
+    }
+
+    auto behavior = gameObject->Get_Component<BehaviorTree>();
+    if (behavior && FAILED(behavior->Reload_FromBoundAsset()))
+    {
+        LOG_WARN("Editor Play hot reload failed to reload BehaviorTree for object type {}.",
+            static_cast<uint32>(gameObject->Get_ObjectType()));
+    }
+
+    auto aiController = gameObject->Get_Component<AIController>();
+    if (aiController)
+        aiController->Refresh_RuntimeBindings();
+
+    if (auto waveTrigger = dynamic_pointer_cast<Client::WaveTrigger>(gameObject))
+        waveTrigger->Refresh_ForEditorPlay();
 }
 
 void EditorInstance::Pause()

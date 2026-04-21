@@ -7,6 +7,14 @@
 #include "GameObject.h"
 #include "Blackboard.h"
 
+static bool Is_PrefabPreviewPawn(const Shared<GameObject>& pawn)
+{
+    if (!pawn)
+        return false;
+
+    return pawn->Get_LevelIndex() == ETOI(ELevelType::Prefab);
+}
+
 AIController::AIController(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Controller(device, context)
 {
@@ -42,18 +50,49 @@ void AIController::BeginPlay()
     _movement = pawn->Get_Component<MovementComponent>();
     _behavior = pawn->Get_Component<BehaviorTree>();
     _animationState = pawn->Get_Component<AnimationStateComponent>();
+ 
+    if (Is_PrefabPreviewPawn(pawn))
+        return;
 
     if (_behavior && !_btFilePath.empty())
         _behavior->Load_FromJson(_btFilePath);
 
+    Refresh_RuntimeBindings();
+
+}
+
+void AIController::Refresh_RuntimeBindings()
+{
+    auto pawn = Get_Pawn();
+    if (!pawn)
+    {
+        _movement.reset();
+        _behavior.reset();
+        _animationState.reset();
+        _blackboard.reset();
+        _lastAnimState.clear();
+        _lastAnimDirection = static_cast<int32>(EMoveInputDirection::Forward);
+        return;
+    }
+
+    _movement = pawn->Get_Component<MovementComponent>();
+    _behavior = pawn->Get_Component<BehaviorTree>();
+    _animationState = pawn->Get_Component<AnimationStateComponent>();
+
+    _blackboard.reset();
     if (_behavior)
         _blackboard = _behavior->Get_Blackboard();
 
+    _lastAnimState.clear();
+    _lastAnimDirection = static_cast<int32>(EMoveInputDirection::Forward);
 }
 
 void AIController::Update(float timeDelta)
 {
     Controller::Update(timeDelta);
+   
+    if (Is_PrefabPreviewPawn(Get_Pawn()))
+        return;
 
     if (_behavior)
         _behavior->Update(timeDelta);

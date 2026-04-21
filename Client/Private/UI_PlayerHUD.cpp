@@ -11,6 +11,7 @@
 #include "UI_PlayerHP.h"
 #include "UI_Text.h"
 #include "CombatStat.h"
+#include "Background.h"
 #include "GameInstance.h"
 
 REGISTER_GAMEOBJECT(UI_PlayerHUD, Protocol::OBJECT_TYPE_UI_PLAYER_HUD)
@@ -39,8 +40,10 @@ HRESULT UI_PlayerHUD::Initialize(void* arg)
     OnHUDPlayerBound.Add(_status.get(), &UI_PlayerStatus::Bind_Player);
     OnHUDPlayerBound.Add(_skillPanel.get(), &UI_PlayerSkill::Bind_Player);
 
-    GAME->Get_DelegateHub().OnRemotePlayerObjectSpawned.Add(
+    _remotePlayerSpawnedHandle = GAME->Get_DelegateHub().OnRemotePlayerObjectSpawned.Add(
         this, &UI_PlayerHUD::Handle_RemotePlayerObjectSpawned);
+    _comboHitHandle = GAME->Get_DelegateHub().OnPlayerComboHit.Add(
+        this, &UI_PlayerHUD::On_PlayerComboHit);
 
     return S_OK;
 }
@@ -50,6 +53,7 @@ void UI_PlayerHUD::Update(float timeDelta)
     HUD::Update(timeDelta);
 
     Update_RemotePlayerStatusList();
+    Update_CombatLineBurst(timeDelta);
 }
 
 void UI_PlayerHUD::Bind_Player(Shared<Player> player)
@@ -192,6 +196,203 @@ void UI_PlayerHUD::Handle_RemotePlayerObjectSpawned(Shared<GameObject> obj)
     Add_RemotePlayer(player);
 }
 
+void UI_PlayerHUD::On_PlayerComboHit(uint32 combo)
+{
+    Trigger_CombatLineBurst(Compute_CombatLineIntensity(combo));
+}
+
+HRESULT UI_PlayerHUD::Ready_CombatLines()
+{
+    Reset_CombatLineLayout();
+
+    for (size_t i = 0; i < _combatLineLayers.size(); ++i)
+    {
+        auto& layer = _combatLineLayers[i];
+
+        Background::FBackgroundDesc desc{};
+        desc.posX = layer.basePosX;
+        desc.posY = layer.basePosY;
+        desc.sizeX = layer.baseSizeX;
+        desc.sizeY = layer.baseSizeY;
+        desc.zOrder = _zOrder + 0.007f + (static_cast<float>(i) * 0.0001f);
+        desc.levelIndex = _levelIndex;
+        desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_SWORD_TRAIL;
+        desc.textureIndex = layer.textureIndex;
+        desc.shaderPassIndex = 7;
+
+        layer.widget = Create_Child<Background>(
+            Protocol::OBJECT_TYPE_BACKGROUND,
+            EUILayer::Overlay,
+            &desc);
+        CHECK_NULL(layer.widget, E_FAIL);
+
+        layer.widget->Set_UIRotationZ(layer.baseRotation);
+        layer.widget->Set_UIOpacity(0.f);
+        layer.widget->Set_Visibility(false);
+    }
+
+    return S_OK;
+}
+
+void UI_PlayerHUD::Reset_CombatLineLayout()
+{
+    const float uiRefWidth = GAME->Get_UIReferenceWidth();
+    const float uiRefHeight = GAME->Get_UIReferenceHeight();
+
+    _combatLineLayers.clear();
+    _combatLineLayers.reserve(4);
+
+    {
+        FCombatLineLayer layer{};
+        layer.textureIndex = COMBAT_LINE_TEXTURE_INDEX_07;
+        layer.basePosX = 120.f;
+        layer.basePosY = uiRefHeight * 0.24f;
+        layer.baseSizeX = 430.f;
+        layer.baseSizeY = 250.f;
+        layer.baseRotation = 64.f;
+        layer.alphaWeight = 0.78f;
+        layer.scaleJitter = 0.012f;
+        layer.phaseOffset = 0.f;
+        _combatLineLayers.push_back(layer);
+    }
+
+    {
+        FCombatLineLayer layer{};
+        layer.textureIndex = COMBAT_LINE_TEXTURE_INDEX_07;
+        layer.basePosX = uiRefWidth - 120.f;
+        layer.basePosY = uiRefHeight * 0.24f;
+        layer.baseSizeX = 430.f;
+        layer.baseSizeY = 250.f;
+        layer.baseRotation = -64.f;
+        layer.alphaWeight = 0.78f;
+        layer.scaleJitter = 0.012f;
+        layer.phaseOffset = 0.85f;
+        _combatLineLayers.push_back(layer);
+    }
+
+    {
+        FCombatLineLayer layer{};
+        layer.textureIndex = COMBAT_LINE_TEXTURE_INDEX_07;
+        layer.basePosX = 120.f;
+        layer.basePosY = uiRefHeight * 0.72f;
+        layer.baseSizeX = 320.f;
+        layer.baseSizeY = 180.f;
+        layer.baseRotation = 112.f;
+        layer.alphaWeight = 0.34f;
+        layer.scaleJitter = 0.008f;
+        layer.phaseOffset = 1.7f;
+        _combatLineLayers.push_back(layer);
+    }
+
+    {
+        FCombatLineLayer layer{};
+        layer.textureIndex = COMBAT_LINE_TEXTURE_INDEX_07;
+        layer.basePosX = uiRefWidth - 120.f;
+        layer.basePosY = uiRefHeight * 0.72f;
+        layer.baseSizeX = 320.f;
+        layer.baseSizeY = 180.f;
+        layer.baseRotation = -112.f;
+        layer.alphaWeight = 0.34f;
+        layer.scaleJitter = 0.008f;
+        layer.phaseOffset = 2.55f;
+        _combatLineLayers.push_back(layer);
+    }
+}
+
+void UI_PlayerHUD::Update_CombatLineBurst(float timeDelta)
+{
+    if (!_isCombatLineBurstActive)
+        return;
+
+    _combatLinePhaseTime += timeDelta;
+
+    if (_combatLineHoldTimer > 0.f)
+    {
+        _combatLineHoldTimer = max(0.f, _combatLineHoldTimer - timeDelta);
+    }
+    else
+    {
+        _combatLineFadeTimer = max(0.f, _combatLineFadeTimer - timeDelta);
+    }
+
+    const float alpha = Compute_CombatLineAlpha();
+
+    if (_combatLineHoldTimer <= 0.f && _combatLineFadeTimer <= 0.f)
+    {
+        Stop_CombatLineBurst();
+        return;
+    }
+
+    for (auto& layer : _combatLineLayers)
+    {
+        if (!layer.widget)
+            continue;
+
+        const float phase = (_combatLinePhaseTime * 10.f) + layer.phaseOffset;
+        const float jitterScale = 1.f + (sinf(phase) * layer.scaleJitter * _combatLineIntensity);
+
+        layer.widget->Set_Visibility(true);
+        layer.widget->Set_UIPosition(layer.basePosX, layer.basePosY);
+        layer.widget->Set_UIRotationZ(layer.baseRotation);
+        layer.widget->Set_UIScale(layer.baseSizeX * jitterScale, layer.baseSizeY * jitterScale);
+        layer.widget->Set_UIOpacity(alpha * layer.alphaWeight);
+    }
+}
+
+float UI_PlayerHUD::Compute_CombatLineAlpha() const
+{
+    if (_combatLineHoldTimer > 0.f)
+        return 1.f;
+
+    if (_combatLineFadeTimer <= 0.f)
+        return 0.f;
+
+    const float ratio = _combatLineFadeTimer / COMBAT_LINE_FADE_TIME;
+    return clamp(ratio, 0.f, 1.f);
+}
+
+float UI_PlayerHUD::Compute_CombatLineIntensity(uint32 combo) const
+{
+    const uint32 safeCombo = min<uint32>(combo, 6);
+    const float intensity = 1.f + ((static_cast<float>(safeCombo) - 1.f) * 0.05f);
+    return clamp(intensity, 1.f, 1.3f);
+}
+
+void UI_PlayerHUD::Trigger_CombatLineBurst(float intensity)
+{
+    _isCombatLineBurstActive = true;
+    _combatLineHoldTimer = COMBAT_LINE_HOLD_TIME;
+    _combatLineFadeTimer = COMBAT_LINE_FADE_TIME;
+    _combatLinePhaseTime = 0.f;
+    _combatLineIntensity = intensity;
+
+    for (auto& layer : _combatLineLayers)
+    {
+        if (!layer.widget)
+            continue;
+
+        layer.widget->Set_Visibility(true);
+    }
+}
+
+void UI_PlayerHUD::Stop_CombatLineBurst()
+{
+    _isCombatLineBurstActive = false;
+    _combatLineHoldTimer = 0.f;
+    _combatLineFadeTimer = 0.f;
+    _combatLinePhaseTime = 0.f;
+    _combatLineIntensity = 1.f;
+
+    for (auto& layer : _combatLineLayers)
+    {
+        if (!layer.widget)
+            continue;
+
+        layer.widget->Set_UIOpacity(0.f);
+        layer.widget->Set_Visibility(false);
+    }
+}
+
 HRESULT UI_PlayerHUD::Ready_UI(void* arg)
 {
     UIObject::FUIDesc statDesc;
@@ -226,7 +427,6 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
         uiRefHeight - 140.f,
         _zOrder);
 
-    // 콤보 UI
     UIObject::FUIDesc announceDesc;
     announceDesc.posX = 0.f;
     announceDesc.posY = 0.f;
@@ -238,7 +438,6 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
     _announceCombo = Create_Child<UI_AnnounceCombo>(Protocol::OBJECT_TYPE_UI_ANNOUNCE_COMBO, EUILayer::HUD, &announceDesc);
     CHECK_NULL(_announceCombo, E_FAIL);
 
-    // 타겟팅 UI
     UIObject::FUIDesc targetDesc;
     targetDesc.posX = 0.f;
     targetDesc.posY = 0.f;
@@ -249,6 +448,8 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
 
     _targeting = Create_Child<UI_Targeting>(Protocol::OBJECT_TYPE_UI_TARGETING, EUILayer::Overlay, &targetDesc);
     CHECK_NULL(_targeting, E_FAIL);
+
+    CHECK_FAILED(Ready_CombatLines(), E_FAIL);
 
     return S_OK;
 }
@@ -282,5 +483,19 @@ Shared<GameObject> UI_PlayerHUD::Clone(void* arg)
 
 void UI_PlayerHUD::Free()
 {
+    auto& hub = GAME->Get_DelegateHub();
+
+    if (_remotePlayerSpawnedHandle.IsValid())
+    {
+        hub.OnRemotePlayerObjectSpawned.Remove(_remotePlayerSpawnedHandle);
+        _remotePlayerSpawnedHandle.Reset();
+    }
+
+    if (_comboHitHandle.IsValid())
+    {
+        hub.OnPlayerComboHit.Remove(_comboHitHandle);
+        _comboHitHandle.Reset();
+    }
+
     HUD::Free();
 }

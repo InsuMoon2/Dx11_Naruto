@@ -18,6 +18,7 @@ enum PacketID
     S_LobbySnapshot = 7,
     S_LobbyChat     = 8,
     S_LobbyStartGame = 9,
+    S_WaveCleared   = 10,
 
     C_EnterGame     = 49,
     C_Move          = 50,
@@ -37,6 +38,7 @@ public:
     static void Handle_S_AddObject(Shared<ServerSession> session, BYTE* buffer, int32 len);
     static void Handle_S_RemoveObject(Shared<ServerSession> session, BYTE* buffer, int32 len);
     static void Handle_S_Move(Shared<ServerSession> session, BYTE* buffer, int32 len);
+    static void Handle_S_WaveCleared(Shared<ServerSession> session, BYTE* buffer, int32 len);
 
     // 로비 참가자 목록을 받기
     static void Handle_S_LobbySnapshot(Shared<ServerSession> session, BYTE* buffer, int32 len);

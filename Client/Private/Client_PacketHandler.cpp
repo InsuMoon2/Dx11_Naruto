@@ -20,6 +20,41 @@ static uint64 s_MyNetworkId = 0;
 // 네트워크로 생성된 플레이어/몬스터를 objectId 기준으로 추적해보기
 static umap<uint64, Weak<GameObject>> s_NetworkObjects;
 
+// 로비 채팅을 protobuf string 필드로 보낼 때 사용한다.
+// wstring 입력을 UTF-8 narrow string으로 국소 변환한다.
+static string WStringToUtf8(const wstring& value)
+{
+    if (value.empty())
+        return {};
+
+    const int32 convertedSize = WideCharToMultiByte(
+        CP_UTF8,
+        0,
+        value.c_str(),
+        static_cast<int32>(value.size()),
+        nullptr,
+        0,
+        nullptr,
+        nullptr);
+
+    if (convertedSize <= 0)
+        return {};
+
+    string result(static_cast<size_t>(convertedSize), '\0');
+
+    WideCharToMultiByte(
+        CP_UTF8,
+        0,
+        value.c_str(),
+        static_cast<int32>(value.size()),
+        result.data(),
+        convertedSize,
+        nullptr,
+        nullptr);
+
+    return result;
+}
+
 static bool Is_PlayerNetworkObject(const Shared<GameObject>& gameObject)
 {
     return gameObject && dynamic_pointer_cast<Player>(gameObject) != nullptr;
@@ -99,6 +134,10 @@ void Client_PacketHandler::HandlePacket(Shared<ServerSession> session, BYTE* buf
 
     case S_LobbyStartGame:
         Handle_S_LobbyStartGame(session, buffer, len);
+        break;
+
+    case S_WaveCleared:
+        Handle_S_WaveCleared(session, buffer, len);
         break;
     }
 
@@ -315,6 +354,14 @@ void Client_PacketHandler::Handle_S_LobbyStartGame(Shared<ServerSession> session
     GAME->Get_DelegateHub().OnLobbyStartGameReceived.Broadcast();
 }
 
+void Client_PacketHandler::Handle_S_WaveCleared(Shared<ServerSession> session, BYTE* buffer, int32 len)
+{
+    Protocol::S_WaveCleared pkt;
+    ParsePacket(buffer, pkt);
+
+    GAME->Get_DelegateHub().OnWaveCleared.Broadcast(pkt.wave_tag());
+}
+
 SendBufferRef Client_PacketHandler::Make_C_Move(const Protocol::ObjectInfo& objectInfo)
 {
     Protocol::C_Move pkt;
@@ -383,7 +430,7 @@ SendBufferRef Client_PacketHandler::Make_C_LobbyChat(const wstring& message)
     if (trimmed.size() > 80)
         trimmed = trimmed.substr(0, 80);
 
-    pkt.set_message(Utils::ToString(trimmed));
+    pkt.set_message(WStringToUtf8(trimmed));
     return MakeSendBuffer(pkt, C_LobbyChat);
 }
 
@@ -405,16 +452,24 @@ Shared<GameObject> Client_PacketHandler::Spawn_NetworkObject(const Protocol::Obj
             .Spawn();
 
     case Protocol::OBJECT_TYPE_MONSTER:
-        return Spawn_Helper::Prefab("Monster")
+    {
+        const string prefabName = info.name().empty() ? "Monster" : info.name();
+
+        return Spawn_Helper::Prefab(prefabName)
             .AtLevel(levelIndex)
             .InLayer(TEXT("Layer_GameObject"))
             .Spawn();
+    }
 
     case Protocol::OBJECT_TYPE_BOSS_PAIN:
-        return Spawn_Helper::Prefab("Boss")
+    {
+        const string prefabName = info.name().empty() ? "Boss" : info.name();
+
+        return Spawn_Helper::Prefab(prefabName)
             .AtLevel(levelIndex)
             .InLayer(TEXT("Layer_GameObject"))
             .Spawn();
+    }
 
     default:
         return nullptr;

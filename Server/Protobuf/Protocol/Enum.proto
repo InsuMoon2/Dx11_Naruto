@@ -58,6 +58,8 @@ enum ComponentID
 
     COMPONENT_TYPE_TEXTURE_SKY_SPHERE   = 223;
 
+    COMPONENT_TYPE_TEXTURE_MISSION = 224;
+
 
     // Mesh
     COMPONENT_TYPE_MESH                 = 299;
@@ -164,9 +166,10 @@ enum OBJECT_TYPE
     OBJECT_TYPE_SHURIKEN                 = 84;
    
     // 메쉬 파티클
-    OBJECT_TYPE_MESH_DEBRIS = 85;
+    OBJECT_TYPE_MESH_DEBRIS              = 85;
+    OBJECT_TYPE_BOSS_PAIN                = 86;
 
-    OBJECT_TYPE_BOSS_PAIN = 86;
+    OBJECT_TYPE_WAVE_TRIGGER             = 87;
 
     // UI : 100+
     OBJECT_TYPE_UI_TEXT                 = 100;
