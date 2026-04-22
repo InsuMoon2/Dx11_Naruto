@@ -1,13 +1,15 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG02_Distance_Tower_A",
-      "material_instance_guid": "606bc661-9403-47d4-b045-afcb7732c945"
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_1",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

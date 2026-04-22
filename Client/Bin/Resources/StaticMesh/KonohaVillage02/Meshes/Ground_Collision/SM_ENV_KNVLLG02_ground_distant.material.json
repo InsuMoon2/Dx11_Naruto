@@ -1,13 +1,15 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG02_DistanceGround_A",
-      "material_instance_guid": "4c25a1de-3887-4332-82b8-4f8dbd86c77e"
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_1",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

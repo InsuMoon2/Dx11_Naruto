@@ -1,0 +1,29 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "3a831086-b931-451d-8bef-74f256cf7d4e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "33c91196-b849-4ef1-85f0-7cece3065d02"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Red",
+      "material_instance_guid": "0a5d4b1d-9197-4a9b-b53b-b9bba2762e7e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster",
+      "material_instance_guid": "15e34ce8-5e84-4a5e-99ca-4d10a3675692"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_Orange",
+      "material_instance_guid": "f446e6b6-a00a-471b-9b92-e585481c68b1"
+    },
+    {
+      "material_name": "Material_5",
+      "textures": []
+    }
+  ]
+}

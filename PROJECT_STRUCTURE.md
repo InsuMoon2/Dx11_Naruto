@@ -663,3 +663,121 @@ Client/Bin/Resources/
 
 - [추가] Codex가 직접 실제 코드 파일을 수정할 때는, 사용자가 따로 요청하지 않은 설명용 주석이나 장황한 안내 주석을 임의로 덧붙이지 않는다.
 - [추가] 다만 이 레포의 `AGENTS.md`처럼 새 변수/함수 주석을 강제하는 상위 작업 규칙이 있는 경우에는 그 규칙을 우선 적용한다.
+
+---
+
+## [변경] 2026-04-22 최신 구조 보강
+
+아래 내용은 2026-04-22 기준 실제 폴더/파일을 다시 스캔해 반영한 최신 스냅샷이다.
+기존 위 본문은 보존하고, 현재 구조와 달라진 지점만 아래에 보강한다.
+
+### [변경] 루트 폴더 실제 상태
+
+```text
+Dx11_Naruto/
+├─ .editorconfig
+├─ .gitattributes
+├─ .gitignore
+├─ .vs/
+├─ .vscode/
+├─ AGENTS.md
+├─ AssimpTool/
+├─ Client/
+├─ Docs/
+├─ Editor/
+├─ Engine/
+├─ EngineSDK/
+├─ Game/
+├─ Server/
+├─ vcpkg_installed/
+├─ DirectX11_Naruto.sln
+├─ Directory.Build.props
+├─ PROJECT_STRUCTURE.md
+├─ Temp.txt
+├─ UpdateLib.bat
+└─ vcpkg.json
+```
+
+- `.vs/`, `.vscode/`, `*.user` 류는 개발 환경 산출물이다.
+- `Temp.txt`가 루트에 존재하므로, 루트 구조 설명 시 임시 파일도 실제 기준으로 인지해야 한다.
+- 솔루션 프로젝트 구성 자체는 여전히 `Engine`, `Client`, `Game`, `Editor`, `AssimpTool`, `ServerCore`, `GameServer` 7개다.
+
+### [변경] 실제 파일 수 기준 프로젝트 스냅샷
+
+| 경로 | 현재 파일 수 |
+|---|---|
+| `Client/Public` | `.h` 144 |
+| `Client/Private` | `.cpp` 138 |
+| `Engine/Public` | `.h` 118 |
+| `Engine/Private` | `.cpp` 100 |
+| `Editor/Public` | `.h` 58 |
+| `Editor/Private` | `.cpp` 54 |
+| `Server/GameServer/Public` | `.h` 10 |
+| `Server/GameServer/Private` | `.cpp` 7 |
+| `Server/ServerCore/Public` | `.h` 17 |
+| `Server/ServerCore/Private` | `.cpp` 16 |
+
+### [변경] Client 최신 구조 메모
+
+- 레벨 클래스는 이제 최소 `Level_MainTitle`, `Level_Loading`, `Level_Gameplay`, `Level_CharacterSetup`, `Level_Lobby`, `Level_Konoha`까지 확인된다.
+- 플레이어 상태 머신은 기존 점프/대시 계열 외에 `PlayerState_AirApproach`, `PlayerState_Hit`, `PlayerState_JumpAttack`, `PlayerState_JumpFall`, `PlayerState_Replacement`, `PlayerState_Shuriken`, `PlayerState_WallRun`, `PlayerState_Wall_Idle`, `PlayerState_WireDash`까지 확장되어 있다.
+- 스킬/이펙트 축이 커졌다. `Skill_*`, `SkillObject_*`, `AttachedEffectObject`, `StretchingMeshEffect`, `Trail_Component`, `SwordTrail_Component`, `SmearEffect_Component`, `GhostEffect_Component`, `TargetComponent`, `CollisionProxyActor`, `WaveTrigger` 등이 현재 Public에 존재한다.
+- 애니메이션 노티파이도 `AN_*` + `ANS_*` 묶음이 많이 늘었고, `ANS_AttachSkill`, `ANS_Move`, `ANS_SmearEffect`, `ANS_SpawnParticle`, `ANS_StretchingMesh`, `ANS_SwordTrail`, `ANS_Trail`, `AN_LaunchSkill`, `AN_PlayCinematic`, `AN_StopParticle` 등이 실제 파일 기준으로 잡힌다.
+- UI는 기존 플레이어 HUD 외에 `UI_AnnounceCombo`, `UI_BossHp`, `UI_MonsterHp`, `UI_Targeting`, `UI_WeaponType`까지 분화되어 있다.
+- 데이터 관리 축에도 `ComboProfile_Manager`, `EquipmentComponent`, `EnemyCharacter`, `MeshDebrisObject`, `SkySphereActor`가 추가되어 있어, 예전 문서보다 전투/연출/장비 구조가 넓어졌다.
+
+### [변경] Engine 최신 구조 메모
+
+- 충돌/바운딩 계층이 문서보다 커졌다. `Bounding`, `Bounding_AABB`, `Bounding_OBB`, `Bounding_Sphere`, `Bounding_Capsule`, `Collider`, `Collision_Manager`, `CollisionProxy_Manager`, `Collision_Define`가 실제로 존재한다.
+- 이펙트/파티클 계층도 별도 축으로 보인다. `EffectAsset_Serializer`, `EffectAsset_Types`, `EffectBilldboardObject`, `EffectMeshObject`, `EffectComponent`, `Particle_Point`, `VIBuffer_Particle_Point`, `VIBuffer_Trail`가 추가 확인된다.
+- 게임플레이 공용 컴포넌트로 `MovementComponent`, `ProjectileComponent`, `Target_Manager`가 엔진 레벨에 존재한다.
+- BT 쪽도 `BTDecorator`, `BTDecorator_Blackboard`까지 포함되어, 기존 문서의 `Task` 중심 설명보다 실제 구조가 더 넓다.
+- `AN_PlaySound`가 엔진 Public/Private 양쪽에 존재하므로, 사운드 트리거가 엔진 레벨 노티파이로 정리되어 있다.
+
+### [변경] Editor 최신 구조 메모
+
+- 에디터는 기존 Scene/Hierarchy/Inspector 계열 외에 `Effect_View`, `Effect_Inspector`, `EffectPreviewRoot` 축이 추가되어 있다.
+- 인스펙터도 `Collider_Inspector`, `AN_SpawnSkill_Inspector`, `WaveTrigger_Inspector`까지 확장되어 있다.
+- 현재 Public 기준 핵심 윈도우/도구는 `Scene_View`, `Game_View`, `Hierarchy`, `Inspector`, `Content_Browser`, `Console_View`, `BehaviorTree_View`, `Prefab_View`, `Profiler_View`, `Animation_View`, `UI_Animation_View`, `Cinematic_View`, `Effect_View`다.
+- 즉, 지금 에디터는 단순 레벨/애니메이션 편집기보다 이펙트와 스킬 프리뷰까지 다루는 편집 도구로 보는 편이 맞다.
+
+### [변경] Server 최신 구조 메모
+
+- `Server/GameServer/Public`에는 기존 핵심 파일 외에 `Server_SimpleMath.h`, `Utils.h`가 추가로 존재한다.
+- `Server/GameServer/Private`에도 `Utils.cpp`가 있어, 서버 쪽에도 별도 수학/유틸 레이어가 생겼다.
+- `Server/ServerCore/Private`는 현재 `IocpCore.cpp`, `IocpEvent.cpp`, `Listener.cpp`, `Session.cpp`, `Service.cpp`, `RecvBuffer.cpp`, `SendBuffer.cpp`, `BufferReader.cpp`, `BufferWriter.cpp`, `NetAddress.cpp`, `SocketUtils.cpp`, `ThreadManager.cpp` 등 16개 cpp로 구성되어 있다.
+
+### [변경] 리소스 폴더 실제 구조
+
+기존 문서의 리소스 설명은 일부만 맞고, 현재는 아래 구조가 실제에 가깝다.
+
+```text
+Client/Bin/Resources/
+├─ Data/
+├─ Effects/
+├─ Fonts/
+├─ Materials/
+├─ Models/
+├─ Skills/
+├─ Sounds/
+├─ StaticMesh/
+├─ Textures/
+└─ Thumbnails/
+```
+
+- `Effects/`, `Skills/`, `Sounds/`가 실제 루트 리소스 폴더로 존재한다.
+- `Data/` 아래 실제 하위 폴더는 `json/`, `MapTools/`, `Temp/`, `xlsx/`다.
+- 예전 문서처럼 `csv/`가 `Data` 바로 아래 있지는 않고, 현재는 `Data/Temp/csv/` 아래에 `ModelTable.csv`, `ShaderTable.csv`, `SkillDataTable.csv`, `StaticLevelComTable.csv`, `TerrainTable.csv`, `TextureTable.csv`가 있다.
+- `Data/xlsx/`에는 `DT_ComboProfile.xlsx`, `DT_GameObject.xlsx`, `DT_Model.xlsx`, `DT_Shader.xlsx`, `DT_SkillData.xlsx`, `DT_StaticLevel.xlsx`, `DT_Terrain.xlsx`, `DT_Texture.xlsx`가 있다.
+- `Data/json/` 최상위에는 `DT_ComboProfile.json`, `DT_GameObject.json`, `DT_Model.json`, `DT_Shader.json`, `DT_SkillData.json`, `DT_StaticLevel.json`, `DT_Terrain.json`, `DT_Texture.json`, `StaticLevelComTable.json`, 그리고 여러 `*_mesh_guid_map.json`이 있다.
+- `Data/json/` 하위 디렉터리는 `AnimNotifies`, `BehaviorTrees`, `Cinematics`, `EditorSettings`, `Effects`, `Levels`, `Prefabs`, `UIAnimations`이다.
+
+### [변경] Docs 폴더 실제 상태
+
+- 현재 `Docs/` 폴더에서 확인되는 마크다운 문서는 `CombatSpeedLineOverlay_AtoZ_Guide.md` 1개다.
+- 따라서 위쪽 구버전 문서 목록은 과거 시점의 기록으로 보고, 현재 루트 구조 판단에는 그대로 쓰지 않는 편이 안전하다.
+
+### [추가] 지금 이 문서를 읽을 때의 우선 해석 규칙
+
+- 최신 실구조 판단은 이 `[변경] 2026-04-22 최신 구조 보강` 섹션을 우선한다.
+- 위 기존 본문과 충돌하면, 실제 파일 스캔 결과가 반영된 이 하단 보강 섹션을 기준으로 본다.

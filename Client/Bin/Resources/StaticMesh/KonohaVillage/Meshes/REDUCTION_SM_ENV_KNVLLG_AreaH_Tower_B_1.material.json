@@ -1,0 +1,39 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Light",
+      "material_instance_guid": "924b5fb1-98e8-49ff-b8f9-47d8b37cea48"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Brown",
+      "material_instance_guid": "ae9c0c4b-83db-4da3-bd6d-e216a123419c"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_01",
+      "material_instance_guid": "9e8fa8ce-6a4a-4a04-96a3-1b823b37b91a"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_Dark",
+      "material_instance_guid": "a269d9a5-3e71-422b-a73f-29c72212d844"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_B",
+      "material_instance_guid": "8e96fc4d-60bf-4d31-9897-f3f466126702"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_BlueLight",
+      "material_instance_guid": "a8ca127d-ee3d-40d5-9ade-a5b1e46d768c"
+    },
+    {
+      "material_name": "Material_6",
+      "textures": [],
+      "base_color_factor": [
+        0.58,
+        0.59,
+        0.62,
+        1.0
+      ]
+    }
+  ]
+}

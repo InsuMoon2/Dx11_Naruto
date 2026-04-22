@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "dummy_material_0",
+      "textures": []
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Brown",
+      "material_instance_guid": "ae9c0c4b-83db-4da3-bd6d-e216a123419c"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_B",
+      "material_instance_guid": "8e96fc4d-60bf-4d31-9897-f3f466126702"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_Red",
+      "material_instance_guid": "cc0319dc-a256-46ea-8a8d-cf825f0629ac"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Light",
+      "material_instance_guid": "924b5fb1-98e8-49ff-b8f9-47d8b37cea48"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Bright",
+      "material_instance_guid": "eda97172-bf20-468c-b652-51797f248fab"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_Dark",
+      "material_instance_guid": "a269d9a5-3e71-422b-a73f-29c72212d844"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Sign_A",
+      "material_instance_guid": "b47c8e8c-02c7-4016-8c6e-98e1ba47ff73"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Eaves_A",
+      "material_instance_guid": "44afe564-20ab-4868-9abe-602d436deb7a"
+    },
+    {
+      "material_name": "Material_8",
+      "textures": [],
+      "base_color_factor": [
+        0.66,
+        0.64,
+        0.6,
+        1.0
+      ]
+    }
+  ]
+}

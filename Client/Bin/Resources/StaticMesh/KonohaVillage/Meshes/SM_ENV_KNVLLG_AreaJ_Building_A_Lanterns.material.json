@@ -1,0 +1,23 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_Light",
+      "material_instance_guid": "18b8d24d-baca-4a0b-81c2-27a65160532f"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_PaperLantern_A",
+      "material_instance_guid": "7184153f-be03-47c8-bb9f-14c446aa60f9"
+    },
+    {
+      "material_name": "Material_2",
+      "textures": [],
+      "base_color_factor": [
+        0.66,
+        0.64,
+        0.6,
+        1.0
+      ]
+    }
+  ]
+}

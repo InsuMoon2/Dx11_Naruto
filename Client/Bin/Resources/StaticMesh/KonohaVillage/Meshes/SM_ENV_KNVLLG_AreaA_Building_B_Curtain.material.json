@@ -1,0 +1,19 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_Curtain_E",
+      "material_instance_guid": "adf896ad-1c6f-48f8-85b6-555441915327"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": [],
+      "base_color_factor": [
+        0.66,
+        0.64,
+        0.6,
+        1.0
+      ]
+    }
+  ]
+}

@@ -56,6 +56,7 @@ private:
     // 서버에서 로컬 몬스터 제거하게
     void            Remove_LocalMonsters_ForServerMode();
 
+    void            On_WaveStarted(const string& waveTag);
     void            On_WaveCleared(const string& waveTag);
     void            Request_EnterKonoha();
 
@@ -83,6 +84,7 @@ private:
     EGameplaySpawnMode  _spawnMode = EGameplaySpawnMode::END;
     bool                _enterGameSent = false;
 
+    FDelegateHandle _waveStartedHandle = {};
     FDelegateHandle _waveClearedHandle = {};
 
     bool            _konohaTransitionRequested = false;

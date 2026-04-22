@@ -58,6 +58,641 @@ static bool Try_BuildPickingLocalBounds(Shared<Model> model, BoundingBox& outBou
     return true;
 }
 
+// 자동 충돌 생성에서 삼각형 단위로 면을 분석하기 위한 로컬 샘플 데이터다.
+// Walkable / WallRun 후보를 분리하고, 여러 삼각형을 한 장의 프록시로 묶을 때 사용한다.
+struct FCollisionSurfaceSample
+{
+    array<Vec3, 3> vertices = {};
+    Vec3 center = Vec3::Zero;
+    Vec3 normal = Vec3::Up;
+    float area = 0.f;
+};
+
+// 자동 생성된 Walkable 프록시 한 장을 만들기 위해 묶인 상향 면 패치 클러스터다.
+// 서로 가까우면서 노멀 방향이 비슷한 삼각형들을 모아, 메시 형상에 더 가까운 경사 Walkable plane 한 장으로 만든다.
+struct FWalkableSurfaceCluster
+{
+    // 패치에 포함된 로컬 정점들이다. 최종 plane 크기와 중심을 투영해서 구할 때 사용한다.
+    vector<Vec3> vertices;
+    // 클러스터 병합 시 사용하는 로컬 AABB 최소값이다.
+    Vec3 minBound = Vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+    // 클러스터 병합 시 사용하는 로컬 AABB 최대값이다.
+    Vec3 maxBound = Vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+    // 면적 가중 중심 누적값이다. 최종 plane 중심을 안정적으로 구하기 위해 사용한다.
+    Vec3 weightedCenter = Vec3::Zero;
+    // 면적 가중 노멀 누적값이다. 최종 plane 회전을 메시 패치 방향에 맞추기 위해 사용한다.
+    Vec3 weightedNormal = Vec3::Zero;
+    // 누적된 삼각형 총 면적이다.
+    float totalArea = 0.f;
+    // 클러스터에 들어간 삼각형 개수다.
+    uint32 sampleCount = 0;
+};
+
+// 벽타기용 WallRun 프록시 한 장을 만들기 위해 묶인 벽 면 패치 클러스터다.
+// 서로 가까우면서 노멀 방향이 비슷한 벽 삼각형들을 묶어, 대각선/사면도 포함한 plane 패치로 근사한다.
+struct FWallSurfaceCluster
+{
+    // 런타임에서 어떤 충돌 역할로 분류할지 결정하는 타입이다.
+    ECollisionProxyType proxyType = ECollisionProxyType::WallRun;
+    // 수평 노멀 방향을 거칠게 양자화한 bin 인덱스다. 곡면/사선 벽을 너무 잘게 쪼개지 않도록 병합 기준으로 사용한다.
+    int32 normalBin = -1;
+    // 패치에 포함된 로컬 정점들이다. 최종 plane 크기와 중심을 투영해서 구할 때 사용한다.
+    vector<Vec3> vertices;
+    // 클러스터 병합 시 사용하는 로컬 AABB 최소값이다.
+    Vec3 minBound = Vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+    // 클러스터 병합 시 사용하는 로컬 AABB 최대값이다.
+    Vec3 maxBound = Vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+    // 면적 가중 중심 누적값이다. 최종 plane 중심을 안정적으로 구하기 위해 사용한다.
+    Vec3 weightedCenter = Vec3::Zero;
+    // 면적 가중 노멀 누적값이다. 최종 plane 회전을 메시 패치 방향에 맞추기 위해 사용한다.
+    Vec3 weightedNormal = Vec3::Zero;
+    // 누적된 삼각형 총 면적이다.
+    float totalArea = 0.f;
+    // 클러스터에 들어간 삼각형 개수다.
+    uint32 sampleCount = 0;
+};
+
+// 두 구간이 겹치거나 일정 거리 이내로 가까운지 판정한다.
+// 삼각형 클러스터를 하나의 프록시로 합칠지 결정할 때 1차 필터로 호출한다.
+static bool Intervals_OverlapOrClose(
+    float minA,
+    float maxA,
+    float minB,
+    float maxB,
+    float tolerance)
+{
+    if (maxA < minB)
+        return (minB - maxA) <= tolerance;
+
+    if (maxB < minA)
+        return (minA - maxB) <= tolerance;
+
+    return true;
+}
+
+// 클러스터 병합 판단에 사용할 로컬 AABB를 점 하나로 확장한다.
+// 삼각형이 추가될 때마다 호출되어 인접 면 여부를 빠르게 판별할 수 있게 한다.
+static void Expand_ClusterBounds(Vec3& minBound, Vec3& maxBound, const Vec3& point)
+{
+    minBound.x = min(minBound.x, point.x);
+    minBound.y = min(minBound.y, point.y);
+    minBound.z = min(minBound.z, point.z);
+
+    maxBound.x = max(maxBound.x, point.x);
+    maxBound.y = max(maxBound.y, point.y);
+    maxBound.z = max(maxBound.z, point.z);
+}
+
+// 면 노멀을 기준으로 plane 투영에 사용할 접선/종법선 축을 만든다.
+// 거의 수직/수평인 면 모두 안정적으로 U/V 축을 만들기 위해 호출한다.
+static bool Try_BuildPatchBasis(
+    const Vec3& normal,
+    Vec3& outTangent,
+    Vec3& outBitangent)
+{
+    Vec3 safeNormal = normal;
+    if (safeNormal.LengthSquared() <= FLT_EPSILON)
+        return false;
+
+    safeNormal.Normalize();
+
+    const Vec3 upCandidate = fabsf(safeNormal.Dot(Vec3::Up)) > 0.95f
+        ? Vec3::Forward
+        : Vec3::Up;
+
+    outTangent = upCandidate.Cross(safeNormal);
+    if (outTangent.LengthSquared() <= FLT_EPSILON)
+        return false;
+
+    outTangent.Normalize();
+
+    outBitangent = safeNormal.Cross(outTangent);
+    if (outBitangent.LengthSquared() <= FLT_EPSILON)
+        return false;
+
+    outBitangent.Normalize();
+    return true;
+}
+
+// 벽 노멀의 수평 방향을 일정 개수의 각도 bin으로 양자화한다.
+// 곡면 벽이나 사선 벽이 미세한 노멀 차이 때문에 너무 잘게 분리되지 않도록 병합 기준으로 사용한다.
+static bool Try_QuantizeWallNormalBin(
+    const Vec3& normal,
+    int32 binCount,
+    int32& outBin)
+{
+    Vec3 horizontalNormal(normal.x, 0.f, normal.z);
+    if (horizontalNormal.LengthSquared() <= FLT_EPSILON)
+        return false;
+
+    horizontalNormal.Normalize();
+
+    const float angle = atan2f(horizontalNormal.x, horizontalNormal.z);
+    const float wrappedAngle = angle < 0.f ? angle + XM_2PI : angle;
+    const float normalized = wrappedAngle / XM_2PI;
+    outBin = static_cast<int32>(floorf(normalized * static_cast<float>(binCount))) % binCount;
+    return true;
+}
+
+// 모델이 보관 중인 CPU 정점/인덱스를 이용해 로컬 삼각형 샘플 목록을 만든다.
+// 이후 Walkable / WallRun 자동 생성은 이 삼각형 샘플을 기반으로 면 방향과 범위를 분석한다.
+static bool Try_BuildCollisionSurfaceSamples(
+    Shared<Model> model,
+    vector<FCollisionSurfaceSample>& outSamples)
+{
+    outSamples.clear();
+
+    if (!model)
+        return false;
+
+    for (const auto& mesh : model->Get_Meshes())
+    {
+        if (!mesh)
+            continue;
+
+        const auto& positions = mesh->Get_CPUPositions();
+        const auto& indices = mesh->Get_CPUIndices();
+
+        if (positions.empty() || indices.empty())
+            continue;
+
+        for (size_t i = 0; i + 2 < indices.size(); i += 3)
+        {
+            const uint32 i0 = indices[i];
+            const uint32 i1 = indices[i + 1];
+            const uint32 i2 = indices[i + 2];
+
+            if (i0 >= positions.size() || i1 >= positions.size() || i2 >= positions.size())
+                continue;
+
+            const Vec3 v0 = positions[i0];
+            const Vec3 v1 = positions[i1];
+            const Vec3 v2 = positions[i2];
+
+            const Vec3 edge0 = v1 - v0;
+            const Vec3 edge1 = v2 - v0;
+            Vec3 normal = edge0.Cross(edge1);
+            const float normalLength = normal.Length();
+
+            if (normalLength <= FLT_EPSILON)
+                continue;
+
+            normal /= normalLength;
+
+            FCollisionSurfaceSample sample{};
+            sample.vertices = { v0, v1, v2 };
+            sample.center = (v0 + v1 + v2) / 3.f;
+            sample.normal = normal;
+            sample.area = normalLength * 0.5f;
+
+            outSamples.push_back(sample);
+        }
+    }
+
+    return !outSamples.empty();
+}
+
+// Walkable 상향 삼각형 하나를 기존 Walkable 클러스터에 흡수한다.
+// 정점/AABB/평균 중심/평균 노멀을 함께 누적해 경사면까지 자연스럽게 plane 패치로 만들 수 있게 한다.
+static void Expand_WalkableCluster(
+    FWalkableSurfaceCluster& cluster,
+    const FCollisionSurfaceSample& sample)
+{
+    for (const Vec3& vertex : sample.vertices)
+    {
+        cluster.vertices.push_back(vertex);
+        Expand_ClusterBounds(cluster.minBound, cluster.maxBound, vertex);
+    }
+
+    cluster.weightedCenter += sample.center * sample.area;
+    cluster.weightedNormal += sample.normal * sample.area;
+    cluster.totalArea += sample.area;
+    ++cluster.sampleCount;
+}
+
+// 상향 삼각형 하나가 기존 Walkable 클러스터에 붙을 수 있는지 판단한다.
+// 높이 차이와 XZ 인접성을 같이 봐서 떨어진 지붕이나 다른 건물끼리 섞이지 않도록 한다.
+static bool Can_MergeWalkableSample(
+    const FWalkableSurfaceCluster& cluster,
+    const FCollisionSurfaceSample& sample,
+    float normalDotThreshold,
+    float planeDistanceTolerance,
+    float adjacencyTolerance)
+{
+    Vec3 clusterNormal = cluster.weightedNormal;
+    if (clusterNormal.LengthSquared() <= FLT_EPSILON)
+        clusterNormal = sample.normal;
+    else
+        clusterNormal.Normalize();
+
+    if (clusterNormal.Dot(sample.normal) < normalDotThreshold)
+        return false;
+
+    const Vec3 clusterCenter = cluster.totalArea > FLT_EPSILON
+        ? cluster.weightedCenter / cluster.totalArea
+        : sample.center;
+
+    const float planeDistance = fabsf((sample.center - clusterCenter).Dot(clusterNormal));
+    if (planeDistance > planeDistanceTolerance)
+        return false;
+
+    Vec3 sampleMin = Vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+    Vec3 sampleMax = Vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
+    for (const Vec3& vertex : sample.vertices)
+    {
+        Expand_ClusterBounds(sampleMin, sampleMax, vertex);
+    }
+
+    return
+        Intervals_OverlapOrClose(cluster.minBound.x, cluster.maxBound.x, sampleMin.x, sampleMax.x, adjacencyTolerance) &&
+        Intervals_OverlapOrClose(cluster.minBound.y, cluster.maxBound.y, sampleMin.y, sampleMax.y, adjacencyTolerance) &&
+        Intervals_OverlapOrClose(cluster.minBound.z, cluster.maxBound.z, sampleMin.z, sampleMax.z, adjacencyTolerance);
+}
+
+// 상향 삼각형들을 지붕/발판 단위로 묶어서 Walkable 클러스터 목록을 만든다.
+// 이후 각 클러스터는 하나의 Walkable plane 프록시로 변환된다.
+static void Build_WalkableSurfaceClusters(
+    const vector<FCollisionSurfaceSample>& samples,
+    const BoundingBox& localBounds,
+    vector<FWalkableSurfaceCluster>& outClusters)
+{
+    outClusters.clear();
+
+    const float localWidth = max(localBounds.Extents.x * 2.f, 0.f);
+    const float localHeight = max(localBounds.Extents.y * 2.f, 0.f);
+    const float localDepth = max(localBounds.Extents.z * 2.f, 0.f);
+
+    const float minUpDot = 0.42f;
+    const float normalDotThreshold = 0.94f;
+    const float planeDistanceTolerance = max(localHeight * 0.08f, 0.18f);
+    const float adjacencyTolerance = max(min(localWidth, localDepth) * 0.05f, 0.22f);
+
+    for (const auto& sample : samples)
+    {
+        if (sample.normal.y < minUpDot)
+            continue;
+
+        bool merged = false;
+
+        for (auto& cluster : outClusters)
+        {
+            if (!Can_MergeWalkableSample(
+                cluster,
+                sample,
+                normalDotThreshold,
+                planeDistanceTolerance,
+                adjacencyTolerance))
+            {
+                continue;
+            }
+
+            Expand_WalkableCluster(cluster, sample);
+            merged = true;
+            break;
+        }
+
+        if (!merged)
+        {
+            FWalkableSurfaceCluster newCluster{};
+            Expand_WalkableCluster(newCluster, sample);
+            outClusters.push_back(newCluster);
+        }
+    }
+}
+
+// 삼각형 하나가 벽 패치 후보인지 판정한다.
+// 완전 바닥/천장 면은 제외하고, 수직 벽부터 기울어진 사면까지 WallRun 패치 후보로 남긴다.
+static bool Is_WallCandidateSample(const FCollisionSurfaceSample& sample)
+{
+    const float minWallSteepness = 0.08f;
+    const float maxWallUpDot = 0.72f;
+    const float absUpDot = fabsf(sample.normal.y);
+    return absUpDot >= minWallSteepness && absUpDot <= maxWallUpDot;
+}
+
+// 벽 삼각형 하나를 기존 Wall 클러스터에 흡수한다.
+// 정점/AABB/평균 중심/평균 노멀을 함께 누적해 경사면까지 자연스럽게 plane 패치로 만들 수 있게 한다.
+static void Expand_WallCluster(
+    FWallSurfaceCluster& cluster,
+    const FCollisionSurfaceSample& sample)
+{
+    for (const Vec3& vertex : sample.vertices)
+    {
+        cluster.vertices.push_back(vertex);
+        Expand_ClusterBounds(cluster.minBound, cluster.maxBound, vertex);
+    }
+
+    cluster.weightedCenter += sample.center * sample.area;
+    cluster.weightedNormal += sample.normal * sample.area;
+    cluster.totalArea += sample.area;
+    ++cluster.sampleCount;
+}
+
+// 벽 삼각형 하나가 기존 Wall 클러스터에 붙을 수 있는지 판단한다.
+// 노멀 방향, 같은 평면에 가까운지, 3축 AABB 인접성을 함께 봐서 근처 폴리곤 패치처럼 묶는다.
+static bool Can_MergeWallSample(
+    const FWallSurfaceCluster& cluster,
+    const FCollisionSurfaceSample& sample,
+    int32 sampleNormalBin,
+    float normalDotThreshold,
+    float planeDistanceTolerance,
+    float adjacencyTolerance)
+{
+    if (cluster.normalBin != sampleNormalBin)
+        return false;
+
+    Vec3 clusterNormal = cluster.weightedNormal;
+    if (clusterNormal.LengthSquared() <= FLT_EPSILON)
+        clusterNormal = sample.normal;
+    else
+        clusterNormal.Normalize();
+
+    if (clusterNormal.Dot(sample.normal) < normalDotThreshold)
+        return false;
+
+    const Vec3 clusterCenter = cluster.totalArea > FLT_EPSILON
+        ? cluster.weightedCenter / cluster.totalArea
+        : sample.center;
+
+    const float planeDistance = fabsf((sample.center - clusterCenter).Dot(clusterNormal));
+    if (planeDistance > planeDistanceTolerance)
+        return false;
+
+    Vec3 sampleMin = Vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+    Vec3 sampleMax = Vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
+    for (const Vec3& vertex : sample.vertices)
+    {
+        Expand_ClusterBounds(sampleMin, sampleMax, vertex);
+    }
+
+    return
+        Intervals_OverlapOrClose(cluster.minBound.x, cluster.maxBound.x, sampleMin.x, sampleMax.x, adjacencyTolerance) &&
+        Intervals_OverlapOrClose(cluster.minBound.y, cluster.maxBound.y, sampleMin.y, sampleMax.y, adjacencyTolerance) &&
+        Intervals_OverlapOrClose(cluster.minBound.z, cluster.maxBound.z, sampleMin.z, sampleMax.z, adjacencyTolerance);
+}
+
+// 벽 후보 삼각형들을 근처 + 노멀 유사도 기준으로 묶어서 WallRun 패치 클러스터 목록을 만든다.
+// 이후 각 클러스터는 메시 형상에 가까운 기울어진 plane 프록시 한 장으로 변환된다.
+static void Build_WallSurfaceClusters(
+    const vector<FCollisionSurfaceSample>& samples,
+    const BoundingBox& localBounds,
+    vector<FWallSurfaceCluster>& outClusters)
+{
+    outClusters.clear();
+
+    const float localWidth = max(localBounds.Extents.x * 2.f, 0.f);
+    const float localHeight = max(localBounds.Extents.y * 2.f, 0.f);
+    const float localDepth = max(localBounds.Extents.z * 2.f, 0.f);
+
+    const int32 wallNormalBinCount = 12;
+    const float normalDotThreshold = 0.88f;
+    const float planeDistanceTolerance = max(max(localWidth, localDepth) * 0.09f, 0.28f);
+    const float adjacencyTolerance = max(max(localWidth, max(localHeight, localDepth)) * 0.06f, 0.36f);
+
+    for (const auto& sample : samples)
+    {
+        if (!Is_WallCandidateSample(sample))
+            continue;
+
+        int32 sampleNormalBin = -1;
+        if (!Try_QuantizeWallNormalBin(sample.normal, wallNormalBinCount, sampleNormalBin))
+            continue;
+
+        bool merged = false;
+
+        for (auto& cluster : outClusters)
+        {
+            if (!Can_MergeWallSample(
+                cluster,
+                sample,
+                sampleNormalBin,
+                normalDotThreshold,
+                planeDistanceTolerance,
+                adjacencyTolerance))
+            {
+                continue;
+            }
+
+            Expand_WallCluster(cluster, sample);
+            merged = true;
+            break;
+        }
+
+        if (!merged)
+        {
+            FWallSurfaceCluster newCluster{};
+            newCluster.normalBin = sampleNormalBin;
+            Expand_WallCluster(newCluster, sample);
+            outClusters.push_back(newCluster);
+        }
+    }
+}
+
+// 패치 클러스터 정점과 평균 노멀을 이용해 plane 프록시의 월드 중심/회전/스케일을 만든다.
+// 단순 AABB가 아니라 실제 패치 방향으로 투영해서 크기를 계산하므로 대각선 지붕/벽도 더 자연스럽게 근사한다.
+static bool Try_BuildPlaneProxyDescFromVertices(
+    const vector<Vec3>& localVertices,
+    const Vec3& averagedLocalNormal,
+    const Matrix& sourceWorldMatrix,
+    float planeWidth,
+    float planeDepth,
+    float normalOffset,
+    float minProjectedWidth,
+    float minProjectedHeight,
+    Vec3& outWorldCenter,
+    Vec3& outProxyScale,
+    Quat& outWorldRotation)
+{
+    if (localVertices.empty())
+        return false;
+
+    Vec3 worldNormal = Vec3::TransformNormal(averagedLocalNormal, sourceWorldMatrix);
+    if (worldNormal.LengthSquared() <= FLT_EPSILON)
+        return false;
+    worldNormal.Normalize();
+
+    Vec3 tangent = Vec3::Zero;
+    Vec3 bitangent = Vec3::Zero;
+    if (!Try_BuildPatchBasis(worldNormal, tangent, bitangent))
+        return false;
+
+    Vec3 worldCentroid = Vec3::Zero;
+    vector<Vec3> worldVertices;
+    worldVertices.reserve(localVertices.size());
+
+    for (const Vec3& localVertex : localVertices)
+    {
+        const Vec3 worldVertex = Vec3::Transform(localVertex, sourceWorldMatrix);
+        worldVertices.push_back(worldVertex);
+        worldCentroid += worldVertex;
+    }
+
+    worldCentroid /= static_cast<float>(worldVertices.size());
+
+    float minU = FLT_MAX;
+    float maxU = -FLT_MAX;
+    float minV = FLT_MAX;
+    float maxV = -FLT_MAX;
+
+    for (const Vec3& worldVertex : worldVertices)
+    {
+        const Vec3 relative = worldVertex - worldCentroid;
+        const float u = relative.Dot(tangent);
+        const float v = relative.Dot(bitangent);
+
+        minU = min(minU, u);
+        maxU = max(maxU, u);
+        minV = min(minV, v);
+        maxV = max(maxV, v);
+    }
+
+    const float projectedWidth = max(maxU - minU, 0.f);
+    const float projectedHeight = max(maxV - minV, 0.f);
+
+    if (projectedWidth < minProjectedWidth || projectedHeight < minProjectedHeight)
+        return false;
+
+    const float centerU = (minU + maxU) * 0.5f;
+    const float centerV = (minV + maxV) * 0.5f;
+
+    outWorldCenter =
+        worldCentroid +
+        tangent * centerU +
+        bitangent * centerV +
+        worldNormal * normalOffset;
+
+    outProxyScale = Vec3(
+        projectedWidth / planeWidth,
+        1.f,
+        projectedHeight / planeDepth);
+
+    outWorldRotation = Quat::FromToRotation(Vec3::Up, worldNormal);
+    return true;
+}
+
+// Walkable 클러스터를 실제 plane 프록시의 월드 중심/회전/스케일로 변환한다.
+// 수평 plane 강제 대신 패치 평균 노멀을 따라가므로 경사진 지붕도 자동 Walkable로 근사할 수 있다.
+static bool Try_BuildWalkableProxyDescFromCluster(
+    const FWalkableSurfaceCluster& cluster,
+    const Matrix& sourceWorldMatrix,
+    float planeWidth,
+    float planeDepth,
+    float roofOffset,
+    Vec3& outWorldCenter,
+    Vec3& outProxyScale,
+    Quat& outWorldRotation)
+{
+    const float walkableShrinkRatio = 0.92f;
+    const Vec3 averagedNormal = cluster.totalArea > FLT_EPSILON
+        ? cluster.weightedNormal / cluster.totalArea
+        : Vec3::Up;
+
+    if (!Try_BuildPlaneProxyDescFromVertices(
+        cluster.vertices,
+        averagedNormal,
+        sourceWorldMatrix,
+        planeWidth,
+        planeDepth,
+        roofOffset,
+        0.5f,
+        0.5f,
+        outWorldCenter,
+        outProxyScale,
+        outWorldRotation))
+    {
+        return false;
+    }
+
+    outProxyScale.x *= walkableShrinkRatio;
+    outProxyScale.z *= walkableShrinkRatio;
+    return true;
+}
+
+// Wall 클러스터를 실제 plane 프록시의 월드 중심/회전/스케일로 변환한다.
+// 전/후/좌/우 축 고정 대신 패치 평균 노멀을 따라가므로 대각선 벽/사면도 더 자연스럽게 근사할 수 있다.
+static bool Try_BuildWallProxyDescFromCluster(
+    const FWallSurfaceCluster& cluster,
+    const Matrix& sourceWorldMatrix,
+    float planeWidth,
+    float planeDepth,
+    float outwardOffset,
+    Vec3& outWorldCenter,
+    Vec3& outProxyScale,
+    Quat& outWorldRotation)
+{
+    const float wallShrinkRatio = 0.96f;
+    const Vec3 averagedNormal = cluster.totalArea > FLT_EPSILON
+        ? cluster.weightedNormal / cluster.totalArea
+        : Vec3::Forward;
+
+    if (cluster.totalArea < 3.f)
+        return false;
+
+    if (!Try_BuildPlaneProxyDescFromVertices(
+        cluster.vertices,
+        averagedNormal,
+        sourceWorldMatrix,
+        planeWidth,
+        planeDepth,
+        outwardOffset,
+        1.2f,
+        1.8f,
+        outWorldCenter,
+        outProxyScale,
+        outWorldRotation))
+    {
+        return false;
+    }
+
+    outProxyScale.x *= wallShrinkRatio;
+    outProxyScale.z *= wallShrinkRatio;
+    return true;
+}
+
+// 동일 메쉬에 대해 충돌체 만들기를 다시 눌렀을 때, 예전 넓은 프록시가 남지 않도록 기존 자동 생성 프록시를 먼저 정리한다.
+// 이름 규칙이 고정되어 있으므로, baseName + suffix 조합으로 찾아서 삭제 이벤트를 발행한다.
+static void Delete_ExistingCollisionProxySet(const wstring& baseName)
+{
+    static const array<wstring, 5> legacySuffixes = {
+        L"_WallFrontProxy",
+        L"_WallBackProxy",
+        L"_WallLeftProxy",
+        L"_WallRightProxy",
+        L"_WalkableProxy"
+    };
+
+    const auto objects = GAME->Get_GameObjects(GAME->Current_Level());
+    for (const auto& obj : objects)
+    {
+        auto proxyActor = dynamic_pointer_cast<CollisionProxyActor>(obj);
+        if (!proxyActor)
+            continue;
+
+        const wstring& objectName = proxyActor->Get_Name();
+        bool shouldDelete = false;
+
+        for (const auto& suffix : legacySuffixes)
+        {
+            if (objectName == baseName + suffix)
+            {
+                shouldDelete = true;
+                break;
+            }
+        }
+
+        if (!shouldDelete)
+        {
+            const wstring autoPrefix = baseName + L"_Auto";
+            shouldDelete = objectName.rfind(autoPrefix, 0) == 0;
+        }
+
+        if (shouldDelete)
+            EVENT->Publish(FEvent_Object::Create(EEventType::Delete_Object, obj));
+    }
+}
+
 static wstring Get_CollisionUnitPlanePath()
 {
     return fs::absolute(
@@ -504,51 +1139,40 @@ void Scene_View::Create_CollisionProxySetFromStaticMesh(Shared<GameObject> sourc
         return;
     }
 
-    const Vec3 localMin = Vec3(localBounds.Center.x, localBounds.Center.y, localBounds.Center.z)
-                    - Vec3(localBounds.Extents.x, localBounds.Extents.y, localBounds.Extents.z);
-
-    const Vec3 localMax = Vec3(localBounds.Center.x, localBounds.Center.y, localBounds.Center.z)
-                    + Vec3(localBounds.Extents.x, localBounds.Extents.y, localBounds.Extents.z);
-
-    const Vec3 localCenter = localBounds.Center;
-
-    const Vec3 sourceWorldScaleRaw = sourceTransform->Get_WorldScale();
-    const Vec3 sourceWorldScale(
-        max(fabsf(sourceWorldScaleRaw.x), 0.0001f),
-        max(fabsf(sourceWorldScaleRaw.y), 0.0001f),
-        max(fabsf(sourceWorldScaleRaw.z), 0.0001f));
-
-    const float width = max((localMax.x - localMin.x) * sourceWorldScale.x, 0.f);
-    const float height = max((localMax.y - localMin.y) * sourceWorldScale.y, 0.f);
-    const float depth = max((localMax.z - localMin.z) * sourceWorldScale.z, 0.f);
-
     const float outwardOffset = 0.05f;
     const float roofOffset = 0.03f;
-    const float minWallWidth = 0.5f;
-    const float minWallHeight = 1.0f;
-    const float minRoofSize = 0.5f;
 
     const Matrix sourceWorldMatrix = sourceTransform->Get_WorldMatrix();
-    const Quat sourceWorldRotation = sourceTransform->Get_WorldRotation();
     const wstring baseName = staticMesh->Get_Name();
+
+    vector<FCollisionSurfaceSample> surfaceSamples;
+    if (!Try_BuildCollisionSurfaceSamples(sourceModel, surfaceSamples))
+    {
+        LOG_ERROR(
+            "Create_CollisionProxySetFromStaticMesh: surface sample build failed for '{}'",
+            Utils::ToString(staticMesh->Get_Name()));
+        NOTIFY("Collision Proxy Surface Failed");
+        return;
+    }
+
+    vector<FWalkableSurfaceCluster> walkableClusters;
+    Build_WalkableSurfaceClusters(surfaceSamples, localBounds, walkableClusters);
+
+    vector<FWallSurfaceCluster> wallClusters;
+    Build_WallSurfaceClusters(surfaceSamples, localBounds, wallClusters);
+
+    Delete_ExistingCollisionProxySet(baseName);
 
     int32 createdCount = 0;
     int32 skippedCount = 0;
 
-    auto createFaceProxy =
+    auto createPlaneProxy =
         [&](const wstring& proxyName,
             ECollisionProxyType proxyType,
-            const Vec3& localFaceCenter,
-            const Quat& localFaceRotation,
-            const Vec3& proxyScale,
-            bool shouldCreate)
+            const Vec3& worldCenter,
+            const Quat& worldRotation,
+            const Vec3& proxyScale)
         {
-            if (!shouldCreate)
-            {
-                ++skippedCount;
-                return;
-            }
-
             CollisionProxyActor::FCollisionProxyDesc desc{};
             desc.name = proxyName;
             desc.modelGuid = unitPlaneGuid;
@@ -568,60 +1192,77 @@ void Scene_View::Create_CollisionProxySetFromStaticMesh(Shared<GameObject> sourc
                 return;
             }
 
-            const Vec3 worldPos = Vec3::Transform(localFaceCenter, sourceWorldMatrix);
-            const Quat worldRot = sourceWorldRotation * localFaceRotation;
-
-            proxyTransform->Set_WorldPosition(worldPos);
-            proxyTransform->Set_WorldRotation(worldRot);
+            proxyTransform->Set_WorldPosition(worldCenter);
+            proxyTransform->Set_WorldRotation(worldRotation);
             proxyTransform->Set_LocalScale(proxyScale);
 
             GAME->Add_GameObject(GAME->Current_Level(), TEXT("Layer_CollisionProxy"), proxyObj);
             ++createdCount;
         };
 
-    createFaceProxy(
-        baseName + L"_WallFrontProxy",
-        ECollisionProxyType::WallRun,
-        Vec3(localCenter.x, localCenter.y, localMax.z + outwardOffset),
-        Quat::CreateFromYawPitchRoll(XMConvertToRadians(0.f), XMConvertToRadians(90.f), XMConvertToRadians(0.f)),
-        Vec3(width / planeBaseSize.x, 1.f, height / planeBaseSize.y),
-        width >= minWallWidth && height >= minWallHeight);
+    int32 walkableProxyIndex = 0;
+    for (const auto& walkableCluster : walkableClusters)
+    {
+        Vec3 worldCenter = Vec3::Zero;
+        Vec3 proxyScale(1.f, 1.f, 1.f);
+        Quat worldRotation = Quat::Identity;
 
-    createFaceProxy(
-        baseName + L"_WallBackProxy",
-        ECollisionProxyType::WallRun,
-        Vec3(localCenter.x, localCenter.y, localMin.z - outwardOffset),
-        Quat::CreateFromYawPitchRoll(XMConvertToRadians(180.f), XMConvertToRadians(90.f), XMConvertToRadians(0.f)),
-        Vec3(width / planeBaseSize.x, 1.f, height / planeBaseSize.y),
-        width >= minWallWidth && height >= minWallHeight);
+        if (!Try_BuildWalkableProxyDescFromCluster(
+            walkableCluster,
+            sourceWorldMatrix,
+            planeBaseSize.x,
+            planeBaseSize.y,
+            roofOffset,
+            worldCenter,
+            proxyScale,
+            worldRotation))
+        {
+            ++skippedCount;
+            continue;
+        }
 
-    createFaceProxy(
-        baseName + L"_WallLeftProxy",
-        ECollisionProxyType::WallRun,
-        Vec3(localMin.x - outwardOffset, localCenter.y, localCenter.z),
-        Quat::CreateFromYawPitchRoll(XMConvertToRadians(-90.f), XMConvertToRadians(90.f), XMConvertToRadians(0.f)),
-        Vec3(depth / planeBaseSize.x, 1.f, height / planeBaseSize.y),
-        depth >= minWallWidth && height >= minWallHeight);
+        createPlaneProxy(
+            baseName + L"_AutoWalkableProxy_" + std::to_wstring(walkableProxyIndex++),
+            ECollisionProxyType::Walkable,
+            worldCenter,
+            worldRotation,
+            proxyScale);
+    }
 
-    createFaceProxy(
-        baseName + L"_WallRightProxy",
-        ECollisionProxyType::WallRun,
-        Vec3(localMax.x + outwardOffset, localCenter.y, localCenter.z),
-        Quat::CreateFromYawPitchRoll(XMConvertToRadians(90.f), XMConvertToRadians(90.f), XMConvertToRadians(0.f)),
-        Vec3(depth / planeBaseSize.x, 1.f, height / planeBaseSize.y),
-        depth >= minWallWidth && height >= minWallHeight);
+    int32 wallProxyIndex = 0;
+    for (const auto& wallCluster : wallClusters)
+    {
+        Vec3 worldCenter = Vec3::Zero;
+        Vec3 proxyScale(1.f, 1.f, 1.f);
+        Quat worldRotation = Quat::Identity;
 
-    createFaceProxy(
-        baseName + L"_WalkableProxy",
-        ECollisionProxyType::Walkable,
-        Vec3(localCenter.x, localMax.y + roofOffset, localCenter.z),
-        Quat::Identity,
-        Vec3(width / planeBaseSize.x, 1.f, depth / planeBaseSize.y),
-        width >= minRoofSize && depth >= minRoofSize);
+        if (!Try_BuildWallProxyDescFromCluster(
+            wallCluster,
+            sourceWorldMatrix,
+            planeBaseSize.x,
+            planeBaseSize.y,
+            outwardOffset,
+            worldCenter,
+            proxyScale,
+            worldRotation))
+        {
+            ++skippedCount;
+            continue;
+        }
+
+        createPlaneProxy(
+            baseName + L"_AutoWallProxy_" + std::to_wstring(wallProxyIndex++),
+            ECollisionProxyType::WallRun,
+            worldCenter,
+            worldRotation,
+            proxyScale);
+    }
 
     LOG_INFO(
-        "Collision proxy set created: actor='{}', created={}, skipped={}",
+        "Collision proxy set created: actor='{}', walkableClusters={}, wallClusters={}, created={}, skipped={}",
         Utils::ToString(baseName),
+        static_cast<int32>(walkableClusters.size()),
+        static_cast<int32>(wallClusters.size()),
         createdCount,
         skippedCount);
 

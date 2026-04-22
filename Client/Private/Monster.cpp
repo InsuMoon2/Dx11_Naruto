@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Monster.h"
-
+#include "Bounding_OBB.h"
 #include "CombatStat.h"
 #include "MovementComponent.h"
 #include "AIController.h"
@@ -95,10 +95,14 @@ HRESULT Monster::Ready_Components()
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_VTXANIMMESH, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_MODEL_MONSTER, _model), E_FAIL);
 
-    Bounding_Sphere::FBoundingSphereDesc sphereDesc{};
-    sphereDesc.radius = 1.5f;
+    //Bounding_Sphere::FBoundingSphereDesc sphereDesc{};
+    //sphereDesc.radius = 1.5f;
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_SPHERE, _collider, &sphereDesc), E_FAIL);
+    Bounding_OBB::FBoundingOBBDesc obbDesc{};
+    obbDesc.center = Vec3(0.f, 0.7f, 0.f);
+    obbDesc.extents = Vec3(0.5f, 0.6f, 0.5f);
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_OBB, _collider, &obbDesc), E_FAIL);
     _collider->Set_CollisionPreset(Collision_Preset::Monster_Body);
 
     return S_OK;

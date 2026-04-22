@@ -1,13 +1,15 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG_Aircon_J",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_1",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

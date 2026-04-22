@@ -241,9 +241,11 @@
     <ClInclude Include="..\Public\ANS_SwordTrail.h" />
     <ClInclude Include="..\Public\ANS_Test.h" />
     <ClInclude Include="..\Public\ANS_Trail.h" />
+    <ClInclude Include="..\Public\AN_CameraShake.h" />
     <ClInclude Include="..\Public\AN_ChangeState.h" />
     <ClInclude Include="..\Public\AN_BodyCollisionPreset_Change.h" />
     <ClInclude Include="..\Public\AN_ClearMeleeSkill.h" />
+    <ClInclude Include="..\Public\AN_ChangePlayerState.h" />
     <ClInclude Include="..\Public\AN_EquipMeleeSkill.h" />
     <ClInclude Include="..\Public\AN_Gravity.h" />
     <ClInclude Include="..\Public\AN_LaunchSkill.h" />
@@ -264,10 +266,12 @@
     <ClInclude Include="..\Public\Boss_Pain.h" />
     <ClInclude Include="..\Public\BTTask_Attack.h" />
     <ClInclude Include="..\Public\BTTask_DodgeAndWait.h" />
+    <ClInclude Include="..\Public\BTTask_JumpToTarget.h" />
     <ClInclude Include="..\Public\BTTask_RetreatAndWait.h" />
     <ClInclude Include="..\Public\BTTask_FindClosestTarget.h" />
     <ClInclude Include="..\Public\BTTask_Hit.h" />
     <ClInclude Include="..\Public\BTTask_PlayStateAndWait.h" />
+    <ClInclude Include="..\Public\BTTask_SelectAttackType.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
     <ClInclude Include="..\Public\Camera_Target.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
@@ -301,6 +305,7 @@
     <ClInclude Include="..\Public\PlayerController.h" />
     <ClInclude Include="..\Public\PlayerStateMachine.h" />
     <ClInclude Include="..\Public\PlayerState_AirApproach.h" />
+    <ClInclude Include="..\Public\PlayerState_Airbone.h" />
     <ClInclude Include="..\Public\PlayerState_Attack.h" />
     <ClInclude Include="..\Public\PlayerState_Dash.h" />
     <ClInclude Include="..\Public\PlayerState_DoubleJump.h" />
@@ -360,6 +365,7 @@
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Trail_Component.h" />
     <ClInclude Include="..\Public\UI_AnnounceCombo.h" />
+    <ClInclude Include="..\Public\UI_BossHp.h" />
     <ClInclude Include="..\Public\UI_LoadingProgressBar.h" />
     <ClInclude Include="..\Public\UI_LoadingSpinner.h" />
     <ClInclude Include="..\Public\UI_MainTitleMenuButton.h" />
@@ -417,9 +423,11 @@
     <ClCompile Include="..\Private\ANS_SwordTrail.cpp" />
     <ClCompile Include="..\Private\ANS_Test.cpp" />
     <ClCompile Include="..\Private\ANS_Trail.cpp" />
+    <ClCompile Include="..\Private\AN_CameraShake.cpp" />
     <ClCompile Include="..\Private\AN_ChangeState.cpp" />
     <ClCompile Include="..\Private\AN_BodyCollisionPreset_Change.cpp" />
     <ClCompile Include="..\Private\AN_ClearMeleeSkill.cpp" />
+    <ClCompile Include="..\Private\AN_ChangePlayerState.cpp" />
     <ClCompile Include="..\Private\AN_EquipMeleeSkill.cpp" />
     <ClCompile Include="..\Private\AN_Gravity.cpp" />
     <ClCompile Include="..\Private\AN_LaunchSkill.cpp" />
@@ -440,10 +448,12 @@
     <ClCompile Include="..\Private\Boss_Pain.cpp" />
     <ClCompile Include="..\Private\BTTask_Attack.cpp" />
     <ClCompile Include="..\Private\BTTask_DodgeAndWait.cpp" />
+    <ClCompile Include="..\Private\BTTask_JumpToTarget.cpp" />
     <ClCompile Include="..\Private\BTTask_RetreatAndWait.cpp" />
     <ClCompile Include="..\Private\BTTask_FindClosestTarget.cpp" />
     <ClCompile Include="..\Private\BTTask_Hit.cpp" />
     <ClCompile Include="..\Private\BTTask_PlayStateAndWait.cpp" />
+    <ClCompile Include="..\Private\BTTask_SelectAttackType.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Target.cpp" />
     <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
@@ -471,6 +481,7 @@
     <ClCompile Include="..\Private\PlayerController.cpp" />
     <ClCompile Include="..\Private\PlayerStateMachine.cpp" />
     <ClCompile Include="..\Private\PlayerState_AirApproach.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Airbone.cpp" />
     <ClCompile Include="..\Private\PlayerState_Attack.cpp" />
     <ClCompile Include="..\Private\PlayerState_Dash.cpp" />
     <ClCompile Include="..\Private\PlayerState_DoubleJump.cpp" />
@@ -529,6 +540,7 @@
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Trail_Component.cpp" />
     <ClCompile Include="..\Private\UI_AnnounceCombo.cpp" />
+    <ClCompile Include="..\Private\UI_BossHp.cpp" />
     <ClCompile Include="..\Private\UI_LoadingProgressBar.cpp" />
     <ClCompile Include="..\Private\UI_LoadingSpinner.cpp" />
     <ClCompile Include="..\Private\UI_MainTitleMenuButton.cpp" />

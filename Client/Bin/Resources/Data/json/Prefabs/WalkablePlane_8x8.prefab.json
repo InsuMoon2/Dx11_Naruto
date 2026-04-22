@@ -1,0 +1,31 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                8.0,
+                1.0,
+                8.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        }
+    ],
+    "custom_properties": {
+        "enabled": true,
+        "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+        "proxy_type": "Walkable"
+    },
+    "guid": "d205450b-f52b-49e8-bcb0-16e57f0e77d8",
+    "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+    "prefab_name": "WalkablePlane_8x8",
+    "static_class": "CollisionProxyActor"
+}

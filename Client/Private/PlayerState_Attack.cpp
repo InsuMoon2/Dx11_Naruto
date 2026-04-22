@@ -15,7 +15,6 @@
 
 PlayerState_Attack::PlayerState_Attack()
 {
-    
 }
 
 void PlayerState_Attack::Enter(PlayerStateMachine* state)
@@ -31,13 +30,11 @@ void PlayerState_Attack::Enter(PlayerStateMachine* state)
     if (!input || !movement || !owner)
         return;
 
-    input->Set_InputMode(EPlayerInputMode::Normal);  
+    input->Set_InputMode(EPlayerInputMode::Normal);
     movement->Set_OrientRotationToMovement(false);
 
-    // 무기타입 + 공중 여부로 프로파일 선택되게
     Select_Profile(state);
 
-    // 노티파이에서 세팅
     _comboWindowOpen = false;
     _hasBufferedAttack = false;
 
@@ -46,8 +43,6 @@ void PlayerState_Attack::Enter(PlayerStateMachine* state)
 
 void PlayerState_Attack::Update(PlayerStateMachine* state, float timeDelta)
 {
-    EAnimPhase phase = state->Get_AnimPhase();
-
     auto input = state->Get_Input();
     CHECK_NULL(input);
 
@@ -58,8 +53,7 @@ void PlayerState_Attack::Update(PlayerStateMachine* state, float timeDelta)
                 && _comboIndex < _activeProfile->maxCombo - 1)
         {
             Advance_Combo();
-
-            return; 
+            return;
         }
     }
 
@@ -68,7 +62,6 @@ void PlayerState_Attack::Update(PlayerStateMachine* state, float timeDelta)
         Reset_Combo();
         state->Change_State(EPlayerState::Idle);
     }
-
 }
 
 void PlayerState_Attack::Exit(PlayerStateMachine* state)
@@ -82,10 +75,15 @@ void PlayerState_Attack::Exit(PlayerStateMachine* state)
     }
 
     auto input = state->Get_Input();
-    input->Set_InputMode(EPlayerInputMode::Normal);
+    if (input)
+        input->Set_InputMode(EPlayerInputMode::Normal);
 
     _cachedStateMachine = nullptr;
     _comboIndex = 0;
+    _comboWindowOpen = false;
+    _hasBufferedAttack = false;
+    _activeProfile = nullptr;
+    _activeProfileType = EAttackProfileType::Hand_Ground;
 
     auto owner = state->Get_Owner();
     if (owner)
@@ -97,7 +95,7 @@ void PlayerState_Attack::Exit(PlayerStateMachine* state)
             if (weapon)
                 weapon->Set_ColliderActive(false);
         }
-        
+
         auto myPlayer = dynamic_pointer_cast<MyPlayer>(owner);
         if (myPlayer)
         {
@@ -127,17 +125,12 @@ void PlayerState_Attack::Close_ComboWindow()
         return;
 
     _comboWindowOpen = false;
-
-    Reset_Combo();
-
-    if (_cachedStateMachine)
-        _cachedStateMachine->Change_State(EPlayerState::Idle);
+    _hasBufferedAttack = false;
 }
 
 void PlayerState_Attack::Buffer_AttackInput()
 {
-    //if (_comboWindowOpen)
-        _hasBufferedAttack = true;
+    _hasBufferedAttack = true;
 }
 
 void PlayerState_Attack::Reset_Combo()
@@ -147,7 +140,6 @@ void PlayerState_Attack::Reset_Combo()
     _hasBufferedAttack = false;
     _activeProfile = nullptr;
     _activeProfileType = EAttackProfileType::Hand_Ground;
-
 }
 
 void PlayerState_Attack::Advance_Combo()
@@ -176,7 +168,6 @@ const FComboEntry* PlayerState_Attack::Get_CurrentComboEntry() const
 
 void PlayerState_Attack::Select_Profile(PlayerStateMachine* state)
 {
-    // EquipmentComponent에서 무기타입 가져오기
     auto owner = state->Get_Owner();
     CHECK_NULL(owner);
 
@@ -185,7 +176,7 @@ void PlayerState_Attack::Select_Profile(PlayerStateMachine* state)
     bool isAerial = false;
     auto movement = state->Get_Movement();
     if (movement)
-        isAerial = !movement->Is_OnGround(); // 공중
+        isAerial = !movement->Is_OnGround();
 
     if (state->Is_ForceGroundAttack())
     {
@@ -193,20 +184,17 @@ void PlayerState_Attack::Select_Profile(PlayerStateMachine* state)
         state->Set_ForceGroundAttack(false);
     }
 
-    // 프로파일 타입 결정
     if (equipment)
     {
         _activeProfileType = equipment->Find_AttackProfileType(isAerial);
     }
     else
     {
-        // equipment Component가 없으면 격투 지상
         _activeProfileType = isAerial
             ? EAttackProfileType::Hand_Aerial
             : EAttackProfileType::Hand_Ground;
     }
 
-    // 프로파일 조회
     _activeProfile = GET_SINGLE(ComboProfile_Manager)->Find(_activeProfileType);
 
     if (!_activeProfile)

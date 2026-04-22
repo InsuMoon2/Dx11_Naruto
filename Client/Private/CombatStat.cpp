@@ -86,7 +86,6 @@ void CombatStat::Take_Damage(FDamageEvent damageEvent)
 
     if (Is_Dead())
     {
-        // TODO : 델리게이트로 이벤트 처리 하기. 플레이어는 안 죽을거라 몬스터쪽에 해주면 될듯
         LOG_INFO("CombatStat HP가 0이 되었습니다. (사망)");
     }
 }
@@ -100,6 +99,7 @@ bool CombatStat::Apply_Damage(Character* hitted)
 
     FDamageEvent eventDesc;
     eventDesc.damageCauser = Get_Owner();
+
     float baseDamage = Get_Attack();
 
     const FComboEntry* entry = nullptr;
@@ -118,16 +118,34 @@ bool CombatStat::Apply_Damage(Character* hitted)
         }
     }
 
-    if (entry)
+    const bool isAirboneAttack =
+        (state && state->Get_CurrentStateID() == EPlayerState::Attack_Airbone);
+
+    if (isAirboneAttack)
     {
-        eventDesc.damage = baseDamage + entry->damageMultiplier; // 나중에 곱연산으로.. 그렇게까지 해야하나?
+        eventDesc.damage = baseDamage + 2.f;
+        eventDesc.launchPower = 2.5f;
+        eventDesc.launchUp = 9.f;
+        eventDesc.hitSound = 0;
+        eventDesc.hitReactionType = EHitReactionType::Air;
+        eventDesc.forceHitRestart = true;
+    }
+
+    else if (entry)
+    {
+        eventDesc.damage = baseDamage + entry->damageMultiplier; 
         eventDesc.launchPower = entry->launchPower;
         eventDesc.launchUp = entry->launchUp;
         eventDesc.hitSound = entry->hitSound;
+        eventDesc.hitReactionType = entry->hitReactionType;
+        eventDesc.forceHitRestart = true;
+
     }
     else
     {
         eventDesc.damage = baseDamage;
+        eventDesc.hitReactionType = EHitReactionType::Default;
+        eventDesc.forceHitRestart = true;
     }
 
     hitted->TakeDamage(eventDesc);

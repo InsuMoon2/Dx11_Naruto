@@ -2,24 +2,24 @@
     "attack": 35.0,
     "body_collider_center": [
         0.0,
-        1.5,
+        0.699999988079071,
         0.0
     ],
     "body_collider_extents": [
-        1.5,
-        2.0,
-        1.5
+        0.5,
+        0.6000000238418579,
+        0.5
     ],
     "components": [
         {
             "position": [
-                0.488596647977829,
-                5.0,
-                -2.8092899322509766
+                0.33839380741119385,
+                4.999998569488525,
+                -2.8015964031219482
             ],
             "rotation": [
-                -0.0,
-                -139.3087615966797,
+                0.0,
+                -139.3087158203125,
                 0.0
             ],
             "scale": [
@@ -33,13 +33,13 @@
             "bounding": {
                 "center": [
                     0.0,
-                    1.5,
+                    0.9200000166893005,
                     0.0
                 ],
                 "extents": [
-                    1.5,
-                    2.0,
-                    1.5
+                    0.5,
+                    0.8899999856948853,
+                    0.5
                 ]
             },
             "channel": "Monster_Body",
@@ -118,6 +118,52 @@
                         "loop": true,
                         "playRate": 1.0
                     },
+                    "key": "Hit_Down",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_Pain|Pain_Beaten_SpinBlowOff_Conect_toDown",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
                     "key": "Idle",
                     "loopClip": {
                         "animationName": "",
@@ -164,7 +210,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Attack_04",
+                    "key": "Hit",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -172,7 +218,7 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_Pain|Pain_Attack_supa_01",
+                        "animationName": "SK_CHR_Pain|Pain_Beaten_Left",
                         "loop": false,
                         "playRate": 1.0
                     },
@@ -256,7 +302,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Hit",
+                    "key": "Attack_04",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -264,9 +310,193 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_Pain|Pain_Beaten_Left",
+                        "animationName": "SK_CHR_Pain|Pain_Attack_supa_01",
                         "loop": false,
                         "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_Airbone",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit_BlowOff",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_Pain|Pain_Beaten_GuardReverseBlowOff",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit_Launch",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_Pain|Pain_Beaten_Blasted",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit_Air",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_Pain|Pain_Beaten_Aerial_Large_Front_Conect_toFall",
+                        "loop": false,
+                        "playRate": 1.5
                     },
                     "start": {
                         "animationName": "",
@@ -495,7 +725,7 @@
             "type": "COMPONENT_TYPE_MODEL"
         }
     ],
-    "guid": "5ad1c544-b8d0-456f-a634-2d4e229a718b",
+    "guid": "2fd8312c-bfeb-4864-9e18-b66b5df16000",
     "hit_effect_asset_name": "HitParticle",
     "idle_state_name": "Idle",
     "max_hp": 1500.0,

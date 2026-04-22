@@ -11,6 +11,7 @@ RemotePlayer::RemotePlayer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Player(device, context)
 {
     Set_ObjectType(Protocol::OBJECT_TYPE_REMOTE_PLAYER);
+    Set_Local(false);
 }
 
 RemotePlayer::RemotePlayer(const RemotePlayer& rhs)
@@ -45,9 +46,8 @@ void RemotePlayer::Update(float timeDelta)
     Vec3 newPos = Vec3::Lerp(currentPos, _targetPos, _lerpSpeed * timeDelta);
     _transformCom->Set_WorldPosition(newPos);
 
-    Quat targetRot = Quat::CreateFromYawPitchRoll(_targetRotY, 0.f, 0.f);
     Quat currentRot = _transformCom->Get_LocalRotation();
-    Quat newRot = Quat::Slerp(currentRot, targetRot, _lerpSpeed * timeDelta);
+    Quat newRot = Quat::Slerp(currentRot, _targetRotation, _lerpSpeed * timeDelta);
     _transformCom->Set_LocalRotation(newRot);
 
     if (_animState)
@@ -58,9 +58,11 @@ void RemotePlayer::Update(float timeDelta)
 
 void RemotePlayer::Sync(const Protocol::ObjectInfo& info)
 {
-    // 목표 위치만 갱신 후 Update에서 보간 진행 (자연스러운 움직임을 위해)
     const Vec3 nextPos(info.pos().x(), info.pos().y(), info.pos().z());
-    const float nextRotY = info.rot_y();
+    const Quat nextRotation = Quat::CreateFromYawPitchRoll(
+        info.rot_y(),
+        info.rot_x(),
+        info.rot_z());
 
     const Vec3 currentPos = _transformCom->Get_WorldPosition();
     const float distSq = Vec3::DistanceSquared(currentPos, nextPos);
@@ -68,23 +70,26 @@ void RemotePlayer::Sync(const Protocol::ObjectInfo& info)
     if (!_hasReceivedFirstSync || distSq >= _snapDistanceSq)
     {
         _transformCom->Set_WorldPosition(nextPos);
-        _transformCom->Set_LocalRotation(
-            Quat::CreateFromYawPitchRoll(nextRotY, 0.f, 0.f));
+        _transformCom->Set_LocalRotation(nextRotation);
 
         _targetPos = nextPos;
-        _targetRotY = nextRotY;
+        _targetRotation = nextRotation;
         _hasReceivedFirstSync = true;
     }
     else
     {
         _targetPos = nextPos;
-        _targetRotY = nextRotY;
+        _targetRotation = nextRotation;
     }
 
     if (_animState)
     {
         _animState->Read_FromObjectInfo(info);
     }
+
+    Refresh_WeaponAttachment_ByReplicatedState(
+        From_ProtoWeaponType(info.weapon_type()),
+        info.object_state());
 
     if (_combatStat && info.has_stat())
     {

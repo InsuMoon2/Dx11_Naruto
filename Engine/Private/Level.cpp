@@ -54,6 +54,97 @@ HRESULT Level::Load_LevelFromJson(const wstring& fileName)
         fileName);
 }
 
+HRESULT Level::Add_GameObjectJsonToLevel(uint32 targetLevelIndex, uint32 prototypeLevelIndex, const json& objJson)
+{
+    if (!objJson.contains("object_type"))
+        return S_FALSE;
+
+    Protocol::OBJECT_TYPE objType = Protocol::OBJECT_TYPE_NONE;
+
+    if (objJson["object_type"].is_string())
+    {
+        auto result = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
+            objJson["object_type"].get<string>());
+
+        if (!result.has_value())
+            return S_FALSE;
+
+        objType = result.value();
+    }
+    else
+    {
+        objType = static_cast<Protocol::OBJECT_TYPE>(
+            objJson["object_type"].get<uint32>());
+    }
+
+    if (objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
+        objType == Protocol::OBJECT_TYPE_CAMERA_TARGET ||
+        objType == Protocol::OBJECT_TYPE_PLAYER)
+    {
+        return S_FALSE;
+    }
+
+    auto gameObject = GAME->Clone_GameObject(prototypeLevelIndex, objType, nullptr);
+    if (!gameObject && prototypeLevelIndex != 0)
+    {
+        gameObject = GAME->Clone_GameObject(0, objType, nullptr);
+    }
+
+    if (!gameObject)
+        return S_FALSE;
+
+    gameObject->From_Json(objJson);
+
+    if (objJson.contains("custom_properties") && objJson["custom_properties"].is_object())
+    {
+        gameObject->From_Json(objJson["custom_properties"]);
+    }
+
+    if (objJson.contains("components"))
+    {
+        for (const auto& compData : objJson["components"])
+        {
+            if (compData.is_null())
+                continue;
+
+            if (!compData.contains("type"))
+                continue;
+
+            uint32 typeId = 0;
+
+            if (compData["type"].is_string())
+            {
+                auto result = magic_enum::enum_cast<Protocol::ComponentID>(
+                    compData["type"].get<string>());
+
+                if (!result.has_value())
+                    continue;
+
+                typeId = static_cast<uint32>(result.value());
+            }
+            else
+            {
+                typeId = compData["type"].get<uint32>();
+            }
+
+            auto comp = gameObject->Find_Component_ByStaticType(typeId);
+            if (comp)
+            {
+                comp->From_Json(compData);
+            }
+        }
+    }
+
+    wstring layerTag = L"Layer_Default";
+    if (objJson.contains("layerTag"))
+    {
+        layerTag = Utils::ToWString(objJson["layerTag"].get<string>());
+    }
+
+    CHECK_FAILED(GAME->Add_GameObject(targetLevelIndex, layerTag, gameObject), E_FAIL);
+    return S_OK;
+}
+
 HRESULT Level::Load_LevelChunkToLevel(uint32 targetLevelIndex, uint32 prototypeLevelIndex, const wstring& fileName)
 {
     const wstring levelDirectory = L"../../Client/Bin/Resources/Data/json/Levels/";
@@ -71,93 +162,13 @@ HRESULT Level::Load_LevelChunkToLevel(uint32 targetLevelIndex, uint32 prototypeL
 
             for (auto& objJson : root["gameObjects"])
             {
-                if (!objJson.contains("object_type"))
-                    continue;
+                const HRESULT addHr =
+                    Add_GameObjectJsonToLevel(targetLevelIndex, prototypeLevelIndex, objJson);
 
-                Protocol::OBJECT_TYPE objType = Protocol::OBJECT_TYPE_NONE;
+                CHECK_FAILED(addHr, E_FAIL);
 
-                if (objJson["object_type"].is_string())
-                {
-                    auto result = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
-                        objJson["object_type"].get<string>());
-
-                    if (!result.has_value())
-                        continue;
-
-                    objType = result.value();
-                }
-                else
-                {
-                    objType = static_cast<Protocol::OBJECT_TYPE>(
-                        objJson["object_type"].get<uint32>());
-                }
-
-                if (objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
-                    objType == Protocol::OBJECT_TYPE_CAMERA_TARGET ||
-                    objType == Protocol::OBJECT_TYPE_PLAYER)
-                {
-                    continue;
-                }
-
-                auto gameObject = GAME->Clone_GameObject(prototypeLevelIndex, objType, nullptr);
-                if (!gameObject && prototypeLevelIndex != 0)
-                {
-                    gameObject = GAME->Clone_GameObject(0, objType, nullptr);
-                }
-
-                if (!gameObject)
-                    continue;
-
-                gameObject->From_Json(objJson);
-
-                if (objJson.contains("custom_properties") && objJson["custom_properties"].is_object())
-                {
-                    gameObject->From_Json(objJson["custom_properties"]);
-                }
-
-                if (objJson.contains("components"))
-                {
-                    for (const auto& compData : objJson["components"])
-                    {
-                        if (compData.is_null())
-                            continue;
-
-                        if (!compData.contains("type"))
-                            continue;
-
-                        uint32 typeId = 0;
-
-                        if (compData["type"].is_string())
-                        {
-                            auto result = magic_enum::enum_cast<Protocol::ComponentID>(
-                                compData["type"].get<string>());
-
-                            if (!result.has_value())
-                                continue;
-
-                            typeId = static_cast<uint32>(result.value());
-                        }
-                        else
-                        {
-                            typeId = compData["type"].get<uint32>();
-                        }
-
-                        auto comp = gameObject->Find_Component_ByStaticType(typeId);
-                        if (comp)
-                        {
-                            comp->From_Json(compData);
-                        }
-                    }
-                }
-
-                wstring layerTag = L"Layer_Default";
-                if (objJson.contains("layerTag"))
-                {
-                    layerTag = Utils::ToWString(objJson["layerTag"].get<string>());
-                }
-
-                CHECK_FAILED(GAME->Add_GameObject(targetLevelIndex, layerTag, gameObject), E_FAIL);
-                ++loadedCount;
+                if (addHr == S_OK)
+                    ++loadedCount;
             }
 
             return S_OK;

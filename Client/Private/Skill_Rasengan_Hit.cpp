@@ -31,7 +31,7 @@ HRESULT Skill_Rasengan_Hit::Initialize_Prototype()
     _maxHitCount     = 6;
     _hitInterval     = 0.12f;
     _hitLaunchForce  = 0.f;
-    _colliderRadius  = 1.35f;
+    _colliderRadius  = 1.65f;
     _collisionPreset = Collision_Preset::Player_Attack;
 
     return SkillObject::Initialize_Prototype();

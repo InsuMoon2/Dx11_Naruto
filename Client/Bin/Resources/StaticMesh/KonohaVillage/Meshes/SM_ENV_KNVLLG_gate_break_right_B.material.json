@@ -1,0 +1,21 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_LightBrown",
+      "material_instance_guid": "7e1e0455-d837-4034-bd2c-d4c5a506eecf"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Brown",
+      "material_instance_guid": "ae9c0c4b-83db-4da3-bd6d-e216a123419c"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "3a831086-b931-451d-8bef-74f256cf7d4e"
+    },
+    {
+      "material_name": "Material_3",
+      "textures": []
+    }
+  ]
+}

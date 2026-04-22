@@ -1,65 +1,80 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG02_Pipe_04",
-      "material_instance_guid": "1e908290-4c7d-4fc0-993b-a2737abebdfe"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_PipeDetails_01",
-      "material_instance_guid": "0547ba36-4f59-40b4-8072-bb6954e77de6"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_Pipe_01",
-      "material_instance_guid": "f21fd177-9bc7-4a0f-acf9-247e0e05b941"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_PlasterDarkGrey",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_MetalRoof_GreenLight",
-      "material_instance_guid": "2becb624-fbe5-4544-9f09-afe656a9664d"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_WoodPlain_Black",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_WoodPlain_Yellow",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_WoodPlain_Red",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Duct_A",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_StoneTrim",
-      "material_instance_guid": "e3386f33-fe8a-4a7f-92c7-5aa00fdf2dad"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Windows_A",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Light",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Window_Paper",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_14",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

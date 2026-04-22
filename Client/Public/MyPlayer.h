@@ -90,7 +90,7 @@ private:
     float _syncInterval = 1.f / 30.f;
 
     Vec3 _lastSyncPos = {};
-    float _lastSyncRotY = 0.f;
+    Vec3 _lastSyncRot = {};
     Protocol::OBJECT_STATE_TYPE   _lastObjectState = Protocol::OBJECT_STATE_TYPE_IDLE;
     Protocol::MOVE_INPUT_DIR_TYPE _lastMoveDir = Protocol::MOVE_INPUT_DIR_TYPE_FORWARD;
 
@@ -98,6 +98,15 @@ private:
 
     Protocol::ATTACK_PROFILE_TYPE _lastAttackProfile = Protocol::ATTACK_PROFILE_TYPE_HAND_GROUND;
     int32 _lastAttackComboIndex = 0;
+
+    // 마지막으로 송신한 실제 애니메이션 상태 키다. 같은 OBJECT_STATE 내 세부 상태 변화 감지에 사용한다.
+    string _lastAnimStateKey = "";
+
+    // 마지막으로 송신한 피격 타입이다. 원격 히트 분기 변화 감지에 사용한다.
+    Protocol::HIT_REACTION_TYPE _lastHitReactionType = Protocol::HIT_REACTION_TYPE_DEFAULT;
+
+    // 마지막으로 송신한 피격 serial이다. 같은 Hit 재시작을 패킷으로 다시 보내기 위해 비교한다.
+    uint32 _lastHitReactionSerial = 0;
 
 public:
     static shared_ptr<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

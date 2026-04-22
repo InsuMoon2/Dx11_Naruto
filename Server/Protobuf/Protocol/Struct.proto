@@ -38,6 +38,8 @@ message ObjectInfo
 
     Vec3                pos         = 4;
     float               rot_y       = 5;
+    float               rot_x       = 18;
+    float               rot_z       = 19;
 
     OBJECT_TYPE         objectType  = 6;
 
@@ -52,4 +54,9 @@ message ObjectInfo
 
     ATTACK_PROFILE_TYPE attack_profile = 15;
     int32               attack_combo_index = 16;
+    WEAPON_TYPE         weapon_type = 17;
+
+    string              anim_state_key = 20;
+    HIT_REACTION_TYPE   hit_reaction_type = 21;
+    uint32              hit_reaction_serial = 22;
 }

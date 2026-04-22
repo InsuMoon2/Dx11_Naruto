@@ -217,20 +217,26 @@ HRESULT CollisionProxyActor::Ready_Components()
         CHECK_FAILED(Resolve_ModelAsset(), E_FAIL);
     }
 
+    const uint32 staticLevelIndex = ETOI(ELevelType::Static);
     const uint32 modelKey = static_cast<uint32>(hash<string>{}(_modelGuid));
 
-    // 기존에 사용하던 StaticMesh랑 동일하게 맞추기
-    const Matrix scaleMatrix = Matrix::CreateScale(1.f);
-    const Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
-    const Matrix preTransform = scaleMatrix * rotationMatrix;
+    // collision proxy도 동일 guid 프로토타입이 살아 있으면 재생성 대신 clone만 사용한다.
+    if (GAME->Find_Component_Prototype(staticLevelIndex, modelKey) == nullptr)
+    {
+        // 기존에 사용하던 StaticMesh랑 동일하게 맞추기
+        const Matrix scaleMatrix = Matrix::CreateScale(1.f);
+        const Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
+        const Matrix preTransform = scaleMatrix * rotationMatrix;
 
-    auto proto = Model::Create(
-        _device, _context, EMeshVertexType::StaticMesh, _resolvedPath, preTransform, true);
+        auto proto = Model::Create(
+            _device, _context, EMeshVertexType::StaticMesh, _resolvedPath, preTransform, true);
 
-    CHECK_NULL(proto, E_FAIL);
+        CHECK_NULL(proto, E_FAIL);
 
-    GAME->Add_Component_Prototype(ETOI(ELevelType::Static), modelKey, proto);
-    CHECK_FAILED(Add_Component(ETOI(ELevelType::Static), modelKey, _modelCom), E_FAIL);
+        CHECK_FAILED(GAME->Add_Component_Prototype(staticLevelIndex, modelKey, proto), E_FAIL);
+    }
+
+    CHECK_FAILED(Add_Component(staticLevelIndex, modelKey, _modelCom), E_FAIL);
 
     return S_OK;
 }

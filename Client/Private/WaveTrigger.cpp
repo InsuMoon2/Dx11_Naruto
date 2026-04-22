@@ -474,6 +474,8 @@ void WaveTrigger::Try_TriggerWave(Shared<GameObject> otherObject)
         }
     }
 
+    GAME->Get_DelegateHub().OnWaveStarted.Broadcast(_waveTag);
+
     Spawn_Wave();
 }
 

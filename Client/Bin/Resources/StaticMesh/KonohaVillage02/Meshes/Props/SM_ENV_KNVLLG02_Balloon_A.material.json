@@ -1,25 +1,30 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG02_Balloon_A",
-      "material_instance_guid": "8bf26c14-52ee-4369-9b56-795a4d599c79"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_Balloon_A_Blue",
-      "material_instance_guid": "4f3704ca-3401-4a42-a185-65a4ee0fd5e7"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_LKNVLD_Metal_A",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_LKNVLD_Nbuta_RopeMetal",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_4",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

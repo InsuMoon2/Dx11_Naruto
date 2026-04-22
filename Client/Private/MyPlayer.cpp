@@ -19,6 +19,7 @@
 #include "TargetComponent.h"
 #include "Customizer_Manager.h"
 #include "SkillComponent.h"
+#include "Bounding_OBB.h"
 
 REGISTER_GAMEOBJECT(MyPlayer, Protocol::OBJECT_TYPE_PLAYER)
 
@@ -63,10 +64,14 @@ HRESULT MyPlayer::Initialize(void* arg)
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_PLAYER_STATE, _stateMachine), E_FAIL);
 
     // 충돌체 추가
-    Bounding_Sphere::FBoundingSphereDesc sphereDesc{};
-    sphereDesc.radius = 1.5f;
+    //Bounding_Sphere::FBoundingSphereDesc sphereDesc{};
+    //sphereDesc.radius = 1.5f;
 
-    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_SPHERE, _collider, &sphereDesc), E_FAIL);
+    Bounding_OBB::FBoundingOBBDesc obbDesc{};
+    obbDesc.center = Vec3(0.f, 0.7f, 0.f);
+    obbDesc.extents = Vec3(0.5f, 0.6f, 0.5f);
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_OBB, _collider, &obbDesc), E_FAIL);
     _collider->Set_CollisionPreset(Collision_Preset::Player_Body);
 	_collider->Set_IsActive(true);
 
@@ -249,12 +254,15 @@ void MyPlayer::Send_MovePacket(bool forceSend)
     GET_SINGLE(NetworkManager)->Send_Packet(buf);
 
     _lastSyncPos = Vec3(info.pos().x(), info.pos().y(), info.pos().z());
-    _lastSyncRotY = info.rot_y();
+    _lastSyncRot = Vec3(info.rot_x(), info.rot_y(), info.rot_z());
     _lastObjectState = info.object_state();
     _lastMoveDir = info.move_dir();
     _lastAnimPhase = info.anim_phase();
     _lastAttackProfile = info.attack_profile();
     _lastAttackComboIndex = info.attack_combo_index();
+    _lastAnimStateKey = info.anim_state_key();
+    _lastHitReactionType = info.hit_reaction_type();
+    _lastHitReactionSerial = info.hit_reaction_serial();
 }
 
 Protocol::ObjectInfo MyPlayer::Build_NetworkInfo() const
@@ -269,8 +277,10 @@ Protocol::ObjectInfo MyPlayer::Build_NetworkInfo() const
     protoPos->set_y(pos.y);
     protoPos->set_z(pos.z);
 
-    float rotY = _transformCom->Get_LocalRotation().ToEuler().y;
-    info.set_rot_y(rotY);
+    Vec3 rot = _transformCom->Get_LocalRotation().ToEuler();
+    info.set_rot_x(rot.x);
+    info.set_rot_y(rot.y);
+    info.set_rot_z(rot.z);
 
     if (_animState && _stateMachine)
     {
@@ -282,6 +292,11 @@ Protocol::ObjectInfo MyPlayer::Build_NetworkInfo() const
 
     if (_combatStat)
         _combatStat->Serialize_ToProtobuf(*info.mutable_stat());
+
+    if (_equipment)
+        info.set_weapon_type(To_ProtoWeaponType(_equipment->Get_CurrentWeaponType()));
+    else
+        info.set_weapon_type(Protocol::WEAPON_TYPE_HAND);
 
     return info;
 }
@@ -336,12 +351,13 @@ bool MyPlayer::Should_SendMovePacket(const Protocol::ObjectInfo& nextInfo) const
         nextInfo.pos().z());
 
     const float posDeltaSq = Vec3::DistanceSquared(nextPos, _lastSyncPos);
-    const float rotDelta = fabsf(nextInfo.rot_y() - _lastSyncRotY);
+    const Vec3 nextRot(nextInfo.rot_x(), nextInfo.rot_y(), nextInfo.rot_z());
+    const float rotDeltaSq = Vec3::DistanceSquared(nextRot, _lastSyncRot);
 
     if (posDeltaSq > 0.0001f)
         return true;
 
-    if (rotDelta > XMConvertToRadians(1.f))
+    if (rotDeltaSq > XMConvertToRadians(1.f) * XMConvertToRadians(1.f))
         return true;
 
     if (nextInfo.object_state() != _lastObjectState)
@@ -360,6 +376,15 @@ bool MyPlayer::Should_SendMovePacket(const Protocol::ObjectInfo& nextInfo) const
         return true;
 
     if (nextInfo.attack_combo_index() != _lastAttackComboIndex)
+        return true;
+
+    if (nextInfo.anim_state_key() != _lastAnimStateKey)
+        return true;
+
+    if (nextInfo.hit_reaction_type() != _lastHitReactionType)
+        return true;
+
+    if (nextInfo.hit_reaction_serial() != _lastHitReactionSerial)
         return true;
 
 

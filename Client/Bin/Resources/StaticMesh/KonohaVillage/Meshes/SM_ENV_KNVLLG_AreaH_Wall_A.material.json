@@ -1,0 +1,53 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_Orange",
+      "material_instance_guid": "f446e6b6-a00a-471b-9b92-e585481c68b1"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "3a831086-b931-451d-8bef-74f256cf7d4e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster",
+      "material_instance_guid": "15e34ce8-5e84-4a5e-99ca-4d10a3675692"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteFloor_B",
+      "material_instance_guid": "0b82c4c5-32d6-4c62-a64e-e91720af44bc"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "33c91196-b849-4ef1-85f0-7cece3065d02"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Window_Paper",
+      "material_instance_guid": "96768a24-fd21-4f8a-9ef6-85197417297d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_FloorConc_B",
+      "material_instance_guid": "0b372174-6d4b-4313-9a8e-de59da74ff44"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_DistanceGround_A",
+      "material_instance_guid": "76d10a90-a282-4ebf-807a-3155462be770"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Stonewall_04",
+      "material_instance_guid": "d194e226-b836-405d-a01f-2ebb21920992"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_StoneWall_Blend",
+      "material_instance_guid": "0151b824-cbf2-47a1-a866-cdb21e1a8ce1"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_RoughTiles",
+      "material_instance_guid": "47763dd1-e85b-42b8-9517-29b3bd51a4b1"
+    },
+    {
+      "material_name": "Material_11",
+      "textures": []
+    }
+  ]
+}

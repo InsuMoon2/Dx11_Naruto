@@ -236,6 +236,16 @@ bool SkillObject::Apply_Skill_Hit(Character* hitted, float damage, float launchF
     damageEvent.damageCauser = owner;
     damageEvent.launchPower = launchForce;
     damageEvent.launchUp = launchUp;
+    damageEvent.forceHitRestart = true;
+
+    if (launchForce > 0.f && launchUp > 0.f)
+        damageEvent.hitReactionType = EHitReactionType::Launch;
+
+    else if (launchForce > 0.f)
+        damageEvent.hitReactionType = EHitReactionType::BlowOff;
+
+    else
+        damageEvent.hitReactionType = EHitReactionType::Stagger;
 
     hitted->TakeDamage(damageEvent);
 

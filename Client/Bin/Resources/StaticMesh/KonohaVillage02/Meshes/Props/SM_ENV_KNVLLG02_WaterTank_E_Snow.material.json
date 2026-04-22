@@ -1,29 +1,35 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG_Sticker_02",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Plaster_Light",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_WaterTank_A",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Pipe_01",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Pipe_02",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_5",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

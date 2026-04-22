@@ -55,8 +55,8 @@ static fs::path ResolveDefaultMeshDir(const wchar_t* executablePath)
         //LR"(Client\Bin\Resources\StaticMesh\KonohaVillage03\Meshes)";
         //LR"(Client\Bin\Resources\Models\LeafNinja)";
         //LR"(Client\Bin\Resources\Models\WhiteZetsu)";
-        //LR"(Client\Bin\Resources\Models\Custom\Animation)";
-        LR"(Client\Bin\Resources\Models\ShinsuSenju)";
+        LR"(Client\Bin\Resources\Models\Custom\Animation)";
+        //LR"(Client\Bin\Resources\Models\ShinsuSenju)";
         //LR"(Client\Bin\Resources\Skills\ETC\Meshes\Temp)";
         //LR"(Client\Bin\Resources\Models\SkySphere)";
 

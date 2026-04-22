@@ -20,7 +20,7 @@ public:
     HRESULT Initialize();
     void    Add_RenderGroup(ERenderGroup renderType, shared_ptr<GameObject> gameObject);
     void    Draw(bool renderDebugPrimitives = true, bool renderColliders = true, bool renderRTDebug = false);
-    HRESULT Draw_Preview();
+    HRESULT Draw_Preview(bool renderColliders = true);
 
     void    Backup_RenderGroup();
     void    Restore_RenderGroup();
@@ -34,6 +34,8 @@ public:
 private:
     void    Render_BackgroundUI();
     void    Render_Priority();
+    // Opaque 렌더 직전에 같은 shader/model 계열이 연속으로 오도록 정렬한다.
+    void    Sort_NonBlendRenderObjects();
     void    Render_NonBlend();
     void    Render_Blend();
     void    Render_UI();

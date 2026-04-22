@@ -18,6 +18,15 @@ public:
         bool    bindOnPlayerSpawned = true;
     };
 
+private:
+    struct FActiveCameraShake
+    {
+        FCameraShakeDesc request{};
+        float   elapsedSec = 0.f;
+        Vec3    posPhase = Vec3::Zero;
+        Vec3    rotPhase = Vec3::Zero;
+    };
+
 public:
     explicit Camera_Target(ComPtr<Device> device, ComPtr<DeviceContext> context);
     explicit Camera_Target(const Camera_Target& rhs);
@@ -35,9 +44,23 @@ public:
 
 public:
     void    Set_TargetTransform(Shared<Transform> target) { _targetTransform = target; }
-    
     float   Get_Yaw() const { return _yaw; }
 
+public:
+    void    Request_CameraShake(const FCameraShakeDesc& request) override;
+    void    Stop_CameraShake(const string& tag = "") override;
+    void    Clear_CameraShake() override;
+
+private:
+    void    Update_CameraShake(float timeDelta, Vec3& outLocalPosOffset, Vec3& outLocalRotOffsetDeg);
+    void    Push_CameraShake(const FCameraShakeDesc& request);
+    Matrix  Build_ShakenViewMatrix(const Vec3& localPosOffset, const Vec3& localRotOffsetDeg) const;
+
+    // 데미지받아서 처리될 때
+    void    On_Damaged(Shared<Character> damagedCharacter, float damage);
+
+    static float Compute_ShakeEnvelope(const FActiveCameraShake& shake);
+    static float Sample_ShakeAxis(float elapsedSec, float frequency, float phaseRad);
 
 private:
     Weak<Transform> _targetTransform;
@@ -67,6 +90,17 @@ private:
     bool            _enableMouseRotation = true;
     bool            _bindOnPlayerSpawned = true;
 
+private:
+    vector<FActiveCameraShake> _activeCameraShakes; 
+    FDelegateHandle            _damagedHandle = {}; 
+
+    static constexpr size_t MAX_ACTIVE_CAMERA_SHAKES = 4; // 동시에 유지할 최대 쉐이크 개수.
+    static constexpr float MAX_SHAKE_POS_X = 0.25f;
+    static constexpr float MAX_SHAKE_POS_Y = 0.25f;
+    static constexpr float MAX_SHAKE_POS_Z = 0.25f;
+    static constexpr float MAX_SHAKE_ROT_PITCH = 3.f;
+    static constexpr float MAX_SHAKE_ROT_YAW = 3.f;
+    static constexpr float MAX_SHAKE_ROT_ROLL = 3.f;
 
 public:
     static Shared<Camera_Target> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

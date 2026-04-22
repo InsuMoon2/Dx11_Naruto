@@ -180,6 +180,7 @@ void GameRoom::Enter_GameRoom(Shared<GameSession> session, const Protocol::C_Ent
     {
         (*player->info.mutable_equipparts())[pair.first] = pair.second;
     }
+    player->info.set_weapon_type(pkt.info().weapon_type());
 
     auto* protoPos = player->info.mutable_pos();
     protoPos->set_x(pkt.spawn_pos().x());
@@ -310,13 +311,37 @@ void GameRoom::Handle_C_Move(Shared<GameSession> session, Protocol::C_Move& pkt)
     if (player == nullptr)
         return;
 
-    // 서버 측 위치 갱신
-    player->info = pkt.info();
-    player->info.set_objectid(id);
+    Protocol::ObjectInfo& currentInfo = player->info;
+    const Protocol::ObjectInfo& nextInfo = pkt.info();
+
+    currentInfo.set_objectid(id);
+    currentInfo.set_objecttype(Protocol::OBJECT_TYPE_PLAYER);
+    currentInfo.mutable_pos()->CopyFrom(nextInfo.pos());
+    currentInfo.set_rot_x(nextInfo.rot_x());
+    currentInfo.set_rot_y(nextInfo.rot_y());
+    currentInfo.set_rot_z(nextInfo.rot_z());
+    currentInfo.set_object_state(nextInfo.object_state());
+    currentInfo.set_move_dir(nextInfo.move_dir());
+    currentInfo.set_anim_phase(nextInfo.anim_phase());
+    currentInfo.set_anim_force_restart(nextInfo.anim_force_restart());
+    currentInfo.set_attack_profile(nextInfo.attack_profile());
+    currentInfo.set_attack_combo_index(nextInfo.attack_combo_index());
+    currentInfo.set_anim_state_key(nextInfo.anim_state_key());
+    currentInfo.set_hit_reaction_type(nextInfo.hit_reaction_type());
+    currentInfo.set_hit_reaction_serial(nextInfo.hit_reaction_serial());
+    currentInfo.set_weapon_type(nextInfo.weapon_type());
+
+    if (nextInfo.has_stat())
+        currentInfo.mutable_stat()->CopyFrom(nextInfo.stat());
+    else
+        currentInfo.clear_stat();
+
+    if (!nextInfo.name().empty())
+        currentInfo.set_name(nextInfo.name());
 
     // 모든 플레이어들에게 이동 패킷 전달
     {
-        SendBufferRef sendBuffer = Server_PacketHandler::Make_S_Move(player->info);
+        SendBufferRef sendBuffer = Server_PacketHandler::Make_S_Move(currentInfo);
         Broadcast(sendBuffer);
     }
 
@@ -585,6 +610,8 @@ void GameRoom::Trigger_Wave(FServerWaveTriggerDesc& trigger)
     trigger.clearBroadcasted = false;
     trigger.spawnedMonsterIds.clear();
 
+    Broadcast_WaveStarted(trigger.waveTag);
+
     for (const auto& spawnEntry : trigger.spawnEntries)
     {
         auto monster = Monster::Create();
@@ -604,6 +631,14 @@ void GameRoom::Trigger_Wave(FServerWaveTriggerDesc& trigger)
         Add_Monster(monster);
         trigger.spawnedMonsterIds.push_back(monster->Get_ObjectID());
     }
+}
+
+void GameRoom::Broadcast_WaveStarted(const string& waveTag)
+{
+    Protocol::S_WaveStarted pkt;
+    pkt.set_wave_tag(waveTag);
+
+    Broadcast(Server_PacketHandler::Make_S_WaveStarted(pkt));
 }
 
 void GameRoom::Broadcast_WaveCleared(const string& waveTag)

@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_Fence_A",
+      "material_instance_guid": "341aaf03-9494-499c-b8d4-e35ec88b7e6d"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

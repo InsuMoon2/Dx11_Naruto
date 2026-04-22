@@ -2551,9 +2551,90 @@
             "components": [
                 {
                     "position": [
-                        -3.315345287322998,
+                        -14.043501853942871,
                         0.0,
-                        17.16123390197754
+                        -9.864612579345703
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "type": "COMPONENT_TYPE_EFFECT"
+                },
+                {
+                    "bounding": {
+                        "center": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "extents": [
+                            2.0,
+                            2.0,
+                            2.0
+                        ]
+                    },
+                    "channel": "",
+                    "collision_preset": "Trigger",
+                    "is_active": true,
+                    "shape": "OBB",
+                    "type": "COMPONENT_TYPE_COLLIDER"
+                }
+            ],
+            "custom_properties": {
+                "clear_delay_sec": 1.0,
+                "default_effect_asset_name": "",
+                "play_default_effect_on_begin_play": true,
+                "play_trigger_effect_on_trigger": true,
+                "spawn_entries": [
+                    {
+                        "object_type_override": "OBJECT_TYPE_MONSTER",
+                        "position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "prefab_name": "Boss",
+                        "rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ],
+                "spawn_layer_tag": "Layer_Builder",
+                "stop_default_effect_on_trigger": true,
+                "trigger_effect_asset_name": "",
+                "trigger_once": true,
+                "wave_tag": "BossPainWave"
+            },
+            "guid": "6f48eaf6-e221-4f8b-a712-b00334e77b0c",
+            "layerTag": "Layer_GameObject",
+            "object_type": "OBJECT_TYPE_WAVE_TRIGGER",
+            "prefab_name": "WaveBoss",
+            "static_class": "WaveBoss"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        3.4353559017181396,
+                        0.0,
+                        10.30479621887207
                     ],
                     "rotation": [
                         -0.0,
@@ -2641,7 +2722,7 @@
                 "trigger_once": true,
                 "wave_tag": "GamePlayClearWave"
             },
-            "guid": "cb3e3635-7154-442b-baff-b2a63c864880",
+            "guid": "0b072d33-3985-48fe-9789-f552f8d23a9e",
             "layerTag": "Layer_GameObject",
             "object_type": "OBJECT_TYPE_WAVE_TRIGGER",
             "prefab_name": "WaveTrigger",
@@ -3163,6 +3244,58 @@
                 }
             ],
             "guid": "af8069f4-5497-48f7-9e4f-7d2bf82c8b79",
+            "layerTag": "Layer_PlayerStart",
+            "object_type": "OBJECT_TYPE_PLAYER_START",
+            "static_class": "PlayerStart"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        5.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                }
+            ],
+            "guid": "e43f59ad-cdd3-4b91-b90e-e3d9361350ef",
+            "layerTag": "Layer_PlayerStart",
+            "object_type": "OBJECT_TYPE_PLAYER_START",
+            "static_class": "PlayerStart"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        5.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                }
+            ],
+            "guid": "4880b1f5-d4d4-4533-807b-0f83c52a654e",
             "layerTag": "Layer_PlayerStart",
             "object_type": "OBJECT_TYPE_PLAYER_START",
             "static_class": "PlayerStart"

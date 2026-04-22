@@ -109,6 +109,18 @@ Matrix Level_Konoha::Build_CollisionModelPreTransform()
     return scaleMatrix * rotationMatrix;
 }
 
+// Ground_Collision 폴더 안에서도 바닥 계열 meshbin만 기본 걷기 충돌로 사용한다.
+// 땅이 아닌 충돌 메시가 섞여 들어와도 이름에 ground가 없는 파일은 제외된다.
+static bool IsGroundCollisionMeshFile(const fs::path& meshPath)
+{
+    const string extensionLower = Utils::ToLowerCopy(meshPath.extension().string());
+    if (extensionLower != ".meshbin")
+        return false;
+
+    const string fileNameLower = Utils::ToLowerCopy(meshPath.filename().string());
+    return (fileNameLower.find("ground") != string::npos);
+}
+
 bool Level_Konoha::Try_BuildWorldBoundsFromModel(
     Shared<Model> model,
     const Matrix& worldMatrix,
@@ -160,10 +172,10 @@ HRESULT Level_Konoha::Ready_Lights()
     FLightDesc lightDesc{};
 
     lightDesc.type = ELightType::Directional;
-    lightDesc.direction  = Vec4(1.f, -1.f, 1.f, 0.f);
-    lightDesc.diffuse  = Vec4(1.f, 1.f, 1.f, 1.f);
-    lightDesc.ambient  = Vec4(0.18f, 0.18f, 0.18f, 1.f);
-    lightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+    lightDesc.direction  = Vec4(0.55f, -0.85f, 0.35f, 0.f);
+    lightDesc.diffuse  = Vec4(0.92f, 0.74f, 0.58f, 1.f);
+    lightDesc.ambient  = Vec4(0.14f, 0.12f, 0.16f, 1.f);
+    lightDesc.specular = Vec4(0.42f, 0.32f, 0.25f, 1.f);
 
     CHECK_FAILED(GAME->Add_Light(lightDesc), E_FAIL);
 
@@ -252,11 +264,11 @@ HRESULT Level_Konoha::Ready_Layer_SkySphere()
         desc.renderStyle = 1;
         desc.uvTiling = Vec2(1.f, 1.f);
         desc.uvScrollSpeed = Vec2::Zero;
-        desc.colorTint = Vec4(1.f, 1.f, 1.f, 1.f);
-        desc.horizonColor = Vec4(0.34111f, 0.569243f, 1.f, 1.f);
-        desc.zenithColor = Vec4(0.069653f, 0.295485f, 0.56f, 1.f);
+        desc.colorTint = Vec4(0.95f, 0.9f, 0.86f, 1.f);
+        desc.horizonColor = Vec4(0.92f, 0.54f, 0.33f, 1.f);
+        desc.zenithColor = Vec4(0.14f, 0.18f, 0.32f, 1.f);
         desc.opacity = 1.f;
-        desc.emissiveStrength = 1.f;
+        desc.emissiveStrength = 0.82f;
         desc.scale = Vec3(1.f, 1.f, 1.f);
 
         CHECK_FAILED(GAME->Add_GameObject(levelIndex, Protocol::OBJECT_TYPE_SKY_SPHERE, layerTag, &desc), E_FAIL);
@@ -275,11 +287,11 @@ HRESULT Level_Konoha::Ready_Layer_SkySphere()
         desc.roll = 6.f;
         desc.uvTiling = Vec2(1.f, 1.f);
         desc.uvScrollSpeed = Vec2::Zero;
-        desc.colorTint = Vec4(1.f, 1.f, 1.f, 1.f);
+        desc.colorTint = Vec4(1.f, 0.82f, 0.72f, 0.92f);
         desc.subUVTiling = Vec2(1.f, 1.f);
         desc.subUVScrollSpeed = Vec2::Zero;
-        desc.opacity = 0.32f;
-        desc.emissiveStrength = 1.f;
+        desc.opacity = 0.24f;
+        desc.emissiveStrength = 0.72f;
         desc.scale = Vec3(1.f, 1.f, 1.f);
 
         CHECK_FAILED(GAME->Add_GameObject(levelIndex, Protocol::OBJECT_TYPE_SKY_SPHERE, layerTag, &desc), E_FAIL);
@@ -409,7 +421,7 @@ HRESULT Level_Konoha::Ready_DefaultGroundCollision()
     _defaultGroundModels.clear();
 
     const fs::path groundDirectory =
-        L"../../Client/Bin/Resources/StaticMesh/KonohaVillage02/Meshes/Ground_Collision";
+        L"../../Client/Bin/Resources/StaticMesh/KonohaVillage/Meshes/Ground_Collision";
 
     CHECK_FAILED(Append_CollisionInstancesFromDirectory(groundDirectory, _defaultGroundModels), E_FAIL);
 
@@ -436,7 +448,7 @@ HRESULT Level_Konoha::Append_CollisionInstancesFromDirectory(
             continue;
 
         const fs::path meshPath = entry.path();
-        if (Utils::ToLowerCopy(meshPath.extension().string()) != ".meshbin")
+        if (!IsGroundCollisionMeshFile(meshPath))
             continue;
 
         auto model = Model::Create(

@@ -280,12 +280,21 @@ void Animation_View::Pre_Render()
         _model->Set_EnableNotifies(false);
     }
 
-    _previewOwner->Priority_Update(0.f);
+    if (_ownsPreviewObject && _previewOwner && !_previewHasBegunPlay)
+    {
+        _previewOwner->BeginPlay();
+        _previewHasBegunPlay = true;
+    }
+
+    const float dt = ImGui::GetIO().DeltaTime;
+
+    _previewOwner->Priority_Update(dt);
     Apply_CurrentFrame_ToPreview();
+    _previewOwner->Update(dt);
 
     // Preview 오브젝트만 렌더 큐에 남기기 위해 기존 큐를 잠깐 백업한다.
     GAME->Backup_RenderGroup();
-    _previewOwner->Late_Update(0.f);
+    _previewOwner->Late_Update(dt);
 
     if (_model)
     {
@@ -299,7 +308,7 @@ void Animation_View::Pre_Render()
     _previewRT->BindAsTarget();
 
     GAME->Clear_DepthOnly();
-    GAME->Draw_Preview();
+    GAME->Draw_Preview(false);
 
     _previewRT->BindAsTarget();
     Draw_PreviewGrid();
@@ -335,8 +344,13 @@ void Animation_View::Open_Model(Shared<Model> model)
     _clipSearchText.clear();
     _animStateClipNames.clear();
     _showAllClips = false;
+    _sortedClipEntries.clear();
+    _visibleClipIndices.clear();
+    _clipSortCacheDirty = true;
     _sourcePrefabName.clear();
     _skipGuiThisFrame = false;
+    _ownsPreviewObject = false;
+    _previewHasBegunPlay = false;
 
     _selectedClipIndex = -1;
     Clear_SelectedEntries();
@@ -355,8 +369,24 @@ void Animation_View::Open_Model(Shared<Model> model)
         if (sourceOwner)
             _sourcePrefabName = sourceOwner->Get_SourcePrefabName();
 
-        _previewOwner = sourceOwner;
-        _model = model;
+        _previewOwner = Create_PreviewOwnerFromSourceModel(model);
+        _model = Find_PreviewModel();
+
+        if (!_previewOwner || !_model)
+        {
+            LOG_WARN("Animation_View preview clone fallback: using source owner/model directly.");
+            _previewOwner.reset();
+            _previewOwner = sourceOwner;
+            _model = model;
+            _ownsPreviewObject = false;
+        }
+        else
+        {
+            _ownsPreviewObject = true;
+
+            uint32 prefabLevelIndex = static_cast<uint32>(ELevelType::Prefab);
+            GAME->Add_GameObject(prefabLevelIndex, TEXT("Layer_Preview"), _previewOwner);
+        }
 
         json data = _model->To_Json();
         _modelGuid = data.value("model_guid", "");
@@ -366,6 +396,7 @@ void Animation_View::Open_Model(Shared<Model> model)
         Update_PrefabPreviewSuspension(true);
 
     Refresh_ClipFilter();
+    Rebuild_ClipSortCache();
 
     Ensure_PreviewCamera();
     Fit_PreviewCamera_ToOwner();
@@ -472,21 +503,16 @@ void Animation_View::Add_Notify_AtFrame(int32 frame, const string& typeName)
     entry.notify = instance;
 
     clip->notifies.push_back(entry);
-
-    sort(clip->notifies.begin(), clip->notifies.end(),
-        [](const FAnimNotifyEventEntry& lhs, const FAnimNotifyEventEntry& rhs)
-        {
-            if (lhs.trackIndex == rhs.trackIndex)
-                return lhs.timeSec < rhs.timeSec;
-
-            return lhs.trackIndex < rhs.trackIndex;
-        });
+    Sort_CurrentClipNotifies();
 
     for (int32 i = 0; i < static_cast<int32>(clip->notifies.size()); ++i)
     {
         if (clip->notifies[i].notify == instance)
         {
+            _selectedNotifyIndices.clear();
+            _selectedStateIndices.clear();
             _selectedNotifyIndex = i;
+            _selectedNotifyIndices.insert(i);
             _selectedStateIndex = -1;
             Select_NotifyTrack(clip->notifies[i].trackIndex);
             break;
@@ -527,24 +553,16 @@ void Animation_View::Add_State_ByFrameRange(int32 startFrame, int32 endFrame, co
     entry.notifyState = instance;
 
     clip->notifyStates.push_back(entry);
-
-    sort(clip->notifyStates.begin(), clip->notifyStates.end(),
-        [](const FAnimNotifyStateEntry& lhs, const FAnimNotifyStateEntry& rhs)
-        {
-            if (lhs.trackIndex != rhs.trackIndex)
-                return lhs.trackIndex < rhs.trackIndex;
-
-            if (lhs.startSec == rhs.startSec)
-                return lhs.durationSec < rhs.durationSec;
-
-            return lhs.startSec < rhs.startSec;
-        });
+    Sort_CurrentClipStates();
 
     for (int32 i = 0; i < static_cast<int32>(clip->notifyStates.size()); ++i)
     {
         if (clip->notifyStates[i].notifyState == instance)
         {
+            _selectedNotifyIndices.clear();
+            _selectedStateIndices.clear();
             _selectedStateIndex = i;
+            _selectedStateIndices.insert(i);
             _selectedNotifyIndex = -1;
             Select_NotifyStateTrack(clip->notifyStates[i].trackIndex);
             break;
@@ -666,9 +684,14 @@ void Animation_View::Draw_ClipBrowserPanel()
         strcpy_s(searchBuffer, _clipSearchText.c_str());
 
         if (ImGui::InputTextWithHint("##ClipSearch", "Search clips...", searchBuffer, static_cast<size_t>(std::size(searchBuffer))))
+        {
             _clipSearchText = searchBuffer;
+            Refresh_VisibleClipEntries();
+        }
 
-        ImGui::Checkbox("Show All Clips", &_showAllClips);
+        if (ImGui::Checkbox("Show All Clips", &_showAllClips))
+            Refresh_VisibleClipEntries();
+
         ImGui::Spacing();
         Draw_ClipList();
     }
@@ -879,30 +902,19 @@ void Animation_View::Draw_ClipList()
 
     if (ImGui::BeginChild("AnimationClipList", ImVec2(0.f, 0.f), true))
     {
-        const uint32 count = _model->Get_AnimationCount();
+        if (_clipSortCacheDirty)
+            Rebuild_ClipSortCache();
+
         bool foundAny = false;
-        vector<uint32> sortedIndices;
-        sortedIndices.reserve(count);
 
-        for (uint32 i = 0; i < count; ++i)
-            sortedIndices.push_back(i);
-
-        sort(sortedIndices.begin(), sortedIndices.end(),
-            [this](uint32 lhs, uint32 rhs)
-            {
-                return Compare_NameCaseInsensitive(
-                    _model->Get_AnimationName(lhs),
-                    _model->Get_AnimationName(rhs));
-            });
-
-        for (uint32 index : sortedIndices)
+        for (uint32 visibleIndex : _visibleClipIndices)
         {
-            const string label = _model->Get_AnimationName(index);
-            if (!Passes_AnimStateClipFilter(label))
+            if (visibleIndex >= _sortedClipEntries.size())
                 continue;
 
-            if (!Passes_ClipSearch(label))
-                continue;
+            const auto& entry = _sortedClipEntries[visibleIndex];
+            const uint32 index = entry.index;
+            const string& label = entry.label;
 
             foundAny = true;
 
@@ -962,13 +974,12 @@ void Animation_View::Draw_NotifyList()
 
                         const int32 frame = static_cast<int32>(std::round(entry.timeSec * fps));
                         const string label = entry.notify->Get_TypeName() + " (" + to_string(frame) + ")";
+                        const bool isSelected =
+                            _selectedNotifyIndices.contains(i) ||
+                            (_selectedNotifyIndices.empty() && _selectedNotifyIndex == i);
 
-                        if (ImGui::Selectable(label.c_str(), _selectedNotifyIndex == i))
-                        {
-                            _selectedNotifyIndex = i;
-                            _selectedStateIndex = -1;
-                            Select_NotifyTrack(trackIndex);
-                        }
+                        if (ImGui::Selectable(label.c_str(), isSelected))
+                            Handle_NotifySelection(i, trackIndex, ImGui::GetIO().KeyCtrl);
                     }
 
                     ImGui::TreePop();
@@ -1019,13 +1030,12 @@ void Animation_View::Draw_StateList()
                         const int32 startFrame = static_cast<int32>(std::round(entry.startSec * fps));
                         const int32 endFrame = static_cast<int32>(std::round((entry.startSec + entry.durationSec) * fps));
                         const string label = entry.notifyState->Get_TypeName() + " (" + to_string(startFrame) + "~" + to_string(endFrame) + ")";
+                        const bool isSelected =
+                            _selectedStateIndices.contains(i) ||
+                            (_selectedStateIndices.empty() && _selectedStateIndex == i);
 
-                        if (ImGui::Selectable(label.c_str(), _selectedStateIndex == i))
-                        {
-                            _selectedStateIndex = i;
-                            _selectedNotifyIndex = -1;
-                            Select_NotifyStateTrack(trackIndex);
-                        }
+                        if (ImGui::Selectable(label.c_str(), isSelected))
+                            Handle_StateSelection(i, trackIndex, ImGui::GetIO().KeyCtrl);
                     }
 
                     ImGui::TreePop();
@@ -1965,6 +1975,60 @@ void Animation_View::Refresh_ClipFilter()
         Collect_AnimationName(desc->directional.left, _animStateClipNames);
         Collect_AnimationName(desc->directional.right, _animStateClipNames);
     }
+
+    Refresh_VisibleClipEntries();
+}
+
+void Animation_View::Rebuild_ClipSortCache()
+{
+    _sortedClipEntries.clear();
+    _visibleClipIndices.clear();
+    _clipSortCacheDirty = false;
+
+    if (!_model)
+        return;
+
+    const uint32 count = _model->Get_AnimationCount();
+    _sortedClipEntries.reserve(count);
+
+    for (uint32 i = 0; i < count; ++i)
+    {
+        FClipListEntry entry{};
+        entry.index = i;
+        entry.label = _model->Get_AnimationName(i);
+        _sortedClipEntries.push_back(std::move(entry));
+    }
+
+    sort(_sortedClipEntries.begin(), _sortedClipEntries.end(),
+        [](const FClipListEntry& lhs, const FClipListEntry& rhs)
+        {
+            return Compare_NameCaseInsensitive(lhs.label, rhs.label);
+        });
+
+    Refresh_VisibleClipEntries();
+}
+
+void Animation_View::Refresh_VisibleClipEntries()
+{
+    _visibleClipIndices.clear();
+
+    if (_clipSortCacheDirty)
+        return;
+
+    _visibleClipIndices.reserve(_sortedClipEntries.size());
+
+    for (uint32 i = 0; i < static_cast<uint32>(_sortedClipEntries.size()); ++i)
+    {
+        const auto& entry = _sortedClipEntries[i];
+
+        if (!Passes_AnimStateClipFilter(entry.label))
+            continue;
+
+        if (!Passes_ClipSearch(entry.label))
+            continue;
+
+        _visibleClipIndices.push_back(i);
+    }
 }
 
 bool Animation_View::Passes_AnimStateClipFilter(const string& clipName) const
@@ -2020,9 +2084,241 @@ bool Animation_View::Has_SelectedNotifyStateTrack() const
 
 void Animation_View::Clear_SelectedEntries()
 {
+    _selectedNotifyIndices.clear();
+    _selectedStateIndices.clear();
     _selectedNotifyIndex = -1;
     _selectedStateIndex = -1;
     _sequencerState.selectedEntry = -1;
+}
+
+vector<int32> Animation_View::Collect_SelectedNotifyIndices() const
+{
+    auto* clip = const_cast<Animation_View*>(this)->Get_CurrentClip();
+    vector<int32> result;
+    if (!clip)
+        return result;
+
+    if (!_selectedNotifyIndices.empty())
+    {
+        result.reserve(_selectedNotifyIndices.size());
+
+        for (int32 index : _selectedNotifyIndices)
+        {
+            if (index >= 0 && index < static_cast<int32>(clip->notifies.size()))
+                result.push_back(index);
+        }
+    }
+    else if (_selectedNotifyIndex >= 0 && _selectedNotifyIndex < static_cast<int32>(clip->notifies.size()))
+    {
+        result.push_back(_selectedNotifyIndex);
+    }
+
+    sort(result.begin(), result.end(),
+        [clip](int32 lhs, int32 rhs)
+        {
+            const auto& left = clip->notifies[lhs];
+            const auto& right = clip->notifies[rhs];
+
+            if (left.trackIndex == right.trackIndex)
+                return left.timeSec < right.timeSec;
+
+            return left.trackIndex < right.trackIndex;
+        });
+
+    return result;
+}
+
+vector<int32> Animation_View::Collect_SelectedStateIndices() const
+{
+    auto* clip = const_cast<Animation_View*>(this)->Get_CurrentClip();
+    vector<int32> result;
+    if (!clip)
+        return result;
+
+    if (!_selectedStateIndices.empty())
+    {
+        result.reserve(_selectedStateIndices.size());
+
+        for (int32 index : _selectedStateIndices)
+        {
+            if (index >= 0 && index < static_cast<int32>(clip->notifyStates.size()))
+                result.push_back(index);
+        }
+    }
+    else if (_selectedStateIndex >= 0 && _selectedStateIndex < static_cast<int32>(clip->notifyStates.size()))
+    {
+        result.push_back(_selectedStateIndex);
+    }
+
+    sort(result.begin(), result.end(),
+        [clip](int32 lhs, int32 rhs)
+        {
+            const auto& left = clip->notifyStates[lhs];
+            const auto& right = clip->notifyStates[rhs];
+
+            if (left.trackIndex != right.trackIndex)
+                return left.trackIndex < right.trackIndex;
+
+            if (left.startSec == right.startSec)
+                return left.durationSec < right.durationSec;
+
+            return left.startSec < right.startSec;
+        });
+
+    return result;
+}
+
+void Animation_View::Handle_NotifySelection(int32 notifyIndex, int32 trackIndex, bool isCtrlHeld)
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip || notifyIndex < 0 || notifyIndex >= static_cast<int32>(clip->notifies.size()))
+        return;
+
+    _selectedStateIndices.clear();
+    _selectedStateIndex = -1;
+
+    if (!isCtrlHeld)
+    {
+        _selectedNotifyIndices.clear();
+        _selectedNotifyIndices.insert(notifyIndex);
+    }
+    else
+    {
+        if (_selectedNotifyIndices.empty() &&
+            _selectedNotifyIndex >= 0 &&
+            _selectedNotifyIndex < static_cast<int32>(clip->notifies.size()))
+        {
+            _selectedNotifyIndices.insert(_selectedNotifyIndex);
+        }
+
+        if (_selectedNotifyIndices.contains(notifyIndex))
+        {
+            if (_selectedNotifyIndices.size() > 1)
+                _selectedNotifyIndices.erase(notifyIndex);
+        }
+        else
+        {
+            _selectedNotifyIndices.insert(notifyIndex);
+        }
+    }
+
+    if (_selectedNotifyIndices.empty())
+        _selectedNotifyIndices.insert(notifyIndex);
+
+    if (_selectedNotifyIndices.contains(notifyIndex))
+        _selectedNotifyIndex = notifyIndex;
+    else
+        _selectedNotifyIndex = *std::min_element(_selectedNotifyIndices.begin(), _selectedNotifyIndices.end());
+
+    Select_NotifyTrack(trackIndex);
+}
+
+void Animation_View::Handle_StateSelection(int32 stateIndex, int32 trackIndex, bool isCtrlHeld)
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip || stateIndex < 0 || stateIndex >= static_cast<int32>(clip->notifyStates.size()))
+        return;
+
+    _selectedNotifyIndices.clear();
+    _selectedNotifyIndex = -1;
+
+    if (!isCtrlHeld)
+    {
+        _selectedStateIndices.clear();
+        _selectedStateIndices.insert(stateIndex);
+    }
+    else
+    {
+        if (_selectedStateIndices.empty() &&
+            _selectedStateIndex >= 0 &&
+            _selectedStateIndex < static_cast<int32>(clip->notifyStates.size()))
+        {
+            _selectedStateIndices.insert(_selectedStateIndex);
+        }
+
+        if (_selectedStateIndices.contains(stateIndex))
+        {
+            if (_selectedStateIndices.size() > 1)
+                _selectedStateIndices.erase(stateIndex);
+        }
+        else
+        {
+            _selectedStateIndices.insert(stateIndex);
+        }
+    }
+
+    if (_selectedStateIndices.empty())
+        _selectedStateIndices.insert(stateIndex);
+
+    if (_selectedStateIndices.contains(stateIndex))
+        _selectedStateIndex = stateIndex;
+    else
+        _selectedStateIndex = *std::min_element(_selectedStateIndices.begin(), _selectedStateIndices.end());
+
+    Select_NotifyStateTrack(trackIndex);
+}
+
+void Animation_View::Ensure_NotifyTrackCount(int32 requiredTrackCount)
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip || requiredTrackCount <= 0)
+        return;
+
+    while (static_cast<int32>(clip->notifyTracks.size()) < requiredTrackCount)
+    {
+        FAnimNotifyTrackDesc trackDesc;
+        trackDesc.name = "Notify Track " + to_string(static_cast<int32>(clip->notifyTracks.size()));
+        clip->notifyTracks.push_back(trackDesc);
+    }
+}
+
+void Animation_View::Ensure_StateTrackCount(int32 requiredTrackCount)
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip || requiredTrackCount <= 0)
+        return;
+
+    while (static_cast<int32>(clip->notifyStateTracks.size()) < requiredTrackCount)
+    {
+        FAnimNotifyTrackDesc trackDesc;
+        trackDesc.name = "Notify State Track " + to_string(static_cast<int32>(clip->notifyStateTracks.size()));
+        clip->notifyStateTracks.push_back(trackDesc);
+    }
+}
+
+void Animation_View::Sort_CurrentClipNotifies()
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip)
+        return;
+
+    sort(clip->notifies.begin(), clip->notifies.end(),
+        [](const FAnimNotifyEventEntry& lhs, const FAnimNotifyEventEntry& rhs)
+        {
+            if (lhs.trackIndex == rhs.trackIndex)
+                return lhs.timeSec < rhs.timeSec;
+
+            return lhs.trackIndex < rhs.trackIndex;
+        });
+}
+
+void Animation_View::Sort_CurrentClipStates()
+{
+    auto* clip = Get_CurrentClip();
+    if (!clip)
+        return;
+
+    sort(clip->notifyStates.begin(), clip->notifyStates.end(),
+        [](const FAnimNotifyStateEntry& lhs, const FAnimNotifyStateEntry& rhs)
+        {
+            if (lhs.trackIndex != rhs.trackIndex)
+                return lhs.trackIndex < rhs.trackIndex;
+
+            if (lhs.startSec == rhs.startSec)
+                return lhs.durationSec < rhs.durationSec;
+
+            return lhs.startSec < rhs.startSec;
+        });
 }
 
 void Animation_View::Select_NotifyTrack(int32 trackIndex)
@@ -2063,19 +2359,29 @@ void Animation_View::Copy_SelectedNotify()
     if (!clip)
         return;
 
-    if (_selectedNotifyIndex < 0 || _selectedNotifyIndex >= static_cast<int32>(clip->notifies.size()))
-        return;
-
-    auto& entry = clip->notifies[_selectedNotifyIndex];
-    if (!entry.notify)
+    const auto selectedIndices = Collect_SelectedNotifyIndices();
+    if (selectedIndices.empty())
         return;
 
     _copiedNotifyKind = ENotifyClipboardKind::Notify;
-    _copiedNotifyTypeName = entry.notify->Get_TypeName();
-    _copiedNotifyPayload = entry.notify->Serialize_Payload();
-    _copiedNotifyStateDurationSec = 0.f;
+    _copiedNotifyEntries.clear();
+    _copiedNotifyStateEntries.clear();
 
-    NOTIFY("노티파이 복사");
+    for (int32 index : selectedIndices)
+    {
+        const auto& entry = clip->notifies[index];
+        if (!entry.notify)
+            continue;
+
+        FCopiedNotifyEntry copiedEntry{};
+        copiedEntry.typeName = entry.notify->Get_TypeName();
+        copiedEntry.payload = entry.notify->Serialize_Payload();
+        copiedEntry.timeSec = entry.timeSec;
+        copiedEntry.trackIndex = entry.trackIndex;
+        _copiedNotifyEntries.push_back(std::move(copiedEntry));
+    }
+
+    NOTIFY("노티파이 {}개 복사", static_cast<int32>(_copiedNotifyEntries.size()));
 }
 
 void Animation_View::Copy_SelectedNotifyState()
@@ -2084,129 +2390,189 @@ void Animation_View::Copy_SelectedNotifyState()
     if (!clip)
         return;
 
-    if (_selectedStateIndex < 0 || _selectedStateIndex >= static_cast<int32>(clip->notifyStates.size()))
-        return;
-
-    auto& entry = clip->notifyStates[_selectedStateIndex];
-    if (!entry.notifyState)
+    const auto selectedIndices = Collect_SelectedStateIndices();
+    if (selectedIndices.empty())
         return;
 
     _copiedNotifyKind = ENotifyClipboardKind::NotifyState;
-    _copiedNotifyTypeName = entry.notifyState->Get_TypeName();
-    _copiedNotifyPayload = entry.notifyState->Serialize_Payload();
-    _copiedNotifyStateDurationSec = entry.durationSec;
+    _copiedNotifyEntries.clear();
+    _copiedNotifyStateEntries.clear();
 
-    NOTIFY("노티파이 스테이트 복사");
+    for (int32 index : selectedIndices)
+    {
+        const auto& entry = clip->notifyStates[index];
+        if (!entry.notifyState)
+            continue;
+
+        FCopiedNotifyStateEntry copiedEntry{};
+        copiedEntry.typeName = entry.notifyState->Get_TypeName();
+        copiedEntry.payload = entry.notifyState->Serialize_Payload();
+        copiedEntry.startSec = entry.startSec;
+        copiedEntry.durationSec = entry.durationSec;
+        copiedEntry.trackIndex = entry.trackIndex;
+        _copiedNotifyStateEntries.push_back(std::move(copiedEntry));
+    }
+
+    NOTIFY("노티파이 스테이트 {}개 복사", static_cast<int32>(_copiedNotifyStateEntries.size()));
 }
 
 void Animation_View::Paste_CopiedNotify()
 {
     auto* clip = Get_CurrentClip();
-    if (!clip || _copiedNotifyTypeName.empty())
+    if (!clip || _copiedNotifyEntries.empty())
         return;
 
     if (clip->notifyTracks.empty())
         Add_NotifyTrack("Notifies");
-
-    auto instance = AnimNotify_Factory::Create_Notify(_copiedNotifyTypeName);
-    if (!instance)
-        return;
-
-    instance->Deserialize_Payload(_copiedNotifyPayload);
 
     int32 trackIndex = _selectedNotifyTrackIndex;
     if (!_sequencerContext.isSelectedStateTrack && _sequencerContext.selectedTrackIndex >= 0)
         trackIndex = _sequencerContext.selectedTrackIndex;
 
     trackIndex = std::clamp(trackIndex, 0, static_cast<int32>(clip->notifyTracks.size()) - 1);
+    const int32 fps = Get_CurrentClipFps();
+    const float pasteBaseTimeSec = static_cast<float>(_sequencerState.currentFrame) / static_cast<float>(fps);
 
-    FAnimNotifyEventEntry entry;
-    entry.timeSec = static_cast<float>(_sequencerState.currentFrame) / static_cast<float>(Get_CurrentClipFps());
-    entry.trackIndex = trackIndex;
-    entry.notify = instance;
+    float minTimeSec = FLT_MAX;
+    int32 minTrackIndex = INT_MAX;
+    int32 maxTrackIndex = INT_MIN;
 
-    clip->notifies.push_back(entry);
+    for (const auto& copiedEntry : _copiedNotifyEntries)
+    {
+        minTimeSec = min(minTimeSec, copiedEntry.timeSec);
+        minTrackIndex = min(minTrackIndex, copiedEntry.trackIndex);
+        maxTrackIndex = max(maxTrackIndex, copiedEntry.trackIndex);
+    }
 
-    sort(clip->notifies.begin(), clip->notifies.end(),
-        [](const FAnimNotifyEventEntry& lhs, const FAnimNotifyEventEntry& rhs)
-        {
-            if (lhs.trackIndex == rhs.trackIndex)
-                return lhs.timeSec < rhs.timeSec;
+    if (minTimeSec == FLT_MAX)
+        return;
 
-            return lhs.trackIndex < rhs.trackIndex;
-        });
+    Ensure_NotifyTrackCount(trackIndex + (maxTrackIndex - minTrackIndex) + 1);
+
+    vector<Shared<AnimNotify>> createdNotifies;
+    createdNotifies.reserve(_copiedNotifyEntries.size());
+
+    for (const auto& copiedEntry : _copiedNotifyEntries)
+    {
+        auto instance = AnimNotify_Factory::Create_Notify(copiedEntry.typeName);
+        if (!instance)
+            continue;
+
+        instance->Deserialize_Payload(copiedEntry.payload);
+
+        FAnimNotifyEventEntry entry;
+        entry.timeSec = pasteBaseTimeSec + (copiedEntry.timeSec - minTimeSec);
+        entry.trackIndex = trackIndex + (copiedEntry.trackIndex - minTrackIndex);
+        entry.notify = instance;
+
+        clip->notifies.push_back(entry);
+        createdNotifies.push_back(instance);
+    }
+
+    Sort_CurrentClipNotifies();
+
+    _selectedNotifyIndices.clear();
+    _selectedStateIndices.clear();
+    _selectedNotifyIndex = -1;
+    _selectedStateIndex = -1;
 
     for (int32 i = 0; i < static_cast<int32>(clip->notifies.size()); ++i)
     {
-        if (clip->notifies[i].notify == instance)
-        {
+        const auto& entry = clip->notifies[i];
+        if (std::find(createdNotifies.begin(), createdNotifies.end(), entry.notify) == createdNotifies.end())
+            continue;
+
+        _selectedNotifyIndices.insert(i);
+        if (_selectedNotifyIndex < 0)
             _selectedNotifyIndex = i;
-            _selectedStateIndex = -1;
-            Select_NotifyTrack(clip->notifies[i].trackIndex);
-            break;
-        }
     }
 
+    if (!_selectedNotifyIndices.empty())
+        _selectedNotifyIndex = *std::min_element(_selectedNotifyIndices.begin(), _selectedNotifyIndices.end());
+
+    Select_NotifyTrack(trackIndex);
     MarkDirty();
-    NOTIFY("노티파이 붙여넣기");
+    NOTIFY("노티파이 {}개 붙여넣기", static_cast<int32>(createdNotifies.size()));
 }
 
 void Animation_View::Paste_CopiedNotifyState()
 {
     auto* clip = Get_CurrentClip();
-    if (!clip || _copiedNotifyTypeName.empty())
+    if (!clip || _copiedNotifyStateEntries.empty())
         return;
 
     if (clip->notifyStateTracks.empty())
         Add_NotifyStateTrack("Notify States");
-
-    auto instance = AnimNotify_Factory::Create_NotifyState(_copiedNotifyTypeName);
-    if (!instance)
-        return;
-
-    instance->Deserialize_Payload(_copiedNotifyPayload);
 
     int32 trackIndex = _selectedNotifyStateTrackIndex;
     if (_sequencerContext.isSelectedStateTrack && _sequencerContext.selectedTrackIndex >= 0)
         trackIndex = _sequencerContext.selectedTrackIndex;
 
     trackIndex = std::clamp(trackIndex, 0, static_cast<int32>(clip->notifyStateTracks.size()) - 1);
-
     const int32 fps = Get_CurrentClipFps();
+    const float pasteBaseTimeSec = static_cast<float>(_sequencerState.currentFrame) / static_cast<float>(fps);
 
-    FAnimNotifyStateEntry entry;
-    entry.startSec = static_cast<float>(_sequencerState.currentFrame) / static_cast<float>(fps);
-    entry.durationSec = max(0.f, _copiedNotifyStateDurationSec);
-    entry.trackIndex = trackIndex;
-    entry.notifyState = instance;
+    float minStartSec = FLT_MAX;
+    int32 minTrackIndex = INT_MAX;
+    int32 maxTrackIndex = INT_MIN;
 
-    clip->notifyStates.push_back(entry);
+    for (const auto& copiedEntry : _copiedNotifyStateEntries)
+    {
+        minStartSec = min(minStartSec, copiedEntry.startSec);
+        minTrackIndex = min(minTrackIndex, copiedEntry.trackIndex);
+        maxTrackIndex = max(maxTrackIndex, copiedEntry.trackIndex);
+    }
 
-    sort(clip->notifyStates.begin(), clip->notifyStates.end(),
-        [](const FAnimNotifyStateEntry& lhs, const FAnimNotifyStateEntry& rhs)
-        {
-            if (lhs.trackIndex != rhs.trackIndex)
-                return lhs.trackIndex < rhs.trackIndex;
+    if (minStartSec == FLT_MAX)
+        return;
 
-            if (lhs.startSec == rhs.startSec)
-                return lhs.durationSec < rhs.durationSec;
+    Ensure_StateTrackCount(trackIndex + (maxTrackIndex - minTrackIndex) + 1);
 
-            return lhs.startSec < rhs.startSec;
-        });
+    vector<Shared<AnimNotifyState>> createdStates;
+    createdStates.reserve(_copiedNotifyStateEntries.size());
+
+    for (const auto& copiedEntry : _copiedNotifyStateEntries)
+    {
+        auto instance = AnimNotify_Factory::Create_NotifyState(copiedEntry.typeName);
+        if (!instance)
+            continue;
+
+        instance->Deserialize_Payload(copiedEntry.payload);
+
+        FAnimNotifyStateEntry entry;
+        entry.startSec = pasteBaseTimeSec + (copiedEntry.startSec - minStartSec);
+        entry.durationSec = max(0.f, copiedEntry.durationSec);
+        entry.trackIndex = trackIndex + (copiedEntry.trackIndex - minTrackIndex);
+        entry.notifyState = instance;
+
+        clip->notifyStates.push_back(entry);
+        createdStates.push_back(instance);
+    }
+
+    Sort_CurrentClipStates();
+
+    _selectedNotifyIndices.clear();
+    _selectedStateIndices.clear();
+    _selectedNotifyIndex = -1;
+    _selectedStateIndex = -1;
 
     for (int32 i = 0; i < static_cast<int32>(clip->notifyStates.size()); ++i)
     {
-        if (clip->notifyStates[i].notifyState == instance)
-        {
+        const auto& entry = clip->notifyStates[i];
+        if (std::find(createdStates.begin(), createdStates.end(), entry.notifyState) == createdStates.end())
+            continue;
+
+        _selectedStateIndices.insert(i);
+        if (_selectedStateIndex < 0)
             _selectedStateIndex = i;
-            _selectedNotifyIndex = -1;
-            Select_NotifyStateTrack(clip->notifyStates[i].trackIndex);
-            break;
-        }
     }
 
+    if (!_selectedStateIndices.empty())
+        _selectedStateIndex = *std::min_element(_selectedStateIndices.begin(), _selectedStateIndices.end());
+
+    Select_NotifyStateTrack(trackIndex);
     MarkDirty();
-    NOTIFY("노티파이 스테이트 붙여넣기");
+    NOTIFY("노티파이 스테이트 {}개 붙여넣기", static_cast<int32>(createdStates.size()));
 }
 
 float Animation_View::Get_CurrentFrameTimeSec() const
@@ -2236,6 +2602,46 @@ int32 Animation_View::Pixel_ToFrame_InSequencer(float pixelX, float trackMinX, f
     const float clamped = std::clamp(normalized, 0.f, 1.f);
 
     return frameMin + static_cast<int32>(std::round(clamped * static_cast<float>(frameMax - frameMin)));
+}
+
+bool Animation_View::Is_NotifyIndexSelected(int32 notifyIndex) const
+{
+    if (notifyIndex < 0)
+        return false;
+
+    return _selectedNotifyIndices.contains(notifyIndex) ||
+           (_selectedNotifyIndices.empty() && _selectedNotifyIndex == notifyIndex);
+}
+
+bool Animation_View::Is_StateIndexSelected(int32 stateIndex) const
+{
+    if (stateIndex < 0)
+        return false;
+
+    return _selectedStateIndices.contains(stateIndex) ||
+           (_selectedStateIndices.empty() && _selectedStateIndex == stateIndex);
+}
+
+void Animation_View::Handle_NotifySelectionFromSequencer(int32 notifyIndex, int32 trackIndex, bool isCtrlHeld)
+{
+    Handle_NotifySelection(notifyIndex, trackIndex, isCtrlHeld);
+}
+
+void Animation_View::Handle_StateSelectionFromSequencer(int32 stateIndex, int32 trackIndex, bool isCtrlHeld)
+{
+    Handle_StateSelection(stateIndex, trackIndex, isCtrlHeld);
+}
+
+void Animation_View::Clear_NotifySelectionFromSequencer(int32 trackIndex)
+{
+    Clear_SelectedEntries();
+    Select_NotifyTrack(trackIndex);
+}
+
+void Animation_View::Clear_StateSelectionFromSequencer(int32 trackIndex)
+{
+    Clear_SelectedEntries();
+    Select_NotifyStateTrack(trackIndex);
 }
 
 int32 Animation_View::Get_FrameMax() const
@@ -2280,13 +2686,24 @@ void Animation_View::Close_ViewSession()
     Update_PrefabPreviewSuspension(false);
 
     _sourcePrefabName.clear();
+
+    if (_ownsPreviewObject && _previewOwner)
+    {
+        GAME->Delete_GameObject(static_cast<uint32>(ELevelType::Prefab), _previewOwner);
+    }
+
     _previewOwner.reset();
     _model.reset();
     _previewRT.reset();
     _previewRTRequestedSize = ImVec2(0.f, 0.f);
+    _sortedClipEntries.clear();
+    _visibleClipIndices.clear();
+    _clipSortCacheDirty = true;
     _isPlaying = false;
     _previewPlaybackTimeSec = 0.f;
     _pendingCloseViewSession = false;
+    _ownsPreviewObject = false;
+    _previewHasBegunPlay = false;
 }
 
 Shared<GameObject> Animation_View::Create_PreviewOwnerFromSourceModel(Shared<Model> sourceModel)
@@ -2321,6 +2738,18 @@ Shared<GameObject> Animation_View::Create_PreviewOwnerFromSourceModel(Shared<Mod
         movement->Set_GravityEnabled(false);
 
     return previewOwner;
+}
+
+Shared<Model> Animation_View::Find_PreviewModel() const
+{
+    if (!_previewOwner)
+        return nullptr;
+
+    auto component = _previewOwner->Find_Component_ByStaticType(Model::StaticTypeID());
+    if (!component)
+        return nullptr;
+
+    return dynamic_pointer_cast<Model>(component);
 }
 
 void Animation_View::Update_PrefabPreviewSuspension(bool suspend)

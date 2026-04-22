@@ -1,0 +1,19 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_House_Distance_A",
+      "material_instance_guid": "e2866492-3b19-4a3a-afdc-7c36261f12ae"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": [],
+      "base_color_factor": [
+        0.58,
+        0.59,
+        0.62,
+        1.0
+      ]
+    }
+  ]
+}

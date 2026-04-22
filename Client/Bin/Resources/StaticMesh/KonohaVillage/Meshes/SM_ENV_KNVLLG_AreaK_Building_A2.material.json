@@ -1,0 +1,83 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "3a831086-b931-451d-8bef-74f256cf7d4e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "33c91196-b849-4ef1-85f0-7cece3065d02"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_StoneTrim",
+      "material_instance_guid": "bb586838-0747-4572-84c7-83a97c82dd3a"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Bright",
+      "material_instance_guid": "eda97172-bf20-468c-b652-51797f248fab"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_Light",
+      "material_instance_guid": "18b8d24d-baca-4a0b-81c2-27a65160532f"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_Red",
+      "material_instance_guid": "cc0319dc-a256-46ea-8a8d-cf825f0629ac"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_RoughTiles",
+      "material_instance_guid": "47763dd1-e85b-42b8-9517-29b3bd51a4b1"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster",
+      "material_instance_guid": "15e34ce8-5e84-4a5e-99ca-4d10a3675692"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Red",
+      "material_instance_guid": "0a5d4b1d-9197-4a9b-b53b-b9bba2762e7e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Window_Paper",
+      "material_instance_guid": "96768a24-fd21-4f8a-9ef6-85197417297d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_A",
+      "material_instance_guid": "e8085cb0-8fbd-4878-8f9d-07811e3e285b"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Signboard_U",
+      "material_instance_guid": "23a26b15-bd72-4440-80cb-b96f89fe3bd2"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Signboard_T",
+      "material_instance_guid": "fc70b5ee-2e5b-4ded-a0a1-fe23eb5c13ee"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Rope_A",
+      "material_instance_guid": "5598b83c-6271-482a-a7c5-0b23ce9dc42a"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Signboard_Z",
+      "material_instance_guid": "a49ed9fb-79dd-40c3-947c-887bb03ba277"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_PaperBase_A",
+      "material_instance_guid": "8bac0a96-a7a0-4c59-b05f-d230a035262e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Banner_A",
+      "material_instance_guid": "703997f1-41c5-4e40-b727-b2204dc404fd"
+    },
+    {
+      "material_name": "Material_17",
+      "textures": [],
+      "base_color_factor": [
+        0.66,
+        0.64,
+        0.6,
+        1.0
+      ]
+    }
+  ]
+}

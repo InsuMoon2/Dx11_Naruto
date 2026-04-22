@@ -45,6 +45,8 @@ public:
 
     void    Sync(const Protocol::ObjectInfo& info);
 
+    void    Set_RotationToDamageCauser(const FDamageEvent& damageEvent);
+
 protected:
     HRESULT Bind_ShaderResources() override;
 
@@ -86,9 +88,16 @@ protected:
     Protocol::ATTACK_PROFILE_TYPE _lastAttackProfile = Protocol::ATTACK_PROFILE_TYPE_HAND_GROUND; 
     int32 _lastAttackComboIndex = 0;
 
+    string _lastAnimStateKey = "";
+    Protocol::HIT_REACTION_TYPE _lastHitReactionType = Protocol::HIT_REACTION_TYPE_DEFAULT;
+    uint32 _lastHitReactionSerial = 0;
+
     string _hitEffectAssetName = "HitParticle"; 
     float _hitEffectHeightOffset = 1.f; 
-    string _idleStateName = "Idle"; 
+    string _idleStateName = "Idle";
+
+public:
+    void Free() override;
 };
 
 NS_END

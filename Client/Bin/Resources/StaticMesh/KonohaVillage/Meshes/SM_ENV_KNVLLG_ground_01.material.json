@@ -1,0 +1,29 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_StoneStairs",
+      "material_instance_guid": "11473436-ac57-4d96-89c7-c102629ad02f"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_GroundSoil_A",
+      "material_instance_guid": "75db064f-e5ff-4011-9eb6-effc336c3051"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_FloorConc_B",
+      "material_instance_guid": "0b372174-6d4b-4313-9a8e-de59da74ff44"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_StoneTrim",
+      "material_instance_guid": "bb586838-0747-4572-84c7-83a97c82dd3a"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "3a831086-b931-451d-8bef-74f256cf7d4e"
+    },
+    {
+      "material_name": "Material_5",
+      "textures": []
+    }
+  ]
+}

@@ -1,29 +1,35 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG02_Pipe_01",
-      "material_instance_guid": "f21fd177-9bc7-4a0f-acf9-247e0e05b941"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_PipeDetails_01",
-      "material_instance_guid": "0547ba36-4f59-40b4-8072-bb6954e77de6"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Stonewall_04",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_StoneWall_Blend",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_RoughTiles",
-      "material_instance_guid": "3f495c7a-f76b-4913-a13c-f9141946bc85"
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_5",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

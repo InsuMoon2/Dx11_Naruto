@@ -62,4 +62,16 @@ struct FCameraSequenceAsset
     FCameraTrack    track;
 };
 
+struct FCameraShakeDesc
+{
+    string tag = ""; // 같은 카메라 셰이크들어오는거 판별용
+    float durationSec = 0.15f;
+    float frequency = 24.f;
+    float blendInSec = 0.01f;
+    float blendOutSec = 0.08f;
+
+    Vec3 localPosAmplitude = Vec3::Zero;
+    Vec3 localRotAmplitudeDeg = Vec3::Zero;
+};
+
 NS_END

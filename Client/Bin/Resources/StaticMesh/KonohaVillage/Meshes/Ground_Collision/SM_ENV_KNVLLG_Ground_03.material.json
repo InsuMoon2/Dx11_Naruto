@@ -1,0 +1,25 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_Wood",
+      "textures": []
+    },
+    {
+      "material_name": "MI_Dirt",
+      "textures": []
+    },
+    {
+      "material_name": "MI_Rock",
+      "textures": []
+    },
+    {
+      "material_name": "MI_Metal",
+      "textures": []
+    },
+    {
+      "material_name": "Material_4",
+      "textures": []
+    }
+  ]
+}

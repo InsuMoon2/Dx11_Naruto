@@ -21,6 +21,15 @@ class PlayerStateMachine final : public Component
     GENERATED_COMPONENT(PlayerStateMachine, Protocol::COMPONENT_TYPE_PLAYER_STATE)
 
 public:
+    struct FPendingHitReaction
+    {
+        bool                active = false;
+        EHitReactionType    type = EHitReactionType::Default;
+        uint32              serial = 0;
+        bool                forceRestart = false;
+    };
+
+public:
     explicit         PlayerStateMachine(ComPtr<Device> device, ComPtr<DeviceContext> context);
     explicit         PlayerStateMachine(const PlayerStateMachine& rhs);
     virtual         ~PlayerStateMachine() = default;
@@ -97,7 +106,11 @@ public:
 
     static string               To_AnimationStateName(EPlayerState stateID);
 
-    void                        Trigger_HitReaction() { _pendingHitReaction = true; }
+    void                        Trigger_HitReaction(EHitReactionType type, uint32 serial, bool forceRestart);
+
+    const FPendingHitReaction&  Get_PendingHitReaction() const { return _pendingHitReaction; }
+    void                        Consume_PendingHitReaction();
+
 
     // 상태 바뀔 때 이벤트 전파
     FOnPlayerStateChanged       OnStateChanged;
@@ -105,8 +118,9 @@ public:
     // 근접해서 때릴지 판단
     bool Try_MeleeApproach(
         EPlayerState nextState,
-        float approachRange = 12.f,
-        float meleeRange = 2.55f);
+        float approachRange = 7.f,
+        float meleeRange = 1.45f);
+
 
 public:
     void Set_ForceGroundAttack(bool val) { _forceGroundAttack = val; }
@@ -126,10 +140,16 @@ private:
     bool                        Check_Cinematic();
     bool                        Check_HitReaction(); // 슈퍼아머 아닐 때
 
+    bool Check_Airbone_Input();
+
+
 private:
     Shared<InputComponent>                      _input;
     Shared<MovementComponent>                   _movement;
     Shared<AnimationStateComponent>             _animationState;
+
+    FPendingHitReaction                         _pendingHitReaction{};
+    uint32                                      _lastConsumedReactionSerial = 0; // 소모된 히트리액션
 
 private:
     umap<EPlayerState, Shared<IPlayerState>>    _states;
@@ -141,7 +161,7 @@ private:
     float                                       _pendingSuperJumpVelocity = 0.f;
     Vec3                                        _pendingLandDirection = Vec3::Zero;
 
-    bool                                        _pendingHitReaction = false;
+    //bool                                        _pendingHitReaction = false;
 
     EMoveInputDirection                         _pendingMoveInputDirection = EMoveInputDirection::Forward;
     Vec3                                        _pendingDashWorldDirection = Vec3::Forward;

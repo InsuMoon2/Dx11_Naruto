@@ -32,6 +32,7 @@ HRESULT GameObject::Initialize(void* arg)
 
         CHECK_FAILED(_transformCom->Initialize(arg), E_FAIL);
 
+        _transformCom->Set_IsLocal(_isLocal);
         _transformCom->Set_Owner(GetSharedPtr());
 
         _components.emplace(Transform::StaticTypeID(), _transformCom);
@@ -166,6 +167,8 @@ HRESULT GameObject::Bind_ShaderResources()
 
 void GameObject::Set_Local(bool isLocal)
 {
+    _isLocal = isLocal;
+
     // 자신이 리모트 객체면, 내가 가진 모든 컴포넌트들한테도 설정
     for (auto& pair : _components)
     {
@@ -187,6 +190,7 @@ HRESULT GameObject::Add_Component(uint32 id, shared_ptr<Component> component)
     if (_components.contains(id))
         return E_FAIL;
 
+    component->Set_IsLocal(_isLocal);
     component->Set_Owner(GetSharedPtr());
 
     _components.emplace(id, component);

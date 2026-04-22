@@ -17,6 +17,8 @@ public:
     HRESULT Initialize_Prototype() override;
     HRESULT Initialize(void* arg) override;
 
+    void    BeginPlay() override;
+
     json    To_Json() const override;
     void    From_Json(const json& data) override;
 
@@ -32,8 +34,8 @@ private:
     float _maxWalkSpeed = 2.f;
     float _maxSprintSpeed = 4.f;
 
-    Vec3 _bodyColliderCenter = Vec3(0.f, 1.5f, 0.f);
-    Vec3 _bodyColliderExtents = Vec3(1.f, 1.5f, 1.f);
+    Vec3 _bodyColliderCenter = Vec3(0.f, 0.7f, 0.f);
+    Vec3 _bodyColliderExtents = Vec3(0.5f, 0.6f, 0.5f);
 
     uint32 _modelComponentID = static_cast<uint32>(std::hash<string>{}("Model_Pain")); 
 

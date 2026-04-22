@@ -492,9 +492,9 @@ HRESULT GameInstance::Resize_DeferredViewport(uint32 width, uint32 height)
     return S_OK;
 }
 
-HRESULT GameInstance::Draw_Preview()
+HRESULT GameInstance::Draw_Preview(bool renderColliders)
 {
-    return _renderer->Draw_Preview();
+    return _renderer->Draw_Preview(renderColliders);
 }
 
 Shared<GameObject> GameInstance::Instantiate_Prefab(const string& prefabName, const json& overrides)
@@ -1070,6 +1070,21 @@ bool GameInstance::Play_Cinematic(const wstring& sequenceName, Shared<Transform>
 void GameInstance::Stop_Cinematic()
 {
     return _cameraManager->Stop_Cinematic();
+}
+
+void GameInstance::Request_CameraShake(const FCameraShakeDesc& request)
+{
+    _cameraManager->Request_CameraShake(request);
+}
+
+void GameInstance::Stop_CameraShake(const string& tag)
+{
+    _cameraManager->Stop_CameraShake(tag);
+}
+
+void GameInstance::Clear_CameraShake()
+{
+    _cameraManager->Clear_CameraShake();
 }
 
 void GameInstance::Free()

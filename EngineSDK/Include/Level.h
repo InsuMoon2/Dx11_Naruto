@@ -24,6 +24,11 @@ public:
 public:
     virtual HRESULT Load_LevelFromJson(const wstring& fileName);
 
+    // 단일 오브젝트 JSON을 실제 게임 오브젝트로 만들어 target level에 추가할 때 호출한다.
+    static HRESULT  Add_GameObjectJsonToLevel(uint32 targetLevelIndex,
+                                              uint32 prototypeLevelIndex,
+                                              const json& objJson);
+
     static HRESULT  Load_LevelChunkToLevel(uint32 targetLevelIndex,
                                             uint32 prototypeLevelIndex,
                                             const wstring& fileName);

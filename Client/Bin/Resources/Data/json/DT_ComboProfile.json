@@ -10,8 +10,9 @@
             "damageMultiplier": 1.0,
             "canCancel": true,
             "launchPower": 3,
-            "launchUp": 3,
-            "hitSound": 0
+            "launchUp": 0,
+            "hitSound": 0,
+            "hitReactionType": "Hit"
         },
         {
             "profileName": "격투형 일반",
@@ -23,8 +24,9 @@
             "damageMultiplier": 1.2,
             "canCancel": true,
             "launchPower": 2,
-            "launchUp": 2,
-            "hitSound": 0
+            "launchUp": 0,
+            "hitSound": 0,
+            "hitReactionType": "Hit"
         },
         {
             "profileName": "격투형 일반",
@@ -36,8 +38,9 @@
             "damageMultiplier": 1.5,
             "canCancel": true,
             "launchPower": 3,
-            "launchUp": 3,
-            "hitSound": 0
+            "launchUp": 0,
+            "hitSound": 0,
+            "hitReactionType": "Hit"
         },
         {
             "profileName": "격투형 일반",
@@ -49,8 +52,9 @@
             "damageMultiplier": 2.0,
             "canCancel": false,
             "launchPower": 4,
-            "launchUp": 4,
-            "hitSound": 0
+            "launchUp": 0,
+            "hitSound": 0,
+            "hitReactionType": "Down"
         },
         {
             "profileName": "격투형 공중",
@@ -61,7 +65,7 @@
             "animStateKey": "Attack_Air_01",
             "damageMultiplier": 1.0,
             "canCancel": true,
-            "launchPower": 1,
+            "launchPower": 2,
             "launchUp": 2,
             "hitSound": 0
         },
@@ -87,7 +91,7 @@
             "animStateKey": "Attack_Air_03",
             "damageMultiplier": 1.8,
             "canCancel": false,
-            "launchPower": 1,
+            "launchPower": 2,
             "launchUp": 3,
             "hitSound": 0
         },
@@ -101,7 +105,7 @@
             "damageMultiplier": 2.0,
             "canCancel": false,
             "launchPower": 3,
-            "launchUp": 3,
+            "launchUp": -3,
             "hitSound": 0
         },
         {

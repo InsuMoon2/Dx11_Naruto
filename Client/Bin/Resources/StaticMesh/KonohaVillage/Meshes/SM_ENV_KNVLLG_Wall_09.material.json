@@ -1,0 +1,33 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_StoneWall_Blend",
+      "material_instance_guid": "0151b824-cbf2-47a1-a866-cdb21e1a8ce1"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_PipeDetails_01",
+      "material_instance_guid": "e9fa41fb-0bc2-42f3-a301-12ac250ba29d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_RoughTiles",
+      "material_instance_guid": "47763dd1-e85b-42b8-9517-29b3bd51a4b1"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Stonewall_04",
+      "material_instance_guid": "d194e226-b836-405d-a01f-2ebb21920992"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_01",
+      "material_instance_guid": "9e8fa8ce-6a4a-4a04-96a3-1b823b37b91a"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Dark2",
+      "material_instance_guid": "8e6cde9d-78aa-4781-807d-f2a61b2c6dad"
+    },
+    {
+      "material_name": "Material_6",
+      "textures": []
+    }
+  ]
+}

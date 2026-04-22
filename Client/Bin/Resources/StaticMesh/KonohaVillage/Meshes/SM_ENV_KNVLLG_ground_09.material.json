@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_GroundSoil_A",
+      "material_instance_guid": "75db064f-e5ff-4011-9eb6-effc336c3051"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

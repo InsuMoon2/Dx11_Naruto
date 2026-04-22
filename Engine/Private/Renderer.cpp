@@ -148,14 +148,15 @@ void Renderer::Draw(bool renderDebugPrimitives, bool renderColliders, bool rende
 #endif
 }
 
-HRESULT Renderer::Draw_Preview()
+HRESULT Renderer::Draw_Preview(bool renderColliders)
 {
     _drawCallCount = 0;
 
     Apply_Default3DState();
     Render_Priority();
 
-    GAME->Render_Colliders();
+    if (renderColliders)
+        GAME->Render_Colliders();
     
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::NonBlend)])
     {
@@ -222,9 +223,49 @@ void Renderer::Render_Priority()
     _renderObjects[ETOI(ERenderGroup::Priority)].clear();
 }
 
+void Renderer::Sort_NonBlendRenderObjects()
+{
+    auto& renderObjects = _renderObjects[ETOI(ERenderGroup::NonBlend)];
+
+    renderObjects.sort([](const Shared<GameObject>& lhs, const Shared<GameObject>& rhs)
+        {
+            if (lhs == rhs)
+                return false;
+
+            if (!lhs)
+                return false;
+
+            if (!rhs)
+                return true;
+
+            const bool lhsSortable = lhs->Is_RenderBatchSortable();
+            const bool rhsSortable = rhs->Is_RenderBatchSortable();
+
+            if (lhsSortable != rhsSortable)
+                return lhsSortable && !rhsSortable;
+
+            if (!lhsSortable)
+                return false;
+
+            const uint64 lhsPrimaryKey = lhs->Get_RenderBatchPrimaryKey();
+            const uint64 rhsPrimaryKey = rhs->Get_RenderBatchPrimaryKey();
+            if (lhsPrimaryKey != rhsPrimaryKey)
+                return lhsPrimaryKey < rhsPrimaryKey;
+
+            const uint64 lhsSecondaryKey = lhs->Get_RenderBatchSecondaryKey();
+            const uint64 rhsSecondaryKey = rhs->Get_RenderBatchSecondaryKey();
+            if (lhsSecondaryKey != rhsSecondaryKey)
+                return lhsSecondaryKey < rhsSecondaryKey;
+
+            return false;
+        });
+}
+
 void Renderer::Render_NonBlend()
 {
     CHECK_FAILED(GAME->Begin_MRT(L"MRT_GameObjects"));
+
+    Sort_NonBlendRenderObjects();
 
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::NonBlend)])
     {

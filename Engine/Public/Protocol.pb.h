@@ -106,6 +106,9 @@ extern S_UpdateStatDefaultTypeInternal _S_UpdateStat_default_instance_;
 class S_WaveCleared;
 struct S_WaveClearedDefaultTypeInternal;
 extern S_WaveClearedDefaultTypeInternal _S_WaveCleared_default_instance_;
+class S_WaveStarted;
+struct S_WaveStartedDefaultTypeInternal;
+extern S_WaveStartedDefaultTypeInternal _S_WaveStarted_default_instance_;
 }  // namespace Protocol
 namespace google {
 namespace protobuf {
@@ -117,6 +120,202 @@ namespace Protocol {
 // ===================================================================
 
 
+// -------------------------------------------------------------------
+
+class S_WaveStarted final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:Protocol.S_WaveStarted) */ {
+ public:
+  inline S_WaveStarted() : S_WaveStarted(nullptr) {}
+  ~S_WaveStarted() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(S_WaveStarted* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(S_WaveStarted));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR S_WaveStarted(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline S_WaveStarted(const S_WaveStarted& from) : S_WaveStarted(nullptr, from) {}
+  inline S_WaveStarted(S_WaveStarted&& from) noexcept
+      : S_WaveStarted(nullptr, std::move(from)) {}
+  inline S_WaveStarted& operator=(const S_WaveStarted& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_WaveStarted& operator=(S_WaveStarted&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_WaveStarted& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_WaveStarted* internal_default_instance() {
+    return reinterpret_cast<const S_WaveStarted*>(
+        &_S_WaveStarted_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 5;
+  friend void swap(S_WaveStarted& a, S_WaveStarted& b) { a.Swap(&b); }
+  inline void Swap(S_WaveStarted* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_WaveStarted* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  S_WaveStarted* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<S_WaveStarted>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const S_WaveStarted& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const S_WaveStarted& from) { S_WaveStarted::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(S_WaveStarted* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "Protocol.S_WaveStarted"; }
+
+ protected:
+  explicit S_WaveStarted(::google::protobuf::Arena* arena);
+  S_WaveStarted(::google::protobuf::Arena* arena, const S_WaveStarted& from);
+  S_WaveStarted(::google::protobuf::Arena* arena, S_WaveStarted&& from) noexcept
+      : S_WaveStarted(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kWaveTagFieldNumber = 1,
+  };
+  // string wave_tag = 1;
+  void clear_wave_tag() ;
+  const std::string& wave_tag() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_wave_tag(Arg_&& arg, Args_... args);
+  std::string* mutable_wave_tag();
+  PROTOBUF_NODISCARD std::string* release_wave_tag();
+  void set_allocated_wave_tag(std::string* value);
+
+  private:
+  const std::string& _internal_wave_tag() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_wave_tag(
+      const std::string& value);
+  std::string* _internal_mutable_wave_tag();
+
+  public:
+  // @@protoc_insertion_point(class_scope:Protocol.S_WaveStarted)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      0, 1, 0,
+      39, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const S_WaveStarted& from_msg);
+    ::google::protobuf::internal::ArenaStringPtr wave_tag_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};
 // -------------------------------------------------------------------
 
 class S_WaveCleared final : public ::google::protobuf::Message
@@ -178,7 +377,7 @@ class S_WaveCleared final : public ::google::protobuf::Message
     return reinterpret_cast<const S_WaveCleared*>(
         &_S_WaveCleared_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 5;
+  static constexpr int kIndexInFileMessages = 6;
   friend void swap(S_WaveCleared& a, S_WaveCleared& b) { a.Swap(&b); }
   inline void Swap(S_WaveCleared* other) {
     if (other == this) return;
@@ -572,7 +771,7 @@ class S_LobbyStartGame final : public ::google::protobuf::internal::ZeroFieldsBa
     return reinterpret_cast<const S_LobbyStartGame*>(
         &_S_LobbyStartGame_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 16;
+  static constexpr int kIndexInFileMessages = 17;
   friend void swap(S_LobbyStartGame& a, S_LobbyStartGame& b) { a.Swap(&b); }
   inline void Swap(S_LobbyStartGame* other) {
     if (other == this) return;
@@ -718,7 +917,7 @@ class S_LobbyChat final : public ::google::protobuf::Message
     return reinterpret_cast<const S_LobbyChat*>(
         &_S_LobbyChat_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 14;
+  static constexpr int kIndexInFileMessages = 15;
   friend void swap(S_LobbyChat& a, S_LobbyChat& b) { a.Swap(&b); }
   inline void Swap(S_LobbyChat* other) {
     if (other == this) return;
@@ -1145,7 +1344,7 @@ class C_LobbyStartGame final : public ::google::protobuf::internal::ZeroFieldsBa
     return reinterpret_cast<const C_LobbyStartGame*>(
         &_C_LobbyStartGame_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 15;
+  static constexpr int kIndexInFileMessages = 16;
   friend void swap(C_LobbyStartGame& a, C_LobbyStartGame& b) { a.Swap(&b); }
   inline void Swap(C_LobbyStartGame* other) {
     if (other == this) return;
@@ -1291,7 +1490,7 @@ class C_LobbyChat final : public ::google::protobuf::Message
     return reinterpret_cast<const C_LobbyChat*>(
         &_C_LobbyChat_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 13;
+  static constexpr int kIndexInFileMessages = 14;
   friend void swap(C_LobbyChat& a, C_LobbyChat& b) { a.Swap(&b); }
   inline void Swap(C_LobbyChat* other) {
     if (other == this) return;
@@ -1487,7 +1686,7 @@ class S_UpdateStat final : public ::google::protobuf::Message
     return reinterpret_cast<const S_UpdateStat*>(
         &_S_UpdateStat_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 9;
+  static constexpr int kIndexInFileMessages = 10;
   friend void swap(S_UpdateStat& a, S_UpdateStat& b) { a.Swap(&b); }
   inline void Swap(S_UpdateStat* other) {
     if (other == this) return;
@@ -2124,7 +2323,7 @@ class S_Move final : public ::google::protobuf::Message
     return reinterpret_cast<const S_Move*>(
         &_S_Move_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 8;
+  static constexpr int kIndexInFileMessages = 9;
   friend void swap(S_Move& a, S_Move& b) { a.Swap(&b); }
   inline void Swap(S_Move* other) {
     if (other == this) return;
@@ -2517,7 +2716,7 @@ class LobbyPlayerInfo final : public ::google::protobuf::Message
     return reinterpret_cast<const LobbyPlayerInfo*>(
         &_LobbyPlayerInfo_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 10;
+  static constexpr int kIndexInFileMessages = 11;
   friend void swap(LobbyPlayerInfo& a, LobbyPlayerInfo& b) { a.Swap(&b); }
   inline void Swap(LobbyPlayerInfo* other) {
     if (other == this) return;
@@ -2749,7 +2948,7 @@ class C_Move final : public ::google::protobuf::Message
     return reinterpret_cast<const C_Move*>(
         &_C_Move_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 7;
+  static constexpr int kIndexInFileMessages = 8;
   friend void swap(C_Move& a, C_Move& b) { a.Swap(&b); }
   inline void Swap(C_Move* other) {
     if (other == this) return;
@@ -2945,7 +3144,7 @@ class C_LobbyJoin final : public ::google::protobuf::Message
     return reinterpret_cast<const C_LobbyJoin*>(
         &_C_LobbyJoin_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 11;
+  static constexpr int kIndexInFileMessages = 12;
   friend void swap(C_LobbyJoin& a, C_LobbyJoin& b) { a.Swap(&b); }
   inline void Swap(C_LobbyJoin* other) {
     if (other == this) return;
@@ -3141,7 +3340,7 @@ class C_EnterGame final : public ::google::protobuf::Message
     return reinterpret_cast<const C_EnterGame*>(
         &_C_EnterGame_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 6;
+  static constexpr int kIndexInFileMessages = 7;
   friend void swap(C_EnterGame& a, C_EnterGame& b) { a.Swap(&b); }
   inline void Swap(C_EnterGame* other) {
     if (other == this) return;
@@ -3366,7 +3565,7 @@ class S_LobbySnapshot final : public ::google::protobuf::Message
     return reinterpret_cast<const S_LobbySnapshot*>(
         &_S_LobbySnapshot_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 12;
+  static constexpr int kIndexInFileMessages = 13;
   friend void swap(S_LobbySnapshot& a, S_LobbySnapshot& b) { a.Swap(&b); }
   inline void Swap(S_LobbySnapshot* other) {
     if (other == this) return;
@@ -3881,6 +4080,58 @@ S_RemoveObject::_internal_ids() const {
 inline ::google::protobuf::RepeatedField<::uint64_t>* S_RemoveObject::_internal_mutable_ids() {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return &_impl_.ids_;
+}
+
+// -------------------------------------------------------------------
+
+// S_WaveStarted
+
+// string wave_tag = 1;
+inline void S_WaveStarted::clear_wave_tag() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.wave_tag_.ClearToEmpty();
+}
+inline const std::string& S_WaveStarted::wave_tag() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Protocol.S_WaveStarted.wave_tag)
+  return _internal_wave_tag();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void S_WaveStarted::set_wave_tag(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.wave_tag_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Protocol.S_WaveStarted.wave_tag)
+}
+inline std::string* S_WaveStarted::mutable_wave_tag() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_wave_tag();
+  // @@protoc_insertion_point(field_mutable:Protocol.S_WaveStarted.wave_tag)
+  return _s;
+}
+inline const std::string& S_WaveStarted::_internal_wave_tag() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.wave_tag_.Get();
+}
+inline void S_WaveStarted::_internal_set_wave_tag(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.wave_tag_.Set(value, GetArena());
+}
+inline std::string* S_WaveStarted::_internal_mutable_wave_tag() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.wave_tag_.Mutable( GetArena());
+}
+inline std::string* S_WaveStarted::release_wave_tag() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Protocol.S_WaveStarted.wave_tag)
+  return _impl_.wave_tag_.Release();
+}
+inline void S_WaveStarted::set_allocated_wave_tag(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.wave_tag_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.wave_tag_.IsDefault()) {
+    _impl_.wave_tag_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:Protocol.S_WaveStarted.wave_tag)
 }
 
 // -------------------------------------------------------------------

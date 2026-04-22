@@ -9,9 +9,11 @@ namespace Client
         TextureAppend,
         Terrain,
         Model,
+        StaticModelPrototype,
         Skill,
         GameObjectPrototype,
         LevelChunk,
+        LevelObject,
 
         END
     };
@@ -51,8 +53,10 @@ namespace Client
         Attack_Sword_01,        Attack_Sword_02,        Attack_Sword_03,    Attack_Sword_04,
         Attack_SwordAir_01,     Attack_SwordAir_02,
 
-        Hit,
+        Hit, Hit_Launch, Hit_BlowOff, Hit_Down, Hit_Air, Hit_Air_Down,
         Dash,
+
+        Attack_Airbone,
 
         // 스킬 string으로 가능하긴 한데, 안전하게 Enum처리하기
         Skill_Rasengan,         Skill_Rasengan_Air,     Skill_Rasengan_End, Skill_Rasengan_Landed, Skill_Rasengan_Air_End,
@@ -61,7 +65,7 @@ namespace Client
         Skill_Chidori,          Skill_Chidori_Air,      Skill_Chidori_End, Skill_Chidori_Landed, Skill_Chidori_Air_End,
         Skill_FireBall,         Skill_FireBall_Air,
 
-        Skill_ShinsuSenju,      Skill_Kirin,
+        Skill_ShinsuSenju,      Skill_Kirin,        Skill_Kamui,
 
         Dead,
         END
@@ -112,7 +116,9 @@ namespace Client
         Normal,         // 전부 키기
         LookOnly,       // 시점 이동만 허용
         MoveAndLook,    // 이동 + 시점
+        RecoveryMove,
         BlockAll,       // 전부 차단
+        
 
         END
     };

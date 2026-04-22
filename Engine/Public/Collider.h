@@ -75,7 +75,6 @@ private:
 
     Shared<Bounding>        _bounding;
 
-
     set<Weak<Collider>, owner_less<>> _overlapSet;
 
 #ifdef _DEBUG

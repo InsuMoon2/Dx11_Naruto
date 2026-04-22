@@ -1022,9 +1022,9 @@
                 {
                     "duration_sec": 0.4333333373069763,
                     "payload": {
-                        "Direction Source": 258,
+                        "Direction Source": 2,
                         "direction_source": "TargetDirection",
-                        "ignore_y": true,
+                        "ignore_y": false,
                         "move_speed": 0.0,
                         "move_velocity": [
                             0.0,
@@ -1983,6 +1983,203 @@
                 }
             ],
             "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|Naruto_Attack_Punch_Left",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "전환 상태": 0
+                    },
+                    "time_sec": 0.8999999761581421,
+                    "track_index": 0,
+                    "type": "AN_ChangePlayerState"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
+                },
+                {
+                    "name": "Notify State Track"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.20000000298023224,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": true,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 0.4333333373069763,
+                    "track_index": 0,
+                    "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.4000000059604645,
+                    "payload": {},
+                    "start_sec": 0.5666666626930237,
+                    "track_index": 1,
+                    "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.30000001192092896,
+                    "payload": {
+                        "Direction Source": 2,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 3.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.2666666805744171,
+                    "track_index": 2,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|Naruto_Attack_Punch_Right",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "전환 상태": 0
+                    },
+                    "time_sec": 1.9333332777023315,
+                    "track_index": 0,
+                    "type": "AN_ChangePlayerState"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track 1"
+                },
+                {
+                    "name": "Notify State Track 2"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.30000001192092896,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "right_foot": false,
+                        "right_hand": true,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 0.4000000059604645,
+                    "track_index": 0,
+                    "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.4000000059604645,
+                    "payload": {},
+                    "start_sec": 0.699999988079071,
+                    "track_index": 1,
+                    "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.30000001192092896,
+                    "payload": {
+                        "Direction Source": 2,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 3.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.4000000059604645,
+                    "track_index": 2,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Hand_BackKick",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track 1"
+                },
+                {
+                    "name": "Notify State Track 2"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.4333333373069763,
+                    "payload": {
+                        "left_foot": true,
+                        "left_hand": false,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "hitbox"
+                    },
+                    "start_sec": 0.7333333492279053,
+                    "track_index": 0,
+                    "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.1666666716337204,
+                    "payload": {
+                        "Direction Source": 258,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": true,
+                        "move_speed": 1.5,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.2666666805744171,
+                    "track_index": 2,
+                    "type": "ANS_Move"
+                }
+            ],
             "notify_tracks": [
                 {
                     "name": "Notifies"

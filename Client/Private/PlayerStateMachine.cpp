@@ -24,6 +24,7 @@
 #include "SkillDataManager.h"
 #include "EquipmentComponent.h"
 #include "PlayerState_AirApproach.h"
+#include "PlayerState_Airbone.h"
 #include "PlayerState_JumpAttack.h"
 #include "PlayerState_JumpFall.h"
 #include "PlayerState_Hit.h"
@@ -89,6 +90,8 @@ void PlayerStateMachine::Register_DefaultStates()
 
     Register_State(EPlayerState::Replacement, PlayerState_Replacement::Create());
     Register_State(EPlayerState::Shuriken, PlayerState_Shuriken::Create());
+
+    Register_State(EPlayerState::Attack_Airbone, PlayerState_Airbone::Create());
 }
 
 HRESULT PlayerStateMachine::Initialize_Prototype()
@@ -227,6 +230,9 @@ bool PlayerStateMachine::Check_Global_Transitions()
     // 스킬 쓸 때 그냥 슈퍼아퍼처리
     if (Check_HitReaction())    return true;
 
+     if (Check_Airbone_Input())
+        return true;
+
     if (Check_Skill_Input())
         return true;
 
@@ -304,23 +310,63 @@ bool PlayerStateMachine::Check_Cinematic()
 
 bool PlayerStateMachine::Check_HitReaction()
 {
-    if (_pendingHitReaction)
-    {
-        _pendingHitReaction = false;
+    if (_pendingHitReaction.active == false)
+        return false;
 
-        // 상태가 없거나 슈퍼아머 아닐 때에만
-        if (!_currentState || !_currentState->Has_SuperArmor())
+    if (_currentState && _currentState->Has_SuperArmor())
+        return false;
+
+    const bool isCurrentHitState = (_currentStateID == EPlayerState::Hit);
+    const bool isNewSerial = (_pendingHitReaction.serial != _lastConsumedReactionSerial);
+
+    if (isCurrentHitState)
+    {
+        // 강제 재시작이면 애니메이션 다시
+        if (isNewSerial || _pendingHitReaction.forceRestart)
         {
-            Change_State(EPlayerState::Hit);
+            Force_Enter_State(EPlayerState::Hit);
             return true;
         }
+
+        return false;
     }
+
+    Change_State(EPlayerState::Hit);
+    return true;
 
     return false;
 }
 
+bool PlayerStateMachine::Check_Airbone_Input()
+{
+    auto input = Get_Input();
+    auto movement = Get_Movement();
+    if (!input || !movement)
+        return false;
+
+    const auto& frame = input->Get_Frame();
+    if (!frame.airboneDown)
+        return false;
+
+    // 올려차기는 지상전용
+    if (!movement->Is_OnGround())
+        return false;
+
+    switch (Get_CurrentStateID())
+    {
+    case EPlayerState::Idle:
+    case EPlayerState::BigSword_Idle:
+    case EPlayerState::Run:
+        Change_State(EPlayerState::Attack_Airbone);
+        return true;
+
+    default:
+        return false;
+    }
+}
+
 bool PlayerStateMachine::Set_CameraRelativeMoveDirection(const Vec2& moveAxis, EMoveInputDirection& outDir,
-    Vec3& outWorldDir) const
+                                                         Vec3& outWorldDir) const
 {
     auto cmd = Init_MoveCommand();
 
@@ -394,6 +440,20 @@ string PlayerStateMachine::To_AnimationStateName(EPlayerState stateID)
     const auto name = magic_enum::enum_name(stateID);
 
     return name.empty() ? "" : string(name);
+}
+
+void PlayerStateMachine::Trigger_HitReaction(EHitReactionType type, uint32 serial, bool forceRestart)
+{
+    _pendingHitReaction.active = true;
+    _pendingHitReaction.type = type;
+    _pendingHitReaction.serial = serial;
+    _pendingHitReaction.forceRestart = forceRestart;
+}
+
+void PlayerStateMachine::Consume_PendingHitReaction()
+{
+    _lastConsumedReactionSerial = _pendingHitReaction.serial;
+    _pendingHitReaction ={};
 }
 
 bool PlayerStateMachine::Check_WeaponToggle()

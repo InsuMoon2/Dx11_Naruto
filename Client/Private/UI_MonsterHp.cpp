@@ -37,9 +37,8 @@ HRESULT UI_MonsterHp::Initialize(void* arg)
 
     CHECK_FAILED(Ready_Components(), E_FAIL);
 
-
     // 위치를 몬스터의 머리통 위에
-    _transformCom->Set_LocalScale(256.f, 32.f, 0.f);
+    _transformCom->Set_LocalScale(0.f, 5.f, 0.f);
 
     return S_OK;
 }

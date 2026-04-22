@@ -32,7 +32,8 @@ void Level_Serializer::Save_Level(const wstring& fileName, uint32 levelIndex, co
                 auto objType = obj->Get_ObjectType();
                 if (objType == Protocol::OBJECT_TYPE_CAMERA_FREE ||
                     objType == Protocol::OBJECT_TYPE_CAMERA_TARGET ||
-                    objType == Protocol::OBJECT_TYPE_PLAYER)
+                    objType == Protocol::OBJECT_TYPE_PLAYER ||
+                    objType == Protocol::OBJECT_TYPE_SKY_SPHERE)
                     continue;
 
                 if (Is_ProxyObject(obj))
@@ -168,6 +169,12 @@ shared_ptr<GameObject> Level_Serializer::JsonToGameObject(const json& j, uint32 
     else
     {
         objType = static_cast<Protocol::OBJECT_TYPE>(j["object_type"].get<uint32>());
+    }
+
+    if (objType == Protocol::OBJECT_TYPE_SKY_SPHERE)
+    {
+        LOG_INFO("Skip SkySphereActor while loading level JSON");
+        return nullptr;
     }
 
     // 프로토타입에서 복사 (항상 Static 레벨에서 찾기)

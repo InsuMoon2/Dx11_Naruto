@@ -13,20 +13,21 @@
 #include "CombatStat.h"
 #include "Background.h"
 #include "GameInstance.h"
+#include "UI_BossHp.h"
 
 REGISTER_GAMEOBJECT(UI_PlayerHUD, Protocol::OBJECT_TYPE_UI_PLAYER_HUD)
 
 UI_PlayerHUD::UI_PlayerHUD(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : HUD(device, context)
 {
-    
+
 }
 
 UI_PlayerHUD::UI_PlayerHUD(const UI_PlayerHUD& rhs)
     : HUD(rhs)
 {
 }
-    
+
 HRESULT UI_PlayerHUD::Initialize_Prototype()
 {
     return HUD::Initialize_Prototype();
@@ -45,6 +46,9 @@ HRESULT UI_PlayerHUD::Initialize(void* arg)
     _comboHitHandle = GAME->Get_DelegateHub().OnPlayerComboHit.Add(
         this, &UI_PlayerHUD::On_PlayerComboHit);
 
+    _bossObjectSpawnedHandle = GAME->Get_DelegateHub().OnBossObjectSpawned.Add(
+        this, &UI_PlayerHUD::Handle_BossSpawned);
+
     return S_OK;
 }
 
@@ -54,6 +58,14 @@ void UI_PlayerHUD::Update(float timeDelta)
 
     Update_RemotePlayerStatusList();
     Update_CombatLineBurst(timeDelta);
+
+    const bool bossVisible = _bossHp && _bossHp->Is_Visibility();
+
+    if (_bossGauge)
+        _bossGauge->Set_Visibility(bossVisible);
+
+    if (_bossIcon)
+        _bossIcon->Set_Visibility(bossVisible);
 }
 
 void UI_PlayerHUD::Bind_Player(Shared<Player> player)
@@ -199,6 +211,18 @@ void UI_PlayerHUD::Handle_RemotePlayerObjectSpawned(Shared<GameObject> obj)
 void UI_PlayerHUD::On_PlayerComboHit(uint32 combo)
 {
     Trigger_CombatLineBurst(Compute_CombatLineIntensity(combo));
+}
+
+void UI_PlayerHUD::Handle_BossSpawned(Shared<GameObject> obj)
+{
+    if (_bossHp)
+        _bossHp->Bind_Boss(obj);
+
+    if (_bossGauge)
+        _bossGauge->Set_Visibility(true);
+
+    if (_bossIcon)
+        _bossIcon->Set_Visibility(true);
 }
 
 HRESULT UI_PlayerHUD::Ready_CombatLines()
@@ -449,7 +473,68 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
     _targeting = Create_Child<UI_Targeting>(Protocol::OBJECT_TYPE_UI_TARGETING, EUILayer::Overlay, &targetDesc);
     CHECK_NULL(_targeting, E_FAIL);
 
+    // 보스 체력
+    {
+        const float bossGaugeX = uiRefWidth * 0.5f;
+        const float bossGaugeY = (uiRefHeight * 0.5f) - 400.f;
+
+        Background::FBackgroundDesc gaugeDesc{};
+        gaugeDesc.posX = bossGaugeX;
+        gaugeDesc.posY = bossGaugeY;
+        gaugeDesc.sizeX = 580.f;
+        gaugeDesc.sizeY = 128.f;
+        gaugeDesc.zOrder = _zOrder;
+        gaugeDesc.levelIndex = _levelIndex;
+        gaugeDesc.textureType = Protocol::COMPONENT_TYPE_BOSS_HP;
+        gaugeDesc.textureIndex = 0;
+        gaugeDesc.shaderPassIndex = 1;
+
+        _bossGauge = Create_Child<Background>(
+            Protocol::OBJECT_TYPE_BACKGROUND,
+            EUILayer::HUD,
+            &gaugeDesc);
+        CHECK_NULL(_bossGauge, E_FAIL);
+
+        Background::FBackgroundDesc iconDesc{};
+        iconDesc.posX = bossGaugeX - 198.4f;
+        iconDesc.posY = bossGaugeY;
+        iconDesc.sizeX = 126.83f;
+        iconDesc.sizeY = 106.45f;
+        iconDesc.zOrder = _zOrder + 0.01f;
+        iconDesc.levelIndex = _levelIndex;
+        iconDesc.textureType = Protocol::COMPONENT_TYPE_BOSS_HP;
+        iconDesc.textureIndex = 2;
+        iconDesc.shaderPassIndex = 1;
+
+        _bossIcon = Create_Child<Background>(
+            Protocol::OBJECT_TYPE_BACKGROUND,
+            EUILayer::HUD,
+            &iconDesc);
+        CHECK_NULL(_bossIcon, E_FAIL);
+
+        UIObject::FUIDesc bossHpDesc{};
+        bossHpDesc.posX = bossGaugeX + 36.5f;
+        bossHpDesc.posY = bossGaugeY + 2.9f;
+        bossHpDesc.sizeX = 635.f;
+        bossHpDesc.sizeY = 82.49f;
+        bossHpDesc.zOrder = _zOrder;
+        bossHpDesc.levelIndex = _levelIndex;
+
+        _bossHp = Create_Child<UI_BossHp>(
+            Protocol::OBJECT_TYPE_UI_BOSS_HP,
+            EUILayer::HUD,
+            &bossHpDesc);
+        CHECK_NULL(_bossHp, E_FAIL);
+
+        _bossHp->Set_FillRange(98.f / 512.f, 413.f / 512.f);
+
+        _bossGauge->Set_Visibility(false);
+        _bossIcon->Set_Visibility(false);
+        _bossHp->Set_Visibility(false);
+    }
+
     CHECK_FAILED(Ready_CombatLines(), E_FAIL);
+
 
     return S_OK;
 }
@@ -495,6 +580,12 @@ void UI_PlayerHUD::Free()
     {
         hub.OnPlayerComboHit.Remove(_comboHitHandle);
         _comboHitHandle.Reset();
+    }
+
+    if (_bossObjectSpawnedHandle.IsValid())
+    {
+        hub.OnBossObjectSpawned.Remove(_bossObjectSpawnedHandle);
+        _bossObjectSpawnedHandle.Reset();
     }
 
     HUD::Free();

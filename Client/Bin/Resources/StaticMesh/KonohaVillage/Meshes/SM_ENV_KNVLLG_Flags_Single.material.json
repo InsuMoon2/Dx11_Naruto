@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_Flags_A",
+      "material_instance_guid": "07fa7d18-d1da-4621-b4e1-7e726db7294f"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": []
+    }
+  ]
+}

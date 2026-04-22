@@ -12,8 +12,12 @@ bool BTTask_Hit::Register_Properties()
     info.className = "BTTask_Hit";
 
     PROPERTY_STRING_JSON("Hit Flag Key", "hit_flag_key", _hitFlagKey);
-    PROPERTY_STRING_JSON("Hit Anim State", "hit_anim_state", _hitAnimState);
+    PROPERTY_STRING_JSON("Hit Anim State Key", "hit_anim_state_key", _hitAnimStateKey);
+    PROPERTY_STRING_JSON("Hit Serial Key", "hit_serial_key", _hitSerialKey);
+    PROPERTY_STRING_JSON("Anim Replay Serial Key", "anim_replay_serial_key", _animReplaySerialKey);
+    PROPERTY_STRING_JSON("Default Hit Anim State", "default_hit_anim_state", _defaultHitAnimState);
     PROPERTY_BOOL_JSON("Request Anim End", "request_anim_end", _requestAnimEnd);
+
     return true;
 }
 
@@ -24,9 +28,13 @@ BTTask_Hit::BTTask_Hit()
 BTTask_Hit::BTTask_Hit(const BTTask_Hit& rhs)
     : BTTask(rhs)
     , _hitFlagKey(rhs._hitFlagKey)
-    , _hitAnimState(rhs._hitAnimState)
+    , _hitAnimStateKey(rhs._hitAnimStateKey)
+    , _hitSerialKey(rhs._hitSerialKey)
+    , _animReplaySerialKey(rhs._animReplaySerialKey)
+    , _defaultHitAnimState(rhs._defaultHitAnimState)
     , _requestAnimEnd(rhs._requestAnimEnd)
     , _startedHit(false)
+    , _activeHitSerial(0)
 {
 }
 
@@ -39,6 +47,22 @@ void BTTask_Hit::Initialize()
     BTTask::Initialize();
 
     _startedHit = false;
+    _activeHitSerial = 0;
+}
+
+string BTTask_Hit::Resolve_HitAnimState(const Shared<Blackboard>& blackboard) const
+{
+    if (!blackboard)
+        return _defaultHitAnimState;
+
+    if (blackboard->HasKey(_hitAnimStateKey))
+    {
+        const string hitAnimState = blackboard->Get_ValueAsString(_hitAnimStateKey);
+        if (!hitAnimState.empty())
+            return hitAnimState;
+    }
+
+    return _defaultHitAnimState;
 }
 
 EBTNodeResult BTTask_Hit::Update(float timeDelta)
@@ -46,41 +70,65 @@ EBTNodeResult BTTask_Hit::Update(float timeDelta)
     auto blackboard = _blackboard.lock();
     auto owner = _owner.lock();
 
-    auto animState = owner->Get_Component<AnimationStateComponent>();
-
-    if (!blackboard || !owner || !animState)
+    if (!blackboard || !owner)
     {
         _lastResult = EBTNodeResult::Failed;
         return _lastResult;
     }
 
-    // 처음 Hit 애니메이션 진입
-    if (!_startedHit)
+    auto animState = owner->Get_Component<AnimationStateComponent>();
+    if (!animState)
     {
-        // MoveAxis를 근데 .. Launch값마다 밀리게 하는건 비헤이비어트리에서 제어할 필요가있나
+        _lastResult = EBTNodeResult::Failed;
+        return _lastResult;
+    }
+
+    const bool isHit = blackboard->Get_ValueAsBool(_hitFlagKey);
+    if (!isHit)
+    {
+        _startedHit = false;
+        _activeHitSerial = 0;
+        _lastResult = EBTNodeResult::Failed;
+        return _lastResult;
+    }
+
+    const int32 incomingHitSerial = blackboard->HasKey(_hitSerialKey)
+        ? blackboard->Get_ValueAsInt(_hitSerialKey)
+        : 0;
+
+    const bool shouldStartHit =
+        (!_startedHit) || (incomingHitSerial != _activeHitSerial);
+
+    if (shouldStartHit)
+    {
         blackboard->Set_ValueAsFloat("MoveAxisX", 0.f);
         blackboard->Set_ValueAsFloat("MoveAxisY", 0.f);
         blackboard->Set_ValueAsBool("Sprint", false);
 
-        blackboard->Set_ValueAsString("AnimState", _hitAnimState);
+        const string hitAnimState = Resolve_HitAnimState(blackboard);
+        blackboard->Set_ValueAsString("AnimState", hitAnimState);
+
+        // 같은 AnimState라도 serial을 올려서 AIController가 다시 재생
+        blackboard->Set_ValueAsInt(_animReplaySerialKey, incomingHitSerial);
 
         if (_requestAnimEnd)
             blackboard->Set_ValueAsBool("AnimRequestEnd", true);
 
         _startedHit = true;
+        _activeHitSerial = incomingHitSerial;
 
         _lastResult = EBTNodeResult::InProgress;
         return _lastResult;
     }
 
-    // 애니메이션 끝날때까지 대기
     if (!animState->Is_CurrentStateFinished())
     {
         _lastResult = EBTNodeResult::InProgress;
         return _lastResult;
     }
-    // 애니메이션 종료
+
     _startedHit = false;
+    _activeHitSerial = 0;
 
     blackboard->Set_ValueAsBool(_hitFlagKey, false);
 

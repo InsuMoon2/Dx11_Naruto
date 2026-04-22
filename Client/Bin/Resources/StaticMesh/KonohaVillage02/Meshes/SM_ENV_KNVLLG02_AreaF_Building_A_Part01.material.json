@@ -1,69 +1,85 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG02_PipeDetails_01",
-      "material_instance_guid": "0547ba36-4f59-40b4-8072-bb6954e77de6"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Flag_A",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_ConcreteSlabs_Bright",
-      "material_instance_guid": "317219b4-0d00-46a5-9f77-52e35f5a1aee"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_Pipe_04",
-      "material_instance_guid": "1e908290-4c7d-4fc0-993b-a2737abebdfe"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_WoodPlain_Brown",
-      "material_instance_guid": "df4b8e30-51ad-491b-b6a0-7f16b8623aae"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Windows_A",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Plaster_Red",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_MetalRoof_Black",
-      "material_instance_guid": "a819264f-19b5-4017-8028-e80c7cb639c1"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Banner_A",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_WoodPlain_Black",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_Pipe_01",
-      "material_instance_guid": "f21fd177-9bc7-4a0f-acf9-247e0e05b941"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_StoneTrim",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Window_Paper",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Signboard_K",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_15",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

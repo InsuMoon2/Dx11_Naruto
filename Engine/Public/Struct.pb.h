@@ -970,6 +970,7 @@ class ObjectInfo final : public ::google::protobuf::Message
   enum : int {
     kEquipPartsFieldNumber = 14,
     kNameFieldNumber = 2,
+    kAnimStateKeyFieldNumber = 20,
     kStatFieldNumber = 3,
     kPosFieldNumber = 4,
     kObjectIdFieldNumber = 1,
@@ -981,6 +982,11 @@ class ObjectInfo final : public ::google::protobuf::Message
     kAnimForceRestartFieldNumber = 13,
     kAttackProfileFieldNumber = 15,
     kAttackComboIndexFieldNumber = 16,
+    kWeaponTypeFieldNumber = 17,
+    kRotXFieldNumber = 18,
+    kRotZFieldNumber = 19,
+    kHitReactionTypeFieldNumber = 21,
+    kHitReactionSerialFieldNumber = 22,
   };
   // map<int32, string> equipParts = 14;
   int equipparts_size() const;
@@ -1011,6 +1017,22 @@ class ObjectInfo final : public ::google::protobuf::Message
   inline PROTOBUF_ALWAYS_INLINE void _internal_set_name(
       const std::string& value);
   std::string* _internal_mutable_name();
+
+  public:
+  // string anim_state_key = 20;
+  void clear_anim_state_key() ;
+  const std::string& anim_state_key() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_anim_state_key(Arg_&& arg, Args_... args);
+  std::string* mutable_anim_state_key();
+  PROTOBUF_NODISCARD std::string* release_anim_state_key();
+  void set_allocated_anim_state_key(std::string* value);
+
+  private:
+  const std::string& _internal_anim_state_key() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_anim_state_key(
+      const std::string& value);
+  std::string* _internal_mutable_anim_state_key();
 
   public:
   // .Protocol.CombatStat stat = 3;
@@ -1133,13 +1155,63 @@ class ObjectInfo final : public ::google::protobuf::Message
   void _internal_set_attack_combo_index(::int32_t value);
 
   public:
+  // .Protocol.WEAPON_TYPE weapon_type = 17;
+  void clear_weapon_type() ;
+  ::Protocol::WEAPON_TYPE weapon_type() const;
+  void set_weapon_type(::Protocol::WEAPON_TYPE value);
+
+  private:
+  ::Protocol::WEAPON_TYPE _internal_weapon_type() const;
+  void _internal_set_weapon_type(::Protocol::WEAPON_TYPE value);
+
+  public:
+  // float rot_x = 18;
+  void clear_rot_x() ;
+  float rot_x() const;
+  void set_rot_x(float value);
+
+  private:
+  float _internal_rot_x() const;
+  void _internal_set_rot_x(float value);
+
+  public:
+  // float rot_z = 19;
+  void clear_rot_z() ;
+  float rot_z() const;
+  void set_rot_z(float value);
+
+  private:
+  float _internal_rot_z() const;
+  void _internal_set_rot_z(float value);
+
+  public:
+  // .Protocol.HIT_REACTION_TYPE hit_reaction_type = 21;
+  void clear_hit_reaction_type() ;
+  ::Protocol::HIT_REACTION_TYPE hit_reaction_type() const;
+  void set_hit_reaction_type(::Protocol::HIT_REACTION_TYPE value);
+
+  private:
+  ::Protocol::HIT_REACTION_TYPE _internal_hit_reaction_type() const;
+  void _internal_set_hit_reaction_type(::Protocol::HIT_REACTION_TYPE value);
+
+  public:
+  // uint32 hit_reaction_serial = 22;
+  void clear_hit_reaction_serial() ;
+  ::uint32_t hit_reaction_serial() const;
+  void set_hit_reaction_serial(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_hit_reaction_serial() const;
+  void _internal_set_hit_reaction_serial(::uint32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:Protocol.ObjectInfo)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      4, 13, 3,
-      50, 2>
+      5, 19, 3,
+      72, 2>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -1163,6 +1235,7 @@ class ObjectInfo final : public ::google::protobuf::Message
                       ::google::protobuf::internal::WireFormatLite::TYPE_STRING>
         equipparts_;
     ::google::protobuf::internal::ArenaStringPtr name_;
+    ::google::protobuf::internal::ArenaStringPtr anim_state_key_;
     ::Protocol::CombatStat* stat_;
     ::Protocol::Vec3* pos_;
     ::uint64_t objectid_;
@@ -1174,6 +1247,11 @@ class ObjectInfo final : public ::google::protobuf::Message
     bool anim_force_restart_;
     int attack_profile_;
     ::int32_t attack_combo_index_;
+    int weapon_type_;
+    float rot_x_;
+    float rot_z_;
+    int hit_reaction_type_;
+    ::uint32_t hit_reaction_serial_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1803,6 +1881,50 @@ inline void ObjectInfo::_internal_set_rot_y(float value) {
   _impl_.rot_y_ = value;
 }
 
+// float rot_x = 18;
+inline void ObjectInfo::clear_rot_x() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.rot_x_ = 0;
+}
+inline float ObjectInfo::rot_x() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.rot_x)
+  return _internal_rot_x();
+}
+inline void ObjectInfo::set_rot_x(float value) {
+  _internal_set_rot_x(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.rot_x)
+}
+inline float ObjectInfo::_internal_rot_x() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.rot_x_;
+}
+inline void ObjectInfo::_internal_set_rot_x(float value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.rot_x_ = value;
+}
+
+// float rot_z = 19;
+inline void ObjectInfo::clear_rot_z() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.rot_z_ = 0;
+}
+inline float ObjectInfo::rot_z() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.rot_z)
+  return _internal_rot_z();
+}
+inline void ObjectInfo::set_rot_z(float value) {
+  _internal_set_rot_z(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.rot_z)
+}
+inline float ObjectInfo::_internal_rot_z() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.rot_z_;
+}
+inline void ObjectInfo::_internal_set_rot_z(float value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.rot_z_ = value;
+}
+
 // .Protocol.OBJECT_TYPE objectType = 6;
 inline void ObjectInfo::clear_objecttype() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
@@ -1983,6 +2105,120 @@ inline ::int32_t ObjectInfo::_internal_attack_combo_index() const {
 inline void ObjectInfo::_internal_set_attack_combo_index(::int32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.attack_combo_index_ = value;
+}
+
+// .Protocol.WEAPON_TYPE weapon_type = 17;
+inline void ObjectInfo::clear_weapon_type() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.weapon_type_ = 0;
+}
+inline ::Protocol::WEAPON_TYPE ObjectInfo::weapon_type() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.weapon_type)
+  return _internal_weapon_type();
+}
+inline void ObjectInfo::set_weapon_type(::Protocol::WEAPON_TYPE value) {
+  _internal_set_weapon_type(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.weapon_type)
+}
+inline ::Protocol::WEAPON_TYPE ObjectInfo::_internal_weapon_type() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::Protocol::WEAPON_TYPE>(_impl_.weapon_type_);
+}
+inline void ObjectInfo::_internal_set_weapon_type(::Protocol::WEAPON_TYPE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.weapon_type_ = value;
+}
+
+// string anim_state_key = 20;
+inline void ObjectInfo::clear_anim_state_key() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.anim_state_key_.ClearToEmpty();
+}
+inline const std::string& ObjectInfo::anim_state_key() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.anim_state_key)
+  return _internal_anim_state_key();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void ObjectInfo::set_anim_state_key(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.anim_state_key_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.anim_state_key)
+}
+inline std::string* ObjectInfo::mutable_anim_state_key() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_anim_state_key();
+  // @@protoc_insertion_point(field_mutable:Protocol.ObjectInfo.anim_state_key)
+  return _s;
+}
+inline const std::string& ObjectInfo::_internal_anim_state_key() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.anim_state_key_.Get();
+}
+inline void ObjectInfo::_internal_set_anim_state_key(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.anim_state_key_.Set(value, GetArena());
+}
+inline std::string* ObjectInfo::_internal_mutable_anim_state_key() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.anim_state_key_.Mutable( GetArena());
+}
+inline std::string* ObjectInfo::release_anim_state_key() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Protocol.ObjectInfo.anim_state_key)
+  return _impl_.anim_state_key_.Release();
+}
+inline void ObjectInfo::set_allocated_anim_state_key(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.anim_state_key_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.anim_state_key_.IsDefault()) {
+    _impl_.anim_state_key_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:Protocol.ObjectInfo.anim_state_key)
+}
+
+// .Protocol.HIT_REACTION_TYPE hit_reaction_type = 21;
+inline void ObjectInfo::clear_hit_reaction_type() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.hit_reaction_type_ = 0;
+}
+inline ::Protocol::HIT_REACTION_TYPE ObjectInfo::hit_reaction_type() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.hit_reaction_type)
+  return _internal_hit_reaction_type();
+}
+inline void ObjectInfo::set_hit_reaction_type(::Protocol::HIT_REACTION_TYPE value) {
+  _internal_set_hit_reaction_type(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.hit_reaction_type)
+}
+inline ::Protocol::HIT_REACTION_TYPE ObjectInfo::_internal_hit_reaction_type() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::Protocol::HIT_REACTION_TYPE>(_impl_.hit_reaction_type_);
+}
+inline void ObjectInfo::_internal_set_hit_reaction_type(::Protocol::HIT_REACTION_TYPE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.hit_reaction_type_ = value;
+}
+
+// uint32 hit_reaction_serial = 22;
+inline void ObjectInfo::clear_hit_reaction_serial() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.hit_reaction_serial_ = 0u;
+}
+inline ::uint32_t ObjectInfo::hit_reaction_serial() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.hit_reaction_serial)
+  return _internal_hit_reaction_serial();
+}
+inline void ObjectInfo::set_hit_reaction_serial(::uint32_t value) {
+  _internal_set_hit_reaction_serial(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.hit_reaction_serial)
+}
+inline ::uint32_t ObjectInfo::_internal_hit_reaction_serial() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.hit_reaction_serial_;
+}
+inline void ObjectInfo::_internal_set_hit_reaction_serial(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.hit_reaction_serial_ = value;
 }
 
 #ifdef __GNUC__

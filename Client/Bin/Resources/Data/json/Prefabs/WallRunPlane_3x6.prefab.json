@@ -1,0 +1,31 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                90.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                3.0,
+                1.0,
+                6.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        }
+    ],
+    "custom_properties": {
+        "enabled": true,
+        "model_guid": "ba7ffc3b-61bb-4197-a223-71e846c6f618",
+        "proxy_type": "WallRun"
+    },
+    "guid": "89b7ea63-5120-4abd-8b97-f63d3db1dcf5",
+    "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+    "prefab_name": "WallRunPlane_3x6",
+    "static_class": "CollisionProxyActor"
+}

@@ -34,6 +34,8 @@ public:
 
         bool  replacementDown = false;
 
+        bool  airboneDown = false;
+
         bool  useSkillDown[3] = { false, false, false };
         bool  useSkillPress[3] = {};
     };

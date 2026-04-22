@@ -1,13 +1,15 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG02_FarLobby_A",
-      "material_instance_guid": "a374eacb-b120-4f71-8d42-b98b54a86a9c"
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_1",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

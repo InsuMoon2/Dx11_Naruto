@@ -17,6 +17,7 @@ enum PacketID
     S_LobbyChat     = 8,
     S_LobbyStartGame = 9,
     S_WaveCleared   = 10,
+    S_WaveStarted   = 11,
                        
     // Client -> Server
     C_EnterGame     = 49,
@@ -55,6 +56,7 @@ public:
     static SendBufferRef Make_S_RemoveObject(Protocol::S_RemoveObject& pkt);
     static SendBufferRef Make_S_Move(Protocol::ObjectInfo& info);
     static SendBufferRef Make_S_WaveCleared(Protocol::S_WaveCleared& pkt);
+    static SendBufferRef Make_S_WaveStarted(Protocol::S_WaveStarted& pkt);
 
     static SendBufferRef Make_S_LobbySnapshot(Protocol::S_LobbySnapshot& pkt);
     static SendBufferRef Make_S_LobbyChat(Protocol::S_LobbyChat& pkt);

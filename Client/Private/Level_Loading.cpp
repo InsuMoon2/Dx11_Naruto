@@ -11,6 +11,23 @@
 #include "Level_Lobby.h"
 #include "UI_LoadingSpinner.h"
 #include "UI_LoadingProgressBar.h"
+#include <chrono>
+
+// 메인 스레드에서 오래 걸릴 수 있는 로딩 잡인지 판별한다.
+// 로딩 UI가 끊기지 않도록, 이런 잡은 한 프레임에 많이 처리하지 않는다.
+static bool Is_HeavyMainThreadLoadJob(const FLoadJob& job)
+{
+    switch (job.type)
+    {
+    case ELoadJobType::TextureCreate:
+    case ELoadJobType::StaticModelPrototype:
+    case ELoadJobType::LevelChunk:
+        return true;
+
+    default:
+        return false;
+    }
+}
 
 Level_Loading::Level_Loading(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -45,10 +62,22 @@ HRESULT Level_Loading::Initialize(ELevelType nextLevelID, bool loadSharedResourc
 
 void Level_Loading::Update(float timeDelta)
 {
-    const int jobPerFrame = 1;
+    // 한 프레임에 너무 많은 잡을 처리하면 로딩 스피너가 끊기므로 전체 처리 개수를 줄인다.
+    const int32 maxJobsPerFrame = 4;
+    // 무거운 잡은 프레임당 1개만 처리해서 큰 프레임 드랍이 연속으로 발생하지 않게 한다.
+    const int32 maxHeavyJobsPerFrame = 1;
+    // 스피너와 로딩 UI가 계속 갱신되도록 메인 스레드 로딩 시간 예산을 제한한다.
+    const auto maxMainThreadLoadingTime = std::chrono::milliseconds(2);
+    // 이번 프레임에서 로딩 잡 처리에 쓴 시간을 재기 위한 시작 시각이다.
+    const auto frameLoadStart = std::chrono::steady_clock::now();
+    int32 processedHeavyJobs = 0;
 
-    for (int i = 0; i < jobPerFrame; ++i)
+    for (int32 i = 0; i < maxJobsPerFrame; ++i)
     {
+        const auto elapsedLoadingTime = std::chrono::steady_clock::now() - frameLoadStart;
+        if (elapsedLoadingTime >= maxMainThreadLoadingTime)
+            break;
+
         FLoadJob job{};
         if (!_loader->Pop_NextJob(job))
             break;
@@ -57,6 +86,14 @@ void Level_Loading::Update(float timeDelta)
         {
             MSG_BOX("Failed to execute loading job");
             return;
+        }
+
+        if (Is_HeavyMainThreadLoadJob(job))
+        {
+            ++processedHeavyJobs;
+
+            if (processedHeavyJobs >= maxHeavyJobsPerFrame)
+                break;
         }
     }
 

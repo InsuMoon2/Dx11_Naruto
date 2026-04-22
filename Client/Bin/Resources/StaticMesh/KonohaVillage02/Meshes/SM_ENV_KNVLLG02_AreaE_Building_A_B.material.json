@@ -1,57 +1,70 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG_Windows_A",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_Plaster",
-      "material_instance_guid": "6a2ac29a-e48a-47be-a9a7-340ca48c136e"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_ConcreteSlabs_Bright",
-      "material_instance_guid": "317219b4-0d00-46a5-9f77-52e35f5a1aee"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_WoodBoard_Natural_Lighter",
-      "material_instance_guid": "36beaf84-0844-4866-8f29-db7981d43320"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_Pipe_01",
-      "material_instance_guid": "f21fd177-9bc7-4a0f-acf9-247e0e05b941"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_Pipe_04",
-      "material_instance_guid": "1e908290-4c7d-4fc0-993b-a2737abebdfe"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_MetalRoof_Red",
-      "material_instance_guid": "db49cd1b-33d9-4358-8b6f-8c3b8b6a0fea"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_BoltedPlates_02",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_PipeDetails_01",
-      "material_instance_guid": "0547ba36-4f59-40b4-8072-bb6954e77de6"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Vent_A",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_MetalParts_D",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Window_Paper",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_12",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

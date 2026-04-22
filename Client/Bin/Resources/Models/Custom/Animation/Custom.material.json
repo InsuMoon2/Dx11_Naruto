@@ -10,11 +10,6 @@
       "material_name": "surfaceShader1",
       "textures": [
       ]
-    },
-    {
-      "material_name": "DefaultMaterial",
-      "textures": [
-      ]
     }
   ]
 }

@@ -1,0 +1,63 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Dark2",
+      "material_instance_guid": "8e6cde9d-78aa-4781-807d-f2a61b2c6dad"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_Light",
+      "material_instance_guid": "18b8d24d-baca-4a0b-81c2-27a65160532f"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "33c91196-b849-4ef1-85f0-7cece3065d02"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Bright",
+      "material_instance_guid": "eda97172-bf20-468c-b652-51797f248fab"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_A",
+      "material_instance_guid": "e8085cb0-8fbd-4878-8f9d-07811e3e285b"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_PipeDetails_01",
+      "material_instance_guid": "e9fa41fb-0bc2-42f3-a301-12ac250ba29d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_Dark",
+      "material_instance_guid": "a269d9a5-3e71-422b-a73f-29c72212d844"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Signboard_Y",
+      "material_instance_guid": "41041d8d-7230-4a47-bf18-e40d0b4264df"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ElectricDetails",
+      "material_instance_guid": "f67fe92e-8e6c-48fc-9f02-6dc290c49d51"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_LightBrown",
+      "material_instance_guid": "7e1e0455-d837-4034-bd2c-d4c5a506eecf"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_Yellow",
+      "material_instance_guid": "3548f252-bd2b-49dc-b2f8-fe7800a42fdc"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_01",
+      "material_instance_guid": "9e8fa8ce-6a4a-4a04-96a3-1b823b37b91a"
+    },
+    {
+      "material_name": "Material_12",
+      "textures": [],
+      "base_color_factor": [
+        0.66,
+        0.64,
+        0.6,
+        1.0
+      ]
+    }
+  ]
+}

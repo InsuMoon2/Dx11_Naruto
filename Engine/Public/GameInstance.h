@@ -187,7 +187,7 @@ public: /* Renderer */
 
     HRESULT                 Resize_DeferredViewport(uint32 width, uint32 height);
 
-    HRESULT                 Draw_Preview();
+    HRESULT                 Draw_Preview(bool renderColliders = true);
 
 public: /* Prefeb */
     Shared<GameObject>      Instantiate_Prefab(const string& prefabName, const json& overrides = {});
@@ -251,6 +251,10 @@ public: /* Camera */
 
     void                            Stop_Cinematic();
 
+
+    void                            Request_CameraShake(const FCameraShakeDesc& request);
+    void                            Stop_CameraShake(const string& tag = "");
+    void                            Clear_CameraShake();
 
 
 public: /* DelegateHub */

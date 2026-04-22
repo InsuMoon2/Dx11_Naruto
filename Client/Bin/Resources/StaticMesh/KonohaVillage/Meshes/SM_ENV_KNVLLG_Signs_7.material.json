@@ -1,0 +1,33 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "33c91196-b849-4ef1-85f0-7cece3065d02"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Wooden_Sign_Atlas_02",
+      "material_instance_guid": "0d950b46-dda6-431b-b9bd-77b5f4b21127"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "3a831086-b931-451d-8bef-74f256cf7d4e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Wooden_Sign_Atlas",
+      "material_instance_guid": "67b00aba-94b0-464d-a91b-3e9362aa5d3f"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_DeviantMaterials_Sign_Atlas",
+      "material_instance_guid": "a09a8ebf-d643-40cc-8c13-9e4b0a712940"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_FloaterSigns",
+      "material_instance_guid": "4ccff144-ec46-4125-a411-968eb483f5b0"
+    },
+    {
+      "material_name": "Material_6",
+      "textures": []
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Brown",
+      "material_instance_guid": "ae9c0c4b-83db-4da3-bd6d-e216a123419c"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_A",
+      "material_instance_guid": "e8085cb0-8fbd-4878-8f9d-07811e3e285b"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "3a831086-b931-451d-8bef-74f256cf7d4e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_Light",
+      "material_instance_guid": "18b8d24d-baca-4a0b-81c2-27a65160532f"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_Green",
+      "material_instance_guid": "e79caecc-de76-4b48-a858-192e6ee5495c"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_05",
+      "material_instance_guid": "ed96ecee-2cb9-4c19-b5a4-92e7ffe9116d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_LightBlue",
+      "material_instance_guid": "55dc4b6d-7dac-40e0-bf06-aacd0fa2dd93"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Bright",
+      "material_instance_guid": "eda97172-bf20-468c-b652-51797f248fab"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Aircon_I",
+      "material_instance_guid": "8b39042a-7543-4395-bec5-08685dbde97e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_Orange",
+      "material_instance_guid": "f446e6b6-a00a-471b-9b92-e585481c68b1"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteFloor_B",
+      "material_instance_guid": "0b82c4c5-32d6-4c62-a64e-e91720af44bc"
+    },
+    {
+      "material_name": "Material_11",
+      "textures": [],
+      "base_color_factor": [
+        0.66,
+        0.64,
+        0.6,
+        1.0
+      ]
+    }
+  ]
+}

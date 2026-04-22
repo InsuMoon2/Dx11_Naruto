@@ -1,0 +1,35 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_01",
+      "material_instance_guid": "9e8fa8ce-6a4a-4a04-96a3-1b823b37b91a"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Light",
+      "material_instance_guid": "924b5fb1-98e8-49ff-b8f9-47d8b37cea48"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "33c91196-b849-4ef1-85f0-7cece3065d02"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_B",
+      "material_instance_guid": "8e96fc4d-60bf-4d31-9897-f3f466126702"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_BlueMarine",
+      "material_instance_guid": "8184b66b-1b74-41f7-ac1f-34b8b7f51e3b"
+    },
+    {
+      "material_name": "Material_5",
+      "textures": [],
+      "base_color_factor": [
+        0.58,
+        0.59,
+        0.62,
+        1.0
+      ]
+    }
+  ]
+}

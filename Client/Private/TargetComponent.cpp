@@ -68,94 +68,19 @@ void TargetComponent::Update_Targeting(float timeDelta)
     // 매 프레임 몬스터 갱신
     Update_Candiates();
 
+    // 현재 락온 대상이 범위를 벗어나거나, 죽으면 자동 해제
+    Refresh_LockedTarget();
+
     if (INPUT->KeyDown(KEY_TYPE::V))
     {
-        // 이미 타겟팅을 하고있으면
-        if (_isLocked)
-        {
-            _isLocked = false;
-            _lockedTarget.reset();
-        }
-        else // 없으면, 탐색
-        {
-            LockOn_NearestTarget();
-        }
-    }
-
-    // 거리에서 벗어나거나, 타겟팅 대상이 죽으면 Lock 해제
-    if (_isLocked)
-    {
-        if (_lockedTarget.expired())
-        {
-            _isLocked = false;
-        }
-        else
-        {
-            // 리스트에서 타겟이 벗어났는지
-            Shared<GameObject> lockPtr = _lockedTarget.lock();
-            bool isStillCandiates = false;
-
-            for (const auto& weakCandiate : _candidates)
-            {
-                if (!weakCandiate.expired() && weakCandiate.lock() == lockPtr)
-                {
-                    isStillCandiates = true;
-                    break;
-                }
-            }
-
-            if (!isStillCandiates)
-            {
-                _isLocked = false;
-                _lockedTarget.reset();
-            }
-        }
-    }
-
-}
-
-void TargetComponent::LockOn_NearestTarget()
-{
-    if (_candidates.empty())
+        LockOn_NearestTarget(true);
         return;
-
-    Shared<GameObject> owner = Get_Owner();
-    if (owner == nullptr) return;
-
-    auto ownerTransform = owner->Get_Transform();
-    CHECK_NULL(ownerTransform);
-
-    Vec3 ownerPos = ownerTransform->Get_WorldPosition();
-
-    float minDistance = FLT_MAX;
-    Shared<Character> nearestTarget {};
-
-    for (const auto& weakTarget : _candidates)
-    {
-        if (weakTarget.expired())
-            continue;
-
-        Shared<Character> targetPtr = weakTarget.lock();
-        auto targetTransform = targetPtr->Get_Transform();
-        CHECK_NULL(targetTransform);
-
-        Vec3 targetPos = targetTransform->Get_WorldPosition();
-
-        float distance = Vec3::Distance(targetPos, ownerPos);
-
-        if (distance < minDistance)
-        {
-            minDistance = distance;
-            nearestTarget = targetPtr;
-        }
     }
 
-    if (nearestTarget != nullptr)
+     if (_isLocked == false)
     {
-        _lockedTarget = nearestTarget;
-        _isLocked = true;
+        LockOn_NearestTarget(false);
     }
-
 }
 
 void TargetComponent::Late_Update(float timeDelta)
@@ -204,6 +129,125 @@ void TargetComponent::Update_Candiates()
 
     }
 
+}
+
+void TargetComponent::Refresh_LockedTarget()
+{
+    if (_isLocked == false)
+        return;
+
+    if (_lockedTarget.expired())
+    {
+        Clear_Lock();
+        return;
+    }
+
+    Shared<GameObject> lockedTarget = _lockedTarget.lock();
+    if (lockedTarget == nullptr)
+    {
+        Clear_Lock();
+        return;
+    }
+
+    if (Is_TargetInCandidates(lockedTarget) == false)
+    {
+        Clear_Lock();
+    }
+}
+
+void TargetComponent::Clear_Lock()
+{
+    _isLocked = false;
+    _lockedTarget.reset();
+}
+
+void TargetComponent::LockOn_NearestTarget(bool currentTarget)
+{
+    Shared<Character> nearestTarget = Find_NearestTarget(currentTarget);
+
+    if (nearestTarget == nullptr && currentTarget)
+    {
+        nearestTarget = Find_NearestTarget(false);
+    }
+
+    if (nearestTarget == nullptr)
+    {
+        Clear_Lock();
+        return;
+    }
+
+    _lockedTarget = nearestTarget;
+    _isLocked = true;
+}
+
+Shared<Character> TargetComponent::Find_NearestTarget(bool currentTarget)
+{
+    if (_candidates.empty())
+        return nullptr;
+
+    Shared<GameObject> owner = Get_Owner();
+    if (owner == nullptr)
+        return nullptr;
+
+    auto ownerTransform = owner->Get_Transform();
+    if (ownerTransform == nullptr)
+        return nullptr;
+
+    Shared<Character> currentLockedTarget = nullptr;
+    if (_lockedTarget.expired() == false)
+    {
+        currentLockedTarget = _lockedTarget.lock();
+    }
+
+    const Vec3 ownerPos = ownerTransform->Get_WorldPosition();
+
+    float minDistance = FLT_MAX;
+    Shared<Character> nearestTarget = nullptr;
+
+    for (const auto& weakTarget : _candidates)
+    {
+        if (weakTarget.expired())
+            continue;
+
+        Shared<Character> targetPtr = weakTarget.lock();
+        if (targetPtr == nullptr)
+            continue;
+
+        if (currentTarget && currentLockedTarget && targetPtr == currentLockedTarget)
+            continue;
+
+        auto targetTransform = targetPtr->Get_Transform();
+        if (targetTransform == nullptr)
+            continue;
+
+        const Vec3 targetPos = targetTransform->Get_WorldPosition();
+        const float distance = Vec3::Distance(targetPos, ownerPos);
+
+        if (distance < minDistance)
+        {
+            minDistance = distance;
+            nearestTarget = targetPtr;
+        }
+    }
+
+    return nearestTarget;
+}
+
+bool TargetComponent::Is_TargetInCandidates(Shared<GameObject> target)
+{
+    if (target == nullptr)
+        return false;
+
+    for (const auto& weakCandidate : _candidates)
+    {
+        if (weakCandidate.expired())
+            continue;
+
+        if (weakCandidate.lock() == target)
+            return true;
+    }
+
+    return false;
 }
 
 Shared<TargetComponent> TargetComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

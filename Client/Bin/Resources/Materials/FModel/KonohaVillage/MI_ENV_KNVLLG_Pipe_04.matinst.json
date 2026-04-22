@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "name": "MI_ENV_KNVLLG_Pipe_04",
+  "profile": "generic_pbr",
+  "parent": "M_GenericPBR",
+  "base_color_factor": [
+    0.0574,
+    0.087687,
+    0.14,
+    1.0
+  ],
+  "shadow_color": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "normal_strength": 2.54129,
+  "blend_normal_strength": 1.0,
+  "mask_scale": 1.0,
+  "mask_threshold": 1.0,
+  "uneven_color_scale": 1.0,
+  "blend_mode": 0,
+  "textures": [
+    {
+      "slot": "base_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/KonohaVillage/T_ENV_KNVLLG_Pipe_01_BC.png",
+      "uv_channel": 0,
+      "sampling_scale": 1.0
+    },
+    {
+      "slot": "normal",
+      "index": 0,
+      "path": "../../../Textures/FModel/KonohaVillage/T_ENV_KNVLLG_Pipe_01_N.png",
+      "uv_channel": 0,
+      "sampling_scale": 1.0
+    },
+    {
+      "slot": "uneven_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/KonohaVillage/T_ENV_KNVLLG_Pipe_01_UC.png",
+      "uv_channel": 0,
+      "sampling_scale": 1.0
+    }
+  ],
+  "source": {
+    "fmodel_mi_json": "MI_ENV_KNVLLG_Pipe_04.props.txt"
+  }
+}

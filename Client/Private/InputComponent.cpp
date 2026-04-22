@@ -84,6 +84,8 @@ void InputComponent::Update_Input(float timeDelta)
 
     const bool rawShurikenDown = INPUT->KeyDown(KEY_TYPE::RBUTTON);
 
+    const bool rawAirboneDown = INPUT->KeyDown(KEY_TYPE::E);
+
     // 무기 교체
     const bool rawToggleWeaponDown = INPUT->KeyDown(KEY_TYPE::TAB);
 
@@ -126,6 +128,7 @@ void InputComponent::Update_Input(float timeDelta)
         _frame.jumpDown = rawJumpDown;
     }
 
+
     if (_inputGate.allowSkill)
     {
         _frame.useSkillDown[0] = rawSkill1Down;
@@ -153,6 +156,7 @@ void InputComponent::Update_Input(float timeDelta)
     _frame.wireDash = rawCtrlDown;
     _frame.replacementDown = rawReplacementDown;
     _frame.shurikenDown = rawShurikenDown;
+    _frame.airboneDown = rawAirboneDown;
 
     if (_inputGate.allowJumpDash)
     {
@@ -223,6 +227,17 @@ InputComponent::FInputGate InputComponent::Get_InputGate_Preset(EPlayerInputMode
         gate.allowSkill = false;
         gate.allowAttack = true;
         gate.allowWeaponToggle = true;
+        break;
+
+    case EPlayerInputMode::RecoveryMove:
+        gate.allowMove = true;
+        gate.allowLook = true;
+        gate.allowDash = false;
+        gate.allowJump = false;
+        gate.allowSuperJump = false;
+        gate.allowSkill = false;
+        gate.allowAttack = true;
+        gate.allowWeaponToggle = false;
         break;
 
     case EPlayerInputMode::BlockAll:

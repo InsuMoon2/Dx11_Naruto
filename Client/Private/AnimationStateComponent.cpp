@@ -75,6 +75,7 @@ bool AnimationStateComponent::Play_State(const string& stateKey)
 
     _prevStateName = _currentStateName;
     _currentStateName = stateKey;
+    Update_LocalHitReactionSerial(stateKey);
 
     if (animDesc->mode == EStateAnimationMode::Sequence)
     {
@@ -116,6 +117,7 @@ bool AnimationStateComponent::Play_DirectionalState(const string& stateName, EMo
 
     _prevStateName = _currentStateName;
     _currentStateName = stateName;
+    Update_LocalHitReactionSerial(stateName);
 
     _model->Set_Animation(*clip);
     return true;
@@ -141,6 +143,7 @@ bool AnimationStateComponent::Play_StateLoopOnly(const string& stateName)
 
     _prevStateName = _currentStateName;
     _currentStateName = stateName;
+    Update_LocalHitReactionSerial(stateName);
 
     _model->Set_AnimationSequence(emptyStart, desc->loop, desc->end);
     return true;
@@ -509,6 +512,10 @@ void AnimationStateComponent::Capture_FromStateMachine(const Shared<PlayerStateM
     _replicatedState.state = replicatedState;
     _replicatedState.dir = nextDir;
     _replicatedState.phase = nextPhase;
+    _replicatedState.animStateKey = _currentStateName;
+    _replicatedState.hitReactionType = Resolve_HitReactionType(localState);
+    _replicatedState.hitReactionSerial =
+        Is_HitState(localState) ? _localHitReactionSerial : 0;
 
     // 현재 재생 애니메이션 기준으로 상태가 바뀐 경우에도 원격 클라에서 재시작되도록
     _replicatedState.forceRestart = stateChanged && Requires_ForceRestart(localState);
@@ -556,14 +563,39 @@ void AnimationStateComponent::Apply_NetworkState()
         _replicatedState.attackComboIndex != _appliedState.attackComboIndex ||
         _replicatedState.attackProfile != _appliedState.attackProfile;
 
+    const bool animStateKeyChanged =
+        _replicatedState.animStateKey != _appliedState.animStateKey;
+
+    const bool hitReactionChanged =
+        _replicatedState.hitReactionType != _appliedState.hitReactionType ||
+        _replicatedState.hitReactionSerial != _appliedState.hitReactionSerial;
+
     if (!stateChanged && !phaseChanged &&
-        !_replicatedState.forceRestart && !attackInfoChanged)
+        !_replicatedState.forceRestart &&
+        !attackInfoChanged &&
+        !animStateKeyChanged &&
+        !hitReactionChanged)
         return;
 
     bool played = false;
+    const string explicitAnimStateKey = _replicatedState.animStateKey;
+
+    // anim_state_key가 있으면 object_state보다 우선해서 같은 상태 내 세부 애니메이션을 재생한다.
+    if (!explicitAnimStateKey.empty() &&
+        (_replicatedState.forceRestart || stateChanged || animStateKeyChanged || hitReactionChanged))
+    {
+        const auto* explicitStateDesc = Find_State(explicitAnimStateKey);
+        if (explicitStateDesc)
+        {
+            if (explicitStateDesc->mode == EStateAnimationMode::DirectionalSingle)
+                played = Play_DirectionalState(explicitAnimStateKey, _replicatedState.dir);
+            else
+                played = Play_State(explicitAnimStateKey);
+        }
+    }
 
     // 수신된 attack_combo_index에 해당하는 animStateKey를 직접 조호ㅣ
-    if (attackInfoChanged)
+    if (!played && attackInfoChanged)
     {
         const FComboProfile* profile =
             GET_SINGLE(ComboProfile_Manager)->Find(_replicatedState.attackProfile);
@@ -581,23 +613,29 @@ void AnimationStateComponent::Apply_NetworkState()
     // 위에서 재생되지 않은 경우 기존 로직 그대로 실행
     if (!played)
     {
-        const EPlayerState localState = To_LocalState(_replicatedState.state);
+        EPlayerState localState = To_LocalState(_replicatedState.state);
+        if (localState == EPlayerState::Hit)
+            localState = Resolve_HitReactionState(_replicatedState.hitReactionType);
 
-        const string stateName = Find_StateNameByWeapon(
-            Get_Owner().get(), localState);
+        string stateName = explicitAnimStateKey;
+        if (stateName.empty())
+        {
+            stateName = Find_StateNameByWeapon(
+                Get_Owner().get(), localState);
+        }
 
         const auto* stateDesc = Find_State(stateName);
 
         if (_replicatedState.forceRestart)
         {
-            if (localState == EPlayerState::Dash)
+            if (stateDesc && stateDesc->mode == EStateAnimationMode::DirectionalSingle)
                 played = Play_DirectionalState(stateName, _replicatedState.dir);
             else
                 played = Play_State(stateName);
         }
-        else if (stateChanged)
+        else if (stateChanged || hitReactionChanged || animStateKeyChanged)
         {
-            if (localState == EPlayerState::Dash)
+            if (stateDesc && stateDesc->mode == EStateAnimationMode::DirectionalSingle)
                 played = Play_DirectionalState(stateName, _replicatedState.dir);
             else
                 played = Play_State(stateName);
@@ -641,6 +679,9 @@ void AnimationStateComponent::Write_ToObjectInfo(Protocol::ObjectInfo& info) con
 
     info.set_attack_profile(To_ProtoAttackProfile(_replicatedState.attackProfile));
     info.set_attack_combo_index(_replicatedState.attackComboIndex);
+    info.set_anim_state_key(_replicatedState.animStateKey);
+    info.set_hit_reaction_type(To_ProtoHitReaction(_replicatedState.hitReactionType));
+    info.set_hit_reaction_serial(_replicatedState.hitReactionSerial);
 }
 
 void AnimationStateComponent::Read_FromObjectInfo(const Protocol::ObjectInfo& info)
@@ -655,6 +696,9 @@ void AnimationStateComponent::Read_FromObjectInfo(const Protocol::ObjectInfo& in
 
     state.attackProfile = From_ProtoAttackProfile(info.attack_profile());
     state.attackComboIndex = info.attack_combo_index();
+    state.animStateKey = info.anim_state_key();
+    state.hitReactionType = From_ProtoHitReaction(info.hit_reaction_type());
+    state.hitReactionSerial = info.hit_reaction_serial();
 
     Sync_FromNetwork(state);
 }
@@ -664,6 +708,133 @@ string AnimationStateComponent::To_AnimationStateName(EPlayerState state)
     auto name = magic_enum::enum_name(state);
     return name.empty() ? "" : string(name);
 }
+
+bool AnimationStateComponent::Is_HitState(EPlayerState state)
+{
+    switch (state)
+    {
+    case EPlayerState::Hit:
+    case EPlayerState::Hit_Launch:
+    case EPlayerState::Hit_BlowOff:
+    case EPlayerState::Hit_Down:
+    case EPlayerState::Hit_Air:
+    case EPlayerState::Hit_Air_Down:
+        return true;
+
+    default:
+        return false;
+    }
+}
+
+EHitReactionType AnimationStateComponent::Resolve_HitReactionType(EPlayerState state)
+{
+    switch (state)
+    {
+    case EPlayerState::Hit_Launch:
+        return EHitReactionType::Launch;
+
+    case EPlayerState::Hit_BlowOff:
+        return EHitReactionType::BlowOff;
+
+    case EPlayerState::Hit_Down:
+        return EHitReactionType::Down;
+
+    case EPlayerState::Hit_Air:
+        return EHitReactionType::Air;
+
+    case EPlayerState::Hit_Air_Down:
+        return EHitReactionType::Air_Down;
+
+    case EPlayerState::Hit:
+        return EHitReactionType::Stagger;
+
+    default:
+        return EHitReactionType::Default;
+    }
+}
+
+EPlayerState AnimationStateComponent::Resolve_HitReactionState(EHitReactionType type)
+{
+    switch (type)
+    {
+    case EHitReactionType::Launch:
+        return EPlayerState::Hit_Launch;
+
+    case EHitReactionType::BlowOff:
+        return EPlayerState::Hit_BlowOff;
+
+    case EHitReactionType::Down:
+        return EPlayerState::Hit_Down;
+
+    case EHitReactionType::Air:
+        return EPlayerState::Hit_Air;
+
+    case EHitReactionType::Air_Down:
+        return EPlayerState::Hit_Air_Down;
+
+    case EHitReactionType::Stagger:
+    case EHitReactionType::Default:
+    default:
+        return EPlayerState::Hit;
+    }
+}
+
+Protocol::HIT_REACTION_TYPE AnimationStateComponent::To_ProtoHitReaction(EHitReactionType hitReactionType)
+{
+    switch (hitReactionType)
+    {
+    case EHitReactionType::Stagger:
+        return Protocol::HIT_REACTION_TYPE_STAGGER;
+
+    case EHitReactionType::Launch:
+        return Protocol::HIT_REACTION_TYPE_LAUNCH;
+
+    case EHitReactionType::BlowOff:
+        return Protocol::HIT_REACTION_TYPE_BLOWOFF;
+
+    case EHitReactionType::Down:
+        return Protocol::HIT_REACTION_TYPE_DOWN;
+
+    case EHitReactionType::Air:
+        return Protocol::HIT_REACTION_TYPE_AIR;
+
+    case EHitReactionType::Air_Down:
+        return Protocol::HIT_REACTION_TYPE_AIR_DOWN;
+
+    case EHitReactionType::Default:
+    default:
+        return Protocol::HIT_REACTION_TYPE_DEFAULT;
+    }
+}
+
+EHitReactionType AnimationStateComponent::From_ProtoHitReaction(Protocol::HIT_REACTION_TYPE hitReactionType)
+{
+    switch (hitReactionType)
+    {
+    case Protocol::HIT_REACTION_TYPE_STAGGER:
+        return EHitReactionType::Stagger;
+
+    case Protocol::HIT_REACTION_TYPE_LAUNCH:
+        return EHitReactionType::Launch;
+
+    case Protocol::HIT_REACTION_TYPE_BLOWOFF:
+        return EHitReactionType::BlowOff;
+
+    case Protocol::HIT_REACTION_TYPE_DOWN:
+        return EHitReactionType::Down;
+
+    case Protocol::HIT_REACTION_TYPE_AIR:
+        return EHitReactionType::Air;
+
+    case Protocol::HIT_REACTION_TYPE_AIR_DOWN:
+        return EHitReactionType::Air_Down;
+
+    case Protocol::HIT_REACTION_TYPE_DEFAULT:
+    default:
+        return EHitReactionType::Default;
+    }
+}
+
 
 string AnimationStateComponent::Find_StateNameByWeapon(GameObject* owner, EPlayerState state)
 {
@@ -707,6 +878,9 @@ bool AnimationStateComponent::Requires_ForceRestart(EPlayerState state)
     case EPlayerState::WireDash:
     case EPlayerState::AirApproach:
     case EPlayerState::Hit:
+    case EPlayerState::Hit_Launch:
+    case EPlayerState::Hit_BlowOff:
+    case EPlayerState::Hit_Down:
     case EPlayerState::JumpAttack:
 
     case EPlayerState::Replacement:
@@ -722,6 +896,9 @@ bool AnimationStateComponent::Requires_ForceRestart(EPlayerState state)
     case EPlayerState::Skill_Chidori_End:
     case EPlayerState::Skill_FireBall:
     case EPlayerState::Skill_FireBall_Air:
+    case EPlayerState::Skill_ShinsuSenju:
+    case EPlayerState::Skill_Kirin:
+    case EPlayerState::Skill_Kamui:
         return true;
 
     default:
@@ -742,8 +919,6 @@ Protocol::OBJECT_STATE_TYPE AnimationStateComponent::To_ReplicatedState(EPlayerS
 
     case EPlayerState::Replacement:
     case EPlayerState::JumpFall:            return Protocol::OBJECT_STATE_TYPE_JUMP_FALL;
-
-        // 수리검 추가해야함
 
     case EPlayerState::DoubleJump:          return Protocol::OBJECT_STATE_TYPE_DOUBLE_JUMP;
     case EPlayerState::JumpDash:            return Protocol::OBJECT_STATE_TYPE_JUMP_DASH;
@@ -768,7 +943,11 @@ Protocol::OBJECT_STATE_TYPE AnimationStateComponent::To_ReplicatedState(EPlayerS
     case EPlayerState::Attack_Sword_04:     return Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_04;
     case EPlayerState::Attack_SwordAir_01:  return Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_AIR_01;
     case EPlayerState::Attack_SwordAir_02:  return Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_AIR_02;
-    case EPlayerState::Hit:                 return Protocol::OBJECT_STATE_TYPE_HIT;
+    case EPlayerState::Hit:
+    case EPlayerState::Hit_Launch:
+    case EPlayerState::Hit_BlowOff:
+    case EPlayerState::Hit_Down:
+                                            return Protocol::OBJECT_STATE_TYPE_HIT;
     case EPlayerState::Dash:                return Protocol::OBJECT_STATE_TYPE_DASH;
     case EPlayerState::Skill_Rasengan:      return Protocol::OBJECT_STATE_TYPE_SKILL_RASENGAN;
     case EPlayerState::Skill_Rasengan_Air:  return Protocol::OBJECT_STATE_TYPE_SKILL_RASENGAN_AIR;
@@ -780,6 +959,10 @@ Protocol::OBJECT_STATE_TYPE AnimationStateComponent::To_ReplicatedState(EPlayerS
     case EPlayerState::Skill_Chidori_End:   return Protocol::OBJECT_STATE_TYPE_SKILL_CHIDORI_END;
     case EPlayerState::Skill_FireBall:      return Protocol::OBJECT_STATE_TYPE_SKILL_FIREBALL;
     case EPlayerState::Skill_FireBall_Air:  return Protocol::OBJECT_STATE_TYPE_SKILL_FIREBALL_AIR;
+    case EPlayerState::Shuriken:            return Protocol::OBJECT_STATE_TYPE_SHURIKEN;
+    case EPlayerState::Skill_ShinsuSenju:   return Protocol::OBJECT_STATE_TYPE_SKILL_SHINSUSENJU;
+    case EPlayerState::Skill_Kirin:         return Protocol::OBJECT_STATE_TYPE_SKILL_KIRIN;
+    case EPlayerState::Skill_Kamui:         return Protocol::OBJECT_STATE_TYPE_SKILL_KAMUI;
     case EPlayerState::Dead:                return Protocol::OBJECT_STATE_TYPE_DEAD;
     default:                                return Protocol::OBJECT_STATE_TYPE_IDLE;
     }
@@ -831,6 +1014,10 @@ EPlayerState AnimationStateComponent::To_LocalState(Protocol::OBJECT_STATE_TYPE 
     case Protocol::OBJECT_STATE_TYPE_SKILL_CHIDORI_END:     return EPlayerState::Skill_Chidori_End;
     case Protocol::OBJECT_STATE_TYPE_SKILL_FIREBALL:        return EPlayerState::Skill_FireBall;
     case Protocol::OBJECT_STATE_TYPE_SKILL_FIREBALL_AIR:    return EPlayerState::Skill_FireBall_Air;
+    case Protocol::OBJECT_STATE_TYPE_SHURIKEN:              return EPlayerState::Shuriken;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_SHINSUSENJU:     return EPlayerState::Skill_ShinsuSenju;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_KIRIN:           return EPlayerState::Skill_Kirin;
+    case Protocol::OBJECT_STATE_TYPE_SKILL_KAMUI:           return EPlayerState::Skill_Kamui;
     case Protocol::OBJECT_STATE_TYPE_DEAD:                  return EPlayerState::Dead;
     default:                                                return EPlayerState::Idle;
     }
@@ -905,6 +1092,18 @@ EAttackProfileType AnimationStateComponent::From_ProtoAttackProfile(Protocol::AT
     case Protocol::ATTACK_PROFILE_TYPE_BIGSWORD_AERIAL: return EAttackProfileType::BigSword_Aerial;
     default:                                            return EAttackProfileType::Hand_Ground;
     }
+}
+
+void AnimationStateComponent::Update_LocalHitReactionSerial(const string& stateKey)
+{
+    const auto hitState = magic_enum::enum_cast<EPlayerState>(stateKey);
+    if (!hitState.has_value())
+        return;
+
+    if (!Is_HitState(hitState.value()))
+        return;
+
+    ++_localHitReactionSerial;
 }
 
 Shared<AnimationStateComponent> AnimationStateComponent::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

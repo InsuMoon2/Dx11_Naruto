@@ -1,0 +1,789 @@
+{
+    "levelName": "BM_Konoha_Village_Env_WaterTank",
+    "levelIndex": 3,
+    "gameObjects": [
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_A3_32",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "0ed7d983-b75c-4142-97fa-159c8e705ca1",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "46cad1bd-c74b-4edd-9b5c-9d86132119c0",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -67.65,
+                        41.7,
+                        77.4
+                    ],
+                    "rotation": [
+                        0.0,
+                        89.999954,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_A4_35",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "698b11ae-e51f-47b3-b5e9-33dfd6e9be8e",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "46cad1bd-c74b-4edd-9b5c-9d86132119c0",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -24.55,
+                        29.95,
+                        42.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        90.00005,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_A5_44",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "fc1419dd-99b7-4544-b608-e4246a944bf5",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "46cad1bd-c74b-4edd-9b5c-9d86132119c0",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        39.9,
+                        29.5,
+                        59.1
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_A6_52",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "858ea9eb-3475-45ee-9dc5-e25cc09a6358",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "46cad1bd-c74b-4edd-9b5c-9d86132119c0",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        59.85,
+                        14.200000000000001,
+                        49.800000000000004
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_A7_61",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7612736b-79a7-46a5-9c90-10e43cbf1fe9",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "46cad1bd-c74b-4edd-9b5c-9d86132119c0",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        104.25,
+                        16.8,
+                        18.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        -175.00005,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_B2_82",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "ef5f218a-c338-4153-a0b7-e6760347e270",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "c6289a28-85d1-45db-9d23-6a512a7cff24",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        127.4,
+                        40.4,
+                        -34.2
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.9998,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_B3_95",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "070a9519-0c57-401a-8ed5-6808502c90d2",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "c6289a28-85d1-45db-9d23-6a512a7cff24",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        99.15,
+                        26.0,
+                        -61.800000000000004
+                    ],
+                    "rotation": [
+                        0.0,
+                        90.00018,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_B5_143",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "1f0f9221-3a56-4469-be91-eae14e853fe3",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "c6289a28-85d1-45db-9d23-6a512a7cff24",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -61.25,
+                        46.15,
+                        120.7
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.99994,
+                        0.0
+                    ],
+                    "scale": [
+                        1.5,
+                        1.5,
+                        1.5
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_B6_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f4feb66d-9445-415a-8d0e-c7dc18198732",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "c6289a28-85d1-45db-9d23-6a512a7cff24",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -69.79,
+                        22.53,
+                        78.97
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_B_64",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "80e14c56-d005-42a2-b53c-18458ce80a6f",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "c6289a28-85d1-45db-9d23-6a512a7cff24",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        104.10000000000001,
+                        16.8,
+                        15.8
+                    ],
+                    "rotation": [
+                        0.0,
+                        179.9999,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_C2_58",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "67d561f6-1147-4463-9547-f5814c981733",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "414f4796-5017-4bf1-91f6-c842cd29e8ff",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        77.60000000000001,
+                        19.164897,
+                        50.45
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.99994,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_C3_110",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "c35654d9-25dd-4099-a95b-7d4af389d468",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "414f4796-5017-4bf1-91f6-c842cd29e8ff",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        44.050000000000004,
+                        25.5,
+                        -32.8
+                    ],
+                    "rotation": [
+                        0.0,
+                        179.9999,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_C4_116",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "9a87fe5c-f432-434f-b067-acba27a21fb2",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "414f4796-5017-4bf1-91f6-c842cd29e8ff",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -1.2,
+                        45.0,
+                        -80.65
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_C_38",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "4048fa55-c15a-4d18-9f28-4a732a03d323",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "414f4796-5017-4bf1-91f6-c842cd29e8ff",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        19.650000000000002,
+                        29.5,
+                        52.9
+                    ],
+                    "rotation": [
+                        0.0,
+                        135.00002,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_D2_29",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e66290af-01f2-4bdc-bc89-ad8141ab7c8e",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "ec41730a-1af7-4321-8783-f41efa0f382e",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -91.5,
+                        54.050000000000004,
+                        112.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        174.99985,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_D4_104",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "61637ee3-6c96-4115-9760-026daac30939",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "ec41730a-1af7-4321-8783-f41efa0f382e",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        87.25,
+                        27.0,
+                        -60.75
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.99994,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_D6_149",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "682d0ce4-8f9c-4a3b-bfe4-c25c77b17a5e",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "ec41730a-1af7-4321-8783-f41efa0f382e",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -49.95,
+                        46.300000000000004,
+                        124.10000000000001
+                    ],
+                    "rotation": [
+                        0.0,
+                        4.9997587,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_D_9",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f02a6c61-259e-4be8-9fd7-11db360387c6",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "ec41730a-1af7-4321-8783-f41efa0f382e",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -92.09062,
+                        48.880044,
+                        12.144525000000002
+                    ],
+                    "rotation": [
+                        0.0,
+                        -88.31447,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E10_140",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "9d09e951-58ca-4ee3-a6e3-3a180e8f77a0",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6f6b9504-c7bd-45a0-8aff-ded9d7229b90",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -56.5,
+                        46.209813999999994,
+                        116.55
+                    ],
+                    "rotation": [
+                        0.0,
+                        89.99996,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E11_128",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5f95d4b2-419c-40ef-9d67-ec1a76e621d0",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6f6b9504-c7bd-45a0-8aff-ded9d7229b90",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -34.977399999999996,
+                        62.0,
+                        -64.803545
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.595184,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E12_123",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "3e2fc1b1-9c87-440d-b526-03f23a0e510e",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6f6b9504-c7bd-45a0-8aff-ded9d7229b90",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -27.2,
+                        44.550000000000004,
+                        -12.15
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E13",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "8f9f1456-bf0d-4448-b5e8-803fec956e9d",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6f6b9504-c7bd-45a0-8aff-ded9d7229b90",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -27.2,
+                        44.550000000000004,
+                        -18.3
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "4d69e4d7-ebd5-470f-b541-dbf18720ef85",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6f6b9504-c7bd-45a0-8aff-ded9d7229b90",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        52.300000000000004,
+                        24.6,
+                        83.65
+                    ],
+                    "rotation": [
+                        0.0,
+                        90.00014,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E7_85",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b5e8a809-9ad4-4978-8a49-84a5a97c15fc",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6f6b9504-c7bd-45a0-8aff-ded9d7229b90",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        127.9,
+                        40.4,
+                        -30.900000000000002
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E8_91",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "01968c69-18ae-4bfc-9d5b-6b8c48490ba4",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6f6b9504-c7bd-45a0-8aff-ded9d7229b90",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        129.4,
+                        40.4,
+                        -16.9
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.99992,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E9",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b068df7c-d0dc-47c5-8f11-696918ffd1e4",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6f6b9504-c7bd-45a0-8aff-ded9d7229b90",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        129.4,
+                        40.4,
+                        -20.45
+                    ],
+                    "rotation": [
+                        0.0,
+                        89.99953,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E_20",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "0a415eab-8855-4f02-b203-5abfef2ea0cc",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6f6b9504-c7bd-45a0-8aff-ded9d7229b90",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        76.4,
+                        24.6,
+                        83.65
+                    ],
+                    "rotation": [
+                        0.0,
+                        100.000046,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E_roof_01",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "4ef03e86-25a1-471c-91a5-3b718931bad7",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6f6b9504-c7bd-45a0-8aff-ded9d7229b90",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        4.7,
+                        55.0,
+                        82.4
+                    ],
+                    "rotation": [
+                        0.0,
+                        94.99997,
+                        0.0
+                    ],
+                    "scale": [
+                        1.25,
+                        1.25,
+                        1.25
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_WaterTank_E_roof_02",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "fcbc4a2a-9a2e-4f8f-86dc-61be165d9c5e",
+            "layerTag": "Layer_Backdrop",
+            "model_guid": "6f6b9504-c7bd-45a0-8aff-ded9d7229b90",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -17.35,
+                        55.0,
+                        82.4
+                    ],
+                    "rotation": [
+                        0.0,
+                        94.99997,
+                        0.0
+                    ],
+                    "scale": [
+                        1.25,
+                        1.25,
+                        1.25
+                    ]
+                }
+            ]
+        }
+    ]
+}

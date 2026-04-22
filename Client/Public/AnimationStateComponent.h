@@ -29,6 +29,15 @@ public:
         // 공격 프로파일과 콤보 인덱스 -> Attack 상태일 때만
         EAttackProfileType  attackProfile = EAttackProfileType::Hand_Ground;
         int32               attackComboIndex = 0;
+
+        // 실제 재생한 애니메이션 상태 키다. 같은 OBJECT_STATE 내 세부 상태를 구분할 때 사용한다.
+        string              animStateKey = "";
+
+        // 피격 상태일 때 어떤 리액션인지 원격 클라에 전달한다.
+        EHitReactionType    hitReactionType = EHitReactionType::Default;
+
+        // 같은 피격 애니메이션이 다시 들어와도 재생을 재시작시키기 위한 serial 값이다.
+        uint32              hitReactionSerial = 0;
     };
 
 public:
@@ -97,6 +106,13 @@ public:
 private:
     static string To_AnimationStateName(EPlayerState state);
 
+    static bool Is_HitState(EPlayerState state);
+    static EHitReactionType Resolve_HitReactionType(EPlayerState state);
+
+    static EPlayerState Resolve_HitReactionState(EHitReactionType type);
+
+    static Protocol::HIT_REACTION_TYPE To_ProtoHitReaction(EHitReactionType hitReactionType);
+    static EHitReactionType From_ProtoHitReaction(Protocol::HIT_REACTION_TYPE hitReactionType);
 
     static bool Requires_ForceRestart(EPlayerState state);
 
@@ -113,6 +129,8 @@ private:
 
     Shared<Model>                           Resolve_Model();
 
+    void                                    Update_LocalHitReactionSerial(const string& stateKey);
+
 private:
     Shared<Model>                     _model;
     umap<string, FStateAnimationDesc> _stateAnimations;
@@ -123,6 +141,9 @@ private:
 private: /* Network */
     FAnimReplicatedState _replicatedState{};
     FAnimReplicatedState _appliedState{};
+
+    // 로컬 플레이어의 마지막 Hit 재생 serial이다.
+    uint32 _localHitReactionSerial = 0;
 
 
 public:

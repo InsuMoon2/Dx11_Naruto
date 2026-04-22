@@ -17,6 +17,9 @@ public:
 
     EPlayerState Get_StateID() const override { return EPlayerState::Hit; }
 
+private:
+    static EPlayerState Resolve_HitState(EHitReactionType type);
+
 public:
     static Shared<PlayerState_Hit> Create();
 };

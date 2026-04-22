@@ -125,6 +125,11 @@ namespace Engine
         float   launchPower = 0.f;
         float   launchUp = 0.f;
         int32   hitSound = 0;       // 이건 추후에 타격 사운드
+
+        EHitReactionType hitReactionType = EHitReactionType::Default;
+        uint32 hitReactionSerial = 0;
+
+        bool forceHitRestart = false;
     };
 
     struct FTrailPoint

@@ -23,9 +23,8 @@ public:
 
 
 private:
-    // 보간용 데이터
     Vec3  _targetPos = {};
-    float _targetRotY = 0.f;
+    Quat  _targetRotation = Quat::Identity;
     float _lerpSpeed = 15.f;
                     
     bool  _hasReceivedFirstSync = false;

@@ -33,6 +33,11 @@ message S_RemoveObject
 	repeated uint64 ids = 1;
 }
 
+message S_WaveStarted
+{
+    string wave_tag = 1;
+}
+
 message S_WaveCleared
 {
     string wave_tag = 1;

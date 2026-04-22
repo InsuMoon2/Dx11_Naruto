@@ -40,6 +40,27 @@ StaticMeshActor::~StaticMeshActor()
 {
 }
 
+bool StaticMeshActor::Is_RenderBatchSortable() const
+{
+    return true;
+}
+
+uint64 StaticMeshActor::Get_RenderBatchPrimaryKey() const
+{
+    return static_cast<uint64>(Protocol::COMPONENT_TYPE_SHADER_STATIC_MESH);
+}
+
+uint64 StaticMeshActor::Get_RenderBatchSecondaryKey() const
+{
+    if (!_modelGuid.empty())
+        return static_cast<uint64>(hash<string>{}(_modelGuid));
+
+    if (!_resolvedPath.empty())
+        return static_cast<uint64>(hash<string>{}(_resolvedPath));
+
+    return 0ull;
+}
+
 HRESULT StaticMeshActor::Initialize_Prototype()
 {
     return GameObject::Initialize_Prototype();
@@ -329,17 +350,24 @@ HRESULT StaticMeshActor::Ready_Components()
         CHECK_FAILED(Resolve_ModelAsset(), E_FAIL);
     }
 
-    uint32 modelKey = static_cast<uint32>(hash<string>{}(_modelGuid));
+    const uint32 staticLevelIndex = ETOI(ELevelType::Static);
+    const uint32 modelKey = static_cast<uint32>(hash<string>{}(_modelGuid));
 
-    Matrix scaleMatrix = Matrix::CreateScale(1.f);
-    Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
-    Matrix preTransform = scaleMatrix * rotationMatrix;
+    // 같은 model_guid 프로토타입이 이미 Static 레벨에 있으면, 디스크에서 모델을 다시 만들지 않는다.
+    if (GAME->Find_Component_Prototype(staticLevelIndex, modelKey) == nullptr)
+    {
+        const Matrix scaleMatrix = Matrix::CreateScale(1.f);
+        const Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
+        const Matrix preTransform = scaleMatrix * rotationMatrix;
 
-    auto proto = Model::Create(_device, _context, EMeshVertexType::StaticMesh, _resolvedPath, preTransform, true);
-    CHECK_NULL(proto, E_FAIL);
+        auto proto = Model::Create(
+            _device, _context, EMeshVertexType::StaticMesh, _resolvedPath, preTransform, true);
+        CHECK_NULL(proto, E_FAIL);
 
-    GAME->Add_Component_Prototype(ETOI(ELevelType::Static), modelKey, proto);
-    CHECK_FAILED(Add_Component(ETOI(ELevelType::Static), modelKey, _modelCom), E_FAIL);
+        CHECK_FAILED(GAME->Add_Component_Prototype(staticLevelIndex, modelKey, proto), E_FAIL);
+    }
+
+    CHECK_FAILED(Add_Component(staticLevelIndex, modelKey, _modelCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_STATIC_MESH, _shaderCom), E_FAIL);
 
     return S_OK;

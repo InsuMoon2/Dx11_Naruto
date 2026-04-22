@@ -7,6 +7,7 @@
 #include "AnimNotify_Factory.h"
 #include "Monster.h"
 #include "PlayerStateMachine.h"
+#include "MovementComponent.h"
 
 REGISTER_ANIM_NOTIFY_STATE(ANS_Move);
 IMPLEMENT_REFLECTION(ANS_Move);
@@ -17,12 +18,12 @@ bool ANS_Move::Register_Properties()
     info.className = "ANS_Move";
 
     PROPERTY_FLOAT_JSON("Move Speed", "move_speed", _moveSpeed, -100.f, 100.f);
-    PROPERTY_BOOL_JSON("Rotate To Target", "rotate_to_target",  _rotateToTarget);
+    PROPERTY_BOOL_JSON("Rotate To Target", "rotate_to_target", _rotateToTarget);
     PROPERTY_FLOAT_JSON("Rotation Speed", "rotation_speed", _rotationSpeed, 0.f, 1800.f);
 
     PROPERTY_ENUM("Direction Source", _directionSource, ANS_Move::EMoveDirectionSource);
 
-    PROPERTY_VEC3_JSON("Move Velocity", "move_velocity", _moveVelocity, 0.1f); 
+    PROPERTY_VEC3_JSON("Move Velocity", "move_velocity", _moveVelocity, 0.1f);
 
     PROPERTY_BOOL_JSON("스킬 Y축 무시(지상용)", "ignore_y", _ignoreY);
 
@@ -49,7 +50,8 @@ void ANS_Move::On_Begin(const FAnimNotifyContext& context)
     if (!Set_MoveDirection(context, resolvedDir))
     {
         resolvedDir = transform->Get_WorldForward();
-        if (_ignoreY) resolvedDir.y = 0.f;
+        if (_ignoreY)
+            resolvedDir.y = 0.f;
 
         if (resolvedDir.LengthSquared() <= FLT_EPSILON)
             resolvedDir = Vec3::Forward;
@@ -81,6 +83,10 @@ void ANS_Move::On_Tick(const FAnimNotifyContext& context)
     if (!transform)
         return;
 
+    auto movement = owner->Get_Component<MovementComponent>();
+    if (!movement)
+        return;
+
     const float dt = context.deltaTime;
 
     if (_rotateToTarget && _directionSource == EMoveDirectionSource::TargetDirection)
@@ -109,7 +115,7 @@ void ANS_Move::On_Tick(const FAnimNotifyContext& context)
     if (_moveDir.LengthSquared() <= FLT_EPSILON)
         return;
 
-   Vec3 forwardDir = _moveDir;
+    Vec3 forwardDir = _moveDir;
     Vec3 rightDir = Vec3::Up.Cross(forwardDir);
 
     rightDir.Normalize();
@@ -122,13 +128,13 @@ void ANS_Move::On_Tick(const FAnimNotifyContext& context)
     if (_ignoreY)
         finalOffset.y = 0.f;
 
-    transform->Add_WorldOffset(finalOffset * dt);
+    movement->Apply_NotifyMotionDelta(finalOffset * dt);
 }
 
 void ANS_Move::On_End(const FAnimNotifyContext& context)
 {
-    if (context.isPreview) return;
-
+    if (context.isPreview)
+        return;
 }
 
 json ANS_Move::Serialize_Payload() const
@@ -142,6 +148,7 @@ json ANS_Move::Serialize_Payload() const
 void ANS_Move::Deserialize_Payload(const json& payload)
 {
     AnimNotifyState::Deserialize_Payload(payload);
+
     if (payload.contains("direction_source"))
     {
         if (payload["direction_source"].is_string())
@@ -187,18 +194,15 @@ bool ANS_Move::Set_MoveDirection(const FAnimNotifyContext& context, Vec3& outDir
     default:
         outDir = transform->Get_WorldForward();
         break;
-
-
-
     }
 
-    if (_ignoreY) outDir.y = 0.f;
+    if (_ignoreY)
+        outDir.y = 0.f;
 
     if (outDir.LengthSquared() <= FLT_EPSILON)
         return false;
 
     outDir.Normalize();
-
     return true;
 }
 
@@ -231,7 +235,8 @@ bool ANS_Move::Set_TargetDirection(const FAnimNotifyContext& context, Vec3& outD
         return false;
 
     Vec3 toTarget = targetTransform->Get_WorldPosition() - ownerPos;
-    if (_ignoreY) toTarget.y = 0.f;
+    if (_ignoreY)
+        toTarget.y = 0.f;
 
     if (toTarget.LengthSquared() <= 0.0001f)
         return false;
@@ -260,5 +265,3 @@ bool ANS_Move::Set_DashDirection(const FAnimNotifyContext& context, Vec3& outDir
     outDir.Normalize();
     return true;
 }
-
-

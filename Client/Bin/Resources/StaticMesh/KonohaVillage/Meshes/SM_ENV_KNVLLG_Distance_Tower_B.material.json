@@ -1,0 +1,19 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_Distance_Tower_B",
+      "material_instance_guid": "e240eb2c-cfd7-46f3-8465-7fce6436c596"
+    },
+    {
+      "material_name": "Material_1",
+      "textures": [],
+      "base_color_factor": [
+        0.58,
+        0.59,
+        0.62,
+        1.0
+      ]
+    }
+  ]
+}

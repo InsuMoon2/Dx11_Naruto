@@ -17,6 +17,8 @@ set "KNV02_TEX_DST=..\..\Textures\FModel\KonohaVillage02"
 set "KNV02_MATINST_DST=..\..\Materials\FModel\KonohaVillage02"
 set "KNV02_GUID_MAP=..\json\KonohaVillage02_mesh_guid_map.json"
 set "KNV02_LEVEL_OUT=..\json\Levels"
+REM Snow blend textures are not needed for this KonohaVillage02 conversion preset.
+set "KNV02_STRIP_SNOW_ARG=--strip-snow"
 
 if not defined ASSIMP_TOOL set "ASSIMP_TOOL=%~dp0..\..\..\..\..\AssimpTool\Bin\AssimpTool.exe"
 
@@ -63,6 +65,7 @@ echo   KNV02_TEX_DST=%KNV02_TEX_DST%
 echo   KNV02_MATINST_DST=%KNV02_MATINST_DST%
 echo   KNV02_GUID_MAP=%KNV02_GUID_MAP%
 echo   KNV02_LEVEL_OUT=%KNV02_LEVEL_OUT%
+echo   KNV02_STRIP_SNOW_ARG=%KNV02_STRIP_SNOW_ARG%
 echo   ASSIMP_TOOL=%ASSIMP_TOOL%
 
 python "%~dp0BuildKonohaVillage02Pipeline.py" ^
@@ -78,6 +81,7 @@ python "%~dp0BuildKonohaVillage02Pipeline.py" ^
   --level-map-root "%KNV02_LEVEL_MAP_ROOT%" ^
   --guid-map-out "%KNV02_GUID_MAP%" ^
   --level-out-dir "%KNV02_LEVEL_OUT%" ^
+  %KNV02_STRIP_SNOW_ARG% ^
   %*
 
 if errorlevel 1 goto :error_exit

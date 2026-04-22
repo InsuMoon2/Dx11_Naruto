@@ -56,7 +56,10 @@ void Player::BeginPlay()
         _weaponTypeChangedHandle.Reset();
     }
 
-    _weaponTypeChangedHandle = delegate.OnWeaponTypeChanged.Add(this, &Player::On_WeaponTypeChagned);
+    if (Is_Local())
+    {
+        _weaponTypeChangedHandle = delegate.OnWeaponTypeChanged.Add(this, &Player::On_WeaponTypeChagned);
+    }
 
     //if (_equipment)
     //    Change_WeaponAttachment(_equipment->Get_CurrentWeaponType());
@@ -139,7 +142,10 @@ void Player::OnDamaged(const FDamageEvent& damageEvent)
     auto sm = Get_Component<PlayerStateMachine>();
     if (sm && _combatStat && !_combatStat->Is_Dead())
     {
-        sm->Trigger_HitReaction(); // 스테이트 머신에서 슈퍼아머인지 판단하고 상태 변환
+        sm->Trigger_HitReaction(
+            damageEvent.hitReactionType,
+            damageEvent.hitReactionSerial,
+            damageEvent.forceHitRestart); // 스테이트 머신에서 슈퍼아머인지 판단하고 상태 변환
     }
 }
 
@@ -366,6 +372,46 @@ void Player::Refresh_WeaponAttachment_ByCurrentState()
     Change_WeaponAttachment(_equipment->Get_CurrentWeaponType());
 }
 
+void Player::Refresh_WeaponAttachment_ByReplicatedState(EWeaponType weaponType, Protocol::OBJECT_STATE_TYPE replicatedState)
+{
+    if (_equipment)
+    {
+        _equipment->Set_WeaponType(weaponType);
+    }
+
+    auto weaponPartBase = Get_PartObject(EPartSlot::Weapon);
+    if (!weaponPartBase)
+        return;
+
+    auto weaponPart = dynamic_pointer_cast<Weapon>(weaponPartBase);
+    if (!weaponPart)
+        return;
+
+    const EPlayerState attachmentState =
+        Is_SwordAttackReplicatedState(replicatedState) ? EPlayerState::Attack : EPlayerState::Idle;
+
+    const Matrix* socketMatrix = Find_WeaponSocketMatrix(weaponType, attachmentState);
+    weaponPart->Set_SocketMatrix(socketMatrix);
+}
+
+bool Player::Is_SwordAttackReplicatedState(Protocol::OBJECT_STATE_TYPE replicatedState) const
+{
+    switch (replicatedState)
+    {
+    case Protocol::OBJECT_STATE_TYPE_ATTACK:
+    case Protocol::OBJECT_STATE_TYPE_JUMP_ATTACK:
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_01:
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_02:
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_03:
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_04:
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_AIR_01:
+    case Protocol::OBJECT_STATE_TYPE_ATTACK_SWORD_AIR_02:
+        return true;
+    default:
+        return false;
+    }
+}
+
 void Player::Change_WeaponAttachment(EWeaponType weaponType)
 {
     auto weaponPartBase = Get_PartObject(EPartSlot::Weapon);
@@ -383,6 +429,30 @@ void Player::Change_WeaponAttachment(EWeaponType weaponType)
 
     const Matrix* socketMatrix = Find_WeaponSocketMatrix(weaponType, currentState);
     weaponPart->Set_SocketMatrix(socketMatrix);
+}
+
+Protocol::WEAPON_TYPE Player::To_ProtoWeaponType(EWeaponType weaponType)
+{
+    switch (weaponType)
+    {
+    case EWeaponType::BigSwrod:
+        return Protocol::WEAPON_TYPE_BIGSWORD;
+    case EWeaponType::Hand:
+    default:
+        return Protocol::WEAPON_TYPE_HAND;
+    }
+}
+
+EWeaponType Player::From_ProtoWeaponType(Protocol::WEAPON_TYPE weaponType)
+{
+    switch (weaponType)
+    {
+    case Protocol::WEAPON_TYPE_BIGSWORD:
+        return EWeaponType::BigSwrod;
+    case Protocol::WEAPON_TYPE_HAND:
+    default:
+        return EWeaponType::Hand;
+    }
 }
 
 void Player::On_WeaponTypeChagned(int32 weaponTypeIndex)

@@ -86,5 +86,17 @@ namespace Engine
         END
     };
 
+    enum class EHitReactionType
+    {
+        Default,
+        Stagger,
+        Launch,
+        BlowOff,
+        Down,
+        Air,
+        Air_Down,
+        END
+    };
+
 }
 

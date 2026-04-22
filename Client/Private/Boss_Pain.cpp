@@ -48,6 +48,13 @@ HRESULT Boss_Pain::Initialize(void* arg)
     return S_OK;
 }
 
+void Boss_Pain::BeginPlay()
+{
+    EnemyCharacter::BeginPlay();
+
+    GAME->Get_DelegateHub().OnBossObjectSpawned.Broadcast(GetSharedPtr<Boss_Pain>());
+}
+
 json Boss_Pain::To_Json() const
 {
     json j = Character::To_Json();

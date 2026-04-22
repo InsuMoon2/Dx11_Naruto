@@ -114,6 +114,7 @@ private:
     void Ensure_LevelWaveTriggersLoaded();
     void Update_WaveTriggers();
     void Trigger_Wave(FServerWaveTriggerDesc& trigger);
+    void Broadcast_WaveStarted(const string& waveTag);
     void Broadcast_WaveCleared(const string& waveTag);
     bool Is_WaveTriggerCleared(const FServerWaveTriggerDesc& trigger) const;
 

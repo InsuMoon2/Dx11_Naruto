@@ -25,7 +25,10 @@ DECLARE_DELEGATE(FOnLobbySnapshotReceived, const Protocol::S_LobbySnapshot&);
 DECLARE_DELEGATE(FOnLobbyChatReceived, const Protocol::S_LobbyChat&);
 DECLARE_DELEGATE(FOnLobbyStartGameReceived);
 
+DECLARE_DELEGATE(FOnWaveStarted, const string&);
 DECLARE_DELEGATE(FOnWaveCleared, const string&);
+
+DECLARE_DELEGATE(FOnBossObjectSpawned, Shared<GameObject>);
 
 // 델리게이트들을 모아놓을 허브 : 매니저 역할이긴하네..
 class ENGINE_DLL DelegateHub : public Base
@@ -57,10 +60,11 @@ public:
 	FOnLobbyChatReceived		OnLobbyChatReceived;
 	FOnLobbyStartGameReceived	OnLobbyStartGameReceived;
 
+    FOnWaveStarted              OnWaveStarted;
     FOnWaveCleared              OnWaveCleared;
 
-    // 추후 확장 할 것들
-    // LevelChanged, OnBossKill, MonsterKill .. etc
+    // 보스 체력바
+    FOnBossObjectSpawned        OnBossObjectSpawned;
 
     
 };

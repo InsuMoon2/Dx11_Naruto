@@ -6,6 +6,8 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "Model.h"
+#include "Collider.h"
+#include "Collision_Define.h"
 
 IMPLEMENT_REFLECTION(MovementComponent)
 
@@ -363,6 +365,7 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
     const Vec3 previousPos = transform->Get_WorldPosition();
 
     transform->Add_WorldOffset(_velocity * timeDelta);
+    Apply_CharacterBodyBlock(previousPos, transform);
 
     Vec3 currentPos = transform->Get_WorldPosition();
 
@@ -443,6 +446,113 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
             return;
         }
     }
+}
+
+bool MovementComponent::Is_CharacterBodyChannel(Collision_Channel channel)
+{
+    return channel == Collision_Channel::Player_Body
+        || channel == Collision_Channel::Monster_Body;
+}
+
+bool MovementComponent::Is_BlockedByCharacterBody(const Vec3& testPosition, Shared<Transform> transform) const
+{
+    if (!transform)
+        return false;
+
+    auto owner = _owner.lock();
+    if (!owner)
+        return false;
+
+    auto selfCollider = owner->Get_Component<Collider>();
+    if (!selfCollider || !selfCollider->Get_IsActive())
+        return false;
+
+    if (!Is_CharacterBodyChannel(selfCollider->Get_Channel()))
+        return false;
+
+    const Vec3 originalPos = transform->Get_WorldPosition();
+
+    transform->Set_WorldPosition(testPosition);
+    selfCollider->Update_Collider(transform->Get_WorldMatrix());
+
+    bool isBlocked = false;
+    const vector<Shared<GameObject>> gameObjects = GAME->Get_GameObjects(owner->Get_LevelIndex());
+
+    for (const auto& otherObject : gameObjects)
+    {
+        if (!otherObject || otherObject.get() == owner.get())
+            continue;
+
+        auto otherCollider = otherObject->Get_Component<Collider>();
+        if (!otherCollider || !otherCollider->Get_IsActive())
+            continue;
+
+        if (!Is_CharacterBodyChannel(otherCollider->Get_Channel()))
+            continue;
+
+        const ECollisionResponse response = Calculate_ResponseResult(
+            selfCollider->Get_Channel(),
+            selfCollider->Get_OverlapMask(),
+            selfCollider->Get_BlockMask(),
+            otherCollider->Get_Channel(),
+            otherCollider->Get_OverlapMask(),
+            otherCollider->Get_BlockMask());
+
+        if (response != ECollisionResponse::Block)
+            continue;
+
+        if (auto otherTransform = otherObject->Get_Transform())
+            otherCollider->Update_Collider(otherTransform->Get_WorldMatrix());
+
+        if (selfCollider->Intersect(otherCollider))
+        {
+            isBlocked = true;
+            break;
+        }
+    }
+
+    transform->Set_WorldPosition(originalPos);
+    selfCollider->Update_Collider(transform->Get_WorldMatrix());
+
+    return isBlocked;
+}
+
+void MovementComponent::Apply_CharacterBodyBlock(const Vec3& previousPos, Shared<Transform> transform)
+{
+    if (!transform)
+        return;
+
+    const Vec3 currentPos = transform->Get_WorldPosition();
+
+    Vec3 moveDelta = currentPos - previousPos;
+    moveDelta.y = 0.f;
+
+    if (moveDelta.LengthSquared() <= FLT_EPSILON)
+        return;
+
+    if (!Is_BlockedByCharacterBody(currentPos, transform))
+        return;
+
+    Vec3 resolvedPos = previousPos;
+
+    const Vec3 tryPosX = resolvedPos + Vec3(moveDelta.x, 0.f, 0.f);
+    if (!Is_BlockedByCharacterBody(tryPosX, transform))
+        resolvedPos.x = tryPosX.x;
+
+    const Vec3 tryPosZ = resolvedPos + Vec3(0.f, 0.f, moveDelta.z);
+    if (!Is_BlockedByCharacterBody(tryPosZ, transform))
+        resolvedPos.z = tryPosZ.z;
+
+    resolvedPos.y = currentPos.y;
+    transform->Set_WorldPosition(resolvedPos);
+
+    auto owner = _owner.lock();
+    if (!owner)
+        return;
+
+    auto selfCollider = owner->Get_Component<Collider>();
+    if (selfCollider)
+        selfCollider->Update_Collider(transform->Get_WorldMatrix());
 }
 
 Vec3 MovementComponent::Build_DesiredMoveDirection() const
@@ -683,6 +793,21 @@ void MovementComponent::Restore_DefaultUpRotation(Shared<Transform> transform)
 
     Quat targetRot = Quat::CreateFromRotationMatrix(lookAtMatrix);
     transform->Set_WorldRotation(targetRot);
+}
+
+void MovementComponent::Apply_NotifyMotionDelta(const Vec3& worldDelta)
+{
+    if (!_transform)
+        return;
+
+    const Vec3 previousPos = _transform->Get_WorldPosition();
+
+    _transform->Add_WorldOffset(worldDelta);
+
+    Apply_CharacterBodyBlock(previousPos, _transform);
+
+    if (!_isWallRunning && worldDelta.y <= 0.f)
+        Apply_WallBlock(previousPos, _transform);
 }
 
 bool MovementComponent::Detect_WallEntrySurface(

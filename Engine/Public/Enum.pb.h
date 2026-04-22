@@ -285,7 +285,11 @@ enum OBJECT_STATE_TYPE : int {
   OBJECT_STATE_TYPE_SKILL_CHIDORI_END = 39,
   OBJECT_STATE_TYPE_SKILL_FIREBALL = 40,
   OBJECT_STATE_TYPE_SKILL_FIREBALL_AIR = 41,
-  OBJECT_STATE_TYPE_DEAD = 42,
+  OBJECT_STATE_TYPE_SHURIKEN = 42,
+  OBJECT_STATE_TYPE_SKILL_SHINSUSENJU = 43,
+  OBJECT_STATE_TYPE_SKILL_KIRIN = 44,
+  OBJECT_STATE_TYPE_SKILL_KAMUI = 45,
+  OBJECT_STATE_TYPE_DEAD = 46,
   OBJECT_STATE_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   OBJECT_STATE_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -295,8 +299,8 @@ enum OBJECT_STATE_TYPE : int {
 bool OBJECT_STATE_TYPE_IsValid(int value);
 extern const uint32_t OBJECT_STATE_TYPE_internal_data_[];
 constexpr OBJECT_STATE_TYPE OBJECT_STATE_TYPE_MIN = static_cast<OBJECT_STATE_TYPE>(0);
-constexpr OBJECT_STATE_TYPE OBJECT_STATE_TYPE_MAX = static_cast<OBJECT_STATE_TYPE>(42);
-constexpr int OBJECT_STATE_TYPE_ARRAYSIZE = 42 + 1;
+constexpr OBJECT_STATE_TYPE OBJECT_STATE_TYPE_MAX = static_cast<OBJECT_STATE_TYPE>(46);
+constexpr int OBJECT_STATE_TYPE_ARRAYSIZE = 46 + 1;
 const ::google::protobuf::EnumDescriptor*
 OBJECT_STATE_TYPE_descriptor();
 template <typename T>
@@ -309,7 +313,7 @@ const std::string& OBJECT_STATE_TYPE_Name(T value) {
 template <>
 inline const std::string& OBJECT_STATE_TYPE_Name(OBJECT_STATE_TYPE value) {
   return ::google::protobuf::internal::NameOfDenseEnum<OBJECT_STATE_TYPE_descriptor,
-                                                 0, 42>(
+                                                 0, 46>(
       static_cast<int>(value));
 }
 inline bool OBJECT_STATE_TYPE_Parse(absl::string_view name, OBJECT_STATE_TYPE* value) {
@@ -420,6 +424,77 @@ inline bool ATTACK_PROFILE_TYPE_Parse(absl::string_view name, ATTACK_PROFILE_TYP
   return ::google::protobuf::internal::ParseNamedEnum<ATTACK_PROFILE_TYPE>(
       ATTACK_PROFILE_TYPE_descriptor(), name, value);
 }
+enum WEAPON_TYPE : int {
+  WEAPON_TYPE_HAND = 0,
+  WEAPON_TYPE_BIGSWORD = 1,
+  WEAPON_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::min(),
+  WEAPON_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::max(),
+};
+
+bool WEAPON_TYPE_IsValid(int value);
+extern const uint32_t WEAPON_TYPE_internal_data_[];
+constexpr WEAPON_TYPE WEAPON_TYPE_MIN = static_cast<WEAPON_TYPE>(0);
+constexpr WEAPON_TYPE WEAPON_TYPE_MAX = static_cast<WEAPON_TYPE>(1);
+constexpr int WEAPON_TYPE_ARRAYSIZE = 1 + 1;
+const ::google::protobuf::EnumDescriptor*
+WEAPON_TYPE_descriptor();
+template <typename T>
+const std::string& WEAPON_TYPE_Name(T value) {
+  static_assert(std::is_same<T, WEAPON_TYPE>::value ||
+                    std::is_integral<T>::value,
+                "Incorrect type passed to WEAPON_TYPE_Name().");
+  return WEAPON_TYPE_Name(static_cast<WEAPON_TYPE>(value));
+}
+template <>
+inline const std::string& WEAPON_TYPE_Name(WEAPON_TYPE value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<WEAPON_TYPE_descriptor,
+                                                 0, 1>(
+      static_cast<int>(value));
+}
+inline bool WEAPON_TYPE_Parse(absl::string_view name, WEAPON_TYPE* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<WEAPON_TYPE>(
+      WEAPON_TYPE_descriptor(), name, value);
+}
+enum HIT_REACTION_TYPE : int {
+  HIT_REACTION_TYPE_DEFAULT = 0,
+  HIT_REACTION_TYPE_STAGGER = 1,
+  HIT_REACTION_TYPE_LAUNCH = 2,
+  HIT_REACTION_TYPE_BLOWOFF = 3,
+  HIT_REACTION_TYPE_DOWN = 4,
+  HIT_REACTION_TYPE_AIR = 5,
+  HIT_REACTION_TYPE_AIR_DOWN = 6,
+  HIT_REACTION_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::min(),
+  HIT_REACTION_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::max(),
+};
+
+bool HIT_REACTION_TYPE_IsValid(int value);
+extern const uint32_t HIT_REACTION_TYPE_internal_data_[];
+constexpr HIT_REACTION_TYPE HIT_REACTION_TYPE_MIN = static_cast<HIT_REACTION_TYPE>(0);
+constexpr HIT_REACTION_TYPE HIT_REACTION_TYPE_MAX = static_cast<HIT_REACTION_TYPE>(6);
+constexpr int HIT_REACTION_TYPE_ARRAYSIZE = 6 + 1;
+const ::google::protobuf::EnumDescriptor*
+HIT_REACTION_TYPE_descriptor();
+template <typename T>
+const std::string& HIT_REACTION_TYPE_Name(T value) {
+  static_assert(std::is_same<T, HIT_REACTION_TYPE>::value ||
+                    std::is_integral<T>::value,
+                "Incorrect type passed to HIT_REACTION_TYPE_Name().");
+  return HIT_REACTION_TYPE_Name(static_cast<HIT_REACTION_TYPE>(value));
+}
+template <>
+inline const std::string& HIT_REACTION_TYPE_Name(HIT_REACTION_TYPE value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<HIT_REACTION_TYPE_descriptor,
+                                                 0, 6>(
+      static_cast<int>(value));
+}
+inline bool HIT_REACTION_TYPE_Parse(absl::string_view name, HIT_REACTION_TYPE* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<HIT_REACTION_TYPE>(
+      HIT_REACTION_TYPE_descriptor(), name, value);
+}
 
 // ===================================================================
 
@@ -483,6 +558,18 @@ struct is_proto_enum<::Protocol::ATTACK_PROFILE_TYPE> : std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor<::Protocol::ATTACK_PROFILE_TYPE>() {
   return ::Protocol::ATTACK_PROFILE_TYPE_descriptor();
+}
+template <>
+struct is_proto_enum<::Protocol::WEAPON_TYPE> : std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor<::Protocol::WEAPON_TYPE>() {
+  return ::Protocol::WEAPON_TYPE_descriptor();
+}
+template <>
+struct is_proto_enum<::Protocol::HIT_REACTION_TYPE> : std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor<::Protocol::HIT_REACTION_TYPE>() {
+  return ::Protocol::HIT_REACTION_TYPE_descriptor();
 }
 
 }  // namespace protobuf

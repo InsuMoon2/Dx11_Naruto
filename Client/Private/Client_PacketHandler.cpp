@@ -139,6 +139,10 @@ void Client_PacketHandler::HandlePacket(Shared<ServerSession> session, BYTE* buf
     case S_WaveCleared:
         Handle_S_WaveCleared(session, buffer, len);
         break;
+
+    case S_WaveStarted:
+        Handle_S_WaveStarted(session, buffer, len);
+        break;
     }
 
 
@@ -362,6 +366,14 @@ void Client_PacketHandler::Handle_S_WaveCleared(Shared<ServerSession> session, B
     GAME->Get_DelegateHub().OnWaveCleared.Broadcast(pkt.wave_tag());
 }
 
+void Client_PacketHandler::Handle_S_WaveStarted(Shared<ServerSession> session, BYTE* buffer, int32 len)
+{
+    Protocol::S_WaveStarted pkt;
+    ParsePacket(buffer, pkt);
+
+    GAME->Get_DelegateHub().OnWaveStarted.Broadcast(pkt.wave_tag());
+}
+
 SendBufferRef Client_PacketHandler::Make_C_Move(const Protocol::ObjectInfo& objectInfo)
 {
     Protocol::C_Move pkt;
@@ -395,6 +407,8 @@ SendBufferRef Client_PacketHandler::Make_C_EnterGame(const Vec3& spawnPos, float
             (*pkt.mutable_info()->mutable_equipparts())[i] = Utils::ToString(partTag);
         }
     }
+
+    pkt.mutable_info()->set_weapon_type(Protocol::WEAPON_TYPE_HAND);
 
     return MakeSendBuffer(pkt, C_EnterGame);
 }

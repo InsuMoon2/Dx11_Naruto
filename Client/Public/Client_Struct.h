@@ -55,6 +55,8 @@ namespace Client
         float   launchPower = 0.f;
         float   launchUp = 0.f;
         int32   hitSound = 0;
+
+        EHitReactionType hitReactionType = EHitReactionType::Default;
     };
 
     struct FComboProfile
@@ -76,6 +78,7 @@ namespace Client
         uint32 levelIndex = 0;
         uint32 prototypeLevelIndex = 0;
         uint32 objectType = 0;
+        uint32 startIndex = 0; // 텍스처 시퀀스 잡이 몇 번째 이미지부터 처리할지 나타내는 시작 인덱스다.
 
         string idStr;
         string pathStr;
@@ -87,6 +90,7 @@ namespace Client
         FSkillData skillData{};
 
         uint32 skillIconSrvIndex = 0;
+        json   payloadJson{}; // 오브젝트 단위 로딩 잡이 메인 스레드에서 적용할 원본 JSON payload다.
     };
 
     struct FDirectionClipDesc

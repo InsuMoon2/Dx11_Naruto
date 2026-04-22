@@ -36,6 +36,9 @@ public:
 
     virtual HRESULT     Bind_ShaderResources();
     virtual bool        Should_ExcludeFromEditorSnapshot() const { return false; }
+    virtual bool        Is_RenderBatchSortable() const { return false; }
+    virtual uint64      Get_RenderBatchPrimaryKey() const { return 0ull; }
+    virtual uint64      Get_RenderBatchSecondaryKey() const { return 0ull; }
 
 public: /* PendingKill */
     void Set_Destroy(bool flag) { _isDestroyed = flag; }
@@ -49,6 +52,7 @@ public: /* PendingKill */
     void Set_SourcePrefabName(const string& prefabName) { _sourcePrefabName = prefabName; }
     const string& Get_SourcePrefabName() const { return _sourcePrefabName; }
 
+    bool Is_Local() const { return _isLocal; }
     void Set_Local(bool isLocal);
 
 public:
@@ -80,6 +84,7 @@ public:
         shared_ptr<Component> component = GAME->Clone_Component(levelIndex, componentID, arg);
         CHECK_NULL(component, E_FAIL);
 
+        component->Set_IsLocal(_isLocal);
         component->Set_Owner(this->GetSharedPtr());
 
         _components.emplace(componentID, component);
@@ -97,6 +102,7 @@ public:
         shared_ptr<Component> component = GAME->Clone_Component(componentID, arg);
         CHECK_NULL(component, E_FAIL);
 
+        component->Set_IsLocal(_isLocal);
         component->Set_Owner(this->GetSharedPtr());
 
         _components.emplace(componentID, component);
@@ -151,6 +157,8 @@ protected: /* Values */
 
     bool _isDestroyed = false;
     bool _hasBegunPlay = false;
+
+    bool _isLocal = true;
 
     // GUID
     string _guid;

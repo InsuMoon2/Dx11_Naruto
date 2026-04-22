@@ -32,6 +32,12 @@ public:
 public:
     void            Clear_InvalidCameras();
 
+public: /* Camera Shake */
+    void Request_CameraShake(const FCameraShakeDesc& request);
+    void Stop_CameraShake(const string& tag = "");
+    void Clear_CameraShake();
+
+
 private:
     Shared<Camera>  Find_NextValidCamera(const Shared<Camera>& current);
 

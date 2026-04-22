@@ -81,6 +81,11 @@ GROUND_OVERRIDE_BLEND_SCALE = 8.0
 # [추가] 바닥 오버라이드 마스크는 메시 UV를 그대로 쓰도록 기본 배율 1을 사용한다.
 GROUND_OVERRIDE_MASK_SCALE = 1.0
 
+# Snow-related texture names are stripped when the batch opts into snow-free output.
+SNOW_NAME_TOKENS = (
+    "snow",
+)
+
 
 # [추가] props.txt 안의 TextureStreamingData 블록에서 texture별 UV 메타를 복원하는 함수다.
 def parse_texture_streaming_entries(lines: list[str]):
@@ -149,6 +154,8 @@ def parse_args():
     parser.add_argument("--level-map-root", type=Path, help="MapJSON folder to pass to ConvertFModelLevel.py")
     parser.add_argument("--level-guid-map", type=Path, help="Mesh GUID map json to pass to ConvertFModelLevel.py")
     parser.add_argument("--level-out-dir", type=Path, help="Output folder for generated .level.json files")
+    # Remove snow-related textures from generated material instances.
+    parser.add_argument("--strip-snow", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--no-copy", action="store_true")
     return parser.parse_args()
@@ -767,6 +774,50 @@ def append_texture_slot(out_data: dict, slot_name: str, texture_path: str, textu
 
 # [추가] 현재 머티리얼이 KonohaVillage02 바닥 강제 마스킹 대상인지 판정하는 helper다.
 # [추가] 바닥 청크에 실제로 쓰이는 머티리얼 이름만 좁게 잡아서 다른 맵 재질까지 건드리지 않도록 한다.
+# Decide whether a texture path or material name should be treated as snow content.
+def is_snow_related_name(name: str) -> bool:
+    lowered_name = name.lower().strip()
+    return any(token in lowered_name for token in SNOW_NAME_TOKENS)
+
+
+# Strip snow slots from a generated material instance so the converted map stays snow-free.
+def strip_snow_textures_from_material(material_name: str, out_data: dict):
+    textures = out_data.get("textures", [])
+    if not isinstance(textures, list) or not textures:
+        return
+
+    filtered_textures = []
+    removed_slots = set()
+
+    for texture in textures:
+        texture_path = str(texture.get("path", ""))
+        slot_name = str(texture.get("slot", ""))
+
+        if is_snow_related_name(texture_path):
+            removed_slots.add(slot_name)
+            continue
+
+        filtered_textures.append(texture)
+
+    if not removed_slots:
+        return
+
+    out_data["textures"] = filtered_textures
+
+    # Reset blend-oriented controls once their snow inputs have been removed.
+    if "blend_base_color" in removed_slots:
+        out_data["mask_scale"] = 1.0
+        out_data["mask_threshold"] = 1.0
+
+    if "blend_normal" in removed_slots:
+        out_data["blend_normal_strength"] = 0.0
+
+    # Dedicated snow materials should not keep a snowy tint after their snow textures are stripped.
+    if is_snow_related_name(material_name):
+        out_data["base_color_factor"] = [1.0, 1.0, 1.0, 1.0]
+        out_data["shadow_color"] = [1.0, 1.0, 1.0, 1.0]
+
+
 def is_ground_override_material(material_name: str) -> bool:
     upper_name = material_name.upper().strip()
     return upper_name in GROUND_OVERRIDE_MATERIAL_NAMES
@@ -1052,7 +1103,8 @@ def get_or_create_material_instance_guid(matinst_path: Path, dry_run: bool) -> s
 
 
 def build_material_instance_payload(material_name: str, mi_path: Path, mi_data: dict, texture_index: dict,
-                                    profile_config: dict, matinst_root: Path, copy_root, dry_run: bool):
+                                    profile_config: dict, matinst_root: Path, copy_root, dry_run: bool,
+                                    strip_snow: bool):
     matinst_path = matinst_root / f"{material_name}.matinst.json"
     profile = detect_profile(material_name, profile_config)
 
@@ -1060,6 +1112,9 @@ def build_material_instance_payload(material_name: str, mi_path: Path, mi_data: 
         payload = resolve_flat_color_normal(material_name, mi_data, texture_index, matinst_path, copy_root, dry_run)
     else:
         payload = resolve_generic_pbr(material_name, mi_data, texture_index, matinst_path, copy_root, dry_run)
+
+    if strip_snow:
+        strip_snow_textures_from_material(material_name, payload)
 
     payload["source"] = {"fmodel_mi_json": mi_path.name}
     return payload
@@ -1085,7 +1140,7 @@ def collect_material_names_from_mesh_files(mesh_root: Path):
 
 
 def emit_material_instances(mesh_root: Path, mi_index: dict, texture_index: dict, profile_config: dict,
-                            matinst_root: Path, copy_root, dry_run: bool):
+                            matinst_root: Path, copy_root, dry_run: bool, strip_snow: bool):
     # 1-pass: 메시에서 실제로 쓰는 material_name만 뽑아서 .matinst.json 생성
     material_names = collect_material_names_from_mesh_files(mesh_root)
 
@@ -1103,7 +1158,8 @@ def emit_material_instances(mesh_root: Path, mi_index: dict, texture_index: dict
             mi_data = load_mi_data(mi_path)
 
             payload = build_material_instance_payload(
-                material_name, mi_path, mi_data, texture_index, profile_config, matinst_root, copy_root, dry_run
+                material_name, mi_path, mi_data, texture_index, profile_config, matinst_root, copy_root, dry_run,
+                strip_snow
             )
 
             out_path = write_material_instance_file(material_name, payload, matinst_root, dry_run)
@@ -1126,6 +1182,65 @@ def rewrite_mesh_material_to_guid(entry: dict, guid: str) -> dict:
         "material_name": entry.get("material_name", "Material"),
         "material_instance_guid": guid,
     }
+
+
+def infer_unresolved_material_base_color(material_name: str, mat_path: Path):
+    lower_name = material_name.lower()
+    lower_path = mat_path.as_posix().lower()
+
+    if "window" in lower_name:
+        return [0.72, 0.77, 0.83, 1.0]
+    if "paper" in lower_name:
+        return [0.82, 0.79, 0.72, 1.0]
+    if "plasterdarkgrey" in lower_name:
+        return [0.46, 0.46, 0.48, 1.0]
+    if "plasterdark" in lower_name:
+        return [0.55, 0.53, 0.50, 1.0]
+    if "plaster" in lower_name:
+        return [0.69, 0.65, 0.60, 1.0]
+    if "concreteslabs_bright" in lower_name or "concreteslabs_light" in lower_name or "concreteslabs" in lower_name:
+        return [0.62, 0.61, 0.58, 1.0]
+    if "woodplain_black" in lower_name:
+        return [0.18, 0.16, 0.15, 1.0]
+    if "woodplain_red" in lower_name:
+        return [0.41, 0.18, 0.15, 1.0]
+    if "woodplain_yellow" in lower_name or "woodboard_natural_yellowed" in lower_name:
+        return [0.56, 0.43, 0.24, 1.0]
+    if "woodplain_brown" in lower_name or "woodboard_natural" in lower_name:
+        return [0.44, 0.32, 0.21, 1.0]
+    if "wrapping" in lower_name:
+        return [0.60, 0.53, 0.40, 1.0]
+    if "electric" in lower_name or "duct" in lower_name:
+        return [0.46, 0.47, 0.50, 1.0]
+
+    if lower_name.startswith("material_"):
+        if "distance" in lower_path or "tower" in lower_path or "house" in lower_path or "lobby" in lower_path or "farbuilding" in lower_path:
+            return [0.58, 0.59, 0.62, 1.0]
+        if "building" in lower_path:
+            return [0.66, 0.64, 0.60, 1.0]
+
+    return None
+
+
+def rewrite_unresolved_mesh_material(entry: dict, mat_path: Path) -> dict:
+    rewritten = dict(entry)
+
+    if "base_color_factor" in rewritten:
+        return rewritten
+
+    textures = rewritten.get("textures", [])
+    if isinstance(textures, list) and len(textures) > 0:
+        return rewritten
+
+    material_name = rewritten.get("material_name", "").strip()
+    if not material_name:
+        return rewritten
+
+    base_color = infer_unresolved_material_base_color(material_name, mat_path)
+    if base_color is not None:
+        rewritten["base_color_factor"] = base_color
+
+    return rewritten
 
 
 def bind_mesh_materials(mesh_root: Path, matinst_root: Path, dry_run: bool):
@@ -1157,13 +1272,13 @@ def bind_mesh_materials(mesh_root: Path, matinst_root: Path, dry_run: bool):
             matinst_path = matinst_index.get(material_name.lower())
             if not matinst_path:
                 unresolved += 1
-                new_materials.append(entry)
+                new_materials.append(rewrite_unresolved_mesh_material(entry, mat_path))
                 continue
 
             guid = get_or_create_material_instance_guid(matinst_path, dry_run)
             if not guid:
                 missing_meta += 1
-                new_materials.append(entry)
+                new_materials.append(rewrite_unresolved_mesh_material(entry, mat_path))
                 continue
 
             new_materials.append(rewrite_mesh_material_to_guid(entry, guid))
@@ -1184,7 +1299,70 @@ def bind_mesh_materials(mesh_root: Path, matinst_root: Path, dry_run: bool):
     print(f"Still unresolved     : {unresolved}")
 
 
-def run_convert_level(dry_run: bool, map_root: Path | None, guid_map: Path | None, out_dir: Path | None):
+def bind_mesh_materials_safe(mesh_root: Path, matinst_root: Path, dry_run: bool):
+    # Safer variant for large map batches: one locked file should not abort every other material bind.
+    matinst_index = build_matinst_index(matinst_root)
+
+    processed = 0
+    unresolved = 0
+    missing_meta = 0
+    save_failures = 0
+
+    for mat_path in mesh_root.rglob("*.material.json"):
+        try:
+            root = load_json(mat_path)
+            materials = root.get("materials", [])
+
+            if not isinstance(materials, list):
+                continue
+
+            new_materials = []
+
+            for entry in materials:
+                if not isinstance(entry, dict):
+                    continue
+
+                material_name = entry.get("material_name", "").strip()
+                if not material_name:
+                    new_materials.append(entry)
+                    continue
+
+                matinst_path = matinst_index.get(material_name.lower())
+                if not matinst_path:
+                    unresolved += 1
+                    new_materials.append(rewrite_unresolved_mesh_material(entry, mat_path))
+                    continue
+
+                guid = get_or_create_material_instance_guid(matinst_path, dry_run)
+                if not guid:
+                    missing_meta += 1
+                    new_materials.append(rewrite_unresolved_mesh_material(entry, mat_path))
+                    continue
+
+                new_materials.append(rewrite_mesh_material_to_guid(entry, guid))
+
+            root["version"] = 4
+            root["materials"] = new_materials
+
+            if not dry_run:
+                save_json(mat_path, root)
+
+            processed += 1
+            print(f"[BIND] {mat_path.name}")
+        except Exception as e:
+            save_failures += 1
+            print(f"[BIND-SKIP] {mat_path.name} -> {e}")
+
+    print("")
+    print("========== BIND RESULT ==========")
+    print(f"Processed mesh files : {processed}")
+    print(f"Missing matinst/meta : {missing_meta}")
+    print(f"Still unresolved     : {unresolved}")
+    print(f"Bind save failures   : {save_failures}")
+
+
+def run_convert_level(dry_run: bool, map_root: Path | None, guid_map: Path | None, out_dir: Path | None,
+                      skip_snow_meshes: bool):
     if dry_run:
         print("[LEVEL] dry-run: skipped ConvertFModelLevel.py")
         return
@@ -1198,6 +1376,8 @@ def run_convert_level(dry_run: bool, map_root: Path | None, guid_map: Path | Non
         command.extend(["--guid-map", str(guid_map)])
     if out_dir is not None:
         command.extend(["--out-dir", str(out_dir)])
+    if skip_snow_meshes:
+        command.append("--skip-snow-meshes")
 
     result = subprocess.run(command, check=False)
     if result.returncode != 0:
@@ -1244,6 +1424,7 @@ def main():
             matinst_root=matinst_root,
             copy_root=copy_root,
             dry_run=args.dry_run,
+            strip_snow=args.strip_snow,
         )
 
         normalized, updated_files = normalize_generated_matinst_paths(
@@ -1263,7 +1444,7 @@ def main():
         if updated_files:
             print(f"[Resolver] MatInst paths normalized: {normalized} entries in {updated_files} files")
 
-        bind_mesh_materials(
+        bind_mesh_materials_safe(
             mesh_root=mesh_root,
             matinst_root=matinst_root,
             dry_run=args.dry_run,
@@ -1287,6 +1468,7 @@ def main():
             matinst_root=matinst_root,
             copy_root=copy_root,
             dry_run=args.dry_run,
+            strip_snow=args.strip_snow,
         )
 
         normalized, updated_files = normalize_generated_matinst_paths(
@@ -1297,7 +1479,7 @@ def main():
         if updated_files:
             print(f"[Resolver] MatInst paths normalized: {normalized} entries in {updated_files} files")
 
-        bind_mesh_materials(
+        bind_mesh_materials_safe(
             mesh_root=mesh_root,
             matinst_root=matinst_root,
             dry_run=args.dry_run,
@@ -1309,6 +1491,7 @@ def main():
                 args.level_map_root,
                 args.level_guid_map,
                 args.level_out_dir,
+                args.strip_snow,
             )
 
 

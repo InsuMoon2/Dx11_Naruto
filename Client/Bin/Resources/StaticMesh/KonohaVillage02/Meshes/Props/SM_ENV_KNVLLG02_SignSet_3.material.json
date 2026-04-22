@@ -1,37 +1,45 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG_DeviantMaterials_Sign_Atlas",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_WoodBoard_Natural_Lighter",
-      "material_instance_guid": "36beaf84-0844-4866-8f29-db7981d43320"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Wooden_Sign_Atlas",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_FloaterSigns",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_WoodPlain_Brown",
-      "material_instance_guid": "df4b8e30-51ad-491b-b6a0-7f16b8623aae"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Sticker_02",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_Signboard_O",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_7",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

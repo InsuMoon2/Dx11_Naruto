@@ -126,6 +126,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     GAME->Add_Timer(L"Timer_60FPS");
 
     float timeAcc = {};
+    // 창 제목에 유지해서 표시할 최근 FPS 문자열이다.
+    wstring fpsWindowTitle = L"FPS : 0.0";
+    // FPS를 계산할 때 사용할 누적 시간(초)이다.
+    float fpsElapsed = 0.f;
+    // FPS 샘플 구간 동안 실제로 렌더된 프레임 수다.
+    uint32 fpsFrameCount = 0;
 
     // 기본 메시지 루프입니다:
     while (true)
@@ -152,6 +158,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
             mainApp->Update(dt);
             mainApp->Late_Update(dt);
             mainApp->Render();
+
+            fpsElapsed += dt;
+            ++fpsFrameCount;
+
+            if (fpsElapsed >= 0.5f)
+            {
+                const float currentFps = static_cast<float>(fpsFrameCount) / fpsElapsed;
+
+                wchar_t titleBuffer[64] = {};
+                swprintf_s(titleBuffer, L"FPS : %.1f", currentFps);
+                fpsWindowTitle = titleBuffer;
+
+                fpsElapsed = 0.f;
+                fpsFrameCount = 0;
+            }
+
+            SetWindowText(g_hWnd, fpsWindowTitle.c_str());
 
             timeAcc = 0.f;
         }

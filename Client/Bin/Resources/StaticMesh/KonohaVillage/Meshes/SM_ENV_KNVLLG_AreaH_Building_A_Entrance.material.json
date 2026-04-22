@@ -1,0 +1,67 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_Red",
+      "material_instance_guid": "1d7c60d6-ba9e-4ac9-9835-7ff8e7391bac"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Duct_A",
+      "material_instance_guid": "cc77db01-bb45-4d90-890e-ae2268684198"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "33c91196-b849-4ef1-85f0-7cece3065d02"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "3a831086-b931-451d-8bef-74f256cf7d4e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_04",
+      "material_instance_guid": "0860f126-ad5b-47d4-bc6f-b31e0f69542e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_StoneTrim",
+      "material_instance_guid": "bb586838-0747-4572-84c7-83a97c82dd3a"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Curtain_B",
+      "material_instance_guid": "3dbfdb58-0b06-4dc7-ba90-585a011c4843"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_Light",
+      "material_instance_guid": "18b8d24d-baca-4a0b-81c2-27a65160532f"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_Red",
+      "material_instance_guid": "cc0319dc-a256-46ea-8a8d-cf825f0629ac"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Red",
+      "material_instance_guid": "6934cdc9-6903-4556-9444-3e0570707a4d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Signboard_D",
+      "material_instance_guid": "b22e0fa2-3123-441d-8ce7-482ada3b6943"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Brown",
+      "material_instance_guid": "ae9c0c4b-83db-4da3-bd6d-e216a123419c"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_A",
+      "material_instance_guid": "e8085cb0-8fbd-4878-8f9d-07811e3e285b"
+    },
+    {
+      "material_name": "Material_13",
+      "textures": [],
+      "base_color_factor": [
+        0.66,
+        0.64,
+        0.6,
+        1.0
+      ]
+    }
+  ]
+}

@@ -102,6 +102,8 @@ def parse_args():
     parser.add_argument("--level-map-root", type=Path, required=True)
     parser.add_argument("--guid-map-out", type=Path, required=True)
     parser.add_argument("--level-out-dir", type=Path, required=True)
+    # Strip snow-related texture bindings from generated material instances.
+    parser.add_argument("--strip-snow", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args()
 
@@ -201,6 +203,9 @@ def main():
 
     for extra_texture_root in args.extra_texture_root:
         resolve_command.extend(["--extra-texture-root", str(extra_texture_root)])
+
+    if args.strip_snow:
+        resolve_command.append("--strip-snow")
 
     if args.dry_run:
         resolve_command.append("--dry-run")

@@ -1,17 +1,20 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNFRST_WireMesh_B",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNFRST_WireMesh_A",
-      "textures": []
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_2",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

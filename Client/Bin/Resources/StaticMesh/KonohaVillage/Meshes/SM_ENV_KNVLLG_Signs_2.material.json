@@ -1,0 +1,17 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "33c91196-b849-4ef1-85f0-7cece3065d02"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Wooden_Sign_Atlas",
+      "material_instance_guid": "67b00aba-94b0-464d-a91b-3e9362aa5d3f"
+    },
+    {
+      "material_name": "Material_2",
+      "textures": []
+    }
+  ]
+}

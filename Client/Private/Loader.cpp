@@ -70,6 +70,130 @@
 #include "BTTask_DodgeAndWait.h"
 #include "BTTask_RetreatAndWait.h"
 
+// 레벨 청크 JSON을 읽어서 메인 스레드에서 한 개씩 처리할 오브젝트 잡으로 분해할 때 호출한다.
+// StaticMeshActor / CollisionProxyActor의 고유 model_guid는 먼저 프로토타입 preload 잡으로 분리한다.
+static bool Try_GetLevelObjectType(const json& objJson, Protocol::OBJECT_TYPE& outObjectType)
+{
+    if (!objJson.contains("object_type"))
+        return false;
+
+    if (objJson["object_type"].is_string())
+    {
+        const auto objectType = magic_enum::enum_cast<Protocol::OBJECT_TYPE>(
+            objJson["object_type"].get<string>());
+
+        if (!objectType.has_value())
+            return false;
+
+        outObjectType = objectType.value();
+        return true;
+    }
+
+    outObjectType = static_cast<Protocol::OBJECT_TYPE>(objJson["object_type"].get<uint32>());
+    return true;
+}
+
+// 레벨 오브젝트 JSON에서 static mesh 계열의 model_guid를 뽑아낼 때 호출한다.
+// custom_properties 안에 들어간 경우도 같이 처리한다.
+static bool Try_GetStaticModelGuidFromLevelObject(const json& objJson, string& outModelGuid)
+{
+    Protocol::OBJECT_TYPE objectType = Protocol::OBJECT_TYPE_NONE;
+    if (!Try_GetLevelObjectType(objJson, objectType))
+        return false;
+
+    if (objectType != Protocol::OBJECT_TYPE_STATIC_MESH &&
+        objectType != Protocol::OBJECT_TYPE_COLLISION_PROXY)
+    {
+        return false;
+    }
+
+    if (objJson.contains("model_guid") && objJson["model_guid"].is_string())
+    {
+        outModelGuid = objJson["model_guid"].get<string>();
+        return !outModelGuid.empty();
+    }
+
+    if (objJson.contains("custom_properties") &&
+        objJson["custom_properties"].is_object() &&
+        objJson["custom_properties"].contains("model_guid") &&
+        objJson["custom_properties"]["model_guid"].is_string())
+    {
+        outModelGuid = objJson["custom_properties"]["model_guid"].get<string>();
+        return !outModelGuid.empty();
+    }
+
+    return false;
+}
+
+// 같은 static model guid는 로딩 화면에서 한 번만 프로토타입 preload 잡으로 등록한다.
+static void Append_StaticModelPrototypePreloadJob(
+    const json& objJson,
+    unordered_set<string>& queuedModelGuids,
+    vector<FLoadJob>& outJobs)
+{
+    string modelGuid;
+    if (!Try_GetStaticModelGuidFromLevelObject(objJson, modelGuid))
+        return;
+
+    if (!queuedModelGuids.insert(modelGuid).second)
+        return;
+
+    FLoadJob preloadJob{};
+    preloadJob.type = ELoadJobType::StaticModelPrototype;
+    preloadJob.levelIndex = ETOI(ELevelType::Static);
+    preloadJob.componentID = static_cast<uint32>(hash<string>{}(modelGuid));
+    preloadJob.idStr = modelGuid;
+    outJobs.push_back(std::move(preloadJob));
+}
+
+static HRESULT Append_LevelObjectJobsFromFile(const wstring& fileName,
+                                              uint32 targetLevelIndex,
+                                              uint32 prototypeLevelIndex,
+                                              unordered_set<string>& queuedModelGuids,
+                                              vector<FLoadJob>& outJobs)
+{
+    const wstring levelDirectory = L"../../Client/Bin/Resources/Data/json/Levels/";
+    const array<wstring, 2> candidatePaths =
+    {
+        levelDirectory + fileName + L".level.json",
+        levelDirectory + fileName + L".proxy.level.json"
+    };
+
+    for (const wstring& candidatePath : candidatePaths)
+    {
+        if (!filesystem::exists(candidatePath))
+            continue;
+
+        ifstream file(candidatePath);
+        if (!file.is_open())
+        {
+            LOG_ERROR("파일 열기 실패 : {}", Utils::ToString(candidatePath));
+            return E_FAIL;
+        }
+
+        json root;
+        file >> root;
+        file.close();
+
+        if (!root.contains("gameObjects") || !root["gameObjects"].is_array())
+            continue;
+
+        for (const auto& objJson : root["gameObjects"])
+        {
+            Append_StaticModelPrototypePreloadJob(objJson, queuedModelGuids, outJobs);
+
+            FLoadJob job{};
+            job.type = ELoadJobType::LevelObject;
+            job.levelIndex = targetLevelIndex;
+            job.prototypeLevelIndex = prototypeLevelIndex;
+            job.payloadJson = objJson;
+            outJobs.push_back(std::move(job));
+        }
+    }
+
+    return S_OK;
+}
+
 
 Loader::Loader(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
@@ -308,8 +432,15 @@ HRESULT Loader::Execute_Job_OnMainThread(const FLoadJob& job)
     case ELoadJobType::TextureCreate:
         {
         wstring wPath = Utils::ToWString(job.pathStr);
+        wstring resolvedPath = wPath;
+        if (job.count == 1 && job.pathStr.find("%d") != string::npos)
+        {
+            wchar_t fullPath[MAX_PATH] = {};
+            wsprintf(fullPath, wPath.c_str(), job.startIndex);
+            resolvedPath = fullPath;
+        }
 
-        auto texture = Texture::Create(_device, _context, wPath.c_str(), job.count);
+        auto texture = Texture::Create(_device, _context, resolvedPath.c_str(), job.count);
         CHECK_NULL(texture, E_FAIL);
 
         CHECK_FAILED(
@@ -330,7 +461,7 @@ HRESULT Loader::Execute_Job_OnMainThread(const FLoadJob& job)
             for (uint32 i = 0; i < job.count; ++i)
             {
                 wchar_t fullPath[MAX_PATH] = {};
-                wsprintf(fullPath, wPath.c_str(), i);
+                wsprintf(fullPath, wPath.c_str(), job.startIndex + i);
                 CHECK_FAILED(texture->Add_SRV(fullPath), E_FAIL);
             }
         }
@@ -384,6 +515,34 @@ HRESULT Loader::Execute_Job_OnMainThread(const FLoadJob& job)
         GAME->Register_ComponentFactory_Prototype(job.componentID, job.levelIndex);
         break;
         }
+    case ELoadJobType::StaticModelPrototype:
+        {
+        if (GAME->Find_Component_Prototype(ETOI(ELevelType::Static), job.componentID) != nullptr)
+            break;
+
+        const wstring resolvedPath = GAME->Resolve_AssetPath(job.idStr);
+        if (resolvedPath.empty())
+        {
+            LOG_ERROR("Static model preload failed. guid='{}'", job.idStr);
+            return E_FAIL;
+        }
+
+        const Matrix preTransform =
+            Matrix::CreateScale(1.f) *
+            Matrix::CreateRotationY(XMConvertToRadians(180.f));
+
+        auto proto = Model::Create(
+            _device,
+            _context,
+            EMeshVertexType::StaticMesh,
+            Utils::ToString(resolvedPath),
+            preTransform,
+            true);
+
+        CHECK_NULL(proto, E_FAIL);
+        CHECK_FAILED(GAME->Add_Component_Prototype(ETOI(ELevelType::Static), job.componentID, proto), E_FAIL);
+        break;
+        }
     case ELoadJobType::Skill:
         {
         auto mgr = GET_SINGLE(SkillDataManager);
@@ -418,6 +577,14 @@ HRESULT Loader::Execute_Job_OnMainThread(const FLoadJob& job)
             job.levelIndex,
             job.prototypeLevelIndex,
             Utils::ToWString(job.pathStr)), E_FAIL);
+        break;
+        }
+    case ELoadJobType::LevelObject:
+        {
+        CHECK_FAILED(Level::Add_GameObjectJsonToLevel(
+            job.levelIndex,
+            job.prototypeLevelIndex,
+            job.payloadJson), E_FAIL);
         break;
         }
 
@@ -484,6 +651,7 @@ HRESULT Loader::Loading_For_GamePlay()
     //::Sleep(20000); UI 값 변경 테스트용 Delay
 
     vector<FLoadJob> jobs;
+    unordered_set<string> queuedStaticModelGuids;
 
     // 클라 단독 실행
     if (_loadSharedResources)
@@ -491,7 +659,7 @@ HRESULT Loader::Loading_For_GamePlay()
         Register_Components();
         Initialize_BT_Nodes();
 
-        lstrcpy(_loadingText, TEXT("공용 리소스 작업 준비 중"));
+        //lstrcpy(_loadingText, TEXT("공용 리소스 작업 준비 중"));
 
         CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
             TEXT("../../Client/Bin/Resources/Data/json/DT_Shader.json"), jobs), E_FAIL);
@@ -513,21 +681,21 @@ HRESULT Loader::Loading_For_GamePlay()
     CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
         TEXT("../../Client/Bin/Resources/Data/json/DT_GameObject.json"), jobs), E_FAIL);
 
-    auto pushChunk = [&](const char* fileName)
+    auto pushChunk = [&](const char* fileName) -> HRESULT
         {
-            FLoadJob job{};
-            job.type = ELoadJobType::LevelChunk;
-            job.levelIndex = ETOI(ELevelType::GamePlay);
-            job.prototypeLevelIndex = ETOI(ELevelType::GamePlay);
-            job.pathStr = fileName;
-            jobs.push_back(std::move(job));
+            return Append_LevelObjectJobsFromFile(
+                Utils::ToWString(fileName),
+                ETOI(ELevelType::GamePlay),
+                ETOI(ELevelType::GamePlay),
+                queuedStaticModelGuids,
+                jobs);
         };
 
     // 맵 리소스 로드
     //pushChunk("BM_ExamStadium_Env_Terrain");
     //pushChunk("BM_ExamStadium_p");
 
-    pushChunk("[20260422]Tutorial");
+    CHECK_FAILED(pushChunk("[20260422]Tutorial"), E_FAIL);
 
     {
         scoped_lock lock(_jobMutex);
@@ -554,7 +722,7 @@ HRESULT Loader::Loading_For_CharacterSetup()
         Register_Components();
         Initialize_BT_Nodes();
 
-        lstrcpy(_loadingText, TEXT("공용 리소스 작업 준비 중"));
+        //lstrcpy(_loadingText, TEXT("공용 리소스 작업 준비 중"));
 
         CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
             TEXT("../../Client/Bin/Resources/Data/json/DT_Shader.json"), jobs), E_FAIL);
@@ -602,6 +770,7 @@ HRESULT Loader::Loading_For_CharacterSetup()
 HRESULT Loader::Loading_For_Konoha()
 {
     vector<FLoadJob> jobs;
+    unordered_set<string> queuedStaticModelGuids;
 
     // 클라 단독 실행
     if (_loadSharedResources)
@@ -609,7 +778,7 @@ HRESULT Loader::Loading_For_Konoha()
         Register_Components();
         Initialize_BT_Nodes();
 
-        lstrcpy(_loadingText, TEXT("공용 리소스 작업 준비 중"));
+        //lstrcpy(_loadingText, TEXT("공용 리소스 작업 준비 중"));
 
         CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
             TEXT("../../Client/Bin/Resources/Data/json/DT_Shader.json"), jobs), E_FAIL);
@@ -631,24 +800,24 @@ HRESULT Loader::Loading_For_Konoha()
     CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
         TEXT("../../Client/Bin/Resources/Data/json/DT_GameObject.json"), jobs), E_FAIL);
 
-    auto pushChunk = [&](const char* fileName)
+    auto pushChunk = [&](const char* fileName) -> HRESULT
         {
-            FLoadJob job{};
-            job.type = ELoadJobType::LevelChunk;
-            job.levelIndex = ETOI(ELevelType::Konoha);
-            job.prototypeLevelIndex = ETOI(ELevelType::Konoha);
-            job.pathStr = fileName;
-            jobs.push_back(std::move(job));
+            return Append_LevelObjectJobsFromFile(
+                Utils::ToWString(fileName),
+                ETOI(ELevelType::Konoha),
+                ETOI(ELevelType::Konoha),
+                queuedStaticModelGuids,
+                jobs);
         };
 
     // 맵 리소스 로드
-    //pushChunk("BM_KonohaVillage02");
-    //pushChunk("BM_KonohaVillage02_Env_Terrain");
-    //pushChunk("BM_KonohaVillage02_Floor");
-    //pushChunk("BM_KonohaVillage02_Props");
+    //pushChunk("BM_KonohaVillage");
+    //pushChunk("BM_KonohaVillage_Env_Terrain");
+    //pushChunk("BM_KonohaVillage_Floor");
+    //pushChunk("BM_KonohaVillage_Props");
     //pushChunk("BM_Konoha_Village02_Env_WaterTank");
 
-    pushChunk("[20260417]Konoha");
+    CHECK_FAILED(pushChunk("[20260422]Konoha"), E_FAIL);
 
     {
         scoped_lock lock(_jobMutex);

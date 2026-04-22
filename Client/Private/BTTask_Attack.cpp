@@ -13,6 +13,7 @@ bool BTTask_Attack::Register_Properties()
     info.className = "BTTask_Attack";
 
     PROPERTY_STRING_JSON("Target Object Key", "target_object_key", _targetObjectKey);
+    PROPERTY_STRING_JSON("Selected Attack State Key", "selected_attack_state_key", _selectedAttackStateKey);
 
     PROPERTY_STRING_JSON("Attack Anim State 01", "attack_anim_state_01", _attackAnimState01);
     PROPERTY_STRING_JSON("Attack Anim State 02", "attack_anim_state_02", _attackAnimState02);
@@ -35,7 +36,8 @@ BTTask_Attack::BTTask_Attack()
 
 BTTask_Attack::BTTask_Attack(const BTTask_Attack& rhs)
     : BTTask(rhs)
-   , _targetObjectKey(rhs._targetObjectKey)
+    , _targetObjectKey(rhs._targetObjectKey)
+    , _selectedAttackStateKey(rhs._selectedAttackStateKey)
     , _attackAnimState01(rhs._attackAnimState01)
     , _attackAnimState02(rhs._attackAnimState02)
     , _attackAnimState03(rhs._attackAnimState03)
@@ -173,6 +175,13 @@ vector<string> BTTask_Attack::Build_AttackAnimStateList() const
 
 string BTTask_Attack::Select_AttackAnimState(const Shared<Blackboard>& blackboard)
 {
+    if (blackboard && blackboard->HasKey(_selectedAttackStateKey))
+    {
+        const string selectedAttackState = blackboard->Get_ValueAsString(_selectedAttackStateKey);
+        if (!selectedAttackState.empty())
+            return selectedAttackState;
+    }
+
     const vector<string> attackStates = Build_AttackAnimStateList();
 
     // 단일 공격만 할 때 -> 거의 사용안함 Legacy 호환

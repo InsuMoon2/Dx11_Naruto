@@ -1,0 +1,79 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "3a831086-b931-451d-8bef-74f256cf7d4e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "33c91196-b849-4ef1-85f0-7cece3065d02"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_Light",
+      "material_instance_guid": "18b8d24d-baca-4a0b-81c2-27a65160532f"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_GreenLight",
+      "material_instance_guid": "9d4555d7-2a28-4623-8f5d-4fcf176b7f77"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_PipeDetails_01",
+      "material_instance_guid": "e9fa41fb-0bc2-42f3-a301-12ac250ba29d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_PlasterDarkGrey",
+      "material_instance_guid": "afed1e61-b657-407a-af92-c176b23b2ad5"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_01",
+      "material_instance_guid": "9e8fa8ce-6a4a-4a04-96a3-1b823b37b91a"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Wrapping_01",
+      "material_instance_guid": "f5efd78e-7ca2-44b4-962e-2dbff41c5122"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Sticker_02",
+      "material_instance_guid": "35ab0809-a0dc-4523-baed-510de5569af5"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Bright",
+      "material_instance_guid": "eda97172-bf20-468c-b652-51797f248fab"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Brown",
+      "material_instance_guid": "ae9c0c4b-83db-4da3-bd6d-e216a123419c"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_PaperBase_A",
+      "material_instance_guid": "8bac0a96-a7a0-4c59-b05f-d230a035262e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Rope_A",
+      "material_instance_guid": "5598b83c-6271-482a-a7c5-0b23ce9dc42a"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_StoneTrim",
+      "material_instance_guid": "bb586838-0747-4572-84c7-83a97c82dd3a"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Window_Paper",
+      "material_instance_guid": "96768a24-fd21-4f8a-9ef6-85197417297d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_A",
+      "material_instance_guid": "e8085cb0-8fbd-4878-8f9d-07811e3e285b"
+    },
+    {
+      "material_name": "Material_16",
+      "textures": [],
+      "base_color_factor": [
+        0.66,
+        0.64,
+        0.6,
+        1.0
+      ]
+    }
+  ]
+}

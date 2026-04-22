@@ -323,9 +323,7 @@ void AnimSequencerAdapter::Draw_NotifyTrack(int32 trackIndex, ImDrawList* drawLi
         ImVec2 rectMax(x + markerWidth, rectMin.y + markerHeight);
         ImRect notifyRect(rectMin, rectMax);
 
-        const bool isSelected =
-            _context->selectedNotifyIndex &&
-            (*_context->selectedNotifyIndex == i);
+        const bool isSelected = _context->view->Is_NotifyIndexSelected(i);
 
         const bool isHovered = notifyRect.Contains(io.MousePos);
 
@@ -344,11 +342,14 @@ void AnimSequencerAdapter::Draw_NotifyTrack(int32 trackIndex, ImDrawList* drawLi
 
         if (notifyRect.Contains(io.MousePos) && ImGui::IsMouseClicked(0))
         {
-            Select_Notify(i, trackIndex);
+            _context->view->Handle_NotifySelectionFromSequencer(i, trackIndex, io.KeyCtrl);
             _context->clickedOnNotify = true;
 
-            _draggingNotifyIndex = i;
-            _notifyDragOffsetX = io.MousePos.x - rectMin.x;
+            if (!io.KeyCtrl)
+            {
+                _draggingNotifyIndex = i;
+                _notifyDragOffsetX = io.MousePos.x - rectMin.x;
+            }
         }
 
         if (_draggingNotifyIndex == i && ImGui::IsMouseDown(0))
@@ -376,8 +377,7 @@ void AnimSequencerAdapter::Draw_NotifyTrack(int32 trackIndex, ImDrawList* drawLi
         rc.Contains(io.MousePos) &&
         ImGui::IsMouseClicked(0))
     {
-        Clear_Selection();
-        Select_Notify(-1, trackIndex);
+        _context->view->Clear_NotifySelectionFromSequencer(trackIndex);
         _context->clickedOnNotify = true;
     }
 }
@@ -432,9 +432,7 @@ void AnimSequencerAdapter::Draw_StateTrack(int32 trackIndex, ImDrawList* drawLis
         const ImRect rightHandle(ImVec2(x2 - handleWidth, y1), ImVec2(x2, y2));
         const ImRect centerRect(ImVec2(x1 + handleWidth, y1), ImVec2(x2 - handleWidth, y2));
 
-        const bool isSelected =
-            _context->selectedStateIndex &&
-            (*_context->selectedStateIndex == i);
+        const bool isSelected = _context->view->Is_StateIndexSelected(i);
 
         const bool isHovered = fullRect.Contains(io.MousePos);
         const bool isLeftHovered = leftHandle.Contains(io.MousePos);
@@ -461,25 +459,34 @@ void AnimSequencerAdapter::Draw_StateTrack(int32 trackIndex, ImDrawList* drawLis
         {
             if (leftHandle.Contains(io.MousePos))
             {
-                Select_State(i, trackIndex);
+                _context->view->Handle_StateSelectionFromSequencer(i, trackIndex, io.KeyCtrl);
                 _context->clickedOnNotify = true;
-                _draggingStateIndex = i;
-                _stateDragMode = EStateDragMode::ResizeStart;
+                if (!io.KeyCtrl)
+                {
+                    _draggingStateIndex = i;
+                    _stateDragMode = EStateDragMode::ResizeStart;
+                }
             }
             else if (rightHandle.Contains(io.MousePos))
             {
-                Select_State(i, trackIndex);
+                _context->view->Handle_StateSelectionFromSequencer(i, trackIndex, io.KeyCtrl);
                 _context->clickedOnNotify = true;
-                _draggingStateIndex = i;
-                _stateDragMode = EStateDragMode::ResizeEnd;
+                if (!io.KeyCtrl)
+                {
+                    _draggingStateIndex = i;
+                    _stateDragMode = EStateDragMode::ResizeEnd;
+                }
             }
             else if (centerRect.Contains(io.MousePos))
             {
-                Select_State(i, trackIndex);
+                _context->view->Handle_StateSelectionFromSequencer(i, trackIndex, io.KeyCtrl);
                 _context->clickedOnNotify = true;
-                _draggingStateIndex = i;
-                _stateDragMode = EStateDragMode::Move;
-                _stateDragOffsetX = io.MousePos.x - x1;
+                if (!io.KeyCtrl)
+                {
+                    _draggingStateIndex = i;
+                    _stateDragMode = EStateDragMode::Move;
+                    _stateDragOffsetX = io.MousePos.x - x1;
+                }
             }
         }
 
@@ -541,8 +548,7 @@ void AnimSequencerAdapter::Draw_StateTrack(int32 trackIndex, ImDrawList* drawLis
         rc.Contains(io.MousePos) &&
         ImGui::IsMouseClicked(0))
     {
-        Clear_Selection();
-        Select_State(-1, trackIndex);
+        _context->view->Clear_StateSelectionFromSequencer(trackIndex);
         _context->clickedOnNotify = true;
     }
 

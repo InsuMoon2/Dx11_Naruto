@@ -186,10 +186,15 @@ public: /* 벽타기 */
 
     void Restore_DefaultUpRotation(Shared<Transform> transform);
 
+    void Apply_NotifyMotionDelta(const Vec3& worldDelta);
+
 private: /* Line Trace 방식으로 벽타기 리팩토링 */
     bool Detect_WallEntrySurface(const Vec3& currentPos, const Vec3& desiredDir, FSurfaceHit& outHit) const;
     bool Trace_WallSurface(const Ray& wallRay, float maxDistance, FSurfaceHit& outHit) const;
     static Vec3 Rotate_HorizontalDirection(const Vec3& dir, float degrees);
+    static bool Is_CharacterBodyChannel(Collision_Channel channel);
+    bool Is_BlockedByCharacterBody(const Vec3& testPosition, Shared<Transform> transform) const;
+    void Apply_CharacterBodyBlock(const Vec3& previousPos, Shared<Transform> transform);
 
     void Apply_WallBlock(
         const Vec3& previousPos,

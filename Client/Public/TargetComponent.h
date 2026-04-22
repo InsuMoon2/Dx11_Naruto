@@ -27,19 +27,24 @@ public:
     const vector<Weak<Character>>& Get_Candiates() const { return _candidates; }
     Weak<Character>                Get_LockedTarget() const { return _lockedTarget; }
 
-    bool                         IsLockOn() const { return _isLocked; }
-    void                         Set_TargetCollider(Shared<Collider> targetCollider) { _targetCollider = targetCollider; }
+    bool                        IsLockOn() const { return _isLocked; }
+    void                        Set_TargetCollider(Shared<Collider> targetCollider) { _targetCollider = targetCollider; }
 
 private:
-    void                         LockOn_NearestTarget();
-    void                         Update_Candiates();
+    void                        Update_Candiates();
+
+    void                        Refresh_LockedTarget();
+    void                        Clear_Lock();
+    void                        LockOn_NearestTarget(bool currentTarget = false);
+    Shared<Character>           Find_NearestTarget(bool currentTarget = false);
+    bool                        Is_TargetInCandidates(Shared<GameObject> target);
 
 private:
-    Shared<Collider>         _targetCollider;
-    Weak<Character>            _lockedTarget; // V 키로 타겟팅할 놈
+    Shared<Collider>            _targetCollider;
+    Weak<Character>             _lockedTarget; // V 키로 타겟팅할 놈
 
-    bool                     _isLocked = false;
-    vector<Weak<Character>>    _candidates;   // 타겟팅된 몬스터 목록들
+    bool                        _isLocked = false;
+    vector<Weak<Character>>     _candidates;   // 타겟팅된 몬스터 목록들
     
 
 public:

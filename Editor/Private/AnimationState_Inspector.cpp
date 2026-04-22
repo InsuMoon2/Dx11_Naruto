@@ -148,6 +148,106 @@ bool AnimationState_Inspector::Is_PlayerAnimationState(Shared<AnimationStateComp
     return owner->Get_Component<PlayerStateMachine>() != nullptr;
 }
 
+const vector<EPlayerState>& AnimationState_Inspector::Get_SortedPlayerStates()
+{
+    // PlayerState 콤보는 내용이 고정이므로 한 번만 정렬해두고 재사용한다.
+    static vector<EPlayerState> sortedStates = []()
+    {
+        vector<EPlayerState> result;
+        result.reserve(magic_enum::enum_count<EPlayerState>());
+
+        for (EPlayerState state : magic_enum::enum_values<EPlayerState>())
+        {
+            if (state == EPlayerState::END)
+                continue;
+
+            result.push_back(state);
+        }
+
+        sort(result.begin(), result.end(),
+            [](EPlayerState lhs, EPlayerState rhs)
+            {
+                return std::lexicographical_compare(
+                    magic_enum::enum_name(lhs).begin(), magic_enum::enum_name(lhs).end(),
+                    magic_enum::enum_name(rhs).begin(), magic_enum::enum_name(rhs).end(),
+                    [](char l, char r)
+                    {
+                        return std::tolower(static_cast<unsigned char>(l)) <
+                               std::tolower(static_cast<unsigned char>(r));
+                    });
+            });
+
+        return result;
+    }();
+
+    return sortedStates;
+}
+
+void AnimationState_Inspector::Mark_StateNameCacheDirty()
+{
+    _isStateNameCacheDirty = true;
+}
+
+void AnimationState_Inspector::Refresh_StateNameCache(Shared<AnimationStateComponent> animState)
+{
+    AnimationStateComponent* currentAnimState = animState.get();
+
+    if (_cachedAnimState != currentAnimState)
+    {
+        _cachedAnimState = currentAnimState;
+        _isStateNameCacheDirty = true;
+    }
+
+    if (!_isStateNameCacheDirty)
+        return;
+
+    _cachedStateNames.clear();
+
+    if (animState)
+        _cachedStateNames = animState->Get_StateNames();
+
+    _isStateNameCacheDirty = false;
+}
+
+void AnimationState_Inspector::Refresh_AnimationCache(Shared<AnimationStateComponent> animState)
+{
+    auto owner = animState ? animState->Get_Owner() : nullptr;
+    auto model = owner ? owner->Get_Component<Model>() : nullptr;
+
+    const AnimationStateComponent* currentAnimState = animState.get();
+    const string modelGuid = model ? model->Get_ModelGuid() : "";
+    const uint32 animationCount = model ? model->Get_AnimationCount() : 0;
+
+    const bool changedAnimState = (_cachedAnimState != currentAnimState);
+    const bool changedModelGuid = (_cachedModelGuid != modelGuid);
+    const bool changedAnimationCount = (_cachedAnimationCount != animationCount);
+
+    if (!changedAnimState && !changedModelGuid && !changedAnimationCount)
+        return;
+
+    _cachedAnimState = const_cast<AnimationStateComponent*>(currentAnimState);
+    _cachedModelGuid = modelGuid;
+    _cachedAnimationCount = animationCount;
+    _cachedAnimationEntries.clear();
+
+    if (!animState)
+        return;
+
+    const vector<string> animationNames = animState->Get_ModelAnimationNames();
+    _cachedAnimationEntries.reserve(animationNames.size());
+
+    for (const string& rawName : animationNames)
+    {
+        FCachedAnimationEntry entry;
+        entry.rawName = rawName;
+        entry.displayName = Editor_Helper::Build_AnimatoinDisplayName(rawName);
+        entry.rawLower = Utils::ToLowerCopy(rawName);
+        entry.displayLower = Utils::ToLowerCopy(entry.displayName);
+
+        _cachedAnimationEntries.push_back(std::move(entry));
+    }
+}
+
 void AnimationState_Inspector::Draw_StateList(Shared<AnimationStateComponent> animState)
 {
     const float labelOffset = 120.f;
@@ -169,31 +269,7 @@ void AnimationState_Inspector::Draw_StateList(Shared<AnimationStateComponent> an
         ImGui::SetNextItemWidth(comboWidth);
         if (ImGui::BeginCombo("##PlayerState", currentLabel))
         {
-            vector<EPlayerState> sortedStates;
-            sortedStates.reserve(magic_enum::enum_count<EPlayerState>());
-
-            for (EPlayerState state : magic_enum::enum_values<EPlayerState>())
-            {
-                if (state == EPlayerState::END)
-                    continue;
-
-                sortedStates.push_back(state);
-            }
-
-            sort(sortedStates.begin(), sortedStates.end(),
-                [](EPlayerState lhs, EPlayerState rhs)
-                {
-                    return std::lexicographical_compare(
-                        magic_enum::enum_name(lhs).begin(), magic_enum::enum_name(lhs).end(),
-                        magic_enum::enum_name(rhs).begin(), magic_enum::enum_name(rhs).end(),
-                        [](char l, char r)
-                        {
-                            return std::tolower(static_cast<unsigned char>(l)) <
-                                   std::tolower(static_cast<unsigned char>(r));
-                        });
-                });
-
-            for (EPlayerState state : sortedStates)
+            for (EPlayerState state : Get_SortedPlayerStates())
             {
                 const bool selected = (_selectedPlayerState == state);
 
@@ -223,6 +299,7 @@ void AnimationState_Inspector::Draw_StateList(Shared<AnimationStateComponent> an
             if (!stateName.empty())
             {
                 animState->Edit_State(stateName);
+                Mark_StateNameCacheDirty();
                 _selectedStateName = stateName;
             }
         }
@@ -239,6 +316,8 @@ void AnimationState_Inspector::Draw_StateList(Shared<AnimationStateComponent> an
         {
             if (animState->Remove_State(stateName) && _selectedStateName == stateName)
                 _selectedStateName.clear();
+
+            Mark_StateNameCacheDirty();
         }
 
         if (!alreadyExists)
@@ -277,6 +356,7 @@ void AnimationState_Inspector::Draw_StateList(Shared<AnimationStateComponent> an
     if (ImGui::Button("Add##AnimState", ImVec2(buttonWidth, 0.f)))
     {
         animState->Edit_State(stateName);
+        Mark_StateNameCacheDirty();
         _selectedStateName = stateName;
         ZeroMemory(_newStateNameBuffer, sizeof(_newStateNameBuffer));
     }
@@ -293,6 +373,8 @@ void AnimationState_Inspector::Draw_StateList(Shared<AnimationStateComponent> an
     {
         if (animState->Remove_State(stateName))
         {
+            Mark_StateNameCacheDirty();
+
             if (_selectedStateName == stateName)
                 _selectedStateName.clear();
 
@@ -321,19 +403,19 @@ void AnimationState_Inspector::Draw_ExistingStateList(Shared<AnimationStateCompo
     if (!animState)
         return;
 
-    const vector<string> stateNames = animState->Get_StateNames();
+    Refresh_StateNameCache(animState);
 
     ImGui::Text("Added States");
     ImGui::BeginChild("##ExistingAnimStateList", ImVec2(0.f, 120.f), true);
 
-    if (stateNames.empty())
+    if (_cachedStateNames.empty())
     {
         ImGui::TextDisabled("(추가된 상태가 없음)");
         ImGui::EndChild();
         return;
     }
 
-    for (const string& stateName : stateNames)
+    for (const string& stateName : _cachedStateNames)
     {
         const bool isSelected = (_selectedStateName == stateName);
 
@@ -388,46 +470,50 @@ void AnimationState_Inspector::Draw_ModeCombo(FStateAnimationDesc& desc)
 
 void AnimationState_Inspector::Draw_AnimationList(Shared<AnimationStateComponent> animState, string* targetClipName)
 {
-    const string filterText = _searchBuffer;
-    const vector<string> animationNames = animState->Get_ModelAnimationNames();
+    Refresh_AnimationCache(animState);
 
-    if (animationNames.empty())
+    if (_cachedAnimationEntries.empty())
     {
         ImGui::TextDisabled("Animation clip not found.");
         return;
     }
 
+    const string filterLower = Utils::ToLowerCopy(_searchBuffer);
+
     ImGui::BeginChild("AnimationList", ImVec2(0.f, 220.f), true);
 
     bool anyVisible = false;
 
-    for (size_t i = 0; i < animationNames.size(); ++i)
+    for (size_t i = 0; i < _cachedAnimationEntries.size(); ++i)
     {
-        const string& animName = animationNames[i];
-        const string displayName = Editor_Helper::Build_AnimatoinDisplayName(animName);
+        const FCachedAnimationEntry& entry = _cachedAnimationEntries[i];
 
-        if (!Editor_Helper::Passes_AnimationDisplayFilter(animName, filterText))
+        if (!filterLower.empty() &&
+            entry.rawLower.find(filterLower) == string::npos &&
+            entry.displayLower.find(filterLower) == string::npos)
+        {
             continue;
+        }
 
         anyVisible = true;
 
-        const bool selected = (targetClipName && *targetClipName == animName);
+        const bool selected = (targetClipName && *targetClipName == entry.rawName);
 
-        const string itemLabel = displayName + "##Anim_" + to_string(i);
+        const string itemLabel = entry.displayName + "##Anim_" + to_string(i);
 
         if (ImGui::Selectable(itemLabel.c_str(), selected))
         {
             if (targetClipName)
-                *targetClipName = animName;
+                *targetClipName = entry.rawName;
         }
 
         if (selected)
             ImGui::SetItemDefaultFocus();
 
-        if (ImGui::IsItemHovered() && displayName != animName)
+        if (ImGui::IsItemHovered() && entry.displayName != entry.rawName)
         {
             ImGui::BeginTooltip();
-            ImGui::TextUnformatted(animName.c_str());
+            ImGui::TextUnformatted(entry.rawName.c_str());
             ImGui::EndTooltip();
         }
     }

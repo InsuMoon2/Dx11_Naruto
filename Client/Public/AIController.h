@@ -42,6 +42,8 @@ private:
     string                      _lastAnimState = "";
     int32                       _lastAnimDirection = static_cast<int32>(EMoveInputDirection::Forward);
 
+    int32                       _lastAnimReplaySerial = 0;
+
 public:
     static Shared<AIController> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     Shared<Component>           Clone(void* arg) override;

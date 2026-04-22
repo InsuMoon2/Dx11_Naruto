@@ -1,0 +1,47 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodPlain_Brown",
+      "material_instance_guid": "ae9c0c4b-83db-4da3-bd6d-e216a123419c"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_Orange",
+      "material_instance_guid": "f446e6b6-a00a-471b-9b92-e585481c68b1"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_Light",
+      "material_instance_guid": "18b8d24d-baca-4a0b-81c2-27a65160532f"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteFloor_B",
+      "material_instance_guid": "0b82c4c5-32d6-4c62-a64e-e91720af44bc"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Aircon_E",
+      "material_instance_guid": "273ed9f9-bbc4-4c6c-a168-4ac088304e27"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_04",
+      "material_instance_guid": "0860f126-ad5b-47d4-bc6f-b31e0f69542e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "3a831086-b931-451d-8bef-74f256cf7d4e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_B",
+      "material_instance_guid": "8e96fc4d-60bf-4d31-9897-f3f466126702"
+    },
+    {
+      "material_name": "Material_8",
+      "textures": [],
+      "base_color_factor": [
+        0.66,
+        0.64,
+        0.6,
+        1.0
+      ]
+    }
+  ]
+}

@@ -117,6 +117,11 @@ SendBufferRef Server_PacketHandler::Make_S_WaveCleared(Protocol::S_WaveCleared& 
     return MakeSendBuffer(pkt, S_WaveCleared);
 }
 
+SendBufferRef Server_PacketHandler::Make_S_WaveStarted(Protocol::S_WaveStarted& pkt)
+{
+    return MakeSendBuffer(pkt, S_WaveStarted);
+}
+
 SendBufferRef Server_PacketHandler::Make_S_LobbySnapshot(Protocol::S_LobbySnapshot& pkt)
 {
     return MakeSendBuffer(pkt, S_LobbySnapshot);

@@ -56,6 +56,9 @@ HRESULT EnemyCharacter::Initialize(void* arg)
     _lastAnimPhase = Protocol::ANIM_PHASE_START;
     _lastAttackProfile = Protocol::ATTACK_PROFILE_TYPE_HAND_GROUND;
     _lastAttackComboIndex = 0;
+    _lastAnimStateKey.clear();
+    _lastHitReactionType = Protocol::HIT_REACTION_TYPE_DEFAULT;
+    _lastHitReactionSerial = 0;
 
     return S_OK;
 }
@@ -188,6 +191,8 @@ void EnemyCharacter::OnDamaged(const FDamageEvent& damageEvent)
 {
     Character::OnDamaged(damageEvent);
 
+    Set_RotationToDamageCauser(damageEvent);
+
     if (damageEvent.damage > 0.f && _transformCom && !_hitEffectAssetName.empty())
     {
         Vec3 hitEffectPosition = _transformCom->Get_WorldPosition();
@@ -200,9 +205,48 @@ void EnemyCharacter::OnDamaged(const FDamageEvent& damageEvent)
     {
         auto blackboard = _behavior->Get_Blackboard();
         if (blackboard)
+        {
+            static int32 sHitReactionSerial = 0;
+            ++sHitReactionSerial;
+
+            string hitAnimState = "Hit";
+            switch (damageEvent.hitReactionType)
+            {
+            case EHitReactionType::Launch:
+                hitAnimState = "Hit_Launch";
+                break;
+
+            case EHitReactionType::BlowOff:
+                hitAnimState = "Hit_BlowOff";
+                break;
+
+            case EHitReactionType::Down:
+                hitAnimState = "Hit_Down";
+                break;
+
+            case EHitReactionType::Air:
+                hitAnimState = "Hit_Air";
+                break;
+
+            case EHitReactionType::Air_Down:
+                hitAnimState = "Hit_Air_Down";
+                break;
+
+            case EHitReactionType::Stagger:
+            case EHitReactionType::Default:
+            default:
+                hitAnimState = "Hit";
+                break;
+            }
+
             blackboard->Set_ValueAsBool("IsHit", true);
+            blackboard->Set_ValueAsInt("HitReactionType", static_cast<int32>(damageEvent.hitReactionType));
+            blackboard->Set_ValueAsInt("HitReactionSerial", sHitReactionSerial);
+            blackboard->Set_ValueAsString("HitAnimState", hitAnimState);
+        }
     }
 }
+
 
 void EnemyCharacter::OnDead(const FDamageEvent& damageEvent)
 {
@@ -250,6 +294,33 @@ void EnemyCharacter::Sync(const Protocol::ObjectInfo& info)
         Protocol::CombatStat stat = info.stat();
         _combatStat->Sync_FromProtobuf(stat);
     }
+}
+
+void EnemyCharacter::Set_RotationToDamageCauser(const FDamageEvent& damageEvent)
+{
+    if (!_transformCom)
+        return;
+
+    auto damageCauser = damageEvent.damageCauser;
+    if (!damageCauser)
+        return;
+
+    auto causerTransform = damageCauser->Get_Component<Transform>();
+    if (!causerTransform)
+        return;
+
+    const Vec3 myPos = _transformCom->Get_WorldPosition();
+    Vec3 targetPos = causerTransform->Get_WorldPosition();
+
+    targetPos.y = myPos.y;
+
+    Vec3 lookDir = targetPos - myPos;
+    if (lookDir.LengthSquared() <= 0.0001f)
+        return;
+
+    lookDir.Normalize();
+
+    _transformCom->LookAt(myPos + lookDir);
 }
 
 HRESULT EnemyCharacter::Bind_ShaderResources()
@@ -320,6 +391,15 @@ bool EnemyCharacter::Should_SendMovePacket(const Protocol::ObjectInfo& nextInfo)
     if (nextInfo.attack_combo_index() != _lastAttackComboIndex)
         return true;
 
+    if (nextInfo.anim_state_key() != _lastAnimStateKey)
+        return true;
+
+    if (nextInfo.hit_reaction_type() != _lastHitReactionType)
+        return true;
+
+    if (nextInfo.hit_reaction_serial() != _lastHitReactionSerial)
+        return true;
+
     return false;
 }
 
@@ -343,6 +423,9 @@ void EnemyCharacter::Send_MovePacket(bool forceSend)
     _lastAnimPhase = info.anim_phase();
     _lastAttackProfile = info.attack_profile();
     _lastAttackComboIndex = info.attack_combo_index();
+    _lastAnimStateKey = info.anim_state_key();
+    _lastHitReactionType = info.hit_reaction_type();
+    _lastHitReactionSerial = info.hit_reaction_serial();
 }
 
 void EnemyCharacter::Capture_NetworkAnimState(Protocol::ObjectInfo& outInfo)
@@ -354,6 +437,9 @@ void EnemyCharacter::Capture_NetworkAnimState(Protocol::ObjectInfo& outInfo)
     replicatedState.forceRestart = false;
     replicatedState.attackProfile = EAttackProfileType::Hand_Ground;
     replicatedState.attackComboIndex = 0;
+    replicatedState.animStateKey = "";
+    replicatedState.hitReactionType = EHitReactionType::Default;
+    replicatedState.hitReactionSerial = 0;
 
     string animStateName = _idleStateName;
 
@@ -379,6 +465,7 @@ void EnemyCharacter::Capture_NetworkAnimState(Protocol::ObjectInfo& outInfo)
     }
 
     replicatedState.state = To_EnemyObjectState(animStateName);
+    replicatedState.animStateKey = animStateName;
 
     Protocol::MOVE_INPUT_DIR_TYPE nextMoveDir = Protocol::MOVE_INPUT_DIR_TYPE_FORWARD;
     switch (replicatedState.dir)
@@ -415,7 +502,15 @@ void EnemyCharacter::Capture_NetworkAnimState(Protocol::ObjectInfo& outInfo)
         outInfo.set_anim_force_restart(replicatedState.forceRestart);
         outInfo.set_attack_profile(Protocol::ATTACK_PROFILE_TYPE_HAND_GROUND);
         outInfo.set_attack_combo_index(0);
+        outInfo.set_anim_state_key(replicatedState.animStateKey);
+        outInfo.set_hit_reaction_type(Protocol::HIT_REACTION_TYPE_DEFAULT);
+        outInfo.set_hit_reaction_serial(0);
     }
+}
+
+void EnemyCharacter::Free()
+{
+    Character::Free();
 }
 
 NS_END

@@ -42,6 +42,11 @@ public:
     float Get_NearZ() const { return _nearZ; }
     float Get_FarZ() const { return _farZ; }
 
+public: /* Camera Shake */
+    virtual void Request_CameraShake(const FCameraShakeDesc& request) {}
+    virtual void Stop_CameraShake(const string& tag = "") {}
+    virtual void Clear_CameraShake() {}
+
 protected:
     // View + Proj 행렬을 PipeLine에 세팅
     void    Update_TransformMatrices();

@@ -56,12 +56,26 @@ public:
     float Get_CurrentClipLengthSec() const;
 
     int32 Pixel_ToFrame_InSequencer(float pixelX, float trackMinX, float trackMaxX) const;
+    // 시퀀서 타임라인에서 특정 Notify 인덱스가 현재 선택 집합에 포함되는지 확인할 때 호출한다.
+    bool Is_NotifyIndexSelected(int32 notifyIndex) const;
+    // 시퀀서 타임라인에서 특정 Notify State 인덱스가 현재 선택 집합에 포함되는지 확인할 때 호출한다.
+    bool Is_StateIndexSelected(int32 stateIndex) const;
+    // 시퀀서 타임라인에서 Notify 바를 클릭했을 때 Ctrl 다중선택 규칙까지 포함해 선택을 갱신할 때 호출한다.
+    void Handle_NotifySelectionFromSequencer(int32 notifyIndex, int32 trackIndex, bool isCtrlHeld);
+    // 시퀀서 타임라인에서 Notify State 바를 클릭했을 때 Ctrl 다중선택 규칙까지 포함해 선택을 갱신할 때 호출한다.
+    void Handle_StateSelectionFromSequencer(int32 stateIndex, int32 trackIndex, bool isCtrlHeld);
+    // 시퀀서 타임라인의 빈 공간을 클릭해 Notify 선택을 해제하고 현재 트랙만 유지할 때 호출한다.
+    void Clear_NotifySelectionFromSequencer(int32 trackIndex);
+    // 시퀀서 타임라인의 빈 공간을 클릭해 Notify State 선택을 해제하고 현재 트랙만 유지할 때 호출한다.
+    void Clear_StateSelectionFromSequencer(int32 trackIndex);
 
 private:
     // 애니메이션 뷰를 닫거나 대상 모델을 바꿀 때 전용 프리뷰 clone과 프리팹 뷰 연동 상태를 정리할 때 호출한다.
     void Close_ViewSession();
     // 전달받은 소스 모델 owner를 기반으로 애니메이션 뷰 전용 프리뷰 clone을 만들 때 호출한다.
     Shared<GameObject> Create_PreviewOwnerFromSourceModel(Shared<Model> sourceModel);
+    // 애니메이션 뷰가 들고 있는 프리뷰 owner에서 실제 샘플링 대상 Model 컴포넌트를 찾을 때 호출한다.
+    Shared<Model> Find_PreviewModel() const;
     // 애니메이션 뷰가 같은 프리팹을 보고 있는 동안 프리팹 뷰 live preview를 일시정지/해제할 때 호출한다.
     void Update_PrefabPreviewSuspension(bool suspend);
     // 현재 프리뷰 패널 크기를 다음 Pre_Render에서 사용할 RT 크기로 반영할 때 호출한다.
@@ -125,6 +139,10 @@ private:
     void Handle_DeleteShortcut();
     // 애니메이션 뷰에서 Ctrl+C / Ctrl+V 단축키를 처리한다.
     void Handle_CopyPasteShortcut();
+    // 현재 모델의 전체 애니메이션 이름 목록을 정렬 캐시로 다시 만들 때 호출한다.
+    void Rebuild_ClipSortCache();
+    // 검색어/ShowAll/AnimState 필터 기준으로 화면에 보여줄 애니메이션 목록만 다시 계산할 때 호출한다.
+    void Refresh_VisibleClipEntries();
 
     bool Passes_ClipSearch(const string& clipName) const;
     bool Passes_AnimStateClipFilter(const string& clipName) const;
@@ -132,6 +150,22 @@ private:
     bool Has_SelectedState() const;
     bool Has_SelectedNotifyTrack() const;
     bool Has_SelectedNotifyStateTrack() const;
+    // 현재 단일/다중 선택 상태를 합쳐 복사 대상 Notify 인덱스 목록을 정리할 때 호출한다.
+    vector<int32> Collect_SelectedNotifyIndices() const;
+    // 현재 단일/다중 선택 상태를 합쳐 복사 대상 Notify State 인덱스 목록을 정리할 때 호출한다.
+    vector<int32> Collect_SelectedStateIndices() const;
+    // Notify 항목 클릭 시 Ctrl 다중선택과 단일선택을 공통 처리할 때 호출한다.
+    void Handle_NotifySelection(int32 notifyIndex, int32 trackIndex, bool isCtrlHeld);
+    // Notify State 항목 클릭 시 Ctrl 다중선택과 단일선택을 공통 처리할 때 호출한다.
+    void Handle_StateSelection(int32 stateIndex, int32 trackIndex, bool isCtrlHeld);
+    // 붙여넣기 전에 Notify 트랙 개수가 필요한 수보다 부족하면 자동으로 확장할 때 호출한다.
+    void Ensure_NotifyTrackCount(int32 requiredTrackCount);
+    // 붙여넣기 전에 Notify State 트랙 개수가 필요한 수보다 부족하면 자동으로 확장할 때 호출한다.
+    void Ensure_StateTrackCount(int32 requiredTrackCount);
+    // 현재 클립의 Notify 배열을 트랙/시간 기준으로 정렬할 때 호출한다.
+    void Sort_CurrentClipNotifies();
+    // 현재 클립의 Notify State 배열을 트랙/시간 기준으로 정렬할 때 호출한다.
+    void Sort_CurrentClipStates();
     // 시퀀서 우클릭 좌표가 어느 트랙 row 위인지 계산한다.
     bool Try_GetSequencerTrackContext(
         const ImVec2& sequencerCanvasPos,
@@ -160,6 +194,34 @@ private:
     void Start_CurrentClipPlaybackFromFrame(int32 frame);
 
 private:
+    // 애니메이션 클립 브라우저의 정렬/필터 캐시에 사용하는 고정 메타데이터다.
+    struct FClipListEntry
+    {
+        // 모델 내부 원본 애니메이션 인덱스다.
+        uint32 index = 0;
+        // 화면 표시와 검색에 같이 쓰는 애니메이션 이름이다.
+        string label;
+    };
+
+    // 다중 복사한 Notify 한 개의 타입/페이로드/원래 배치 위치를 저장하는 클립보드 엔트리다.
+    struct FCopiedNotifyEntry
+    {
+        string typeName = "";
+        json payload = json::object();
+        float timeSec = 0.f;
+        int32 trackIndex = 0;
+    };
+
+    // 다중 복사한 Notify State 한 개의 타입/페이로드/길이/원래 배치 위치를 저장하는 클립보드 엔트리다.
+    struct FCopiedNotifyStateEntry
+    {
+        string typeName = "";
+        json payload = json::object();
+        float startSec = 0.f;
+        float durationSec = 0.f;
+        int32 trackIndex = 0;
+    };
+
     Shared<Model>               _model;
     Shared<GameObject>          _previewOwner;
     Shared<Editor_Camera_Free>  _previewCamera;
@@ -182,6 +244,10 @@ private:
     int32 _selectedStateIndex = -1;
     int32 _selectedNotifyTrackIndex = 0;
     int32 _selectedNotifyStateTrackIndex = 0;
+    // Ctrl 다중선택으로 잡힌 Notify 인덱스 집합이다.
+    unordered_set<int32> _selectedNotifyIndices;
+    // Ctrl 다중선택으로 잡힌 Notify State 인덱스 집합이다.
+    unordered_set<int32> _selectedStateIndices;
 
     bool  _isPlaying = false;
     bool  _isPreviewHovered = false;
@@ -204,12 +270,22 @@ private:
     string _clipSearchText;
     unordered_set<string> _animStateClipNames;
     bool _showAllClips = false;
+    // 모델의 전체 애니메이션 목록을 이름 기준으로 한 번만 정렬해 보관하는 캐시다.
+    vector<FClipListEntry> _sortedClipEntries;
+    // 현재 검색/필터 조건을 통과한 정렬 캐시 엔트리 인덱스 목록이다.
+    vector<uint32> _visibleClipIndices;
+    // 다음 Draw_ClipList 전에 전체 애니메이션 정렬 캐시를 다시 만들어야 하는지 표시한다.
+    bool _clipSortCacheDirty = true;
     // 애니메이션 뷰가 현재 점유 중인 원본 프리팹 이름이다.
     string _sourcePrefabName;
     // ImGui가 현재 프레임 draw list를 소비하기 전 GPU 자원을 해제하지 않도록 close cleanup을 다음 프레임으로 미룰 때 사용한다.
     bool _pendingCloseViewSession = false;
     // pending close를 처리한 프레임에는 OnGui를 건너뛰어 이미 종료된 창을 다시 그리지 않도록 제어한다.
     bool _skipGuiThisFrame = false;
+    // 애니메이션 뷰가 프리뷰 owner를 직접 생성해서 Prefab 레벨에 등록했는지 추적한다.
+    bool _ownsPreviewObject = false;
+    // 애니메이션 뷰 전용 프리뷰 owner에 BeginPlay를 한 번만 호출하기 위한 플래그다.
+    bool _previewHasBegunPlay = false;
 
 private:
     // 시퀀서 우클릭 컨텍스트 메뉴를 다음 프레임에 열기 위한 플래그다.
@@ -246,12 +322,10 @@ private:
 
     // 내부 복사 버퍼에 저장된 엔트리 종류를 기록한다.
     ENotifyClipboardKind _copiedNotifyKind = ENotifyClipboardKind::None;
-    // 복사한 Notify / Notify State의 타입 이름을 저장한다.
-    string _copiedNotifyTypeName = "";
-    // 복사한 Notify / Notify State의 리플렉션 payload를 저장한다.
-    json _copiedNotifyPayload = json::object();
-    // 복사한 Notify State의 원본 duration을 유지하기 위한 값이다.
-    float _copiedNotifyStateDurationSec = 0.f;
+    // 다중 복사한 Notify 엔트리들의 타입/페이로드/원래 배치 정보를 저장한다.
+    vector<FCopiedNotifyEntry> _copiedNotifyEntries;
+    // 다중 복사한 Notify State 엔트리들의 타입/페이로드/원래 배치 정보를 저장한다.
+    vector<FCopiedNotifyStateEntry> _copiedNotifyStateEntries;
 
 public:
     static Shared<Animation_View> Create();

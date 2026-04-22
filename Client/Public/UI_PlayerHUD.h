@@ -17,6 +17,7 @@ class Background;
 
 class CombatStat;
 class UI_PlayerHP;
+class UI_BossHp;
 
 DECLARE_DELEGATE(FOnHUDPlayerBound, Shared<Player>);
 
@@ -68,6 +69,8 @@ public:
     void        Handle_RemotePlayerObjectSpawned(Shared<GameObject> obj);
     void        On_PlayerComboHit(uint32 combo);
 
+    void        Handle_BossSpawned(Shared<GameObject> obj);
+
 private:
     HRESULT     Ready_CombatLines();
     void        Reset_CombatLineLayout();
@@ -99,6 +102,12 @@ private:
     float                       _combatLinePhaseTime = 0.f;
     float                       _combatLineIntensity = 1.f;
     bool                        _isCombatLineBurstActive = false;
+
+    Shared<Background>          _bossGauge;
+    Shared<Background>          _bossIcon;
+
+    Shared<UI_BossHp>           _bossHp;
+    FDelegateHandle             _bossObjectSpawnedHandle = {};
 
 private:
     static constexpr uint32 COMBAT_LINE_TEXTURE_INDEX_07 = 8;

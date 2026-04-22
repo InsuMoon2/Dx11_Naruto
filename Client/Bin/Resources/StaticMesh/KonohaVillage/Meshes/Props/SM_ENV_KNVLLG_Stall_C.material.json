@@ -1,0 +1,17 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_Stall_A_01",
+      "material_instance_guid": "e0219c87-dc74-472b-80f6-3af167cb7c9d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Stall_A_01",
+      "material_instance_guid": "e0219c87-dc74-472b-80f6-3af167cb7c9d"
+    },
+    {
+      "material_name": "Material_2",
+      "textures": []
+    }
+  ]
+}

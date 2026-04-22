@@ -1,0 +1,63 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_BlueMarine",
+      "material_instance_guid": "8184b66b-1b74-41f7-ac1f-34b8b7f51e3b"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Sticker_02",
+      "material_instance_guid": "35ab0809-a0dc-4523-baed-510de5569af5"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_PipeDetails_01",
+      "material_instance_guid": "e9fa41fb-0bc2-42f3-a301-12ac250ba29d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_Light",
+      "material_instance_guid": "18b8d24d-baca-4a0b-81c2-27a65160532f"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster",
+      "material_instance_guid": "15e34ce8-5e84-4a5e-99ca-4d10a3675692"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Bright",
+      "material_instance_guid": "eda97172-bf20-468c-b652-51797f248fab"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "33c91196-b849-4ef1-85f0-7cece3065d02"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_A",
+      "material_instance_guid": "e8085cb0-8fbd-4878-8f9d-07811e3e285b"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Signboard_V",
+      "material_instance_guid": "9e650707-5d01-4677-a723-f6bf16e41aab"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Window_Paper",
+      "material_instance_guid": "96768a24-fd21-4f8a-9ef6-85197417297d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Aircon_G",
+      "material_instance_guid": "bda3f1f0-911a-4580-89d2-7c51cc13fb67"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_01",
+      "material_instance_guid": "9e8fa8ce-6a4a-4a04-96a3-1b823b37b91a"
+    },
+    {
+      "material_name": "Material_12",
+      "textures": [],
+      "base_color_factor": [
+        0.66,
+        0.64,
+        0.6,
+        1.0
+      ]
+    }
+  ]
+}

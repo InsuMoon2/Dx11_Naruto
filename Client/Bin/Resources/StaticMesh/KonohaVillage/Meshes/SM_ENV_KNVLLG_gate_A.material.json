@@ -1,0 +1,57 @@
+{
+  "version": 4,
+  "materials": [
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Lighter",
+      "material_instance_guid": "33c91196-b849-4ef1-85f0-7cece3065d02"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
+      "material_instance_guid": "3a831086-b931-451d-8bef-74f256cf7d4e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster",
+      "material_instance_guid": "15e34ce8-5e84-4a5e-99ca-4d10a3675692"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_MetalRoof_Yellow",
+      "material_instance_guid": "3548f252-bd2b-49dc-b2f8-fe7800a42fdc"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Plaster_Light",
+      "material_instance_guid": "18b8d24d-baca-4a0b-81c2-27a65160532f"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_StoneTrim",
+      "material_instance_guid": "bb586838-0747-4572-84c7-83a97c82dd3a"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Windows_A",
+      "material_instance_guid": "e8085cb0-8fbd-4878-8f9d-07811e3e285b"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Pipe_04",
+      "material_instance_guid": "0860f126-ad5b-47d4-bc6f-b31e0f69542e"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Wrapping_01",
+      "material_instance_guid": "f5efd78e-7ca2-44b4-962e-2dbff41c5122"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_PipeDetails_01",
+      "material_instance_guid": "e9fa41fb-0bc2-42f3-a301-12ac250ba29d"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_ConcreteSlabs_Bright",
+      "material_instance_guid": "eda97172-bf20-468c-b652-51797f248fab"
+    },
+    {
+      "material_name": "MI_ENV_KNVLLG_Wooden_Sign_Atlas_02",
+      "material_instance_guid": "0d950b46-dda6-431b-b9bd-77b5f4b21127"
+    },
+    {
+      "material_name": "Material_12",
+      "textures": []
+    }
+  ]
+}

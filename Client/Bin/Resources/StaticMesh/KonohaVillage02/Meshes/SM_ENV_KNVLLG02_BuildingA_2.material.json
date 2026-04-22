@@ -1,21 +1,25 @@
 {
-  "version": 4,
+  "version": 2,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG02_Stonewall_04",
-      "material_instance_guid": "68cb60de-66b6-4f12-a325-e8f4a814bc57"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_RoughTiles",
-      "material_instance_guid": "3f495c7a-f76b-4913-a13c-f9141946bc85"
+      "textures": [
+      ]
     },
     {
       "material_name": "MI_ENV_KNVLLG02_StoneWall_Blend",
-      "material_instance_guid": "55336332-cb8f-4629-85f9-780805a1e710"
+      "textures": [
+      ]
     },
     {
       "material_name": "Material_3",
-      "textures": []
+      "textures": [
+      ]
     }
   ]
 }

@@ -49,6 +49,7 @@ public:
     HRESULT Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetTag);
 
     void    Refresh_WeaponAttachment_ByCurrentState();
+    void    Refresh_WeaponAttachment_ByReplicatedState(EWeaponType weaponType, Protocol::OBJECT_STATE_TYPE replicatedState);
 
     // 서버에서 이름 세팅용
     void    Set_PlayerName(const wstring& name) { _playerName = name; }
@@ -63,7 +64,11 @@ protected:
 protected:
     const Matrix* Find_WeaponSocketMatrix(EWeaponType weaponType, EPlayerState currentState) const;
     bool  Is_SwordAttackState(EPlayerState state) const;
+    bool  Is_SwordAttackReplicatedState(Protocol::OBJECT_STATE_TYPE replicatedState) const;
     void  Change_WeaponAttachment(EWeaponType weaponType);
+
+    static Protocol::WEAPON_TYPE To_ProtoWeaponType(EWeaponType weaponType);
+    static EWeaponType From_ProtoWeaponType(Protocol::WEAPON_TYPE weaponType);
 
     void  On_WeaponTypeChagned(int32 weaponTypeIndex);
 

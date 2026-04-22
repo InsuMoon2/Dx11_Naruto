@@ -389,6 +389,14 @@
       <Filter>06. Behavior\Task</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\WaveTrigger.h" />
+    <ClInclude Include="..\Public\UI_BossHp.h" />
+    <ClInclude Include="..\Public\AN_CameraShake.h" />
+    <ClInclude Include="..\Public\BTTask_SelectAttackType.h" />
+    <ClInclude Include="..\Public\BTTask_JumpToTarget.h" />
+    <ClInclude Include="..\Public\AN_ChangePlayerState.h" />
+    <ClInclude Include="..\Public\PlayerState_Airbone.h">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -761,6 +769,14 @@
       <Filter>06. Behavior\Task</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\WaveTrigger.cpp" />
+    <ClCompile Include="..\Private\UI_BossHp.cpp" />
+    <ClCompile Include="..\Private\AN_CameraShake.cpp" />
+    <ClCompile Include="..\Private\BTTask_SelectAttackType.cpp" />
+    <ClCompile Include="..\Private\BTTask_JumpToTarget.cpp" />
+    <ClCompile Include="..\Private\AN_ChangePlayerState.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Airbone.cpp">
+      <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

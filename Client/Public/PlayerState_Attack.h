@@ -34,6 +34,8 @@ public:
     // 현재 콤보 반환용
     const FComboEntry* Get_CurrentComboEntry() const;
 
+    void Enable_RecoveryMove();
+
 private:
     void    Select_Profile(PlayerStateMachine* state);
     void    Play_CurrentComboClip(PlayerStateMachine* state);
@@ -42,6 +44,7 @@ private:
     int32   _comboIndex = 0;
     bool    _comboWindowOpen = false;
     bool    _hasBufferedAttack = false; // 콤보 입력 가능 구간에서 입력이 들어왔는지 판단
+    bool    _recoveryMoveEnabled = false;
 
 private: // 콤보 프로파일
     const FComboProfile* _activeProfile = nullptr;

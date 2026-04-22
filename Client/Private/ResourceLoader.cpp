@@ -401,27 +401,69 @@ HRESULT ResourceLoader::Build_AllResourceJobs(const wstring& tablePath, vector<F
 
             uint32 typeId = Get_ComponentID_From_String(idStr);
             uint32 levelIndex = Get_LevelIndex_From_String(levelStr);
+            const bool hasSequencePattern = (pathStr.find("%d") != string::npos);
 
             if (typeId == 0) continue;
-            FLoadJob job;
-
-            job.componentID = typeId;
-            job.levelIndex = levelIndex;
-            job.idStr = idStr;
-            job.pathStr = pathStr;
-            job.count = count;
 
             if (!firstTextureByType[typeId])
             {
-                job.type = ELoadJobType::TextureCreate;
+                FLoadJob createJob{};
+                createJob.type = ELoadJobType::TextureCreate;
+                createJob.componentID = typeId;
+                createJob.levelIndex = levelIndex;
+                createJob.idStr = idStr;
+                createJob.pathStr = pathStr;
+                createJob.startIndex = 0;
+                createJob.count = hasSequencePattern ? 1u : count;
+                outJobs.push_back(std::move(createJob));
                 firstTextureByType[typeId] = true;
+
+                if (hasSequencePattern && count > 1)
+                {
+                    for (int32 textureIndex = 1; textureIndex < count; ++textureIndex)
+                    {
+                        FLoadJob appendJob{};
+                        appendJob.type = ELoadJobType::TextureAppend;
+                        appendJob.componentID = typeId;
+                        appendJob.levelIndex = levelIndex;
+                        appendJob.idStr = idStr;
+                        appendJob.pathStr = pathStr;
+                        appendJob.startIndex = static_cast<uint32>(textureIndex);
+                        appendJob.count = 1;
+                        outJobs.push_back(std::move(appendJob));
+                    }
+                }
             }
             else
             {
-                job.type = ELoadJobType::TextureAppend;
+                if (hasSequencePattern && count > 1)
+                {
+                    for (int32 textureIndex = 0; textureIndex < count; ++textureIndex)
+                    {
+                        FLoadJob appendJob{};
+                        appendJob.type = ELoadJobType::TextureAppend;
+                        appendJob.componentID = typeId;
+                        appendJob.levelIndex = levelIndex;
+                        appendJob.idStr = idStr;
+                        appendJob.pathStr = pathStr;
+                        appendJob.startIndex = static_cast<uint32>(textureIndex);
+                        appendJob.count = 1;
+                        outJobs.push_back(std::move(appendJob));
+                    }
+                }
+                else
+                {
+                    FLoadJob appendJob{};
+                    appendJob.type = ELoadJobType::TextureAppend;
+                    appendJob.componentID = typeId;
+                    appendJob.levelIndex = levelIndex;
+                    appendJob.idStr = idStr;
+                    appendJob.pathStr = pathStr;
+                    appendJob.startIndex = 0;
+                    appendJob.count = count;
+                    outJobs.push_back(std::move(appendJob));
+                }
             }
-
-            outJobs.push_back(job);
         }
     }
 

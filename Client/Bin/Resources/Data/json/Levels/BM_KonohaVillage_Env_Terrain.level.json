@@ -1,0 +1,3624 @@
+{
+    "levelName": "BM_KonohaVillage_Env_Terrain",
+    "levelIndex": 3,
+    "gameObjects": [
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_A_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "3fe9536a-1b87-4a3a-aaf1-644c4af1b32b",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "8c63f13c-855a-4640-95bf-d3e9c5e84772",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_A_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "2568b0a7-284a-4eaa-987f-f7618f75b5d7",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "765dce7b-d916-4720-a67d-9ec75e4514ee",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_B_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "71629f31-8498-4574-a88f-cb243cf21027",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "14edb15c-ba72-4815-a8e7-392beefa44de",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_B_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "387dea6c-580d-47ae-b885-283f9ece508d",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "47e76f86-05e9-4f60-a269-d39e1f11be4e",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_C_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5b8ac528-32a2-4f83-b8a8-f29eb3a8eb76",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "9d6a0362-025c-40f0-9693-1ee4069aa1d7",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_C_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "467985fe-f683-4ede-971b-78289b49ef66",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "e1bb2b35-4e6b-49f3-93e3-6f22c3338305",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_D_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "552d756a-450d-4796-9d5a-17478143f920",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "e5a52059-144b-4c13-96a9-34532bdd6eeb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_F_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b9c1c81c-52fd-42b1-9285-6042581b3c91",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "61704cf9-6560-4bc8-888f-a9533196d65b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_F_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "d2a7b1ce-87eb-4a5e-a27c-584951c82ee3",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "8ec912e3-375f-4cf9-a22f-1532d0549676",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_G_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "16923ea4-73ed-447a-8e9f-1217d0c2892c",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "02f1e7fd-b4b4-458a-b707-74d12d1d1214",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_G_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "d861c058-81f4-4afe-ac80-8fd7b7724312",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "caa41f14-998e-4c51-8ca1-7dc43dc0ba55",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_G_3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "dc31ef1e-0750-4310-b942-9c149fa68ae9",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "0bb77784-fedc-496e-8cc2-b4b1f241c008",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_I_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f606669b-800b-4c68-a030-ca8522b5b40f",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "c20b38c4-fdf0-4593-bfd8-2fc9ec71dbf4",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_J_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "a16d6bca-a9a9-41c6-a317-e89f57be9041",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "45fd0985-be9c-4e3f-a62d-ceaacfd65b56",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_K_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7e54544d-227a-4956-91b2-a9c79f79df02",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "02ac1eb5-d390-4317-965d-46449bd4cb2a",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_FarTree_A1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "98bf3e0d-2b90-44b2-ac86-6f464360e7d9",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "df62780d-5e41-4bf9-928d-84b6341b82b7",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "212ad9e3-fd8d-4fea-a492-b31b78a68a6c",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "d56dad30-1eda-4525-b25f-110017847681",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5e997feb-2f10-4b10-ad5c-a01def094856",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "10aed29a-0cef-40c3-8b32-68ac0bead2c7",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "1d0fd125-55df-4c7b-b20e-8212c23f6bd1",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "b7b97187-b0e9-4eb0-b4d9-ecc27cc8f968",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "55afdd38-e622-4f1c-9d18-7965e182660a",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "c119d2c7-13ac-4b2b-85c4-c105865e3fc9",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e417cb0d-afa3-415a-9448-9a454fb60b86",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "fa0994e6-b8c1-4afe-8846-0146789398c4",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A6",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "6bcf55d0-35a3-489f-9606-87794bb145a7",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "4399e877-9b0c-45d1-bbbe-8852e3df4fcf",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A7",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "963f1929-2107-4fe3-b997-8c08facd2e84",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "a42c0d63-aa56-4b80-8c4c-2c2c0b900085",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A8",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "2daa61d9-a211-4421-a790-2ce402cb3723",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "9b269b1e-d3fb-4b85-a322-8f03dddfe6fb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_AreaH_Tower_A_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7706f3fc-63ca-4d5c-977e-dd9bf2e7a444",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "13dd5e4e-8f08-4fec-a6c4-f467b4b3907e",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_AreaH_Tower_A_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "081fcfc5-b5d5-4657-ac95-fce466bbff78",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "10cbda3c-41f9-49f3-b84d-136056d110e6",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_AreaH_Tower_B_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "53a0fe33-2dd3-42ba-812e-34dfa49ebd85",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "0def0755-6be0-47f0-8421-67f66d3df457",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_B_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "709326c0-2532-4856-b839-b9e789ac8a2e",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "548cb5cc-9fb2-465e-88e9-30c95b078bcc",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_C_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "9ebbb144-adba-4101-8932-e170d2dc04a3",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "400628c7-2ee4-4329-ac2d-28000d51a7dd",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_D_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "43cc942b-73ec-4392-a92a-98f2c9bc8a5e",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "5d76808c-d0d1-48b1-8eea-fff81b5598be",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_D_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "c133d849-27ce-4338-9b46-5442ff89dc62",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "40cac15a-1308-44b3-8c54-9d15dc544a5f",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_E_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "48abecb8-b301-458f-8f09-3d0a5fdca1a8",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "1b88ea33-9836-4426-aed4-e7348ac7800f",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_E_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "cd0ae1e1-e67b-47dd-b464-8ba4310b428f",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "38545431-14bc-47e6-a4a0-44f183c0d455",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_E_3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "dfc53a2e-e2f1-4dfa-adf9-9a4be4b111a0",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "3d145b4c-6b04-40a6-b476-893f380da3b5",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_F_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7e3c3590-5bfd-41ea-923a-c3bc78f1c5a0",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "771333fd-8aef-41e1-8304-18ec6aa0c73c",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_F_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "fdd495c1-9bd6-4b42-b74a-ba2366487821",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "23b2ea73-7b33-4fe8-bd0a-7fc24a7a0a70",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_I_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "81f91ffb-cac5-416c-af70-45ae64edbc38",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "5c004d2c-2022-4451-a9e0-92f6f14b1893",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_I_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "22e7acbe-d1e1-4101-bdf2-97555dceaee2",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "91445336-0193-4263-8958-fe59e251cbde",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_J_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "27eed2ec-0796-467b-a123-b240773cc5e5",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "fb253f79-8abf-49fa-82a0-ab3243db0e65",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_J_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "223f162b-2013-4893-8231-2ab559758462",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "fcf9e721-feff-480c-a4fb-599d7f32d942",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_J_3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "ca7a9a58-e0ab-4257-b5d1-8f5483615436",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "55d839cd-f331-4d40-92d9-3f1d59259db7",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_K_1",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "df0df01c-9dc4-400e-96f6-f25598d71951",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "6d75b5a7-f608-4232-85ef-7d2b9a0118f6",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_K_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b51b5ef0-395c-41f7-843d-72ff4fb759b6",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "19c74997-c749-42c1-ad0a-93e71fba0b60",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaA_Building_A_11",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "0ee1380c-49ae-495d-97e5-50a46360e1b6",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "bc031645-20c2-43cb-bbd8-18b942ef23a0",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaA_Building_A_BaseWall_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "2632681c-4270-45e2-86a3-28102f9997ae",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "89691cb7-c746-480b-98b4-2bc32c164aa4",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaA_Building_B_14",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "a41c9f50-3c8a-4714-99c2-dcd511faabdd",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "e1460e7b-593d-4faf-a744-754bdee0f98c",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaA_Building_B_Curtain_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "021f9d28-16d4-4347-993d-ed0f6146e504",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "f8bf24ca-6f15-4047-91d7-4f77e3666112",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaA_Building_B_Wall_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "4d6022b5-74a1-4adc-9a4a-0df594184be4",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "22c636ef-d1bc-43cc-b5b1-24583640491d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaB_Building_A_Part_01_11",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7be7112a-97a5-4a06-a59f-6c95dff7d229",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "ba5cf9ef-c90e-4be8-9241-5b27cc5f0446",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaB_Building_A_Part_02_13",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "70ed1a50-a53a-4b02-b688-123e0250c931",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "aa3904e8-f717-4909-8c2d-b7886b7199ac",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaB_Building_A_Part_03_15",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "3d5b7c0c-67a8-4200-83ae-a8cfbe422ca8",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "6434dba2-0881-4f18-9e05-c83f1fc4f5ec",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaB_Building_B_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "34215813-4fff-4c16-a134-034b07b538db",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "39417a10-c6d2-4fc3-9c8f-87a7b0a853eb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaB_Building_C_8",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "c0788175-3d6b-4808-94fd-fa2e87e5d700",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7c3df37c-8f9f-4a6a-bf84-475fe5bf76b7",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaC_Building_A_11",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5278a7fc-3e4f-4453-b0ca-a6a1d1313f00",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "87866d9e-57e6-4654-872b-7019fc6dbd23",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaC_Building_A_Wall_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "aa8e960e-11e2-4c7a-9c4f-6a254f06dbbb",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "ea99416e-2673-4a29-9839-e2d65ee9442e",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaD_Building_A",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f6aca5f9-1251-4a71-bb7b-522af9c13405",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "6d6dbfdc-30a0-470f-a2a5-5482b3f50de8",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaD_Building_B_16",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "10faefc0-bcef-41d4-938d-f597ba325180",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "4a0c4da0-1463-4999-ac13-63ed5bcd5b3a",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaD_Tower_A_Part01_10",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "0d04ae3e-8c79-4267-84fd-67629ed25a07",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "1d122109-82fd-4cce-8f76-d53a69f51917",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaD_Tower_A_Part02_12",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "00965970-c511-4e8b-a680-ab0716aa8cf5",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "0cab65e1-17b7-42ab-a125-8147eb14cbed",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaD_Tower_A_Part03_14",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "8fc0c69d-2a35-4abd-abac-951ddf20b2a6",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "dc28510c-2732-49aa-9512-d5af23a6a092",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaD_Tower_B_22",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "45285241-c949-4b07-aec6-de7f2b8a66dd",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "6b9d1453-3a5b-4fa8-959d-72c39e400458",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaE_Building_A_B_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "ea6f64cb-5c0f-4681-8dfc-985d178dd59a",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "22cbb99b-b6f5-4070-bd25-7e78238e025c",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaF_Building_A_Part01_19",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b580f1c3-d853-485c-870e-74f036d654f1",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "5e486e75-de6a-449b-b2ca-090395d1476a",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaF_Building_A_Part02_21",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e4d3c7cf-e932-40f2-af25-9449e6701279",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "33ca91e5-b673-40d6-b13a-d78a4d6fcc4d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaF_Building_A_Part03_23",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "edb50537-2081-4d73-9d56-c4d0b3a8d158",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "87f745eb-580e-444d-8dc1-336250326c14",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaG_Building_A_37",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "37e69767-82bc-473d-8fb9-ce4cc9d83a4b",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "f3f635fd-2768-439c-b0a2-08e9f8bf3f8f",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaG_Building_B_43",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7bd6cb44-11cc-4049-8a74-fdb4149983c0",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "e1de02a8-1db2-4a6f-a61d-3558ca2a062f",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaG_Building_C_46",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "dee6e26b-8255-498e-9d96-acb0554ff960",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "53954374-31cc-4123-b136-68d44b492d0c",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaG_Building_D_49",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "40d0a14f-2b0f-4a35-88df-c22a9f1da8d3",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "1e357bd6-ce44-4bd5-9b0d-512fdbcadeed",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaG_Building_E_52",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "9df4f3b2-cd0d-4f55-94b0-621d7848f406",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "7032531a-9b0a-42f5-9566-b620abe06e82",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaG_Building_F_55",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "01927912-fe11-4056-85c1-0c6302335a97",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "c2c52ee6-c0bf-4fad-8e5a-87cade0465cd",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaG_Building_G_58",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "948f293c-86cd-4b19-a718-bb6b5d8abe0a",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "e2bf9692-3e28-4978-a444-fdbc23e4e1ac",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaG_Building_H_61",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "2386decc-6c53-43ce-8bd1-afb69d8b77f6",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "96f7c5c5-5a10-4307-890e-bc2ce6087d72",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_28",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "a0e2319a-3eb1-4b33-aa63-42f51fb16b0c",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "b23c9652-0275-44f6-9f05-55ee93f62900",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_30",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "af4971ef-cd3f-45fc-8968-fc12d96385af",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "334929c1-58c0-495f-88d1-0618a1803f02",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_32",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f63780c5-506b-469a-bf9f-56fd085929c5",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "1646d37a-736f-4cc2-8e08-ef5619fdd1d6",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_Entrance2_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "1e3e4a85-e00a-482e-ae86-9c175e7a0c47",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "8f470ec3-d02a-4575-ba9a-8b3bb1af6460",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.056232910000000004,
+                        -0.33710938
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_Signs_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e720c208-3333-48f7-a6e6-fff03d4608a7",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "ed15aabb-b13b-430b-aa9e-44ba228d992f",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaH_Building_B_3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "cc0b602f-165d-452d-9288-dced9abbd435",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "dcc3080a-a319-4c78-909d-6ef46aca0c03",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Lanterns_8",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b400b2c2-1c4d-41cd-84e1-2582c8cf023a",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "996b9ef1-8a6e-4a88-bbd0-62d8f1b018c6",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Part01_10",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "729b6896-2527-4033-a517-899647c89f17",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "b9e0f94b-3f48-44a4-ae1b-21696b5f74d7",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Part02_12",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5f54a750-128c-4c11-ba55-7f7dd1d3d202",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "9d1f866f-8b4c-4bf4-922b-622547f61419",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Part03_14",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "ee27014f-2568-46d6-8026-edfc030da3f1",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "26825a80-096d-47ab-bc89-bea192917312",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_88",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "3c19b389-fea3-451d-97b3-03b53da9993a",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "b5d268f4-15d1-4530-a674-3c5a778c3f56",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b2265e97-101d-477f-9d97-18a157de97f4",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "a5db14cf-597f-474a-8443-9c3c42b4a719",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        93.85170000000001,
+                        7.000202600000001,
+                        94.38112
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.99982,
+                        0.0
+                    ],
+                    "scale": [
+                        0.90625,
+                        1.0,
+                        1.03125
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate3_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "53ff752f-78c3-4bbe-a7d9-69b5a06a217e",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "a5db14cf-597f-474a-8443-9c3c42b4a719",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        125.36005,
+                        7.000193,
+                        39.85
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.78125,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate4_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "c4d628cd-4947-4543-9114-9f23427b2c82",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "a5db14cf-597f-474a-8443-9c3c42b4a719",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        125.36005,
+                        7.000193,
+                        21.1
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.78125,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "233928cf-42b3-473b-aa10-48a024dcdff4",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "a5db14cf-597f-474a-8443-9c3c42b4a719",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        125.36005,
+                        7.000193,
+                        58.66236
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.78125,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Distance_Tower_A2_458",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f23fac10-2ffb-4c15-b69c-ed5b4519ddc1",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "4f7eb910-fdac-41cb-bd03-62266e31ee19",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -400.6847,
+                        1.3747559,
+                        -223.96923999999999
+                    ],
+                    "rotation": [
+                        0.0,
+                        47.183754,
+                        0.0
+                    ],
+                    "scale": [
+                        1.625459,
+                        1.1260681,
+                        1.625459
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Distance_Tower_A3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "2b7da6a5-6eca-4fb0-b36f-08d9285c691d",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "4f7eb910-fdac-41cb-bd03-62266e31ee19",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        76.76328000000001,
+                        14.578564,
+                        -392.4482
+                    ],
+                    "rotation": [
+                        0.0,
+                        121.451126,
+                        0.0
+                    ],
+                    "scale": [
+                        1.625459,
+                        1.126068,
+                        1.625459
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Distance_Tower_A4_462",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "15f0bb17-57eb-41f4-9b11-6998906f2972",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "4f7eb910-fdac-41cb-bd03-62266e31ee19",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -452.15906,
+                        -2.76375,
+                        98.75816999999999
+                    ],
+                    "rotation": [
+                        0.0,
+                        -9.158861,
+                        0.0
+                    ],
+                    "scale": [
+                        1.3906109,
+                        0.8388371,
+                        1.3906109
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Distance_Tower_A_455",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e254b2e9-810d-4179-96a1-083937bd2497",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "4f7eb910-fdac-41cb-bd03-62266e31ee19",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        316.55824,
+                        2.4453613,
+                        348.73080000000004
+                    ],
+                    "rotation": [
+                        0.0,
+                        -125.30515,
+                        0.0
+                    ],
+                    "scale": [
+                        1.2915342,
+                        0.77168185,
+                        1.2915342
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Distance_Tower_B2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "17db42a7-dcb8-4f38-b69a-2f202990ae63",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "081aaef9-5795-4598-afaa-e986b8063439",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        113.96027000000001,
+                        4.000005,
+                        329.62188000000003
+                    ],
+                    "rotation": [
+                        0.0,
+                        -17.850695,
+                        0.0
+                    ],
+                    "scale": [
+                        1.5859134,
+                        0.83593696,
+                        1.5859134
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Distance_Tower_B3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "24ce6082-41ff-42c1-986b-ae0cf3860d4e",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "081aaef9-5795-4598-afaa-e986b8063439",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -377.75800000000004,
+                        4.000005,
+                        -109.71907999999999
+                    ],
+                    "rotation": [
+                        0.0,
+                        88.26008,
+                        0.0
+                    ],
+                    "scale": [
+                        1.585913,
+                        0.835937,
+                        1.585913
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Distance_Tower_B4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "77ba8a63-50ae-4a95-98f5-f36a4fe83c42",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "081aaef9-5795-4598-afaa-e986b8063439",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -242.09576,
+                        4.000005,
+                        -297.00316
+                    ],
+                    "rotation": [
+                        0.0,
+                        141.98367,
+                        0.0
+                    ],
+                    "scale": [
+                        1.5159516,
+                        0.8866581,
+                        1.5159516
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Distance_Tower_B_474",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e59b3133-f896-4a53-a442-df8e8e0f670b",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "081aaef9-5795-4598-afaa-e986b8063439",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        331.15234,
+                        4.000005,
+                        -169.19398
+                    ],
+                    "rotation": [
+                        0.0,
+                        -126.8104,
+                        0.0
+                    ],
+                    "scale": [
+                        1.5081383,
+                        0.90831584,
+                        1.5081383
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_FarLobby_A_226",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "fe709692-8fbc-4958-a37d-f9dd08e430bf",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "06fb2f67-5a77-45d3-a0ea-891b5a7f0dac",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_gate_A_3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "61569b25-94a0-4a8a-a785-e5d98c5bf3f7",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "0ef204db-bd2d-4885-8df3-52ab7ee834a9",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_GateUnit_01_5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "21e9cfd7-6f1c-49d8-9ad8-2dc009d258c0",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "34846b96-76de-4ec2-ae2b-898b38acadc4",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -61.5,
+                        28.0,
+                        -52.9
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_GateUnit_2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b3097b57-a402-4e7a-996f-5f82f5aec37d",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "34846b96-76de-4ec2-ae2b-898b38acadc4",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -47.4,
+                        27.985122,
+                        -39.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.99994,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_GateUnit_3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7cf30568-30f6-4769-83dc-739c6f358564",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "34846b96-76de-4ec2-ae2b-898b38acadc4",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -66.95,
+                        36.0,
+                        -85.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.99994,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_GateUnit_4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "23f10340-4070-4131-b59b-2289f535dfe4",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "34846b96-76de-4ec2-ae2b-898b38acadc4",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -108.95,
+                        36.0,
+                        -42.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.99992,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Ground_Base_A",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "6d0b6512-8ca4-4aef-9503-63dda0ff5912",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "d6b3989d-8f50-471a-81b1-c836ff014799",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_A2_214",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "260a5861-d044-4a8e-bccc-8ab556153218",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "2d6f4963-7390-4956-b6a2-3c74f228cd00",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        431.9143,
+                        3.9998438,
+                        -168.42227
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_A3_216",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "3fec1cd2-72d9-4cd5-8e2f-5d029e7affba",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "2d6f4963-7390-4956-b6a2-3c74f228cd00",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        110.21901,
+                        3.9998438,
+                        412.162
+                    ],
+                    "rotation": [
+                        0.0,
+                        90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_A4_217",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "2a9c39d0-6f5b-45c4-966c-4c83209f66db",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "2d6f4963-7390-4956-b6a2-3c74f228cd00",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -363.28983999999997,
+                        3.9998438,
+                        280.27158000000003
+                    ],
+                    "rotation": [
+                        0.0,
+                        150.72989,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_A5_218",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "4348966c-b667-4c13-b036-a76d18a776e5",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "2d6f4963-7390-4956-b6a2-3c74f228cd00",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        41.550596,
+                        18.169121,
+                        -508.25419999999997
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.45108,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_A_212",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "1d9ba3d3-636c-4f5e-86aa-6edc2c26c17f",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "2d6f4963-7390-4956-b6a2-3c74f228cd00",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        431.9143,
+                        3.9998438,
+                        122.75772
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_B2_219",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e31ce8fe-d64b-41de-bb6c-e6ed1505e6fb",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -51.336073999999996,
+                        18.169238,
+                        -425.7659
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_B3_220",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7a68c8ef-ece0-407a-b3a2-b9c294909af8",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        28.731206000000004,
+                        3.9997266000000002,
+                        475.7155
+                    ],
+                    "rotation": [
+                        0.0,
+                        90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_B4_225",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "3cc51b2b-8a7f-452b-a02a-ad3ea6e25e8b",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        206.41215,
+                        12.340078000000002,
+                        -450.74793
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_B5_267",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f7b9aaaf-dac7-4859-9afa-d055e2c9c7cb",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        154.72388999999998,
+                        17.801367,
+                        -409.81305000000003
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_B6_297",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "1b95e4df-9ccb-40e2-a449-b782eadbecbc",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        65.34313,
+                        3.9997266000000002,
+                        683.88375
+                    ],
+                    "rotation": [
+                        0.0,
+                        90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_B7_398",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "8bc3bfe3-2598-42e2-a941-b444df44818b",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        669.54484,
+                        3.9999610000000003,
+                        -90.14637
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_B_213",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "70c92955-a999-4928-8d13-f65e52f76de2",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        499.9458,
+                        3.9999610000000003,
+                        -86.04263999999999
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_C2_221",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "a8351172-a344-463e-ba39-0b8b836a990f",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -329.4854,
+                        3.9979297000000003,
+                        -310.50287000000003
+                    ],
+                    "rotation": [
+                        0.0,
+                        46.843792,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_C3_224",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "7fd24e56-9522-4951-8dd2-200ddd885450",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -101.29526,
+                        3.9979297000000003,
+                        401.74926
+                    ],
+                    "rotation": [
+                        0.0,
+                        -72.82971,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_C4_228",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "0489e24b-ccf4-47a7-aac7-b0ccc775b659",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -356.59722999999997,
+                        4.0,
+                        120.59843000000001
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_C5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f138acf0-74e3-4f6e-a773-fb05331e200b",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        315.37719000000004,
+                        4.0,
+                        -431.69734
+                    ],
+                    "rotation": [
+                        0.0,
+                        90.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_C6",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "4a42a8e6-000e-4ef1-93be-1f31360b8f17",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -359.71766,
+                        3.9999610000000003,
+                        -117.14204
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_C_211",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "dad47edf-e9e1-45ac-924c-e7a7e5bdbee6",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        402.51855000000006,
+                        3.9979297000000003,
+                        256.18016
+                    ],
+                    "rotation": [
+                        0.0,
+                        -163.22868,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_E2",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "4d5c961d-fc23-424b-8d67-c89b650e8a5f",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "d5a56b67-1a86-47fa-a642-cd9dfb2c08eb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        322.92650000000003,
+                        4.0000488,
+                        137.29939000000002
+                    ],
+                    "rotation": [
+                        0.0,
+                        -1.9155273,
+                        0.0
+                    ],
+                    "scale": [
+                        1.6020374,
+                        1.6020374,
+                        1.6020374
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_E3",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "1881a442-2871-43e3-8cf1-c2b116a74dbb",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "d5a56b67-1a86-47fa-a642-cd9dfb2c08eb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        405.6632,
+                        4.0000098,
+                        -88.83376
+                    ],
+                    "rotation": [
+                        0.0,
+                        -40.839813,
+                        0.0
+                    ],
+                    "scale": [
+                        1.602037,
+                        1.602037,
+                        1.602037
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_E4",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "3f220da2-981f-4111-9070-ec51bd70e526",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "d5a56b67-1a86-47fa-a642-cd9dfb2c08eb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -17.717940000000002,
+                        17.385075999999998,
+                        -285.18912
+                    ],
+                    "rotation": [
+                        0.0,
+                        -145.95076,
+                        0.0
+                    ],
+                    "scale": [
+                        1.7191473,
+                        1.7191473,
+                        1.7191473
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_E5",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5621e2b2-81f5-4d22-b243-563f312e1a60",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "d5a56b67-1a86-47fa-a642-cd9dfb2c08eb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -233.45408,
+                        4.0003613,
+                        -430.00137
+                    ],
+                    "rotation": [
+                        0.0,
+                        -154.55202,
+                        0.0
+                    ],
+                    "scale": [
+                        1.52713,
+                        1.52713,
+                        1.52713
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_House_Distance_E_106",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "f9fb7464-d626-4abe-a0bf-df98e49c7a2c",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "d5a56b67-1a86-47fa-a642-cd9dfb2c08eb",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -274.09361,
+                        4.0000098,
+                        375.12863
+                    ],
+                    "rotation": [
+                        0.0,
+                        87.144684,
+                        0.0
+                    ],
+                    "scale": [
+                        1.4273263,
+                        1.4273263,
+                        1.4273263
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Signs_11",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "2ee3e4a1-9a3e-425b-be8b-4c0680e9d415",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "0c5efa04-9742-4b3d-903a-4656b012467b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Signs_13",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "ad43d3f4-2980-489c-a153-461f412f9cdd",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "801147a1-e426-4124-bef9-05793e8b89de",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Signs_15",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "5ee36f55-74ee-41de-85a7-49654524c7b8",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "bdf4ac16-3d50-4b2d-bb9f-ab603221267c",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Signs_17",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "8a8b1b16-4c65-4dc2-a952-50219246a807",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "10edbf6d-158c-4fdb-aa9f-48cc2a63df21",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Signs_19",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "91d6b5e9-224b-4560-994a-e48ce04b29dc",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "9f8be096-fccf-4116-a434-0863db213a9b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Signs_21",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "b02358d0-4512-493f-965a-a0e6f23b6bd4",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "6471cf4a-e974-44d8-9f51-8ba8a464c13f",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Signs_23",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "e7cb0975-5adf-4cf7-b366-c9e634ef6923",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "023fdc03-b1c5-4c04-9f9b-a3b1a0b7bb4b",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Signs_9",
+            "object_type": "OBJECT_TYPE_STATIC_MESH",
+            "guid": "8662e466-e30f-4b3c-82e9-ef12f3322dbf",
+            "layerTag": "Layer_Terrain",
+            "model_guid": "0013001b-23dd-4ef0-bd96-0319fd4b44d7",
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        }
+    ]
+}

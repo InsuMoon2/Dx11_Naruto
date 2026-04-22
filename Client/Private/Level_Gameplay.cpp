@@ -68,6 +68,7 @@ HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
 
     _konohaTransitionRequested = false;
 
+    _waveStartedHandle = GAME->Get_DelegateHub().OnWaveStarted.Add(this, &Level_Gameplay::On_WaveStarted);
     _waveClearedHandle = GAME->Get_DelegateHub().OnWaveCleared.Add(this, &Level_Gameplay::On_WaveCleared);
 
     return S_OK;
@@ -84,9 +85,11 @@ void Level_Gameplay::Update(float timeDelta)
             ? EGameplaySpawnMode::Server
             : EGameplaySpawnMode::LocalOnly;
 
+        // Gameplay 진입 시 shared resource는 이미 로드되어 있으므로,
+        // Konoha 복귀에서는 맵 오브젝트만 다시 구성하고 공용 테이블은 재큐잉하지 않는다.
         GAME->Change_Level(
             ETOI(ELevelType::Loading),
-            Level_Loading::Create(_device, _context, ELevelType::Konoha, true, spawnMode));
+            Level_Loading::Create(_device, _context, ELevelType::Konoha, false, spawnMode));
 
         return;
     }
@@ -120,6 +123,14 @@ void Level_Gameplay::On_WaveCleared(const string& waveTag)
         return;
 
     Request_EnterKonoha();
+}
+
+void Level_Gameplay::On_WaveStarted(const string& waveTag)
+{
+    if (waveTag != "GamePlayClearWave")
+        return;
+
+    GAME->Play_Cinematic(L"GamePlayClearWave");
 }
 
 HRESULT Level_Gameplay::Ready_Lights()
@@ -794,6 +805,12 @@ void Level_Gameplay::Free()
     {
         GAME->Get_DelegateHub().OnPlayerObjectSpawned.Remove(_playerObjectSpawnedHandle);
         _playerObjectSpawnedHandle.Reset();
+    }
+
+    if (_waveStartedHandle.IsValid())
+    {
+        GAME->Get_DelegateHub().OnWaveStarted.Remove(_waveStartedHandle);
+        _waveStartedHandle.Reset();
     }
 
     if (_waveClearedHandle.IsValid())

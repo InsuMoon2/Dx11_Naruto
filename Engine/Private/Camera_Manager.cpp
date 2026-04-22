@@ -223,6 +223,33 @@ void Camera_Manager::Clear_InvalidCameras()
 
 }
 
+void Camera_Manager::Request_CameraShake(const FCameraShakeDesc& request)
+{
+    auto activeCamera = _activeCamera.lock();
+    if (!activeCamera)
+        return;
+
+    activeCamera->Request_CameraShake(request);
+}
+
+void Camera_Manager::Stop_CameraShake(const string& tag)
+{
+    auto activeCamera = _activeCamera.lock();
+    if (!activeCamera)
+        return;
+
+    activeCamera->Stop_CameraShake(tag);
+}
+
+void Camera_Manager::Clear_CameraShake()
+{
+    auto activeCamera = _activeCamera.lock();
+    if (!activeCamera)
+        return;
+
+    activeCamera->Clear_CameraShake();
+}
+
 Shared<Camera> Camera_Manager::Find_NextValidCamera(const Shared<Camera>& current)
 {
     Clear_InvalidCameras();

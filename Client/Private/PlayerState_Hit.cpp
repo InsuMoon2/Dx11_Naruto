@@ -36,7 +36,12 @@ void PlayerState_Hit::Enter(PlayerStateMachine* state)
         }
     }
 
-    state->Play_AnimState(EPlayerState::Hit);
+    const auto& pendingHit = state->Get_PendingHitReaction();
+    const EPlayerState hitState = Resolve_HitState(pendingHit.type);
+
+    state->Play_AnimState(hitState);
+
+    state->Consume_PendingHitReaction();
 }
 
 void PlayerState_Hit::Update(PlayerStateMachine* state, float timeDelta)
@@ -85,6 +90,26 @@ void PlayerState_Hit::Exit(PlayerStateMachine* state)
     auto movement = state->Get_Movement();
     if (movement)
         movement->Set_OrientRotationToMovement(true);
+}
+
+EPlayerState PlayerState_Hit::Resolve_HitState(EHitReactionType type)
+{
+    switch (type)
+    {
+    case EHitReactionType::Launch:
+        return EPlayerState::Hit_Launch;
+
+    case EHitReactionType::BlowOff:
+        return EPlayerState::Hit_BlowOff;
+
+    case EHitReactionType::Down:
+        return EPlayerState::Hit_Down;
+
+    case EHitReactionType::Stagger:
+    case EHitReactionType::Default:
+    default:
+        return EPlayerState::Hit;
+    }
 }
 
 Shared<PlayerState_Hit> PlayerState_Hit::Create()

@@ -79,6 +79,15 @@ def is_collision_mesh_name(mesh_base_name: str):
     return False
 
 
+# [추가] 눈 오버레이/설경 전용 StaticMesh를 레벨 스폰에서 제거하는 helper다.
+# [추가] 눈 머티리얼만 지우면 회색 껍데기가 남으므로, snow 이름이 들어간 메시 자체를 변환 단계에서 제외한다.
+def is_snow_mesh_name(mesh_base_name: str):
+    if not mesh_base_name:
+        return False
+
+    return "SNOW" in mesh_base_name.upper()
+
+
 def read_ue_vec3(props, name: str, default):
     value = get_prop(props, name)
     if not isinstance(value, dict):
@@ -160,6 +169,7 @@ def convert_level(
     unit_scale=0.01,
     swap_yz=True,
     negate_yaw=False,
+    skip_snow_meshes=False,
 ):
     component_by_actor_name = build_component_index(entries)
     game_objects = []
@@ -199,6 +209,15 @@ def convert_level(
             skipped.append({
                 "actor": actor_name,
                 "reason": "Collision mesh skipped",
+                "mesh": mesh_base_name,
+            })
+            continue
+
+        # [추가] snow 메시를 머티리얼만 비우면 화면에 회색/갈색 오버레이가 남으므로 스폰 자체를 막는다.
+        if skip_snow_meshes and is_snow_mesh_name(mesh_base_name):
+            skipped.append({
+                "actor": actor_name,
+                "reason": "Snow mesh skipped",
                 "mesh": mesh_base_name,
             })
             continue
@@ -320,6 +339,7 @@ def process_fmodel_file(fmodel_path: Path, guid_map: dict, args):
         unit_scale=args.unit_scale,
         swap_yz=args.swap_yz,
         negate_yaw=args.negate_yaw,
+        skip_snow_meshes=args.skip_snow_meshes,
     )
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -359,6 +379,9 @@ def parse_args():
     parser.add_argument("--swap-yz", dest="swap_yz", action="store_true", default=True, help="Swap Y/Z axes. Default: on")
     parser.add_argument("--no-swap-yz", dest="swap_yz", action="store_false", help="Disable Y/Z axis swap.")
     parser.add_argument("--negate-yaw", action="store_true", default=False, help="Negate yaw during rotation conversion.")
+    # [추가] snow 이름이 들어간 전용 오버레이 메시를 레벨 결과에서 제외한다.
+    parser.add_argument("--skip-snow-meshes", action="store_true", default=False,
+                        help="Skip StaticMesh actors whose mesh name contains snow.")
     args = parser.parse_args()
 
     if len(sys.argv) == 1:

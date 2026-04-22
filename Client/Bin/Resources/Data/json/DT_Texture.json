@@ -163,12 +163,6 @@
             "Level": "Static"
         },
         {
-            "Id": "COMPONENT_TYPE_BOSS_HP",
-            "Path": "../../Client/Bin/Resources/Textures/UI/Boss/T_UI_Boss_Gauge1.png",
-            "Count": 1,
-            "Level": "Static"
-        },
-        {
             "Id": "COMPONENT_TYPE_TEXTURE_ANNOUNCE_HIT",
             "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_Announce_RadialLine_01_Additive_BC.png",
             "Count": 1,
@@ -508,6 +502,30 @@
         {
             "Id": "COMPONENT_TYPE_TEXTURE_SKILL_ICON",
             "Path": "../../Client/Bin/Resources/Textures/UI/Skill_Icon/T_UI_Skill_Kirin_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_BOSS_HP",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Boss/T_UI_Boss_Gauge1.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_BOSS_HP",
+            "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/life_gauge_masc_Body.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_BOSS_HP",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Boss/Pain_Icon.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_BOSS_HP",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Boss/Boss_Text.png",
             "Count": 1,
             "Level": "Static"
         }

@@ -72,6 +72,8 @@ void AIController::Refresh_RuntimeBindings()
         _blackboard.reset();
         _lastAnimState.clear();
         _lastAnimDirection = static_cast<int32>(EMoveInputDirection::Forward);
+        _lastAnimReplaySerial = 0;
+
         return;
     }
 
@@ -85,6 +87,7 @@ void AIController::Refresh_RuntimeBindings()
 
     _lastAnimState.clear();
     _lastAnimDirection = static_cast<int32>(EMoveInputDirection::Forward);
+    _lastAnimReplaySerial = 0;
 }
 
 void AIController::Update(float timeDelta)
@@ -126,6 +129,10 @@ void AIController::Update(float timeDelta)
             dir = static_cast<EMoveInputDirection>(_blackboard->Get_ValueAsInt("AnimDirection"));
         }
 
+        // 같은 AnimState여도, 다시 재생할 때 seiral 검색
+        const int32 replaySerial = _blackboard->HasKey("AnimReplaySerial")
+            ? _blackboard->Get_ValueAsInt("AnimReplaySerial") : 0;
+
         if (!animState.empty())
         {
             const auto* stateDesc = _animationState->Find_State(animState);
@@ -133,20 +140,21 @@ void AIController::Update(float timeDelta)
             {
                 const int32 dirValue = static_cast<int32>(dir);
 
-                // 상태나 방향이 바뀐 경우에만 재생 변경
-                if (animState != _lastAnimState || dirValue != _lastAnimDirection)
+                const bool shouldReplay =
+                    (animState != _lastAnimState) ||
+                    (dirValue != _lastAnimDirection) ||
+                    (replaySerial != _lastAnimReplaySerial);
+
+                if (shouldReplay)
                 {
                     if (stateDesc->mode == EStateAnimationMode::DirectionalSingle)
-                    {
                         _animationState->Play_DirectionalState(animState, dir);
-                    }
                     else
-                    {
                         _animationState->Play_State(animState);
-                    }
 
                     _lastAnimState = animState;
                     _lastAnimDirection = dirValue;
+                    _lastAnimReplaySerial = replaySerial;
                 }
             }
 
