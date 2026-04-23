@@ -201,6 +201,15 @@ HRESULT Level::Load_LevelChunkToLevel(uint32 targetLevelIndex, uint32 prototypeL
         }
     }
 
+    if (targetLevelIndex == GAME->Current_Level())
+    {
+        auto currentLevel = GAME->Get_Current_Level();
+        if (currentLevel)
+        {
+            CHECK_FAILED(currentLevel->On_LevelChunkLoaded(fileName), E_FAIL);
+        }
+    }
+
     LOG_INFO("Level loaded: {} objects from '{}'", loadedCount, Utils::ToString(fileName));
     return S_OK;
 }

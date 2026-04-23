@@ -20,6 +20,9 @@ public:
     virtual HRESULT Render();
 
     virtual void    On_CharInput(wchar_t ch) {};
+    // 레벨 청크(.level.json / .proxy.level.json)가 현재 레벨에 추가된 직후 후처리가 필요할 때 호출된다.
+    // CollisionProxy cache 재빌드처럼 "로드는 끝났지만 런타임 캐시는 아직 옛 상태"인 문제를 여기서 정리한다.
+    virtual HRESULT On_LevelChunkLoaded(const wstring& fileName) { return S_OK; }
 
 public:
     virtual HRESULT Load_LevelFromJson(const wstring& fileName);

@@ -98,6 +98,22 @@ void Level_Gameplay::Update(float timeDelta)
     {
         Try_SendEnterGamePacket();
     }
+
+    _collisionModelRefreshAccumulator += timeDelta;
+    if (_collisionModelRefreshAccumulator >= 0.1f)
+    {
+        _collisionModelRefreshAccumulator = 0.f;
+
+        const uint32 levelIndex = ETOI(ELevelType::GamePlay);
+        const auto gameObjects = GAME->Get_GameObjects(levelIndex);
+        for (const auto& obj : gameObjects)
+        {
+            if (!obj)
+                continue;
+
+            Apply_CollisionModelsToPlayer(obj);
+        }
+    }
 }
 
 void Level_Gameplay::Late_Update(float timeDelta)
@@ -114,6 +130,12 @@ HRESULT Level_Gameplay::Render()
 
     #endif
     
+    return S_OK;
+}
+
+HRESULT Level_Gameplay::On_LevelChunkLoaded(const wstring& fileName)
+{
+    CHECK_FAILED(Rebuild_CollisionProxyCache(), E_FAIL);
     return S_OK;
 }
 
@@ -396,7 +418,7 @@ void Level_Gameplay::Build_CollisionProxyEntries(vector<FProxyEntry>& outEntries
     outEntries.clear();
     outEntries.reserve(
         _defaultGroundModels.size() +
-        _walkableProxyModels.size() +
+        _surfaceProxyModels.size() +
         _worldBlockProxyModels.size());
 
     const auto appendEntries =
@@ -412,14 +434,13 @@ void Level_Gameplay::Build_CollisionProxyEntries(vector<FProxyEntry>& outEntries
         };
 
     appendEntries(_defaultGroundModels, ECollisionProxyType::Walkable);
-    appendEntries(_walkableProxyModels, ECollisionProxyType::Walkable);
+    appendEntries(_surfaceProxyModels, ECollisionProxyType::Walkable);
     appendEntries(_worldBlockProxyModels, ECollisionProxyType::WorldBlock);
 }
 
 HRESULT Level_Gameplay::Rebuild_CollisionProxyCache()
 {
-    _walkableProxyModels.clear();
-    _wallProxyModels.clear();
+    _surfaceProxyModels.clear();
     _worldBlockProxyModels.clear();
 
     CHECK_FAILED(Collect_CollisionProxyActorsFromLayer(TEXT("Layer_CollisionProxy")), E_FAIL);
@@ -429,9 +450,18 @@ HRESULT Level_Gameplay::Rebuild_CollisionProxyCache()
 
     GAME->Ready_CollisionProxy(proxyEntries);
 
+    const uint32 levelIndex = ETOI(ELevelType::GamePlay);
+    const auto gameObjects = GAME->Get_GameObjects(levelIndex);
+    for (const auto& obj : gameObjects)
+    {
+        if (!obj)
+            continue;
+
+        Apply_CollisionModelsToPlayer(obj);
+    }
+
     LOG_INFO("[Level_Gameplay] Default Ground = {}", _defaultGroundModels.size());
-    LOG_INFO("[Level_Gameplay] Walkable Proxy = {}", _walkableProxyModels.size());
-    LOG_INFO("[Level_Gameplay] Wall Proxy = {}", _wallProxyModels.size());
+    LOG_INFO("[Level_Gameplay] Surface Proxy = {}", _surfaceProxyModels.size());
     LOG_INFO("[Level_Gameplay] WorldBlock Proxy = {}", _worldBlockProxyModels.size());
 
     return S_OK;
@@ -482,11 +512,8 @@ HRESULT Level_Gameplay::Append_CollisionProxyInstance(Shared<CollisionProxyActor
     switch (actor->Get_ProxyType())
     {
     case ECollisionProxyType::Walkable:
-        _walkableProxyModels.push_back(instance);
-        break;
-
     case ECollisionProxyType::WallRun:
-        _wallProxyModels.push_back(instance);
+        _surfaceProxyModels.push_back(instance);
         break;
 
     case ECollisionProxyType::WorldBlock:
@@ -552,18 +579,45 @@ void Level_Gameplay::On_PlayerObjectSpawned(Shared<GameObject> obj)
         return;
 
     _playerHUD->Bind_Player(player);
+    Apply_CollisionModelsToPlayer(obj);
+}
+
+void Level_Gameplay::Apply_CollisionModelsToPlayer(const Shared<GameObject>& obj)
+{
+    if (!obj)
+        return;
 
     auto moveCom = obj->Get_Component<MovementComponent>();
     if (!moveCom)
         return;
 
-    vector<MovementComponent::FCollisionModelInstance> combinedGroundModels = _defaultGroundModels;
-    combinedGroundModels.insert(
-        combinedGroundModels.end(),
-        _walkableProxyModels.begin(),
-        _walkableProxyModels.end());
+    auto transform = obj->Get_Transform();
+    if (!transform)
+        return;
 
-    moveCom->Set_GroundCollisionModels(combinedGroundModels);
+    vector<MovementComponent::FCollisionModelInstance> nearbyWalkableModels;
+    vector<MovementComponent::FCollisionModelInstance> nearbyWallModels;
+    vector<MovementComponent::FCollisionModelInstance> nearbyWorldBlockModels;
+
+    GAME->Query_ActiveCollisionProxy(
+        transform->Get_WorldPosition(),
+        nearbyWalkableModels,
+        nearbyWallModels,
+        &nearbyWorldBlockModels);
+
+    vector<MovementComponent::FCollisionModelInstance> nearbySurfaceModels = _defaultGroundModels;
+    nearbySurfaceModels.insert(
+        nearbySurfaceModels.end(),
+        nearbyWalkableModels.begin(),
+        nearbyWalkableModels.end());
+    nearbySurfaceModels.insert(
+        nearbySurfaceModels.end(),
+        nearbyWallModels.begin(),
+        nearbyWallModels.end());
+
+    moveCom->Set_SurfaceCollisionModels(nearbySurfaceModels);
+    moveCom->Set_BlockCollisionModels(nearbyWorldBlockModels);
+    moveCom->Set_TraceDebugEnabled(_showCollisionDebug);
 }
 
 void Level_Gameplay::Try_SendEnterGamePacket()
@@ -698,6 +752,11 @@ void Level_Gameplay::Draw_StaticMeshRender()
             continue;
 
         debugCenter = transform->Get_WorldPosition();
+
+        auto moveCom = obj->Get_Component<MovementComponent>();
+        if (moveCom)
+            moveCom->Set_TraceDebugEnabled(_showCollisionDebug);
+
         hasDebugCenter = true;
         break;
     }
@@ -718,11 +777,11 @@ void Level_Gameplay::Draw_StaticMeshRender()
     const float debugRadius = 35.f;
     const float debugRadiusSq = debugRadius * debugRadius;
     const int32 maxDefaultGroundDrawCount = 120;
-    const int32 maxWalkableDrawCount = 80;
+    const int32 maxSurfaceDrawCount = 80;
     const int32 maxWorldBlockDrawCount = 80;
 
     int32 defaultGroundDrawCount = 0;
-    int32 walkableDrawCount = 0;
+    int32 surfaceDrawCount = 0;
     int32 worldBlockDrawCount = 0;
 
     const auto drawProxyBoxes =
@@ -764,10 +823,10 @@ void Level_Gameplay::Draw_StaticMeshRender()
         defaultGroundDrawCount);
 
     drawProxyBoxes(
-        _walkableProxyModels,
-        Color(0.f, 1.f, 0.f, 1.f),
-        maxWalkableDrawCount,
-        walkableDrawCount);
+        _surfaceProxyModels,
+        Color(0.f, 1.f, 0.3f, 1.f),
+        maxSurfaceDrawCount,
+        surfaceDrawCount);
 
     drawProxyBoxes(
         _worldBlockProxyModels,

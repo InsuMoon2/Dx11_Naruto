@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "Controller.h"
 #include "MovementComponent.h"
+#include "Shader.h"
 
 Character::Character(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : ContainerObject(device, context)
@@ -30,6 +31,9 @@ HRESULT Character::Initialize(void* arg)
 
     CHECK_FAILED(Ready_Components(), E_FAIL);
 
+    _hitColorRemainTime = 0.f;
+
+
     return S_OK;
 }
 
@@ -49,7 +53,7 @@ void Character::Update(float timeDelta)
 {
     ContainerObject::Update(timeDelta);
 
-
+    Update_HitColor(timeDelta);
 }
 
 void Character::Late_Update(float timeDelta)
@@ -114,6 +118,10 @@ void Character::TakeDamage(const FDamageEvent& damageEvent)
 
 void Character::OnDamaged(const FDamageEvent& damageEvent)
 {
+     if (damageEvent.damage > 0.f)
+    {
+        Start_HitColor();
+    }
 }
 
 void Character::OnDead(const FDamageEvent& damageEvent)
@@ -125,6 +133,44 @@ void Character::OnDead(const FDamageEvent& damageEvent)
 HRESULT Character::Ready_Components()
 {
     _transformCom->Set_LocalPosition(0.f, 0.f, -5.f);
+
+    return S_OK;
+}
+
+void Character::Start_HitColor()
+{
+    _hitColorRemainTime = _hitColorDuration;
+}
+
+void Character::Update_HitColor(float timeDelta)
+{
+    if (_hitColorRemainTime <= 0.f)
+        return;
+
+    _hitColorRemainTime -= timeDelta;
+
+    if (_hitColorRemainTime < 0.f)
+        _hitColorRemainTime = 0.f;
+}
+
+float Character::Get_HitColorStrength() const
+{
+    if (_hitColorDuration <= FLT_EPSILON)
+        return 0.f;
+
+    const float normalizedRemain = _hitColorRemainTime / _hitColorDuration;
+    return _hitColorMaxStrength * max(0.f, min(1.f, normalizedRemain));
+}
+
+HRESULT Character::Bind_HitColor_ShaderParams(const Shared<Shader>& shader) const
+{
+    CHECK_NULL(shader, E_FAIL);
+
+    const Vec4 hitColor = _hitColor;
+    const float hitColorStrength = Get_HitColorStrength();
+
+    CHECK_FAILED(shader->Bind_RawValue("g_HitColor", &hitColor, sizeof(Vec4)), E_FAIL);
+    CHECK_FAILED(shader->Bind_RawValue("g_HitColorStrength", &hitColorStrength, sizeof(float)), E_FAIL);
 
     return S_OK;
 }

@@ -106,17 +106,24 @@ void PlayerState_AirApproach::Update(PlayerStateMachine* state, float timeDelta)
         return;
     }
 
-    // 너무 오래 접근하면 탈주처리 -> 일단 기본 JumpFall로 세팅 -> 이거때매 문제가있던거같은데
-    /*if (_elapsedTime >= _approachDesc.maxApproachTime)
+    // 있어야한다.
+    if (_elapsedTime >= _approachDesc.maxApproachTime)
     {
         state->Change_State(_approachDesc.nextStateOnFail);
         return;
-    }*/
+    }
 
     // 타겟으로 회전처리
     Vec3 moveDir = Utils::Safe_Normalize(toTarget, Vec3::Forward);
-    const Vec3 ownerPos = transform->Get_WorldPosition();
-    transform->LookAt(ownerPos + moveDir);
+
+    Vec3 lookDir = moveDir;
+    lookDir.y = 0.;
+
+    if (lookDir.LengthSquared() > FLT_EPSILON)
+    {
+        lookDir.Normalize();
+        transform->LookAt(transform->Get_WorldPosition() + lookDir);
+    }
 
     Vec3 velocity = moveDir * _approachDesc.moveSpeed;
     movement->Set_Velocity(velocity);

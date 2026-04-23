@@ -26,6 +26,8 @@ public:
     virtual void    Update(float timeDelta) override;
     virtual void    Late_Update(float timeDelta) override;
     virtual HRESULT Render() override;
+    // Gameplay 청크 로드 직후 collision proxy cache를 다시 빌드해서 즉시 충돌에 반영한다.
+    virtual HRESULT On_LevelChunkLoaded(const wstring& fileName) override;
 
 private:
     HRESULT         Ready_Lights();
@@ -64,6 +66,7 @@ private:
 private:
     void            Build_CollisionProxyEntries(vector<FProxyEntry>& outEntries) const;
     HRESULT         Rebuild_CollisionProxyCache();
+    void            Apply_CollisionModelsToPlayer(const Shared<GameObject>& obj);
 
     HRESULT         Collect_CollisionProxyActorsFromLayer(const wstring& layerTag);
     HRESULT         Append_CollisionProxyInstance(Shared<CollisionProxyActor> actor);
@@ -90,10 +93,10 @@ private:
     bool            _konohaTransitionRequested = false;
 
     bool _showCollisionDebug = false;
+    float _collisionModelRefreshAccumulator = 0.f;
 
     vector<MovementComponent::FCollisionModelInstance> _defaultGroundModels;
-    vector<MovementComponent::FCollisionModelInstance> _walkableProxyModels;
-    vector<MovementComponent::FCollisionModelInstance> _wallProxyModels;
+    vector<MovementComponent::FCollisionModelInstance> _surfaceProxyModels;
     vector<MovementComponent::FCollisionModelInstance> _worldBlockProxyModels;
 
 

@@ -26,6 +26,9 @@ public:
     void From_Json(const json& data) override;
 
 private:
+    HRESULT Clone_EffectFrom(const Shader& rhs);
+
+private:
     ComPtr<ID3DX11Effect>               _effect;
     uint32                              _numPasses = {};
 

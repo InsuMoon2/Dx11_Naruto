@@ -88,6 +88,105 @@ def ensure_mesh_output_dirs(mesh_src: Path, mesh_dst: Path):
         (mesh_dst / rel_dir).mkdir(parents=True, exist_ok=True)
 
 
+# Stage COL_* meshes that AssimpTool would otherwise skip during the main recursive pass.
+def build_col_mesh_stage(mesh_src: Path, mesh_dst: Path) -> tuple[Path | None, Path | None]:
+    stage_root = mesh_dst.parent / "__ColMeshStage"
+    staged_files = []
+
+    if stage_root.exists():
+        shutil.rmtree(stage_root, ignore_errors=True)
+
+    for source_path in sorted(mesh_src.rglob("*")):
+        if not source_path.is_file():
+            continue
+
+        if source_path.parent.name == "Ground_Collision":
+            continue
+
+        if not source_path.name.startswith("COL_"):
+            continue
+
+        if source_path.suffix.lower() not in {".gltf", ".fbx"}:
+            continue
+
+        rel_parent = source_path.parent.relative_to(mesh_src)
+        staged_dir = stage_root / rel_parent
+        staged_dir.mkdir(parents=True, exist_ok=True)
+
+        staged_mesh_name = source_path.name.removeprefix("COL_")
+        staged_mesh_path = staged_dir / staged_mesh_name
+        shutil.copy2(source_path, staged_mesh_path)
+
+        staged_files.append((source_path, staged_mesh_path.relative_to(stage_root)))
+
+        if source_path.suffix.lower() == ".gltf":
+            source_bin_path = source_path.with_suffix(".bin")
+            if source_bin_path.exists():
+                shutil.copy2(source_bin_path, staged_dir / source_bin_path.name)
+
+    if not staged_files:
+        return None, None
+
+    return stage_root, mesh_dst
+
+
+# Rename staged COL output files back to their original COL_* runtime names after AssimpTool finishes.
+def normalize_col_mesh_outputs(col_stage_root: Path, mesh_dst: Path):
+    for staged_mesh_path in sorted(col_stage_root.rglob("*")):
+        if not staged_mesh_path.is_file():
+            continue
+
+        if staged_mesh_path.suffix.lower() not in {".gltf", ".fbx"}:
+            continue
+
+        rel_parent = staged_mesh_path.parent.relative_to(col_stage_root)
+        staged_stem = staged_mesh_path.stem
+        original_stem = f"COL_{staged_stem}"
+
+        output_dir = mesh_dst / rel_parent
+        if not output_dir.exists():
+            continue
+
+        rename_pairs = [
+            (output_dir / f"{staged_stem}.meshbin", output_dir / f"{original_stem}.meshbin"),
+            (output_dir / f"{staged_stem}.meshbin.meta", output_dir / f"{original_stem}.meshbin.meta"),
+            (output_dir / f"{staged_stem}.material.json", output_dir / f"{original_stem}.material.json"),
+        ]
+
+        for source_output_path, renamed_output_path in rename_pairs:
+            if not source_output_path.exists():
+                continue
+
+            if renamed_output_path.exists():
+                renamed_output_path.unlink()
+
+            source_output_path.rename(renamed_output_path)
+
+
+# Convert staged COL_* meshes into meshbin output so their GUIDs can be referenced from proxy levels.
+def convert_col_meshes(args):
+    stage_root, stage_dst = build_col_mesh_stage(args.mesh_src, args.mesh_dst)
+    if stage_root is None or stage_dst is None:
+        print("[COL MESH CONVERT] skipped: no root COL_* meshes found")
+        return
+
+    col_command = [
+        str(args.assimp_tool),
+        str(stage_root),
+        str(stage_dst),
+        "static",
+    ]
+
+    if args.dry_run:
+        print("[COL MESH CONVERT] dry-run skipped")
+        print(" ".join(f"\"{item}\"" if " " in item else item for item in col_command))
+        return
+
+    run_command(col_command, "COL MESH CONVERT")
+    normalize_col_mesh_outputs(stage_root, stage_dst)
+    shutil.rmtree(stage_root, ignore_errors=True)
+
+
 # Old KonohaVillage exports store walkable collision meshes under Ground_Collision with a COL_ prefix.
 # AssimpTool skips source meshes whose filename starts with COL_, so we stage renamed gltf files
 # while keeping the original .bin payload names that the gltf JSON already references.
@@ -255,6 +354,7 @@ def main():
     else:
         run_command(assimp_command, "ASSIMP CONVERT")
 
+    convert_col_meshes(args)
     convert_ground_collision_meshes(args)
 
     if args.dry_run:
@@ -267,6 +367,7 @@ def main():
         str(resolve_script),
         "--mode", "all",
         "--run-level-convert",
+        "--run-collision-proxy-convert",
         "--mesh-root", str(args.mesh_dst),
         "--mi-root", str(args.mi_root),
         "--texture-root", str(args.texture_root),

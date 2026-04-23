@@ -951,10 +951,11 @@ Ray Scene_View::Build_PickingRay(Vec2 localMousePos) const
     return Ray(nearWorld, rayDir);
 }
 
-Shared<GameObject> Scene_View::Pick_GameObject(const Ray& ray) const
+bool Scene_View::Try_RaycastScene(const Ray& ray, Vec3& outHitPoint, Shared<GameObject>* outHitObject) const
 {
     Shared<GameObject> pickedObject = nullptr;
     float closestDist = FLT_MAX;
+    Vec3 closestHitPoint = Vec3::Zero;
 
     const auto gameObjects = GAME->Get_GameObjects(GAME->Current_Level());
 
@@ -1006,9 +1007,29 @@ Shared<GameObject> Scene_View::Pick_GameObject(const Ray& ray) const
         if (hitDist < closestDist)
         {
             closestDist = hitDist;
+            closestHitPoint = hitPoint;
             pickedObject = obj;
         }
     }
+
+    if (!pickedObject)
+        return false;
+
+    outHitPoint = closestHitPoint;
+
+    if (outHitObject)
+        *outHitObject = pickedObject;
+
+    return true;
+}
+
+Shared<GameObject> Scene_View::Pick_GameObject(const Ray& ray) const
+{
+    Shared<GameObject> pickedObject = nullptr;
+    Vec3 hitPoint = Vec3::Zero;
+
+    if (!Try_RaycastScene(ray, hitPoint, &pickedObject))
+        return nullptr;
 
     return pickedObject;
 }
@@ -1607,33 +1628,15 @@ void Scene_View::Handle_Guizmo_Shotcut()
 
 Vec3 Scene_View::Screen_To_World(Vec2 screenPos)
 {
-    // NDC로 변환
-    float ndcX = (screenPos.x / _viewportSize.x) * 2.f - 1.f;
-    float ndcY = 1.f - (screenPos.y / _viewportSize.y) * 2.f;
+    const Ray pickingRay = Build_PickingRay(screenPos);
+    Vec3 hitPoint = Vec3::Zero;
 
-    // 역행렬 세팅
-    const Matrix* invertView = GAME->Get_TransformInverse(ETransformState::View);
-    const Matrix* invertProj = GAME->Get_TransformInverse(ETransformState::Proj);
+    if (Try_RaycastScene(pickingRay, hitPoint))
+        return hitPoint;
 
-    if (!invertView || !invertProj)
-        return Vec3::Zero;
+    const Vec3 nearWorld = pickingRay.position;
+    const Vec3 rayDir = pickingRay.direction;
 
-    // NDC -> View Space
-    Vec3 nearNDC(ndcX, ndcY, 0.f);
-    Vec3 farNDC(ndcX, ndcY, 1.f);
-
-    Vec3 nearView = Vec3::Transform(nearNDC, *invertProj);
-    Vec3 farView = Vec3::Transform(farNDC, *invertProj);
-
-    // View -> World
-    Vec3 nearWorld = Vec3::Transform(nearView, *invertView);
-    Vec3 farWorld = Vec3::Transform(farView, *invertView);
-
-    // 레이 방향
-    Vec3 rayDir = farWorld - nearWorld;
-    rayDir.Normalize();
-
-    // 일단 임시값으로 y = 5 추후에, 네비메시 이후 평면과의 교차점 계산으로 세팅
     float targetY = 0.f;
     if (fabsf(rayDir.y) < FLT_EPSILON)
         return Vec3(nearWorld.x, targetY, nearWorld.z);

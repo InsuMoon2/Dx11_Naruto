@@ -68,6 +68,7 @@ private:
 
 private:
     Ray Build_PickingRay(Vec2 localMousePos) const;
+    bool Try_RaycastScene(const Ray& ray, Vec3& outHitPoint, Shared<GameObject>* outHitObject = nullptr) const;
     Shared<GameObject> Pick_GameObject(const Ray& ray) const;
     void Handle_MousePicking();
 

@@ -1,0 +1,1166 @@
+{
+    "levelName": "BM_Konoha_Village_Env_WaterTank",
+    "levelIndex": 3,
+    "gameObjects": [
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A3_9_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "2ea50e48-cd05-4329-a78e-8ac29f7f2a56",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -67.65,
+                        41.7,
+                        77.4
+                    ],
+                    "rotation": [
+                        0.0,
+                        89.999954,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A3_9_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "c739a99a-5e94-4780-b1f6-e8edbd7eaab8",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -67.65,
+                        41.7,
+                        77.4
+                    ],
+                    "rotation": [
+                        0.0,
+                        89.999954,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A4_12_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "2d9dd720-39aa-4cba-8da9-8c050539ced9",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -24.55,
+                        29.95,
+                        42.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        89.999954,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A4_12_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "3795e322-5cc3-4aec-b783-ac0a6de2b566",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -24.55,
+                        29.95,
+                        42.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        89.999954,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A5_15_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "8d0b9371-587c-492e-866f-8a69851b236e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        39.9,
+                        29.5,
+                        59.1
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A5_15_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "e8cc7399-947b-41c4-8417-4d96c2e3cb02",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        39.9,
+                        29.5,
+                        59.1
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A6_18_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "9cb05d8d-82fd-4153-a661-36db665eb460",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        59.85,
+                        14.200000000000001,
+                        49.800000000000004
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A6_18_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "79b25c7d-8548-4076-8a90-df915cf21ca1",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        59.85,
+                        14.200000000000001,
+                        49.800000000000004
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A7_21_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "0ab60888-e49d-401a-a75a-585131114b4f",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        104.25,
+                        16.8,
+                        18.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        -175.0001,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A7_21_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "7ff85e98-5e8f-4a38-a049-e14f486d073c",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        104.25,
+                        16.8,
+                        18.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        -175.0001,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_B2_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "9403fd2c-4949-405f-9501-a8104bf35bec",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -69.79,
+                        22.53,
+                        78.97
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_B2_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "05c78c5c-b0d0-4e23-89cb-701d8c375f28",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -69.79,
+                        22.53,
+                        78.97
+                    ],
+                    "rotation": [
+                        0.0,
+                        180.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_B_45_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "7795530e-e41f-4bd0-bb82-77d50c54cf61",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        104.10000000000001,
+                        16.8,
+                        15.8
+                    ],
+                    "rotation": [
+                        0.0,
+                        179.99992,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_B_45_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "3f2cb064-fb22-4749-a7ae-fe7db5df01f7",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        104.10000000000001,
+                        16.8,
+                        15.8
+                    ],
+                    "rotation": [
+                        0.0,
+                        179.99992,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C2_71_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "a87f56c5-8b64-4d84-b812-8be7655a21c1",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        77.597734,
+                        19.164897,
+                        50.461343
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.99988,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C2_71_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "670fb9a4-9484-4b8e-aff5-f17200b4ff2e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        77.597734,
+                        19.164897,
+                        50.461343
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.99988,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C3_74_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "5bad7cef-8e6e-4f01-8e9c-0a1ec6a6b551",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        44.050000000000004,
+                        25.5,
+                        -32.8
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.99982,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C3_74_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "16592016-8f8c-480c-9cda-6527700a843e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        44.050000000000004,
+                        25.5,
+                        -32.8
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.99982,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C4_79_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "6725774b-3df3-41ff-9f6d-a2d9cbfc57d0",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -1.2,
+                        45.0,
+                        -80.65
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C4_79_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "216783a6-f9dd-4cc0-9d2b-4ec0356275b9",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -1.2,
+                        45.0,
+                        -80.65
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C_68_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "42a184df-c900-487a-815e-79e8081b0ab8",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        19.674834,
+                        29.515417000000003,
+                        52.86736
+                    ],
+                    "rotation": [
+                        0.0,
+                        135.00012,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C_68_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "01019e95-0937-4b4e-9d75-d361ec36347f",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        19.674834,
+                        29.515417000000003,
+                        52.86736
+                    ],
+                    "rotation": [
+                        0.0,
+                        135.00012,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_D2_88_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "97fc6404-34cd-4583-92eb-6f7e7e245179",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -91.5,
+                        54.050000000000004,
+                        112.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        174.99982,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_D2_88_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "ea40a7ca-2ad7-4822-a864-770d276f374d",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -91.5,
+                        54.050000000000004,
+                        112.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        174.99982,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_D_85_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "11cbae29-2cd6-4656-aaff-68bfed04277d",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -92.07772999999999,
+                        48.856836,
+                        12.123792000000002
+                    ],
+                    "rotation": [
+                        0.0,
+                        -84.99994,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_D_85_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "d0a1b2a2-f3b0-4b1a-a6e9-ecca6e01c0ef",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -92.07772999999999,
+                        48.856836,
+                        12.123792000000002
+                    ],
+                    "rotation": [
+                        0.0,
+                        -84.99994,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E11_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "e883f763-8036-4419-912e-163d42dc93fb",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -34.977399999999996,
+                        62.0,
+                        -64.803545
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.59482,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E11_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "d05eaf12-8ce4-4504-bcd0-072f7930ef2a",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -34.977399999999996,
+                        62.0,
+                        -64.803545
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.59482,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E3_111_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "95cf82a4-7feb-4cc3-b932-4b95bdb084a0",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        52.300000000000004,
+                        24.6,
+                        83.65
+                    ],
+                    "rotation": [
+                        0.0,
+                        89.99996,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E3_111_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "a97426c2-3236-4785-88d3-98ed0315634e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        52.300000000000004,
+                        24.6,
+                        83.65
+                    ],
+                    "rotation": [
+                        0.0,
+                        89.99996,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E5_127_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "9419045f-bb4e-4625-82ca-baf419e1e506",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -27.2,
+                        44.550000000000004,
+                        -12.15
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E5_127_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "29b9eff5-0522-4689-b863-e406481239e1",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -27.2,
+                        44.550000000000004,
+                        -12.15
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E6_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "4172bf96-94b2-4631-af0c-655956895c23",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -27.2,
+                        44.550000000000004,
+                        -18.3
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E6_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "e7d18fb8-af04-415b-a662-e7942251c49e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -27.2,
+                        44.550000000000004,
+                        -18.3
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_105_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "128718aa-c598-4a25-a4a7-8c29861043ac",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        76.4,
+                        24.6,
+                        83.65
+                    ],
+                    "rotation": [
+                        0.0,
+                        99.999985,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_105_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "55595077-317c-426e-9c61-8acac40ca6e7",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        76.4,
+                        24.6,
+                        83.65
+                    ],
+                    "rotation": [
+                        0.0,
+                        99.999985,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_roof_01_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "71f3d909-af3d-462e-b7bc-f4540e8e0788",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        4.7,
+                        55.0,
+                        82.4
+                    ],
+                    "rotation": [
+                        0.0,
+                        95.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.25,
+                        1.25,
+                        1.25
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_roof_01_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "c20e5071-f1ba-49fd-8b4b-d3f8f22fe14d",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        4.7,
+                        55.0,
+                        82.4
+                    ],
+                    "rotation": [
+                        0.0,
+                        95.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.25,
+                        1.25,
+                        1.25
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_roof_02_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "7e7cda09-5ab2-481f-86c5-1e273f56eb0b",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -17.35,
+                        55.0,
+                        82.4
+                    ],
+                    "rotation": [
+                        0.0,
+                        95.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.25,
+                        1.25,
+                        1.25
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_roof_02_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "a798a996-5255-4ec4-a99d-3b88c86c00b0",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -17.35,
+                        55.0,
+                        82.4
+                    ],
+                    "rotation": [
+                        0.0,
+                        95.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.25,
+                        1.25,
+                        1.25
+                    ]
+                }
+            ]
+        }
+    ]
+}

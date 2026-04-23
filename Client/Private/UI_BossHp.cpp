@@ -20,10 +20,15 @@ UI_BossHp::UI_BossHp(ComPtr<Device> device, ComPtr<DeviceContext> context)
 
 UI_BossHp::UI_BossHp(const UI_BossHp& rhs)
     : HUD(rhs)
-    , _hpRatio(rhs._hpRatio)
+    , _targetHpRatio(rhs._targetHpRatio)
+    , _displayHpRatio(rhs._displayHpRatio)
     , _fillStartU(rhs._fillStartU)
     , _fillEndU(rhs._fillEndU)
     , _fillColor(rhs._fillColor)
+    , _introStartHpRatio(rhs._introStartHpRatio)
+    , _introFillDuration(rhs._introFillDuration)
+    , _introElapsed(0.f)
+    , _isIntroPlaying(false)
 {
     _bossObject.reset();
     _bossCombat.reset();
@@ -48,7 +53,7 @@ void UI_BossHp::Update(float timeDelta)
 {
     HUD::Update(timeDelta);
 
-    Update_BossBinding();
+    Update_BossBinding(timeDelta);
 }
 
 HRESULT UI_BossHp::Render()
@@ -63,7 +68,7 @@ HRESULT UI_BossHp::Render()
     CHECK_FAILED(_textureCom->Bind_SRV(_shaderCom, "g_Texture", 1), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_BaseColor", &_fillColor, sizeof(Color)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &_opacity, sizeof(float)), E_FAIL);
-    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FillRatio", &_hpRatio, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_FillRatio", &_displayHpRatio, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FillStartU", &_fillStartU, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FillEndU", &_fillEndU, sizeof(float)), E_FAIL);
 
@@ -86,15 +91,26 @@ void UI_BossHp::Bind_Boss(Shared<GameObject> bossObject)
     _bossCombat = bossObject->Get_Component<CombatStat>();
     _hpRatio = 1.f;
 
-    if (_bossCombat.lock())
+    if (auto bossCombat = _bossCombat.lock())
+    {
+        const float targetRatio = clamp(bossCombat->Get_HpRatio(), 0.f, 1.f);
+        Begin_IntroFill(targetRatio);
         Set_Visibility(true);
+    }
+        
 }
 
 void UI_BossHp::Clear_Boss()
 {
-    _bossObject.reset();
+     _bossObject.reset();
     _bossCombat.reset();
-    _hpRatio = 1.f;
+
+    _targetHpRatio = 1.f;
+    _displayHpRatio = 1.f;
+
+    _introElapsed = 0.f;
+    _isIntroPlaying = false;
+
     Set_Visibility(false);
 }
 
@@ -114,7 +130,7 @@ HRESULT UI_BossHp::Ready_UI()
     return S_OK;
 }
 
-void UI_BossHp::Update_BossBinding()
+void UI_BossHp::Update_BossBinding(float timeDelta)
 {
     auto bossObject = _bossObject.lock();
     auto bossCombat = _bossCombat.lock();
@@ -131,8 +147,49 @@ void UI_BossHp::Update_BossBinding()
         return;
     }
 
-    _hpRatio = clamp(bossCombat->Get_HpRatio(), 0.f, 1.f);
+    _targetHpRatio = clamp(bossCombat->Get_HpRatio(), 0.f, 1.f);
+
+    if (_isIntroPlaying)
+    {
+        if (_targetHpRatio <= _introStartHpRatio)
+        {
+            _displayHpRatio = _targetHpRatio;
+            _isIntroPlaying = false;
+        }
+        else
+        {
+            _introElapsed += timeDelta;
+
+            const float alpha = clamp(_introElapsed / _introFillDuration, 0.f, 1.f);
+            _displayHpRatio = _introStartHpRatio + (_targetHpRatio - _introStartHpRatio) * alpha;
+
+            if (alpha >= 1.f)
+            {
+                _displayHpRatio = _targetHpRatio;
+                _isIntroPlaying = false;
+            }
+        }
+    }
+    else
+    {
+        _displayHpRatio = _targetHpRatio;
+    }
+
     Set_Visibility(true);
+}
+
+void UI_BossHp::Begin_IntroFill(float targetHpRatio)
+{
+    _targetHpRatio = clamp(targetHpRatio, 0.f, 1.f);
+    _displayHpRatio = _introStartHpRatio;
+    _introElapsed = 0.f;
+    _isIntroPlaying = true;
+
+    if (_targetHpRatio <= _introStartHpRatio)
+    {
+        _displayHpRatio = _targetHpRatio;
+        _isIntroPlaying = false;
+    }
 }
 
 Shared<UI_BossHp> UI_BossHp::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

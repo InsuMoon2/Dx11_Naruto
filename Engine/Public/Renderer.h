@@ -27,6 +27,10 @@ public:
 
     void    Resize_DeferredViewport(uint32 width, uint32 height);
 
+public: /* 블러 처리 */
+    void    Set_BlurStrength(float strength);
+    void    Set_BlurDirection(const Vec2& direction);
+
 #ifdef _DEBUG
     void    Add_DebugRenderGroup(Shared<Component> debugComponent);
 #endif
@@ -58,28 +62,32 @@ public:
     void    Reset_DrawCallCount() { _drawCallCount = 0; }
 
 private:
-    ComPtr<Device>          _device;
-    ComPtr<DeviceContext>   _context;
+    ComPtr<Device>                  _device;
+    ComPtr<DeviceContext>           _context;
 
-    uint32                  _drawCallCount = 0;
+    uint32                          _drawCallCount = 0;
 
     ComPtr<ID3D11BlendState>        _uiBlendState;
     ComPtr<ID3D11DepthStencilState> _defaultDepthState;
     ComPtr<ID3D11DepthStencilState> _uiDepthDisabledState;
 
-    list<shared_ptr<GameObject>> _renderObjects[ETOI(ERenderGroup::END)];
-    list<shared_ptr<GameObject>> _backupRenderObjects[ETOI(ERenderGroup::END)];
+    list<shared_ptr<GameObject>>    _renderObjects[ETOI(ERenderGroup::END)];
+    list<shared_ptr<GameObject>>    _backupRenderObjects[ETOI(ERenderGroup::END)];
 
-    Shared<Shader>          _deferredShader;
-    Shared<VIBuffer_Rect>   _viBuffer;
+    Shared<Shader>                  _deferredShader;
+    Shared<VIBuffer_Rect>           _viBuffer;
 
-    Matrix _worldMatrix;
-    Matrix _viewMatrix;
-    Matrix _projMatrix;
+    Matrix                          _worldMatrix;
+    Matrix                          _viewMatrix;
+    Matrix                          _projMatrix;
 
 #ifdef _DEBUG
-    list<shared_ptr<Component>> _debugComponents;
+    list<shared_ptr<Component>>     _debugComponents;
 #endif
+
+private:
+    float   _blurStrength = 0.f;
+    Vec2    _blurDirection = Vec2(0.f, 1.f); // UV기준
 
 public:
     static unique_ptr<Renderer> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

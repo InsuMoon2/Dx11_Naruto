@@ -49,6 +49,18 @@ protected:
     virtual HRESULT Ready_Components();
 
 protected:
+    void Start_HitColor();
+    void Update_HitColor(float timeDelta);
+    float Get_HitColorStrength() const;
+    HRESULT Bind_HitColor_ShaderParams(const Shared<Shader>& shader) const;
+
+protected:
+    Vec4  _hitColor = Vec4(1.f, 1.f, 1.f, 1.f);
+    float _hitColorDuration = 0.2f;
+    float _hitColorRemainTime = 0.f;
+    float _hitColorMaxStrength = 0.8f;
+
+protected:
     Shared<Shader>          _shaderCom;
     Shared<Texture>         _textureCom;
     Shared<VIBuffer_Rect>   _bufferCom;

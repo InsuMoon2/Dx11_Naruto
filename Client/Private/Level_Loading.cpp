@@ -136,6 +136,15 @@ void Level_Loading::Update(float timeDelta)
             return;
         }
 
+        // 로딩 잡으로 미리 쌓아둔 level / proxy 오브젝트를 현재 레벨 기준 캐시에 다시 반영한다.
+        // Konoha / Gameplay는 여기서 collision proxy cache를 한 번 더 재빌드해서
+        // 플레이어 MovementComponent가 최신 wall / ground 목록을 받도록 맞춘다.
+        auto currentLevel = GAME->Get_Current_Level();
+        if (currentLevel)
+        {
+            currentLevel->On_LevelChunkLoaded(L"PostLoadingFinalize");
+        }
+
         return;
     }
 }

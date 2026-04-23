@@ -24,7 +24,8 @@ public:
     void Query_ActiveCollisionProxy(
         const Vec3& focusPos,
         vector<MovementComponent::FCollisionModelInstance>& outWalkable,
-        vector<MovementComponent::FCollisionModelInstance>& outWall) const;
+        vector<MovementComponent::FCollisionModelInstance>& outWall,
+        vector<MovementComponent::FCollisionModelInstance>* outWorldBlock = nullptr) const;
 
     void Clear();
 

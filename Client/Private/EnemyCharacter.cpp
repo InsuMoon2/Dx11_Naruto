@@ -116,6 +116,7 @@ void EnemyCharacter::Update(float timeDelta)
             Send_MovePacket(false);
         }
     }
+
 }
 
 void EnemyCharacter::Late_Update(float timeDelta)
@@ -152,6 +153,8 @@ HRESULT EnemyCharacter::Render()
 
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_OutlineColor", &outlineColor, sizeof(Vec4)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_OutlineThickness", &outlineThickness, sizeof(float)), E_FAIL);
+
+    CHECK_FAILED(Bind_HitColor_ShaderParams(_shaderCom), E_FAIL);
 
     for (size_t i = 0; i < numMeshes; ++i)
     {
@@ -193,12 +196,15 @@ void EnemyCharacter::OnDamaged(const FDamageEvent& damageEvent)
 
     Set_RotationToDamageCauser(damageEvent);
 
-    if (damageEvent.damage > 0.f && _transformCom && !_hitEffectAssetName.empty())
+    if (damageEvent.damage > 0.f)
     {
-        Vec3 hitEffectPosition = _transformCom->Get_WorldPosition();
-        hitEffectPosition.y += _hitEffectHeightOffset;
+        if (_transformCom && !_hitEffectAssetName.empty())
+        {
+            Vec3 hitEffectPosition = _transformCom->Get_WorldPosition();
+            hitEffectPosition.y += _hitEffectHeightOffset;
 
-        SkillObject::Spawn_Effect_Once(_hitEffectAssetName, hitEffectPosition);
+            SkillObject::Spawn_Effect_Once(_hitEffectAssetName, hitEffectPosition);
+        }
     }
 
     if (_behavior)

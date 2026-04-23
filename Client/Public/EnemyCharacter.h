@@ -69,18 +69,19 @@ protected:
     Shared<AnimationStateComponent> _animState;
     Shared<Collider>                _collider;
 
-    bool _networkDriven = false;
-    uint64 _networkObjectId = 0;
-    Vec3 _targetPos = Vec3::Zero;
-    float _targetRotY = 0.f; 
-    float _lerpSpeed = 10.f; 
-    float _snapDistanceSq = 25.f;
-    bool _hasReceivedFirstSync = false; 
+protected:
+    bool    _networkDriven = false;
+    uint64  _networkObjectId = 0;
+    Vec3    _targetPos = Vec3::Zero;
+    float   _targetRotY = 0.f; 
+    float   _lerpSpeed = 10.f; 
+    float   _snapDistanceSq = 25.f;
+    bool    _hasReceivedFirstSync = false; 
 
-    float _syncTimer = 0.f;
-    float _syncInterval = 0.05f; 
+    float   _syncTimer = 0.f;
+    float   _syncInterval = 0.05f; 
 
-    Vec3 _lastSyncPos = Vec3::Zero; 
+    Vec3     _lastSyncPos = Vec3::Zero; 
     float _lastSyncRotY = 0.f; 
     Protocol::OBJECT_STATE_TYPE _lastObjectState = Protocol::OBJECT_STATE_TYPE_IDLE; 
     Protocol::MOVE_INPUT_DIR_TYPE _lastMoveDir = Protocol::MOVE_INPUT_DIR_TYPE_FORWARD; 

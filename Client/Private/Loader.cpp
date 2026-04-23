@@ -125,6 +125,14 @@ static bool Try_GetStaticModelGuidFromLevelObject(const json& objJson, string& o
     return false;
 }
 
+// 코노하 맵 로딩 직전에 FModel 변환 산출물 폴더를 런타임 에셋 매니저에 다시 스캔할 때 호출한다.
+// 배치로 새로 생성한 COL meshbin/meta가 .asset_cache.json에 아직 반영되지 않았더라도 이번 로딩에서 바로 resolve 되게 만든다.
+static void Scan_KonohaLevelAssets()
+{
+    GAME->Scan_Assets(TEXT("../../Client/Bin/Resources/StaticMesh/KonohaVillage"));
+    GAME->Scan_Assets(TEXT("../../Client/Bin/Resources/Data/json/Levels"));
+}
+
 // 같은 static model guid는 로딩 화면에서 한 번만 프로토타입 preload 잡으로 등록한다.
 static void Append_StaticModelPrototypePreloadJob(
     const json& objJson,
@@ -772,6 +780,9 @@ HRESULT Loader::Loading_For_Konoha()
     vector<FLoadJob> jobs;
     unordered_set<string> queuedStaticModelGuids;
 
+    // 코노하 전용 변환 산출물은 플레이 직전에 다시 스캔해서 COL proxy가 참조하는 model_guid를 즉시 찾을 수 있게 한다.
+    Scan_KonohaLevelAssets();
+
     // 클라 단독 실행
     if (_loadSharedResources)
     {
@@ -811,13 +822,13 @@ HRESULT Loader::Loading_For_Konoha()
         };
 
     // 맵 리소스 로드
-    //pushChunk("BM_KonohaVillage");
-    //pushChunk("BM_KonohaVillage_Env_Terrain");
-    //pushChunk("BM_KonohaVillage_Floor");
-    //pushChunk("BM_KonohaVillage_Props");
-    //pushChunk("BM_Konoha_Village02_Env_WaterTank");
+    //CHECK_FAILED(pushChunk("BM_KonohaVillage"), E_FAIL);
+    //CHECK_FAILED(pushChunk("BM_KonohaVillage_Env_Terrain"), E_FAIL);
+    //CHECK_FAILED(pushChunk("BM_KonohaVillage_Floor"), E_FAIL);
+    //CHECK_FAILED(pushChunk("BM_KonohaVillage_Props"), E_FAIL);
+    //CHECK_FAILED(pushChunk("BM_Konoha_Village_Env_WaterTank"), E_FAIL);
 
-    CHECK_FAILED(pushChunk("[20260422]Konoha"), E_FAIL);
+    CHECK_FAILED(pushChunk("[20260423]Konoha"), E_FAIL);
 
     {
         scoped_lock lock(_jobMutex);

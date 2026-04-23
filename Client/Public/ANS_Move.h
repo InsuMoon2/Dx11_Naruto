@@ -46,6 +46,8 @@ private:
 
     EMoveDirectionSource _directionSource = EMoveDirectionSource::OwnerForward;
 
+    // 지형 이동 매끄럽게
+    bool _constrainToGround = true;
 
     // Y축 무시할지?
     bool _ignoreY = true;

@@ -189,6 +189,9 @@ public: /* Renderer */
 
     HRESULT                 Draw_Preview(bool renderColliders = true);
 
+    void                    Set_BlurStrength(float strength);
+    void                    Set_BlurDirection(const Vec2& center);
+
 public: /* Prefeb */
     Shared<GameObject>      Instantiate_Prefab(const string& prefabName, const json& overrides = {});
     HRESULT                 Save_Prefab(const string& prefabPath, Shared<GameObject> gameObject);
@@ -380,7 +383,8 @@ public: /* Collision Proxy */
     void Query_ActiveCollisionProxy(
         const Vec3& focusPos,
         vector<MovementComponent::FCollisionModelInstance>& outWalkable,
-        vector<MovementComponent::FCollisionModelInstance>& outWall) const;
+        vector<MovementComponent::FCollisionModelInstance>& outWall,
+        vector<MovementComponent::FCollisionModelInstance>* outWorldBlock = nullptr) const;
 
     void Clear_CollisionProxy();
 

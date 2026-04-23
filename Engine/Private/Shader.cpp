@@ -8,8 +8,10 @@ Shader::Shader(ComPtr<Device> device, ComPtr<DeviceContext> context)
 }
 
 Shader::Shader(const Shader& rhs)
-    : Component(rhs), _effect(rhs._effect), _numPasses(rhs._numPasses),
-    _inputLayouts(rhs._inputLayouts)
+    : Component(rhs)
+    , _effect(nullptr)
+    , _numPasses(rhs._numPasses)
+    , _inputLayouts(rhs._inputLayouts)
 {
     
 }
@@ -181,6 +183,27 @@ void Shader::From_Json(const json& data)
 
 }
 
+HRESULT Shader::Clone_EffectFrom(const Shader& rhs)
+{
+    CHECK_NULL(rhs._effect, E_FAIL);
+
+    ComPtr<ID3DX11Effect> clonedEffect;
+    const HRESULT hr = rhs._effect->CloneEffect(0, clonedEffect.GetAddressOf());
+
+    if (FAILED(hr) || clonedEffect == nullptr)
+    {
+        LOG_ERROR(
+            "Shader effect clone failed. hr=0x{:08X}, numPasses={}",
+            static_cast<uint32>(hr),
+            rhs._numPasses);
+
+        return E_FAIL;
+    }
+
+    _effect = clonedEffect;
+    return S_OK;
+}
+
 Shared<Shader> Shader::Create(ComPtr<Device> device,
                               ComPtr<DeviceContext> context)
 {
@@ -208,10 +231,15 @@ Shared<Component> Shader::Clone(void* arg)
 {
     auto instance = make_shared<Shader>(*this);
 
+    if (FAILED(instance->Clone_EffectFrom(*this)))
+    {
+        MSG_BOX("Failed to Clone Effect : Shader");
+        return nullptr;
+    }
+
     if (FAILED(instance->Initialize(arg)))
     {
         MSG_BOX("Failed to Cloned : Shader");
-
         return nullptr;
     }
 

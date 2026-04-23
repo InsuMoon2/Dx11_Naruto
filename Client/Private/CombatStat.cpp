@@ -37,6 +37,7 @@ CombatStat::CombatStat(const CombatStat& rhs)
     , _speed(rhs._speed)
     , _attack(rhs._attack)
     , _defense(rhs._defense)
+    , _attackSwingOverride(rhs._attackSwingOverride)
 {
 }
 
@@ -46,7 +47,6 @@ CombatStat::~CombatStat()
 
 HRESULT CombatStat::Initialize_Prototype()
 {
-
     return S_OK;
 }
 
@@ -93,16 +93,17 @@ void CombatStat::Take_Damage(FDamageEvent damageEvent)
 bool CombatStat::Apply_Damage(Character* hitted)
 {
     if (!hitted || Is_AlreadyHit(hitted))
-        return false; // 이미 때린 놈이면 무시
+        return false; // 이미 때린 대상이면 무시
 
     Register_Hit(hitted);
 
-    FDamageEvent eventDesc;
+    FDamageEvent eventDesc{};
     eventDesc.damageCauser = Get_Owner();
 
-    float baseDamage = Get_Attack();
+    const float baseDamage = Get_Attack();
 
     const FComboEntry* entry = nullptr;
+
     auto state = Get_Owner()->Get_Component<PlayerStateMachine>();
     if (state)
     {
@@ -118,34 +119,35 @@ bool CombatStat::Apply_Damage(Character* hitted)
         }
     }
 
-    const bool isAirboneAttack =
-        (state && state->Get_CurrentStateID() == EPlayerState::Attack_Airbone);
-
-    if (isAirboneAttack)
+    if (entry)
     {
-        eventDesc.damage = baseDamage + 2.f;
-        eventDesc.launchPower = 2.5f;
-        eventDesc.launchUp = 9.f;
-        eventDesc.hitSound = 0;
-        eventDesc.hitReactionType = EHitReactionType::Air;
-        eventDesc.forceHitRestart = true;
-    }
-
-    else if (entry)
-    {
-        eventDesc.damage = baseDamage + entry->damageMultiplier; 
+        eventDesc.damage = baseDamage + entry->damageMultiplier;
         eventDesc.launchPower = entry->launchPower;
         eventDesc.launchUp = entry->launchUp;
         eventDesc.hitSound = entry->hitSound;
         eventDesc.hitReactionType = entry->hitReactionType;
         eventDesc.forceHitRestart = true;
-
     }
     else
     {
         eventDesc.damage = baseDamage;
+        eventDesc.launchPower = 0.f;
+        eventDesc.launchUp = 0.f;
+        eventDesc.hitSound = 0;
         eventDesc.hitReactionType = EHitReactionType::Default;
         eventDesc.forceHitRestart = true;
+    }
+
+    if (_attackSwingOverride.useHitReactionOverride)
+    {
+        eventDesc.hitReactionType = _attackSwingOverride.hitReactionType;
+        eventDesc.forceHitRestart = true;
+    }
+
+    if (_attackSwingOverride.useLaunchOverride)
+    {
+        eventDesc.launchPower = _attackSwingOverride.launchPower;
+        eventDesc.launchUp = _attackSwingOverride.launchUp;
     }
 
     hitted->TakeDamage(eventDesc);
@@ -191,7 +193,6 @@ shared_ptr<CombatStat> CombatStat::Create(ComPtr<Device> device, ComPtr<DeviceCo
     if (FAILED(instance->Initialize_Prototype()))
     {
         MSG_BOX("Failed to Create : CombatStat");
-
         return nullptr;
     }
 
@@ -205,7 +206,6 @@ shared_ptr<Component> CombatStat::Clone(void* arg)
     if (FAILED(instance->Initialize(arg)))
     {
         MSG_BOX("Failed to Clone : CombatStat");
-
         return nullptr;
     }
 

@@ -1,9 +1,0 @@
-Diffuse=T_ENV_LKNVLD_Pipe_07_BC
-Normal=T_ENV_LKNVLD_CopicMask_03_N
-Other[0]=T_ENV_LKNVLD_Noize_01_UC
-Other[1]=BC
-Other[2]=Hat1
-Other[3]=UC
-Other[4]=DefaultTexture
-Other[5]=T_EFF_Noise_01_M
-Other[6]=T_ENV_RainPattern_Mask

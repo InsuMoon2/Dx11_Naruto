@@ -254,6 +254,7 @@
     <ClInclude Include="..\Public\AN_PlayCinematic.h" />
     <ClInclude Include="..\Public\AN_SpawnAttack.h" />
     <ClInclude Include="..\Public\AN_SpawnParticle.h" />
+    <ClInclude Include="..\Public\AN_SpawnProjSkill.h" />
     <ClInclude Include="..\Public\AN_SpawnSkill.h" />
     <ClInclude Include="..\Public\AN_StopParticle.h" />
     <ClInclude Include="..\Public\AN_StretchingMesh_End.h" />
@@ -279,6 +280,7 @@
     <ClInclude Include="..\Public\Client_PacketHandler.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\Public\CollisionProxyActor.h" />
+    <ClInclude Include="..\Public\Collision_SurfaceCache.h" />
     <ClInclude Include="..\Public\ComboProfile_Manager.h" />
     <ClInclude Include="..\Public\Customizer_Manager.h" />
     <ClInclude Include="..\Public\EnemyCharacter.h" />
@@ -436,6 +438,7 @@
     <ClCompile Include="..\Private\AN_PlayCinematic.cpp" />
     <ClCompile Include="..\Private\AN_SpawnAttack.cpp" />
     <ClCompile Include="..\Private\AN_SpawnParticle.cpp" />
+    <ClCompile Include="..\Private\AN_SpawnProjSkill.cpp" />
     <ClCompile Include="..\Private\AN_SpawnSkill.cpp" />
     <ClCompile Include="..\Private\AN_StopParticle.cpp" />
     <ClCompile Include="..\Private\AN_StretchingMesh_End.cpp" />
@@ -458,6 +461,7 @@
     <ClCompile Include="..\Private\Camera_Target.cpp" />
     <ClCompile Include="..\Private\Client_PacketHandler.cpp" />
     <ClCompile Include="..\Private\CollisionProxyActor.cpp" />
+    <ClCompile Include="..\Private\Collision_SurfaceCache.cpp" />
     <ClCompile Include="..\Private\ComboProfile_Manager.cpp" />
     <ClCompile Include="..\Private\Customizer_Manager.cpp" />
     <ClCompile Include="..\Private\EnemyCharacter.cpp" />

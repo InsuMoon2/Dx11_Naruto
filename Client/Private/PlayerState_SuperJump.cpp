@@ -2,7 +2,7 @@
 #include "PlayerState_SuperJump.h"
 
 #include "GameObject.h"
-
+#include "GameInstance.h"
 #include "PlayerStateMachine.h"
 #include "InputComponent.h"
 #include "MovementComponent.h"
@@ -29,6 +29,9 @@ void PlayerState_SuperJump::Enter(PlayerStateMachine* state)
     const float velocity = state->Get_PendingSuperJumpVeloicty();
     movement->Start_SuperJump(velocity);
     movement->Set_OrientRotationToMovement(true);
+
+    GAME->Set_BlurStrength(0.5f);
+    GAME->Set_BlurDirection(Vec2(0.f, 1.f));
 
     state->Play_AnimState(EPlayerState::SuperJump);
 }
@@ -102,7 +105,7 @@ void PlayerState_SuperJump::Update(PlayerStateMachine* state, float timeDelta)
 
 void PlayerState_SuperJump::Exit(PlayerStateMachine* state)
 {
-
+    GAME->Set_BlurStrength(0.f);
 }
 
 Shared<PlayerState_SuperJump> PlayerState_SuperJump::Create()

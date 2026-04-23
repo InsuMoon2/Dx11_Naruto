@@ -26,6 +26,7 @@ bool ANS_Move::Register_Properties()
     PROPERTY_VEC3_JSON("Move Velocity", "move_velocity", _moveVelocity, 0.1f);
 
     PROPERTY_BOOL_JSON("스킬 Y축 무시(지상용)", "ignore_y", _ignoreY);
+    PROPERTY_BOOL_JSON("지형이동 매끄럽게", "constrain_to_ground", _constrainToGround);
 
     return true;
 }
@@ -50,7 +51,7 @@ void ANS_Move::On_Begin(const FAnimNotifyContext& context)
     if (!Set_MoveDirection(context, resolvedDir))
     {
         resolvedDir = transform->Get_WorldForward();
-        if (_ignoreY)
+        if (_ignoreY || _constrainToGround)
             resolvedDir.y = 0.f;
 
         if (resolvedDir.LengthSquared() <= FLT_EPSILON)
@@ -65,8 +66,18 @@ void ANS_Move::On_Begin(const FAnimNotifyContext& context)
         _directionSource == EMoveDirectionSource::TargetDirection &&
         _rotationSpeed <= 0.f)
     {
-        const Vec3 ownerPos = transform->Get_WorldPosition();
-        transform->LookAt(ownerPos + _moveDir);
+        Vec3 lookDir = _moveDir;
+
+        if (_ignoreY || _constrainToGround)
+            lookDir.y = 0.f;
+
+        if (lookDir.LengthSquared() > FLT_EPSILON)
+        {
+            lookDir.Normalize();
+
+            const Vec3 ownerPos = transform->Get_WorldPosition();
+            transform->LookAt(ownerPos + lookDir);
+        }
     }
 }
 
@@ -94,18 +105,28 @@ void ANS_Move::On_Tick(const FAnimNotifyContext& context)
         Vec3 targetDir = Vec3::Zero;
         if (Set_TargetDirection(context, targetDir))
         {
-            if (_rotationSpeed > 0.f)
-            {
-                Quat curRot = transform->Get_WorldRotation();
-                Quat targetRot = Quat::FromToRotation(Vec3::Backward, targetDir);
+            Vec3 lookDir = targetDir;
 
-                const float alpha = min(1.f, _rotationSpeed * dt / 180.f);
-                transform->Set_WorldRotation(Quat::Slerp(curRot, targetRot, alpha));
-            }
-            else
+            if (_ignoreY || _constrainToGround)
+                lookDir.y = 0.f;
+
+            if (lookDir.LengthSquared() > FLT_EPSILON)
             {
-                const Vec3 ownerPos = transform->Get_WorldPosition();
-                transform->LookAt(ownerPos + targetDir);
+                lookDir.Normalize();
+
+                if (_rotationSpeed > 0.f)
+                {
+                    Quat curRot = transform->Get_WorldRotation();
+                    Quat targetRot = Quat::FromToRotation(Vec3::Backward, lookDir);
+
+                    const float alpha = min(1.f, _rotationSpeed * dt / 180.f);
+                    transform->Set_WorldRotation(Quat::Slerp(curRot, targetRot, alpha));
+                }
+                else
+                {
+                    const Vec3 ownerPos = transform->Get_WorldPosition();
+                    transform->LookAt(ownerPos + lookDir);
+                }
             }
 
             _moveDir = targetDir;
@@ -128,7 +149,7 @@ void ANS_Move::On_Tick(const FAnimNotifyContext& context)
     if (_ignoreY)
         finalOffset.y = 0.f;
 
-    movement->Apply_NotifyMotionDelta(finalOffset * dt);
+    movement->Apply_NotifyMotionDelta(finalOffset * dt, _constrainToGround);
 }
 
 void ANS_Move::On_End(const FAnimNotifyContext& context)
@@ -234,8 +255,9 @@ bool ANS_Move::Set_TargetDirection(const FAnimNotifyContext& context, Vec3& outD
     if (!targetTransform)
         return false;
 
-    Vec3 toTarget = targetTransform->Get_WorldPosition() - ownerPos;
-    if (_ignoreY)
+     Vec3 toTarget = targetTransform->Get_WorldPosition() - ownerPos;
+
+    if (_ignoreY || _constrainToGround)
         toTarget.y = 0.f;
 
     if (toTarget.LengthSquared() <= 0.0001f)
@@ -243,6 +265,7 @@ bool ANS_Move::Set_TargetDirection(const FAnimNotifyContext& context, Vec3& outD
 
     toTarget.Normalize();
     outDir = toTarget;
+
     return true;
 }
 
@@ -257,11 +280,10 @@ bool ANS_Move::Set_DashDirection(const FAnimNotifyContext& context, Vec3& outDir
         return false;
 
     outDir = stateMachine->Get_PendingDashWorldDirection();
-    outDir.y = 0.f;
+
+    if (_ignoreY || _constrainToGround)
+        outDir.y = 0.f;
 
     if (outDir.LengthSquared() <= FLT_EPSILON)
         return false;
-
-    outDir.Normalize();
-    return true;
 }

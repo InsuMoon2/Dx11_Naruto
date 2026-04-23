@@ -296,7 +296,7 @@ bool PlayerState_Replacement::Validate_GroundCandidate(PlayerStateMachine* state
         return false;
 
     MovementComponent::FSurfaceHit groundHit{};
-    if (!movement->Detect_GroundSurface(candidatePosition, groundHit))
+    if (!movement->Detect_FloorBelow(candidatePosition, groundHit))
         return false;
 
     const Vec3 currentPos = transform->Get_WorldPosition();

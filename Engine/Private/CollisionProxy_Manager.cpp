@@ -8,10 +8,14 @@ void CollisionProxy_Manager::Ready_CollisionProxy(const vector<FProxyEntry>& ent
 
 void CollisionProxy_Manager::Query_ActiveCollisionProxy(const Vec3& focusPos,
     vector<MovementComponent::FCollisionModelInstance>& outWalkable,
-    vector<MovementComponent::FCollisionModelInstance>& outWall) const
+    vector<MovementComponent::FCollisionModelInstance>& outWall,
+    vector<MovementComponent::FCollisionModelInstance>* outWorldBlock) const
 {
     outWalkable.clear();
     outWall.clear();
+
+    if (outWorldBlock)
+        outWorldBlock->clear();
 
     const float activeRangeSq = _activeRange * _activeRange;
 
@@ -33,7 +37,8 @@ void CollisionProxy_Manager::Query_ActiveCollisionProxy(const Vec3& focusPos,
             break;
 
         case ECollisionProxyType::WorldBlock:
-            // 1차에서는 movement가 world block proxy를 직접 소비하지 않는다.
+            if (outWorldBlock)
+                outWorldBlock->push_back(entry.instance);
             break;
 
         default:

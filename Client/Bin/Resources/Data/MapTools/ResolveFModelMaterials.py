@@ -151,6 +151,7 @@ def parse_args():
     )
 
     parser.add_argument("--run-level-convert", action="store_true")
+    parser.add_argument("--run-collision-proxy-convert", action="store_true")
     parser.add_argument("--level-map-root", type=Path, help="MapJSON folder to pass to ConvertFModelLevel.py")
     parser.add_argument("--level-guid-map", type=Path, help="Mesh GUID map json to pass to ConvertFModelLevel.py")
     parser.add_argument("--level-out-dir", type=Path, help="Output folder for generated .level.json files")
@@ -1384,6 +1385,27 @@ def run_convert_level(dry_run: bool, map_root: Path | None, guid_map: Path | Non
         raise RuntimeError(f"ConvertFModelLevel.py failed with exit code {result.returncode}")
 
 
+def run_convert_collision_proxy(dry_run: bool, map_root: Path | None, guid_map: Path | None,
+                                out_dir: Path | None):
+    if dry_run:
+        print("[COLLISION PROXY] dry-run: skipped ConvertFModelCollisionProxy.py")
+        return
+
+    script_path = Path(__file__).resolve().parent / "ConvertFModelCollisionProxy.py"
+    command = [sys.executable, str(script_path)]
+
+    if map_root is not None:
+        command.extend(["--map-root", str(map_root)])
+    if guid_map is not None:
+        command.extend(["--guid-map", str(guid_map)])
+    if out_dir is not None:
+        command.extend(["--out-dir", str(out_dir)])
+
+    result = subprocess.run(command, check=False)
+    if result.returncode != 0:
+        raise RuntimeError(f"ConvertFModelCollisionProxy.py failed with exit code {result.returncode}")
+
+
 def main():
     args = parse_args()
 
@@ -1492,6 +1514,14 @@ def main():
                 args.level_guid_map,
                 args.level_out_dir,
                 args.strip_snow,
+            )
+
+        if args.run_collision_proxy_convert:
+            run_convert_collision_proxy(
+                args.dry_run,
+                args.level_map_root,
+                args.level_guid_map,
+                args.level_out_dir,
             )
 
 

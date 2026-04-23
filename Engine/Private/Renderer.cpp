@@ -10,7 +10,7 @@
 Renderer::Renderer(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : _device(device), _context(context)
 {
-    
+
 }
 
 Renderer::~Renderer()
@@ -30,7 +30,7 @@ HRESULT Renderer::Initialize()
     blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
     blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
     blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-    
+
     blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
     blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
@@ -92,12 +92,29 @@ void Renderer::Restore_RenderGroup()
 
 void Renderer::Resize_DeferredViewport(uint32 width, uint32 height)
 {
-	if (width == 0 || height == 0)
+    if (width == 0 || height == 0)
         return;
 
     _worldMatrix = Matrix::CreateScale(static_cast<float>(width), static_cast<float>(height), 1.f);
     _viewMatrix = Matrix::Identity;
     _projMatrix = XMMatrixOrthographicLH(static_cast<float>(width), static_cast<float>(height), 0.f, 1.f);
+}
+
+void Renderer::Set_BlurStrength(float strength)
+{
+    _blurStrength = ::clamp(strength, 0.f, 1.f);
+}
+
+void Renderer::Set_BlurDirection(const Vec2& direction)
+{
+    Vec2 normalized = direction;
+
+    if (normalized.LengthSquared() <= FLT_EPSILON)
+        normalized = Vec2(0.f, 1.f);
+    else
+        normalized.Normalize();
+
+    _blurDirection = normalized;
 }
 
 #ifdef _DEBUG
@@ -157,7 +174,7 @@ HRESULT Renderer::Draw_Preview(bool renderColliders)
 
     if (renderColliders)
         GAME->Render_Colliders();
-    
+
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::NonBlend)])
     {
         if (renderObject)
@@ -182,7 +199,7 @@ HRESULT Renderer::Draw_Preview(bool renderColliders)
 
     _renderObjects[ETOI(ERenderGroup::BackgroundUI)].clear();
     _renderObjects[ETOI(ERenderGroup::UI)].clear();
-    
+
     return S_OK;
 }
 
@@ -305,15 +322,15 @@ void Renderer::Render_UI()
         {
             auto uiSrc = dynamic_pointer_cast<UIObject>(src);
             auto uiDst = dynamic_pointer_cast<UIObject>(dst);
-    
+
             if (uiSrc->Get_UILayer() != uiDst->Get_UILayer())
             {
                 return uiSrc->Get_UILayer() < uiDst->Get_UILayer();
             }
-    
+
             // 같은 레이어면, ZOrder 기준
             return uiSrc->Get_ZOrder() < uiDst->Get_ZOrder();
-    
+
         });
 
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::UI)])
@@ -410,37 +427,66 @@ void Renderer::Render_NonLight()
 void Renderer::Render_Combined()
 {
     if (FAILED(_deferredShader->Bind_Matrix("g_WorldMatrix", &_worldMatrix))) return;
-    if (FAILED(_deferredShader->Bind_Matrix("g_ViewMatrix",  &_viewMatrix)))  return;
-    if (FAILED(_deferredShader->Bind_Matrix("g_ProjMatrix",  &_projMatrix)))  return;
+    if (FAILED(_deferredShader->Bind_Matrix("g_ViewMatrix", &_viewMatrix)))  return;
+    if (FAILED(_deferredShader->Bind_Matrix("g_ProjMatrix", &_projMatrix)))  return;
 
     if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_DiffuseTexture", L"Target_Diffuse"))) return;
     if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_NormalTexture", L"Target_Normal"))) return;
-    if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_ShadeTexture",   L"Target_Shade")))   return;
+    if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_ShadeTexture", L"Target_Shade")))   return;
 
     if (FAILED(GAME->Bind_RT_ShaderResource(_deferredShader, "g_SpecularTexture", L"Target_Specular"))) return;
 
-    // 포스트 프로세스 외곽선 처리
-    const float outlineInvViewportSize[2] =
+    // 툰셰이딩 외곽선 처리
     {
-        1.f / max(1.f, static_cast<float>(GAME->Get_ViewportWidth())),
-        1.f / max(1.f, static_cast<float>(GAME->Get_ViewportHeight()))
-    };
+        const float outlineInvViewportSize[2] =
+        {
+            1.f / max(1.f, static_cast<float>(GAME->Get_ViewportWidth())),
+            1.f / max(1.f, static_cast<float>(GAME->Get_ViewportHeight()))
+        };
 
-    const float outlineNormalThreshold = 0.32f;
-    const float outlineStrength = 0.45f;
-    const Vec4 outlineColor = Vec4(0.04f, 0.05f, 0.08f, 1.f);
+        const float outlineNormalThreshold = 0.32f;
+        const float outlineStrength = 0.45f;
+        const Vec4 outlineColor = Vec4(0.04f, 0.05f, 0.08f, 1.f);
 
-    if (FAILED(_deferredShader->Bind_RawValue("g_OutlineInvViewportSize", outlineInvViewportSize, sizeof(outlineInvViewportSize))))
-        return;
+        if (FAILED(_deferredShader->Bind_RawValue("g_OutlineInvViewportSize", outlineInvViewportSize, sizeof(outlineInvViewportSize))))
+            return;
 
-    if (FAILED(_deferredShader->Bind_RawValue("g_PostOutlineNormalThreshold", &outlineNormalThreshold, sizeof(float))))
-        return;
+        if (FAILED(_deferredShader->Bind_RawValue("g_PostOutlineNormalThreshold", &outlineNormalThreshold, sizeof(float))))
+            return;
 
-    if (FAILED(_deferredShader->Bind_RawValue("g_PostOutlineStrength", &outlineStrength, sizeof(float))))
-        return;
+        if (FAILED(_deferredShader->Bind_RawValue("g_PostOutlineStrength", &outlineStrength, sizeof(float))))
+            return;
 
-    if (FAILED(_deferredShader->Bind_RawValue("g_PostOutlineColor", &outlineColor, sizeof(Vec4))))
-        return;
+        if (FAILED(_deferredShader->Bind_RawValue("g_PostOutlineColor", &outlineColor, sizeof(Vec4))))
+            return;
+    }
+
+    // 블러처리
+    {
+        const float blurStrength = _blurStrength;
+
+        const float blurDirection[2] =
+        {
+            _blurDirection.x,
+            _blurDirection.y
+        };
+
+        const float blurInvViewportSize[2] =
+        {
+            1.f / max(1.f, static_cast<float>(GAME->Get_ViewportWidth())),
+            1.f / max(1.f, static_cast<float>(GAME->Get_ViewportHeight()))
+        };
+
+        if (FAILED(_deferredShader->Bind_RawValue("g_ScreenBlurStrength", &blurStrength, sizeof(float))))
+            return;
+
+        if (FAILED(_deferredShader->Bind_RawValue("g_ScreenBlurDirection", blurDirection, sizeof(blurDirection))))
+            return;
+
+        if (FAILED(_deferredShader->Bind_RawValue("g_ScreenBlurInvViewportSize", blurInvViewportSize, sizeof(blurInvViewportSize))))
+            return;
+    }
+
 
     _deferredShader->Begin_Pass(ETOI(EDeferred::Combined));
 
@@ -483,13 +529,13 @@ HRESULT Renderer::Ready_RenderTarget()
     const uint32 height = static_cast<uint32>(GAME->Get_ViewportHeight());
 
     CHECK_FAILED(GAME->Add_RenderTarget(L"Target_Diffuse",
-        width, height, DXGI_FORMAT_R8G8B8A8_UNORM, Color(0,0,0,0)), E_FAIL);
+        width, height, DXGI_FORMAT_R8G8B8A8_UNORM, Color(0, 0, 0, 0)), E_FAIL);
 
     CHECK_FAILED(GAME->Add_RenderTarget(L"Target_Normal",
-        width, height, DXGI_FORMAT_R16G16B16A16_UNORM, Color(0,0,0,0)), E_FAIL);
+        width, height, DXGI_FORMAT_R16G16B16A16_UNORM, Color(0, 0, 0, 0)), E_FAIL);
 
     CHECK_FAILED(GAME->Add_RenderTarget(L"Target_Shade",
-        width, height, DXGI_FORMAT_R16G16B16A16_UNORM, Color(0,0,0,0)), E_FAIL);
+        width, height, DXGI_FORMAT_R16G16B16A16_UNORM, Color(0, 0, 0, 0)), E_FAIL);
 
     CHECK_FAILED(GAME->Add_RenderTarget(L"Target_Depth",
         width, height, DXGI_FORMAT_R32G32B32A32_FLOAT, Color(0, 0, 0, 0)), E_FAIL);
@@ -498,11 +544,11 @@ HRESULT Renderer::Ready_RenderTarget()
         width, height, DXGI_FORMAT_R16G16B16A16_UNORM, Color(0, 0, 0, 0)), E_FAIL);
 
     CHECK_FAILED(GAME->Add_MRT(L"MRT_GameObjects", L"Target_Diffuse"), E_FAIL); // SV_TARGET0
-    CHECK_FAILED(GAME->Add_MRT(L"MRT_GameObjects", L"Target_Normal"),  E_FAIL); // SV_TARGET1
-    CHECK_FAILED(GAME->Add_MRT(L"MRT_GameObjects", L"Target_Depth"),   E_FAIL); // SV_TARGET2
+    CHECK_FAILED(GAME->Add_MRT(L"MRT_GameObjects", L"Target_Normal"), E_FAIL); // SV_TARGET1
+    CHECK_FAILED(GAME->Add_MRT(L"MRT_GameObjects", L"Target_Depth"), E_FAIL); // SV_TARGET2
 
-    CHECK_FAILED(GAME->Add_MRT(L"MRT_LightAcc",    L"Target_Shade"),   E_FAIL); // SV_TARGET0
-    CHECK_FAILED(GAME->Add_MRT(L"MRT_LightAcc", L"Target_Specular"),   E_FAIL); // SV_TARGET1
+    CHECK_FAILED(GAME->Add_MRT(L"MRT_LightAcc", L"Target_Shade"), E_FAIL); // SV_TARGET0
+    CHECK_FAILED(GAME->Add_MRT(L"MRT_LightAcc", L"Target_Specular"), E_FAIL); // SV_TARGET1
 
     // Deferred Shader, 풀스크린 Rect 생성
     _viBuffer = VIBuffer_Rect::Create(_device, _context);
@@ -520,8 +566,8 @@ HRESULT Renderer::Ready_RenderTarget()
 
 #ifdef _DEBUG
     CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Diffuse", 150.f, 300.f, 150.f, 150.f), E_FAIL);
-    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Normal",  150.f, 450.f, 150.f, 150.f), E_FAIL);
-    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Shade",   300.f, 300.f, 150.f, 150.f), E_FAIL);
+    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Normal", 150.f, 450.f, 150.f, 150.f), E_FAIL);
+    CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Shade", 300.f, 300.f, 150.f, 150.f), E_FAIL);
     CHECK_FAILED(GAME->Ready_RT_Debug(L"Target_Specular", 300.f, 450.f, 150.f, 150.f), E_FAIL);
 #endif
 
@@ -534,7 +580,7 @@ unique_ptr<Renderer> Renderer::Create(ComPtr<Device> device, ComPtr<DeviceContex
 
     if (FAILED(instance->Initialize()))
     {
-        return nullptr; 
+        return nullptr;
     }
 
     return instance;

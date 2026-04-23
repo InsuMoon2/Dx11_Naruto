@@ -26,6 +26,11 @@ float2 g_OutlineInvViewportSize = float2(1.f / 1280.f, 1.f / 720.f);
 float g_PostOutlineNormalThreshold = 0.32f;
 float g_PostOutlineStrength = 0.45f;
 
+// 블러처리
+float g_ScreenBlurStrength = 0.f;
+float2 g_ScreenBlurDirection = float2(0.f, 1.f);
+float2 g_ScreenBlurInvViewportSize = float2(1.f / 1280.f, 1.f / 720.f);
+
 float ComputeToonShade(float ndotl)
 {
     float lightAmount = saturate(ndotl + (g_LightAmbient.r * g_MtrlAmbient.r));
@@ -87,6 +92,49 @@ float3 ReconstructWorldPos(float2 uv)
     float4 worldPos = mul(viewPos, g_ViewMatrixInverse);
 
     return worldPos.xyz / max(worldPos.w, 0.0001f);
+}
+
+float3 SampleLitColorClamped(float2 uv)
+{
+    float2 clampedUV = saturate(uv);
+
+    float4 diffuse = g_DiffuseTexture.Sample(DefaultSampler, clampedUV);
+    if (diffuse.a <= 0.001f)
+        return 0.f;
+
+    float4 shade = g_ShadeTexture.Sample(DefaultSampler, clampedUV);
+    float4 specular = g_SpecularTexture.Sample(DefaultSampler, clampedUV);
+
+    return diffuse.rgb * shade.rgb + specular.rgb;
+}
+
+float3 ApplyDirectionalScreenBlur(float2 uv, float3 baseColor)
+{
+    if (g_ScreenBlurStrength <= 0.001f)
+        return baseColor;
+
+    float2 blurDir = g_ScreenBlurDirection;
+    float dirLength = length(blurDir);
+
+    if (dirLength <= 0.0001f)
+        return baseColor;
+
+    blurDir /= dirLength;
+
+    float blurAmount = saturate(g_ScreenBlurStrength);
+
+    float samplePixelDistance = lerp(8.f, 30.f, blurAmount);
+    float2 blurStep = blurDir * g_ScreenBlurInvViewportSize * samplePixelDistance;
+
+    float3 accum = 0.f;
+    accum += baseColor * 0.30f;
+    accum += SampleLitColorClamped(uv - blurStep * 1.f) * 0.20f;
+    accum += SampleLitColorClamped(uv - blurStep * 2.f) * 0.18f;
+    accum += SampleLitColorClamped(uv - blurStep * 3.f) * 0.14f;
+    accum += SampleLitColorClamped(uv - blurStep * 4.f) * 0.10f;
+    accum += SampleLitColorClamped(uv - blurStep * 5.f) * 0.08f;
+
+    return lerp(baseColor, accum, blurAmount);
 }
 
 struct VS_IN
@@ -192,20 +240,21 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
-    
+
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (vDiffuse.a == 0.f)
         discard;
-    
+
     float4 vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vSpecular = g_SpecularTexture.Sample(DefaultSampler, In.vTexcoord);
 
     float3 litColor = vDiffuse.rgb * vShade.rgb + vSpecular.rgb;
+    float3 blurredLitColor = ApplyDirectionalScreenBlur(In.vTexcoord, litColor);
 
     float outlineMask = ComputePostOutlineMask(In.vTexcoord);
 
-    Out.vColor = float4(lerp(litColor, g_PostOutlineColor.rgb, outlineMask), 1.f);
-    
+    Out.vColor = float4(lerp(blurredLitColor, g_PostOutlineColor.rgb, outlineMask), 1.f);
+
     return Out;
 }
 

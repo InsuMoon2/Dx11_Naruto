@@ -39,7 +39,8 @@ protected:
 
 private:
     HRESULT Ready_UI();
-    void    Update_BossBinding();
+    void    Update_BossBinding(float timeDelta);
+    void    Begin_IntroFill(float targetHpRatio);
 
 private:
     Shared<Shader>        _shaderCom;
@@ -49,10 +50,19 @@ private:
     Weak<GameObject>      _bossObject;
     Weak<CombatStat>      _bossCombat;
 
+    float                 _targetHpRatio = 1.f;
+    float                 _displayHpRatio = 1.f;
+
     float                 _hpRatio = 1.f;
     float                 _fillStartU = 0.f;
     float                 _fillEndU = 1.f;
     Color                 _fillColor = Color(0.95f, 0.22f, 0.08f, 1.f);
+
+    float                 _introStartHpRatio = 0.6f;
+    float                 _introFillDuration = 0.9f;
+    float                 _introElapsed = 0.f;
+    bool                  _isIntroPlaying = false;
+
 
 public:
     static Shared<UI_BossHp> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

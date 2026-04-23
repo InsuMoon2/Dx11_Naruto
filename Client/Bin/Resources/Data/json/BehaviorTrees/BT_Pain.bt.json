@@ -210,7 +210,10 @@
             "type": "Selector"
         },
         {
-            "attack_anim_state": "Attack_04",
+            "attack_anim_state_01": "Attack_01",
+            "attack_anim_state_02": "Attack_02",
+            "attack_anim_state_03": "Attack_04",
+            "attack_cycle_index_key": "AttackCycleIndex",
             "attack_range": 2.5,
             "face_target": true,
             "id": 170,
@@ -221,8 +224,10 @@
             "pos_x": -40.0,
             "pos_y": 764.0,
             "request_anim_end": false,
+            "selected_attack_state_key": "SelectedAttackState",
             "target_object_key": "TargetObjectKey",
-            "type": "Task_Attack"
+            "type": "Task_Attack",
+            "use_round_robin": true
         },
         {
             "id": 173,
@@ -260,17 +265,29 @@
             "type": "Decorator_Blackboard"
         },
         {
-            "hit_anim_state": "Hit",
+            "air_hit_anim_state_01": "Hit_Air",
+            "air_hit_anim_state_02": "Hit_Air2",
+            "air_hit_anim_state_03": "",
+            "air_hit_cycle_index_key": "AirHitCycleIndex",
+            "anim_replay_serial_key": "AnimReplaySerial",
+            "ground_hit_anim_state_01": "Hit",
+            "ground_hit_anim_state_02": "Hit2",
+            "ground_hit_anim_state_03": "Hit3",
+            "ground_hit_cycle_index_key": "GroundHitCycleIndex",
+            "hit_anim_select_mode": 1,
+            "hit_anim_state_key": "HitAnimState",
             "hit_flag_key": "IsHit",
+            "hit_serial_key": "HitReactionSerial",
             "id": 210,
             "input_pin_id": 211,
             "name": "Task_Hit",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": -142.0,
-            "pos_y": 610.0,
+            "pos_x": -126.0,
+            "pos_y": 604.0,
             "request_anim_end": false,
-            "type": "Task_Hit"
+            "type": "Task_Hit",
+            "use_blackboard_hit_anim_override": true
         }
     ],
     "root_node_id": 1

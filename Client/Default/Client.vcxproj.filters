@@ -397,6 +397,8 @@
     <ClInclude Include="..\Public\PlayerState_Airbone.h">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AN_SpawnProjSkill.h" />
+    <ClInclude Include="..\Public\Collision_SurfaceCache.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -777,6 +779,8 @@
     <ClCompile Include="..\Private\PlayerState_Airbone.cpp">
       <Filter>03. Component\03. PlayerState\00. PlayerState\01. Attack</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\AN_SpawnProjSkill.cpp" />
+    <ClCompile Include="..\Private\Collision_SurfaceCache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

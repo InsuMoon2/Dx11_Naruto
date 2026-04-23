@@ -497,6 +497,16 @@ HRESULT GameInstance::Draw_Preview(bool renderColliders)
     return _renderer->Draw_Preview(renderColliders);
 }
 
+void GameInstance::Set_BlurStrength(float strength)
+{
+    return _renderer->Set_BlurStrength(strength);
+}
+
+void GameInstance::Set_BlurDirection(const Vec2& center)
+{
+    return _renderer->Set_BlurDirection(center);
+}
+
 Shared<GameObject> GameInstance::Instantiate_Prefab(const string& prefabName, const json& overrides)
 {
     return _prefabManager->Instantiate_Prefab(prefabName, overrides);
@@ -986,10 +996,11 @@ void GameInstance::Ready_CollisionProxy(const vector<FProxyEntry>& entries)
 
 void GameInstance::Query_ActiveCollisionProxy(const Vec3& focusPos,
     vector<MovementComponent::FCollisionModelInstance>& outWalkable,
-    vector<MovementComponent::FCollisionModelInstance>& outWall) const
+    vector<MovementComponent::FCollisionModelInstance>& outWall,
+    vector<MovementComponent::FCollisionModelInstance>* outWorldBlock) const
 {
     if (_collisionProxyManager)
-        _collisionProxyManager->Query_ActiveCollisionProxy(focusPos, outWalkable, outWall);
+        _collisionProxyManager->Query_ActiveCollisionProxy(focusPos, outWalkable, outWall, outWorldBlock);
 }
 
 void GameInstance::Clear_CollisionProxy()

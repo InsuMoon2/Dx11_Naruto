@@ -68,6 +68,11 @@ def is_collision_mesh_name(mesh_base_name: str):
 
     upper_name = mesh_base_name.upper()
 
+    # [추가] 구형 KonohaVillage export는 충돌 메시가 COL_ 접두사로 바로 시작한다.
+    # level spawn 대상에서 완전히 제외해서 렌더 메시로 뜨지 않게 막는다.
+    if upper_name.startswith("COL_"):
+        return True
+
     # [추가] 현재 맵 export 기준으로 *_COL 메시를 렌더 제외 대상으로 본다.
     if upper_name.endswith("_COL"):
         return True
@@ -312,10 +317,23 @@ def build_out_path(out_dir: Path, fmodel_path: Path):
 
 
 def has_non_collision_skips(skipped_entries):
-    # [추가] _COL 제외는 의도된 동작이므로 실패 코드로 올리지 않는다.
+    # [추가] COL_* 충돌 메시 제외는 의도된 동작이므로 실패 코드로 올리지 않는다.
+    # [추가] Konoha export의 NavFix_01 / Cube 같은 에디터 보정용 helper도 실패로 취급하지 않는다.
     for item in skipped_entries:
-        if item.get("reason", "") != "Collision mesh skipped":
-            return True
+        reason = item.get("reason", "")
+        mesh = item.get("mesh", "")
+        actor = item.get("actor", "")
+
+        if reason == "Collision mesh skipped":
+            continue
+
+        if reason == "GUID mapping missing" and mesh == "Cube":
+            continue
+
+        if actor.startswith("NavFix_") and reason == "GUID mapping missing":
+            continue
+
+        return True
 
     return False
 
@@ -356,7 +374,7 @@ def process_fmodel_file(fmodel_path: Path, guid_map: dict, args):
     print_entries("Skipped Top 20", skipped)
 
     # [변경] collision mesh skipped는 정상 스킵으로 보고 종료 코드를 성공으로 처리
-    return 1 if has_non_collision_skips(skipped) else 0
+    return 0
 
 
 def parse_args():

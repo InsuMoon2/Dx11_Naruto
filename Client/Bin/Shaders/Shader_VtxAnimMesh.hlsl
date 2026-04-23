@@ -3,6 +3,9 @@
 float4 g_OutlineColor = float4(0.04f, 0.05f, 0.08f, 1.f);
 float g_OutlineThickness = 0.0035f;
 
+float4 g_HitColor = float4(1.f, 1.f, 1.f, 1.f);
+float g_HitColorStrength = 0.f;
+
 row_major matrix g_BoneMatrices[512];
 
 struct VS_IN
@@ -114,6 +117,9 @@ PS_OUT PS_MAIN(PS_IN In)
 
     if (vMtrlDiffuse.a < 0.3f)
         discard;
+
+    float hitColorLerp = saturate(g_HitColorStrength);
+    vMtrlDiffuse.rgb = lerp(vMtrlDiffuse.rgb, g_HitColor.rgb, hitColorLerp);
 
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = float4(normalize(In.vNormal.xyz) * 0.5f + 0.5f, 0.f);

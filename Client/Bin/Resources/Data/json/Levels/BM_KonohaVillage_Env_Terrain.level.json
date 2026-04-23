@@ -5,7 +5,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_A_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "3fe9536a-1b87-4a3a-aaf1-644c4af1b32b",
+            "guid": "7102d1ba-3088-41d4-a484-0e2b03bd7133",
             "layerTag": "Layer_Terrain",
             "model_guid": "8c63f13c-855a-4640-95bf-d3e9c5e84772",
             "components": [
@@ -32,7 +32,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_A_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "2568b0a7-284a-4eaa-987f-f7618f75b5d7",
+            "guid": "ad2bfc53-49ff-44d0-b6b3-9a746cd3581f",
             "layerTag": "Layer_Terrain",
             "model_guid": "765dce7b-d916-4720-a67d-9ec75e4514ee",
             "components": [
@@ -59,7 +59,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_B_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "71629f31-8498-4574-a88f-cb243cf21027",
+            "guid": "6ba42420-80da-48fe-902a-b2eb3cc0e527",
             "layerTag": "Layer_Terrain",
             "model_guid": "14edb15c-ba72-4815-a8e7-392beefa44de",
             "components": [
@@ -86,7 +86,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_B_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "387dea6c-580d-47ae-b885-283f9ece508d",
+            "guid": "de1d8908-b5a1-4cc2-b606-af348436c3ab",
             "layerTag": "Layer_Terrain",
             "model_guid": "47e76f86-05e9-4f60-a269-d39e1f11be4e",
             "components": [
@@ -113,7 +113,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_C_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "5b8ac528-32a2-4f83-b8a8-f29eb3a8eb76",
+            "guid": "3515e754-6c68-42f9-b17e-4ce2cf5fc792",
             "layerTag": "Layer_Terrain",
             "model_guid": "9d6a0362-025c-40f0-9693-1ee4069aa1d7",
             "components": [
@@ -140,7 +140,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_C_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "467985fe-f683-4ede-971b-78289b49ef66",
+            "guid": "0b7d54be-acfc-4814-9db7-13f2ec2aad9e",
             "layerTag": "Layer_Terrain",
             "model_guid": "e1bb2b35-4e6b-49f3-93e3-6f22c3338305",
             "components": [
@@ -167,7 +167,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_D_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "552d756a-450d-4796-9d5a-17478143f920",
+            "guid": "49874545-9620-433c-809d-34d37e09b11b",
             "layerTag": "Layer_Terrain",
             "model_guid": "e5a52059-144b-4c13-96a9-34532bdd6eeb",
             "components": [
@@ -194,7 +194,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_F_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "b9c1c81c-52fd-42b1-9285-6042581b3c91",
+            "guid": "aef3554d-0b48-4986-81e3-4cbed0e18982",
             "layerTag": "Layer_Terrain",
             "model_guid": "61704cf9-6560-4bc8-888f-a9533196d65b",
             "components": [
@@ -221,7 +221,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_F_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "d2a7b1ce-87eb-4a5e-a27c-584951c82ee3",
+            "guid": "5a242b36-1979-43e1-9a84-4103231ee010",
             "layerTag": "Layer_Terrain",
             "model_guid": "8ec912e3-375f-4cf9-a22f-1532d0549676",
             "components": [
@@ -248,7 +248,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_G_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "16923ea4-73ed-447a-8e9f-1217d0c2892c",
+            "guid": "b1d2c3c9-09f9-4824-b93d-0f66c51f7922",
             "layerTag": "Layer_Terrain",
             "model_guid": "02f1e7fd-b4b4-458a-b707-74d12d1d1214",
             "components": [
@@ -275,7 +275,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_G_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "d861c058-81f4-4afe-ac80-8fd7b7724312",
+            "guid": "385e00d5-109e-4624-9b07-1b1160564f91",
             "layerTag": "Layer_Terrain",
             "model_guid": "caa41f14-998e-4c51-8ca1-7dc43dc0ba55",
             "components": [
@@ -302,7 +302,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_G_3",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "dc31ef1e-0750-4310-b942-9c149fa68ae9",
+            "guid": "7b298fe8-cb3d-4daa-b02f-bddc0859f861",
             "layerTag": "Layer_Terrain",
             "model_guid": "0bb77784-fedc-496e-8cc2-b4b1f241c008",
             "components": [
@@ -329,7 +329,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_I_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "f606669b-800b-4c68-a030-ca8522b5b40f",
+            "guid": "e9edf418-384e-4e63-86b6-fc2a149972b0",
             "layerTag": "Layer_Terrain",
             "model_guid": "c20b38c4-fdf0-4593-bfd8-2fc9ec71dbf4",
             "components": [
@@ -356,7 +356,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_J_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "a16d6bca-a9a9-41c6-a317-e89f57be9041",
+            "guid": "6607b5ca-4a32-4c45-87c3-37e8e1644293",
             "layerTag": "Layer_Terrain",
             "model_guid": "45fd0985-be9c-4e3f-a62d-ceaacfd65b56",
             "components": [
@@ -383,7 +383,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_K_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "7e54544d-227a-4956-91b2-a9c79f79df02",
+            "guid": "323a3711-4fe0-4a65-8354-3ea92b171969",
             "layerTag": "Layer_Terrain",
             "model_guid": "02ac1eb5-d390-4317-965d-46449bd4cb2a",
             "components": [
@@ -410,7 +410,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_FarTree_A1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "98bf3e0d-2b90-44b2-ac86-6f464360e7d9",
+            "guid": "2f3c0a39-fee2-4850-8896-7e02621eff1a",
             "layerTag": "Layer_Terrain",
             "model_guid": "df62780d-5e41-4bf9-928d-84b6341b82b7",
             "components": [
@@ -437,7 +437,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "212ad9e3-fd8d-4fea-a492-b31b78a68a6c",
+            "guid": "eb848577-777a-410f-9fa1-72da739f8e43",
             "layerTag": "Layer_Terrain",
             "model_guid": "d56dad30-1eda-4525-b25f-110017847681",
             "components": [
@@ -464,7 +464,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "5e997feb-2f10-4b10-ad5c-a01def094856",
+            "guid": "9ccd778f-fe8c-4a27-9515-1bcfa3be1086",
             "layerTag": "Layer_Terrain",
             "model_guid": "10aed29a-0cef-40c3-8b32-68ac0bead2c7",
             "components": [
@@ -491,7 +491,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A3",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "1d0fd125-55df-4c7b-b20e-8212c23f6bd1",
+            "guid": "c2b3d892-3036-46ac-ac0f-c5c9d2f85575",
             "layerTag": "Layer_Terrain",
             "model_guid": "b7b97187-b0e9-4eb0-b4d9-ecc27cc8f968",
             "components": [
@@ -518,7 +518,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A4",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "55afdd38-e622-4f1c-9d18-7965e182660a",
+            "guid": "f28be9cc-af98-4948-ae72-075562f25365",
             "layerTag": "Layer_Terrain",
             "model_guid": "c119d2c7-13ac-4b2b-85c4-c105865e3fc9",
             "components": [
@@ -545,7 +545,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A5",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "e417cb0d-afa3-415a-9448-9a454fb60b86",
+            "guid": "5582d11f-d458-4a5f-a6c0-1bf1abf0bc90",
             "layerTag": "Layer_Terrain",
             "model_guid": "fa0994e6-b8c1-4afe-8846-0146789398c4",
             "components": [
@@ -572,7 +572,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A6",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "6bcf55d0-35a3-489f-9606-87794bb145a7",
+            "guid": "d770cffa-de52-44c9-8b71-917e7a71af68",
             "layerTag": "Layer_Terrain",
             "model_guid": "4399e877-9b0c-45d1-bbbe-8852e3df4fcf",
             "components": [
@@ -599,7 +599,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A7",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "963f1929-2107-4fe3-b997-8c08facd2e84",
+            "guid": "a4737c45-c816-4470-a685-02ca3574dfe7",
             "layerTag": "Layer_Terrain",
             "model_guid": "a42c0d63-aa56-4b80-8c4c-2c2c0b900085",
             "components": [
@@ -626,7 +626,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A8",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "2daa61d9-a211-4421-a790-2ce402cb3723",
+            "guid": "c35ee0c4-615f-4455-b991-da7e72272e8f",
             "layerTag": "Layer_Terrain",
             "model_guid": "9b269b1e-d3fb-4b85-a322-8f03dddfe6fb",
             "components": [
@@ -653,7 +653,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_AreaH_Tower_A_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "7706f3fc-63ca-4d5c-977e-dd9bf2e7a444",
+            "guid": "47873da2-6c6f-4884-af51-79813fe5f0bd",
             "layerTag": "Layer_Terrain",
             "model_guid": "13dd5e4e-8f08-4fec-a6c4-f467b4b3907e",
             "components": [
@@ -680,7 +680,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_AreaH_Tower_A_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "081fcfc5-b5d5-4657-ac95-fce466bbff78",
+            "guid": "2adb1b27-9c9c-423f-b8ee-0eac22566428",
             "layerTag": "Layer_Terrain",
             "model_guid": "10cbda3c-41f9-49f3-b84d-136056d110e6",
             "components": [
@@ -707,7 +707,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_AreaH_Tower_B_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "53a0fe33-2dd3-42ba-812e-34dfa49ebd85",
+            "guid": "abb02729-ed41-4e2e-bf22-9958b393a4a3",
             "layerTag": "Layer_Terrain",
             "model_guid": "0def0755-6be0-47f0-8421-67f66d3df457",
             "components": [
@@ -734,7 +734,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_B_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "709326c0-2532-4856-b839-b9e789ac8a2e",
+            "guid": "3feaac97-b599-4fac-939d-0d7819ea5232",
             "layerTag": "Layer_Terrain",
             "model_guid": "548cb5cc-9fb2-465e-88e9-30c95b078bcc",
             "components": [
@@ -761,7 +761,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_C_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "9ebbb144-adba-4101-8932-e170d2dc04a3",
+            "guid": "9af68de0-b8bc-4cce-b3de-cad9c1051bc0",
             "layerTag": "Layer_Terrain",
             "model_guid": "400628c7-2ee4-4329-ac2d-28000d51a7dd",
             "components": [
@@ -788,7 +788,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_D_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "43cc942b-73ec-4392-a92a-98f2c9bc8a5e",
+            "guid": "281b8d1e-a339-4590-97f3-411a3bc7b69a",
             "layerTag": "Layer_Terrain",
             "model_guid": "5d76808c-d0d1-48b1-8eea-fff81b5598be",
             "components": [
@@ -815,7 +815,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_D_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "c133d849-27ce-4338-9b46-5442ff89dc62",
+            "guid": "426e9ba1-92da-4373-a4f1-521f7f5a13fa",
             "layerTag": "Layer_Terrain",
             "model_guid": "40cac15a-1308-44b3-8c54-9d15dc544a5f",
             "components": [
@@ -842,7 +842,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_E_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "48abecb8-b301-458f-8f09-3d0a5fdca1a8",
+            "guid": "60709039-466c-4e8e-b2b9-02ee9b3bb886",
             "layerTag": "Layer_Terrain",
             "model_guid": "1b88ea33-9836-4426-aed4-e7348ac7800f",
             "components": [
@@ -869,7 +869,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_E_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "cd0ae1e1-e67b-47dd-b464-8ba4310b428f",
+            "guid": "831a2625-9ed8-4955-bb3d-d43f9047fcf1",
             "layerTag": "Layer_Terrain",
             "model_guid": "38545431-14bc-47e6-a4a0-44f183c0d455",
             "components": [
@@ -896,7 +896,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_E_3",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "dfc53a2e-e2f1-4dfa-adf9-9a4be4b111a0",
+            "guid": "2939ef9c-20d5-4039-8e11-725010c3e507",
             "layerTag": "Layer_Terrain",
             "model_guid": "3d145b4c-6b04-40a6-b476-893f380da3b5",
             "components": [
@@ -923,7 +923,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_F_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "7e3c3590-5bfd-41ea-923a-c3bc78f1c5a0",
+            "guid": "84ddd192-fb2c-4aa2-a69e-d53e93deb832",
             "layerTag": "Layer_Terrain",
             "model_guid": "771333fd-8aef-41e1-8304-18ec6aa0c73c",
             "components": [
@@ -950,7 +950,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_F_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "fdd495c1-9bd6-4b42-b74a-ba2366487821",
+            "guid": "2b6e35da-4425-4ed8-ba68-77f0541db31c",
             "layerTag": "Layer_Terrain",
             "model_guid": "23b2ea73-7b33-4fe8-bd0a-7fc24a7a0a70",
             "components": [
@@ -977,7 +977,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_I_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "81f91ffb-cac5-416c-af70-45ae64edbc38",
+            "guid": "5da49a54-ce27-485b-abc9-93567f72b6df",
             "layerTag": "Layer_Terrain",
             "model_guid": "5c004d2c-2022-4451-a9e0-92f6f14b1893",
             "components": [
@@ -1004,7 +1004,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_I_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "22e7acbe-d1e1-4101-bdf2-97555dceaee2",
+            "guid": "f10afb6e-9712-4cdf-9642-50d956ad0116",
             "layerTag": "Layer_Terrain",
             "model_guid": "91445336-0193-4263-8958-fe59e251cbde",
             "components": [
@@ -1031,7 +1031,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_J_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "27eed2ec-0796-467b-a123-b240773cc5e5",
+            "guid": "f0a9c1db-af16-4a4f-b93e-dc4c636c8d57",
             "layerTag": "Layer_Terrain",
             "model_guid": "fb253f79-8abf-49fa-82a0-ab3243db0e65",
             "components": [
@@ -1058,7 +1058,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_J_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "223f162b-2013-4893-8231-2ab559758462",
+            "guid": "d13601f0-019b-4e82-a6f9-579dc90a9d5f",
             "layerTag": "Layer_Terrain",
             "model_guid": "fcf9e721-feff-480c-a4fb-599d7f32d942",
             "components": [
@@ -1085,7 +1085,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_J_3",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "ca7a9a58-e0ab-4257-b5d1-8f5483615436",
+            "guid": "7218e6af-435c-48e9-a967-0333bf6c6b4d",
             "layerTag": "Layer_Terrain",
             "model_guid": "55d839cd-f331-4d40-92d9-3f1d59259db7",
             "components": [
@@ -1112,7 +1112,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_K_1",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "df0df01c-9dc4-400e-96f6-f25598d71951",
+            "guid": "1d005b0d-ac8c-44de-aaa8-56587d866aa4",
             "layerTag": "Layer_Terrain",
             "model_guid": "6d75b5a7-f608-4232-85ef-7d2b9a0118f6",
             "components": [
@@ -1139,7 +1139,7 @@
         {
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_K_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "b51b5ef0-395c-41f7-843d-72ff4fb759b6",
+            "guid": "0a28faea-f87e-4715-b2e0-7913a4a66c8f",
             "layerTag": "Layer_Terrain",
             "model_guid": "19c74997-c749-42c1-ad0a-93e71fba0b60",
             "components": [
@@ -1166,7 +1166,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaA_Building_A_11",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "0ee1380c-49ae-495d-97e5-50a46360e1b6",
+            "guid": "cbffbae5-22d5-4c86-b153-380cd630f662",
             "layerTag": "Layer_Terrain",
             "model_guid": "bc031645-20c2-43cb-bbd8-18b942ef23a0",
             "components": [
@@ -1193,7 +1193,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaA_Building_A_BaseWall_5",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "2632681c-4270-45e2-86a3-28102f9997ae",
+            "guid": "9529e42c-15e8-42f8-a869-965e438197b5",
             "layerTag": "Layer_Terrain",
             "model_guid": "89691cb7-c746-480b-98b4-2bc32c164aa4",
             "components": [
@@ -1220,7 +1220,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaA_Building_B_14",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "a41c9f50-3c8a-4714-99c2-dcd511faabdd",
+            "guid": "4113fb21-0c6c-4e92-bdd9-d1ee66695c8a",
             "layerTag": "Layer_Terrain",
             "model_guid": "e1460e7b-593d-4faf-a744-754bdee0f98c",
             "components": [
@@ -1247,7 +1247,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaA_Building_B_Curtain_5",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "021f9d28-16d4-4347-993d-ed0f6146e504",
+            "guid": "d062f56a-c27b-4ec4-9217-7f090a070cc5",
             "layerTag": "Layer_Terrain",
             "model_guid": "f8bf24ca-6f15-4047-91d7-4f77e3666112",
             "components": [
@@ -1274,7 +1274,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaA_Building_B_Wall_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "4d6022b5-74a1-4adc-9a4a-0df594184be4",
+            "guid": "136cfcc3-44bb-414e-bc10-50177e537273",
             "layerTag": "Layer_Terrain",
             "model_guid": "22c636ef-d1bc-43cc-b5b1-24583640491d",
             "components": [
@@ -1301,7 +1301,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaB_Building_A_Part_01_11",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "7be7112a-97a5-4a06-a59f-6c95dff7d229",
+            "guid": "4b5cd78d-7dec-4a84-a927-dd720de53fd6",
             "layerTag": "Layer_Terrain",
             "model_guid": "ba5cf9ef-c90e-4be8-9241-5b27cc5f0446",
             "components": [
@@ -1328,7 +1328,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaB_Building_A_Part_02_13",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "70ed1a50-a53a-4b02-b688-123e0250c931",
+            "guid": "7518c01f-d1ce-4a4c-a088-a4e6703bb291",
             "layerTag": "Layer_Terrain",
             "model_guid": "aa3904e8-f717-4909-8c2d-b7886b7199ac",
             "components": [
@@ -1355,7 +1355,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaB_Building_A_Part_03_15",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "3d5b7c0c-67a8-4200-83ae-a8cfbe422ca8",
+            "guid": "5b0b7845-3b76-4667-85d7-a3e8c061ebbc",
             "layerTag": "Layer_Terrain",
             "model_guid": "6434dba2-0881-4f18-9e05-c83f1fc4f5ec",
             "components": [
@@ -1382,7 +1382,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaB_Building_B_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "34215813-4fff-4c16-a134-034b07b538db",
+            "guid": "7826313e-c120-4a96-9b02-3d4382b3f238",
             "layerTag": "Layer_Terrain",
             "model_guid": "39417a10-c6d2-4fc3-9c8f-87a7b0a853eb",
             "components": [
@@ -1409,7 +1409,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaB_Building_C_8",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "c0788175-3d6b-4808-94fd-fa2e87e5d700",
+            "guid": "0a731ad5-91eb-4a80-b22d-5cf84044030c",
             "layerTag": "Layer_Terrain",
             "model_guid": "7c3df37c-8f9f-4a6a-bf84-475fe5bf76b7",
             "components": [
@@ -1436,7 +1436,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaC_Building_A_11",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "5278a7fc-3e4f-4453-b0ca-a6a1d1313f00",
+            "guid": "fbbbf92b-0eb6-4423-800b-891b14e8b31e",
             "layerTag": "Layer_Terrain",
             "model_guid": "87866d9e-57e6-4654-872b-7019fc6dbd23",
             "components": [
@@ -1463,7 +1463,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaC_Building_A_Wall_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "aa8e960e-11e2-4c7a-9c4f-6a254f06dbbb",
+            "guid": "56a85733-2350-41a7-8960-53a8cebb1ec1",
             "layerTag": "Layer_Terrain",
             "model_guid": "ea99416e-2673-4a29-9839-e2d65ee9442e",
             "components": [
@@ -1490,7 +1490,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaD_Building_A",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "f6aca5f9-1251-4a71-bb7b-522af9c13405",
+            "guid": "71e03775-b492-40ec-850f-2653e5009c88",
             "layerTag": "Layer_Terrain",
             "model_guid": "6d6dbfdc-30a0-470f-a2a5-5482b3f50de8",
             "components": [
@@ -1517,7 +1517,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaD_Building_B_16",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "10faefc0-bcef-41d4-938d-f597ba325180",
+            "guid": "2044b022-1662-4b05-80e6-6c4fe59c80c2",
             "layerTag": "Layer_Terrain",
             "model_guid": "4a0c4da0-1463-4999-ac13-63ed5bcd5b3a",
             "components": [
@@ -1544,7 +1544,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaD_Tower_A_Part01_10",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "0d04ae3e-8c79-4267-84fd-67629ed25a07",
+            "guid": "08fe0f91-10d1-4d64-8b31-94a8c7d19e84",
             "layerTag": "Layer_Terrain",
             "model_guid": "1d122109-82fd-4cce-8f76-d53a69f51917",
             "components": [
@@ -1571,7 +1571,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaD_Tower_A_Part02_12",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "00965970-c511-4e8b-a680-ab0716aa8cf5",
+            "guid": "d34bdfa0-55e2-48f3-b710-96e1a5c224fe",
             "layerTag": "Layer_Terrain",
             "model_guid": "0cab65e1-17b7-42ab-a125-8147eb14cbed",
             "components": [
@@ -1598,7 +1598,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaD_Tower_A_Part03_14",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "8fc0c69d-2a35-4abd-abac-951ddf20b2a6",
+            "guid": "465b91a4-f7b8-4f48-90c7-9ccf55fd4113",
             "layerTag": "Layer_Terrain",
             "model_guid": "dc28510c-2732-49aa-9512-d5af23a6a092",
             "components": [
@@ -1625,7 +1625,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaD_Tower_B_22",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "45285241-c949-4b07-aec6-de7f2b8a66dd",
+            "guid": "71b84af8-50b0-401b-bf52-fa83bae20e56",
             "layerTag": "Layer_Terrain",
             "model_guid": "6b9d1453-3a5b-4fa8-959d-72c39e400458",
             "components": [
@@ -1652,7 +1652,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaE_Building_A_B_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "ea6f64cb-5c0f-4681-8dfc-985d178dd59a",
+            "guid": "fc6e7adc-e57a-4ba7-9ae6-b9b439c61c80",
             "layerTag": "Layer_Terrain",
             "model_guid": "22cbb99b-b6f5-4070-bd25-7e78238e025c",
             "components": [
@@ -1679,7 +1679,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaF_Building_A_Part01_19",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "b580f1c3-d853-485c-870e-74f036d654f1",
+            "guid": "4fe96419-8ce7-4cac-9dcc-323704601cc8",
             "layerTag": "Layer_Terrain",
             "model_guid": "5e486e75-de6a-449b-b2ca-090395d1476a",
             "components": [
@@ -1706,7 +1706,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaF_Building_A_Part02_21",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "e4d3c7cf-e932-40f2-af25-9449e6701279",
+            "guid": "4ba5b53c-08e5-46fb-b90a-89716fb382e1",
             "layerTag": "Layer_Terrain",
             "model_guid": "33ca91e5-b673-40d6-b13a-d78a4d6fcc4d",
             "components": [
@@ -1733,7 +1733,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaF_Building_A_Part03_23",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "edb50537-2081-4d73-9d56-c4d0b3a8d158",
+            "guid": "3dcea413-fe95-4b3f-8d08-b2c1dcef5b1a",
             "layerTag": "Layer_Terrain",
             "model_guid": "87f745eb-580e-444d-8dc1-336250326c14",
             "components": [
@@ -1760,7 +1760,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_A_37",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "37e69767-82bc-473d-8fb9-ce4cc9d83a4b",
+            "guid": "f012ce7d-ca40-4a82-8b00-448e9e1cb871",
             "layerTag": "Layer_Terrain",
             "model_guid": "f3f635fd-2768-439c-b0a2-08e9f8bf3f8f",
             "components": [
@@ -1787,7 +1787,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_B_43",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "7bd6cb44-11cc-4049-8a74-fdb4149983c0",
+            "guid": "e85e63b4-ff2d-4c38-b3ca-a32fc2550d2d",
             "layerTag": "Layer_Terrain",
             "model_guid": "e1de02a8-1db2-4a6f-a61d-3558ca2a062f",
             "components": [
@@ -1814,7 +1814,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_C_46",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "dee6e26b-8255-498e-9d96-acb0554ff960",
+            "guid": "386dcdb8-1bfa-4ead-b8b4-afd0c0558879",
             "layerTag": "Layer_Terrain",
             "model_guid": "53954374-31cc-4123-b136-68d44b492d0c",
             "components": [
@@ -1841,7 +1841,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_D_49",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "40d0a14f-2b0f-4a35-88df-c22a9f1da8d3",
+            "guid": "45f18490-5951-4d51-8c81-e97e5d93898f",
             "layerTag": "Layer_Terrain",
             "model_guid": "1e357bd6-ce44-4bd5-9b0d-512fdbcadeed",
             "components": [
@@ -1868,7 +1868,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_E_52",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "9df4f3b2-cd0d-4f55-94b0-621d7848f406",
+            "guid": "60e18ed8-5c5a-4cfb-b163-77f07bde74b7",
             "layerTag": "Layer_Terrain",
             "model_guid": "7032531a-9b0a-42f5-9566-b620abe06e82",
             "components": [
@@ -1895,7 +1895,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_F_55",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "01927912-fe11-4056-85c1-0c6302335a97",
+            "guid": "71d29aa1-c54c-4881-aecf-ad17f0e0f5e4",
             "layerTag": "Layer_Terrain",
             "model_guid": "c2c52ee6-c0bf-4fad-8e5a-87cade0465cd",
             "components": [
@@ -1922,7 +1922,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_G_58",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "948f293c-86cd-4b19-a718-bb6b5d8abe0a",
+            "guid": "a966f288-e910-4f29-9c39-1117e988715c",
             "layerTag": "Layer_Terrain",
             "model_guid": "e2bf9692-3e28-4978-a444-fdbc23e4e1ac",
             "components": [
@@ -1949,7 +1949,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_H_61",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "2386decc-6c53-43ce-8bd1-afb69d8b77f6",
+            "guid": "61d5bfe9-22a1-4fc4-ab8a-b41deed893b7",
             "layerTag": "Layer_Terrain",
             "model_guid": "96f7c5c5-5a10-4307-890e-bc2ce6087d72",
             "components": [
@@ -1976,7 +1976,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_28",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "a0e2319a-3eb1-4b33-aa63-42f51fb16b0c",
+            "guid": "316160b3-0d2e-441b-ad14-521ea97e5789",
             "layerTag": "Layer_Terrain",
             "model_guid": "b23c9652-0275-44f6-9f05-55ee93f62900",
             "components": [
@@ -2003,7 +2003,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_30",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "af4971ef-cd3f-45fc-8968-fc12d96385af",
+            "guid": "3be0bd5e-adfd-4727-ae1e-9638a75bdfb8",
             "layerTag": "Layer_Terrain",
             "model_guid": "334929c1-58c0-495f-88d1-0618a1803f02",
             "components": [
@@ -2030,7 +2030,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_32",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "f63780c5-506b-469a-bf9f-56fd085929c5",
+            "guid": "19c11f80-5a1a-4ff6-ae0f-05468b81f908",
             "layerTag": "Layer_Terrain",
             "model_guid": "1646d37a-736f-4cc2-8e08-ef5619fdd1d6",
             "components": [
@@ -2057,7 +2057,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_Entrance2_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "1e3e4a85-e00a-482e-ae86-9c175e7a0c47",
+            "guid": "c3d00a0b-7257-4aa4-a0eb-32b25e643af0",
             "layerTag": "Layer_Terrain",
             "model_guid": "8f470ec3-d02a-4575-ba9a-8b3bb1af6460",
             "components": [
@@ -2084,7 +2084,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_Signs_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "e720c208-3333-48f7-a6e6-fff03d4608a7",
+            "guid": "4f094847-2bca-4493-902c-5804c541b561",
             "layerTag": "Layer_Terrain",
             "model_guid": "ed15aabb-b13b-430b-aa9e-44ba228d992f",
             "components": [
@@ -2111,7 +2111,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_B_3",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "cc0b602f-165d-452d-9288-dced9abbd435",
+            "guid": "15bcb172-c57b-4f73-8434-11db9f954739",
             "layerTag": "Layer_Terrain",
             "model_guid": "dcc3080a-a319-4c78-909d-6ef46aca0c03",
             "components": [
@@ -2138,7 +2138,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Lanterns_8",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "b400b2c2-1c4d-41cd-84e1-2582c8cf023a",
+            "guid": "490d43a5-36a3-4e5c-aa5e-13a2b1c11130",
             "layerTag": "Layer_Terrain",
             "model_guid": "996b9ef1-8a6e-4a88-bbd0-62d8f1b018c6",
             "components": [
@@ -2165,7 +2165,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Part01_10",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "729b6896-2527-4033-a517-899647c89f17",
+            "guid": "e90a53ff-3045-462a-9241-2fd09410c2f5",
             "layerTag": "Layer_Terrain",
             "model_guid": "b9e0f94b-3f48-44a4-ae1b-21696b5f74d7",
             "components": [
@@ -2192,7 +2192,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Part02_12",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "5f54a750-128c-4c11-ba55-7f7dd1d3d202",
+            "guid": "55b99b64-80ca-424b-a3b5-613f5791303d",
             "layerTag": "Layer_Terrain",
             "model_guid": "9d1f866f-8b4c-4bf4-922b-622547f61419",
             "components": [
@@ -2219,7 +2219,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Part03_14",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "ee27014f-2568-46d6-8026-edfc030da3f1",
+            "guid": "35ccc4b9-9221-4668-859a-56e9659f8707",
             "layerTag": "Layer_Terrain",
             "model_guid": "26825a80-096d-47ab-bc89-bea192917312",
             "components": [
@@ -2246,7 +2246,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_88",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "3c19b389-fea3-451d-97b3-03b53da9993a",
+            "guid": "56b46aee-c75b-4f3d-8fc2-8721ffd78f1d",
             "layerTag": "Layer_Terrain",
             "model_guid": "b5d268f4-15d1-4530-a674-3c5a778c3f56",
             "components": [
@@ -2273,7 +2273,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "b2265e97-101d-477f-9d97-18a157de97f4",
+            "guid": "3e46c05a-b2cc-483e-981d-9113965e21b9",
             "layerTag": "Layer_Terrain",
             "model_guid": "a5db14cf-597f-474a-8443-9c3c42b4a719",
             "components": [
@@ -2300,7 +2300,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate3_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "53ff752f-78c3-4bbe-a7d9-69b5a06a217e",
+            "guid": "6fea6a4c-41da-45d3-9948-26f2fc7365f3",
             "layerTag": "Layer_Terrain",
             "model_guid": "a5db14cf-597f-474a-8443-9c3c42b4a719",
             "components": [
@@ -2327,7 +2327,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate4_5",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "c4d628cd-4947-4543-9114-9f23427b2c82",
+            "guid": "3f383205-450a-4076-8ff6-6aef4c22ba93",
             "layerTag": "Layer_Terrain",
             "model_guid": "a5db14cf-597f-474a-8443-9c3c42b4a719",
             "components": [
@@ -2354,7 +2354,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate_5",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "233928cf-42b3-473b-aa10-48a024dcdff4",
+            "guid": "809fca41-0f4f-414b-875c-0c0849253898",
             "layerTag": "Layer_Terrain",
             "model_guid": "a5db14cf-597f-474a-8443-9c3c42b4a719",
             "components": [
@@ -2381,7 +2381,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_A2_458",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "f23fac10-2ffb-4c15-b69c-ed5b4519ddc1",
+            "guid": "f15f02c6-4c40-4b2a-b4b4-178fbb094db9",
             "layerTag": "Layer_Terrain",
             "model_guid": "4f7eb910-fdac-41cb-bd03-62266e31ee19",
             "components": [
@@ -2408,7 +2408,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_A3",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "2b7da6a5-6eca-4fb0-b36f-08d9285c691d",
+            "guid": "200841ac-493a-4853-a90f-9e4783c79406",
             "layerTag": "Layer_Terrain",
             "model_guid": "4f7eb910-fdac-41cb-bd03-62266e31ee19",
             "components": [
@@ -2435,7 +2435,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_A4_462",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "15f0bb17-57eb-41f4-9b11-6998906f2972",
+            "guid": "49f1d0b9-b4aa-4f4e-8f4e-ff4ae502acb0",
             "layerTag": "Layer_Terrain",
             "model_guid": "4f7eb910-fdac-41cb-bd03-62266e31ee19",
             "components": [
@@ -2462,7 +2462,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_A_455",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "e254b2e9-810d-4179-96a1-083937bd2497",
+            "guid": "dc91bed8-6534-4152-9728-b197a39cef8c",
             "layerTag": "Layer_Terrain",
             "model_guid": "4f7eb910-fdac-41cb-bd03-62266e31ee19",
             "components": [
@@ -2489,7 +2489,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_B2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "17db42a7-dcb8-4f38-b69a-2f202990ae63",
+            "guid": "df21bdf9-4d2c-4490-93dd-64492c3c6c33",
             "layerTag": "Layer_Terrain",
             "model_guid": "081aaef9-5795-4598-afaa-e986b8063439",
             "components": [
@@ -2516,7 +2516,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_B3",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "24ce6082-41ff-42c1-986b-ae0cf3860d4e",
+            "guid": "bcb34a8c-21d2-400b-b3bd-d96849cb82f0",
             "layerTag": "Layer_Terrain",
             "model_guid": "081aaef9-5795-4598-afaa-e986b8063439",
             "components": [
@@ -2543,7 +2543,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_B4",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "77ba8a63-50ae-4a95-98f5-f36a4fe83c42",
+            "guid": "44ffffba-2f1a-4fe8-a5c5-36ac4dfd285e",
             "layerTag": "Layer_Terrain",
             "model_guid": "081aaef9-5795-4598-afaa-e986b8063439",
             "components": [
@@ -2570,7 +2570,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_B_474",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "e59b3133-f896-4a53-a442-df8e8e0f670b",
+            "guid": "a87f3a32-e662-4882-8435-b50e8741b385",
             "layerTag": "Layer_Terrain",
             "model_guid": "081aaef9-5795-4598-afaa-e986b8063439",
             "components": [
@@ -2597,7 +2597,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_FarLobby_A_226",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "fe709692-8fbc-4958-a37d-f9dd08e430bf",
+            "guid": "ec04ce9d-c40d-497f-8d4b-8f0e8b375b18",
             "layerTag": "Layer_Terrain",
             "model_guid": "06fb2f67-5a77-45d3-a0ea-891b5a7f0dac",
             "components": [
@@ -2624,7 +2624,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_gate_A_3",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "61569b25-94a0-4a8a-a785-e5d98c5bf3f7",
+            "guid": "d17b12f0-8593-49cd-b1e9-b5edcd740038",
             "layerTag": "Layer_Terrain",
             "model_guid": "0ef204db-bd2d-4885-8df3-52ab7ee834a9",
             "components": [
@@ -2651,7 +2651,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_GateUnit_01_5",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "21e9cfd7-6f1c-49d8-9ad8-2dc009d258c0",
+            "guid": "76ca69bd-22c0-4af8-a3a2-cf0c10e7e7dc",
             "layerTag": "Layer_Terrain",
             "model_guid": "34846b96-76de-4ec2-ae2b-898b38acadc4",
             "components": [
@@ -2678,7 +2678,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_GateUnit_2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "b3097b57-a402-4e7a-996f-5f82f5aec37d",
+            "guid": "dbf591a2-35e9-441e-a6cb-bbb9763e4148",
             "layerTag": "Layer_Terrain",
             "model_guid": "34846b96-76de-4ec2-ae2b-898b38acadc4",
             "components": [
@@ -2705,7 +2705,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_GateUnit_3",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "7cf30568-30f6-4769-83dc-739c6f358564",
+            "guid": "437e2b17-cb39-4e94-b63a-4fbae6e48430",
             "layerTag": "Layer_Terrain",
             "model_guid": "34846b96-76de-4ec2-ae2b-898b38acadc4",
             "components": [
@@ -2732,7 +2732,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_GateUnit_4",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "23f10340-4070-4131-b59b-2289f535dfe4",
+            "guid": "e73c04b8-dbf2-4ec1-8bc5-a571d23f00d6",
             "layerTag": "Layer_Terrain",
             "model_guid": "34846b96-76de-4ec2-ae2b-898b38acadc4",
             "components": [
@@ -2759,7 +2759,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Ground_Base_A",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "6d0b6512-8ca4-4aef-9503-63dda0ff5912",
+            "guid": "af510f54-db0e-431c-a4dc-23f94b8bbace",
             "layerTag": "Layer_Terrain",
             "model_guid": "d6b3989d-8f50-471a-81b1-c836ff014799",
             "components": [
@@ -2786,7 +2786,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_A2_214",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "260a5861-d044-4a8e-bccc-8ab556153218",
+            "guid": "4910f109-cfd7-440b-b5c2-cc53f10113cb",
             "layerTag": "Layer_Terrain",
             "model_guid": "2d6f4963-7390-4956-b6a2-3c74f228cd00",
             "components": [
@@ -2813,7 +2813,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_A3_216",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "3fec1cd2-72d9-4cd5-8e2f-5d029e7affba",
+            "guid": "0b419b37-a8ee-46f3-b018-11f666d7393b",
             "layerTag": "Layer_Terrain",
             "model_guid": "2d6f4963-7390-4956-b6a2-3c74f228cd00",
             "components": [
@@ -2840,7 +2840,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_A4_217",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "2a9c39d0-6f5b-45c4-966c-4c83209f66db",
+            "guid": "16602f72-5f95-4b8a-a3d3-9be55771213d",
             "layerTag": "Layer_Terrain",
             "model_guid": "2d6f4963-7390-4956-b6a2-3c74f228cd00",
             "components": [
@@ -2867,7 +2867,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_A5_218",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "4348966c-b667-4c13-b036-a76d18a776e5",
+            "guid": "0a70cb37-0014-4fa6-badd-20c565430a7a",
             "layerTag": "Layer_Terrain",
             "model_guid": "2d6f4963-7390-4956-b6a2-3c74f228cd00",
             "components": [
@@ -2894,7 +2894,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_A_212",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "1d9ba3d3-636c-4f5e-86aa-6edc2c26c17f",
+            "guid": "0522f300-2a7e-40bf-b3de-97402456996e",
             "layerTag": "Layer_Terrain",
             "model_guid": "2d6f4963-7390-4956-b6a2-3c74f228cd00",
             "components": [
@@ -2921,7 +2921,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_B2_219",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "e31ce8fe-d64b-41de-bb6c-e6ed1505e6fb",
+            "guid": "e3354624-10e1-43ce-a847-8d62d5def822",
             "layerTag": "Layer_Terrain",
             "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
             "components": [
@@ -2948,7 +2948,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_B3_220",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "7a68c8ef-ece0-407a-b3a2-b9c294909af8",
+            "guid": "12302c63-89b4-4be1-9f2e-03c9a3013366",
             "layerTag": "Layer_Terrain",
             "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
             "components": [
@@ -2975,7 +2975,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_B4_225",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "3cc51b2b-8a7f-452b-a02a-ad3ea6e25e8b",
+            "guid": "7f118db6-3524-4675-8ec9-6264861d13f2",
             "layerTag": "Layer_Terrain",
             "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
             "components": [
@@ -3002,7 +3002,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_B5_267",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "f7b9aaaf-dac7-4859-9afa-d055e2c9c7cb",
+            "guid": "9226b381-9c2a-46e2-a5ae-9c16eb3898ec",
             "layerTag": "Layer_Terrain",
             "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
             "components": [
@@ -3029,7 +3029,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_B6_297",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "1b95e4df-9ccb-40e2-a449-b782eadbecbc",
+            "guid": "4f21ee10-55de-4e57-b3dc-0bb5db2a3ebd",
             "layerTag": "Layer_Terrain",
             "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
             "components": [
@@ -3056,7 +3056,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_B7_398",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "8bc3bfe3-2598-42e2-a941-b444df44818b",
+            "guid": "af384edf-a047-4c3f-a29d-293c7a5b97c5",
             "layerTag": "Layer_Terrain",
             "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
             "components": [
@@ -3083,7 +3083,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_B_213",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "70c92955-a999-4928-8d13-f65e52f76de2",
+            "guid": "60eb8c3d-931e-4099-9c80-26bfb17d2e1b",
             "layerTag": "Layer_Terrain",
             "model_guid": "c8754d52-ac82-4a21-9779-36084001da5b",
             "components": [
@@ -3110,7 +3110,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_C2_221",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "a8351172-a344-463e-ba39-0b8b836a990f",
+            "guid": "ec48ab2d-8d59-477f-b91e-971eeb063d91",
             "layerTag": "Layer_Terrain",
             "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
             "components": [
@@ -3137,7 +3137,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_C3_224",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "7fd24e56-9522-4951-8dd2-200ddd885450",
+            "guid": "485da16f-e66d-452b-be24-d1fa97f5c610",
             "layerTag": "Layer_Terrain",
             "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
             "components": [
@@ -3164,7 +3164,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_C4_228",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "0489e24b-ccf4-47a7-aac7-b0ccc775b659",
+            "guid": "aefc2d03-6c57-4a58-bfa3-9cd682339ed1",
             "layerTag": "Layer_Terrain",
             "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
             "components": [
@@ -3191,7 +3191,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_C5",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "f138acf0-74e3-4f6e-a773-fb05331e200b",
+            "guid": "d88946c3-f259-4b73-8a7a-07c2d775f5d1",
             "layerTag": "Layer_Terrain",
             "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
             "components": [
@@ -3218,7 +3218,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_C6",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "4a42a8e6-000e-4ef1-93be-1f31360b8f17",
+            "guid": "6a00e695-7764-4a40-be64-ac69b60d0316",
             "layerTag": "Layer_Terrain",
             "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
             "components": [
@@ -3245,7 +3245,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_C_211",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "dad47edf-e9e1-45ac-924c-e7a7e5bdbee6",
+            "guid": "24c1bd74-2849-4fd1-a755-708535a5ae0c",
             "layerTag": "Layer_Terrain",
             "model_guid": "dd5d3c75-9d84-4985-b871-1313662a0d2d",
             "components": [
@@ -3272,7 +3272,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_E2",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "4d5c961d-fc23-424b-8d67-c89b650e8a5f",
+            "guid": "ef8ea2f4-9f0c-4622-b572-06e0da6ee4f1",
             "layerTag": "Layer_Terrain",
             "model_guid": "d5a56b67-1a86-47fa-a642-cd9dfb2c08eb",
             "components": [
@@ -3299,7 +3299,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_E3",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "1881a442-2871-43e3-8cf1-c2b116a74dbb",
+            "guid": "00d938e8-6ee9-4dd6-a5c2-977ad2615382",
             "layerTag": "Layer_Terrain",
             "model_guid": "d5a56b67-1a86-47fa-a642-cd9dfb2c08eb",
             "components": [
@@ -3326,7 +3326,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_E4",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "3f220da2-981f-4111-9070-ec51bd70e526",
+            "guid": "3340a2c0-d1bf-4f9e-bd7a-71964012c221",
             "layerTag": "Layer_Terrain",
             "model_guid": "d5a56b67-1a86-47fa-a642-cd9dfb2c08eb",
             "components": [
@@ -3353,7 +3353,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_E5",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "5621e2b2-81f5-4d22-b243-563f312e1a60",
+            "guid": "ce834ffc-4adb-4dde-af74-0ec0ced5ce6b",
             "layerTag": "Layer_Terrain",
             "model_guid": "d5a56b67-1a86-47fa-a642-cd9dfb2c08eb",
             "components": [
@@ -3380,7 +3380,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_House_Distance_E_106",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "f9fb7464-d626-4abe-a0bf-df98e49c7a2c",
+            "guid": "7eb73283-11e4-45df-9070-0b82faab4f8a",
             "layerTag": "Layer_Terrain",
             "model_guid": "d5a56b67-1a86-47fa-a642-cd9dfb2c08eb",
             "components": [
@@ -3407,7 +3407,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Signs_11",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "2ee3e4a1-9a3e-425b-be8b-4c0680e9d415",
+            "guid": "92e49798-ba7a-4e4b-80c5-b5a53ccbc3fc",
             "layerTag": "Layer_Terrain",
             "model_guid": "0c5efa04-9742-4b3d-903a-4656b012467b",
             "components": [
@@ -3434,7 +3434,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Signs_13",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "ad43d3f4-2980-489c-a153-461f412f9cdd",
+            "guid": "e45dbafe-2f3b-4cdd-ac79-bd20102b650f",
             "layerTag": "Layer_Terrain",
             "model_guid": "801147a1-e426-4124-bef9-05793e8b89de",
             "components": [
@@ -3461,7 +3461,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Signs_15",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "5ee36f55-74ee-41de-85a7-49654524c7b8",
+            "guid": "6044f668-7e21-49b9-ac43-23a1838646ed",
             "layerTag": "Layer_Terrain",
             "model_guid": "bdf4ac16-3d50-4b2d-bb9f-ab603221267c",
             "components": [
@@ -3488,7 +3488,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Signs_17",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "8a8b1b16-4c65-4dc2-a952-50219246a807",
+            "guid": "588cf0d6-852d-4b48-ac12-eba71bb8d9bd",
             "layerTag": "Layer_Terrain",
             "model_guid": "10edbf6d-158c-4fdb-aa9f-48cc2a63df21",
             "components": [
@@ -3515,7 +3515,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Signs_19",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "91d6b5e9-224b-4560-994a-e48ce04b29dc",
+            "guid": "51d79721-d80b-4762-ab8c-3823a83ffccd",
             "layerTag": "Layer_Terrain",
             "model_guid": "9f8be096-fccf-4116-a434-0863db213a9b",
             "components": [
@@ -3542,7 +3542,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Signs_21",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "b02358d0-4512-493f-965a-a0e6f23b6bd4",
+            "guid": "dc42ed99-3f80-474d-b88f-01e91106b69d",
             "layerTag": "Layer_Terrain",
             "model_guid": "6471cf4a-e974-44d8-9f51-8ba8a464c13f",
             "components": [
@@ -3569,7 +3569,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Signs_23",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "e7cb0975-5adf-4cf7-b366-c9e634ef6923",
+            "guid": "e3a51abb-7329-4693-b1bc-fdb6af34e286",
             "layerTag": "Layer_Terrain",
             "model_guid": "023fdc03-b1c5-4c04-9f9b-a3b1a0b7bb4b",
             "components": [
@@ -3596,7 +3596,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Signs_9",
             "object_type": "OBJECT_TYPE_STATIC_MESH",
-            "guid": "8662e466-e30f-4b3c-82e9-ef12f3322dbf",
+            "guid": "40a1c65c-a767-4262-827c-8cafa64a4f28",
             "layerTag": "Layer_Terrain",
             "model_guid": "0013001b-23dd-4ef0-bd96-0319fd4b44d7",
             "components": [

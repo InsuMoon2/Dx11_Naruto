@@ -2,7 +2,7 @@
 #include "MovementComponent.h"
 
 #include "Camera.h"
-
+#include "Debug_Manager.h"
 #include "GameObject.h"
 #include "Transform.h"
 #include "Model.h"
@@ -51,6 +51,7 @@ MovementComponent::MovementComponent(const MovementComponent& rhs)
     , _commandDesc(rhs._commandDesc)
     , _velocity(rhs._velocity)
     , _gravityEnabled(rhs._gravityEnabled)
+    , _wallRunLostContactElapsed(rhs._wallRunLostContactElapsed)
 {
 }
 
@@ -76,6 +77,7 @@ HRESULT MovementComponent::Initialize(void* arg)
     _isWallRunning = false;
     _currentWallNormal = Vec3::Up;
     _currentWallHitPoint = Vec3::Zero;
+    _wallRunLostContactElapsed = 0.f;
 
     Component::Initialize(arg);
 
@@ -246,10 +248,25 @@ bool MovementComponent::Try_WireDash_WallTrace(
     FSurfaceHit& outHit) const
 {
     Vec3 dir = Utils::Safe_Normalize(traceDir, Vec3::Forward);
-    const Vec3 traceOrigin = traceStart + Vec3(0.f, _wireDashDesc.traceStartOffsetY, 0.f);
-    const Ray wallRay(traceOrigin, dir);
+    Ray wallRay(traceStart, dir);
 
-    return Trace_WallSurface(wallRay, _wireDashDesc.maxDistance, outHit);
+    FSurfaceHit hit{};
+    const bool isHit = Trace_Surface(wallRay, _wireDashDesc.maxDistance, hit);
+
+    if (!isHit)
+    {
+        outHit = FSurfaceHit{};
+        return false;
+    }
+
+    if (!Is_WallLikeNormal(hit.hitNormal))
+    {
+        outHit = FSurfaceHit{};
+        return false;
+    }
+
+    outHit = hit;
+    return true;
 }
 
 void MovementComponent::Update_Rotation(float timeDelta, Shared<Transform> transform)
@@ -296,11 +313,11 @@ void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> trans
         _velocity.x = _dashWorldDirection.x * _dashSpeed;
         _velocity.z = _dashWorldDirection.z * _dashSpeed;
 
-        if (abs(_dashWorldDirection.y) > 0.001f) 
+        if (abs(_dashWorldDirection.y) > 0.001f)
         {
-             _velocity.y = _dashWorldDirection.y * _dashSpeed;
+            _velocity.y = _dashWorldDirection.y * _dashSpeed;
         }
-        else if (_gravityEnabled && !_onGround) 
+        else if (_gravityEnabled && !_onGround)
         {
             _velocity.y += _moveDesc.gravity * timeDelta;
         }
@@ -371,12 +388,43 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
 
     if (_isWallRunning)
     {
+        const float wallRunLostContactGrace = 0.12f;
+
+        // 벽타기 중 먼저 상단 착지 가능 여부를 본다.
+        FSurfaceHit topHit{};
+        if (Detect_TopLanding(currentPos, _currentWallNormal, topHit))
+        {
+            currentPos = transform->Get_WorldPosition();
+            currentPos.y = topHit.hitPoint.y;
+            transform->Set_WorldPosition(currentPos);
+
+            _velocity.y = 0.f;
+            _onGround = true;
+            _canDoubleJump = false;
+            Exit_WallRun();
+            return;
+        }
+
+        // 상단이 아니면 현재 붙어 있는 벽을 계속 유지할 수 있는지 본다.
         FSurfaceHit wallHit{};
-        if (Detect_WallSurface(currentPos, -_currentWallNormal, wallHit))
+        if (Detect_WallAhead(currentPos, -_currentWallNormal, wallHit))
         {
             _currentWallNormal = wallHit.hitNormal;
             _currentWallHitPoint = wallHit.hitPoint;
+            _wallRunLostContactElapsed = 0.f;
             Apply_WallRunPosition(transform, wallHit);
+            return;
+        }
+
+        _wallRunLostContactElapsed += timeDelta;
+        if (_wallRunLostContactElapsed < wallRunLostContactGrace)
+        {
+            FSurfaceHit fallbackHit{};
+            fallbackHit.hitNormal = _currentWallNormal;
+            fallbackHit.hitPoint = _currentWallHitPoint;
+            fallbackHit.isValid = true;
+
+            Apply_WallRunPosition(transform, fallbackHit);
             return;
         }
 
@@ -386,7 +434,7 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
     if (_velocity.y <= 0.f)
     {
         FSurfaceHit groundHit{};
-        const bool foundGround = Detect_GroundSurface(currentPos, groundHit);
+        const bool foundGround = Detect_FloorBelow(currentPos, groundHit);
 
         if (foundGround && currentPos.y <= groundHit.hitPoint.y + _moveDesc.groundSnapTolerance)
         {
@@ -431,15 +479,8 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
         horizontalVelocity.Length() >= 2.0f)
     {
         FSurfaceHit wallHit{};
-        //if (Detect_WallEntrySurface(currentPos, desiredDir, wallHit) &&
-        //    Can_EnterWallRun(wallHit, desiredDir))
-        //{
-        //    Enter_WallRun(wallHit);
-        //    Apply_WallRunPosition(transform, wallHit);
-        //    return;
-        //}
-
-        if (Detect_WallEntrySurface(currentPos, desiredDir, wallHit))
+        if (Detect_WallAhead(currentPos, desiredDir, wallHit) &&
+            Can_EnterWallRun(wallHit, desiredDir))
         {
             Enter_WallRun(wallHit);
             Apply_WallRunPosition(transform, wallHit);
@@ -616,57 +657,87 @@ Vec3 MovementComponent::Build_WallRunMoveDirection() const
     return Utils::Safe_Normalize(desiredDir, Vec3::Forward);
 }
 
-bool MovementComponent::Detect_GroundSurface(const Vec3& currentPos, FSurfaceHit& outHit) const
+bool MovementComponent::Detect_FloorBelow(const Vec3& currentPos, FSurfaceHit& outHit) const
 {
-    Vec3 rayOrigin = currentPos + Vec3(0.f, _moveDesc.groundTraceStartOffsetY, 0.f);
-    Ray downRay(rayOrigin, Vec3(0.f, -1.f, 0.f));
+    const Vec3 rayStart = currentPos + Vec3(0.f, _moveDesc.groundTraceStartOffsetY, 0.f);
+    const float traceDistance = _moveDesc.groundTraceStartOffsetY + 2.0f;
+    const Vec3 rayEnd = rayStart + Vec3(0.f, -1.f, 0.f) * traceDistance;
+
+    Ray downRay(rayStart, Vec3(0.f, -1.f, 0.f));
+
+    FSurfaceHit hit{};
+    const bool isHit = Trace_Surface(downRay, traceDistance, hit);
+
+    Draw_TraceDebug(rayStart, rayEnd, hit);
+
+    if (!isHit)
+    {
+        outHit = FSurfaceHit{};
+        return false;
+    }
+
+    if (!Is_GroundLikeNormal(hit.hitNormal))
+    {
+        outHit = FSurfaceHit{};
+        return false;
+    }
+
+    outHit = hit;
+    return true;
+}
+
+bool MovementComponent::Detect_WallAhead(const Vec3& currentPos, const Vec3& desiredDir, FSurfaceHit& outHit) const
+{
+    Vec3 baseDir = desiredDir;
+    baseDir.y = 0.f;
+
+    if (baseDir.LengthSquared() <= FLT_EPSILON)
+    {
+        outHit = FSurfaceHit{};
+        return false;
+    }
+
+    baseDir = Utils::Safe_Normalize(baseDir, Vec3::Forward);
+
+    const float traceDistance = _moveDesc.wallDetectDistance + 0.15f;
+    const float verticalOffsets[3] = { -0.35f, 0.f, 0.35f };
 
     FSurfaceHit bestHit{};
-    float bestHeight = -FLT_MAX;
 
-    for (const auto& collision : _groundCollisionModels)
+    for (int32 verticalIndex = 0; verticalIndex < 3; ++verticalIndex)
     {
-        if (!collision.model)
-            continue;
+        const float verticalOffset = verticalOffsets[verticalIndex];
+        const Vec3 rayOrigin = currentPos + Vec3(0.f, _moveDesc.wallTraceStartOffsetY + verticalOffset, 0.f);
+        const bool useFanTrace = (verticalIndex == 1);
+        const float horizontalAngles[3] = { 0.f, -15.f, 15.f };
+        const int32 horizontalCount = useFanTrace ? 3 : 1;
 
-        if (collision.hasWorldBounds)
+        for (int32 horizontalIndex = 0; horizontalIndex < horizontalCount; ++horizontalIndex)
         {
-            float boundsHitDist = 0.f;
-            if (!downRay.Intersects(collision.worldBounds, boundsHitDist))
+            const float horizontalAngle = horizontalAngles[horizontalIndex];
+            const Vec3 rayDir =
+                (horizontalAngle == 0.f)
+                ? baseDir
+                : Rotate_HorizontalDirection(baseDir, horizontalAngle);
+
+            const Ray ray(rayOrigin, rayDir);
+
+            FSurfaceHit hit{};
+            const bool isHit = Trace_Surface(ray, traceDistance, hit);
+
+            Draw_TraceDebug(
+                ray.position,
+                ray.position + ray.direction * traceDistance,
+                hit);
+
+            if (!isHit)
                 continue;
-        }
 
-        float hitDist = 0.f;
-        Vec3 hitPoint = Vec3::Zero;
-        Vec3 hitNormal = Vec3::Up;
+            if (!Is_WallLikeNormal(hit.hitNormal))
+                continue;
 
-        if (!collision.model)
-            continue;
-
-        if (!collision.model->Raycast(downRay, collision.worldMatrix, hitDist, hitPoint, hitNormal))
-            continue;
-
-        Vec3 surfaceNormal = Utils::Safe_Normalize(hitNormal, Vec3::Up);
-
-        if (surfaceNormal.Dot(Vec3::Up) < 0.f)
-        {
-            surfaceNormal = surfaceNormal * -1.f;
-        }
-
-        const float upDot = surfaceNormal.Dot(Vec3::Up);
-
-        if (upDot < _moveDesc.groundWalkableMinUpDot)
-            continue;
-
-        if (hitPoint.y > bestHeight)
-        {
-            bestHeight = hitPoint.y;
-            bestHit.hitModel = collision.model;
-            bestHit.hitWorldMatrix = collision.worldMatrix;
-            bestHit.hitPoint = hitPoint;
-            bestHit.hitNormal = surfaceNormal;
-            bestHit.hitDistance = hitDist;
-            bestHit.isValid = true;
+            if (!bestHit.isValid || hit.hitDistance < bestHit.hitDistance)
+                bestHit = hit;
         }
     }
 
@@ -674,21 +745,49 @@ bool MovementComponent::Detect_GroundSurface(const Vec3& currentPos, FSurfaceHit
     return bestHit.isValid;
 }
 
-bool MovementComponent::Detect_WallSurface(
-    const Vec3& currentPos,
-    const Vec3& castDir,
-    FSurfaceHit& outHit) const
+bool MovementComponent::Detect_TopLanding(const Vec3& currentPos, const Vec3& wallNormal, FSurfaceHit& outHit) const
 {
-    Vec3 dir = castDir;
-    if (dir.LengthSquared() <= FLT_EPSILON)
-        dir = _transform ? _transform->Get_WorldForward() : Vec3::Forward;
+    const float forwardSample = 0.50f;
+    const float sideSamples[3] = { 0.f, -0.18f, 0.18f };
+    const float traceDistance = 2.2f;
 
-    dir = Utils::Safe_Normalize(dir, Vec3::Forward);
+    Vec3 wallForward = -Utils::Safe_Normalize(wallNormal, Vec3::Forward);
+    Vec3 wallSide = wallForward.Cross(Vec3::Up);
+    if (wallSide.LengthSquared() <= FLT_EPSILON)
+        wallSide = Vec3::Right;
+    else
+        wallSide.Normalize();
 
-    const Vec3 rayOrigin = currentPos + Vec3(0.f, _moveDesc.wallTraceStartOffsetY, 0.f);
-    const Ray wallRay(rayOrigin, dir);
+    FSurfaceHit bestHit{};
 
-    return Trace_WallSurface(wallRay, _moveDesc.wallDetectDistance, outHit);
+    for (float sideSample : sideSamples)
+    {
+        const Vec3 rayStart =
+            currentPos +
+            wallForward * forwardSample +
+            wallSide * sideSample +
+            Vec3(0.f, 1.4f, 0.f);
+        const Vec3 rayEnd = rayStart + Vec3(0.f, -1.f, 0.f) * traceDistance;
+
+        Ray downRay(rayStart, Vec3(0.f, -1.f, 0.f));
+
+        FSurfaceHit hit{};
+        const bool isHit = Trace_Surface(downRay, traceDistance, hit);
+
+        Draw_TraceDebug(rayStart, rayEnd, hit);
+
+        if (!isHit)
+            continue;
+
+        if (!Is_GroundLikeNormal(hit.hitNormal))
+            continue;
+
+        if (!bestHit.isValid || hit.hitDistance < bestHit.hitDistance)
+            bestHit = hit;
+    }
+
+    outHit = bestHit;
+    return bestHit.isValid;
 }
 
 bool MovementComponent::Can_EnterWallRun(const FSurfaceHit& wallHit, const Vec3& desiredMoveDir) const
@@ -711,6 +810,7 @@ void MovementComponent::Enter_WallRun(const FSurfaceHit& wallHit)
     _isWallRunning = true;
     _currentWallNormal = wallHit.hitNormal;
     _currentWallHitPoint = wallHit.hitPoint;
+    _wallRunLostContactElapsed = 0.f;
     _onGround = false;
 
     // 벽에 붙는 순간 낙하 속도를 제거
@@ -727,6 +827,7 @@ void MovementComponent::Exit_WallRun()
     _isWallRunning = false;
     _currentWallNormal = Vec3::Up;
     _currentWallHitPoint = Vec3::Zero;
+    _wallRunLostContactElapsed = 0.f;
 }
 
 void MovementComponent::Apply_WallRunPosition(Shared<Transform> transform, const FSurfaceHit& wallHit)
@@ -795,98 +896,155 @@ void MovementComponent::Restore_DefaultUpRotation(Shared<Transform> transform)
     transform->Set_WorldRotation(targetRot);
 }
 
-void MovementComponent::Apply_NotifyMotionDelta(const Vec3& worldDelta)
+void MovementComponent::Apply_NotifyMotionDelta(const Vec3& worldDelta, bool constrainToGround)
 {
     if (!_transform)
         return;
 
-    const Vec3 previousPos = _transform->Get_WorldPosition();
+    if (worldDelta.LengthSquared() <= FLT_EPSILON)
+        return;
 
-    _transform->Add_WorldOffset(worldDelta);
+    const float totalDistance = worldDelta.Length();
+    const float maxStepDistance = 0.35f;
+    const int32 subStepCount = max(1, static_cast<int32>(ceilf(totalDistance / maxStepDistance)));
+    const Vec3 stepDelta = worldDelta / static_cast<float>(subStepCount);
+
+    for (int32 i = 0; i < subStepCount; ++i)
+    {
+        if (!Apply_NotifyMotionStep(stepDelta, constrainToGround))
+            break;
+    }
+}
+
+bool MovementComponent::Apply_NotifyMotionStep(const Vec3& stepDelta, bool constrainToGround)
+{
+    if (!_transform)
+        return false;
+
+    const Vec3 previousPos = _transform->Get_WorldPosition();
+    const Vec3 resolvedStepDelta = Build_NotifyMotionStepDelta(stepDelta, constrainToGround);
+
+    if (resolvedStepDelta.LengthSquared() <= FLT_EPSILON)
+        return true;
+
+    _transform->Add_WorldOffset(resolvedStepDelta);
 
     Apply_CharacterBodyBlock(previousPos, _transform);
 
-    if (!_isWallRunning && worldDelta.y <= 0.f)
+    if (!_isWallRunning)
         Apply_WallBlock(previousPos, _transform);
+
+    if (!constrainToGround)
+        return true;
+
+    return Resolve_NotifyGroundSnap(previousPos, _transform);
 }
 
-bool MovementComponent::Detect_WallEntrySurface(
-    const Vec3& currentPos,
-    const Vec3& desiredDir,
-    FSurfaceHit& outHit) const
+bool MovementComponent::Resolve_NotifyGroundSnap(const Vec3& previousPos, Shared<Transform> transform)
 {
-    Vec3 baseDir = desiredDir;
-    baseDir.y = 0.f;
-
-    if (baseDir.LengthSquared() <= FLT_EPSILON)
-    {
-        outHit = FSurfaceHit{};
+    if (!transform)
         return false;
+
+    Vec3 currentPos = transform->Get_WorldPosition();
+
+    FSurfaceHit groundHit{};
+    const bool foundGround = Detect_FloorBelow(currentPos, groundHit);
+
+    const float maxClimbHeight = _moveDesc.groundTraceStartOffsetY + _moveDesc.groundSnapTolerance;
+
+    if (foundGround)
+    {
+        const float heightDelta = groundHit.hitPoint.y - previousPos.y;
+
+        if (heightDelta > maxClimbHeight)
+        {
+            transform->Set_WorldPosition(previousPos);
+            return false;
+        }
+
+        currentPos.y = groundHit.hitPoint.y;
+        transform->Set_WorldPosition(currentPos);
+
+        _velocity.y = 0.f;
+        _onGround = true;
+
+        return true;
     }
 
-    baseDir = Utils::Safe_Normalize(baseDir, Vec3::Forward);
-
-    const Vec3 rayOrigin = currentPos + Vec3(0.f, _moveDesc.wallTraceStartOffsetY, 0.f);
-    const Ray rays[3] =
+    if (currentPos.y <= _moveDesc.groundY + _moveDesc.groundSnapTolerance)
     {
-        Ray(rayOrigin, baseDir),
-        Ray(rayOrigin, Rotate_HorizontalDirection(baseDir, -15.f)),
-        Ray(rayOrigin, Rotate_HorizontalDirection(baseDir, 15.f))
-    };
+        currentPos.y = _moveDesc.groundY;
+        transform->Set_WorldPosition(currentPos);
 
-    FSurfaceHit bestHit{};
-    for (const Ray& ray : rays)
-    {
-        FSurfaceHit hit{};
-        if (!Trace_WallSurface(ray, _moveDesc.wallDetectDistance, hit))
-            continue;
+        _velocity.y = 0.f;
+        _onGround = true;
 
-        if (!bestHit.isValid || hit.hitDistance < bestHit.hitDistance)
-            bestHit = hit;
+        return true;
     }
 
-    outHit = bestHit;
-    return bestHit.isValid;
+    transform->Set_WorldPosition(previousPos);
+    return false;
 }
 
+Vec3 MovementComponent::Build_NotifyMotionStepDelta(const Vec3& stepDelta, bool constrainToGround) const
+{
+    Vec3 resolvedDelta = stepDelta;
 
-bool MovementComponent::Trace_WallSurface(
-    const Ray& wallRay,
-    float maxDistance,
-    FSurfaceHit& outHit) const
+    if (constrainToGround)
+        resolvedDelta.y = 0.f;
+
+    return resolvedDelta;
+}
+
+bool MovementComponent::Trace_Surface(const Ray& ray, float maxDistance, FSurfaceHit& outHit) const
 {
     FSurfaceHit bestHit{};
+    vector<pair<float, const FCollisionModelInstance*>> candidates;
+    candidates.reserve(_surfaceCollisionModels.size());
 
-    for (const auto& collision : _wallCollisionModels)
+    for (const auto& collision : _surfaceCollisionModels)
     {
         if (!collision.model)
             continue;
 
+        float boundsHitDist = 0.f;
         if (collision.hasWorldBounds)
         {
-            float boundsHitDist = 0.f;
-            if (!wallRay.Intersects(collision.worldBounds, boundsHitDist))
+            if (!ray.Intersects(collision.worldBounds, boundsHitDist))
                 continue;
 
             if (boundsHitDist > maxDistance)
                 continue;
         }
 
+        candidates.push_back({ boundsHitDist, &collision });
+    }
+
+    if (candidates.empty())
+    {
+        outHit = bestHit;
+        return false;
+    }
+
+    sort(candidates.begin(), candidates.end(),
+        [](const auto& lhs, const auto& rhs)
+        {
+            return lhs.first < rhs.first;
+        });
+
+    const size_t maxCandidateCount = min<size_t>(candidates.size(), 8);
+
+    for (size_t i = 0; i < maxCandidateCount; ++i)
+    {
+        const auto& collision = *candidates[i].second;
         float hitDist = 0.f;
         Vec3 hitPoint = Vec3::Zero;
         Vec3 hitNormal = Vec3::Up;
 
-        if (!collision.model)
-            continue;
-
-        if (!collision.model->Raycast(wallRay, collision.worldMatrix, hitDist, hitPoint, hitNormal))
+        if (!collision.model->Raycast(ray, collision.worldMatrix, hitDist, hitPoint, hitNormal))
             continue;
 
         if (hitDist > maxDistance)
-            continue;
-
-        const float upDotAbs = fabsf(hitNormal.Dot(Vec3::Up));
-        if (upDotAbs > _moveDesc.wallRunnableMaxUpDot)
             continue;
 
         if (!bestHit.isValid || hitDist < bestHit.hitDistance)
@@ -894,7 +1052,7 @@ bool MovementComponent::Trace_WallSurface(
             bestHit.hitModel = collision.model;
             bestHit.hitWorldMatrix = collision.worldMatrix;
             bestHit.hitPoint = hitPoint;
-            bestHit.hitNormal = hitNormal;
+            bestHit.hitNormal = Utils::Safe_Normalize(hitNormal, Vec3::Up);
             bestHit.hitDistance = hitDist;
             bestHit.isValid = true;
         }
@@ -902,6 +1060,106 @@ bool MovementComponent::Trace_WallSurface(
 
     outHit = bestHit;
     return bestHit.isValid;
+}
+
+bool MovementComponent::Trace_BlockSurface(const Ray& ray, float maxDistance, FSurfaceHit& outHit) const
+{
+    FSurfaceHit bestHit{};
+    vector<pair<float, const FCollisionModelInstance*>> candidates;
+    candidates.reserve(_blockCollisionModels.size());
+
+    for (const auto& collision : _blockCollisionModels)
+    {
+        if (!collision.model)
+            continue;
+
+        float boundsHitDist = 0.f;
+        if (collision.hasWorldBounds)
+        {
+            if (!ray.Intersects(collision.worldBounds, boundsHitDist))
+                continue;
+
+            if (boundsHitDist > maxDistance)
+                continue;
+        }
+
+        candidates.push_back({ boundsHitDist, &collision });
+    }
+
+    if (candidates.empty())
+    {
+        outHit = bestHit;
+        return false;
+    }
+
+    sort(candidates.begin(), candidates.end(),
+        [](const auto& lhs, const auto& rhs)
+        {
+            return lhs.first < rhs.first;
+        });
+
+    const size_t maxCandidateCount = min<size_t>(candidates.size(), 8);
+
+    for (size_t i = 0; i < maxCandidateCount; ++i)
+    {
+        const auto& collision = *candidates[i].second;
+        float hitDist = 0.f;
+        Vec3 hitPoint = Vec3::Zero;
+        Vec3 hitNormal = Vec3::Up;
+
+        if (!collision.model->Raycast(ray, collision.worldMatrix, hitDist, hitPoint, hitNormal))
+            continue;
+
+        if (hitDist > maxDistance)
+            continue;
+
+        if (!bestHit.isValid || hitDist < bestHit.hitDistance)
+        {
+            bestHit.hitModel = collision.model;
+            bestHit.hitWorldMatrix = collision.worldMatrix;
+            bestHit.hitPoint = hitPoint;
+            bestHit.hitNormal = Utils::Safe_Normalize(hitNormal, Vec3::Up);
+            bestHit.hitDistance = hitDist;
+            bestHit.isValid = true;
+        }
+    }
+
+    outHit = bestHit;
+    return bestHit.isValid;
+}
+
+bool MovementComponent::Is_GroundLikeNormal(const Vec3& hitNormal) const
+{
+    const Vec3 normal = Utils::Safe_Normalize(hitNormal, Vec3::Up);
+    return normal.Dot(Vec3::Up) >= _moveDesc.groundWalkableMinUpDot;
+}
+
+bool MovementComponent::Is_WallLikeNormal(const Vec3& hitNormal) const
+{
+    const Vec3 normal = Utils::Safe_Normalize(hitNormal, Vec3::Up);
+    const float upDot = fabsf(normal.Dot(Vec3::Up));
+
+    return upDot <= _moveDesc.wallRunnableMaxUpDot;
+}
+
+void MovementComponent::Draw_TraceDebug(const Vec3& start, const Vec3& end, const FSurfaceHit& hit) const
+{
+    if (!_traceDebugEnabled)
+        return;
+
+    FDebugTraceLineDesc traceDesc{};
+    traceDesc.start = start;
+    traceDesc.end = end;
+    traceDesc.isHit = hit.isValid;
+    traceDesc.hitPoint = hit.hitPoint;
+    traceDesc.hitNormal = hit.hitNormal;
+    traceDesc.duration = 0.f;
+    traceDesc.depthEnabled = true;
+    traceDesc.drawHitPoint = true;
+    traceDesc.drawHitNormal = true;
+    traceDesc.drawRemainderOnHit = true;
+
+    GAME->Draw_DebugTraceLine(traceDesc);
 }
 
 Vec3 MovementComponent::Rotate_HorizontalDirection(const Vec3& dir, float degrees)
@@ -919,7 +1177,7 @@ Vec3 MovementComponent::Rotate_HorizontalDirection(const Vec3& dir, float degree
 
 void MovementComponent::Apply_WallBlock(const Vec3& previousPos, Shared<Transform> transform)
 {
-     if (!transform)
+    if (!transform)
         return;
 
     Vec3 currentPos = transform->Get_WorldPosition();
@@ -930,17 +1188,31 @@ void MovementComponent::Apply_WallBlock(const Vec3& previousPos, Shared<Transfor
         return;
 
     Vec3 moveDir = Utils::Safe_Normalize(moveDelta, Vec3::Forward);
+    const Vec3 rayStart = previousPos + Vec3(0.f, _moveDesc.wallTraceStartOffsetY, 0.f);
+    const float traceDistance = moveDelta.Length() + _moveDesc.wallAttachOffset + 0.05f;
+    const Vec3 rayEnd = rayStart + moveDir * traceDistance;
 
-    FSurfaceHit wallHit{};
-    if (!Detect_WallSurface(previousPos, moveDir, wallHit))
+    Ray blockRay(rayStart, moveDir);
+
+    FSurfaceHit blockHit{};
+    bool isHit = Trace_BlockSurface(blockRay, traceDistance, blockHit);
+
+    if (!isHit && _blockCollisionModels.empty())
+        isHit = Trace_Surface(blockRay, traceDistance, blockHit);
+
+    Draw_TraceDebug(rayStart, rayEnd, blockHit);
+
+    if (!isHit)
         return;
 
-    // 벽 쪽으로 실제로 파고드는 이동일 때만 막는다.
-    const float intoWall = moveDelta.Dot(-wallHit.hitNormal);
+    if (!Is_WallLikeNormal(blockHit.hitNormal))
+        return;
+
+    const float intoWall = moveDelta.Dot(-blockHit.hitNormal);
     if (intoWall <= 0.f)
         return;
 
-    Vec3 correctedDelta = moveDelta - (-wallHit.hitNormal) * intoWall;
+    Vec3 correctedDelta = moveDelta - (-blockHit.hitNormal) * intoWall;
     Vec3 correctedPos = previousPos + correctedDelta;
     correctedPos.y = currentPos.y;
 

@@ -1,0 +1,876 @@
+{
+    "levelName": "BM_KonohaVillage_Floor",
+    "levelIndex": 3,
+    "gameObjects": [
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaG_Wall_A_10_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "c87ecd8c-f3ae-49fd-9113-ba3a612254db",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "aa0e843f-670c-4280-afbf-3e3026e1f25b",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaG_Wall_A_10_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "660d4502-a353-4759-a95e-cc1679587184",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "aa0e843f-670c-4280-afbf-3e3026e1f25b",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaH_Wall_A_2_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "c42a7391-c158-4e4a-aca5-9fe951ceaf6a",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "2a239177-101b-4c14-8b03-da2ffe3497de",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaH_Wall_A_2_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "22a0b28a-fde5-46f0-9c86-5e12a497fe91",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "2a239177-101b-4c14-8b03-da2ffe3497de",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaH_Wall_B_7_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "dfaff503-8d9c-46f4-82ee-410bdc23608b",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "e907de36-0064-402d-bb7b-845e7aa89fb6",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaH_Wall_B_7_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "910d69c4-1c36-48d8-9f6e-559ab10601c6",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "e907de36-0064-402d-bb7b-845e7aa89fb6",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaJ_Wall_A_2_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "405b2bd6-abf1-42e0-b137-b9f05a0a654a",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "99fd230c-056c-48ec-9ec9-84e8ab91843f",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_AreaJ_Wall_A_2_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "16fbd586-c8a1-4f53-bdfe-7adefc33a813",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "99fd230c-056c-48ec-9ec9-84e8ab91843f",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_0_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "59f74548-2aa6-46d1-920c-fddd675d049c",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "27d0dfdf-c2d6-4698-a3a8-1c40f644506d",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -0.33404297,
+                        -1.1537158,
+                        0.017099762
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0625,
+                        1.0625,
+                        1.0625
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_0_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "bad420f0-3602-4e82-a5c7-65218002df96",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "27d0dfdf-c2d6-4698-a3a8-1c40f644506d",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        -0.33404297,
+                        -1.1537158,
+                        0.017099762
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0625,
+                        1.0625,
+                        1.0625
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_01_13_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "23158e3c-672b-4742-8234-9023b0a12087",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "652a1cf5-caf4-4e83-a3c2-98b1f29ef48e",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_01_13_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "b622f9a8-debd-492c-8735-fc825a654971",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "652a1cf5-caf4-4e83-a3c2-98b1f29ef48e",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_02_15_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "1fc5473f-6538-4746-a423-bca486a16a4a",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7b5901fc-bee8-4474-8a78-5ab6f4192ba1",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_02_15_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "35993ceb-e32c-49c3-8862-18e58d01e547",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7b5901fc-bee8-4474-8a78-5ab6f4192ba1",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_03_17_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "55fde12a-79fe-45cf-99c0-18e7e7ece4b3",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "eebf28d0-b047-435f-9ac6-0d8e68783464",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_03_17_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "94b6fb83-309a-46c4-bf09-4a51475d776c",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "eebf28d0-b047-435f-9ac6-0d8e68783464",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_04_19_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "ca7849a4-3c06-45ca-b048-f3c1b592ec50",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "b06524e2-86bd-495c-be9b-f01ccd9cadde",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_04_19_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "182c618b-969a-4126-83bf-7933b8efb967",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "b06524e2-86bd-495c-be9b-f01ccd9cadde",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_05_21_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "551887ce-05fd-48ca-9fec-19bd5011945a",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "bcd934bf-c326-413c-a816-b7d52ebdb753",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_05_21_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "cf8a5de3-4b13-4a6e-8505-4529b9898595",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "bcd934bf-c326-413c-a816-b7d52ebdb753",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_06_23_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "b237dc20-e4b2-49e2-a8a1-c230e7c90a76",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "75657e6a-469c-4e99-9458-6a2e415bd525",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_06_23_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "dfff5a72-1759-4581-8a4c-fdf4b6624229",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "75657e6a-469c-4e99-9458-6a2e415bd525",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_07_25_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "d2b0068e-165c-4610-8ed1-4ad271227ea6",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "43ce9b48-02f5-4ca3-b3ae-03dcf1bbd82a",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_07_25_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "0ac5d9fe-3c07-45e4-9f94-b39187d151ff",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "43ce9b48-02f5-4ca3-b3ae-03dcf1bbd82a",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_08_27_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "ba26161b-3d32-4477-8d38-dc9193516976",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f591391a-679c-4ec6-931b-aec3a8b28a7c",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_08_27_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "92a398de-8745-45be-8912-93a274357db5",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f591391a-679c-4ec6-931b-aec3a8b28a7c",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_09_29_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "57528a39-c7a1-4f23-b9b0-96b8263c6d5b",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f33f8dc4-fac7-4a41-a7ec-b2bb7d895ac5",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_09_29_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "0b6c9839-469c-4e66-9454-818a081b99d9",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f33f8dc4-fac7-4a41-a7ec-b2bb7d895ac5",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_11_WallRun",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "010ad9e7-c646-4c17-b725-69ee02eba5e5",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "33ab668a-2fb6-45af-abf5-8741a1b594cb",
+            "proxy_type": "WallRun",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "static_class": "SM_ENV_KNVLLG_Wall_11_WorldBlock",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "guid": "23edeae5-a9dc-4de8-8142-b85a8b3210a3",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "33ab668a-2fb6-45af-abf5-8741a1b594cb",
+            "proxy_type": "WorldBlock",
+            "enabled": true,
+            "components": [
+                {
+                    "type": "COMPONENT_TYPE_TRANSFORM",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -66,7 +66,7 @@ void CollisionProxyActor::Late_Update(float timeDelta)
 
 HRESULT CollisionProxyActor::Render()
 {
-    return GameObject::Render();
+    return S_OK;
 }
 
 json CollisionProxyActor::To_Json() const

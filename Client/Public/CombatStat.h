@@ -24,6 +24,20 @@ public:
         float defense = 5.f;
     };
 
+    // ANS Collision Enable에서 오버라이드해서 Hit Animation 세팅해주게
+    // 다음엔 데이터말고 그냥 여기서 다 노티파이에서 진행?
+    struct FAttackSwingOverride
+    {
+        bool useHitReactionOverride = false;
+
+        EHitReactionType hitReactionType = EHitReactionType::Default;
+
+        bool  useLaunchOverride = false;
+        float launchPower = 0.f;
+        float launchUp = 0.f;
+    };
+
+
 public:
     explicit CombatStat(ComPtr<Device> device, ComPtr<DeviceContext> context);
     explicit CombatStat(const CombatStat& rhs);
@@ -45,6 +59,22 @@ public: /* Hit Tracking */
     void    Begin_AttackSwing() { _hitTargets.clear(); }
     bool    Is_AlreadyHit(GameObject* target) const { return _hitTargets.contains(target); }
     void    Register_Hit(GameObject* target) { _hitTargets.insert(target); }
+
+    void    Begin_Swing()
+    {
+        _hitTargets.clear();
+        _attackSwingOverride = {};
+    }
+
+    void    Set_AttackSwingOverride(const FAttackSwingOverride& overrideDesc)
+    {
+        _attackSwingOverride = overrideDesc;
+    }
+
+    void    Clear_AttackSwingOverride()
+    {
+        _attackSwingOverride = {};
+    }
 
 private:
     void    Set_Hp(float hp);
@@ -70,7 +100,8 @@ private:
     float _defense      = {};
 
 private:
-    set<GameObject*> _hitTargets;
+    set<GameObject*>        _hitTargets;
+    FAttackSwingOverride    _attackSwingOverride{};
 
 public:
     static shared_ptr<CombatStat> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
