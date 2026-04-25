@@ -1,0 +1,25 @@
+{
+    "blackboard": {
+        "bools": {},
+        "floats": {},
+        "ints": {},
+        "strings": {},
+        "vectors": {}
+    },
+    "links": [],
+    "nodes": [
+        {
+            "id": 1,
+            "input_pin_id": 0,
+            "name": "Root",
+            "output_pin_ids": [
+                2
+            ],
+            "parameters": {},
+            "pos_x": 100.0,
+            "pos_y": 300.0,
+            "type": "Root"
+        }
+    ],
+    "root_node_id": 1
+}

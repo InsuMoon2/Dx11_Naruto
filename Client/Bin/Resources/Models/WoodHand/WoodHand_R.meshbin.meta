@@ -1,0 +1,134 @@
+{
+    "boneCount": 21,
+    "bones": [
+        {
+            "depth": 0,
+            "index": 0,
+            "name": "RootNode",
+            "parentIndex": -1
+        },
+        {
+            "depth": 1,
+            "index": 1,
+            "name": "SK_ITM_WoodHandShort_R",
+            "parentIndex": 0
+        },
+        {
+            "depth": 2,
+            "index": 2,
+            "name": "CharacterRoot",
+            "parentIndex": 1
+        },
+        {
+            "depth": 3,
+            "index": 3,
+            "name": "Forearm",
+            "parentIndex": 2
+        },
+        {
+            "depth": 4,
+            "index": 4,
+            "name": "Hand",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 5,
+            "name": "Finger4",
+            "parentIndex": 4
+        },
+        {
+            "depth": 6,
+            "index": 6,
+            "name": "Finger41",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 7,
+            "name": "Finger42",
+            "parentIndex": 6
+        },
+        {
+            "depth": 5,
+            "index": 8,
+            "name": "Finger3",
+            "parentIndex": 4
+        },
+        {
+            "depth": 6,
+            "index": 9,
+            "name": "Finger31",
+            "parentIndex": 8
+        },
+        {
+            "depth": 7,
+            "index": 10,
+            "name": "Finger32",
+            "parentIndex": 9
+        },
+        {
+            "depth": 5,
+            "index": 11,
+            "name": "Finger2",
+            "parentIndex": 4
+        },
+        {
+            "depth": 6,
+            "index": 12,
+            "name": "Finger21",
+            "parentIndex": 11
+        },
+        {
+            "depth": 7,
+            "index": 13,
+            "name": "Finger22",
+            "parentIndex": 12
+        },
+        {
+            "depth": 5,
+            "index": 14,
+            "name": "Finger1",
+            "parentIndex": 4
+        },
+        {
+            "depth": 6,
+            "index": 15,
+            "name": "Finger11",
+            "parentIndex": 14
+        },
+        {
+            "depth": 7,
+            "index": 16,
+            "name": "Finger12",
+            "parentIndex": 15
+        },
+        {
+            "depth": 5,
+            "index": 17,
+            "name": "Finger0",
+            "parentIndex": 4
+        },
+        {
+            "depth": 6,
+            "index": 18,
+            "name": "Finger01",
+            "parentIndex": 17
+        },
+        {
+            "depth": 7,
+            "index": 19,
+            "name": "Finger02",
+            "parentIndex": 18
+        },
+        {
+            "depth": 1,
+            "index": 20,
+            "name": "SK_ITM_WoodHandShort_R.001",
+            "parentIndex": 0
+        }
+    ],
+    "guid": "2923e862-4c80-421e-9780-cea8e921e42e",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

@@ -74,7 +74,7 @@ void WireMeshEffect::Update(float timeDelta)
             _effectCom->Set_RuntimeLocalTransform(
                 _localOffset,
                 _rotationOffset,
-                Vec3(_thickness.x, 0.001f, _thickness.z));
+                Vec3(_thickness.x, _thickness.y, 0.001f));
         }
 
         return;
@@ -89,10 +89,10 @@ void WireMeshEffect::Update(float timeDelta)
 
     if (_effectCom)
     {
-        _effectCom->Set_RuntimeLocalTransform(
-            _localOffset,
-            _rotationOffset,
-            Vec3(_thickness.x, scaleLength, _thickness.z));
+            _effectCom->Set_RuntimeLocalTransform(
+                _localOffset,
+                _rotationOffset,
+                Vec3(_thickness.x, _thickness.y, scaleLength));
     }
 }
 

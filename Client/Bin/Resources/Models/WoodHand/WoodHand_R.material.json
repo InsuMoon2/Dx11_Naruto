@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_ITM_WoodHand",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_ITM_WoodHandShort_BC.png"
+        }
+      ]
+    }
+  ]
+}

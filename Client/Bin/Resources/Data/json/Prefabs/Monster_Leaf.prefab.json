@@ -1,0 +1,492 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                -0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "bounding": {
+                "center": [
+                    0.0,
+                    0.699999988079071,
+                    0.0
+                ],
+                "extents": [
+                    0.5,
+                    0.6000000238418579,
+                    0.5
+                ]
+            },
+            "channel": "Monster_Body",
+            "collision_preset": "Monster_Body",
+            "is_active": true,
+            "shape": "OBB",
+            "type": "COMPONENT_TYPE_COLLIDER"
+        },
+        {
+            "bt_guid": "",
+            "type": "COMPONENT_TYPE_BEHAVIOR"
+        },
+        {
+            "animations": [
+                "SK_CHR_LeafNinja|LeafNinja_Idle_Type02_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Aerial_Dash_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Struggle_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Bind_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Behind_End",
+                "SK_CHR_LeafNinja|LeafNinja_Dying_Aerial_Fall_Behind_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_D51NJ3_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_D29NJ1_End",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_BlowOff_ChaseAttack",
+                "SK_CHR_LeafNinja|LeafNinja_Ninjutsu_Healing_End",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_DownToWall",
+                "SK_CHR_LeafNinja|LeafNinja_Ninjutsu_Healing_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_D51NJ3_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_GetUp",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Front_End",
+                "SK_CHR_LeafNinja|LeafNinja_Attack_Uppercut",
+                "SK_CHR_LeafNinja|Lee_Ninjutsu_Teleportation_Charge_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Walk_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_BellyDown_Small_End",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Fall_ChaseAttack_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_Stagger_Belly",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Burn_Type01",
+                "SK_CHR_LeafNinja|Leaf_Ninjutsu_Teleportation_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Frozen_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_BellyDown_Small_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_SpinBlowOff_Conect_toStand",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_SpinBlowOff_Bound_Conect_toFall",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_DownToFloor_Type01",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Left_Head",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_SpinBlowOff_Behind",
+                "SK_CHR_LeafNinja|Lee_Ninjutsu_EightInnerGatesSixth",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_GuardReverseBlowOff",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_BellyDown_Large_Start",
+                "SK_CHR_LeafNinja|Lee_Ninjutsu_Aerial_EightInnerGatesSixth",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Right_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_SpinBlowOff_Large_Up",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Fall_ChaseAttack_Behind_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Ninjutsu_Teleportation_Charge_Start",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Left_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_HideBlowOff",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_SpinBlowOff_Bound_End",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Restrict_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Front_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_Large_Front_Conect_toFall",
+                "SK_CHR_LeafNinja|CustomMan_Attack_ChakraBoots_A_cmb_05",
+                "SK_CHR_LeafNinja|Lee_Ninjutsu_LeafRisingWind",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Kunai",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_Conect_toFall",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Fall_Front_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Run_End",
+                "SK_CHR_LeafNinja|LeafNinja_Rolling_GetUp",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_D45NJ3_End",
+                "SK_CHR_LeafNinja|LeafNinja_Dodge_Run_Left",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Behind_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_D45NJ3_Start",
+                "SK_CHR_LeafNinja|LeafNinja_DashStep_Left",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_UpLeft_Shoulder",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_BellyDown_Middle_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_LowFront_Chin",
+                "SK_CHR_LeafNinja|LeafNinja_HandSeal_RecoveryChakra_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Fall_Behind_Loop",
+                "SK_CHR_LeafNinja|Leaf_Ninjutsu_Teleportation_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Dying_Blasted",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_D45NJ3_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_DownToFloor",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_D29NJ1_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Throw_Aerial_Kunai_Left",
+                "SK_CHR_LeafNinja|CustomMan_Attack_Hand_StraightPunch",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_UniversalPull_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Right",
+                "SK_CHR_LeafNinja|CustomMan_Attack_Hand_Punch_Left",
+                "SK_CHR_LeafNinja|LeafNinja_Aerial_Dash_End",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Paralysis",
+                "SK_CHR_LeafNinja|LeafNinja_Aerial_Dash_Start",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Behind_Start",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Front_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Left_End",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Left_Start",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Right_End",
+                "SK_CHR_LeafNinja|LeafNinja_AimWalk_Right_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Blasted",
+                "SK_CHR_LeafNinja|LeafNinja_Attack_BackBlowToDownStrike",
+                "SK_CHR_LeafNinja|LeafNinja_Attack_DoubleLowTurnKick",
+                "SK_CHR_LeafNinja|LeafNinja_Attack_DoubleTurnKick",
+                "SK_CHR_LeafNinja|LeafNinja_Attack_LowKickUp",
+                "SK_CHR_LeafNinja|LeafNinja_Attack_MoonKick_Large",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_BlowOff_toFall",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_D51NJ3_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_DownToFloor_Conect_toStand",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_Small_Conect_toFall",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_BellyDown_Large_End",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_BellyDown_Large_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_BellyDown_Middle_End",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_BellyDown_Middle_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_BellyDown_Small_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_D29NJ1_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_D29NJ1_LostEnd",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_D51NJ3_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_D55NJ2",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_DownHit",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Down_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Down_Sleep_Type01_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Down_Type01_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Earthquake_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_ElectricShock_End",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_ElectricShock_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Hide_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Kamui_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Left",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Left_Low",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_OneHitDown_Long",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_OneHitDown_Short",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_ShadowPossession_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_SpinBlowOff",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_SpinBlowOff_Bound_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_SpinBlowOff_Bound_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_SpinBlowOff_Conect_toDown",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_SpinBlowOff_D52NJ3",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Stagger_Belly",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_Struggle_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Beaten_UpFront_Head",
+                "SK_CHR_LeafNinja|LeafNinja_DashStep_Behind",
+                "SK_CHR_LeafNinja|LeafNinja_DashStep_Front",
+                "SK_CHR_LeafNinja|Lee_Ninjutsu_LeafFlashHeelDropKick",
+                "SK_CHR_LeafNinja|LeafNinja_DashStep_Right",
+                "SK_CHR_LeafNinja|LeafNinja_Dodge_Run_Right",
+                "SK_CHR_LeafNinja|LeafNinja_Dying_Type01",
+                "SK_CHR_LeafNinja|LeafNinja_Fall_Front_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Fall_Vertical_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_GetUp_Type01",
+                "SK_CHR_LeafNinja|LeafNinja_HandSeal_RecoveryChakra_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Land",
+                "SK_CHR_LeafNinja|LeafNinja_Ninjutsu_Aerial_FlameBombs",
+                "SK_CHR_LeafNinja|LeafNinja_Ninjutsu_FlameBombs",
+                "SK_CHR_LeafNinja|LeafNinja_Ninjutsu_Healing_Start",
+                "SK_CHR_LeafNinja|LeafNinja_Ninjutsu_LeafRisingWind",
+                "SK_CHR_LeafNinja|LeafNinja_Ninjutsu_Teleportation_Charge_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_RangeAttack_Aerial_BlastPunch",
+                "SK_CHR_LeafNinja|LeafNinja_Run_Loop",
+                "SK_CHR_LeafNinja|LeafNinja_Throw_Aerial_Kunai",
+                "SK_CHR_LeafNinja|LeafNinja_Throw_Aerial_Kunai_Right",
+                "SK_CHR_LeafNinja|LeafNinja_Throw_Kunai",
+                "SK_CHR_LeafNinja|LeafNinja_Walk_End",
+                "SK_CHR_LeafNinja|Lee_Ninjutsu_Aerial_Teleportation_Start",
+                "SK_CHR_LeafNinja|Lee_Ninjutsu_Teleportation_Charge_Loop",
+                "SK_CHR_LeafNinja|Lee_Ninjutsu_Teleportation_Loop",
+                "SK_CHR_LeafNinja|Lee_Ninjutsu_Teleportation_Start"
+            ],
+            "materials": [
+                {
+                    "material_name": "MI_CHR_LeafNinja",
+                    "texture_overrides": {
+                        "base_color_0": "d5c22a74-649f-4f81-9bf7-e92cd2358ece"
+                    }
+                },
+                {
+                    "material_name": "MI_CHR_LeafNinja_Face",
+                    "texture_overrides": {
+                        "base_color_0": "65c2b303-0ad2-4ec6-ae8c-5d18f6d60ac1"
+                    }
+                }
+            ],
+            "model_guid": "069fee47-b8d0-4bc0-b1a1-db7ed103cbf1",
+            "model_type": "SkeletalMesh",
+            "type": "COMPONENT_TYPE_MODEL"
+        },
+        {
+            "type": "COMPONENT_TYPE_SHADER"
+        },
+        {
+            "Attack": 10.0,
+            "Defense": 5.0,
+            "HP": 100.0,
+            "MP": 100.0,
+            "Max HP": 100.0,
+            "Max MP": 100.0,
+            "Speed": 5.0,
+            "type": "COMPONENT_TYPE_COMBAT_STAT"
+        },
+        {
+            "type": "COMPONENT_TYPE_AI_CONTROLLER"
+        },
+        {
+            "Acceleration": 20.0,
+            "Dash Distance": 6.0,
+            "Dash Duration": 0.18000000715255737,
+            "Deceleration": 24.0,
+            "Gravity": -20.0,
+            "Ground Walkable Min Up Dot": 0.550000011920929,
+            "Ground Y": 5.0,
+            "Jump Velocity": 11.0,
+            "Launch Control Lock Duration": 0.11999999731779099,
+            "Max Sprint Speed": 4.0,
+            "Max Walk Speed": 2.0,
+            "Wall Attach Offset": 0.15000000596046448,
+            "Wall Detect Distance": 1.0,
+            "Wall Jump Out Velocity": 6.0,
+            "Wall Jump Up Velocity": 8.0,
+            "Wall Runnable Max Up Dot": 0.3499999940395355,
+            "Wall Top Landing Forward Offset": 0.20000000298023224,
+            "Wall Top Landing Max Height Delta": 0.550000011920929,
+            "Wall Trace Start Offset Y": 1.0,
+            "Yaw Speed": 360.0,
+            "type": "COMPONENT_TYPE_MOVEMENT"
+        },
+        {
+            "animation_states": [
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Idle",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Idle_Type02_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Run",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|CustomMan_Attack_Hand_StraightPunch",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Beaten_Left",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Dead",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Dying_Type01",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_Dash",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Ninjutsu_Teleportation_Charge_Loop",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                }
+            ],
+            "current_state": "Idle",
+            "type": "COMPONENT_TYPE_ANIMATION_STATE"
+        }
+    ],
+    "guid": "aa528f2b-7858-407a-8ff5-45d42fcd9db1",
+    "object_type": "OBJECT_TYPE_MONSTER",
+    "prefab_name": "Monster_Leaf",
+    "static_class": "Monster_Leaf"
+}

@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_StoneNinja",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_StoneNinja_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_StoneNinja_Metal",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_StoneNinja_metal_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_CHR_StoneNinja_FaceOLD",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_StoneNinja_BC_OLD.png"
+        }
+      ]
+    }
+  ]
+}

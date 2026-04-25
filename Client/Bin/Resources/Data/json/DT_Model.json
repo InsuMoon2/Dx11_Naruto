@@ -323,6 +323,20 @@
             "Level": "Static"
         },
         {
+            "Id": "WoodHand_L",
+            "Path": "../../Client/Bin/Resources/Models/WoodHand/WoodHand_L.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "WoodHand_R",
+            "Path": "../../Client/Bin/Resources/Models/WoodHand/WoodHand_R.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
             "Id": "Circle_01",
             "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Circle_01.meshbin",
             "Count": 1,

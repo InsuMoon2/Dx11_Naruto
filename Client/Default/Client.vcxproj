@@ -361,6 +361,7 @@
     <ClInclude Include="..\Public\Skill_ShinsuSenju_Arm.h" />
     <ClInclude Include="..\Public\Skill_ShinsuSenju_Impact.h" />
     <ClInclude Include="..\Public\Skill_WindmillShuriken.h" />
+    <ClInclude Include="..\Public\Skill_WoodHand.h" />
     <ClInclude Include="..\Public\SkySphereActor.h" />
     <ClInclude Include="..\Public\SmearEffect_Component.h" />
     <ClInclude Include="..\Public\Spawn_Helper.h" />
@@ -546,6 +547,7 @@
     <ClCompile Include="..\Private\Skill_ShinsuSenju_Arm.cpp" />
     <ClCompile Include="..\Private\Skill_ShinsuSenju_Impact.cpp" />
     <ClCompile Include="..\Private\Skill_WindmillShuriken.cpp" />
+    <ClCompile Include="..\Private\Skill_WoodHand.cpp" />
     <ClCompile Include="..\Private\SkySphereActor.cpp" />
     <ClCompile Include="..\Private\SmearEffect_Component.cpp" />
     <ClCompile Include="..\Private\Spawn_Helper.cpp" />

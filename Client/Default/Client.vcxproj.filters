@@ -411,6 +411,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_WireLockOn.h" />
     <ClInclude Include="..\Public\WireMeshEffect.h" />
+    <ClInclude Include="..\Public\Skill_WoodHand.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -805,6 +806,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_WireLockOn.cpp" />
     <ClCompile Include="..\Private\WireMeshEffect.cpp" />
+    <ClCompile Include="..\Private\Skill_WoodHand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

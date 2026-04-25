@@ -1,0 +1,494 @@
+{
+    "boneCount": 81,
+    "bones": [
+        {
+            "depth": 0,
+            "index": 0,
+            "name": "RootNode",
+            "parentIndex": -1
+        },
+        {
+            "depth": 1,
+            "index": 1,
+            "name": "SK_CHR_StoneNinja",
+            "parentIndex": 0
+        },
+        {
+            "depth": 2,
+            "index": 2,
+            "name": "CharacterRoot",
+            "parentIndex": 1
+        },
+        {
+            "depth": 3,
+            "index": 3,
+            "name": "Hips",
+            "parentIndex": 2
+        },
+        {
+            "depth": 4,
+            "index": 4,
+            "name": "Spine",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 5,
+            "name": "Spine1",
+            "parentIndex": 4
+        },
+        {
+            "depth": 6,
+            "index": 6,
+            "name": "Neck",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 7,
+            "name": "Head",
+            "parentIndex": 6
+        },
+        {
+            "depth": 6,
+            "index": 8,
+            "name": "LeftShoulder",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 9,
+            "name": "LeftArm",
+            "parentIndex": 8
+        },
+        {
+            "depth": 8,
+            "index": 10,
+            "name": "LeftForeArm",
+            "parentIndex": 9
+        },
+        {
+            "depth": 9,
+            "index": 11,
+            "name": "LeftHand",
+            "parentIndex": 10
+        },
+        {
+            "depth": 10,
+            "index": 12,
+            "name": "LeftHandThumb1",
+            "parentIndex": 11
+        },
+        {
+            "depth": 11,
+            "index": 13,
+            "name": "LeftHandThumb2",
+            "parentIndex": 12
+        },
+        {
+            "depth": 12,
+            "index": 14,
+            "name": "LeftHandThumb3",
+            "parentIndex": 13
+        },
+        {
+            "depth": 10,
+            "index": 15,
+            "name": "L_Hand_Weapon_cnt_tr",
+            "parentIndex": 11
+        },
+        {
+            "depth": 10,
+            "index": 16,
+            "name": "LeftHandIndex1",
+            "parentIndex": 11
+        },
+        {
+            "depth": 11,
+            "index": 17,
+            "name": "LeftHandIndex2",
+            "parentIndex": 16
+        },
+        {
+            "depth": 12,
+            "index": 18,
+            "name": "LeftHandIndex3",
+            "parentIndex": 17
+        },
+        {
+            "depth": 10,
+            "index": 19,
+            "name": "LeftHandMiddle1",
+            "parentIndex": 11
+        },
+        {
+            "depth": 11,
+            "index": 20,
+            "name": "LeftHandMiddle2",
+            "parentIndex": 19
+        },
+        {
+            "depth": 12,
+            "index": 21,
+            "name": "LeftHandMiddle3",
+            "parentIndex": 20
+        },
+        {
+            "depth": 10,
+            "index": 22,
+            "name": "LeftHandRing1",
+            "parentIndex": 11
+        },
+        {
+            "depth": 11,
+            "index": 23,
+            "name": "LeftHandRing2",
+            "parentIndex": 22
+        },
+        {
+            "depth": 12,
+            "index": 24,
+            "name": "LeftHandRing3",
+            "parentIndex": 23
+        },
+        {
+            "depth": 10,
+            "index": 25,
+            "name": "LeftHandPinky1",
+            "parentIndex": 11
+        },
+        {
+            "depth": 11,
+            "index": 26,
+            "name": "LeftHandPinky2",
+            "parentIndex": 25
+        },
+        {
+            "depth": 12,
+            "index": 27,
+            "name": "LeftHandPinky3",
+            "parentIndex": 26
+        },
+        {
+            "depth": 9,
+            "index": 28,
+            "name": "LeftForeArmBend1",
+            "parentIndex": 10
+        },
+        {
+            "depth": 9,
+            "index": 29,
+            "name": "LeftForeArmBend2",
+            "parentIndex": 10
+        },
+        {
+            "depth": 9,
+            "index": 30,
+            "name": "LeftForeArmBend3",
+            "parentIndex": 10
+        },
+        {
+            "depth": 8,
+            "index": 31,
+            "name": "LeftArmBend1",
+            "parentIndex": 9
+        },
+        {
+            "depth": 8,
+            "index": 32,
+            "name": "LeftArmBend2",
+            "parentIndex": 9
+        },
+        {
+            "depth": 8,
+            "index": 33,
+            "name": "LeftArmBend3",
+            "parentIndex": 9
+        },
+        {
+            "depth": 6,
+            "index": 34,
+            "name": "RightShoulder",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 35,
+            "name": "RightArm",
+            "parentIndex": 34
+        },
+        {
+            "depth": 8,
+            "index": 36,
+            "name": "RightForeArm",
+            "parentIndex": 35
+        },
+        {
+            "depth": 9,
+            "index": 37,
+            "name": "RightHand",
+            "parentIndex": 36
+        },
+        {
+            "depth": 10,
+            "index": 38,
+            "name": "RightHandThumb1",
+            "parentIndex": 37
+        },
+        {
+            "depth": 11,
+            "index": 39,
+            "name": "RightHandThumb2",
+            "parentIndex": 38
+        },
+        {
+            "depth": 12,
+            "index": 40,
+            "name": "RightHandThumb3",
+            "parentIndex": 39
+        },
+        {
+            "depth": 10,
+            "index": 41,
+            "name": "R_Hand_Weapon_cnt_tr",
+            "parentIndex": 37
+        },
+        {
+            "depth": 10,
+            "index": 42,
+            "name": "RightHandIndex1",
+            "parentIndex": 37
+        },
+        {
+            "depth": 11,
+            "index": 43,
+            "name": "RightHandIndex2",
+            "parentIndex": 42
+        },
+        {
+            "depth": 12,
+            "index": 44,
+            "name": "RightHandIndex3",
+            "parentIndex": 43
+        },
+        {
+            "depth": 10,
+            "index": 45,
+            "name": "RightHandMiddle1",
+            "parentIndex": 37
+        },
+        {
+            "depth": 11,
+            "index": 46,
+            "name": "RightHandMiddle2",
+            "parentIndex": 45
+        },
+        {
+            "depth": 12,
+            "index": 47,
+            "name": "RightHandMiddle3",
+            "parentIndex": 46
+        },
+        {
+            "depth": 10,
+            "index": 48,
+            "name": "RightHandRing1",
+            "parentIndex": 37
+        },
+        {
+            "depth": 11,
+            "index": 49,
+            "name": "RightHandRing2",
+            "parentIndex": 48
+        },
+        {
+            "depth": 12,
+            "index": 50,
+            "name": "RightHandRing3",
+            "parentIndex": 49
+        },
+        {
+            "depth": 10,
+            "index": 51,
+            "name": "RightHandPinky1",
+            "parentIndex": 37
+        },
+        {
+            "depth": 11,
+            "index": 52,
+            "name": "RightHandPinky2",
+            "parentIndex": 51
+        },
+        {
+            "depth": 12,
+            "index": 53,
+            "name": "RightHandPinky3",
+            "parentIndex": 52
+        },
+        {
+            "depth": 9,
+            "index": 54,
+            "name": "RightForeArmBend1",
+            "parentIndex": 36
+        },
+        {
+            "depth": 9,
+            "index": 55,
+            "name": "RightForeArmBend2",
+            "parentIndex": 36
+        },
+        {
+            "depth": 9,
+            "index": 56,
+            "name": "RightForeArmBend3",
+            "parentIndex": 36
+        },
+        {
+            "depth": 8,
+            "index": 57,
+            "name": "RightArmBend3",
+            "parentIndex": 35
+        },
+        {
+            "depth": 8,
+            "index": 58,
+            "name": "RightArmBend2",
+            "parentIndex": 35
+        },
+        {
+            "depth": 8,
+            "index": 59,
+            "name": "RightArmBend1",
+            "parentIndex": 35
+        },
+        {
+            "depth": 6,
+            "index": 60,
+            "name": "Center_Position_Sword",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 61,
+            "name": "Attach_Sword",
+            "parentIndex": 60
+        },
+        {
+            "depth": 4,
+            "index": 62,
+            "name": "LeftUpLeg",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 63,
+            "name": "LeftLeg",
+            "parentIndex": 62
+        },
+        {
+            "depth": 6,
+            "index": 64,
+            "name": "LeftFoot",
+            "parentIndex": 63
+        },
+        {
+            "depth": 7,
+            "index": 65,
+            "name": "LeftToeBase",
+            "parentIndex": 64
+        },
+        {
+            "depth": 6,
+            "index": 66,
+            "name": "LeftLegBend02",
+            "parentIndex": 63
+        },
+        {
+            "depth": 6,
+            "index": 67,
+            "name": "LeftLegBend01",
+            "parentIndex": 63
+        },
+        {
+            "depth": 6,
+            "index": 68,
+            "name": "LeftLegBend03",
+            "parentIndex": 63
+        },
+        {
+            "depth": 5,
+            "index": 69,
+            "name": "LeftUpLegBend01",
+            "parentIndex": 62
+        },
+        {
+            "depth": 5,
+            "index": 70,
+            "name": "LeftUpLegBend02",
+            "parentIndex": 62
+        },
+        {
+            "depth": 4,
+            "index": 71,
+            "name": "RightUpLeg",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 72,
+            "name": "RightLeg",
+            "parentIndex": 71
+        },
+        {
+            "depth": 6,
+            "index": 73,
+            "name": "RightFoot",
+            "parentIndex": 72
+        },
+        {
+            "depth": 7,
+            "index": 74,
+            "name": "RightToeBase",
+            "parentIndex": 73
+        },
+        {
+            "depth": 6,
+            "index": 75,
+            "name": "RightLegBend01",
+            "parentIndex": 72
+        },
+        {
+            "depth": 6,
+            "index": 76,
+            "name": "RightLegBend02",
+            "parentIndex": 72
+        },
+        {
+            "depth": 6,
+            "index": 77,
+            "name": "RightLegBend03",
+            "parentIndex": 72
+        },
+        {
+            "depth": 5,
+            "index": 78,
+            "name": "RightUpLegBend02",
+            "parentIndex": 71
+        },
+        {
+            "depth": 5,
+            "index": 79,
+            "name": "RightUpLegBend01",
+            "parentIndex": 71
+        },
+        {
+            "depth": 1,
+            "index": 80,
+            "name": "SK_CHR_StoneNinja.001",
+            "parentIndex": 0
+        }
+    ],
+    "guid": "442198a7-fa05-47a9-a12e-54035366ad56",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

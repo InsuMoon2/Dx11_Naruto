@@ -1,6 +1,6 @@
 {
     "autoPlay": true,
-    "effectName": "WireDash",
+    "effectName": "NewEffect",
     "layers": [
         {
             "animationLoop": true,
@@ -65,21 +65,21 @@
             "localPosition": [
                 0.0,
                 0.0,
-                0.10000000149011612
+                0.0
             ],
             "localRotation": [
-                90.0,
+                180.0,
                 0.0,
                 0.0
             ],
             "localScale": [
                 10.0,
-                1.0,
+                10.0,
                 10.0
             ],
             "loop": false,
             "maskTextureGuid": "",
-            "modelGuid": "bc4129ef-b360-4960-b3e4-2651ed79e09d",
+            "modelGuid": "de012595-c888-427b-8892-d97672b31593",
             "normalStrength": 1.0,
             "normalTextureGuid": "",
             "opacity": 1.0,

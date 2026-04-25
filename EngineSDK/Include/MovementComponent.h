@@ -41,7 +41,7 @@ public:
 
     struct FWireDashDesc
     {
-        float maxDistance = 50.f;
+        float maxDistance = 10.f;
         float approachSpeed = 28.f;
         float stopDistance = 0.4f;
         float traceStartOffsetY = 1.f;
