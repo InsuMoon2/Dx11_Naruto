@@ -16,7 +16,8 @@ public:
   virtual ~NetworkManager();
 
 public:
-  void Initialize();
+  // Starts the TCP client service when the player enters an online flow.
+  bool Initialize();
   void Update();
 
   shared_ptr<ServerSession> Create_Session();

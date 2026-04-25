@@ -401,10 +401,20 @@ void Level_Lobby::Handle_LobbySnapshot(const Protocol::S_LobbySnapshot& pkt)
     _myLobbyId = pkt.my_lobby_id();
     _isHost = false;
 
+    cout << "[LobbyClient] Snapshot myLobbyId=" << _myLobbyId
+        << " players=" << pkt.players_size() << endl;
+
     for (int32 i = 0; i < pkt.players_size(); ++i)
     {
         const Protocol::LobbyPlayerInfo& playerInfo = pkt.players(i);
         const uint32 slot = playerInfo.slot();
+
+        cout << "[LobbyClient] Player lobbyId=" << playerInfo.lobby_id()
+            << " slot=" << slot
+            << " host=" << (playerInfo.is_host() ? "true" : "false") << endl;
+
+        if (playerInfo.lobby_id() == _myLobbyId && playerInfo.is_host())
+            _isHost = true;
 
         if (slot == 0 || slot > _slotPlayers.size())
             continue;
@@ -414,9 +424,6 @@ void Level_Lobby::Handle_LobbySnapshot(const Protocol::S_LobbySnapshot& pkt)
             continue;
 
         Apply_PlayerInfoToPreview(player, playerInfo.info());
-
-        if (playerInfo.lobby_id() == _myLobbyId && playerInfo.is_host())
-            _isHost = true;
     }
 
     if (_startGuideText)

@@ -3,12 +3,80 @@
 
 wstring Utils::ToWString(string value)
 {
-  return wstring(value.begin(), value.end());
+    if (value.empty())
+        return {};
+
+    // Network/protobuf strings are stored as UTF-8 and must be restored as wide text for UI rendering.
+    int32 convertedSize = MultiByteToWideChar(
+        CP_UTF8,
+        0,
+        value.c_str(),
+        static_cast<int32>(value.size()),
+        nullptr,
+        0);
+
+    // Legacy resource strings may still arrive in the local ANSI code page, so keep a fallback path.
+    uint32 codePage = CP_UTF8;
+    if (convertedSize <= 0)
+    {
+        codePage = CP_ACP;
+        convertedSize = MultiByteToWideChar(
+            codePage,
+            0,
+            value.c_str(),
+            static_cast<int32>(value.size()),
+            nullptr,
+            0);
+    }
+
+    if (convertedSize <= 0)
+        return {};
+
+    // Converted wide result consumed by UI text and object names.
+    wstring result(static_cast<size_t>(convertedSize), L'\0');
+    MultiByteToWideChar(
+        codePage,
+        0,
+        value.c_str(),
+        static_cast<int32>(value.size()),
+        result.data(),
+        convertedSize);
+
+    return result;
 }
 
 string Utils::ToString(wstring value)
 {
-  return string(value.begin(), value.end());
+    if (value.empty())
+        return {};
+
+    // Protobuf string fields require valid UTF-8, especially for Korean player names and chat labels.
+    const int32 convertedSize = WideCharToMultiByte(
+        CP_UTF8,
+        0,
+        value.c_str(),
+        static_cast<int32>(value.size()),
+        nullptr,
+        0,
+        nullptr,
+        nullptr);
+
+    if (convertedSize <= 0)
+        return {};
+
+    // UTF-8 result passed to protobuf/json/string based runtime systems.
+    string result(static_cast<size_t>(convertedSize), '\0');
+    WideCharToMultiByte(
+        CP_UTF8,
+        0,
+        value.c_str(),
+        static_cast<int32>(value.size()),
+        result.data(),
+        convertedSize,
+        nullptr,
+        nullptr);
+
+    return result;
 }
 
 string Utils::EnumToString(uint32 id)

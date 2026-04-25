@@ -50,6 +50,10 @@ public:
     void Broadcast_LobbySnapshot();
 
 private:
+    // 로비 스냅샷을 만들기 전에 끊어진 세션을 제거하고 슬롯을 1번부터 다시 맞춘다.
+    // 클라이언트가 비정상 종료된 뒤 새로 접속할 때 호스트 슬롯이 밀리지 않게 호출한다.
+    void Prune_LobbyPlayers();
+
     uint64 Get_MonsterAuthorityPlayerId() const;
     void Ensure_LevelMonstersSpawned();
 

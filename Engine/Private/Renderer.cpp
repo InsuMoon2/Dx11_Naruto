@@ -217,6 +217,8 @@ void Renderer::Draw(bool renderDebugPrimitives, bool renderColliders, bool rende
 #ifdef _DEBUG
     if (renderColliders)
         GAME->Render_Colliders();
+#else
+    (void)renderColliders;
 #endif
 
     if (renderDebugPrimitives)
@@ -239,8 +241,12 @@ HRESULT Renderer::Draw_Preview(bool renderColliders)
     Apply_Default3DState();
     Render_Priority();
 
+#ifdef _DEBUG
     if (renderColliders)
         GAME->Render_Colliders();
+#else
+    (void)renderColliders;
+#endif
 
     for (auto& renderObject : _renderObjects[ETOI(ERenderGroup::NonBlend)])
     {
@@ -606,6 +612,7 @@ void Renderer::Apply_UIState()
 
 }
 
+#ifdef _DEBUG
 void Renderer::Render_Debug()
 {
     for (auto& debugComponent : _debugComponents)
@@ -690,6 +697,7 @@ HRESULT Renderer::Update_RTDebugLayout(uint32 width, uint32 height)
 
     return S_OK;
 }
+#endif
 
 HRESULT Renderer::Ready_RenderTarget()
 {

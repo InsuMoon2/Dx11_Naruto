@@ -64,7 +64,11 @@ bool ClientService::Start()
 	const int32 sessionCount = GetMaxSessionCount();
 	for (int32 i = 0; i < sessionCount; i++)
 	{
+		// Client session created and registered to IOCP before ConnectEx is issued.
 		SessionRef session = CreateSession();
+		if (session == nullptr)
+			return false;
+
 		if (session->Connect() == false)
 			return false;
 	}

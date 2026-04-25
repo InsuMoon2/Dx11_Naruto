@@ -12,13 +12,35 @@ LPFN_ACCEPTEX		SocketUtils::AcceptEx = nullptr;
 void SocketUtils::Init()
 {
 	WSADATA wsaData;
-	assert(::WSAStartup(MAKEWORD(2, 2), OUT &wsaData) == 0);
+	// Release builds remove assert expressions, so Winsock startup must run explicitly.
+	const int32 startupResult = ::WSAStartup(MAKEWORD(2, 2), OUT &wsaData);
+	if (startupResult != 0)
+	{
+		cerr << "WSAStartup failed : " << startupResult << endl;
+		return;
+	}
 	
 	/* 런타임에 주소 얻어오는 API */
 	SOCKET dummySocket = CreateSocket();
-	assert(BindWindowsFunction(dummySocket, WSAID_CONNECTEX, reinterpret_cast<LPVOID*>(&ConnectEx)));
-	assert(BindWindowsFunction(dummySocket, WSAID_DISCONNECTEX, reinterpret_cast<LPVOID*>(&DisconnectEx)));
-	assert(BindWindowsFunction(dummySocket, WSAID_ACCEPTEX, reinterpret_cast<LPVOID*>(&AcceptEx)));
+	if (dummySocket == INVALID_SOCKET)
+	{
+		cerr << "Create dummy socket failed : " << ::WSAGetLastError() << endl;
+		return;
+	}
+
+	// ConnectEx is required by the async client connection path.
+	const bool isConnectExBound = BindWindowsFunction(dummySocket, WSAID_CONNECTEX, reinterpret_cast<LPVOID*>(&ConnectEx));
+	// DisconnectEx is required by the async disconnect path.
+	const bool isDisconnectExBound = BindWindowsFunction(dummySocket, WSAID_DISCONNECTEX, reinterpret_cast<LPVOID*>(&DisconnectEx));
+	// AcceptEx is required by the async server accept path.
+	const bool isAcceptExBound = BindWindowsFunction(dummySocket, WSAID_ACCEPTEX, reinterpret_cast<LPVOID*>(&AcceptEx));
+
+	if (!isConnectExBound || !isDisconnectExBound || !isAcceptExBound)
+	{
+		cerr << "Bind Windows socket extension failed : " << ::WSAGetLastError() << endl;
+		Close(dummySocket);
+		return;
+	}
 	
 	Close(dummySocket);
 }

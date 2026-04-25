@@ -304,12 +304,14 @@ HRESULT Loader::Loading()
     return hr;
 }
 
+#ifdef _DEBUG
 HRESULT Loader::Print_LoadingText()
 {
     SetWindowText(g_hWnd, _loadingText);
 
     return S_OK;
 }
+#endif
 
 void Loader::Register_Components()
 {

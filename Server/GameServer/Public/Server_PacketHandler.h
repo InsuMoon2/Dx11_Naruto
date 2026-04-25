@@ -72,7 +72,13 @@ public:
         PacketHeader* header = reinterpret_cast<PacketHeader*>(sendBuffer->Buffer());
         header->size = packetSize;
         header->id = pktId;
-        assert(pkt.SerializeToArray(&header[1], dataSize));
+
+        // Release 빌드에서도 protobuf body가 반드시 버퍼에 기록되도록 명시적으로 직렬화한다.
+        const bool serialized = pkt.SerializeToArray(&header[1], dataSize);
+        assert(serialized);
+        if (!serialized)
+            return nullptr;
+
         sendBuffer->Close(packetSize);
 
         return sendBuffer;

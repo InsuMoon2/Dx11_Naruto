@@ -31,8 +31,6 @@ HRESULT MainApp::Initialize() {
     if (FAILED(Ready_StartLevel(ELevelType::GamePlay)))
         return E_FAIL;
 
-    NetworkManager::GetInstance()->Initialize();
-
     return S_OK;
 }
 

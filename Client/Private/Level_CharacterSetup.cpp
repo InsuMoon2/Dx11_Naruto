@@ -849,7 +849,10 @@ void Level_CharacterSetup::Finish_CharacterSetup()
     {
         if (!NetworkManager::GetInstance()->IsNetworkEnabled())
         {
-            NetworkManager::GetInstance()->Initialize();
+            if (!NetworkManager::GetInstance()->Initialize())
+            {
+                LOG_WARN("[Client] Network service did not start before lobby transition.");
+            }
         }
     }
 

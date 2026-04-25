@@ -358,6 +358,8 @@ void GameRoom::Broadcast(SendBufferRef sendBuffer)
 
 void GameRoom::Broadcast_Lobby(SendBufferRef sendBuffer)
 {
+    Prune_LobbyPlayers();
+
     for (auto& [lobbyId, lobbyPlayer] : _lobbyPlayers)
     {
         auto session = lobbyPlayer.session.lock();
@@ -382,19 +384,28 @@ void GameRoom::Join_Lobby(Shared<GameSession> session, const Protocol::C_LobbyJo
 {
     CHECK_NULL(session);
 
+    Prune_LobbyPlayers();
+
     for (auto& [lobbyId, lobbyPlayer] : _lobbyPlayers)
     {
         auto existingSession = lobbyPlayer.session.lock();
         if (existingSession == session)
         {
             lobbyPlayer.info = pkt.info();
+            cout << "[Lobby] Refresh lobbyId=" << lobbyId
+                << " slot=" << lobbyPlayer.slot
+                << " host=" << (lobbyPlayer.slot == 1 ? "true" : "false")
+                << " players=" << _lobbyPlayers.size() << endl;
             Broadcast_LobbySnapshot();
             return;
         }
     }
 
     if (_lobbyPlayers.size() >= 2)
+    {
+        cout << "[Lobby] Join rejected: lobby full" << endl;
         return;
+    }
 
     FLobbyPlayer lobbyPlayer{};
     lobbyPlayer.lobbyId = _nextLobbyId++;
@@ -403,6 +414,10 @@ void GameRoom::Join_Lobby(Shared<GameSession> session, const Protocol::C_LobbyJo
     lobbyPlayer.session = session;
 
     _lobbyPlayers[lobbyPlayer.lobbyId] = lobbyPlayer;
+    cout << "[Lobby] Join lobbyId=" << lobbyPlayer.lobbyId
+        << " slot=" << lobbyPlayer.slot
+        << " host=" << (lobbyPlayer.slot == 1 ? "true" : "false")
+        << " players=" << _lobbyPlayers.size() << endl;
 
     Broadcast_LobbySnapshot();
 }
@@ -438,6 +453,8 @@ void GameRoom::Handle_LobbyStartGame(Shared<GameSession> session)
 {
     CHECK_NULL(session);
 
+    Prune_LobbyPlayers();
+
     for (auto& [lobbyId, lobbyPlayer] : _lobbyPlayers)
     {
         auto existingSession = lobbyPlayer.session.lock();
@@ -456,6 +473,8 @@ void GameRoom::Send_LobbySnapshot(Shared<GameSession> session)
 {
     CHECK_NULL(session);
 
+    Prune_LobbyPlayers();
+
     uint64 myLobbyId = 0;
     Protocol::S_LobbySnapshot pkt;
 
@@ -473,11 +492,15 @@ void GameRoom::Send_LobbySnapshot(Shared<GameSession> session)
     }
 
     pkt.set_my_lobby_id(myLobbyId);
+    cout << "[Lobby] Snapshot to myLobbyId=" << myLobbyId
+        << " players=" << pkt.players_size() << endl;
     session->Send(Server_PacketHandler::Make_S_LobbySnapshot(pkt));
 }
 
 void GameRoom::Broadcast_LobbySnapshot()
 {
+    Prune_LobbyPlayers();
+
     for (auto& [lobbyId, lobbyPlayer] : _lobbyPlayers)
     {
         auto session = lobbyPlayer.session.lock();
@@ -486,6 +509,37 @@ void GameRoom::Broadcast_LobbySnapshot()
 
         Send_LobbySnapshot(session);
     }
+}
+
+void GameRoom::Prune_LobbyPlayers()
+{
+    bool changed = false;
+    for (auto iter = _lobbyPlayers.begin(); iter != _lobbyPlayers.end(); )
+    {
+        // 로비에 남아 있는 세션이 실제로 살아있는지 확인한다.
+        auto lobbySession = iter->second.session.lock();
+        if (!lobbySession || !lobbySession->IsConnected())
+        {
+            iter = _lobbyPlayers.erase(iter);
+            changed = true;
+            continue;
+        }
+
+        ++iter;
+    }
+
+    // 살아있는 플레이어만 1번부터 다시 배치해서 1번 슬롯이 항상 호스트가 되게 한다.
+    uint32 nextSlot = 1;
+    for (auto& [lobbyId, lobbyPlayer] : _lobbyPlayers)
+    {
+        if (lobbyPlayer.slot != nextSlot)
+            changed = true;
+
+        lobbyPlayer.slot = nextSlot++;
+    }
+
+    if (changed)
+        cout << "[Lobby] Pruned lobby players. players=" << _lobbyPlayers.size() << endl;
 }
 
 void GameRoom::Ensure_LevelMonstersSpawned()

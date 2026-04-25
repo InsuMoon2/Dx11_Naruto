@@ -87,7 +87,18 @@ bool Session::RegisterConnect()
 	if (IsConnected())
 		return false;
 
-	if (GetService()->GetServiceType() != ServiceType::Client)
+	// Service reference kept alive while the connect request is registered.
+	shared_ptr<Service> serviceRef = GetService();
+	if (serviceRef == nullptr)
+		return false;
+
+	if (serviceRef->GetServiceType() != ServiceType::Client)
+		return false;
+
+	if (_socket == INVALID_SOCKET)
+		return false;
+
+	if (SocketUtils::ConnectEx == nullptr)
 		return false;
 
 	if (SocketUtils::SetReuseAddress(_socket, true) == false)
@@ -100,7 +111,8 @@ bool Session::RegisterConnect()
 	_connectEvent.owner = shared_from_this(); // ADD_REF
 
 	DWORD numOfBytes = 0;
-	SOCKADDR_IN sockAddr = GetService()->GetNetAddress().GetSockAddr();
+	// Server endpoint configured by ClientService construction.
+	SOCKADDR_IN sockAddr = serviceRef->GetNetAddress().GetSockAddr();
 	if (false == SocketUtils::ConnectEx(_socket, reinterpret_cast<SOCKADDR*>(&sockAddr), sizeof(sockAddr), nullptr, 0, &numOfBytes, &_connectEvent))
 	{
 		int32 errorCode = ::WSAGetLastError();

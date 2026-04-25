@@ -83,6 +83,12 @@ namespace fs = std::filesystem;
 
 #include <magic_enum/magic_enum.hpp>
 
+// Json
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
+#include "Utils.h"
+
 // Magic Enum : 범위 지정
 template <> struct magic_enum::customize::enum_range<Protocol::ComponentID> {
   static constexpr int min = 0;
@@ -96,13 +102,6 @@ template <> struct magic_enum::customize::enum_range<Protocol::ComponentID> {
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 #include <stdlib.h>
-
-
-// Json
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
-
-#include "Utils.h"
 
 // 메모리 누수 감지
 #ifndef DBG_NEW
