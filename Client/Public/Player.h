@@ -40,6 +40,8 @@ public:
 	void    OnDamaged(const FDamageEvent& damageEvent) override;
 	void    OnDead(const FDamageEvent& damageEvent) override;
 
+    void    Set_RotationToDamageCauser(const FDamageEvent& damageEvent);
+
 public: /* Network */
     uint64  Get_NetworkId() const { return _networkId; }
     void    Set_NetworkId(uint64 id) { _networkId = id; }

@@ -38,6 +38,21 @@ vector<FBlackboardKeyInfo> Blackboard::Get_AllKeys() const
     return keys;
 }
 
+bool Blackboard::Remove_Key(const string& key)
+{
+    bool removed = false;
+
+    // 타입 변경/삭제 시 같은 이름으로 남아 있는 모든 저장소를 함께 정리한다.
+    removed |= _intValues.erase(key) > 0;
+    removed |= _floatValues.erase(key) > 0;
+    removed |= _boolValues.erase(key) > 0;
+    removed |= _vecValues.erase(key) > 0;
+    removed |= _stringValues.erase(key) > 0;
+    removed |= _objectValues.erase(key) > 0;
+
+    return removed;
+}
+
 void Blackboard::Set_ValueAsInt(const string& key, int32 value)
 {
     _intValues[key] = value;

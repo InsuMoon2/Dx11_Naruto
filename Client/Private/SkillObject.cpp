@@ -15,6 +15,19 @@
 
 REGISTER_GAMEOBJECT(SkillObject, Protocol::OBJECT_TYPE_SKILL_OBJECT)
 
+// SpawnAttack/투사체가 현재 바라보는 방향을 피격 launch 방향으로 넘기기 위해 호출한다.
+// owner 중심 기준 대신 실제 공격체 forward를 쓰면 근접 body blow에서도 밀림 방향이 안정적이다.
+static Vec3 Resolve_SkillHitDamageDirection(const Shared<Transform>& transform)
+{
+    if (!transform)
+        return Vec3::Zero;
+
+    Vec3 forward = transform->Get_WorldForward();
+    forward.y = 0.f;
+
+    return Utils::Safe_Normalize(forward, Vec3::Zero);
+}
+
 SkillObject::SkillObject(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
 {
@@ -32,6 +45,11 @@ SkillObject::SkillObject(const SkillObject& rhs)
     , _hitLaunchForce(rhs._hitLaunchForce)
     , _colliderRadius(rhs._colliderRadius)
     , _effectAssetName(rhs._effectAssetName)
+    , _useHitReactionOverride(rhs._useHitReactionOverride)
+    , _hitReactionType(rhs._hitReactionType)
+    , _useLaunchOverride(rhs._useLaunchOverride)
+    , _launchPower(rhs._launchPower)
+    , _launchUp(rhs._launchUp)
 {
 }
 
@@ -57,6 +75,11 @@ HRESULT SkillObject::Initialize(void* arg)
         _collisionPreset = desc->collisionPreset;
         _effectAssetName = desc->effectAssetName;
         _attachOffset = desc->attachOffset;
+        _useHitReactionOverride = desc->useHitReactionOverride;
+        _hitReactionType = desc->hitReactionType;
+        _useLaunchOverride = desc->useLaunchOverride;
+        _launchPower = desc->launchPower;
+        _launchUp = desc->launchUp;
 
         if (_transformCom)
         {
@@ -232,16 +255,28 @@ bool SkillObject::Apply_Skill_Hit(Character* hitted, float damage, float launchF
         return false;
 
     FDamageEvent damageEvent{};
+    const float finalLaunchPower = _useLaunchOverride ? _launchPower : launchForce;
+    const float finalLaunchUp = _useLaunchOverride ? _launchUp : launchUp;
+
     damageEvent.damage = damage;
     damageEvent.damageCauser = owner;
-    damageEvent.launchPower = launchForce;
-    damageEvent.launchUp = launchUp;
+    damageEvent.launchPower = finalLaunchPower;
+    damageEvent.launchUp = finalLaunchUp;
     damageEvent.forceHitRestart = true;
 
-    if (launchForce > 0.f && launchUp > 0.f)
+    const Vec3 damageDir = Resolve_SkillHitDamageDirection(_transformCom);
+    if (damageDir.LengthSquared() > FLT_EPSILON)
+    {
+        damageEvent.damageDir = damageDir;
+        damageEvent.hasCustomDir = true;
+    }
+
+    if (_useHitReactionOverride)
+        damageEvent.hitReactionType = _hitReactionType;
+    else if (finalLaunchPower > 0.f && finalLaunchUp > 0.f)
         damageEvent.hitReactionType = EHitReactionType::Launch;
 
-    else if (launchForce > 0.f)
+    else if (finalLaunchPower > 0.f)
         damageEvent.hitReactionType = EHitReactionType::BlowOff;
 
     else

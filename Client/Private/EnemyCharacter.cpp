@@ -132,6 +132,7 @@ void EnemyCharacter::Late_Update(float timeDelta)
     }
 
     GAME->Add_RenderGroup(ERenderGroup::NonBlend, GetSharedPtr());
+    GAME->Add_RenderGroup(ERenderGroup::ShadowDynamic, GetSharedPtr());
 }
 
 HRESULT EnemyCharacter::Render()
@@ -215,34 +216,38 @@ void EnemyCharacter::OnDamaged(const FDamageEvent& damageEvent)
             static int32 sHitReactionSerial = 0;
             ++sHitReactionSerial;
 
-            string hitAnimState = "Hit";
-            switch (damageEvent.hitReactionType)
+            string hitAnimState = damageEvent.hitAnimStateOverride;
+            if (hitAnimState.empty())
             {
-            case EHitReactionType::Launch:
-                hitAnimState = "Hit_Launch";
-                break;
-
-            case EHitReactionType::BlowOff:
-                hitAnimState = "Hit_BlowOff";
-                break;
-
-            case EHitReactionType::Down:
-                hitAnimState = "Hit_Down";
-                break;
-
-            case EHitReactionType::Air:
-                hitAnimState = "Hit_Air";
-                break;
-
-            case EHitReactionType::Air_Down:
-                hitAnimState = "Hit_Air_Down";
-                break;
-
-            case EHitReactionType::Stagger:
-            case EHitReactionType::Default:
-            default:
                 hitAnimState = "Hit";
-                break;
+                switch (damageEvent.hitReactionType)
+                {
+                case EHitReactionType::Launch:
+                    hitAnimState = "Hit_Launch";
+                    break;
+
+                case EHitReactionType::BlowOff:
+                    hitAnimState = "Hit_BlowOff";
+                    break;
+
+                case EHitReactionType::Down:
+                    hitAnimState = "Hit_Down";
+                    break;
+
+                case EHitReactionType::Air:
+                    hitAnimState = "Hit_Air";
+                    break;
+
+                case EHitReactionType::Air_Down:
+                    hitAnimState = "Hit_Air_Down";
+                    break;
+
+                case EHitReactionType::Stagger:
+                case EHitReactionType::Default:
+                default:
+                    hitAnimState = "Hit";
+                    break;
+                }
             }
 
             blackboard->Set_ValueAsBool("IsHit", true);
@@ -327,6 +332,54 @@ void EnemyCharacter::Set_RotationToDamageCauser(const FDamageEvent& damageEvent)
     lookDir.Normalize();
 
     _transformCom->LookAt(myPos + lookDir);
+}
+
+HRESULT EnemyCharacter::Render_Shadow()
+{
+    if (!_model || !_shaderCom || Is_Destroy())
+    {
+#ifdef _DEBUG
+        LOG_WARN("[EnemyShadow] skipped. model={}, shader={}, destroyed={}, name='{}', guid='{}'",
+            _model != nullptr,
+            _shaderCom != nullptr,
+            Is_Destroy(),
+            Utils::ToString(Get_Name()),
+            Get_GUID());
+#endif
+        return S_FALSE;
+    }
+
+    CHECK_FAILED(Bind_ShadowShaderResources(), E_FAIL);
+    CHECK_FAILED(_model->Bind_BoneMatrices(_shaderCom, "g_BoneMatrices"), E_FAIL);
+
+    const size_t numMeshes = _model->Get_NumMeshes();
+    if (numMeshes == 0)
+    {
+#ifdef _DEBUG
+        LOG_WARN("[EnemyShadow] skipped. numMeshes=0, name='{}', guid='{}'",
+            Utils::ToString(Get_Name()),
+            Get_GUID());
+#endif
+        return S_FALSE;
+    }
+
+    for (size_t i = 0; i < numMeshes; ++i)
+    {
+        CHECK_FAILED(_shaderCom->Bind_SRV("g_DiffuseTexture", nullptr), E_FAIL);
+        CHECK_FAILED(_shaderCom->Begin_Pass(2), E_FAIL);
+        CHECK_FAILED(_model->Render(static_cast<uint32>(i)), E_FAIL);
+    }
+
+    return S_OK;
+}
+
+HRESULT EnemyCharacter::Bind_ShadowShaderResources()
+{
+    CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix()), E_FAIL);
+    CHECK_FAILED(GAME->Bind_ShadowMatrices(_shaderCom, "g_ViewMatrix", "g_ProjMatrix"), E_FAIL);
+
+    return S_OK;
+
 }
 
 HRESULT EnemyCharacter::Bind_ShaderResources()

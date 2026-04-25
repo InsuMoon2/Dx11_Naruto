@@ -153,7 +153,9 @@ void InputComponent::Update_Input(float timeDelta)
         _frame.superJumpCharge = 0.f;
     }
 
-    _frame.wireDash = rawCtrlDown;
+    _frame.wireLockOnDown = rawCtrlDown;
+    _frame.wireDashStart = rawCtrlUp;
+
     _frame.replacementDown = rawReplacementDown;
     _frame.shurikenDown = rawShurikenDown;
     _frame.airboneDown = rawAirboneDown;

@@ -44,6 +44,10 @@ public:
 
     void    Resume();
 
+    float   Get_RuntimeTimeScale() const { return _runtimeTimeScale; }
+    void    Set_RuntimeTimeScale(float timeScale);
+    void    Reset_RuntimeTimeScale();
+
     bool    IsPlaying() const { return GAME->Get_GameState() == EGameState::Play; }
     bool    IsPaused()  const { return GAME->Get_GameState() == EGameState::Pause; }
 
@@ -76,6 +80,7 @@ private:
     vector<Shared<GameObject>> Collect_CurrentLevelMonsterObjects() const;
     bool    Is_PlayHotReloadMonster(const Shared<GameObject>& gameObject) const;
     void    Reload_MonsterAssets(const Shared<GameObject>& gameObject, bool allowPrefabReapply);
+    static float Clamp_RuntimeTimeScale(float timeScale);
 
 private: /* Manager */
     Unique<ImGui_Manager>           _imguiManager;
@@ -90,6 +95,7 @@ private: /* Manager */
 private:
     EDITOR_DESC _desc = {};
     Weak<Camera> _pausedPreviousCamera;
+    float _runtimeTimeScale = 1.f;
 
 };
 

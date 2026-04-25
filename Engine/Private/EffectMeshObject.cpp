@@ -20,6 +20,35 @@ static EEffectBlendMode Resolve_RuntimeBlendMode(const EffectMeshObject::FEffect
     return meshDesc.blendMode;
 }
 
+/* Effect Mesh Lit 프리뷰/런타임에서 등록된 라이트가 없을 때 검게 죽지 않도록 기본 방향광을 만든다. */
+static FLightDesc Make_DefaultEffectMeshLightDesc()
+{
+    FLightDesc desc{};
+    desc.type = ELightType::Directional;
+    desc.direction = Vec4(-1.f, -1.f, -1.f, 0.f);
+    desc.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
+    desc.ambient = Vec4(0.18f, 0.18f, 0.18f, 1.f);
+    desc.specular = Vec4(0.35f, 0.35f, 0.35f, 1.f);
+
+    return desc;
+}
+
+/* Effect Mesh Lit 셰이더에 넘길 대표 라이트를 찾을 때 호출한다. Directional이 없으면 기본 방향광으로 검은 프리뷰를 방지한다. */
+static FLightDesc Resolve_EffectMeshLightDesc()
+{
+    for (uint32 i = 0; i < 16; ++i)
+    {
+        const FLightDesc* lightDesc = GAME->Get_LightDesc(i);
+        if (!lightDesc)
+            break;
+
+        if (lightDesc->type == ELightType::Directional)
+            return *lightDesc;
+    }
+
+    return Make_DefaultEffectMeshLightDesc();
+}
+
 EffectMeshObject::EffectMeshObject(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
 {
@@ -164,6 +193,7 @@ HRESULT EffectMeshObject::Bind_ShaderResources(uint32 meshIndex)
     const int forceVisiblePreview = _forceVisiblePreview ? 1 : 0;
     const int shadingMode = static_cast<int>(meshDesc.shadingMode);
     const int hasDiffuseTexture = diffuseTexture ? 1 : 0;
+    const int hasMaskTexture = maskTexture ? 1 : 0; // 원본 이펙트의 OpacityMask_Map을 실제 alpha cutout에 반영하기 위한 플래그다.
     const int hasOpacityTexture = opacityTexture ? 1 : 0;
     const int hasOpacitySubUvTexture = opacitySubUvTexture ? 1 : 0;
     const int hasOpacityGradationTexture = opacityGradationTexture ? 1 : 0;
@@ -197,12 +227,23 @@ HRESULT EffectMeshObject::Bind_ShaderResources(uint32 meshIndex)
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_EmissiveStrength", &emissiveStrength, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FresnelPower", &meshDesc.fresnelPower, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FresnelMultiplier", &meshDesc.fresnelMultiplier, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_NormalStrength", &meshDesc.normalStrength, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_Roughness", &meshDesc.roughness, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_SpecularStrength", &meshDesc.specularStrength, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_SpecularPower", &meshDesc.specularPower, sizeof(float)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_CustomParams0", &meshDesc.customParams0, sizeof(Vec4)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_CustomParams1", &meshDesc.customParams1, sizeof(Vec4)), E_FAIL);
+
+    const FLightDesc effectLightDesc = Resolve_EffectMeshLightDesc(); // Lit Effect Mesh가 deferred light pass 없이도 자체 조명을 계산할 수 있게 하는 대표 라이트다.
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_LightDir", &effectLightDesc.direction, sizeof(effectLightDesc.direction)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_LightDiffuse", &effectLightDesc.diffuse, sizeof(effectLightDesc.diffuse)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_LightAmbient", &effectLightDesc.ambient, sizeof(effectLightDesc.ambient)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_LightSpecular", &effectLightDesc.specular, sizeof(effectLightDesc.specular)), E_FAIL);
 
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_ForceVisiblePreview", &forceVisiblePreview, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_ShadingMode", &shadingMode, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasDiffuseTexture", &hasDiffuseTexture, sizeof(int)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasMaskTexture", &hasMaskTexture, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasOpacityTexture", &hasOpacityTexture, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasOpacitySubUvTexture", &hasOpacitySubUvTexture, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasOpacityGradationTexture", &hasOpacityGradationTexture, sizeof(int)), E_FAIL);
@@ -327,31 +368,7 @@ HRESULT EffectMeshObject::Resolve_Resources()
 
     if (!_layerDesc.mesh.diffuseTextureGuid.empty() && !_diffuseTexture)
     {
-        uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.diffuseTextureGuid));
-        if (FAILED(Add_Component(texKey, _diffuseTexture)))
-        {
-            wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.diffuseTextureGuid);
-
-            if (resolvedPath.empty())
-            {
-                LOG_ERROR(
-                    "EffectMeshObject diffuse resolve failed. layer='{}', diffuseGuid='{}'",
-                    _layerDesc.base.layerName,
-                    _layerDesc.mesh.diffuseTextureGuid);
-
-                return E_FAIL;
-            }
-
-            if (!resolvedPath.empty())
-            {
-                auto proto = Texture::Create(_device, _context, resolvedPath, 1);
-                if (proto)
-                {
-                    GAME->Add_Component_Prototype(0, texKey, proto);
-                    CHECK_FAILED(Add_Component(0, texKey, _diffuseTexture), E_FAIL);
-                }
-            }
-        }
+        CHECK_FAILED(Resolve_TextureByGuid(_layerDesc.mesh.diffuseTextureGuid, _diffuseTexture, "diffuse"), E_FAIL);
     }
 
     if (!_layerDesc.mesh.maskTextureGuid.empty() && !_maskTexture)
@@ -362,31 +379,7 @@ HRESULT EffectMeshObject::Resolve_Resources()
         }
         else
         {
-            uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.maskTextureGuid));
-            if (FAILED(Add_Component(texKey, _maskTexture)))
-            {
-                wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.maskTextureGuid);
-
-                if (resolvedPath.empty())
-                {
-                    LOG_ERROR(
-                        "EffectMeshObject mask resolve failed. layer='{}', maskGuid='{}'",
-                        _layerDesc.base.layerName,
-                        _layerDesc.mesh.maskTextureGuid);
-
-                    return E_FAIL;
-                }
-
-                if (!resolvedPath.empty())
-                {
-                    auto proto = Texture::Create(_device, _context, resolvedPath, 1);
-                    if (proto)
-                    {
-                        GAME->Add_Component_Prototype(0, texKey, proto);
-                        CHECK_FAILED(Add_Component(0, texKey, _maskTexture), E_FAIL);
-                    }
-                }
-            }
+            CHECK_FAILED(Resolve_TextureByGuid(_layerDesc.mesh.maskTextureGuid, _maskTexture, "mask"), E_FAIL);
         }
     }
 
@@ -410,28 +403,7 @@ HRESULT EffectMeshObject::Resolve_Resources()
         }
         else
         {
-            uint32 texKey = static_cast<uint32>(hash<string>{}(emissiveGuid));
-            if (FAILED(Add_Component(texKey, _emissiveTexture)))
-            {
-                wstring resolvedPath = GAME->Resolve_AssetPath(emissiveGuid);
-
-                if (resolvedPath.empty())
-                {
-                    LOG_ERROR(
-                        "EffectMeshObject emissive resolve failed. layer='{}', emissiveGuid='{}'",
-                        _layerDesc.base.layerName,
-                        emissiveGuid);
-
-                    return E_FAIL;
-                }
-
-                auto proto = Texture::Create(_device, _context, resolvedPath, 1);
-                if (proto)
-                {
-                    GAME->Add_Component_Prototype(0, texKey, proto);
-                    CHECK_FAILED(Add_Component(0, texKey, _emissiveTexture), E_FAIL);
-                }
-            }
+            CHECK_FAILED(Resolve_TextureByGuid(emissiveGuid, _emissiveTexture, "emissive"), E_FAIL);
         }
     }
 
@@ -451,28 +423,7 @@ HRESULT EffectMeshObject::Resolve_Resources()
         }
         else
         {
-            uint32 texKey = static_cast<uint32>(hash<string>{}(opacityGuid));
-            if (FAILED(Add_Component(texKey, _opacityTexture)))
-            {
-                wstring resolvedPath = GAME->Resolve_AssetPath(opacityGuid);
-
-                if (resolvedPath.empty())
-                {
-                    LOG_ERROR(
-                        "EffectMeshObject opacity resolve failed. layer='{}', opacityGuid='{}'",
-                        _layerDesc.base.layerName,
-                        opacityGuid);
-
-                    return E_FAIL;
-                }
-
-                auto proto = Texture::Create(_device, _context, resolvedPath, 1);
-                if (proto)
-                {
-                    GAME->Add_Component_Prototype(0, texKey, proto);
-                    CHECK_FAILED(Add_Component(0, texKey, _opacityTexture), E_FAIL);
-                }
-            }
+            CHECK_FAILED(Resolve_TextureByGuid(opacityGuid, _opacityTexture, "opacity"), E_FAIL);
         }
     }
 
@@ -488,107 +439,23 @@ HRESULT EffectMeshObject::Resolve_Resources()
         }
         else
         {
-            uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.opacitySubUvTextureGuid));
-            if (FAILED(Add_Component(texKey, _opacitySubUvTexture)))
-            {
-                wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.opacitySubUvTextureGuid);
-
-                if (resolvedPath.empty())
-                {
-                    LOG_ERROR(
-                        "EffectMeshObject opacity subuv resolve failed. layer='{}', opacitySubUvGuid='{}'",
-                        _layerDesc.base.layerName,
-                        _layerDesc.mesh.opacitySubUvTextureGuid);
-
-                    return E_FAIL;
-                }
-
-                auto proto = Texture::Create(_device, _context, resolvedPath, 1);
-                if (proto)
-                {
-                    GAME->Add_Component_Prototype(0, texKey, proto);
-                    CHECK_FAILED(Add_Component(0, texKey, _opacitySubUvTexture), E_FAIL);
-                }
-            }
+            CHECK_FAILED(Resolve_TextureByGuid(_layerDesc.mesh.opacitySubUvTextureGuid, _opacitySubUvTexture, "opacity subuv"), E_FAIL);
         }
     }
 
     if (!_layerDesc.mesh.opacityGradationTextureGuid.empty() && !_opacityGradationTexture)
     {
-        uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.opacityGradationTextureGuid));
-        if (FAILED(Add_Component(texKey, _opacityGradationTexture)))
-        {
-            wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.opacityGradationTextureGuid);
-
-            if (resolvedPath.empty())
-            {
-                LOG_ERROR(
-                    "EffectMeshObject opacity gradation resolve failed. layer='{}', opacityGradationGuid='{}'",
-                    _layerDesc.base.layerName,
-                    _layerDesc.mesh.opacityGradationTextureGuid);
-
-                return E_FAIL;
-            }
-
-            auto proto = Texture::Create(_device, _context, resolvedPath, 1);
-            if (proto)
-            {
-                GAME->Add_Component_Prototype(0, texKey, proto);
-                CHECK_FAILED(Add_Component(0, texKey, _opacityGradationTexture), E_FAIL);
-            }
-        }
+        CHECK_FAILED(Resolve_TextureByGuid(_layerDesc.mesh.opacityGradationTextureGuid, _opacityGradationTexture, "opacity gradation"), E_FAIL);
     }
 
     if (!_layerDesc.mesh.emissiveGradationTextureGuid.empty() && !_emissiveGradationTexture)
     {
-        uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.emissiveGradationTextureGuid));
-        if (FAILED(Add_Component(texKey, _emissiveGradationTexture)))
-        {
-            wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.emissiveGradationTextureGuid);
-
-            if (resolvedPath.empty())
-            {
-                LOG_ERROR(
-                    "EffectMeshObject emissive gradation resolve failed. layer='{}', emissiveGradationGuid='{}'",
-                    _layerDesc.base.layerName,
-                    _layerDesc.mesh.emissiveGradationTextureGuid);
-
-                return E_FAIL;
-            }
-
-            auto proto = Texture::Create(_device, _context, resolvedPath, 1);
-            if (proto)
-            {
-                GAME->Add_Component_Prototype(0, texKey, proto);
-                CHECK_FAILED(Add_Component(0, texKey, _emissiveGradationTexture), E_FAIL);
-            }
-        }
+        CHECK_FAILED(Resolve_TextureByGuid(_layerDesc.mesh.emissiveGradationTextureGuid, _emissiveGradationTexture, "emissive gradation"), E_FAIL);
     }
 
     if (!_layerDesc.mesh.uvDistortionTextureGuid.empty() && !_uvDistortionTexture)
     {
-        uint32 texKey = static_cast<uint32>(hash<string>{}(_layerDesc.mesh.uvDistortionTextureGuid));
-        if (FAILED(Add_Component(texKey, _uvDistortionTexture)))
-        {
-            wstring resolvedPath = GAME->Resolve_AssetPath(_layerDesc.mesh.uvDistortionTextureGuid);
-
-            if (resolvedPath.empty())
-            {
-                LOG_ERROR(
-                    "EffectMeshObject uv distortion resolve failed. layer='{}', uvDistortionGuid='{}'",
-                    _layerDesc.base.layerName,
-                    _layerDesc.mesh.uvDistortionTextureGuid);
-
-                return E_FAIL;
-            }
-
-            auto proto = Texture::Create(_device, _context, resolvedPath, 1);
-            if (proto)
-            {
-                GAME->Add_Component_Prototype(0, texKey, proto);
-                CHECK_FAILED(Add_Component(0, texKey, _uvDistortionTexture), E_FAIL);
-            }
-        }
+        CHECK_FAILED(Resolve_TextureByGuid(_layerDesc.mesh.uvDistortionTextureGuid, _uvDistortionTexture, "uv distortion"), E_FAIL);
     }
 
     CHECK_FAILED(Resolve_OverrideResources(), E_FAIL);
@@ -597,7 +464,8 @@ HRESULT EffectMeshObject::Resolve_Resources()
 
 }
 
-HRESULT EffectMeshObject::Resolve_TextureByGuid(const string& guid, Shared<Texture>& outTexture)
+// 이펙트 텍스처는 최초 사용 시 동적으로 프로토타입에 등록되므로, 누락 로그 없이 조용히 기존 등록 상태를 먼저 확인한다.
+HRESULT EffectMeshObject::Resolve_TextureByGuid(const string& guid, Shared<Texture>& outTexture, const char* usageName)
 {
     outTexture = nullptr;
 
@@ -605,25 +473,45 @@ HRESULT EffectMeshObject::Resolve_TextureByGuid(const string& guid, Shared<Textu
         return S_OK;
 
     const uint32 texKey = static_cast<uint32>(hash<string>{}(guid));
-    auto component = GAME->Clone_Component(texKey);
-    if (component)
+    const uint32 currentLevel = GAME->Current_Level(); // Static에 없고 현재 레벨에만 등록된 텍스처 프로토타입도 재사용하기 위한 조회 대상이다.
+
+    // 같은 EffectMeshObject 안에서 base/override가 동일 GUID를 공유하면
+    // 이미 붙여둔 텍스처 컴포넌트를 그대로 재사용해야 중복 Add_Component 실패를 막을 수 있다.
+    if (auto existingTexture = dynamic_pointer_cast<Texture>(Get_Component(texKey)))
     {
-        outTexture = static_pointer_cast<Texture>(component);
+        outTexture = existingTexture;
+        return S_OK;
+    }
+
+    if (GAME->Find_Component_Prototype(0, texKey) != nullptr)
+    {
+        CHECK_FAILED(Add_Component(0, texKey, outTexture), E_FAIL);
+        return S_OK;
+    }
+
+    if (currentLevel != 0 &&
+        GAME->Find_Component_Prototype(currentLevel, texKey) != nullptr)
+    {
+        CHECK_FAILED(Add_Component(currentLevel, texKey, outTexture), E_FAIL);
         return S_OK;
     }
 
     const wstring resolvedPath = GAME->Resolve_AssetPath(guid);
     if (resolvedPath.empty())
+    {
+        LOG_ERROR(
+            "EffectMeshObject {} resolve failed. layer='{}', guid='{}'",
+            usageName,
+            _layerDesc.base.layerName,
+            guid);
+
         return E_FAIL;
+    }
 
     auto proto = Texture::Create(_device, _context, resolvedPath, 1);
     CHECK_NULL(proto, E_FAIL);
     CHECK_FAILED(GAME->Add_Component_Prototype(0, texKey, proto), E_FAIL);
-
-    component = GAME->Clone_Component(texKey);
-    CHECK_NULL(component, E_FAIL);
-
-    outTexture = static_pointer_cast<Texture>(component);
+    CHECK_FAILED(Add_Component(0, texKey, outTexture), E_FAIL);
     return S_OK;
 }
 

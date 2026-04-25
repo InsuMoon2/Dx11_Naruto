@@ -18,6 +18,7 @@ struct VS_OUT
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos  : TEXCOORD2; 
+    float4 vLightViewPos : TEXCOORD3;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -34,6 +35,7 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
+    Out.vLightViewPos = mul(Out.vWorldPos, g_ViewMatrix);
     
     return Out;
 }
@@ -52,6 +54,7 @@ VS_OUT VS_OUTLINE(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = worldPos;
     Out.vProjPos = Out.vPosition; 
+    Out.vLightViewPos = mul(worldPos, g_ViewMatrix);
 
     return Out;
 }
@@ -63,6 +66,7 @@ struct PS_IN
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float4 vLightViewPos : TEXCOORD3;
 };
 
 struct PS_OUT
@@ -71,6 +75,21 @@ struct PS_OUT
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2; 
 };
+
+struct PS_OUT_SHADOW
+{
+    float4 vDepth : SV_TARGET0;
+};
+
+PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
+{
+    PS_OUT_SHADOW Out;
+
+    float lightDepth = In.vProjPos.z / max(In.vProjPos.w, 0.0001f);
+    // clear 색(1,1,1,1)과 실제 shadow 기록 픽셀을 구분하기 위한 alpha 마커다.
+    Out.vDepth = float4(lightDepth, In.vProjPos.w / 1000.f, 0.f, 0.f);
+    return Out;
+}
 
 PS_OUT PS_OUTLINE(PS_IN In)
 {
@@ -124,5 +143,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_OUTLINE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_OUTLINE();
+    }
+
+    pass ShadowPass
+    {
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetRasterizerState(RS_Shadow);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
 }

@@ -24,6 +24,7 @@ EffectBillboardObject::EffectBillboardObject(const EffectBillboardObject& rhs)
     , _ringTextureCom(rhs._ringTextureCom)
     , _ringOpacityTextureCom(rhs._ringOpacityTextureCom)
     , _ringOpacityGradationTextureCom(rhs._ringOpacityGradationTextureCom)
+    , _screenDistortionNormalTextureCom(rhs._screenDistortionNormalTextureCom)
     , _layerDesc(rhs._layerDesc)
     , _resolvedBaseTextureGuid(rhs._resolvedBaseTextureGuid)
     , _resolvedBaseMaskTextureGuid(rhs._resolvedBaseMaskTextureGuid)
@@ -32,6 +33,7 @@ EffectBillboardObject::EffectBillboardObject(const EffectBillboardObject& rhs)
     , _resolvedRingTextureGuid(rhs._resolvedRingTextureGuid)
     , _resolvedRingOpacityTextureGuid(rhs._resolvedRingOpacityTextureGuid)
     , _resolvedRingOpacityGradationTextureGuid(rhs._resolvedRingOpacityGradationTextureGuid)
+    , _resolvedScreenDistortionNormalTextureGuid(rhs._resolvedScreenDistortionNormalTextureGuid)
     , _useRuntimeBaseOpacityOverride(rhs._useRuntimeBaseOpacityOverride)
     , _runtimeBaseOpacity(rhs._runtimeBaseOpacity)
     , _useRuntimeRingOpacityOverride(rhs._useRuntimeRingOpacityOverride)
@@ -108,6 +110,12 @@ void EffectBillboardObject::Late_Update(float timeDelta)
     if (_layerDesc.billboard.billboardToCamera)
     {
         Update_BillboardRotation();
+    }
+
+    if (_layerDesc.billboard.renderMode == EEffectBillboardRenderMode::ScreenDistortion)
+    {
+        GAME->Add_RenderGroup(ERenderGroup::ScreenDistortion, GetSharedPtr());
+        return;
     }
 
     if (_layerDesc.billboard.blendMode == EEffectBlendMode::Opaque)
@@ -202,6 +210,15 @@ HRESULT EffectBillboardObject::Bind_ShaderResources()
     const int hasBaseOpacityGradationTexture = _baseOpacityGradationTextureCom ? 1 : 0;
     const int hasRingOpacityTexture = _ringOpacityTextureCom ? 1 : 0;
     const int hasRingOpacityGradationTexture = _ringOpacityGradationTextureCom ? 1 : 0;
+    const int hasScreenDistortionNormalTexture = _screenDistortionNormalTextureCom ? 1 : 0;
+    Vec2 screenDistortionInvViewportSize = Vec2(1.f, 1.f); // 현재 viewport 픽셀 좌표를 0~1 화면 UV로 바꾸는 역해상도다.
+
+    UINT viewportCount = 1; // ScreenDistortion이 Scene/Game/Effect View 크기를 직접 따르도록 현재 viewport 하나를 읽는다.
+    D3D11_VIEWPORT viewport{};
+    _context->RSGetViewports(&viewportCount, &viewport);
+
+    if (viewport.Width > 0.f && viewport.Height > 0.f)
+        screenDistortionInvViewportSize = Vec2(1.f / viewport.Width, 1.f / viewport.Height);
 
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix()), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View)), E_FAIL);
@@ -250,6 +267,10 @@ HRESULT EffectBillboardObject::Bind_ShaderResources()
     BindOptionalRaw("g_RingEmissiveStrength", &_layerDesc.billboard.ringEmissiveStrength, sizeof(float));
     BindOptionalRaw("g_ElapsedTime", &_elapsedTime, sizeof(float));
     BindOptionalRaw("g_RenderMode", &renderMode, sizeof(int));
+    BindOptionalRaw("g_BaseUvOffset", &_layerDesc.billboard.baseUvOffset, sizeof(Vec2));
+    BindOptionalRaw("g_BaseUvScale", &_layerDesc.billboard.baseUvScale, sizeof(Vec2));
+    BindOptionalRaw("g_RingUvOffset", &_layerDesc.billboard.ringUvOffset, sizeof(Vec2));
+    BindOptionalRaw("g_RingUvScale", &_layerDesc.billboard.ringUvScale, sizeof(Vec2));
     BindOptionalRaw("g_UseBaseFlipbook", &useBaseFlipbook, sizeof(int));
     BindOptionalRaw("g_BaseFlipbookColumns", &baseFlipbookColumns, sizeof(int));
     BindOptionalRaw("g_BaseFlipbookRows", &baseFlipbookRows, sizeof(int));
@@ -266,6 +287,24 @@ HRESULT EffectBillboardObject::Bind_ShaderResources()
     BindOptionalRaw("g_RingFlipbookLoop", &ringFlipbookLoop, sizeof(int));
     BindOptionalRaw("g_CustomParams0", &_layerDesc.billboard.customParams0, sizeof(Vec4));
     BindOptionalRaw("g_CustomParams1", &_layerDesc.billboard.customParams1, sizeof(Vec4));
+    BindOptionalRaw("g_HasScreenDistortionNormalTexture", &hasScreenDistortionNormalTexture, sizeof(int));
+    BindOptionalRaw("g_ScreenDistortionInvViewportSize", &screenDistortionInvViewportSize, sizeof(Vec2));
+    BindOptionalRaw("g_ScreenDistortionStrength", &_layerDesc.billboard.screenDistortionStrength, sizeof(float));
+    BindOptionalRaw("g_ScreenDistortionRadialStrength", &_layerDesc.billboard.screenDistortionRadialStrength, sizeof(float));
+    BindOptionalRaw("g_ScreenDistortionNormalTiling", &_layerDesc.billboard.screenDistortionNormalTiling, sizeof(Vec2));
+    BindOptionalRaw("g_ScreenDistortionScrollA", &_layerDesc.billboard.screenDistortionScrollA, sizeof(Vec2));
+    BindOptionalRaw("g_ScreenDistortionScrollB", &_layerDesc.billboard.screenDistortionScrollB, sizeof(Vec2));
+
+    if (_layerDesc.billboard.renderMode == EEffectBillboardRenderMode::ScreenDistortion)
+    {
+        CHECK_FAILED(GAME->Bind_RT_ShaderResource(_shaderCom, "g_SceneColorTexture", L"Target_SceneColorCopy"), E_FAIL);
+    }
+    else
+    {
+        BindOptionalNullSrv("g_SceneColorTexture");
+    }
+
+    BindOptionalTexture(_screenDistortionNormalTextureCom, "g_ScreenDistortionNormalTexture");
 
     if (_layerDesc.billboard.useRing && _ringTextureCom)
     {
@@ -404,6 +443,22 @@ HRESULT EffectBillboardObject::Resolve_Textures()
         _resolvedRingOpacityGradationTextureGuid = _layerDesc.billboard.ringOpacityGradationTextureGuid;
     }
 
+    if (_layerDesc.billboard.screenDistortionNormalTextureGuid.empty())
+    {
+        _screenDistortionNormalTextureCom.reset();
+        _resolvedScreenDistortionNormalTextureGuid.clear();
+    }
+    else if (_layerDesc.billboard.screenDistortionNormalTextureGuid == _resolvedBaseTextureGuid && _baseTextureCom)
+    {
+        _screenDistortionNormalTextureCom = _baseTextureCom;
+        _resolvedScreenDistortionNormalTextureGuid = _layerDesc.billboard.screenDistortionNormalTextureGuid;
+    }
+    else if (_resolvedScreenDistortionNormalTextureGuid != _layerDesc.billboard.screenDistortionNormalTextureGuid || !_screenDistortionNormalTextureCom)
+    {
+        CHECK_FAILED(Resolve_TextureComponent(_layerDesc.billboard.screenDistortionNormalTextureGuid, _screenDistortionNormalTextureCom), E_FAIL);
+        _resolvedScreenDistortionNormalTextureGuid = _layerDesc.billboard.screenDistortionNormalTextureGuid;
+    }
+
     return S_OK;
 }
 
@@ -435,6 +490,9 @@ HRESULT EffectBillboardObject::Resolve_TextureComponent(const string& textureGui
 
 uint32 EffectBillboardObject::Resolve_PassIndex() const
 {
+    if (_layerDesc.billboard.renderMode == EEffectBillboardRenderMode::ScreenDistortion)
+        return 0;
+
     // Distortion billboards are heat/shock masks, so they must never alpha-darken the background.
     if (_layerDesc.billboard.renderMode == EEffectBillboardRenderMode::Distortion)
         return 1;

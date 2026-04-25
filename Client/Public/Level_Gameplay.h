@@ -44,6 +44,8 @@ private:
                         vector<MovementComponent::FCollisionModelInstance>& outInstances);
 
     HRESULT         Ready_UI();
+    // 활성 카메라/플레이어 기준으로 shadow 전용 카메라를 다시 맞출 때 호출한다.
+    void            Update_DynamicShadowLightFromView();
 
     static Matrix Build_CollisionModelPreTransform();
 
@@ -70,6 +72,15 @@ private:
 
     HRESULT         Collect_CollisionProxyActorsFromLayer(const wstring& layerTag);
     HRESULT         Append_CollisionProxyInstance(Shared<CollisionProxyActor> actor);
+
+    // Gameplay 레벨의 default ground/proxy를 PhysX scene에 등록할 때 호출한다.
+    HRESULT         Register_PhysXProxiesForTest();
+
+    // Model instance 하나를 PhysX static triangle mesh로 변환해서 등록할 때 호출한다.
+    bool            Register_PhysXProxyInstanceForTest(
+                        const MovementComponent::FCollisionModelInstance& instance,
+                        const string& debugName,
+                        ECollisionProxyType proxyType) const;
 
     static bool     Try_BuildWorldBoundsFromModel(
                         Shared<Model> model,

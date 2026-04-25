@@ -317,6 +317,7 @@
     <ClInclude Include="..\Public\Panel.h" />
     <ClInclude Include="..\Public\Particle_Point.h" />
     <ClInclude Include="..\Public\PartObject.h" />
+    <ClInclude Include="..\Public\PhysXMgr.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\PlayerStart.h" />
     <ClInclude Include="..\Public\Prefab_Manager.h" />
@@ -331,6 +332,7 @@
     <ClInclude Include="..\Public\Engine_Typedef.h" />
     <ClInclude Include="..\Public\Reflection_Macro.h" />
     <ClInclude Include="..\Public\RenderTarget.h" />
+    <ClInclude Include="..\Public\Shadow.h" />
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\Sound_Manager.h" />
     <ClInclude Include="..\Public\Target_Manager.h" />
@@ -431,12 +433,14 @@
     <ClCompile Include="..\Private\Panel.cpp" />
     <ClCompile Include="..\Private\Particle_Point.cpp" />
     <ClCompile Include="..\Private\PartObject.cpp" />
+    <ClCompile Include="..\Private\PhysXMgr.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\PlayerStart.cpp" />
     <ClCompile Include="..\Private\Prefab_Manager.cpp" />
     <ClCompile Include="..\Private\ProjectileComponent.cpp" />
     <ClCompile Include="..\Private\Prototype_Manager.cpp" />
     <ClCompile Include="..\Private\RenderTarget.cpp" />
+    <ClCompile Include="..\Private\Shadow.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\Sound_Manager.cpp" />
     <ClCompile Include="..\Private\Target_Manager.cpp" />

@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "GameObject.h"
 #include "Debug_Manager.h"
+#include "WireMeshEffect.h"
 
 PlayerState_AirApproach::PlayerState_AirApproach()
 {
@@ -72,6 +73,8 @@ void PlayerState_AirApproach::Update(PlayerStateMachine* state, float timeDelta)
     {
         _arrived = true;
 
+        Destroy_WireMesh();
+
         switch (_approachDesc.arriveAction)
         {
         case EArriveAction::WallAttach:
@@ -109,20 +112,21 @@ void PlayerState_AirApproach::Update(PlayerStateMachine* state, float timeDelta)
     // 있어야한다.
     if (_elapsedTime >= _approachDesc.maxApproachTime)
     {
+        Destroy_WireMesh();
+
         state->Change_State(_approachDesc.nextStateOnFail);
         return;
     }
 
-    // 타겟으로 회전처리
     Vec3 moveDir = Utils::Safe_Normalize(toTarget, Vec3::Forward);
 
     Vec3 lookDir = moveDir;
-    lookDir.y = 0.;
+    lookDir.y = 0.f;
 
-    if (lookDir.LengthSquared() > FLT_EPSILON)
+    if (lookDir.LengthSquared() > 0.0001f)
     {
         lookDir.Normalize();
-        transform->LookAt(transform->Get_WorldPosition() + lookDir);
+        transform->LookAt(currentPos + lookDir);
     }
 
     Vec3 velocity = moveDir * _approachDesc.moveSpeed;
@@ -144,6 +148,8 @@ void PlayerState_AirApproach::Update(PlayerStateMachine* state, float timeDelta)
 
 void PlayerState_AirApproach::Exit(PlayerStateMachine* state)
 {
+    Destroy_WireMesh();
+
     if (!state)
         return;
 
@@ -159,6 +165,15 @@ void PlayerState_AirApproach::Exit(PlayerStateMachine* state)
     {
         input->Set_InputMode(EPlayerInputMode::Normal);
     }
+}
+
+void PlayerState_AirApproach::Destroy_WireMesh()
+{
+    auto wireEffect = _approachDesc.wireMeshEffect.lock();
+    if (wireEffect)
+        wireEffect->Set_Destroy(true);
+
+    _approachDesc.wireMeshEffect.reset();
 }
 
 Shared<PlayerState_AirApproach> PlayerState_AirApproach::Create()

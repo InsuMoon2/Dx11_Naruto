@@ -160,6 +160,24 @@ Protocol::OBJECT_STATE_TYPE Boss_Pain::To_EnemyObjectState(const string& animSta
     if (animStateName == "Run" || animStateName.rfind("Run_", 0) == 0)
         return Protocol::OBJECT_STATE_TYPE_RUN;
 
+    if (animStateName == "Jump")
+        return Protocol::OBJECT_STATE_TYPE_JUMP;
+
+    if (animStateName == "AirApproach")
+        return Protocol::OBJECT_STATE_TYPE_AIR_APPROACH;
+
+    if (animStateName == "Attack_Air_01")
+        return Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_01;
+
+    if (animStateName == "Attack_Air_02")
+        return Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_02;
+
+    if (animStateName == "Attack_Air_03")
+        return Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_03;
+
+    if (animStateName == "Attack_Air_04")
+        return Protocol::OBJECT_STATE_TYPE_ATTACK_AIR_04;
+
     if (animStateName == "Attack_04")
         return Protocol::OBJECT_STATE_TYPE_ATTACK_04;
 
@@ -186,6 +204,7 @@ Protocol::OBJECT_STATE_TYPE Boss_Pain::To_EnemyObjectState(const string& animSta
 
     return Protocol::OBJECT_STATE_TYPE_IDLE;
 }
+
 
 Shared<Boss_Pain> Boss_Pain::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {

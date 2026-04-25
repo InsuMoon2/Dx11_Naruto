@@ -99,6 +99,10 @@ enum ComponentID : int {
   COMPONENT_TYPE_BOSS_HP = 222,
   COMPONENT_TYPE_TEXTURE_SKY_SPHERE = 223,
   COMPONENT_TYPE_TEXTURE_MISSION = 224,
+  COMPONENT_TYPE_TEXTURE_KO = 225,
+  COMPONENT_TYPE_TEXTURE_TIMER = 226,
+  COMPONENT_TYPE_TEXTURE_HALO = 227,
+  COMPONENT_TYPE_TEXTURE_LOCK_ON = 228,
   COMPONENT_TYPE_MESH = 299,
   COMPONENT_TYPE_MODEL_START = 300,
   COMPONENT_TYPE_MODEL_PLAYER = 301,
@@ -202,6 +206,8 @@ enum OBJECT_TYPE : int {
   OBJECT_TYPE_MESH_DEBRIS = 85,
   OBJECT_TYPE_BOSS_PAIN = 86,
   OBJECT_TYPE_WAVE_TRIGGER = 87,
+  OBJECT_TYPE_CHIBAKU_TENSEI = 88,
+  OBJECT_TYPE_WIRE_MESH_EFFECT = 89,
   OBJECT_TYPE_UI_TEXT = 100,
   OBJECT_TYPE_UI_LOADING_SPINNER = 101,
   OBJECT_TYPE_UI_LOADING_PROGRESS_BAR = 102,
@@ -218,6 +224,8 @@ enum OBJECT_TYPE : int {
   OBJECT_TYPE_UI_MONSTER_HP = 113,
   OBJECT_TYPE_UI_BOSS_HP = 114,
   OBJECT_TYPE_UI_MULTIPLAYER_HP = 115,
+  OBJECT_TYPE_UI_TIMER = 116,
+  OBJECT_TYPE_UI_LOCK_ON = 117,
   OBJECT_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   OBJECT_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -227,8 +235,8 @@ enum OBJECT_TYPE : int {
 bool OBJECT_TYPE_IsValid(int value);
 extern const uint32_t OBJECT_TYPE_internal_data_[];
 constexpr OBJECT_TYPE OBJECT_TYPE_MIN = static_cast<OBJECT_TYPE>(0);
-constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(115);
-constexpr int OBJECT_TYPE_ARRAYSIZE = 115 + 1;
+constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(117);
+constexpr int OBJECT_TYPE_ARRAYSIZE = 117 + 1;
 const ::google::protobuf::EnumDescriptor*
 OBJECT_TYPE_descriptor();
 template <typename T>
@@ -236,7 +244,13 @@ const std::string& OBJECT_TYPE_Name(T value) {
   static_assert(std::is_same<T, OBJECT_TYPE>::value ||
                     std::is_integral<T>::value,
                 "Incorrect type passed to OBJECT_TYPE_Name().");
-  return ::google::protobuf::internal::NameOfEnum(OBJECT_TYPE_descriptor(), value);
+  return OBJECT_TYPE_Name(static_cast<OBJECT_TYPE>(value));
+}
+template <>
+inline const std::string& OBJECT_TYPE_Name(OBJECT_TYPE value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<OBJECT_TYPE_descriptor,
+                                                 0, 117>(
+      static_cast<int>(value));
 }
 inline bool OBJECT_TYPE_Parse(absl::string_view name, OBJECT_TYPE* value) {
   return ::google::protobuf::internal::ParseNamedEnum<OBJECT_TYPE>(

@@ -171,7 +171,9 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
     Protocol::S_MyPlayer pkt;
     ParsePacket(buffer, pkt);
 
-    uint64 myId = pkt.info().objectid();
+    // 서버가 확정한 내 플레이어 스폰/동기화 정보라서 생성과 Sync 양쪽에서 같은 값을 쓴다.
+    const Protocol::ObjectInfo& info = pkt.info();
+    uint64 myId = info.objectid();
     s_MyNetworkId = myId;
 
     auto existingIt = s_NetworkObjects.find(myId);
@@ -186,9 +188,15 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
     }
 
     uint32 levelIndex = GAME->Current_Level();
+    // prefab 기본 위치가 한 프레임이라도 노출되지 않도록 서버 스폰 위치를 생성 단계에 먼저 반영한다.
+    const Vec3 spawnPos(info.pos().x(), info.pos().y(), info.pos().z());
+    // PlayerStart/서버 yaw가 최초 카메라 방향과 캐릭터 방향에 바로 반영되도록 회전도 같이 넘긴다.
+    const Vec3 spawnRot(info.rot_x(), info.rot_y(), info.rot_z());
 
     auto gameObject = Spawn_Helper::Prefab("TestPlayer2")
         .AtLevel(levelIndex)
+        .Position(spawnPos)
+        .Rotation(spawnRot)
         .InLayer(TEXT("Layer_Player"))
         .Spawn();
 
@@ -199,7 +207,7 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
     if (!player)
         return;
 
-    for (auto& pair : pkt.info().equipparts())
+    for (auto& pair : info.equipparts())
     {
         ContainerObject::EPartSlot slot = static_cast<ContainerObject::EPartSlot>(pair.first);
         wstring assetTag = Utils::ToWString(pair.second);
@@ -208,9 +216,9 @@ void Client_PacketHandler::Handle_S_MyPlayer(Shared<ServerSession> session, BYTE
 
     }
 
-    player->Set_PlayerName(Utils::ToWString(pkt.info().name()));
+    player->Set_PlayerName(Utils::ToWString(info.name()));
     player->Set_NetworkId(myId);
-    player->Sync(pkt.info());
+    player->Sync(info);
 
     s_NetworkObjects[myId] = player;
     Refresh_MonsterAuthority();
@@ -457,11 +465,18 @@ SendBufferRef Client_PacketHandler::Make_C_LobbyStartGame()
 
 Shared<GameObject> Client_PacketHandler::Spawn_NetworkObject(const Protocol::ObjectInfo& info, uint32 levelIndex)
 {
+    // 서버가 보낸 최초 위치를 생성 단계에 반영해 원격 오브젝트도 prefab 기본 위치를 거치지 않게 한다.
+    const Vec3 spawnPos(info.pos().x(), info.pos().y(), info.pos().z());
+    // 서버 회전값을 최초 생성부터 맞춰 원격 플레이어/몬스터의 바라보는 방향 튐을 줄인다.
+    const Vec3 spawnRot(info.rot_x(), info.rot_y(), info.rot_z());
+
     switch (info.objecttype())
     {
     case Protocol::OBJECT_TYPE_PLAYER:
         return Spawn_Helper::Prefab("RemotePlayer")
             .AtLevel(levelIndex)
+            .Position(spawnPos)
+            .Rotation(spawnRot)
             .InLayer(TEXT("Layer_GameObject"))
             .Spawn();
 
@@ -471,6 +486,8 @@ Shared<GameObject> Client_PacketHandler::Spawn_NetworkObject(const Protocol::Obj
 
         return Spawn_Helper::Prefab(prefabName)
             .AtLevel(levelIndex)
+            .Position(spawnPos)
+            .Rotation(spawnRot)
             .InLayer(TEXT("Layer_GameObject"))
             .Spawn();
     }
@@ -481,6 +498,8 @@ Shared<GameObject> Client_PacketHandler::Spawn_NetworkObject(const Protocol::Obj
 
         return Spawn_Helper::Prefab(prefabName)
             .AtLevel(levelIndex)
+            .Position(spawnPos)
+            .Rotation(spawnRot)
             .InLayer(TEXT("Layer_GameObject"))
             .Spawn();
     }

@@ -145,6 +145,14 @@ void UI_AnnounceCombo::On_PlayerComboHit(uint32 combo)
         Update_Matrices();
 }
 
+void UI_AnnounceCombo::Set_AnnouncePosition(float x, float y)
+{
+    Set_UIPosition(x, y);
+
+    if (_isVisible)
+        Update_Matrices();
+}
+
 HRESULT UI_AnnounceCombo::Ready_Components()
 {
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TEXTURE_ANNOUNCE_HIT, _textureHit), E_FAIL);

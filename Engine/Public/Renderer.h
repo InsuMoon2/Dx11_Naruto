@@ -33,6 +33,8 @@ public: /* 블러 처리 */
 
 #ifdef _DEBUG
     void    Add_DebugRenderGroup(Shared<Component> debugComponent);
+    // 현재 런타임 뷰포트 크기에 맞춰 RT 디버그 사각형 위치/크기를 다시 배치할 때 호출한다.
+    HRESULT Update_RTDebugLayout(uint32 width, uint32 height);
 #endif
 
 private:
@@ -56,6 +58,13 @@ private:
 #endif
 
     HRESULT    Ready_RenderTarget();
+
+private:
+    void    Render_Shadow();
+    bool    Update_ShadowState();
+    HRESULT Ensure_ShadowResources(const FLightDesc& shadowDesc);
+
+    void    Render_ScreenDistortion();
 
 public:
     uint32  Get_DrawCallCount() const { return _drawCallCount; }
@@ -85,9 +94,16 @@ private:
     list<shared_ptr<Component>>     _debugComponents;
 #endif
 
-private:
+private: /* Blur */
     float   _blurStrength = 0.f;
     Vec2    _blurDirection = Vec2(0.f, 1.f); // UV기준
+
+private: /* Shadow */
+    bool                            _shadowEnabled = false;
+    uint32                          _shadowMapSize = 0;
+    D3D11_VIEWPORT                  _shadowViewport = {};
+    ComPtr<Texture2D>               _shadowDepthTexture;
+    ComPtr<DepthStencil>            _shadowDepthDSV;
 
 public:
     static unique_ptr<Renderer> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

@@ -62,6 +62,7 @@ public:
     bool    Apply_LayerTransform(int32 layerIndex, const FEffectLayerBase& baseDesc);
 
     void    Set_ForceVisiblePreview(bool enabled);
+    void    Set_PreviewSoloLayerIndex(int32 layerIndex);
 
     // NotifyState에서 조절
     void    Set_RuntimeLocalTransform(const Vec3& localPosition, const Vec3& localRotation, const Vec3& localScale);
@@ -76,6 +77,7 @@ private:
     void    Apply_LayerScaleInternal(FActiveLayer& layer);
     // 레이어 수명에 따라 tint/opacity/emissive 값을 계산해 현재 오브젝트에 반영할 때 호출한다.
     void    Apply_LayerAnimatedMaterialInternal(FActiveLayer& layer);
+    bool    Is_LayerVisibleInPreview(int32 layerIndex) const;
     // Position Over Time이 켜진 레이어의 현재 로컬 위치를 계산할 때 호출한다.
     Vec3    Resolve_LayerPosition(const FActiveLayer& layer) const;
     Vec3    Resolve_LayerScale(const FActiveLayer& layer) const;
@@ -94,6 +96,7 @@ private:
     bool                    _isPlaying = false;
 
     bool                    _forceVisiblePreview = false;
+    int32                   _previewSoloLayerIndex = -1;
 
     FPlayDesc               _desc;
 

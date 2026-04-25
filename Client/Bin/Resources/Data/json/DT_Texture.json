@@ -187,6 +187,48 @@
             "Level": "Static"
         },
         {
+            "Id": "COMPONENT_TYPE_TEXTURE_KO",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_Announce_KO_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_KO",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_KO_BG_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_TIMER",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Timer/Decimal%d.png",
+            "Count": 10,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_TIMER",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Timer/Timer0.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_HALO",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/Announce/Textures/T_UI_Announce_Halo_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_LOCK_ON",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/TargetCursol/Textures/T_UI_TargetCursol_Lock3.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_LOCK_ON",
+            "Path": "../../Client/Bin/Resources/Textures/UI/ingame/TargetCursol/Textures/T_UI_TargetCursol_Lock_Effect.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
             "Id": "COMPONENT_TYPE_TEXTURE_MAIN_TITLE",
             "Path": "../../Client/Bin/Resources/Textures/UI/MainTitle/MainTitle%d.png",
             "Count": 2,

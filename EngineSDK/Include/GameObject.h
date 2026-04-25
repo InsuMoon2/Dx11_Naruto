@@ -30,6 +30,7 @@ public:
     virtual void        Update(float timeDelta);
     virtual void        Late_Update(float timeDelta);
     virtual HRESULT     Render();
+    virtual HRESULT     Render_Shadow();
 
     virtual json        To_Json() const;
     virtual void        From_Json(const json& data);

@@ -16,6 +16,7 @@
 #include "SmearEffect_Component.h"
 #include "SwordTrail_Component.h"
 #include "SkillComponent.h"
+#include "Transform.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
@@ -125,6 +126,19 @@ HRESULT Player::Render()
 
 void Player::TakeDamage(const FDamageEvent& damageEvent)
 {
+    if (auto stateMachine = Get_Component<PlayerStateMachine>())
+    {
+        switch (stateMachine->Get_CurrentStateID())
+        {
+        case EPlayerState::Dash:
+        case EPlayerState::JumpDash:
+        case EPlayerState::WireDash:
+            return;
+        default:
+            break;
+        }
+    }
+
     Character::TakeDamage(damageEvent);
 
     if (_combatStat && _combatStat->Is_Dead())
@@ -139,14 +153,43 @@ void Player::OnDamaged(const FDamageEvent& damageEvent)
 {
     Character::OnDamaged(damageEvent);
 
+    Set_RotationToDamageCauser(damageEvent);
+
     auto sm = Get_Component<PlayerStateMachine>();
     if (sm && _combatStat && !_combatStat->Is_Dead())
     {
         sm->Trigger_HitReaction(
             damageEvent.hitReactionType,
             damageEvent.hitReactionSerial,
-            damageEvent.forceHitRestart); // 스테이트 머신에서 슈퍼아머인지 판단하고 상태 변환
+            damageEvent.forceHitRestart,
+            damageEvent.hitAnimStateOverride); // 스테이트 머신에서 슈퍼아머인지 판단하고 상태 변환
     }
+}
+
+void Player::Set_RotationToDamageCauser(const FDamageEvent& damageEvent)
+{
+    if (!_transformCom)
+        return;
+
+    auto damageCauser = damageEvent.damageCauser;
+    if (!damageCauser)
+        return;
+
+    auto causerTransform = damageCauser->Get_Component<Transform>();
+    if (!causerTransform)
+        return;
+
+    const Vec3 myPos = _transformCom->Get_WorldPosition();
+    Vec3 targetPos = causerTransform->Get_WorldPosition();
+
+    targetPos.y = myPos.y;
+
+    Vec3 lookDir = targetPos - myPos;
+    if (lookDir.LengthSquared() <= 0.0001f)
+        return;
+
+    lookDir.Normalize();
+    _transformCom->LookAt(myPos + lookDir);
 }
 
 void Player::OnDead(const FDamageEvent& damageEvent)
@@ -165,7 +208,9 @@ void Player::OnDead(const FDamageEvent& damageEvent)
 
 void Player::Sync(const Protocol::ObjectInfo& info)
 {
+    // 서버 권위 위치/회전을 즉시 반영해 최초 스폰과 이후 재동기화를 같은 기준으로 맞춘다.
     _transformCom->Set_LocalPosition(info.pos().x(), info.pos().y(), info.pos().z());
+    _transformCom->Set_LocalEulerAngles(info.rot_x(), info.rot_y(), info.rot_z());
 
     // 서버에서 이름 세팅한거 로컬에도 세팅되게
     if (!info.name().empty())

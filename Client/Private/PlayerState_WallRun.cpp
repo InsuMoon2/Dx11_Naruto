@@ -52,9 +52,17 @@ void PlayerState_WallRun::Update(PlayerStateMachine* state, float timeDelta)
     if (!movement->Is_WallRunning())
     {
         if (movement->Is_OnGround())
+        {
             state->Change_State(EPlayerState::Run);
+        }
+        else if (movement->Try_RecoverWallRunHold())
+        {
+            state->Change_State(EPlayerState::Wall_Idle);
+        }
         else
+        {
             state->Change_State(EPlayerState::JumpFall);
+        }
         return;
     }
 

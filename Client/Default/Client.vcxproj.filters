@@ -388,6 +388,9 @@
     <ClInclude Include="..\Public\BTTask_RetreatAndWait.h">
       <Filter>06. Behavior\Task</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BTTask_StrafeAroundTarget.h">
+      <Filter>06. Behavior\Task</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\WaveTrigger.h" />
     <ClInclude Include="..\Public\UI_BossHp.h" />
     <ClInclude Include="..\Public\AN_CameraShake.h" />
@@ -399,6 +402,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\AN_SpawnProjSkill.h" />
     <ClInclude Include="..\Public\Collision_SurfaceCache.h" />
+    <ClInclude Include="..\Public\BTTask_UpdateBossContext.h" />
+    <ClInclude Include="..\Public\BTTask_PainForceSkill.h" />
+    <ClInclude Include="..\Public\Skill_ChibakuTensei.h" />
+    <ClInclude Include="..\Public\BTTask_ChibakuTensei.h" />
+    <ClInclude Include="..\Public\UI_Timer.h">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_WireLockOn.h" />
+    <ClInclude Include="..\Public\WireMeshEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -770,6 +782,9 @@
     <ClCompile Include="..\Private\BTTask_RetreatAndWait.cpp">
       <Filter>06. Behavior\Task</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\BTTask_StrafeAroundTarget.cpp">
+      <Filter>06. Behavior\Task</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\WaveTrigger.cpp" />
     <ClCompile Include="..\Private\UI_BossHp.cpp" />
     <ClCompile Include="..\Private\AN_CameraShake.cpp" />
@@ -781,6 +796,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\AN_SpawnProjSkill.cpp" />
     <ClCompile Include="..\Private\Collision_SurfaceCache.cpp" />
+    <ClCompile Include="..\Private\BTTask_UpdateBossContext.cpp" />
+    <ClCompile Include="..\Private\BTTask_PainForceSkill.cpp" />
+    <ClCompile Include="..\Private\Skill_ChibakuTensei.cpp" />
+    <ClCompile Include="..\Private\BTTask_ChibakuTensei.cpp" />
+    <ClCompile Include="..\Private\UI_Timer.cpp">
+      <Filter>02. GameObject\02. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_WireLockOn.cpp" />
+    <ClCompile Include="..\Private\WireMeshEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

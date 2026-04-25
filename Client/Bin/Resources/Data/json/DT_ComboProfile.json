@@ -67,7 +67,8 @@
             "canCancel": true,
             "launchPower": 2,
             "launchUp": 2,
-            "hitSound": 0
+            "hitSound": 0,
+            "hitReactionType": "Hit_Air"
         },
         {
             "profileName": "격투형 공중",
@@ -80,7 +81,8 @@
             "canCancel": true,
             "launchPower": 2,
             "launchUp": 3,
-            "hitSound": 0
+            "hitSound": 0,
+            "hitReactionType": "Hit_Air"
         },
         {
             "profileName": "격투형 공중",
@@ -93,7 +95,8 @@
             "canCancel": false,
             "launchPower": 2,
             "launchUp": 3,
-            "hitSound": 0
+            "hitSound": 0,
+            "hitReactionType": "Hit_Air"
         },
         {
             "profileName": "격투형 공중",
@@ -106,7 +109,8 @@
             "canCancel": false,
             "launchPower": 3,
             "launchUp": -3,
-            "hitSound": 0
+            "hitSound": 0,
+            "hitReactionType": "Hit_Air_Down"
         },
         {
             "profileName": "검술형 일반",

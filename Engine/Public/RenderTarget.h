@@ -42,10 +42,13 @@ public:
     uint32 Get_Width() const { return _width; }
     uint32 Get_Height() const { return _height; }
 
-    #ifdef _DEBUG
+#ifdef _DEBUG
 public:
     HRESULT Ready_Debug(float x, float y, float sizeX, float sizeY);
     HRESULT Render(Shared<VIBuffer_Rect> viBuffer, Shared<Shader> shader);
+
+    // Debug shadow/RT 진단용: R32 계열 RT를 CPU로 읽어 실제 픽셀 값 범위를 로그로 확인할 때 호출한다.
+    HRESULT Log_DebugFloatStats(const wstring& targetTag) const;
 private:
     Matrix _debugWorldMatrix = Matrix::Identity;
 #endif

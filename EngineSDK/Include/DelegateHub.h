@@ -30,6 +30,8 @@ DECLARE_DELEGATE(FOnWaveCleared, const string&);
 
 DECLARE_DELEGATE(FOnBossObjectSpawned, Shared<GameObject>);
 
+DECLARE_DELEGATE(FOnWireLockOnVisible, bool);
+
 // 델리게이트들을 모아놓을 허브 : 매니저 역할이긴하네..
 class ENGINE_DLL DelegateHub : public Base
 {
@@ -65,6 +67,9 @@ public:
 
     // 보스 체력바
     FOnBossObjectSpawned        OnBossObjectSpawned;
+
+    // 와이어 액션
+    FOnWireLockOnVisible        OnWireLockOnVisible;
 
     
 };

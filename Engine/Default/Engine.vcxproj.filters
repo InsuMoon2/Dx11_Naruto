@@ -64,6 +64,9 @@
     <ClInclude Include="..\Public\RenderTarget.h">
       <Filter>01. Utility\05. Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Shadow.h">
+      <Filter>01. Utility\05. Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Transform.h">
       <Filter>01. Utility\04. Component\00. Transform</Filter>
     </ClInclude>
@@ -317,6 +320,9 @@
     <ClInclude Include="..\Public\EffectBilldboardObject.h" />
     <ClInclude Include="..\Public\VIBuffer_Trail.h" />
     <ClInclude Include="..\Public\CollisionProxy_Manager.h" />
+    <ClInclude Include="..\Public\PhysXMgr.h">
+      <Filter>95. Manager</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Target_Manager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -550,6 +556,9 @@
     <ClCompile Include="..\Private\RenderTarget.cpp">
       <Filter>01. Utility\05. Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Shadow.cpp">
+      <Filter>01. Utility\05. Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Transform.cpp">
       <Filter>01. Utility\04. Component\00. Transform</Filter>
     </ClCompile>
@@ -775,6 +784,9 @@
     <ClCompile Include="..\Private\EffectBilldboardObject.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Trail.cpp" />
     <ClCompile Include="..\Private\CollisionProxy_Manager.cpp" />
+    <ClCompile Include="..\Private\PhysXMgr.cpp">
+      <Filter>95. Manager</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Target_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>

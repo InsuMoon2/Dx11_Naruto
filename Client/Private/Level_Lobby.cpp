@@ -305,6 +305,9 @@ HRESULT Level_Lobby::Ready_Layer_UI()
 
 HRESULT Level_Lobby::Ready_PreviewScene()
 {
+    // 프리뷰용 라이트를 등록하기 전에 이전 레벨에서 남은 라이트를 정리한다.
+    GAME->Clear_Lights();
+
     // 로비 프리뷰 캐릭터를 안정적으로 보기 위한 기본 방향광이다.
     {
         FLightDesc lightDesc{};

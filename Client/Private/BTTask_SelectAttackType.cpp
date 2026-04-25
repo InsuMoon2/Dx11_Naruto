@@ -33,6 +33,7 @@ bool BTTask_SelectAttackType::Register_Properties()
     PROPERTY_STRING_JSON("Air Attack State 02", "air_attack_state_02", _airAttackState02);
     PROPERTY_STRING_JSON("Air Attack State 03", "air_attack_state_03", _airAttackState03);
     PROPERTY_STRING_JSON("Air Attack State 04", "air_attack_state_04", _airAttackState04);
+    PROPERTY_STRING_JSON("Can Use Aerial Attack Key", "can_use_aerial_attack_key", _canUseAerialAttackKey);
 
     return true;
 }
@@ -59,6 +60,7 @@ BTTask_SelectAttackType::BTTask_SelectAttackType(const BTTask_SelectAttackType& 
     , _airAttackState02(rhs._airAttackState02)
     , _airAttackState03(rhs._airAttackState03)
     , _airAttackState04(rhs._airAttackState04)
+    , _canUseAerialAttackKey(rhs._canUseAerialAttackKey)
 {
 }
 
@@ -161,10 +163,16 @@ EBTNodeResult BTTask_SelectAttackType::Update(float timeDelta)
     blackboard->Set_ValueAsBool(_targetIsAirborneKey, targetIsAirborne);
     blackboard->Set_ValueAsFloat(_targetHeightDeltaKey, heightDelta);
 
-    // 0 = Ground, 1 = Aerial
-    blackboard->Set_ValueAsInt(_desiredCombatModeKey, targetIsAirborne ? 1 : 0);
+    const bool canUseAerialAttack = blackboard->HasKey(_canUseAerialAttackKey)
+        ? blackboard->Get_ValueAsBool(_canUseAerialAttackKey)
+        : targetIsAirborne;
 
-    const string selectedAttackState = Select_NextAttackState(blackboard, targetIsAirborne);
+    const bool useAerialAttack = targetIsAirborne && canUseAerialAttack;
+
+    // 0 = Ground, 1 = Aerial
+    blackboard->Set_ValueAsInt(_desiredCombatModeKey, useAerialAttack ? 1 : 0);
+
+    const string selectedAttackState = Select_NextAttackState(blackboard, useAerialAttack);
     blackboard->Set_ValueAsString(_selectedAttackStateKey, selectedAttackState);
 
     _lastResult = EBTNodeResult::Succeeded;

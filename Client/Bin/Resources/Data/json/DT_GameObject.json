@@ -111,6 +111,16 @@
             "Level": "Static"
         },
         {
+            "Id": "ChibakuTensei",
+            "ObjectType": "OBJECT_TYPE_CHIBAKU_TENSEI",
+            "Level": "Static"
+        },
+        {
+            "Id": "WireMesh",
+            "ObjectType": "OBJECT_TYPE_WIRE_MESH_EFFECT",
+            "Level": "Static"
+        },
+        {
             "Id": "Skill_Object",
             "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
             "Level": "Static"
@@ -263,6 +273,16 @@
         {
             "Id": "UI_MultiplayerHp",
             "ObjectType": "OBJECT_TYPE_UI_MULTIPLAYER_HP",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_Timer",
+            "ObjectType": "OBJECT_TYPE_UI_TIMER",
+            "Level": "Static"
+        },
+        {
+            "Id": "UI_LockOn",
+            "ObjectType": "OBJECT_TYPE_UI_LOCK_ON",
             "Level": "Static"
         }
     ]

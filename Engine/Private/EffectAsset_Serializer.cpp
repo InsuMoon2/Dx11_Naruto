@@ -285,6 +285,14 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["ringTextureGuid"] = billboard.ringTextureGuid;
         j["ringOpacityTextureGuid"] = billboard.ringOpacityTextureGuid;
         j["ringOpacityGradationTextureGuid"] = billboard.ringOpacityGradationTextureGuid;
+        j["screenDistortionNormalTextureGuid"] = billboard.screenDistortionNormalTextureGuid;
+        j["baseUvOffset"] = { billboard.baseUvOffset.x, billboard.baseUvOffset.y };
+        j["baseUvScale"] = { billboard.baseUvScale.x, billboard.baseUvScale.y };
+        j["ringUvOffset"] = { billboard.ringUvOffset.x, billboard.ringUvOffset.y };
+        j["ringUvScale"] = { billboard.ringUvScale.x, billboard.ringUvScale.y };
+        j["screenDistortionNormalTiling"] = { billboard.screenDistortionNormalTiling.x, billboard.screenDistortionNormalTiling.y };
+        j["screenDistortionScrollA"] = { billboard.screenDistortionScrollA.x, billboard.screenDistortionScrollA.y };
+        j["screenDistortionScrollB"] = { billboard.screenDistortionScrollB.x, billboard.screenDistortionScrollB.y };
         j["blendMode"] = static_cast<int>(billboard.blendMode);
         j["renderMode"] = static_cast<int>(billboard.renderMode);
         j["baseTint"] = { billboard.baseTint.x, billboard.baseTint.y, billboard.baseTint.z, billboard.baseTint.w };
@@ -293,6 +301,8 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["ringOpacity"] = billboard.ringOpacity;
         j["baseEmissiveStrength"] = billboard.baseEmissiveStrength;
         j["ringEmissiveStrength"] = billboard.ringEmissiveStrength;
+        j["screenDistortionStrength"] = billboard.screenDistortionStrength;
+        j["screenDistortionRadialStrength"] = billboard.screenDistortionRadialStrength;
         j["useBaseOpacityOverTime"] = billboard.useBaseOpacityOverTime;
         j["endBaseOpacity"] = billboard.endBaseOpacity;
         j["useRingOpacityOverTime"] = billboard.useRingOpacityOverTime;
@@ -510,6 +520,14 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("ringTextureGuid")) billboard.ringTextureGuid = j["ringTextureGuid"];
         if (j.contains("ringOpacityTextureGuid")) billboard.ringOpacityTextureGuid = j["ringOpacityTextureGuid"];
         if (j.contains("ringOpacityGradationTextureGuid")) billboard.ringOpacityGradationTextureGuid = j["ringOpacityGradationTextureGuid"];
+        if (j.contains("screenDistortionNormalTextureGuid")) billboard.screenDistortionNormalTextureGuid = j["screenDistortionNormalTextureGuid"];
+        if (j.contains("baseUvOffset")) billboard.baseUvOffset = Vec2(j["baseUvOffset"][0], j["baseUvOffset"][1]);
+        if (j.contains("baseUvScale")) billboard.baseUvScale = Vec2(j["baseUvScale"][0], j["baseUvScale"][1]);
+        if (j.contains("ringUvOffset")) billboard.ringUvOffset = Vec2(j["ringUvOffset"][0], j["ringUvOffset"][1]);
+        if (j.contains("ringUvScale")) billboard.ringUvScale = Vec2(j["ringUvScale"][0], j["ringUvScale"][1]);
+        if (j.contains("screenDistortionNormalTiling")) billboard.screenDistortionNormalTiling = Vec2(j["screenDistortionNormalTiling"][0], j["screenDistortionNormalTiling"][1]);
+        if (j.contains("screenDistortionScrollA")) billboard.screenDistortionScrollA = Vec2(j["screenDistortionScrollA"][0], j["screenDistortionScrollA"][1]);
+        if (j.contains("screenDistortionScrollB")) billboard.screenDistortionScrollB = Vec2(j["screenDistortionScrollB"][0], j["screenDistortionScrollB"][1]);
         if (j.contains("blendMode")) billboard.blendMode = static_cast<EEffectBlendMode>(j["blendMode"].get<int>());
         if (j.contains("renderMode")) billboard.renderMode = static_cast<EEffectBillboardRenderMode>(j["renderMode"].get<int>());
         if (j.contains("baseTint")) billboard.baseTint = Vec4(j["baseTint"][0], j["baseTint"][1], j["baseTint"][2], j["baseTint"][3]);
@@ -518,6 +536,8 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("ringOpacity")) billboard.ringOpacity = j["ringOpacity"];
         if (j.contains("baseEmissiveStrength")) billboard.baseEmissiveStrength = j["baseEmissiveStrength"];
         if (j.contains("ringEmissiveStrength")) billboard.ringEmissiveStrength = j["ringEmissiveStrength"];
+        if (j.contains("screenDistortionStrength")) billboard.screenDistortionStrength = j["screenDistortionStrength"];
+        if (j.contains("screenDistortionRadialStrength")) billboard.screenDistortionRadialStrength = j["screenDistortionRadialStrength"];
         if (j.contains("useBaseOpacityOverTime")) billboard.useBaseOpacityOverTime = j["useBaseOpacityOverTime"];
         if (j.contains("endBaseOpacity")) billboard.endBaseOpacity = j["endBaseOpacity"];
         if (j.contains("useRingOpacityOverTime")) billboard.useRingOpacityOverTime = j["useRingOpacityOverTime"];

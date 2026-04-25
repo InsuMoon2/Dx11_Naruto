@@ -15,14 +15,35 @@ HRESULT Light::Initialize(const FLightDesc& desc)
     return S_OK;
 }
 
+HRESULT Light::Update_Desc(const FLightDesc& desc)
+{
+    _lightDesc = desc;
+    return S_OK;
+}
+
 HRESULT Light::Render(Shared<Shader> shader, Shared<VIBuffer_Rect> viBuffer)
 {
     uint32 type = static_cast<uint32>(_lightDesc.type);
 
     uint32 shaderPass = {};
 
+    const int lightCastsShadow =
+        (_lightDesc.type == ELightType::Directional && _lightDesc.castShadow) ? 1 : 0;
+
+    if (FAILED(shader->Bind_RawValue("g_LightCastsShadow", &lightCastsShadow, sizeof(int))))
+        return E_FAIL;
+
     if (_lightDesc.type == ELightType::Directional)
     {
+        if (FAILED(shader->Bind_RawValue("g_ShadowBias", &_lightDesc.shadowBias, sizeof(float))))
+            return E_FAIL;
+
+        if (FAILED(shader->Bind_RawValue("g_ShadowStrength", &_lightDesc.shadowStrength, sizeof(float))))
+            return E_FAIL;
+
+        if (FAILED(shader->Bind_RawValue("g_ShadowSoftness", &_lightDesc.shadowSoftness, sizeof(float))))
+            return E_FAIL;
+
         if (FAILED(shader->Bind_RawValue("g_LightDir", &_lightDesc.direction, sizeof _lightDesc.direction)))
             return E_FAIL;
 

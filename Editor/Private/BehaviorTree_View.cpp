@@ -8,6 +8,81 @@
 #include "Notification_Manager.h"
 #include "Reflection_Inspector.h"
 
+// 주어진 노드가 특정 핀을 소유하는지 검사한다.
+// 링크 정리나 저장 데이터 검증 시 현재 그래프에 존재하는 핀인지 확인할 때 사용한다.
+static bool BTEditorNode_HasPin(const FBTEditorNode& node, ed::PinId pinId)
+{
+    if (node.inputPin == pinId)
+        return true;
+
+    for (const auto& outputPin : node.outputPins)
+    {
+        if (outputPin == pinId)
+            return true;
+    }
+
+    return false;
+}
+
+// 현재 그래프의 어떤 노드라도 해당 핀을 가지고 있는지 검사한다.
+// 로드된 BT json 안에 남아 있는 고아 링크를 제거할 때 사용한다.
+static bool BTEditorGraph_HasPin(const vector<FBTEditorNode>& nodes, ed::PinId pinId)
+{
+    for (const auto& node : nodes)
+    {
+        if (BTEditorNode_HasPin(node, pinId))
+            return true;
+    }
+
+    return false;
+}
+
+// 특정 링크가 특정 노드의 입력/출력 핀 중 하나에 닿아 있는지 검사한다.
+// 노드 삭제 전에 관련 링크를 먼저 걷어내기 위해 사용한다.
+static bool BTEditorLink_TouchesNode(const FBTEditorNode& node, const FBTEditorLink& link)
+{
+    if (link.startPinId == node.inputPin || link.endPinId == node.inputPin)
+        return true;
+
+    for (const auto& outputPin : node.outputPins)
+    {
+        if (link.startPinId == outputPin || link.endPinId == outputPin)
+            return true;
+    }
+
+    return false;
+}
+
+// Blackboard 값 타입을 UI에 표시할 짧은 문자열로 변환한다.
+static const char* BTEditor_GetBlackboardTypeName(EBlackboardValueType type)
+{
+    switch (type)
+    {
+    case EBlackboardValueType::Int:     return "Int";
+    case EBlackboardValueType::Float:   return "Float";
+    case EBlackboardValueType::Bool:    return "Bool";
+    case EBlackboardValueType::Vector3: return "Vec3";
+    case EBlackboardValueType::String:  return "String";
+    default:                            return "Unknown";
+    }
+}
+
+// Blackboard 키 목록을 사용자가 고른 방식으로 정렬한다.
+static void BTEditor_SortBlackboardKeys(vector<FBlackboardKeyInfo>& keys, int sortMode)
+{
+    sort(keys.begin(), keys.end(),
+        [sortMode](const FBlackboardKeyInfo& lhs, const FBlackboardKeyInfo& rhs)
+        {
+            if (sortMode == 0 && lhs.type != rhs.type)
+                return lhs.type < rhs.type;
+
+            if (lhs.name != rhs.name)
+                return lhs.name < rhs.name;
+
+            return lhs.type < rhs.type;
+        });
+}
+
 BehaviorTree_View::BehaviorTree_View()
     : EditorWindow(TEXT("BehaviorTree"))
     , _nextId(1)
@@ -265,6 +340,7 @@ void BehaviorTree_View::Create_BehaviorTree()
 
     _currentFilePath.clear();
     _selectedNodeId = ed::NodeId();
+    _selectedBlackboardKey.clear();
 
     _nextId = 1;
 
@@ -453,7 +529,7 @@ void BehaviorTree_View::Draw_Blackboard()
         // 새 키 추가
         ImGui::InputText("Key Name", _newKeyNameBuf, sizeof(_newKeyNameBuf));
 
-        const char* types[] = { "Int", "Float", "Bool", "Vector3" };
+        const char* types[] = { "Int", "Float", "Bool", "Vector3", "String" };
         ImGui::Combo("Type", &_newKeyTypeIndex, types, IM_ARRAYSIZE(types));
 
         if (ImGui::Button("Add Key", ImVec2(-1, 0)))
@@ -461,16 +537,21 @@ void BehaviorTree_View::Draw_Blackboard()
             string keyName = _newKeyNameBuf;
             if (!keyName.empty() && _blackboard)
             {
+                // 같은 이름의 기존 키가 있으면 타입 변경처럼 동작하게 먼저 정리한다.
+                _blackboard->Remove_Key(keyName);
+
                 // 타입에 따라 기본값 초기 세팅
-                // Int = 0, Float = 1, Bool = 2, Vector = 3
+                // Int = 0, Float = 1, Bool = 2, Vector = 3, String = 4
                 switch (_newKeyTypeIndex)
                 {
                 case 0: _blackboard->Set_ValueAsInt(keyName, 0); break;
                 case 1: _blackboard->Set_ValueAsFloat(keyName, 0.f); break;
                 case 2: _blackboard->Set_ValueAsBool(keyName, false); break;
                 case 3: _blackboard->Set_ValueAsVector(keyName, Vec3(0.f)); break;
+                case 4: _blackboard->Set_ValueAsString(keyName, ""); break;
                 }
 
+                _selectedBlackboardKey = keyName;
                 memset(_newKeyNameBuf, 0, sizeof(_newKeyNameBuf));
                 _isDirty = true;
             }
@@ -480,81 +561,154 @@ void BehaviorTree_View::Draw_Blackboard()
 
     if (displayBB)
     {
-        if (_blackboard)
+        const char* sortModes[] = { "Type", "Name" };
+        ImGui::SetNextItemWidth(-1.f);
+        ImGui::Combo("Sort", &_blackboardSortMode, sortModes, IM_ARRAYSIZE(sortModes));
+
+        if (!_isDebugMode)
         {
-            vector<FBlackboardKeyInfo> allKeys = _blackboard->Get_AllKeys();
+            const bool canDeleteSelected =
+                !_selectedBlackboardKey.empty() &&
+                _blackboard &&
+                _blackboard->HasKey(_selectedBlackboardKey);
 
-            if (allKeys.empty())
+            if (!canDeleteSelected)
+                ImGui::BeginDisabled();
+
+            if (ImGui::Button(ICON_FA_TRASH " Delete Selected", ImVec2(-1.f, 0.f)))
             {
-                ImGui::TextDisabled("No Key Registered");
-            }
-            else
-            {
-                for (const auto& keyInfo : allKeys)
+                if (_blackboard && _blackboard->Remove_Key(_selectedBlackboardKey))
                 {
-                    ImGui::PushID(keyInfo.name.c_str());
-
-                    // 키 이름 + 타입까지 표시
-                    const char* typeStr = "";
-                    switch (keyInfo.type)
-                    {
-                    case EBlackboardValueType::Int:     typeStr = "(Int)";    break;
-                    case EBlackboardValueType::Float:   typeStr = "(Float)";  break;
-                    case EBlackboardValueType::Bool:    typeStr = "(Bool)";   break;
-                    case EBlackboardValueType::Vector3: typeStr = "(Vec3)";   break;
-                    }
-                    ImGui::Text("%s %s", keyInfo.name.c_str(), typeStr);
-                    ImGui::SameLine();
-
-                    // 타입별로 값 편집
-                    switch (keyInfo.type)
-                    {
-                    case EBlackboardValueType::Int:
-                    {
-                        int val = _blackboard->Get_ValueAsInt(keyInfo.name);
-                        if (ImGui::InputInt("##value", &val))
-                        {
-                            _blackboard->Set_ValueAsInt(keyInfo.name, val);
-                            _isDirty = true;
-                        }
-                        break;
-                    }
-                    case EBlackboardValueType::Float:
-                    {
-                        float val = _blackboard->Get_ValueAsFloat(keyInfo.name);
-                        if (ImGui::InputFloat("##value", &val))
-                        {
-                            _blackboard->Set_ValueAsFloat(keyInfo.name, val);
-                            _isDirty = true;
-                        }
-                        break;
-                    }
-                    case EBlackboardValueType::Bool:
-                    {
-                        bool val = _blackboard->Get_ValueAsBool(keyInfo.name);
-                        if (ImGui::Checkbox("##value", &val))
-                        {
-                            _blackboard->Set_ValueAsBool(keyInfo.name, val);
-                            _isDirty = true;
-                        }
-                        break;
-                    }
-                    case EBlackboardValueType::Vector3:
-                    {
-                        Vec3 val = _blackboard->Get_ValueAsVector(keyInfo.name);
-                        if (ImGui::InputFloat3("##value", &val.x))
-                        {
-                            _blackboard->Set_ValueAsVector(keyInfo.name, val);
-                            _isDirty = true;
-                        }
-                        break;
-                    }
-                    }
-
-
-                    ImGui::PopID();
+                    _selectedBlackboardKey.clear();
+                    _isDirty = true;
                 }
             }
+
+            if (!canDeleteSelected)
+                ImGui::EndDisabled();
+        }
+
+        ImGui::Separator();
+
+        vector<FBlackboardKeyInfo> allKeys = displayBB->Get_AllKeys();
+        BTEditor_SortBlackboardKeys(allKeys, _blackboardSortMode);
+
+        const bool selectedKeyStillExists = any_of(allKeys.begin(), allKeys.end(),
+            [this](const FBlackboardKeyInfo& keyInfo)
+            {
+                return keyInfo.name == _selectedBlackboardKey;
+            });
+
+        if (!selectedKeyStillExists)
+            _selectedBlackboardKey.clear();
+
+        if (allKeys.empty())
+        {
+            ImGui::TextDisabled("No Key Registered");
+        }
+        else if (ImGui::BeginTable(
+            "BlackboardKeyTable",
+            3,
+            ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_Resizable))
+        {
+            ImGui::TableSetupColumn("Key", ImGuiTableColumnFlags_WidthStretch, 0.48f);
+            ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, 72.f);
+            ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch, 0.52f);
+            ImGui::TableHeadersRow();
+
+            EBlackboardValueType lastType = EBlackboardValueType::END;
+
+            for (const auto& keyInfo : allKeys)
+            {
+                if (_blackboardSortMode == 0 && lastType != keyInfo.type)
+                {
+                    lastType = keyInfo.type;
+
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0);
+                    ImGui::TextDisabled("%s", BTEditor_GetBlackboardTypeName(keyInfo.type));
+                }
+
+                ImGui::TableNextRow();
+                ImGui::PushID(keyInfo.name.c_str());
+
+                ImGui::TableSetColumnIndex(0);
+                const bool isSelected = _selectedBlackboardKey == keyInfo.name;
+                if (ImGui::Selectable(keyInfo.name.c_str(), isSelected, ImGuiSelectableFlags_SpanAllColumns))
+                    _selectedBlackboardKey = keyInfo.name;
+
+                ImGui::TableSetColumnIndex(1);
+                ImGui::TextUnformatted(BTEditor_GetBlackboardTypeName(keyInfo.type));
+
+                ImGui::TableSetColumnIndex(2);
+                if (_isDebugMode)
+                    ImGui::BeginDisabled();
+
+                // 타입별로 값 편집
+                switch (keyInfo.type)
+                {
+                case EBlackboardValueType::Int:
+                {
+                    int val = displayBB->Get_ValueAsInt(keyInfo.name);
+                    if (ImGui::InputInt("##value", &val) && _blackboard)
+                    {
+                        _blackboard->Set_ValueAsInt(keyInfo.name, val);
+                        _isDirty = true;
+                    }
+                    break;
+                }
+                case EBlackboardValueType::Float:
+                {
+                    float val = displayBB->Get_ValueAsFloat(keyInfo.name);
+                    if (ImGui::InputFloat("##value", &val) && _blackboard)
+                    {
+                        _blackboard->Set_ValueAsFloat(keyInfo.name, val);
+                        _isDirty = true;
+                    }
+                    break;
+                }
+                case EBlackboardValueType::Bool:
+                {
+                    bool val = displayBB->Get_ValueAsBool(keyInfo.name);
+                    if (ImGui::Checkbox("##value", &val) && _blackboard)
+                    {
+                        _blackboard->Set_ValueAsBool(keyInfo.name, val);
+                        _isDirty = true;
+                    }
+                    break;
+                }
+                case EBlackboardValueType::Vector3:
+                {
+                    Vec3 val = displayBB->Get_ValueAsVector(keyInfo.name);
+                    if (ImGui::InputFloat3("##value", &val.x) && _blackboard)
+                    {
+                        _blackboard->Set_ValueAsVector(keyInfo.name, val);
+                        _isDirty = true;
+                    }
+                    break;
+                }
+                case EBlackboardValueType::String:
+                {
+                    string val = displayBB->Get_ValueAsString(keyInfo.name);
+                    char buffer[128] = {};
+                    strncpy_s(buffer, val.c_str(), _TRUNCATE);
+
+                    if (ImGui::InputText("##value", buffer, sizeof(buffer)) && _blackboard)
+                    {
+                        _blackboard->Set_ValueAsString(keyInfo.name, buffer);
+                        _isDirty = true;
+                    }
+                    break;
+                }
+                }
+
+                if (_isDebugMode)
+                    ImGui::EndDisabled();
+
+                ImGui::PopID();
+            }
+
+            ImGui::EndTable();
         }
     }
 }
@@ -611,7 +765,15 @@ void BehaviorTree_View::Draw_Node(const FBTEditorNode& node)
     ImGui::PushID(node.id.AsPointer());
 
     ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+    // Composite 노드는 출력 핀 수가 많을수록 폭을 넓혀서
+    // 각 핀을 안정적으로 집을 수 있게 한다.
     float nodeWidth = 140.0f;
+    if (!node.outputPins.empty())
+    {
+        const float preferredPinWidth = 24.0f;
+        nodeWidth = max(nodeWidth, preferredPinWidth * static_cast<float>(node.outputPins.size()));
+    }
 
     float pinHitBoxHeight = 24.0f; 
     float pinVisualHeight = 12.0f; 
@@ -664,8 +826,9 @@ void BehaviorTree_View::Draw_Node(const FBTEditorNode& node)
         ImGui::Spacing();
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
+        // 출력 핀마다 충분한 클릭 영역을 확보한다.
         float pinWidth = nodeWidth / (float)node.outputPins.size();
-        if (pinWidth < 10.0f) pinWidth = 10.0f;
+        if (pinWidth < 24.0f) pinWidth = 24.0f;
         for (size_t i = 0; i < node.outputPins.size(); ++i)
         {
             if (i > 0) ImGui::SameLine();
@@ -677,6 +840,14 @@ void BehaviorTree_View::Draw_Node(const FBTEditorNode& node)
             ImGui::Dummy(ImVec2(pinWidth, 12));
 
             drawList->AddRectFilled(p, ImVec2(p.x + pinWidth, p.y + 12), ImColor(50, 50, 50), 4.0f);
+
+            // 출력 슬롯 번호를 함께 보여서 어느 핀을 잡는지 헷갈리지 않게 한다.
+            const string pinLabel = to_string(static_cast<int>(i) + 1);
+            const ImVec2 labelSize = ImGui::CalcTextSize(pinLabel.c_str());
+            const ImVec2 labelPos(
+                p.x + (pinWidth - labelSize.x) * 0.5f,
+                p.y - labelSize.y - 2.0f);
+            drawList->AddText(labelPos, ImColor(180, 180, 180, 220), pinLabel.c_str());
 
             ed::EndPin();
 
@@ -916,65 +1087,45 @@ void BehaviorTree_View::Create_Node(const string& nodeType, ImVec2 position)
 void BehaviorTree_View::Delete_Node(ed::NodeId nodeId)
 {
     // Root 노드 삭제 방지
-    auto rootNodeIter = find_if(_nodes.begin(), _nodes.end(),
+    auto nodeIter = find_if(_nodes.begin(), _nodes.end(),
         [nodeId](const FBTEditorNode& node) { return node.id == nodeId; });
 
-    if (rootNodeIter != _nodes.end())
-    {
-        if (rootNodeIter->nodeType == "Root")
-            return; // 삭제 불가
-    }
+    if (nodeIter == _nodes.end())
+        return;
 
-    // 노드 제거
-    auto nodeIter = remove_if(_nodes.begin(), _nodes.end(),
-        [nodeId](const FBTEditorNode& node)
-        {
-            return node.id == nodeId;
-        });
+    if (nodeIter->nodeType == "Root")
+        return; // 삭제 불가
 
-    if (nodeIter != _nodes.end())
-    {
-        _nodes.erase(nodeIter, _nodes.end());
-        _isDirty = true;
-    }
-
-    // 관련된 링크도 제거
+    // 노드를 지우기 전에 현재 노드와 닿아 있는 링크를 먼저 제거한다.
     auto linkIter = remove_if(_links.begin(), _links.end(),
-        [this, nodeId](const FBTEditorLink& link)
+        [node = *nodeIter](const FBTEditorLink& link)
         {
-            // 노드와 연결된 Pin이 있는지 확인
-            for (const auto& node : _nodes)
-            {
-                if (node.id == nodeId)
-                {
-                    // Input/Ouput 둘 중 하나라도 매칭된다면, 제거
-                    if (link.startPinId == node.inputPin || link.endPinId == node.inputPin)
-                        return true;
-
-                    for (const auto& pin : node.outputPins)
-                    {
-                        if (link.startPinId == pin || link.endPinId == pin)
-                            return true;
-                    }
-                }
-            }
-            return false;
+            return BTEditorLink_TouchesNode(node, link);
         });
 
     if (linkIter != _links.end())
-    {
         _links.erase(linkIter, _links.end());
-    }
 
+    _nodes.erase(nodeIter);
+    _isDirty = true;
 }
 
 void BehaviorTree_View::Create_Link(ed::PinId startPin, ed::PinId endPin)
 {
-    // 트리의 정합성을 위해 같은 입력 핀 또는 같은 출력 핀에 연결된 기존 링크는 제거한다.
+    // 같은 출력 핀은 한 번에 하나의 연결만 유지한다.
+    // 대신 입력 핀은 여러 부모가 공유할 수 있게 허용한다.
     auto it = remove_if(_links.begin(), _links.end(),
         [startPin, endPin](const FBTEditorLink& link)
         {
-            return link.startPinId == startPin || link.endPinId == endPin;
+            // 같은 출력 슬롯을 다시 쓰는 경우 기존 연결을 교체한다.
+            if (link.startPinId == startPin)
+                return true;
+
+            // 완전히 동일한 링크를 다시 만들려는 경우 중복 생성을 막는다.
+            if (link.startPinId == startPin && link.endPinId == endPin)
+                return true;
+
+            return false;
         });
     
     if (it != _links.end())
@@ -1193,6 +1344,7 @@ void BehaviorTree_View::Desirialize_FromJson(const json& jsonRoot)
 {
     _nodes.clear();
     _links.clear();
+    _selectedBlackboardKey.clear();
 
     int maxId = 0;
     bool hasRootNode = false;
@@ -1264,6 +1416,17 @@ void BehaviorTree_View::Desirialize_FromJson(const json& jsonRoot)
             maxId = max(maxId, linkIdVal);
         }
     }
+
+    // 저장본에 남아 있는 고아 링크를 제거해 링크 상태가 다시 꼬이지 않게 한다.
+    auto validLinkIter = remove_if(_links.begin(), _links.end(),
+        [this](const FBTEditorLink& link)
+        {
+            return !BTEditorGraph_HasPin(_nodes, link.startPinId) ||
+                   !BTEditorGraph_HasPin(_nodes, link.endPinId);
+        });
+
+    if (validLinkIter != _links.end())
+        _links.erase(validLinkIter, _links.end());
 
     _nextId = maxId + 1;
 

@@ -8,7 +8,10 @@ namespace Engine
 
     enum class EObjectType { GameObject, Component };
 
-    enum class ERenderGroup { BackgroundUI, Priority, NonLight, NonBlend, Blend, UI, END };
+    enum class ERenderGroup
+    {
+        BackgroundUI, Priority, NonLight, NonBlend, ScreenDistortion, Blend, UI, ShadowStatic, ShadowDynamic, END
+    };
 
     enum class EGameState { Edit, Play, Pause, END };
 

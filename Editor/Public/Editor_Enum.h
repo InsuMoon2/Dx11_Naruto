@@ -12,6 +12,7 @@ enum class EAssetOpenType
     Prefab,
     BehaviorTree,
     UIAnimation,
+    Effect,
     Mesh,
     Texture,
     Csv,

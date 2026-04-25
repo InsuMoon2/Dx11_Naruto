@@ -30,7 +30,7 @@
 #include "Animation_Manager.h"
 #include "GameObject_Factory.h"
 #include "Text_Renderer.h"
-
+#include "Shader.h"
 
 #pragma push_macro("new")
 #undef new
@@ -38,9 +38,11 @@
 #include "CollisionProxy_Manager.h"
 #include "Collision_Manager.h"
 #include "Debug_Manager.h"
+#include "PhysXMgr.h"
 #include "imgui.h"
 #include "Sound_Manager.h"
 #include "Target_Manager.h"
+#include "Shadow.h"
 #pragma pop_macro("new")
 
 IMPLEMENT_SINGLETON(GameInstance)
@@ -94,6 +96,9 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     _targetManager = Target_Manager::Create(Get_Device(), Get_Context());
     CHECK_NULL(_targetManager, E_FAIL);
 
+    _shadow = Shadow::Create();
+    CHECK_NULL(_shadow, E_FAIL);
+
     _renderer = Renderer::Create(Get_Device(), Get_Context());
     CHECK_NULL(_renderer, E_FAIL);
 
@@ -143,6 +148,15 @@ HRESULT GameInstance::Initialize_Engine(const ENGINE_DESC& desc, ComPtr<Device>&
     _collisionProxyManager = CollisionProxy_Manager::Create();
     CHECK_NULL(_collisionProxyManager, E_FAIL);
 
+    _physXMgr = PhysXMgr::Create();
+    CHECK_NULL(_physXMgr, E_FAIL);
+
+    if (FAILED(_physXMgr->Initialize()))
+    {
+        LOG_WARN("PhysX manager initialization failed. PhysX collision scene will be disabled.");
+        _physXMgr.reset();
+    }
+
     return S_OK;
 }
 
@@ -167,6 +181,10 @@ void GameInstance::Update_Engine(float timeDelta)
     // 현재 레벨만 업데이트
     _objectManager->Update(timeDelta, _levelManager->Get_CurrentLevel());
     _uiManager->Update(timeDelta);
+
+    // FMOD 재생 상태, 페이드, 종료된 채널 정리를 프레임마다 갱신한다.
+    if (_soundManager)
+        _soundManager->Update(timeDelta);
 
 }
 
@@ -211,11 +229,18 @@ void GameInstance::Clear_Resources(uint32 levelIndex)
     _protoManager->Clear_Prototype(levelIndex);
     _uiManager->Clear_UI_ByLevel(levelIndex);
 
+    // 라이트는 새 레벨 Initialize() 중 먼저 등록될 수 있으므로, 이전 레벨 정리 단계에서 지우지 않는다.
+    // 각 레벨의 Ready_Lights()/Ready_PreviewScene() 진입 시점에서 이전 라이트를 정리한다.
+    Invalidate_StaticShadowMap(); // single shadow RT 경로에서는 no-op이지만 기존 레벨 전환 호출부 호환을 위해 유지한다.
+
     if (_debugManager)
         _debugManager->Clear();
 
     if (_collisionProxyManager)
         _collisionProxyManager->Clear();
+
+    if (_physXMgr)
+        _physXMgr->Clear_StaticGeometry();
 
     _cameraManager->Clear_InvalidCameras();
 }
@@ -644,6 +669,16 @@ HRESULT GameInstance::Add_Light(const FLightDesc& desc)
     return _lightManager->Add_Light(desc);
 }
 
+HRESULT GameInstance::Update_PrimaryShadowLightDesc(const FLightDesc& desc)
+{
+    CHECK_NULL(_lightManager, E_FAIL);
+
+    if (_editorPrimaryShadowLightOverrideEnabled)
+        return _lightManager->Update_PrimaryShadowLightDesc(_editorPrimaryShadowLightOverrideDesc);
+
+    return _lightManager->Update_PrimaryShadowLightDesc(desc);
+}
+
 void GameInstance::Clear_Lights()
 {
     return _lightManager->Clear_Lights();
@@ -652,6 +687,51 @@ void GameInstance::Clear_Lights()
 HRESULT GameInstance::Render_Lights(Shared<Shader> shader, Shared<VIBuffer_Rect> viBuffer)
 {
     return _lightManager->Render_Lights(shader, viBuffer);
+}
+
+const FLightDesc* GameInstance::Get_PrimaryShadowLightDesc() const
+{
+    return _lightManager->Get_PrimaryShadowLightDesc();
+}
+
+void GameInstance::Set_EditorPrimaryShadowLightOverrideEnabled(bool enabled)
+{
+    if (_editorPrimaryShadowLightOverrideEnabled == enabled)
+        return;
+
+    _editorPrimaryShadowLightOverrideEnabled = enabled;
+
+    if (!_lightManager)
+        return;
+
+    if (enabled)
+    {
+        const FLightDesc* currentShadowLightDesc = _lightManager->Get_PrimaryShadowLightDesc();
+        if (currentShadowLightDesc)
+            _editorPrimaryShadowLightOverrideDesc = *currentShadowLightDesc;
+
+        _lightManager->Update_PrimaryShadowLightDesc(_editorPrimaryShadowLightOverrideDesc);
+    }
+}
+
+HRESULT GameInstance::Set_EditorPrimaryShadowLightOverrideDesc(const FLightDesc& desc)
+{
+    CHECK_NULL(_lightManager, E_FAIL);
+
+    _editorPrimaryShadowLightOverrideDesc = desc;
+
+    if (!_editorPrimaryShadowLightOverrideEnabled)
+        return S_OK;
+
+    return _lightManager->Update_PrimaryShadowLightDesc(_editorPrimaryShadowLightOverrideDesc);
+}
+
+const FLightDesc* GameInstance::Get_EditorPrimaryShadowLightOverrideDesc() const
+{
+    if (!_editorPrimaryShadowLightOverrideEnabled)
+        return nullptr;
+
+    return &_editorPrimaryShadowLightOverrideDesc;
 }
 
 string GameInstance::Find_AssetGUID(const wstring& filePath)
@@ -1009,10 +1089,45 @@ void GameInstance::Clear_CollisionProxy()
         _collisionProxyManager->Clear();
 }
 
-HRESULT GameInstance::Add_RenderTarget(const wstring& targetTag, uint32 sizeX, uint32 sizeY, DXGI_FORMAT format,
-    const Color& clearColor)
+bool GameInstance::Register_PhysXStaticTriangleMesh(
+    const string& name,
+    const vector<Vec3>& vertices,
+    const vector<uint32>& indices,
+    const Matrix& worldMatrix,
+    ECollisionProxyType proxyType)
 {
-    return _targetManager->Add_RenderTarget(targetTag, sizeX, sizeY, format, clearColor);
+    // 레벨 로드 코드가 Engine 내부 PhysXMgr에 직접 의존하지 않도록 GameInstance에서 중계한다.
+    if (!_physXMgr)
+        return false;
+
+    return _physXMgr->Register_StaticTriangleMesh(name, vertices, indices, worldMatrix, proxyType);
+}
+
+bool GameInstance::Raycast_PhysX(
+    const Vec3& origin,
+    const Vec3& direction,
+    float distance,
+    FPhysXRaycastHit& outHit,
+    ECollisionProxyType requiredProxyType) const
+{
+    // Movement/디버그 코드가 PhysX raycast를 안전하게 시험할 수 있도록 null guard를 둔다.
+    if (!_physXMgr)
+        return false;
+
+    return _physXMgr->Raycast(origin, direction, distance, outHit, requiredProxyType);
+}
+
+void GameInstance::Clear_PhysXScene()
+{
+    // 레벨 전환 또는 충돌 데이터 재구축 전에 PhysX static geometry를 비운다.
+    if (_physXMgr)
+        _physXMgr->Clear_StaticGeometry();
+}
+
+HRESULT GameInstance::Add_RenderTarget(const wstring& targetTag, uint32 sizeX, uint32 sizeY, DXGI_FORMAT format,
+    const Color& clearColor, bool resizeWithViewport)
+{
+    return _targetManager->Add_RenderTarget(targetTag, sizeX, sizeY, format, clearColor, resizeWithViewport);
 }
 
 HRESULT GameInstance::Add_MRT(const wstring& mrtTag, const wstring& targetTag)
@@ -1020,9 +1135,14 @@ HRESULT GameInstance::Add_MRT(const wstring& mrtTag, const wstring& targetTag)
     return _targetManager->Add_MRT(mrtTag, targetTag);
 }
 
-HRESULT GameInstance::Begin_MRT(const wstring& mrtTag)
+HRESULT GameInstance::Copy_CurrentRenderTargetToRT(const wstring& targetTag)
 {
-    return _targetManager->Begin_MRT(mrtTag);
+    return _targetManager->Copy_CurrentRenderTargetTo(targetTag);
+}
+
+HRESULT GameInstance::Begin_MRT(const wstring& mrtTag, ComPtr<DepthStencil> customDSV)
+{
+    return _targetManager->Begin_MRT(mrtTag, customDSV);
 }
 
 HRESULT GameInstance::End_MRT()
@@ -1050,7 +1170,59 @@ HRESULT GameInstance::Render_RT_Debug(Shared<VIBuffer_Rect> viBuffer, Shared<Sha
 {
     return _targetManager->Render_Debug(mrtTag, shader, viBuffer);
 }
+
+HRESULT GameInstance::Log_RT_DebugFloatStats(const wstring& targetTag)
+{
+    return _targetManager->Log_DebugFloatStats(targetTag);
+}
 #endif
+
+
+HRESULT GameInstance::Bind_ShadowMatrices(Shared<Shader> shader, const char* viewName, const char* projName)
+{
+    CHECK_NULL(_shadow, E_FAIL);
+    CHECK_FAILED(_shadow->Bind_TransformStateMatrix(shader, viewName, projName), E_FAIL);
+
+    return S_OK;
+}
+
+bool GameInstance::Update_PrimaryShadowLight()
+{
+    if (!_shadow)
+        return false;
+
+    const FLightDesc* shadowDesc = _lightManager ? _lightManager->Get_PrimaryShadowLightDesc() : nullptr;
+    if (!shadowDesc)
+    {
+        _shadow->Clear();
+        return false;
+    }
+
+    return SUCCEEDED(_shadow->Update_LightDesc(*shadowDesc));
+}
+
+const FLightDesc* GameInstance::Get_ShadowLightDesc() const
+{
+    if (!_shadow)
+        return nullptr;
+
+    return _shadow->Get_LightDesc();
+}
+
+const Matrix* GameInstance::Get_ShadowViewMatrix() const
+{
+    return _shadow ? _shadow->Get_ViewMatrix() : nullptr;
+}
+
+const Matrix* GameInstance::Get_ShadowProjMatrix() const
+{
+    return _shadow ? _shadow->Get_ProjMatrix() : nullptr;
+}
+
+void GameInstance::Invalidate_StaticShadowMap()
+{
+    // 수업코드 스타일 single shadow RT 경로에서는 매 프레임 shadow pass를 다시 그리므로 별도 invalidate가 필요 없다.
+}
 
 #ifdef _DEBUG
 void GameInstance::Render_Colliders()
@@ -1109,6 +1281,7 @@ void GameInstance::Free()
     _soundManager.reset();
     _collisionManager.reset();
     _debugManager.reset();
+    _physXMgr.reset();
 
     _prefabManager.reset();
     _objectManager.reset(); 

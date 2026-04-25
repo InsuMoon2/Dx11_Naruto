@@ -93,7 +93,7 @@ void PlayerState_Dash::Update(PlayerStateMachine* state, float timeDelta)
     const float currentFrame = state->Get_AnimTrackPositionTicks();
     const float endFrame = state->Get_AnimDurationTicks();
 
-    if (currentFrame >= endFrame - 10.f)
+    if (currentFrame >= 25.f)
     {
         if (input->Has_MoveInput())
         {

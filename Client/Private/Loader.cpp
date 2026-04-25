@@ -64,14 +64,19 @@
 
 // Behavior
 #include "BTTask_Attack.h"
+#include "BTTask_ChibakuTensei.h"
 #include "BTTask_FindClosestTarget.h"
 #include "BTTask_Hit.h"
 #include "BTTask_PlayStateAndWait.h"
 #include "BTTask_DodgeAndWait.h"
+#include "BTTask_JumpToTarget.h"
 #include "BTTask_RetreatAndWait.h"
+#include "BTTask_SelectAttackType.h"
+#include "BTTask_JumpToTarget.h"
+#include "BTTask_UpdateBossContext.h"
+#include "BTTask_PainForceSkill.h"
+#include "BTTask_StrafeAroundTarget.h"
 
-// 레벨 청크 JSON을 읽어서 메인 스레드에서 한 개씩 처리할 오브젝트 잡으로 분해할 때 호출한다.
-// StaticMeshActor / CollisionProxyActor의 고유 model_guid는 먼저 프로토타입 preload 잡으로 분리한다.
 static bool Try_GetLevelObjectType(const json& objJson, Protocol::OBJECT_TYPE& outObjectType)
 {
     if (!objJson.contains("object_type"))
@@ -378,6 +383,24 @@ void Loader::Initialize_BT_Nodes()
 
     GAME->Register_BTNode("Task", "Task_RetreatAndWait",
     []() { return BTTask_RetreatAndWait::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_SelectAttackType",
+    []() { return BTTask_SelectAttackType::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_JumpToTarget",
+    []() { return BTTask_JumpToTarget::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_UpdateBossContext",
+    []() { return BTTask_UpdateBossContext::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_PainForceSkill",
+        []() { return BTTask_PainForceSkill::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_StrafeAroundTarget",
+        []() { return BTTask_StrafeAroundTarget::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_ChibakuTensei",
+    []() { return BTTask_ChibakuTensei::Create(); });
 }
 
 float Loader::Get_ProgressRatio() const
@@ -703,7 +726,7 @@ HRESULT Loader::Loading_For_GamePlay()
     //pushChunk("BM_ExamStadium_Env_Terrain");
     //pushChunk("BM_ExamStadium_p");
 
-    CHECK_FAILED(pushChunk("[20260422]Tutorial"), E_FAIL);
+    CHECK_FAILED(pushChunk("[20260424]Tutorial"), E_FAIL);
 
     {
         scoped_lock lock(_jobMutex);

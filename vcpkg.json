@@ -20,6 +20,7 @@
     "imgui-node-editor",
     "protobuf",
     "effects11",
-    "stduuid"
+    "stduuid",
+    "physx"
   ]
 }

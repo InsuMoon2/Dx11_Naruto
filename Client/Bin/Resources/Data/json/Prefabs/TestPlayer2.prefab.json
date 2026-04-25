@@ -58,8 +58,9 @@
             "Deceleration": 24.0,
             "Gravity": -20.0,
             "Ground Walkable Min Up Dot": 0.550000011920929,
-            "Ground Y": 5.0,
+            "Ground Y": 0.0,
             "Jump Velocity": 10.0,
+            "Launch Control Lock Duration": 0.11999999731779099,
             "Max Sprint Speed": 20.0,
             "Max Walk Speed": 9.0,
             "Wall Attach Offset": 0.15000000596046448,
@@ -67,6 +68,8 @@
             "Wall Jump Out Velocity": 50.0,
             "Wall Jump Up Velocity": 9.0,
             "Wall Runnable Max Up Dot": 0.25,
+            "Wall Top Landing Forward Offset": 0.20000000298023224,
+            "Wall Top Landing Max Height Delta": 0.550000011920929,
             "Wall Trace Start Offset Y": 1.0,
             "Yaw Speed": 360.0,
             "type": "COMPONENT_TYPE_MOVEMENT"
@@ -345,7 +348,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "WireDash",
+                    "key": "Hit_BlowOff",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -353,9 +356,9 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_WireJump_Ready",
-                        "loop": false,
-                        "playRate": 1.2999999523162842
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
                     },
                     "start": {
                         "animationName": "",
@@ -437,7 +440,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Attack_Air_01",
+                    "key": "WireDash",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -445,9 +448,9 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_cmb01",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_WireJump_Ready",
                         "loop": false,
-                        "playRate": 1.0
+                        "playRate": 1.2999999523162842
                     },
                     "start": {
                         "animationName": "",
@@ -498,6 +501,52 @@
                     "start": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_ChakraJump_Charge_Start",
                         "loop": false,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_Air_01",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_cmb01",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
                         "playRate": 1.0
                     }
                 },
@@ -1725,6 +1774,52 @@
                         "loop": true,
                         "playRate": 1.0
                     },
+                    "key": "Hit_Launch",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Blasted",
+                        "loop": false,
+                        "playRate": 1.5
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
                     "key": "Attack_SwordAir_02",
                     "loopClip": {
                         "animationName": "",
@@ -2323,6 +2418,52 @@
                         "loop": true,
                         "playRate": 1.0
                     },
+                    "key": "Hit_Air",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_Large_Front_Conect_toFall",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
                     "key": "Skill_FireBall_Air",
                     "loopClip": {
                         "animationName": "",
@@ -2564,6 +2705,144 @@
                         "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Hand_BackKick",
                         "loop": false,
                         "playRate": 1.5
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit_Down",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit_Air_Down",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_BlowOff_toFall",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit_Pull",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_UniversalPull_Start",
+                        "loop": false,
+                        "playRate": 1.0
                     },
                     "start": {
                         "animationName": "",
@@ -3449,7 +3728,7 @@
             }
         }
     },
-    "guid": "995d6bb6-1022-4465-beb5-b902e8b6ecf5",
+    "guid": "0db8a473-df5e-4efa-a117-5211e2c0980b",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"

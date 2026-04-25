@@ -2,6 +2,7 @@
 #include "Editor_Helper.h"
 
 #include "BehaviorTree_View.h"
+#include "Effect_View.h"
 #include "Prefab_View.h"
 #include "UI_Animation_View.h"
 #include "Utils.h"
@@ -20,6 +21,9 @@ EAssetOpenType Editor_Helper::ClassifyAsset(const fs::path& path)
 
     if (fullPath.ends_with(".uianim.json"))
         return EAssetOpenType::UIAnimation;
+
+    if (fullPath.ends_with(".effect.json"))
+        return EAssetOpenType::Effect;
 
     if (extension == ".fbx" || extension == ".gltf")
         return EAssetOpenType::Mesh;
@@ -70,6 +74,16 @@ void Editor_Helper::Open_Asset(EAssetOpenType assetType, const wstring& filePath
         }
         break;
     }
+    case EAssetOpenType::Effect:
+    {
+        auto effectView = dynamic_pointer_cast<Effect_View>(EDITOR->Get_Window(TEXT("Effect View")));
+        if (effectView)
+        {
+            effectView->Set_Active(true);
+            effectView->Load_EffectFile(fullPath);
+        }
+        break;
+    }
     default:
         ShellExecute(nullptr, L"open", filePath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
         break;
@@ -81,7 +95,8 @@ bool Editor_Helper::IsEditorManagedAsset(EAssetOpenType assetType)
     // 색상처리
     return assetType == EAssetOpenType::Prefab
         || assetType == EAssetOpenType::BehaviorTree 
-        || assetType == EAssetOpenType::UIAnimation;
+        || assetType == EAssetOpenType::UIAnimation
+        || assetType == EAssetOpenType::Effect;
 }
 
 string Editor_Helper::Build_AnimatoinDisplayName(const string& rawClipName)

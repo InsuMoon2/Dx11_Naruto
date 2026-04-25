@@ -248,6 +248,7 @@ void Effect_View::Initialize()
         if (_previewEffectCom)
         {
             _previewEffectCom->Set_ForceVisiblePreview(_forceVisiblePreview);
+            _previewEffectCom->Set_PreviewSoloLayerIndex(_previewSoloLayerIdx);
             _previewObject->Add_Component(Protocol::COMPONENT_TYPE_EFFECT, _previewEffectCom);
             GAME->Add_GameObject(ETOI(ELevelType::Prefab), TEXT("Layer_Preview"), _previewObject);
         }
@@ -819,6 +820,12 @@ void Effect_View::Draw_LayerList()
     ImGui::Separator();
     ImGui::Spacing();
 
+    if (_previewSoloLayerIdx >= static_cast<int32>(_currentAsset.layers.size()))
+    {
+        _previewSoloLayerIdx = -1;
+        Apply_PreviewSoloLayer();
+    }
+
     for (int32 i = 0; i < static_cast<int32>(_currentAsset.layers.size()); ++i)
     {
         ImGui::PushID(i);
@@ -833,6 +840,20 @@ void Effect_View::Draw_LayerList()
             layerKindLabel = "Billboard";
 
         string layerTitle = "[" + layerKindLabel + "] " + layer.base.layerName;
+
+        bool isSoloLayer = (_previewSoloLayerIdx == i);
+        if (ImGui::Checkbox("##LayerSolo", &isSoloLayer))
+        {
+            _previewSoloLayerIdx = isSoloLayer ? i : -1;
+            if (isSoloLayer)
+                _selectedLayerIdx = i;
+            Apply_PreviewSoloLayer();
+        }
+
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("Solo preview this layer");
+
+        ImGui::SameLine();
 
         if (ImGui::Selectable(layerTitle.c_str(), _selectedLayerIdx == i))
             _selectedLayerIdx = i;
@@ -942,12 +963,19 @@ void Effect_View::Draw_LayerList()
 
         if (ImGui::Button(ICON_FA_TRASH " Delete Selected", ImVec2(-1.f, 30.f)))
         {
-            _currentAsset.layers.erase(_currentAsset.layers.begin() + _selectedLayerIdx);
+            const int deletedLayerIdx = _selectedLayerIdx;
+
+            _currentAsset.layers.erase(_currentAsset.layers.begin() + deletedLayerIdx);
 
             if (_currentAsset.layers.empty())
                 _selectedLayerIdx = -1;
             else
                 _selectedLayerIdx = std::clamp(_selectedLayerIdx, 0, static_cast<int32>(_currentAsset.layers.size()) - 1);
+
+            if (_previewSoloLayerIdx == deletedLayerIdx)
+                _previewSoloLayerIdx = -1;
+            else if (_previewSoloLayerIdx > deletedLayerIdx)
+                --_previewSoloLayerIdx;
 
             MarkDirty();
             Restart_PreviewEffect();
@@ -2198,6 +2226,18 @@ void Effect_View::Draw_Inspector()
 
             ImGui::Spacing();
 
+            Draw_AssetSlotPicker(
+                "Screen Distortion Normal",
+                "##EffectBillboardScreenDistortionNormalPicker",
+                ICON_FA_IMAGE " Select Screen Distortion Normal Texture",
+                "CONTENT_TEXTURE",
+                "texture",
+                "Effects/;Skills/;Textures/",
+                layer.billboard.screenDistortionNormalTextureGuid,
+                resourceChanged);
+
+            ImGui::Spacing();
+
             int blend = static_cast<int>(layer.billboard.blendMode);
             if (ImGui::Combo("BlendMode", &blend, "Translucent\0Additive\0Opaque\0"))
             {
@@ -2207,7 +2247,7 @@ void Effect_View::Draw_Inspector()
             }
 
             int renderMode = static_cast<int>(layer.billboard.renderMode);
-            if (ImGui::Combo("Render Mode", &renderMode, "CoreSphere\0FlipbookDecal\0Distortion\0"))
+            if (ImGui::Combo("Render Mode", &renderMode, "CoreSphere\0FlipbookDecal\0Distortion\0ScreenDistortion\0"))
             {
                 layer.billboard.renderMode = static_cast<Engine::EEffectBillboardRenderMode>(renderMode);
                 MarkDirty();
@@ -2242,6 +2282,36 @@ void Effect_View::Draw_Inspector()
             }
 
             if (ImGui::DragFloat("Base Emissive Strength", &layer.billboard.baseEmissiveStrength, 0.01f, 0.f, 16.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat("Screen Distortion Strength", &layer.billboard.screenDistortionStrength, 0.001f, -0.08f, 0.08f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat("Screen Distortion Radial", &layer.billboard.screenDistortionRadialStrength, 0.001f, -0.08f, 0.08f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat2("Screen Distortion Normal Tiling", (float*)&layer.billboard.screenDistortionNormalTiling, 0.05f, 0.01f, 32.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat2("Screen Distortion Scroll A", (float*)&layer.billboard.screenDistortionScrollA, 0.01f, -8.f, 8.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat2("Screen Distortion Scroll B", (float*)&layer.billboard.screenDistortionScrollB, 0.01f, -8.f, 8.f))
             {
                 MarkDirty();
                 materialChanged = true;
@@ -2316,6 +2386,18 @@ void Effect_View::Draw_Inspector()
                 }
 
                 ImGui::Unindent();
+            }
+
+            if (ImGui::DragFloat2("Base Source UV Offset", (float*)&layer.billboard.baseUvOffset, 0.005f, 0.f, 1.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat2("Base Source UV Scale", (float*)&layer.billboard.baseUvScale, 0.005f, 0.001f, 1.f))
+            {
+                MarkDirty();
+                materialChanged = true;
             }
 
             if (ImGui::ColorEdit4("Ring Tint", (float*)&layer.billboard.ringTint))
@@ -2407,6 +2489,18 @@ void Effect_View::Draw_Inspector()
                 ImGui::Unindent();
             }
 
+            if (ImGui::DragFloat2("Ring Source UV Offset", (float*)&layer.billboard.ringUvOffset, 0.005f, 0.f, 1.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
+            if (ImGui::DragFloat2("Ring Source UV Scale", (float*)&layer.billboard.ringUvScale, 0.005f, 0.001f, 1.f))
+            {
+                MarkDirty();
+                materialChanged = true;
+            }
+
             if (ImGui::DragFloat4("Custom Params 0", (float*)&layer.billboard.customParams0, 0.01f))
             {
                 MarkDirty();
@@ -2440,6 +2534,7 @@ void Effect_View::New_EffectAsset()
     _currentFilePath.clear();
     _pendingOpenPath.clear();
     _selectedLayerIdx = -1;
+    _previewSoloLayerIdx = -1;
     _isPlaying = true;
 
     ClearDirty();
@@ -2458,6 +2553,7 @@ bool Effect_View::Load_EffectFile(const string& filePath)
     _currentAsset = loadedAsset;
     _currentFilePath = filePath;
     _selectedLayerIdx = _currentAsset.layers.empty() ? -1 : 0;
+    _previewSoloLayerIdx = -1;
     _isPlaying = true;
 
     ClearDirty();
@@ -2978,8 +3074,15 @@ void Effect_View::Move_SelectedLayer(int32 direction)
     if (targetIdx < 0 || targetIdx >= static_cast<int32>(_currentAsset.layers.size()))
         return;
 
+    const int32 previousSelectedLayerIdx = _selectedLayerIdx;
+
     std::swap(_currentAsset.layers[_selectedLayerIdx], _currentAsset.layers[targetIdx]);
     _selectedLayerIdx = targetIdx;
+
+    if (_previewSoloLayerIdx == previousSelectedLayerIdx)
+        _previewSoloLayerIdx = targetIdx;
+    else if (_previewSoloLayerIdx == targetIdx)
+        _previewSoloLayerIdx = previousSelectedLayerIdx;
 
     MarkDirty();
     Restart_PreviewEffect();
@@ -3031,8 +3134,17 @@ void Effect_View::Restart_PreviewEffect()
 
     _previewEffectCom->Set_ForceVisiblePreview(_forceVisiblePreview);
     _previewEffectCom->Play_EffectAsset(_currentAsset);
+    Apply_PreviewSoloLayer();
 
     _isPlaying = true;
+}
+
+void Effect_View::Apply_PreviewSoloLayer()
+{
+    if (!_previewEffectCom)
+        return;
+
+    _previewEffectCom->Set_PreviewSoloLayerIndex(_previewSoloLayerIdx);
 }
 
 Shared<Effect_View> Effect_View::Create()

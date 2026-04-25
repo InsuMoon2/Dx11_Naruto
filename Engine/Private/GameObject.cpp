@@ -114,6 +114,15 @@ HRESULT GameObject::Render()
     return S_OK;
 }
 
+HRESULT GameObject::Render_Shadow()
+{
+    if (_isDestroyed)
+        return E_FAIL;
+
+
+    return S_OK;
+}
+
 json GameObject::To_Json() const
 {
     json j;

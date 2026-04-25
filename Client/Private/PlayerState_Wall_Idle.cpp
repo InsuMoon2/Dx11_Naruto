@@ -67,7 +67,22 @@ void PlayerState_Wall_Idle::Update(PlayerStateMachine* state, float timeDelta)
     idleCmd.moveAxis = Vec2::Zero;
     movement->Apply_Command(idleCmd);
     movement->Update(timeDelta);
-  
+
+    if (!movement->Is_WallRunning())
+    {
+        if (movement->Is_OnGround())
+        {
+            state->Change_State(input->Has_MoveInput() ? EPlayerState::Run : EPlayerState::Idle);
+        }
+        else if (movement->Try_RecoverWallRunHold())
+        {
+            state->Play_AnimState(EPlayerState::Wall_Idle);
+        }
+        else
+        {
+            state->Change_State(EPlayerState::JumpFall);
+        }
+    }
 }
 
 void PlayerState_Wall_Idle::Exit(PlayerStateMachine* state) {}

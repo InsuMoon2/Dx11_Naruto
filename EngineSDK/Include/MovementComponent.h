@@ -5,6 +5,8 @@
 NS_BEGIN(Engine)
 class Transform;
 class Model;
+class Collider;
+class GameObject;
 
 class ENGINE_DLL MovementComponent final : public Component
 {
@@ -39,7 +41,7 @@ public:
 
     struct FWireDashDesc
     {
-        float maxDistance = 10.f;
+        float maxDistance = 50.f;
         float approachSpeed = 28.f;
         float stopDistance = 0.4f;
         float traceStartOffsetY = 1.f;
@@ -53,6 +55,7 @@ public:
         float acceleration = 20.f;
         float deceleration = 24.f;
         float yawSpeed = 360.f;
+        float launchControlLockDuration = 0.12f; // 피격 launch가 들어온 직후 일반 이동/감속이 수평 속도를 바로 덮지 않도록 잠깐 입력 보정을 막는 시간이다.
 
         float jumpVelocity = 11.f;
         float doubleJumpVelocity = 9.f;
@@ -78,6 +81,9 @@ public:
         float wallJumpOutVelocity = 6.f;
 
         float groundWalkableMinUpDot = 0.55f;
+
+        float wallTopLandingMaxHeightDelta = 0.55f; // 벽 위 착지로 스냅을 허용할 최대 높이 차이다.
+        float wallTopLandingForwardOffset = 0.20f;  // 벽 위 착지 시 상단 평면 안쪽으로 살짝 밀어 넣는 거리다.
     };
 
     struct FMoveCommand
@@ -125,10 +131,8 @@ public:
 
     bool Is_WallRunning() const { return _isWallRunning; }
     void Start_WallJump();
+    bool Try_RecoverWallRunHold(); // 벽 이동이 막혀 wall run이 끊긴 직후, 현재 위치 근처 벽에 다시 붙어서 Wall_Idle로 정지할 수 있는지 확인한다.
 
-    void Set_SurfaceCollisionModels(const vector<FCollisionModelInstance>& models) { _surfaceCollisionModels = models; }
-
-    void Set_BlockCollisionModels(const vector<FCollisionModelInstance>& models) { _blockCollisionModels = models; }
     void Set_TraceDebugEnabled(bool enabled) { _traceDebugEnabled = enabled; }
 
     Vec3 Get_currentWallNormal() const { return _currentWallNormal; }
@@ -137,6 +141,7 @@ public:
     Vec3 Get_Velocity() { return _velocity; }
 
     void Launch(const Vec3& launchVelocity, bool xyOverride = false, bool zOverride = false);
+    void Resolve_CharacterBodyPenetration(); // 이미 겹쳐진 캐릭터 몸통끼리의 수평 침투를 즉시 풀어 Launch/이동이 막히지 않도록 호출한다.
 
 public:
     bool Get_OrientRotationToMovement() const { return _bOrientRotationToMovement; }
@@ -171,6 +176,8 @@ public:
 
     void Apply_WallRunPosition(Shared<Transform> transform, const FSurfaceHit& wallHit);
     void Apply_WallRunRotation(float timeDelta, Shared<Transform> transform);
+    void Apply_WallTopLanding(Shared<Transform> transform, const FSurfaceHit& topHit); // 벽 꼭대기 도달 시 상단으로 자연스럽게 정리한다.
+    bool Resolve_WallRunContact(Shared<Transform> transform, const Vec3& previousPos, const FSurfaceHit& wallHit); // 벽타기 중 실제 표면을 다시 확인하고 관통이 생기면 즉시 복구한다.
 
     void Restore_DefaultUpRotation(Shared<Transform> transform);
 
@@ -180,18 +187,24 @@ public:
     Vec3 Build_NotifyMotionStepDelta(const Vec3& stepDelta, bool constrainToGround) const;
 
 private:
-    bool Trace_Surface(const Ray& ray, float maxDistance, FSurfaceHit& outHit) const;
-    bool Trace_BlockSurface(const Ray& ray, float maxDistance, FSurfaceHit& outHit) const;
+    struct FCharacterBodySeparationInfo
+    {
+        Vec3 center = Vec3::Zero; // 캐릭터 몸통 충돌체의 현재 월드 중심이다.
+        float horizontalRadius = 0.f; // 몸통 충돌체를 수평 원형 프록시로 볼 때 사용하는 반경이다.
+    };
 
     bool Is_GroundLikeNormal(const Vec3& hitNormal) const;
     bool Is_WallLikeNormal(const Vec3& hitNormal) const;
     void Draw_TraceDebug(const Vec3& start, const Vec3& end, const FSurfaceHit& hit) const;
+    bool Trace_WallRunSurface(const Vec3& currentPos, const Vec3& wallNormal, FSurfaceHit& outHit) const; // 벽 바깥쪽에서 안쪽으로 다시 쏴서 현재 붙어야 할 벽 표면을 찾는다.
 
-    static Vec3 Rotate_HorizontalDirection(const Vec3& dir, float degrees);
     static bool Is_CharacterBodyChannel(Collision_Channel channel);
     bool Is_BlockedByCharacterBody(const Vec3& testPosition, Shared<Transform> transform) const;
     void Apply_CharacterBodyBlock(const Vec3& previousPos, Shared<Transform> transform);
+    bool Try_BuildCharacterBodySeparationInfo(const Shared<Collider>& collider, FCharacterBodySeparationInfo& outInfo) const; // 현재 collider 모양을 수평 분리 계산용 원형 프록시로 변환할 때 사용한다.
+    Vec3 Build_CharacterBodyFallbackPushDirection(const Shared<GameObject>& otherObject) const; // 두 몸통 중심이 거의 같아 방향을 못 잡을 때 owner 기준으로 밀어낼 방향을 만든다.
 
+    void Apply_CeilingBlock(const Vec3& previousPos, Shared<Transform> transform); // 상승 중 지형 하부를 뚫지 않도록 머리 위 충돌을 정리한다.
     void Apply_WallBlock(const Vec3& previousPos, Shared<Transform> transform);
 
 private:
@@ -217,9 +230,6 @@ private:
 
     bool _gravityEnabled = true;
 
-    vector<FCollisionModelInstance> _surfaceCollisionModels;
-    vector<FCollisionModelInstance> _blockCollisionModels;
-
     bool _traceDebugEnabled = false;
 
     bool _isWallRunning = false;
@@ -227,6 +237,7 @@ private:
     Vec3 _currentWallNormal = Vec3::Up;
     Vec3 _currentWallHitPoint = Vec3::Zero;
     float _wallRunLostContactElapsed = 0.f;
+    float _launchControlLockRemaining = 0.f; // Launch 직후 수평 속도를 유지하기 위해 일반 이동 보정을 잠시 막아 두는 남은 시간이다.
 
     float _wallJumpCooldown = 0.f;
 

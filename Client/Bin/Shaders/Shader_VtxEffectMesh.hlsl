@@ -52,6 +52,7 @@ int g_FlipbookLoop;
 int g_ForceVisiblePreview;
 int g_ShadingMode;
 int g_HasDiffuseTexture;
+int g_HasMaskTexture;
 int g_HasOpacityTexture;
 int g_HasOpacitySubUvTexture;
 int g_HasOpacityGradationTexture;
@@ -243,10 +244,17 @@ float ResolveBarrierFresnelMask(float fresnelValue, float rimPower)
     return saturate(pow(saturate(fresnelValue), safePower));
 }
 
-// Builds the final alpha mask from explicit opacity, SubUV opacity, and gradation slots.
+// Builds the final alpha mask from explicit opacity, SubUV opacity, gradation, and authored mask slots.
 float ApplyOpacityPipeline(float2 uv, float2 flipbookUV)
 {
     float maskValue = 1.f;
+    float authoredMaskValue = 1.f;
+
+    if (g_HasMaskTexture != 0)
+    {
+        // Cascade-style mesh effects often separate soft opacity from a hard opacity-mask cutout.
+        authoredMaskValue = SampleMask(g_MaskTexture.Sample(DefaultSampler, uv));
+    }
 
     if (g_HasOpacityTexture != 0)
     {
@@ -265,7 +273,7 @@ float ApplyOpacityPipeline(float2 uv, float2 flipbookUV)
         maskValue = gradMask;
     }
 
-    return saturate(maskValue);
+    return saturate(maskValue * authoredMaskValue);
 }
 
 // Roughness texture is optional; this keeps Lit mode stable even when only scalar roughness exists.

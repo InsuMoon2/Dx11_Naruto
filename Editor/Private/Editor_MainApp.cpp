@@ -71,7 +71,8 @@ void Editor_MainApp::Priority_Update(float timeDelta)
 {
     if (EDITOR->IsPlaying())
     {
-        GAME->Priority_Update_Engine(timeDelta);
+        const float scaledTimeDelta = timeDelta * EDITOR->Get_RuntimeTimeScale();
+        GAME->Priority_Update_Engine(scaledTimeDelta);
     }
     else
     {
@@ -93,13 +94,21 @@ void Editor_MainApp::Update(float timeDelta)
 
     // 게임은 Play 모드일 때만
     if (EDITOR->IsPlaying())
-        GAME->Update_Engine(timeDelta);
+    {
+        const float scaledTimeDelta = timeDelta * EDITOR->Get_RuntimeTimeScale();
+        GAME->Update_Engine(scaledTimeDelta);
+    }
 
 }
 
 void Editor_MainApp::Late_Update(float timeDelta)
 {
-    // Edit 모드에서도 Late_Update를 돌려야 RenderGroup에 오브젝트가 등록됨
+    if (EDITOR->IsPaused())
+    {
+        GAME->Late_Update_Engine(0.f);
+        return;
+    }
+
     GAME->Late_Update_Engine(timeDelta);
 }
 

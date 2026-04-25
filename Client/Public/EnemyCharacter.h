@@ -47,6 +47,11 @@ public:
 
     void    Set_RotationToDamageCauser(const FDamageEvent& damageEvent);
 
+    HRESULT Render_Shadow() override;
+
+protected:
+    HRESULT Bind_ShadowShaderResources();
+
 protected:
     HRESULT Bind_ShaderResources() override;
 

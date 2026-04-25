@@ -129,6 +129,16 @@ void Editor_Manager::Render()
                 renderRTDebug = sceneView->Should_RenderRTDebug();
             }
         }
+        else
+        {
+            auto gameView = dynamic_pointer_cast<Game_View>(Get_Window(TEXT("Game")));
+
+            if (gameView)
+            {
+                // Play 중에는 Game View 토글 상태를 읽어서 MRT 디버그 오버레이를 그린다.
+                renderRTDebug = gameView->Should_RenderRTDebug();
+            }
+        }
 
         GAME->Draw(true, true, renderRTDebug);
 
@@ -233,6 +243,25 @@ void Editor_Manager::Handle_Shortcuts()
         if (inspector) inspector->Set_Active(!inspector->IsActive());
     }
 
+    if (ImGui::IsKeyPressed(ImGuiKey_F2, false))
+    {
+        auto gameView = dynamic_pointer_cast<Game_View>(Get_Window(TEXT("Game")));
+        if (gameView && gameView->IsActive() && gameView->Is_Focused())
+        {
+            // Play 중 Game View가 포커스면 RT Debug 체크박스와 동일한 토글을 단축키로 처리한다.
+            gameView->Toggle_RenderRTDebug();
+            return;
+        }
+
+        auto sceneView = dynamic_pointer_cast<Scene_View>(Get_Window(TEXT("Scene")));
+        if (sceneView && sceneView->IsActive() && sceneView->IsFocused())
+        {
+            // Edit 중 Scene View가 포커스면 Scene RT Debug 체크박스와 동일한 토글을 단축키로 처리한다.
+            sceneView->Toggle_RenderRTDebug();
+            return;
+        }
+    }
+
     if (ImGui::IsKeyPressed(ImGuiKey_F9, false))
     {
         if (GAME->Get_GameState() == EGameState::Play)
@@ -242,6 +271,25 @@ void Editor_Manager::Handle_Shortcuts()
         else if (GAME->Get_GameState() == EGameState::Pause)
         {
             EDITOR->Resume();
+        }
+    }
+
+    if (!ImGui::GetIO().WantTextInput)
+    {
+        const bool increaseTimeScale =
+            ImGui::IsKeyPressed(ImGuiKey_KeypadAdd, false) ||
+            (ImGui::GetIO().KeyShift && ImGui::IsKeyPressed(ImGuiKey_Equal, false));
+        const bool decreaseTimeScale =
+            ImGui::IsKeyPressed(ImGuiKey_KeypadSubtract, false) ||
+            ImGui::IsKeyPressed(ImGuiKey_Minus, false);
+
+        if (increaseTimeScale)
+        {
+            EDITOR->Set_RuntimeTimeScale(EDITOR->Get_RuntimeTimeScale() + 0.1f);
+        }
+        else if (decreaseTimeScale)
+        {
+            EDITOR->Set_RuntimeTimeScale(EDITOR->Get_RuntimeTimeScale() - 0.1f);
         }
     }
 }
@@ -310,9 +358,10 @@ void Editor_Manager::Begin_DockSpace()
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 4.f);
 
         float windowWidth = ImGui::GetWindowWidth();
-        ImGui::SetCursorPosX((windowWidth / 2.f) - 150.f); // 왼쪽으로 이동
+        constexpr float toolbarControlWidth = 430.f;
+        ImGui::SetCursorPosX(max(12.f, (windowWidth - toolbarControlWidth) * 0.5f));
 
-                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 4));
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 4));
 
         const EGameState gameState = GAME->Get_GameState();
 
@@ -451,6 +500,37 @@ void Editor_Manager::Begin_DockSpace()
             }
 
             ImGui::EndPopup();
+        }
+
+        ImGui::SameLine();
+
+        ImGui::AlignTextToFramePadding();
+        ImGui::TextDisabled(ICON_FA_GAUGE_HIGH " Time");
+
+        ImGui::SameLine();
+
+        float runtimeTimeScale = EDITOR->Get_RuntimeTimeScale();
+        ImGui::SetNextItemWidth(100.f);
+        if (ImGui::DragFloat("##RuntimeTimeScale", &runtimeTimeScale, 0.01f, 0.1f, 3.f, "x%.2f"))
+        {
+            EDITOR->Set_RuntimeTimeScale(runtimeTimeScale);
+        }
+
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Editor Play mode delta scale");
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::SmallButton(ICON_FA_ARROW_ROTATE_LEFT "##ResetRuntimeTimeScale"))
+        {
+            EDITOR->Reset_RuntimeTimeScale();
+        }
+
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Reset to x1.00");
         }
 
         ImGui::SameLine();

@@ -43,6 +43,7 @@ enum class EEffectBillboardRenderMode : uint8
     CoreSphere = 0,                             // 라센간/파이어볼 코어처럼 중심이 찬 구체형 Billboard를 그릴 때 사용한다.
     FlipbookDecal,                              // 화염 데칼이나 표면 꼬물거림처럼 텍스처 원형을 그대로 살려 붙일 때 사용한다.
     Distortion,                                 // 열기/왜곡 마스크처럼 부드럽고 옅은 연무형 Billboard를 그릴 때 사용한다.
+    ScreenDistortion,                           // SceneColorCopy를 샘플링해 실제 화면 굴절을 만드는 Billboard 모드다.
     END
 };
 
@@ -230,6 +231,14 @@ struct FEffectBillboardLayerDesc
     string ringTextureGuid;                    // 외곽 링/보조 문양 텍스처 GUID
     string ringOpacityTextureGuid;             // 외곽 링 Billboard의 최종 알파를 별도 마스크 텍스처로 제어할 때 사용하는 GUID다.
     string ringOpacityGradationTextureGuid;    // 외곽 링 opacity 마스크 값을 원본 GMO 계열 그라데이션으로 리매핑할 때 사용하는 GUID다.
+    string screenDistortionNormalTextureGuid;  // ScreenDistortion 모드에서 화면 UV를 흔드는 노멀/노이즈 텍스처 GUID다.
+    Vec2 baseUvOffset = Vec2(0.f, 0.f);        // 원본 아틀라스 텍스처에서 중심 Billboard가 샘플링을 시작할 UV 좌표다.
+    Vec2 baseUvScale = Vec2(1.f, 1.f);         // 원본 아틀라스 텍스처에서 중심 Billboard가 사용할 UV 영역 크기다.
+    Vec2 ringUvOffset = Vec2(0.f, 0.f);        // 원본 아틀라스 텍스처에서 링 Billboard가 샘플링을 시작할 UV 좌표다.
+    Vec2 ringUvScale = Vec2(1.f, 1.f);         // 원본 아틀라스 텍스처에서 링 Billboard가 사용할 UV 영역 크기다.
+    Vec2 screenDistortionNormalTiling = Vec2(2.f, 3.f); // ScreenDistortion 노멀/노이즈를 두 번 샘플링할 때 사용할 A/B 타일링 값이다.
+    Vec2 screenDistortionScrollA = Vec2(0.2f, 1.f);      // ScreenDistortion 첫 번째 노멀/노이즈 샘플의 초당 UV 스크롤 속도다.
+    Vec2 screenDistortionScrollB = Vec2(-0.2f, 1.f);     // ScreenDistortion 두 번째 노멀/노이즈 샘플의 초당 UV 스크롤 속도다.
 
     EEffectBlendMode blendMode = EEffectBlendMode::Additive; // 라센간 코어는 Additive를 기본으로 사용한다.
     EEffectBillboardRenderMode renderMode = EEffectBillboardRenderMode::CoreSphere; // Billboard를 코어/데칼/왜곡 중 어떤 방식으로 해석할지 결정한다.
@@ -241,6 +250,8 @@ struct FEffectBillboardLayerDesc
     float ringOpacity = 0.45f;                               // 외곽 링 알파 강도다.
     float baseEmissiveStrength = 1.f;                        // 중심 Billboard 색을 발광처럼 증폭하는 강도다.
     float ringEmissiveStrength = 1.f;                        // 외곽 링 Billboard 색을 발광처럼 증폭하는 강도다.
+    float screenDistortionStrength = 0.018f;                  // ScreenDistortion에서 노멀/노이즈가 화면 UV를 흔드는 기본 강도다.
+    float screenDistortionRadialStrength = 0.012f;            // ScreenDistortion에서 중심 기준으로 화면을 밀거나 빨아들이는 방사형 강도다.
     bool useBaseOpacityOverTime = false;                     // true면 baseOpacity에서 endBaseOpacity로 레이어 수명 동안 보간한다.
     float endBaseOpacity = 0.f;                              // Billboard 중심 레이어 수명 끝에서 도달할 opacity 값이다.
     bool useRingOpacityOverTime = false;                     // true면 ringOpacity에서 endRingOpacity로 레이어 수명 동안 보간한다.

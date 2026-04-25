@@ -32,6 +32,94 @@ Level_Gameplay::~Level_Gameplay()
 {
 }
 
+// 수업코드식 perspective shadow에서는 shadow RT도 viewport 비율을 따르므로 aspect도 화면 비율을 사용한다.
+static constexpr bool GAMEPLAY_SHADOW_USE_VIEWPORT_ASPECT = true;
+// viewport 비율을 직접 계산하지 못하는 경로에서도 수업 프로젝트의 16:9 기준을 유지하기 위한 fallback aspect다.
+static constexpr float GAMEPLAY_SHADOW_RT_ASPECT = 1280.f / 720.f;
+// 플레이어 발밑 그림자가 우선이라 shadow target을 상체보다 낮게 둔다.
+static constexpr float GAMEPLAY_SHADOW_TARGET_HEIGHT_OFFSET = 3.f;
+// Gameplay는 우선 플레이어 기준 shadow 정상화가 목표이므로, target을 앞쪽 지형으로 밀지 않는다.
+static constexpr float GAMEPLAY_SHADOW_TARGET_AHEAD_DISTANCE = 0.f;
+// Shadow Eye를 너무 멀리 두면 경기장 바깥 산맥이 shadow RT를 먹어버리므로 eye 거리를 더 줄인다.
+static constexpr float GAMEPLAY_SHADOW_EYE_DISTANCE = 95.f;
+// perspective shadow camera를 수동 디버그할 때 쓰는 fallback FOV다. Gameplay 기본 shadow는 ortho를 사용한다.
+static constexpr float GAMEPLAY_SHADOW_FOV_Y = 126.f;
+// far가 크면 산맥/외벽이 shadow RT 대부분을 차지하므로 플레이어 주변 바닥 위주로 더 줄인다.
+static constexpr float GAMEPLAY_SHADOW_FAR = 220.f;
+// near plane을 너무 크게 두면 플레이어 주변 geometry가 통째로 잘려서 RT가 다시 비어 보일 수 있으므로 낮게 유지한다.
+static constexpr float GAMEPLAY_SHADOW_NEAR = 0.1f;
+// 플레이어 주변 shadow texel 밀도를 유지하기 위한 orthographic coverage다.
+static constexpr float GAMEPLAY_SHADOW_ORTHO_WIDTH = 80.f;
+// 16:9 shadow RT에서 플레이어 주변 바닥을 충분히 담되 texel이 커지지 않도록 높이를 제한한다.
+static constexpr float GAMEPLAY_SHADOW_ORTHO_HEIGHT = 45.f;
+
+// Tutorial/Gameplay Arena 메시들은 저장 데이터 기준 원점 주변에 있으므로 기본 shadow focus를 Area 내부로 고정한다.
+static Vec3 Get_GameplayAreaShadowTarget()
+{
+    return Vec3(0.f, GAMEPLAY_SHADOW_TARGET_HEIGHT_OFFSET, 0.f);
+}
+
+// Gameplay 레벨에서 네트워크 입장/로컬 스폰이 같은 PlayerStart를 쓰도록 좌표와 회전을 찾을 때 호출한다.
+// 레벨 JSON에서 이미 로드된 PlayerStart가 있으면 그 transform을 그대로 반환하고, 없으면 false를 반환한다.
+static bool Try_FindGameplayPlayerStartTransform(uint32 levelIndex, Vec3& outSpawnPos, float& outSpawnRotY)
+{
+    outSpawnPos = Vec3::Zero;
+    outSpawnRotY = 0.f;
+
+    const auto gameObjects = GAME->Get_GameObjects(levelIndex);
+    for (const auto& obj : gameObjects)
+    {
+        if (!obj || obj->Get_ObjectType() != Protocol::OBJECT_TYPE_PLAYER_START)
+            continue;
+
+        auto transform = obj->Get_Transform();
+        if (!transform)
+            continue;
+
+        outSpawnPos = transform->Get_WorldPosition();
+        outSpawnRotY = transform->Get_LocalRotation().ToEuler().y;
+        return true;
+    }
+
+    return false;
+}
+
+// 현재 레벨의 플레이어나 활성 카메라에서 shadow camera의 eye/target을 잡기 위한 helper다.
+static bool Try_BuildGameplayShadowCameraFromCurrentView(uint32 levelIndex, Vec3& outShadowEye, Vec3& outShadowTarget)
+{
+    bool hasTarget = false;
+    Vec3 playerPosition = Vec3::Zero; // shadow focus의 기준이 되는 플레이어 월드 좌표다.
+
+    const auto gameObjects = GAME->Get_GameObjects(levelIndex);
+    for (const auto& obj : gameObjects)
+    {
+        if (!obj || obj->Get_ObjectType() != Protocol::OBJECT_TYPE_PLAYER)
+            continue;
+
+        auto transform = obj->Get_Transform();
+        if (!transform)
+            continue;
+
+        playerPosition = transform->Get_WorldPosition();
+        outShadowTarget = playerPosition + Vec3(0.f, GAMEPLAY_SHADOW_TARGET_HEIGHT_OFFSET, 0.f);
+        hasTarget = true;
+        break;
+    }
+
+    if (hasTarget)
+    {
+        outShadowTarget = playerPosition + Vec3(0.f, GAMEPLAY_SHADOW_TARGET_HEIGHT_OFFSET, 0.f);
+        // 수업코드식 shadow에서는 eye를 광원 방향으로 다시 계산하므로 helper는 플레이어 기준 target만 안정적으로 맞춘다.
+        outShadowEye = outShadowTarget + Vec3(0.f, 15.f, -12.f);
+        return true;
+    }
+
+    // 플레이어가 아직 ObjectManager에 보이지 않아도 카메라 forward 대신 Arena 내부를 본다.
+    outShadowTarget = Get_GameplayAreaShadowTarget();
+    outShadowEye = outShadowTarget + Vec3(0.f, 15.f, -12.f);
+    return true;
+}
+
 HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
 {
     _spawnMode = spawnMode;
@@ -77,6 +165,7 @@ HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
 void Level_Gameplay::Update(float timeDelta)
 {
     Level::Update(timeDelta);
+    Update_DynamicShadowLightFromView();
 
     if (_konohaTransitionRequested)
     {
@@ -136,6 +225,8 @@ HRESULT Level_Gameplay::Render()
 HRESULT Level_Gameplay::On_LevelChunkLoaded(const wstring& fileName)
 {
     CHECK_FAILED(Rebuild_CollisionProxyCache(), E_FAIL);
+    GAME->Invalidate_StaticShadowMap();
+
     return S_OK;
 }
 
@@ -157,13 +248,45 @@ void Level_Gameplay::On_WaveStarted(const string& waveTag)
 
 HRESULT Level_Gameplay::Ready_Lights()
 {
+    // Gameplay 기본 shadow 설정이 Editor Override에 막히지 않도록 레벨 진입 시 override를 초기화한다.
+    GAME->Set_EditorPrimaryShadowLightOverrideEnabled(false);
+
+    // 새 레벨 라이트를 등록하기 전에 이전 레벨에서 남은 라이트를 정리한다.
+    GAME->Clear_Lights();
+
     FLightDesc lightDesc{};
 
     lightDesc.type = ELightType::Directional;
-    lightDesc.direction = Vec4(1.f, -1.f, 1.f, 0.f);
+    lightDesc.direction = Vec4(-1.f, -1.f, -1.f, 0.f);
     lightDesc.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
     lightDesc.ambient = Vec4(0.18f, 0.18f, 0.18f, 1.f);
     lightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+
+    lightDesc.castShadow = true;
+    lightDesc.shadowMapSize = 2048;
+    lightDesc.shadowCenter = Get_GameplayAreaShadowTarget();
+    lightDesc.shadowOrthoWidth = GAMEPLAY_SHADOW_ORTHO_WIDTH;
+    lightDesc.shadowOrthoHeight = GAMEPLAY_SHADOW_ORTHO_HEIGHT;
+    lightDesc.useShadowCamera = false;
+    lightDesc.shadowTarget = Get_GameplayAreaShadowTarget();
+    lightDesc.shadowFovY = XMConvertToRadians(GAMEPLAY_SHADOW_FOV_Y);
+    if (GAMEPLAY_SHADOW_USE_VIEWPORT_ASPECT)
+        lightDesc.shadowAspect = max(1.f, GAME->Get_ViewportWidth()) / max(1.f, GAME->Get_ViewportHeight());
+    else
+        lightDesc.shadowAspect = GAMEPLAY_SHADOW_RT_ASPECT;
+    lightDesc.shadowNear = GAMEPLAY_SHADOW_NEAR;
+    lightDesc.shadowFar = GAMEPLAY_SHADOW_FAR;
+    lightDesc.shadowBias = 0.00025f;
+    lightDesc.shadowStrength = 0.68f;
+    lightDesc.shadowSoftness = 0.35f;
+
+    Vec3 lightDir = Vec3(lightDesc.direction.x, lightDesc.direction.y, lightDesc.direction.z); // 정사광원 방향 기준으로 shadow eye를 고정하기 위한 방향 벡터다.
+    if (lightDir.LengthSquared() <= FLT_EPSILON)
+        lightDir = Vec3(-1.f, -1.f, -1.f);
+    else
+        lightDir.Normalize();
+
+    lightDesc.shadowEye = lightDesc.shadowTarget - lightDir * GAMEPLAY_SHADOW_EYE_DISTANCE;
 
     CHECK_FAILED(GAME->Add_Light(lightDesc), E_FAIL);
 
@@ -180,6 +303,58 @@ HRESULT Level_Gameplay::Ready_Lights()
 #endif
 
     return S_OK;
+}
+
+void Level_Gameplay::Update_DynamicShadowLightFromView()
+{
+    FLightDesc lightDesc{};
+
+    lightDesc.type = ELightType::Directional;
+    lightDesc.direction = Vec4(-1.f, -1.f, -1.f, 0.f);
+    lightDesc.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
+    lightDesc.ambient = Vec4(0.18f, 0.18f, 0.18f, 1.f);
+    lightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+
+    lightDesc.castShadow = true;
+    lightDesc.shadowMapSize = 2048;
+    lightDesc.shadowCenter = Get_GameplayAreaShadowTarget();
+    lightDesc.shadowOrthoWidth = GAMEPLAY_SHADOW_ORTHO_WIDTH;
+    lightDesc.shadowOrthoHeight = GAMEPLAY_SHADOW_ORTHO_HEIGHT;
+    lightDesc.useShadowCamera = false;
+    lightDesc.shadowTarget = Get_GameplayAreaShadowTarget();
+    lightDesc.shadowFovY = XMConvertToRadians(GAMEPLAY_SHADOW_FOV_Y);
+    if (GAMEPLAY_SHADOW_USE_VIEWPORT_ASPECT)
+        lightDesc.shadowAspect = max(1.f, GAME->Get_ViewportWidth()) / max(1.f, GAME->Get_ViewportHeight());
+    else
+        lightDesc.shadowAspect = GAMEPLAY_SHADOW_RT_ASPECT;
+    lightDesc.shadowNear = GAMEPLAY_SHADOW_NEAR;
+    lightDesc.shadowFar = GAMEPLAY_SHADOW_FAR;
+    lightDesc.shadowBias = 0.00025f;
+    lightDesc.shadowStrength = 0.68f;
+    lightDesc.shadowSoftness = 0.35f;
+
+    Vec3 dynamicShadowEye = Vec3::Zero;
+    Vec3 dynamicShadowTarget = Vec3::Zero;
+    if (Try_BuildGameplayShadowCameraFromCurrentView(ETOI(ELevelType::GamePlay), dynamicShadowEye, dynamicShadowTarget))
+    {
+        lightDesc.shadowTarget = dynamicShadowTarget;
+        lightDesc.shadowCenter = dynamicShadowTarget;
+    }
+
+    Vec3 lightDir = Vec3(lightDesc.direction.x, lightDesc.direction.y, lightDesc.direction.z); // 수업코드처럼 shadow eye를 directional light 방향 축으로 계산하기 위한 광원 방향 벡터다.
+    if (lightDir.LengthSquared() <= FLT_EPSILON)
+        lightDir = Vec3(-1.f, -1.f, -1.f);
+    else
+        lightDir.Normalize();
+
+    // Gameplay도 shadow target만 추적하고, shadow eye는 항상 빛 방향 반대쪽에 고정한다.
+    lightDesc.shadowEye = lightDesc.shadowTarget - lightDir * GAMEPLAY_SHADOW_EYE_DISTANCE;
+
+    const HRESULT updateHr = GAME->Update_PrimaryShadowLightDesc(lightDesc);
+    if (FAILED(updateHr))
+    {
+        LOG_WARN("[Level_Gameplay] Update_DynamicShadowLightFromView failed. hr=0x{:08X}", static_cast<uint32>(updateHr));
+    }
 }
 
 HRESULT Level_Gameplay::Ready_Layer_Camera(const wstring& layerTag)
@@ -226,6 +401,13 @@ HRESULT Level_Gameplay::Ready_Layer_Camera(const wstring& layerTag)
 
 HRESULT Level_Gameplay::Ready_Layer_PlayerStart(const wstring& layerTag)
 {
+    Vec3 existingSpawnPos = Vec3::Zero;
+    float existingSpawnRotY = 0.f;
+
+    // 레벨 JSON에 저장된 PlayerStart가 이미 있으면 하드코딩 fallback을 추가로 만들지 않는다.
+    if (Try_FindGameplayPlayerStartTransform(ETOI(ELevelType::GamePlay), existingSpawnPos, existingSpawnRotY))
+        return S_OK;
+
     // TODO : Spawn Point Save&Load로 위치 세팅
     {
         PlayerStart::FPlayerStartDesc desc;
@@ -449,6 +631,7 @@ HRESULT Level_Gameplay::Rebuild_CollisionProxyCache()
     Build_CollisionProxyEntries(proxyEntries);
 
     GAME->Ready_CollisionProxy(proxyEntries);
+    CHECK_FAILED(Register_PhysXProxiesForTest(), E_FAIL);
 
     const uint32 levelIndex = ETOI(ELevelType::GamePlay);
     const auto gameObjects = GAME->Get_GameObjects(levelIndex);
@@ -465,6 +648,88 @@ HRESULT Level_Gameplay::Rebuild_CollisionProxyCache()
     LOG_INFO("[Level_Gameplay] WorldBlock Proxy = {}", _worldBlockProxyModels.size());
 
     return S_OK;
+}
+
+HRESULT Level_Gameplay::Register_PhysXProxiesForTest()
+{
+    GAME->Clear_PhysXScene();
+
+    int32 registeredCount = 0;
+    int32 registeredWalkableCount = 0;
+    int32 registeredWorldBlockCount = 0;
+
+    const auto registerInstances =
+        [&registeredCount, &registeredWalkableCount, &registeredWorldBlockCount, this](
+            const vector<MovementComponent::FCollisionModelInstance>& instances,
+            const string& debugPrefix,
+            ECollisionProxyType proxyType)
+        {
+            uint32 instanceIndex = 0;
+            for (const auto& instance : instances)
+            {
+                const string debugName = debugPrefix + "_" + to_string(instanceIndex);
+                if (Register_PhysXProxyInstanceForTest(instance, debugName, proxyType))
+                {
+                    ++registeredCount;
+
+                    if (proxyType == ECollisionProxyType::WorldBlock)
+                        ++registeredWorldBlockCount;
+                    else
+                        ++registeredWalkableCount;
+                }
+
+                ++instanceIndex;
+            }
+        };
+
+    registerInstances(_defaultGroundModels, "Gameplay_PhysX_DefaultGround", ECollisionProxyType::Walkable);
+    registerInstances(_surfaceProxyModels, "Gameplay_PhysX_SurfaceProxy", ECollisionProxyType::Walkable);
+    registerInstances(_worldBlockProxyModels, "Gameplay_PhysX_WorldBlockProxy", ECollisionProxyType::WorldBlock);
+
+    LOG_INFO(
+        "[Level_Gameplay] PhysX proxies registered. count={}, walkable={}, worldBlock={}",
+        registeredCount,
+        registeredWalkableCount,
+        registeredWorldBlockCount);
+
+    return S_OK;
+}
+
+bool Level_Gameplay::Register_PhysXProxyInstanceForTest(
+    const MovementComponent::FCollisionModelInstance& instance,
+    const string& debugName,
+    ECollisionProxyType proxyType) const
+{
+    if (!instance.model)
+        return false;
+
+    vector<Vec3> vertices;
+    vector<uint32> indices;
+
+    for (const auto& mesh : instance.model->Get_Meshes())
+    {
+        if (!mesh)
+            continue;
+
+        const auto& meshPositions = mesh->Get_CPUPositions();
+        const auto& meshIndices = mesh->Get_CPUIndices();
+        if (meshPositions.empty() || meshIndices.empty())
+            continue;
+
+        const uint32 baseVertex = static_cast<uint32>(vertices.size());
+        vertices.insert(vertices.end(), meshPositions.begin(), meshPositions.end());
+
+        indices.reserve(indices.size() + meshIndices.size());
+        for (const uint32 meshIndex : meshIndices)
+        {
+            indices.push_back(baseVertex + meshIndex);
+        }
+    }
+
+    if (vertices.empty() || indices.size() < 3)
+        return false;
+
+    return GAME->Register_PhysXStaticTriangleMesh(debugName, vertices, indices, instance.worldMatrix, proxyType);
 }
 
 HRESULT Level_Gameplay::Collect_CollisionProxyActorsFromLayer(const wstring& layerTag)
@@ -529,18 +794,9 @@ HRESULT Level_Gameplay::Append_CollisionProxyInstance(Shared<CollisionProxyActor
 
 void Level_Gameplay::Spawn_LocalPlayer()
 {
-    auto gameObjects = GAME->Get_GameObjects(ETOI(ELevelType::GamePlay));
-
-    Vec3 spawnPos = Vec3(0.f, 0.f, 0.f);
-
-    for (auto& obj : gameObjects)
-    {
-        if (obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER_START)
-        {
-            spawnPos = obj->Get_Component<Transform>()->Get_WorldPosition();
-            break;
-        }
-    }
+    Vec3 spawnPos = Vec3::Zero;
+    float spawnRotY = 0.f;
+    Try_FindGameplayPlayerStartTransform(ETOI(ELevelType::GamePlay), spawnPos, spawnRotY);
 
     auto playerObj = Spawn_Helper::Prefab("TestPlayer2")
         .AtLevel(ETOI(ELevelType::GamePlay))
@@ -591,32 +847,6 @@ void Level_Gameplay::Apply_CollisionModelsToPlayer(const Shared<GameObject>& obj
     if (!moveCom)
         return;
 
-    auto transform = obj->Get_Transform();
-    if (!transform)
-        return;
-
-    vector<MovementComponent::FCollisionModelInstance> nearbyWalkableModels;
-    vector<MovementComponent::FCollisionModelInstance> nearbyWallModels;
-    vector<MovementComponent::FCollisionModelInstance> nearbyWorldBlockModels;
-
-    GAME->Query_ActiveCollisionProxy(
-        transform->Get_WorldPosition(),
-        nearbyWalkableModels,
-        nearbyWallModels,
-        &nearbyWorldBlockModels);
-
-    vector<MovementComponent::FCollisionModelInstance> nearbySurfaceModels = _defaultGroundModels;
-    nearbySurfaceModels.insert(
-        nearbySurfaceModels.end(),
-        nearbyWalkableModels.begin(),
-        nearbyWalkableModels.end());
-    nearbySurfaceModels.insert(
-        nearbySurfaceModels.end(),
-        nearbyWallModels.begin(),
-        nearbyWallModels.end());
-
-    moveCom->Set_SurfaceCollisionModels(nearbySurfaceModels);
-    moveCom->Set_BlockCollisionModels(nearbyWorldBlockModels);
     moveCom->Set_TraceDebugEnabled(_showCollisionDebug);
 }
 
@@ -628,23 +858,12 @@ void Level_Gameplay::Try_SendEnterGamePacket()
     if (!NetworkManager::GetInstance()->IsConnected())
         return;
 
-    Vec3 spawnPos = Vec3(0.f, 0.f, 0.f);
+    Vec3 spawnPos = Vec3::Zero;
     float spawnRotY = 0.f;
 
-    auto gameObjects = GAME->Get_GameObjects(ETOI(ELevelType::GamePlay));
-    for (auto& obj : gameObjects)
-    {
-        if (obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER_START)
-        {
-            auto transform = obj->Get_Component<Transform>();
-            if (transform)
-            {
-                spawnPos = transform->Get_WorldPosition();
-                spawnRotY = transform->Get_LocalRotation().ToEuler().y;
-            }
-            break;
-        }
-    }
+    // PlayerStart를 아직 못 찾은 프레임에는 (0,0,0)을 서버로 보내지 않고 다음 Update에서 다시 시도한다.
+    if (!Try_FindGameplayPlayerStartTransform(ETOI(ELevelType::GamePlay), spawnPos, spawnRotY))
+        return;
 
     auto buf = Client_PacketHandler::Make_C_EnterGame(spawnPos, spawnRotY);
     if (!buf)

@@ -17,6 +17,12 @@ public:
     void On_Tick(const FAnimNotifyContext& context)  override;
     void On_End(const FAnimNotifyContext& context)   override;
 
+    static void Set_FallbackPendingSkill(GameObject* owner, Protocol::OBJECT_TYPE type, Shared<SkillObject_Projectile> skill);
+
+    static Weak<SkillObject_Projectile> Get_FallbackPendingSkill(GameObject* owner, Protocol::OBJECT_TYPE type);
+
+    static void Clear_FallbackPendingSkill(GameObject* owner, Protocol::OBJECT_TYPE type, bool destroyIfAttached);
+
 private:
     Weak<SkillObject_Projectile> _attachedSkill;
 

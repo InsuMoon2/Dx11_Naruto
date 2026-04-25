@@ -197,12 +197,107 @@ HRESULT RenderTarget::Ready_Debug(float x, float y, float sizeX, float sizeY)
 
 HRESULT RenderTarget::Render(Shared<VIBuffer_Rect> viBuffer, Shared<Shader> shader)
 {
+    CHECK_NULL(viBuffer, E_FAIL);
+    CHECK_NULL(shader, E_FAIL);
+
     shader->Bind_Matrix("g_WorldMatrix", &_debugWorldMatrix);
     shader->Bind_SRV("g_Texture", _shaderResourceView.Get());
 
+    CHECK_FAILED(viBuffer->Bind_Resources(), E_FAIL);
     shader->Begin_Pass(0);
+    CHECK_FAILED(viBuffer->Render(), E_FAIL);
 
-    viBuffer->Render();
+    return S_OK;
+}
+
+HRESULT RenderTarget::Log_DebugFloatStats(const wstring& targetTag) const
+{
+    CHECK_NULL(_texture, E_FAIL);
+
+    D3D11_TEXTURE2D_DESC sourceDesc = {};
+    _texture->GetDesc(&sourceDesc);
+
+    const bool isR32Float = (sourceDesc.Format == DXGI_FORMAT_R32_FLOAT);
+    const bool isRGBA32Float = (sourceDesc.Format == DXGI_FORMAT_R32G32B32A32_FLOAT);
+    if (!isR32Float && !isRGBA32Float)
+    {
+        LOG_INFO("[RTStats] {} skipped. unsupported format={}", Utils::ToString(targetTag), static_cast<uint32>(sourceDesc.Format));
+        return S_FALSE;
+    }
+
+    D3D11_TEXTURE2D_DESC stagingDesc = sourceDesc;
+    stagingDesc.Usage = D3D11_USAGE_STAGING;
+    stagingDesc.BindFlags = 0;
+    stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    stagingDesc.MiscFlags = 0;
+
+    ComPtr<Texture2D> stagingTexture;
+    CHECK_FAILED(_device->CreateTexture2D(&stagingDesc, nullptr, stagingTexture.GetAddressOf()), E_FAIL);
+
+    _context->CopyResource(stagingTexture.Get(), _texture.Get());
+
+    D3D11_MAPPED_SUBRESOURCE mapped = {};
+    CHECK_FAILED(_context->Map(stagingTexture.Get(), 0, D3D11_MAP_READ, 0, &mapped), E_FAIL);
+
+    float minValue = FLT_MAX; // RT red 채널의 최소값이다.
+    float maxValue = -FLT_MAX; // RT red 채널의 최대값이다.
+    float minGreenValue = FLT_MAX; // RT green 채널의 최소값이다.
+    float maxGreenValue = -FLT_MAX; // RT green 채널의 최대값이다.
+    uint64 belowClearCount = 0; // clear 값 1보다 작은 red 픽셀 개수다.
+    uint64 nonClearCount = 0; // RGBA 중 하나라도 clear 값과 달라진 픽셀 개수다.
+    uint64 validCount = 0; // 통계를 낸 전체 픽셀 개수다.
+
+    const uint32 componentCount = isRGBA32Float ? 4 : 1;
+    for (uint32 y = 0; y < sourceDesc.Height; ++y)
+    {
+        const auto row = reinterpret_cast<const float*>(
+            reinterpret_cast<const uint8*>(mapped.pData) + static_cast<size_t>(mapped.RowPitch) * y);
+
+        for (uint32 x = 0; x < sourceDesc.Width; ++x)
+        {
+            const float redValue = row[x * componentCount];
+            minValue = min(minValue, redValue);
+            maxValue = max(maxValue, redValue);
+
+            if (redValue < 0.999f)
+                ++belowClearCount;
+
+            if (isRGBA32Float)
+            {
+                const float greenValue = row[x * componentCount + 1];
+                const float blueValue = row[x * componentCount + 2];
+                const float alphaValue = row[x * componentCount + 3];
+
+                minGreenValue = min(minGreenValue, greenValue);
+                maxGreenValue = max(maxGreenValue, greenValue);
+
+                if (fabsf(redValue - 1.f) > 0.0005f ||
+                    fabsf(greenValue - 1.f) > 0.0005f ||
+                    fabsf(blueValue - 1.f) > 0.0005f ||
+                    fabsf(alphaValue - 1.f) > 0.0005f)
+                {
+                    ++nonClearCount;
+                }
+            }
+
+            ++validCount;
+        }
+    }
+
+    _context->Unmap(stagingTexture.Get(), 0);
+
+    LOG_INFO("[RTStats] {} format={} size={}x{} minR={:.6f} maxR={:.6f} minG={:.6f} maxG={:.6f} belowClear={} nonClear={} / {}",
+        Utils::ToString(targetTag),
+        static_cast<uint32>(sourceDesc.Format),
+        sourceDesc.Width,
+        sourceDesc.Height,
+        minValue,
+        maxValue,
+        (isRGBA32Float ? minGreenValue : minValue),
+        (isRGBA32Float ? maxGreenValue : maxValue),
+        belowClearCount,
+        nonClearCount,
+        validCount);
 
     return S_OK;
 }

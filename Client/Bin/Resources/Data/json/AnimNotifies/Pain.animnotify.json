@@ -1,0 +1,596 @@
+{
+    "clips": [
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Attack_BodyBlow",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 5.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.6666666865348816,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Attack_Kunai_SlashingShoulderTurnKick_Left",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 5.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 1.4333332777023315,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Attack_Kunai_Uppercut",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 5.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.8666666746139526,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Attack_supa_01",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 2,
+                        "override_launch_power": 10.0,
+                        "override_launch_up": 5.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.3333333432674408,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Attack_Aerial_Hand_Punch",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 5,
+                        "override_launch_power": 5.0,
+                        "override_launch_up": 6.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.20000000298023224,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Attack_Aerial_DownStrike",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 5,
+                        "override_launch_power": 5.0,
+                        "override_launch_up": 6.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.4000000059604645,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Ninjutsu_AlmightyPush_Start",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 5,
+                        "sound_file": "Pain/ShinraTensei.wav",
+                        "volume": 1.0
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Ninjutsu_UniversalPull",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 5,
+                        "sound_file": "Pain/BanshoTenin.wav",
+                        "volume": 1.0
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Attack_Palm",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 5.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.8999999761581421,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.46666666865348816,
+                    "payload": {
+                        "Direction Source": 256,
+                        "constrain_to_ground": true,
+                        "direction_source": "OwnerForward",
+                        "ignore_y": false,
+                        "move_speed": 7.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": false,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.5,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Attack_TurnKick_Left",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 5.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.2666666805744171,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 5.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.8333333134651184,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.2666666805744171,
+                    "payload": {
+                        "Direction Source": 256,
+                        "constrain_to_ground": true,
+                        "direction_source": "OwnerForward",
+                        "ignore_y": false,
+                        "move_speed": 5.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": false,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.2666666805744171,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                },
+                {
+                    "duration_sec": 0.46666666865348816,
+                    "payload": {
+                        "Direction Source": 256,
+                        "constrain_to_ground": true,
+                        "direction_source": "OwnerForward",
+                        "ignore_y": false,
+                        "move_speed": 7.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": false,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.699999988079071,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Attack_JumpSpinKick",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 5.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.7333333492279053,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.8333333134651184,
+                    "payload": {
+                        "Direction Source": 256,
+                        "constrain_to_ground": true,
+                        "direction_source": "OwnerForward",
+                        "ignore_y": false,
+                        "move_speed": 8.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": false,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.20000000298023224,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Ninjutsu_PlanetaryDevastation_Attack",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 5,
+                        "sound_file": "Pain/ChibakuTensei.wav",
+                        "volume": 1.0
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
+                        "aim_at_target": false,
+                        "launch_type": 88
+                    },
+                    "time_sec": 0.6333333253860474,
+                    "track_index": 1,
+                    "type": "AN_LaunchSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.7666666507720947,
+                    "payload": {
+                        "bone_name": "CharacterRoot",
+                        "collision_preset": 6,
+                        "local_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "spawn_type": 88
+                    },
+                    "start_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "ANS_AttachSkill"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
+                }
+            ]
+        }
+    ],
+    "model_guid": "b8a19dfa-0185-43b8-8c67-b52c52d787d8"
+}

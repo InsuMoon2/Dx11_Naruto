@@ -26,7 +26,8 @@ public:
         bool  jumpDash = false;
         bool  attackDown = false;
 
-        bool  wireDash = false;
+        bool  wireLockOnDown = false;
+        bool  wireDashStart = false;
 
         bool  shurikenDown = false;
 

@@ -24,6 +24,12 @@ static const unordered_map<string, EIconType> g_ExtensionToIconMap =
     { ".xlsx", EIconType::Xlsl}, { ".XLSX" , EIconType::Xlsl}
 };
 
+static string ToLowerCopy(string value)
+{
+    transform(value.begin(), value.end(), value.begin(), ::tolower);
+    return value;
+}
+
 Content_Browser::Content_Browser()
     : EditorWindow(TEXT("Content Browser"))
 {
@@ -181,11 +187,22 @@ void Content_Browser::OnGui()
                 ImGui::SetNextItemWidth(pathWidth);
                 ImGui::InputText("##CurrentPath", pathBuffer, IM_ARRAYSIZE(pathBuffer), ImGuiInputTextFlags_ReadOnly);
 
+                const float controlSpacing = 8.f;
                 float buttonWidth = 100.f;
                 float clearWidth = 80.f;
-                float right = ImGui::GetContentRegionAvail().x;
+                float searchWidth = 220.f;
+                float rightButtonWidth = buttonWidth + controlSpacing + clearWidth;
+                float remainingWidthAfterPath = ImGui::GetContentRegionAvail().x;
+                float searchSlotWidth = remainingWidthAfterPath - rightButtonWidth - controlSpacing;
+                if (searchSlotWidth > 120.f)
+                {
+                    ImGui::SameLine();
+                    ImGui::SetNextItemWidth(min(searchWidth, searchSlotWidth));
+                    ImGui::InputTextWithHint("##AssetNameSearch", "파일명 검색...", _assetSearchBuffer, IM_ARRAYSIZE(_assetSearchBuffer));
+                }
 
-                ImGui::SameLine(right - (buttonWidth + 8.f + clearWidth));
+                float right = ImGui::GetContentRegionAvail().x;
+                ImGui::SameLine(right - rightButtonWidth);
 
                 if (ImGui::Button(ICON_FA_ROTATE_RIGHT " 새로고침", ImVec2(buttonWidth, 24)))
                 {
@@ -368,6 +385,9 @@ void Content_Browser::Draw_FolderTree(FFolderNode& node)
 
 void Content_Browser::Draw_AssetView()
 {
+    string assetSearchLower = ToLowerCopy(_assetSearchBuffer);
+    const bool hasAssetSearch = !assetSearchLower.empty();
+
     // 그리드 레이아웃
     float panelWidth = ImGui::GetContentRegionAvail().x;
     int columnCount = static_cast<int>(panelWidth / (_thumbnailSize + 20.f));
@@ -380,6 +400,13 @@ void Content_Browser::Draw_AssetView()
     {
         for (auto& childFolder : _currentFolder->subFolders)
         {
+            if (hasAssetSearch)
+            {
+                const string folderNameLower = ToLowerCopy(Utils::ToString(childFolder.name));
+                if (folderNameLower.find(assetSearchLower) == string::npos)
+                    continue;
+            }
+
             Draw_FolderTile(childFolder);
         }
 
@@ -394,6 +421,17 @@ void Content_Browser::Draw_AssetView()
 
             size_t dotPos = fileName.find('.');
             string pureName = (dotPos != string::npos) ? fileName.substr(0, dotPos) : path.stem().string();
+
+            if (hasAssetSearch)
+            {
+                const string pureNameLower = ToLowerCopy(pureName);
+                const string fileNameLower = ToLowerCopy(fileName);
+                if (pureNameLower.find(assetSearchLower) == string::npos &&
+                    fileNameLower.find(assetSearchLower) == string::npos)
+                {
+                    continue;
+                }
+            }
 
             string pathStr = Utils::ToString(filePath);
 
@@ -495,7 +533,6 @@ void Content_Browser::Draw_AssetView()
                 Enter_RenameMode(filePath);
             }
 
-            // Prefab 드래그
             if (assetType == EAssetOpenType::Prefab && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
                 if (!guid.empty())
@@ -532,6 +569,12 @@ void Content_Browser::Draw_AssetView()
                     ImGui::SetDragDropPayload("CONTENT_TEXTURE", guid.c_str(), guid.size() + 1);
                     ImGui::SetTooltip(ICON_FA_IMAGE " %s", pureName.c_str());
                 }
+                ImGui::EndDragDropSource();
+            }
+            else if (assetType == EAssetOpenType::Effect && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            {
+                ImGui::SetDragDropPayload("CONTENT_EFFECT", pureName.c_str(), pureName.size() + 1);
+                ImGui::SetTooltip(ICON_FA_BOLT " %s", pureName.c_str());
                 ImGui::EndDragDropSource();
             }
 

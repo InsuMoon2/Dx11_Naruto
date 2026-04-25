@@ -34,12 +34,13 @@ public:
     virtual void    Late_Update(float timeDelta) override;
     virtual HRESULT Render() override;
     virtual HRESULT Bind_ShaderResources() override;
-    // Renderer가 static mesh actor를 정렬 배칭 대상으로 분류할 때 호출한다.
     virtual bool    Is_RenderBatchSortable() const override;
-    // 같은 static mesh shader 계열을 묶기 위한 1차 정렬 키를 반환한다.
     virtual uint64  Get_RenderBatchPrimaryKey() const override;
-    // 같은 model/material 계열을 연속으로 그리기 위한 2차 정렬 키를 반환한다.
     virtual uint64  Get_RenderBatchSecondaryKey() const override;
+
+    virtual HRESULT Render_Shadow() override;
+
+    HRESULT Bind_ShadowShaderResources();
 
 public:
     const string& Get_ModelGuid() const { return _modelGuid; }

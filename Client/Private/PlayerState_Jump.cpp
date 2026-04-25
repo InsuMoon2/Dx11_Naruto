@@ -39,6 +39,7 @@ void PlayerState_Jump::Update(PlayerStateMachine* state, float timeDelta)
 
     if (frame.jumpDash)
     {
+        state->End_WireLockOn();
         state->Change_State(EPlayerState::JumpDash);
         return;
     }
@@ -50,8 +51,14 @@ void PlayerState_Jump::Update(PlayerStateMachine* state, float timeDelta)
         return;
     }
 
-    if (frame.wireDash)
+    if (frame.wireLockOnDown)
     {
+        state->Begin_WireLockOn();
+    }
+
+    if (state->Is_WireLockOn() && frame.wireDashStart)
+    {
+        state->End_WireLockOn();
         state->Change_State(EPlayerState::WireDash);
         return;
     }
@@ -110,7 +117,8 @@ void PlayerState_Jump::Update(PlayerStateMachine* state, float timeDelta)
 
 void PlayerState_Jump::Exit(PlayerStateMachine* state)
 {
-
+    if (state)
+        state->End_WireLockOn();
 }
 
 Shared<PlayerState_Jump> PlayerState_Jump::Create()

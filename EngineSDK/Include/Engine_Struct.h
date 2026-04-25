@@ -47,6 +47,28 @@ namespace Engine
         Color       diffuse;
         Color       ambient;
         Color       specular;
+
+        bool        castShadow = false;
+        uint32      shadowMapSize = 2048;
+        Vec3        shadowCenter = Vec3::Zero;
+        float       shadowOrthoWidth = 220.f;
+        float       shadowOrthoHeight = 220.f;
+        // 수업코드처럼 shadow 전용 perspective 카메라를 직접 쓸지 결정하는 스위치다.
+        bool        useShadowCamera = false;
+        // shadow 전용 카메라의 eye 위치다. useShadowCamera가 true일 때 사용한다.
+        Vec3        shadowEye = Vec3(0.f, 10.f, -7.f);
+        // shadow 전용 카메라가 바라보는 target 위치다. useShadowCamera가 true일 때 사용한다.
+        Vec3        shadowTarget = Vec3::Zero;
+        // shadow 전용 카메라의 수직 시야각(radian)이다. useShadowCamera가 true일 때 사용한다.
+        float       shadowFovY = 2.0943951f;
+        // shadow 전용 카메라의 종횡비다. 0 이하이면 기존 width/height로 다시 유도한다.
+        float       shadowAspect = 1.f;
+        float       shadowNear = 1.f;
+        float       shadowFar = 450.f;
+        float       shadowBias = 0.0015f;
+        float       shadowStrength = 0.65f;
+        float       shadowSoftness = 1.5f;
+
     };
 
     struct FAssetMeta
@@ -128,6 +150,8 @@ namespace Engine
 
         EHitReactionType hitReactionType = EHitReactionType::Default;
         uint32 hitReactionSerial = 0;
+
+        string hitAnimStateOverride = ""; // 특정 공격/스킬이 맞은 대상에게 강제로 재생시키고 싶은 피격 애니메이션 상태명이다.
 
         bool forceHitRestart = false;
     };

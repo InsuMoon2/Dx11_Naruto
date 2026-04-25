@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "AN_LaunchSkill.h"
+#include "ANS_AttachSkill.h"
 #include "AnimNotify_Factory.h"
 #include "SkillObject_Projectile.h"
 #include "GameObject.h"
@@ -32,10 +33,21 @@ void AN_LaunchSkill::Execute(const FAnimNotifyContext& context)
         return;
 
     auto skillCom = context.owner->Get_Component<SkillComponent>();
-    CHECK_NULL(skillCom);
 
     Vec3 launchDir = context.owner->Get_Transform()->Get_WorldForward();
-    auto projectileObj = skillCom->Get_PendingSkill(_launchObjectType).lock();
+    Shared<SkillObject_Projectile> projectileObj = nullptr;
+
+    if (skillCom)
+        projectileObj = skillCom->Get_PendingSkill(_launchObjectType).lock();
+
+    if (!projectileObj)
+        projectileObj = ANS_AttachSkill::Get_FallbackPendingSkill(context.owner, _launchObjectType).lock();
+
+    if (!projectileObj || projectileObj->Is_Destroy() || projectileObj->IsLaunched())
+    {
+        ANS_AttachSkill::Clear_FallbackPendingSkill(context.owner, _launchObjectType, false);
+        return;
+    }
 
     if (_aimAtTarget)
     {
@@ -81,5 +93,9 @@ void AN_LaunchSkill::Execute(const FAnimNotifyContext& context)
         projTransform->LookAt(projTransform->Get_WorldPosition() + launchDir);
     }
 
-    skillCom->Launch_PendingSkill(_launchObjectType, launchDir);
+    if (skillCom && skillCom->Launch_PendingSkill(_launchObjectType, launchDir))
+        return;
+
+    projectileObj->Launch(launchDir);
+    ANS_AttachSkill::Clear_FallbackPendingSkill(context.owner, _launchObjectType, false);
 }

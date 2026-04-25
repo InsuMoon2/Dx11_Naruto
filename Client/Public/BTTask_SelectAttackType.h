@@ -21,7 +21,7 @@ public:
 
 private:
     string _targetObjectKey = "TargetObjectKey";
-    string _targetIsAirborneKey = "TargetIsAirBone";
+    string _targetIsAirborneKey = "TargetIsAirborne";
     string _targetHeightDeltaKey = "TargetHeightDelta";
 
     string _desiredCombatModeKey = "DesiredCombatMode";
@@ -43,6 +43,8 @@ private:
     string _airAttackState02 = "Attack_Air_02";
     string _airAttackState03 = "Attack_Air_03";
     string _airAttackState04 = "Attack_Air_04";
+
+    string _canUseAerialAttackKey = "CanUseAerialAttack";
 
 private:
     string Select_NextAttackState(

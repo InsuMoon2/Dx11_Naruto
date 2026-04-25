@@ -4,6 +4,8 @@
 
 NS_BEGIN(Client)
 
+class WireMeshEffect;
+
 class PlayerState_AirApproach : public IPlayerState
 {
 public:
@@ -31,6 +33,8 @@ public:
         EArriveAction arriveAction = EArriveAction::None;       // 도착 시 수행할 동작
         EPlayerState nextStateOnArrive = EPlayerState::END;     // ChangeState일 때 도착 후 전환할 상태 -> 추후에 공중공격으로 세팅
         EPlayerState nextStateOnFail = EPlayerState::JumpFall;  // 실패 시 전환할 상태 -> 기본 JumpFall
+
+        Weak<WireMeshEffect> wireMeshEffect;
     };
 
 public:
@@ -47,9 +51,12 @@ public:
     void Set_AirApproachDesc(const FApproachDesc& desc) { _approachDesc = desc; }
 
 private:
-    FApproachDesc _approachDesc;   
-    float _elapsedTime = 0.f;      
-    bool _arrived = false;        
+    void Destroy_WireMesh();
+
+private:
+    FApproachDesc _approachDesc;
+    float _elapsedTime = 0.f;
+    bool _arrived = false;
 
 public:
     static Shared<PlayerState_AirApproach> Create();

@@ -27,6 +27,7 @@ public:
         EHitReactionType    type = EHitReactionType::Default;
         uint32              serial = 0;
         bool                forceRestart = false;
+        string              hitAnimStateOverride = ""; // 스킬별 전용 피격 애니메이션을 재생해야 할 때 사용하는 상태명이다.
     };
 
 public:
@@ -106,7 +107,7 @@ public:
 
     static string               To_AnimationStateName(EPlayerState stateID);
 
-    void                        Trigger_HitReaction(EHitReactionType type, uint32 serial, bool forceRestart);
+    void                        Trigger_HitReaction(EHitReactionType type, uint32 serial, bool forceRestart, const string& hitAnimStateOverride = "");
 
     const FPendingHitReaction&  Get_PendingHitReaction() const { return _pendingHitReaction; }
     void                        Consume_PendingHitReaction();
@@ -142,6 +143,10 @@ private:
 
     bool Check_Airbone_Input();
 
+public:
+    void Begin_WireLockOn();
+    void End_WireLockOn();
+    bool Is_WireLockOn() const { return _isWireLockOn;}
 
 private:
     Shared<InputComponent>                      _input;
@@ -169,6 +174,7 @@ private:
     int32                                       _activeSkillSlot = -1;
 
     bool _forceGroundAttack = false;
+    bool _isWireLockOn = false;
 
 protected:
     json To_Json() const override;

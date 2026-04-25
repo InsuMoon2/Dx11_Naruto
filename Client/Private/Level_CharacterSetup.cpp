@@ -366,6 +366,9 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
 
 HRESULT Level_CharacterSetup::Ready_PreviewScene()
 {
+    // 프리뷰용 라이트를 등록하기 전에 이전 레벨에서 남은 라이트를 정리한다.
+    GAME->Clear_Lights();
+
     // 라이트
     {
         FLightDesc lightDesc{};

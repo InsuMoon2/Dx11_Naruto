@@ -27,6 +27,7 @@ public:
 public:
     void    Add_Combo();
     void    On_PlayerComboHit(uint32 combo);
+    void    Set_AnnouncePosition(float x, float y);
 
 private:
     HRESULT Ready_Components() override;

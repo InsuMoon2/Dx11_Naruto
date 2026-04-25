@@ -1,0 +1,192 @@
+{
+    "autoPlay": true,
+    "effectName": "ChibakuTensei_Core",
+    "layers": [
+        {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
+            "blendMode": 2,
+            "colorTint": [
+                0.49000000953674316,
+                0.3199999928474426,
+                0.18000000715255737,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "diffuseTextureGuid": "",
+            "duration": -1.0,
+            "emissiveGradationTextureGuid": "",
+            "emissiveStrength": 1.0,
+            "emissiveTextureGuid": "",
+            "enabled": true,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endEmissiveStrength": 0.0,
+            "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "flipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "CoreShell",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                5.0,
+                5.0,
+                5.0
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "materialOverrides": [
+                {
+                    "blendMode": 2,
+                    "colorTint": [
+                        0.49000000953674316,
+                        0.3199999928474426,
+                        0.18000000715255737,
+                        1.0
+                    ],
+                    "diffuseTextureGuid": "308cd3c6-c19c-4e1e-820a-cdeb8e301863",
+                    "emissiveGradationTextureGuid": "",
+                    "emissiveStrength": 0.8899999856948853,
+                    "emissiveTextureGuid": "",
+                    "enabled": true,
+                    "flipbook": {
+                        "columns": 1,
+                        "enabled": false,
+                        "endFrame": -1,
+                        "fps": 16.0,
+                        "loop": true,
+                        "rows": 1,
+                        "startFrame": 0
+                    },
+                    "fresnelMultiplier": 1.0,
+                    "fresnelPower": 0.0,
+                    "maskTextureGuid": "",
+                    "materialName": "MI_WEP_Eff_PlanetaryDevastation_C_01",
+                    "normalStrength": 1.0,
+                    "normalTextureGuid": "d01c5c0e-6ccf-4678-be15-301cf0fe385e",
+                    "opacity": 1.0,
+                    "opacityGradationTextureGuid": "",
+                    "opacitySubUvTextureGuid": "",
+                    "opacityTextureGuid": "",
+                    "roughness": 0.5,
+                    "roughnessTextureGuid": "",
+                    "shadingMode": 1,
+                    "specularPower": 24.0,
+                    "specularStrength": 2.200000047683716,
+                    "specularTextureGuid": "",
+                    "twoSided": false,
+                    "useOpacityAsTransparency": false,
+                    "uvDistortionSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionStrength": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvDistortionTextureGuid": "",
+                    "uvScrollSpeed": [
+                        0.0,
+                        0.0
+                    ],
+                    "uvTiling": [
+                        1.0,
+                        1.0
+                    ]
+                }
+            ],
+            "modelGuid": "c3c0aedf-13ad-4f15-95f0-e61b50e43401",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
+            "opacity": 1.0,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "",
+            "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
+            "rotationAxis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "rotationSpeed": 0.0,
+            "roughness": 0.8500000238418579,
+            "roughnessTextureGuid": "",
+            "scaleDuration": 1.0,
+            "shadingMode": 0,
+            "specularPower": 32.0,
+            "specularStrength": 0.05000000074505806,
+            "specularTextureGuid": "",
+            "startDelay": 0.0,
+            "twoSided": false,
+            "useColorTintOverTime": false,
+            "useEmissiveStrengthOverTime": false,
+            "useOpacityAsTransparency": false,
+            "useOpacityOverTime": false,
+            "usePositionOverTime": false,
+            "useScaleOverTime": false,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "totalDuration": -1.0
+}

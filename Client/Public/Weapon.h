@@ -42,6 +42,11 @@ public:
     void    Set_SwordTrailLocalPoints(const Vec3& rootLocal, const Vec3& tipLocal);
     bool    Get_SwordTrailWorldPoints(Vec3& outRootWorld, Vec3& outTipWorld) const;
 
+    HRESULT Render_Shadow() override;
+
+private:
+    HRESULT Bind_ShadowShaderResources();
+
 private:
     HRESULT Ready_Components(const wstring& modelAssetTag);
     HRESULT Bind_ShaderResources();

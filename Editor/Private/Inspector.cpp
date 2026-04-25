@@ -40,6 +40,30 @@ static bool Should_SkipHeavyComponentInMainInspector(Shared<Component> component
     return false;
 }
 
+// ImGui에서 Vec3 값을 한 줄로 편집하고 변경 여부를 바로 받을 때 호출한다.
+static bool Draw_Vec3Control(const char* label, Vec3& value, float speed = 0.1f)
+{
+    float editValue[3] = { value.x, value.y, value.z };
+    if (!ImGui::DragFloat3(label, editValue, speed))
+        return false;
+
+    value = Vec3(editValue[0], editValue[1], editValue[2]);
+    return true;
+}
+
+// ImGui에서 Color를 rgb 위주로 편집하고 alpha는 유지할 때 호출한다.
+static bool Draw_Color3Control(const char* label, Color& value)
+{
+    float editValue[3] = { value.x, value.y, value.z };
+    if (!ImGui::ColorEdit3(label, editValue))
+        return false;
+
+    value.x = editValue[0];
+    value.y = editValue[1];
+    value.z = editValue[2];
+    return true;
+}
+
 Inspector::Inspector()
     : EditorWindow(TEXT("Inspector"))
 {
@@ -65,7 +89,11 @@ void Inspector::OnGui()
 
     ImGui::Begin(str.c_str());
     {
-        if (_targetObject != nullptr)
+        if (_isPrimaryShadowLightTarget)
+        {
+            Draw_PrimaryShadowLightInspector();
+        }
+        else if (_targetObject != nullptr)
         {
             Draw_Components(_targetObject);
 
@@ -79,6 +107,14 @@ void Inspector::OnGui()
 
     }
     ImGui::End();
+}
+
+void Inspector::Set_PrimaryShadowLightTarget(bool enabled)
+{
+    _isPrimaryShadowLightTarget = enabled;
+
+    if (enabled)
+        _targetObject = nullptr;
 }
 
 void Inspector::Draw_PartObjects(Shared<ContainerObject> container)
@@ -378,6 +414,168 @@ void Inspector::Draw_RuntimeEffectDebug(Shared<GameObject> target)
     ImGui::Spacing();
     ImGui::Separator();
     ImGui::Spacing();
+}
+
+void Inspector::Draw_PrimaryShadowLightInspector()
+{
+    ImGui::Text("Name: Primary Shadow Light");
+    ImGui::Separator();
+
+    bool overrideEnabled = GAME->Is_EditorPrimaryShadowLightOverrideEnabled();
+    if (ImGui::Checkbox("Editor Override", &overrideEnabled))
+    {
+        GAME->Set_EditorPrimaryShadowLightOverrideEnabled(overrideEnabled);
+    }
+
+    const FLightDesc* sourceDesc = overrideEnabled
+        ? GAME->Get_EditorPrimaryShadowLightOverrideDesc()
+        : GAME->Get_PrimaryShadowLightDesc();
+
+    if (!sourceDesc)
+    {
+        ImGui::Spacing();
+        ImGui::TextDisabled("Primary shadow light is not available.");
+        return;
+    }
+
+    FLightDesc editableDesc = *sourceDesc; // 인스펙터에서 수정 중인 임시 사본이다.
+    bool changed = false;
+
+    ImGui::Spacing();
+    ImGui::TextColored(ImVec4(1.f, 0.85f, 0.35f, 1.f), ICON_FA_SUN " Directional Light");
+
+    Vec3 lightDirection(editableDesc.direction.x, editableDesc.direction.y, editableDesc.direction.z); // 음영 계산에 쓰는 directional light 방향이다.
+    changed |= Draw_Vec3Control("Direction", lightDirection, 0.01f);
+    editableDesc.direction = Vec4(lightDirection.x, lightDirection.y, lightDirection.z, editableDesc.direction.w);
+
+    changed |= Draw_Color3Control("Diffuse", editableDesc.diffuse);
+    changed |= Draw_Color3Control("Ambient", editableDesc.ambient);
+    changed |= Draw_Color3Control("Specular", editableDesc.specular);
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+    ImGui::TextColored(ImVec4(0.35f, 0.85f, 1.f, 1.f), ICON_FA_CAMERA " Shadow Camera");
+
+    changed |= ImGui::Checkbox("Cast Shadow", &editableDesc.castShadow);
+    changed |= ImGui::Checkbox("Use Shadow Camera", &editableDesc.useShadowCamera);
+
+    if (editableDesc.useShadowCamera)
+        ImGui::TextDisabled("Perspective mode: Eye/Target/FOV/Aspect/Near/Far are used.");
+    else
+        ImGui::TextDisabled("Orthographic mode: Center/Ortho Width/Height drive the shadow frustum.");
+
+    ImGui::BeginDisabled(editableDesc.useShadowCamera);
+    changed |= Draw_Vec3Control("Shadow Center", editableDesc.shadowCenter, 0.1f);
+    changed |= ImGui::DragFloat("Shadow Ortho Width", &editableDesc.shadowOrthoWidth, 1.f, 1.f, 10000.f);
+    changed |= ImGui::DragFloat("Shadow Ortho Height", &editableDesc.shadowOrthoHeight, 1.f, 1.f, 10000.f);
+    ImGui::EndDisabled();
+
+    if (editableDesc.useShadowCamera)
+    {
+        // Eye/Target을 같은 delta로 같이 옮겨서 shadow camera가 찍는 월드 위치를 직접 이동한다.
+        Vec3 shadowRigPosition = editableDesc.shadowTarget;
+        if (Draw_Vec3Control("Shadow Rig Position", shadowRigPosition, 0.5f))
+        {
+            // Shadow Rig Position은 target 기준 위치이며, delta를 eye/target/center에 함께 적용한다.
+            const Vec3 shadowRigDelta = shadowRigPosition - editableDesc.shadowTarget;
+            editableDesc.shadowEye += shadowRigDelta;
+            editableDesc.shadowTarget += shadowRigDelta;
+            editableDesc.shadowCenter += shadowRigDelta;
+            changed = true;
+        }
+
+        ImGui::TextDisabled("Move Rig Position first. Eye changes angle/distance, Target changes look direction.");
+
+        if (GAME->Current_Level() == ETOI(ELevelType::GamePlay))
+        {
+            // Gameplay의 Tutorial arena는 원점 주변이므로 shadow rig를 Area 내부 기본 위치로 되돌릴 때 사용한다.
+            if (ImGui::Button("Focus Gameplay Area"))
+            {
+                Vec3 lightDir(editableDesc.direction.x, editableDesc.direction.y, editableDesc.direction.z);
+                if (lightDir.LengthSquared() > FLT_EPSILON)
+                    lightDir.Normalize();
+                else
+                    lightDir = Vec3(-1.f, -1.f, -1.f);
+
+                const Vec3 gameplayAreaTarget = Vec3(0.f, 3.f, 0.f);
+                editableDesc.useShadowCamera = false;
+                editableDesc.shadowTarget = gameplayAreaTarget;
+                editableDesc.shadowCenter = gameplayAreaTarget;
+                editableDesc.shadowEye = gameplayAreaTarget - lightDir * 95.f;
+                editableDesc.shadowOrthoWidth = 80.f;
+                editableDesc.shadowOrthoHeight = 45.f;
+                editableDesc.shadowFovY = 2.2f;
+                editableDesc.shadowFar = 220.f;
+                editableDesc.shadowNear = 0.1f;
+                editableDesc.shadowStrength = 1.f;
+                editableDesc.shadowSoftness = 0.35f;
+                editableDesc.shadowAspect = max(1.f, GAME->Get_ViewportWidth()) / max(1.f, GAME->Get_ViewportHeight());
+                changed = true;
+            }
+        }
+    }
+    else if (GAME->Current_Level() == ETOI(ELevelType::GamePlay))
+    {
+        // Ortho mode에서도 Gameplay shadow focus를 원점 주변 arena로 즉시 되돌릴 때 사용한다.
+        if (ImGui::Button("Focus Gameplay Area"))
+        {
+            Vec3 lightDir(editableDesc.direction.x, editableDesc.direction.y, editableDesc.direction.z);
+            if (lightDir.LengthSquared() > FLT_EPSILON)
+                lightDir.Normalize();
+            else
+                lightDir = Vec3(-1.f, -1.f, -1.f);
+
+            const Vec3 gameplayAreaTarget = Vec3(0.f, 3.f, 0.f);
+            editableDesc.shadowTarget = gameplayAreaTarget;
+            editableDesc.shadowCenter = gameplayAreaTarget;
+            editableDesc.shadowEye = gameplayAreaTarget - lightDir * 95.f;
+            editableDesc.shadowOrthoWidth = 80.f;
+            editableDesc.shadowOrthoHeight = 45.f;
+            editableDesc.shadowFovY = 2.2f;
+            editableDesc.shadowFar = 220.f;
+            editableDesc.shadowNear = 0.1f;
+            editableDesc.shadowStrength = 1.f;
+            editableDesc.shadowSoftness = 0.35f;
+            editableDesc.shadowAspect = max(1.f, GAME->Get_ViewportWidth()) / max(1.f, GAME->Get_ViewportHeight());
+            changed = true;
+        }
+    }
+
+    changed |= Draw_Vec3Control("Shadow Eye", editableDesc.shadowEye, 0.1f);
+    changed |= Draw_Vec3Control("Shadow Target", editableDesc.shadowTarget, 0.1f);
+    changed |= ImGui::DragFloat("Shadow FOV Y", &editableDesc.shadowFovY, 0.005f, XMConvertToRadians(5.f), XMConvertToRadians(179.f));
+    changed |= ImGui::DragFloat("Shadow Aspect", &editableDesc.shadowAspect, 0.01f, 0.1f, 4.f);
+    changed |= ImGui::DragFloat("Shadow Near", &editableDesc.shadowNear, 0.01f, 0.01f, 500.f);
+    changed |= ImGui::DragFloat("Shadow Far", &editableDesc.shadowFar, 0.5f, 1.f, 10000.f);
+    changed |= ImGui::DragFloat("Shadow Bias", &editableDesc.shadowBias, 0.00005f, 0.f, 0.05f, "%.6f");
+    changed |= ImGui::DragFloat("Shadow Strength", &editableDesc.shadowStrength, 0.01f, 0.f, 1.f);
+    changed |= ImGui::DragFloat("Shadow Softness", &editableDesc.shadowSoftness, 0.01f, 0.35f, 8.f);
+
+    if (!overrideEnabled)
+    {
+        ImGui::Spacing();
+        ImGui::TextDisabled("Enable Editor Override to edit values live.");
+        return;
+    }
+
+    if (changed)
+    {
+        Vec3 normalizedDirection = lightDirection; // directional light 음영 계산에 바로 반영할 정규화된 방향 벡터다.
+        if (normalizedDirection.LengthSquared() > FLT_EPSILON)
+            normalizedDirection.Normalize();
+        else
+            normalizedDirection = Vec3(-1.f, -1.f, -1.f);
+
+        editableDesc.direction = Vec4(normalizedDirection.x, normalizedDirection.y, normalizedDirection.z, 0.f);
+        editableDesc.shadowNear = max(editableDesc.shadowNear, 0.01f);
+        editableDesc.shadowFar = max(editableDesc.shadowFar, editableDesc.shadowNear + 1.f);
+        editableDesc.shadowAspect = max(editableDesc.shadowAspect, 0.1f);
+        editableDesc.shadowFovY = clamp(editableDesc.shadowFovY, XMConvertToRadians(5.f), XMConvertToRadians(179.f));
+        editableDesc.shadowSoftness = max(editableDesc.shadowSoftness, 0.35f);
+
+        GAME->Set_EditorPrimaryShadowLightOverrideDesc(editableDesc);
+    }
 }
 
 shared_ptr<Inspector> Inspector::Create()

@@ -53,6 +53,9 @@ void UI_SkillSlot::Update(float timeDelta)
 {
     UIObject::Update(timeDelta);
 
+    if (_readyHaloTimer > 0.f)
+        _readyHaloTimer = max(0.f, _readyHaloTimer - timeDelta);
+
     __super::Update_Transform();
 }
 
@@ -71,8 +74,26 @@ HRESULT UI_SkillSlot::Render()
         CHECK_FAILED(Render_MaskedCooldwn(), E_FAIL);
     }
 
+     if (_readyHaloTimer > 0.f)
+     {
+        CHECK_FAILED(Render_ReadyHalo(), E_FAIL); 
+     }
+
 
     return S_OK;
+}
+
+void UI_SkillSlot::Set_CooldownRatio(float ratio)
+{
+    const float prevRatio = _cooldownRatio;
+    const float nextRatio = ::clamp(ratio, 0.f, 1.f);
+
+    _cooldownRatio = nextRatio;
+
+    if (prevRatio > 0.001f && nextRatio <= 0.001f)
+    {
+        _readyHaloTimer = _readyHaloDuration;
+    }
 }
 
 HRESULT UI_SkillSlot::Bind_CommonShaderResources()
@@ -153,6 +174,30 @@ HRESULT UI_SkillSlot::Ready_Components()
     CHECK_FAILED(Add_Component(_textureComponentType, _iconTextureCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_SHADER_UI, _shaderCom), E_FAIL);
     CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_RECT, _bufferCom), E_FAIL);
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_TEXTURE_HALO, _haloTextureCom), E_FAIL);
+
+    return S_OK;
+}
+
+HRESULT UI_SkillSlot::Render_ReadyHalo()
+{
+    CHECK_NULL(_haloTextureCom, E_FAIL);
+
+    const float progress = 1.f - (_readyHaloTimer / _readyHaloDuration);
+    const float alpha = 1.f - progress;
+    const float scale = 1.0f + progress * 0.75f;
+
+    Matrix haloScaleMatrix = Matrix::CreateScale(scale, scale, 1.f);
+    Matrix haloWorldMatrix = haloScaleMatrix * _worldMatrix;
+
+    CHECK_FAILED(_shaderCom->Bind_RawValue("g_Alpha", &alpha, sizeof(float)), E_FAIL);
+    CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &haloWorldMatrix), E_FAIL);
+    CHECK_FAILED(_haloTextureCom->Bind_SRV(_shaderCom, "g_Texture", 0), E_FAIL);
+
+    CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
+    CHECK_FAILED(_bufferCom->Bind_Resources(), E_FAIL);
+    CHECK_FAILED(_bufferCom->Render(), E_FAIL);
 
     return S_OK;
 }

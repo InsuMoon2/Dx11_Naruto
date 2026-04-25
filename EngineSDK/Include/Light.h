@@ -15,6 +15,8 @@ public:
 
 public:
     HRESULT Initialize(const FLightDesc& desc);
+    // 이미 생성된 light의 설정을 새 desc로 교체할 때 호출한다.
+    HRESULT Update_Desc(const FLightDesc& desc);
     HRESULT Render(Shared<Shader> shader, Shared<VIBuffer_Rect> viBuffer);
 
     const FLightDesc* Get_LightDesc() { return &_lightDesc; }

@@ -103,6 +103,7 @@ void Weapon::Late_Update(float timeDelta)
     }
 
     GAME->Add_RenderGroup(ERenderGroup::NonBlend, this->GetSharedPtr());
+    GAME->Add_RenderGroup(ERenderGroup::ShadowDynamic, GetSharedPtr());
 }
 
 HRESULT Weapon::Render()
@@ -187,6 +188,51 @@ bool Weapon::Get_SwordTrailWorldPoints(Vec3& outRootWorld, Vec3& outTipWorld) co
     outTipWorld = XMVector3TransformCoord(_swordTrailTipLocal, _combinedWorldMatrix);
 
     return true;
+}
+
+HRESULT Weapon::Render_Shadow()
+{
+    if (!_model || !_shader)
+    {
+#ifdef _DEBUG
+        LOG_WARN("[WeaponShadow] skipped. model={}, shader={}, name='{}', guid='{}'",
+            _model != nullptr,
+            _shader != nullptr,
+            Utils::ToString(Get_Name()),
+            Get_GUID());
+#endif
+        return S_FALSE;
+    }
+
+    CHECK_FAILED(Bind_ShadowShaderResources(), E_FAIL);
+
+    size_t numMeshes = _model->Get_NumMeshes();
+    if (numMeshes == 0)
+    {
+#ifdef _DEBUG
+        LOG_WARN("[WeaponShadow] skipped. numMeshes=0, name='{}', guid='{}'",
+            Utils::ToString(Get_Name()),
+            Get_GUID());
+#endif
+        return S_FALSE;
+    }
+
+    for (size_t i = 0; i < numMeshes; ++i)
+    {
+        CHECK_FAILED(_model->Bind_Material(_shader, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0), E_FAIL);
+        CHECK_FAILED(_shader->Begin_Pass(2), E_FAIL);
+        CHECK_FAILED(_model->Render(i), E_FAIL);
+    }
+
+    return S_OK;
+}
+
+HRESULT Weapon::Bind_ShadowShaderResources()
+{
+    CHECK_FAILED(_shader->Bind_Matrix("g_WorldMatrix", &_combinedWorldMatrix), E_FAIL);
+    CHECK_FAILED(GAME->Bind_ShadowMatrices(_shader, "g_ViewMatrix", "g_ProjMatrix"), E_FAIL);
+
+    return S_OK;
 }
 
 HRESULT Weapon::Ready_Components(const wstring& modelAssetTag)

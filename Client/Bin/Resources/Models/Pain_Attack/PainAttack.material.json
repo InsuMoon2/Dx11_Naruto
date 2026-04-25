@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "WorldGridMaterial",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_D55NJ1_PLE_BC.png"
+        }
+      ]
+    }
+  ]
+}

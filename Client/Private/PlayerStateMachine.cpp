@@ -365,6 +365,26 @@ bool PlayerStateMachine::Check_Airbone_Input()
     }
 }
 
+void PlayerStateMachine::Begin_WireLockOn()
+{
+    if (_isWireLockOn)
+        return;
+
+    _isWireLockOn = true;
+
+    GAME->Get_DelegateHub().OnWireLockOnVisible.Broadcast(true);
+}
+
+void PlayerStateMachine::End_WireLockOn()
+{
+    if (!_isWireLockOn)
+        return;
+
+    _isWireLockOn = false;
+
+    GAME->Get_DelegateHub().OnWireLockOnVisible.Broadcast(false);
+}
+
 bool PlayerStateMachine::Set_CameraRelativeMoveDirection(const Vec2& moveAxis, EMoveInputDirection& outDir,
                                                          Vec3& outWorldDir) const
 {
@@ -442,12 +462,13 @@ string PlayerStateMachine::To_AnimationStateName(EPlayerState stateID)
     return name.empty() ? "" : string(name);
 }
 
-void PlayerStateMachine::Trigger_HitReaction(EHitReactionType type, uint32 serial, bool forceRestart)
+void PlayerStateMachine::Trigger_HitReaction(EHitReactionType type, uint32 serial, bool forceRestart, const string& hitAnimStateOverride)
 {
     _pendingHitReaction.active = true;
     _pendingHitReaction.type = type;
     _pendingHitReaction.serial = serial;
     _pendingHitReaction.forceRestart = forceRestart;
+    _pendingHitReaction.hitAnimStateOverride = hitAnimStateOverride;
 }
 
 void PlayerStateMachine::Consume_PendingHitReaction()

@@ -1,6 +1,7 @@
 {
     "gameObjects": [
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -153,6 +154,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_A_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -305,6 +307,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_A_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -432,6 +435,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_B_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -559,6 +563,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_B_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -665,6 +670,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_C_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -771,6 +777,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_C_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -912,6 +919,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_D_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -1018,6 +1026,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_F_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -1124,6 +1133,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_F_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -1257,6 +1267,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_G_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -1390,6 +1401,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_G_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -1523,6 +1535,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_G_3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -1637,6 +1650,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_I_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -1752,6 +1766,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_J_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -1865,6 +1880,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_CommonBuilding_K_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -1912,6 +1928,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_FarTree_A1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -1960,6 +1977,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2008,6 +2026,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2056,6 +2075,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2104,6 +2124,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A4"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2152,6 +2173,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A5"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2200,6 +2222,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A6"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2248,6 +2271,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A7"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2296,6 +2320,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Tree_Distance_A8"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2376,6 +2401,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_AreaH_Tower_A_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2456,6 +2482,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_AreaH_Tower_A_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2544,6 +2571,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_AreaH_Tower_B_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2671,6 +2699,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_B_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2777,6 +2806,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_C_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -2902,6 +2932,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_D_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -3043,6 +3074,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_D_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -3174,6 +3206,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_E_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -3305,6 +3338,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_E_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -3445,6 +3479,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_E_3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -3551,6 +3586,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_F_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -3657,6 +3693,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_F_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -3763,6 +3800,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_I_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -3877,6 +3915,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_I_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -3992,6 +4031,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_J_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -4107,6 +4147,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_J_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -4231,6 +4272,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_J_3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -4336,6 +4378,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_K_1"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -4441,6 +4484,7 @@
             "static_class": "REDUCTION_SM_ENV_KNVLLG_CommonBuilding_K_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -4582,6 +4626,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaA_Building_A_11"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -4691,6 +4736,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaA_Building_A_BaseWall_5"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -4792,6 +4838,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaA_Building_B_14"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -4841,6 +4888,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaA_Building_B_Curtain_5"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -4905,6 +4953,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaA_Building_B_Wall_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -5073,6 +5122,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaB_Building_A_Part_01_11"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -5215,6 +5265,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaB_Building_A_Part_02_13"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -5361,6 +5412,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaB_Building_A_Part_03_15"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -5533,6 +5585,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaB_Building_B_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -5674,6 +5727,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaB_Building_C_8"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -5825,6 +5879,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaC_Building_A_11"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -5903,6 +5958,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaC_Building_A_Wall_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -6023,6 +6079,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaD_Building_A"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -6160,6 +6217,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaD_Building_B_16"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -6323,6 +6381,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaD_Tower_A_Part01_10"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -6429,6 +6488,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaD_Tower_A_Part02_12"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -6535,6 +6595,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaD_Tower_A_Part03_14"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -6707,6 +6768,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaD_Tower_B_22"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -6867,6 +6929,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaE_Building_A_B_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -7033,6 +7096,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaF_Building_A_Part01_19"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -7173,6 +7237,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaF_Building_A_Part02_21"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -7306,6 +7371,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaF_Building_A_Part03_23"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -7436,6 +7502,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_A_37"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -7596,6 +7663,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_B_43"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -7746,6 +7814,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_C_46"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -7882,6 +7951,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_D_49"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -8044,6 +8114,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_E_52"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -8181,6 +8252,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_F_55"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -8346,6 +8418,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_G_58"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -8498,6 +8571,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaG_Building_H_61"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -8666,6 +8740,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_28"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -8732,6 +8807,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_30"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -8857,6 +8933,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_32"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -9005,6 +9082,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_Entrance2_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -9093,6 +9171,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_A_Signs_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -9244,6 +9323,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaH_Building_B_3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -9302,6 +9382,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Lanterns_8"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -9426,6 +9507,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Part01_10"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -9577,6 +9659,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Part02_12"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -9727,6 +9810,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaJ_Building_A_Part03_14"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -9905,6 +9989,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_88"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10030,6 +10115,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10155,6 +10241,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate3_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10280,6 +10367,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate4_5"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10405,6 +10493,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaK_Building_A_Gate_5"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10414,7 +10503,7 @@
                     ],
                     "rotation": [
                         -0.0,
-                        47.18375015258789,
+                        47.183746337890625,
                         0.0
                     ],
                     "scale": [
@@ -10453,6 +10542,7 @@
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_A2_458"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10501,6 +10591,7 @@
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_A3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10510,7 +10601,7 @@
                     ],
                     "rotation": [
                         0.0,
-                        -9.158860206604004,
+                        -9.158859252929688,
                         0.0
                     ],
                     "scale": [
@@ -10549,6 +10640,7 @@
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_A4_462"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10558,7 +10650,7 @@
                     ],
                     "rotation": [
                         0.0,
-                        -125.30513763427734,
+                        -125.30513000488281,
                         0.0
                     ],
                     "scale": [
@@ -10597,6 +10689,7 @@
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_A_455"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10606,7 +10699,7 @@
                     ],
                     "rotation": [
                         0.0,
-                        -17.850692749023438,
+                        -17.850688934326172,
                         0.0
                     ],
                     "scale": [
@@ -10645,6 +10738,7 @@
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_B2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10654,7 +10748,7 @@
                     ],
                     "rotation": [
                         -0.0,
-                        88.26007080078125,
+                        88.26007843017578,
                         0.0
                     ],
                     "scale": [
@@ -10693,6 +10787,7 @@
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_B3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10741,6 +10836,7 @@
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_B4"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10789,6 +10885,7 @@
             "static_class": "SM_ENV_KNVLLG_Distance_Tower_B_474"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10837,6 +10934,7 @@
             "static_class": "SM_ENV_KNVLLG_FarLobby_A_226"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -10979,6 +11077,7 @@
             "static_class": "SM_ENV_KNVLLG_gate_A_3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11063,6 +11162,7 @@
             "static_class": "SM_ENV_KNVLLG_GateUnit_01_5"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11147,6 +11247,7 @@
             "static_class": "SM_ENV_KNVLLG_GateUnit_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11231,6 +11332,7 @@
             "static_class": "SM_ENV_KNVLLG_GateUnit_3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11240,7 +11342,7 @@
                     ],
                     "rotation": [
                         0.0,
-                        -179.99990844726563,
+                        -179.99989318847656,
                         0.0
                     ],
                     "scale": [
@@ -11315,6 +11417,7 @@
             "static_class": "SM_ENV_KNVLLG_GateUnit_4"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11363,6 +11466,7 @@
             "static_class": "SM_ENV_KNVLLG_Ground_Base_A"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11411,6 +11515,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_A2_214"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11459,6 +11564,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_A3_216"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11468,7 +11574,7 @@
                     ],
                     "rotation": [
                         -0.0,
-                        150.72987365722656,
+                        150.7298583984375,
                         0.0
                     ],
                     "scale": [
@@ -11507,6 +11613,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_A4_217"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11555,6 +11662,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_A5_218"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11603,6 +11711,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_A_212"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11651,6 +11760,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_B2_219"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11699,6 +11809,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_B3_220"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11747,6 +11858,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_B4_225"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11795,6 +11907,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_B5_267"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11843,6 +11956,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_B6_297"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11891,6 +12005,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_B7_398"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11939,6 +12054,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_B_213"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -11948,7 +12064,7 @@
                     ],
                     "rotation": [
                         -0.0,
-                        46.843788146972656,
+                        46.843780517578125,
                         0.0
                     ],
                     "scale": [
@@ -11987,6 +12103,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_C2_221"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12035,6 +12152,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_C3_224"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12083,6 +12201,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_C4_228"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12131,6 +12250,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_C5"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12179,6 +12299,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_C6"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12188,7 +12309,7 @@
                     ],
                     "rotation": [
                         0.0,
-                        -163.22866821289063,
+                        -163.22865295410156,
                         0.0
                     ],
                     "scale": [
@@ -12227,6 +12348,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_C_211"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12275,6 +12397,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_E2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12284,7 +12407,7 @@
                     ],
                     "rotation": [
                         0.0,
-                        -40.83980941772461,
+                        -40.839805603027344,
                         0.0
                     ],
                     "scale": [
@@ -12323,6 +12446,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_E3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12371,6 +12495,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_E4"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12419,6 +12544,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_E5"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12467,6 +12593,7 @@
             "static_class": "SM_ENV_KNVLLG_House_Distance_E_106"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12524,6 +12651,7 @@
             "static_class": "SM_ENV_KNVLLG_Signs_11"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12598,6 +12726,7 @@
             "static_class": "SM_ENV_KNVLLG_Signs_13"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12663,6 +12792,7 @@
             "static_class": "SM_ENV_KNVLLG_Signs_15"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12728,6 +12858,7 @@
             "static_class": "SM_ENV_KNVLLG_Signs_17"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12810,6 +12941,7 @@
             "static_class": "SM_ENV_KNVLLG_Signs_19"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12900,6 +13032,7 @@
             "static_class": "SM_ENV_KNVLLG_Signs_21"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -12965,6 +13098,7 @@
             "static_class": "SM_ENV_KNVLLG_Signs_23"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -13047,6 +13181,7 @@
             "static_class": "SM_ENV_KNVLLG_Signs_9"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -13137,6 +13272,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaG_Wall_A_10"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -13272,6 +13408,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaH_Wall_A_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -13354,6 +13491,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaH_Wall_B_7"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -13436,6 +13574,7 @@
             "static_class": "SM_ENV_KNVLLG_AreaJ_Wall_A_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -13524,6 +13663,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_01_81"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -13603,6 +13743,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_02_83"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -13705,6 +13846,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_03_85"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -13784,6 +13926,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_04_87"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -13854,6 +13997,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_05_89"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -13940,6 +14084,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_06_91"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14028,6 +14173,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_07_93"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14098,6 +14244,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_08_95"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14150,6 +14297,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_09_97"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14229,6 +14377,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_71"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14317,6 +14466,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_73"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14403,6 +14553,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_75"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14489,6 +14640,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_77"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14568,6 +14720,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_79"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14616,6 +14769,7 @@
             "static_class": "SM_ENV_KNVLLG_ground_distant_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14671,6 +14825,7 @@
             "static_class": "SM_ENV_KNVLLG_Wall_0"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14753,6 +14908,7 @@
             "static_class": "SM_ENV_KNVLLG_Wall_01_13"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14835,6 +14991,7 @@
             "static_class": "SM_ENV_KNVLLG_Wall_02_15"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14890,6 +15047,7 @@
             "static_class": "SM_ENV_KNVLLG_Wall_03_17"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -14945,6 +15103,7 @@
             "static_class": "SM_ENV_KNVLLG_Wall_04_19"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15009,6 +15168,7 @@
             "static_class": "SM_ENV_KNVLLG_Wall_05_21"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15091,6 +15251,7 @@
             "static_class": "SM_ENV_KNVLLG_Wall_06_23"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15173,6 +15334,7 @@
             "static_class": "SM_ENV_KNVLLG_Wall_07_25"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15273,6 +15435,7 @@
             "static_class": "SM_ENV_KNVLLG_Wall_08_27"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15364,6 +15527,7 @@
             "static_class": "SM_ENV_KNVLLG_Wall_09_29"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15464,6 +15628,7 @@
             "static_class": "SM_ENV_KNVLLG_Wall_11"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15512,6 +15677,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_01"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15560,6 +15726,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_02"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15608,6 +15775,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_03"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15656,6 +15824,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_04"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15704,6 +15873,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_05"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15752,6 +15922,7 @@
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_06"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15800,6 +15971,7 @@
             "static_class": "SM_ENV_KNVLLG_Fence_Large_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15848,6 +16020,7 @@
             "static_class": "SM_ENV_KNVLLG_Flags_Single"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15896,6 +16069,7 @@
             "static_class": "SM_ENV_KNVLLG_Flags_Single2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15904,9 +16078,9 @@
                         2.160667657852173
                     ],
                     "rotation": [
-                        8.003381729125977,
+                        8.003379821777344,
                         87.07933044433594,
-                        -10.637285232543945
+                        -10.637284278869629
                     ],
                     "scale": [
                         1.0,
@@ -15944,6 +16118,7 @@
             "static_class": "SM_ENV_KNVLLG_Flags_Single3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -15952,9 +16127,9 @@
                         -83.09529876708984
                     ],
                     "rotation": [
-                        19.94015884399414,
+                        19.940155029296875,
                         -169.70034790039063,
-                        1.3750096559524536
+                        1.3750097751617432
                     ],
                     "scale": [
                         1.09375,
@@ -15992,6 +16167,7 @@
             "static_class": "SM_ENV_KNVLLG_Flags_Single4"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16000,8 +16176,8 @@
                         -83.81099700927734
                     ],
                     "rotation": [
-                        -0.3659363389015198,
-                        175.74192810058594,
+                        -0.36593636870384216,
+                        175.74191284179688,
                         -3.811859130859375
                     ],
                     "scale": [
@@ -16040,6 +16216,7 @@
             "static_class": "SM_ENV_KNVLLG_Flags_Single5"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16049,7 +16226,7 @@
                     ],
                     "rotation": [
                         -0.0,
-                        174.9999237060547,
+                        174.99990844726563,
                         0.0
                     ],
                     "scale": [
@@ -16088,6 +16265,7 @@
             "static_class": "SM_ENV_KNVLLG_Flags_Single6"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16096,8 +16274,8 @@
                         -107.98272705078125
                     ],
                     "rotation": [
-                        3.1805540833148e-15,
-                        175.00009155273438,
+                        6.3611081666296e-15,
+                        175.0000762939453,
                         1.0177284366363892e-06
                     ],
                     "scale": [
@@ -16136,6 +16314,7 @@
             "static_class": "SM_ENV_KNVLLG_Flags_Single7"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16144,8 +16323,8 @@
                         -80.37560272216797
                     ],
                     "rotation": [
-                        -4.962157249450684,
-                        -159.9995574951172,
+                        -4.962156295776367,
+                        -159.99954223632813,
                         0.870453417301178
                     ],
                     "scale": [
@@ -16184,6 +16363,7 @@
             "static_class": "SM_ENV_KNVLLG_Flags_Single8"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16192,9 +16372,9 @@
                         -27.30178451538086
                     ],
                     "rotation": [
-                        -11.214385032653809,
-                        -73.97205352783203,
-                        -5.844573974609375
+                        -11.214384078979492,
+                        -73.97206115722656,
+                        -5.844573497772217
                     ],
                     "scale": [
                         1.28125,
@@ -16232,6 +16412,7 @@
             "static_class": "SM_ENV_KNVLLG_Flags_Single9"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16281,6 +16462,7 @@
             "static_class": "SM_ENV_KNVLLG_Stall_A2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16330,6 +16512,7 @@
             "static_class": "SM_ENV_KNVLLG_Stall_B"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16379,6 +16562,7 @@
             "static_class": "SM_ENV_KNVLLG_Stall_B3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16388,7 +16572,7 @@
                     ],
                     "rotation": [
                         -0.0,
-                        2.060377597808838,
+                        2.060377836227417,
                         0.0
                     ],
                     "scale": [
@@ -16428,6 +16612,7 @@
             "static_class": "SM_ENV_KNVLLG_Stall_B4"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16438,7 +16623,7 @@
                     "rotation": [
                         0.42105382680892944,
                         178.68435668945313,
-                        -0.009460448287427425
+                        -0.00946044735610485
                     ],
                     "scale": [
                         1.2000000476837158,
@@ -16486,6 +16671,7 @@
             "static_class": "SM_ENV_KNVLLG_Stall_C"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16544,6 +16730,7 @@
             "static_class": "SM_ENV_KNVLLG_Stall_C2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16552,7 +16739,7 @@
                         23.481414794921875
                     ],
                     "rotation": [
-                        -0.0,
+                        -2.6680421427727197e-08,
                         -89.86328887939453,
                         0.6082346439361572
                     ],
@@ -16593,6 +16780,7 @@
             "static_class": "SM_ENV_KNVLLG_Stall_D"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16642,6 +16830,7 @@
             "static_class": "SM_ENV_KNVLLG_Stall_D_38"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16691,6 +16880,7 @@
             "static_class": "SM_ENV_KNVLLG_Stall_E2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16699,8 +16889,8 @@
                         -20.91352081298828
                     ],
                     "rotation": [
-                        2.049056456598919e-05,
-                        179.99993896484375,
+                        2.0490562746999785e-05,
+                        179.9999237060547,
                         0.0
                     ],
                     "scale": [
@@ -16744,6 +16934,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_01_9"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16797,6 +16988,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_02_15"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16850,6 +17042,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_03_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16860,7 +17053,7 @@
                     "rotation": [
                         -5.336084996088175e-08,
                         -22.499942779541016,
-                        2.812509298324585
+                        2.812509059906006
                     ],
                     "scale": [
                         0.7002235054969788,
@@ -16903,6 +17096,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_18"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16956,6 +17150,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_2"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -16966,7 +17161,7 @@
                     "rotation": [
                         -0.0,
                         179.999755859375,
-                        2.8125240802764893
+                        2.81252384185791
                     ],
                     "scale": [
                         0.625,
@@ -17009,6 +17204,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_21"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -17062,6 +17258,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_25"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -17115,6 +17312,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_29"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -17123,7 +17321,7 @@
                         -3.3667540550231934
                     ],
                     "rotation": [
-                        6.830188067397103e-05,
+                        6.830187339801341e-05,
                         4.413908754941076e-05,
                         0.0
                     ],
@@ -17168,6 +17366,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_3"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -17177,7 +17376,7 @@
                     ],
                     "rotation": [
                         0.0,
-                        -179.99966430664063,
+                        -179.99964904785156,
                         0.0
                     ],
                     "scale": [
@@ -17221,6 +17420,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_32"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -17229,8 +17429,8 @@
                         -12.128876686096191
                     ],
                     "rotation": [
-                        4.0981132769957185e-05,
-                        89.99995422363281,
+                        4.098112913197838e-05,
+                        89.99994659423828,
                         -1.628443907497612e-12
                     ],
                     "scale": [
@@ -17274,6 +17474,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_4"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -17327,6 +17528,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_7"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -17335,8 +17537,8 @@
                         87.24564361572266
                     ],
                     "rotation": [
-                        -0.0,
-                        -179.99998474121094,
+                        0.0,
+                        -179.99996948242188,
                         0.0
                     ],
                     "scale": [
@@ -17380,6 +17582,7 @@
             "static_class": "SM_ENV_KNVLLG_VideoScreen_9"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -17438,6 +17641,7 @@
             "static_class": "SM_ENV_Manhole2_22"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -17496,6 +17700,7 @@
             "static_class": "SM_ENV_Manhole3_25"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -17554,6 +17759,7 @@
             "static_class": "SM_ENV_Manhole4"
         },
         {
+            "collision_enabled": false,
             "components": [
                 {
                     "position": [
@@ -17633,6 +17839,32 @@
                 }
             ],
             "guid": "50de1c59-69d6-4836-b4bd-f081ea196d0f",
+            "layerTag": "Layer_PlayerStart",
+            "object_type": "OBJECT_TYPE_PLAYER_START",
+            "static_class": "PlayerStart"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        20.299999237060547,
+                        -12.199999809265137
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                }
+            ],
+            "guid": "47136439-7e0e-4d6d-9ed7-4c18a688f4f3",
             "layerTag": "Layer_PlayerStart",
             "object_type": "OBJECT_TYPE_PLAYER_START",
             "static_class": "PlayerStart"

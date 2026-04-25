@@ -103,6 +103,13 @@ private: /* Blackboard */
 
     int     _newKeyTypeIndex = 0;
 
+    // Blackboard 패널에서 현재 선택된 키 이름이다.
+    // Delete 버튼을 눌렀을 때 이 키를 제거한다.
+    string  _selectedBlackboardKey;
+
+    // Blackboard 키 목록 정렬 방식이다. 0은 타입 우선, 1은 이름 우선이다.
+    int     _blackboardSortMode = 0;
+
     // 현재 보고있는 AI의 Behavior
     Weak<BehaviorTree> _debugTarget;
     Weak<BehaviorTree> _pendingDebugTarget;

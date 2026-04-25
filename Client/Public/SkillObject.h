@@ -35,6 +35,11 @@ public:
         string  effectAssetName = "";
         Collision_Preset collisionPreset = Collision_Preset::Projectile;
         Shared<GameObject> ownerObject = nullptr;
+        bool useHitReactionOverride = false; // SpawnAttack/스킬이 맞힌 대상의 히트 리액션 타입을 강제로 지정할지 여부다.
+        EHitReactionType hitReactionType = EHitReactionType::Default; // useHitReactionOverride가 켜졌을 때 FDamageEvent에 실어 보낼 히트 리액션 타입이다.
+        bool useLaunchOverride = false; // SpawnAttack/스킬이 기본 launch 대신 지정한 launch 값을 강제로 사용할지 여부다.
+        float launchPower = 0.f; // useLaunchOverride가 켜졌을 때 FDamageEvent에 실어 보낼 수평 launch 세기다.
+        float launchUp = 0.f; // useLaunchOverride가 켜졌을 때 FDamageEvent에 실어 보낼 수직 launch 세기다.
 
         bool useDirectionLookAt = true;
     };
@@ -85,6 +90,11 @@ protected:
     float   _colliderRadius = 1.0f;
 
     string  _effectAssetName = "";
+    bool    _useHitReactionOverride = false; // 이 스폰 공격이 기본 리액션 대신 지정한 히트 리액션 타입을 강제할지 여부다.
+    EHitReactionType _hitReactionType = EHitReactionType::Default; // _useHitReactionOverride가 true일 때 Apply_Skill_Hit에서 사용할 히트 리액션 타입이다.
+    bool    _useLaunchOverride = false; // 이 스폰 공격이 Apply_Skill_Hit에 전달된 기본 launch 대신 지정 launch 값을 강제할지 여부다.
+    float   _launchPower = 0.f; // _useLaunchOverride가 true일 때 Apply_Skill_Hit에서 사용할 수평 launch 세기다.
+    float   _launchUp = 0.f; // _useLaunchOverride가 true일 때 Apply_Skill_Hit에서 사용할 수직 launch 세기다.
 
     // 동일 대상 충돌 처리
     umap<GameObject*, float> _hitCooldowns;

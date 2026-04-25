@@ -18,6 +18,64 @@ static float Get_KonohaStaticMeshCullDistance()
     return 220.f;
 }
 
+// Gameplay는 산맥/배경 static caster가 shadow map을 덮지 않도록 Area 내부 주요 mesh만 shadow caster로 허용한다.
+static bool Should_UseGameplayStaticShadowCaster(const StaticMeshActor& actor)
+{
+    const wstring& name = actor.Get_Name(); // Gameplay에서 큰 frustum band를 만들지 않는 소형 static caster만 선별하기 위한 이름이다.
+
+    // Ground/wall/building처럼 큰 면은 shadow receiver로만 두고, Tree 계열처럼 작은 물체만 caster로 복구한다.
+    return name.find(L"Tree") != wstring::npos;
+}
+
+// Konoha는 대형 merged 건물/지형이 많아서 플레이어 추적 shadow map에는 가까운 소형 caster만 넣는다.
+static bool Should_UseKonohaStaticShadowCaster(const StaticMeshActor& actor)
+{
+    const wstring& name = actor.Get_Name(); // Konoha의 대형 배경 caster를 이름 기준으로 제외하기 위한 static mesh 이름이다.
+
+    if (name.find(L"MERGED") != wstring::npos ||
+        name.find(L"REDUCTION") != wstring::npos ||
+        name.find(L"Distance") != wstring::npos ||
+        name.find(L"Far") != wstring::npos ||
+        name.find(L"Ground") != wstring::npos ||
+        name.find(L"Wall") != wstring::npos ||
+        name.find(L"Building") != wstring::npos ||
+        name.find(L"FaceRock") != wstring::npos)
+    {
+        return false;
+    }
+
+    const bool isSmallCaster = // Konoha shadow map에 넣어도 화면을 덮지 않는 소형 prop 이름군이다.
+        name.find(L"Tree") != wstring::npos ||
+        name.find(L"Lantern") != wstring::npos ||
+        name.find(L"Stall") != wstring::npos ||
+        name.find(L"Flags") != wstring::npos ||
+        name.find(L"Signs") != wstring::npos ||
+        name.find(L"Manhole") != wstring::npos ||
+        name.find(L"WaterTank") != wstring::npos ||
+        name.find(L"WoodBoard") != wstring::npos ||
+        name.find(L"SteelBoard") != wstring::npos ||
+        name.find(L"Balloon") != wstring::npos ||
+        name.find(L"Cat") != wstring::npos;
+
+    if (!isSmallCaster)
+        return false;
+
+    auto transform = actor.Get_Transform();
+    if (!transform)
+        return true;
+
+    Vec3 shadowFocus = Vec3::Zero; // Konoha shadow caster 거리 판정은 카메라가 아니라 현재 shadow target/player 주변을 기준으로 한다.
+    if (const FLightDesc* shadowDesc = GAME->Get_PrimaryShadowLightDesc())
+        shadowFocus = shadowDesc->shadowTarget;
+    else if (const Vec4* camPos4 = GAME->Get_CamPosition())
+        shadowFocus = Vec3(camPos4->x, camPos4->y, camPos4->z);
+
+    const Vec3 actorPos = transform->Get_WorldPosition();
+    const float shadowCasterDistance = 95.f; // 80x45 ortho 영역 주변에 들어갈 가능성이 높은 prop만 허용한다.
+
+    return Vec3::DistanceSquared(shadowFocus, actorPos) <= shadowCasterDistance * shadowCasterDistance;
+}
+
 StaticMeshActor::StaticMeshActor(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : GameObject(device, context)
 {
@@ -61,6 +119,77 @@ uint64 StaticMeshActor::Get_RenderBatchSecondaryKey() const
     return 0ull;
 }
 
+HRESULT StaticMeshActor::Render_Shadow()
+{
+    if (!_modelCom || !_shaderCom)
+    {
+#ifdef _DEBUG
+        LOG_WARN("[StaticMeshShadow] skipped. model={}, shader={}, name='{}', guid='{}'",
+            _modelCom != nullptr,
+            _shaderCom != nullptr,
+            Utils::ToString(Get_Name()),
+            Get_GUID());
+#endif
+        return S_FALSE;
+    }
+
+    CHECK_FAILED(Bind_ShadowShaderResources(), E_FAIL);
+
+    size_t numMeshes = _modelCom->Get_NumMeshes();
+    if (numMeshes == 0)
+    {
+#ifdef _DEBUG
+        LOG_WARN("[StaticMeshShadow] skipped. numMeshes=0, name='{}', guid='{}'",
+            Utils::ToString(Get_Name()),
+            Get_GUID());
+#endif
+        return S_FALSE;
+    }
+
+    for (size_t i = 0; i < numMeshes; ++i)
+    {
+        uint32 matIdx = _modelCom->Get_MeshMaterialIndex(static_cast<uint32>(i));
+        auto material = _modelCom->Get_Material(matIdx);
+
+        int hasDiffuseTexture = 0;
+        int hasBlendDiffuseTexture = 0;
+        int hasMaskTexture = 0;
+
+        if (material)
+        {
+            hasDiffuseTexture = (material->Get_TextureCount(EMaterialTextureSlot::BaseColor) > 0) ? 1 : 0;
+            hasBlendDiffuseTexture = (material->Get_TextureCount(EMaterialTextureSlot::BlendBaseColor) > 0) ? 1 : 0;
+            hasMaskTexture = (material->Get_TextureCount(EMaterialTextureSlot::Mask) > 0) ? 1 : 0;
+        }
+
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasDiffuseTexture", &hasDiffuseTexture, sizeof(int)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasBlendDiffuseTexture", &hasBlendDiffuseTexture, sizeof(int)), E_FAIL);
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasMaskTexture", &hasMaskTexture, sizeof(int)), E_FAIL);
+
+        if (hasDiffuseTexture != 0)
+        {
+            CHECK_FAILED(_modelCom->Bind_Material(_shaderCom, "g_DiffuseTexture", static_cast<uint32>(i), EMaterialTextureSlot::BaseColor, 0), E_FAIL);
+        }
+        else
+        {
+            CHECK_FAILED(_shaderCom->Bind_SRV("g_DiffuseTexture", nullptr), E_FAIL);
+        }
+
+        CHECK_FAILED(_shaderCom->Begin_Pass(3), E_FAIL);
+        CHECK_FAILED(_modelCom->Render(static_cast<uint32>(i)), E_FAIL);
+    }
+
+    return S_OK;
+}
+
+HRESULT StaticMeshActor::Bind_ShadowShaderResources()
+{
+    CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix()), E_FAIL);
+    CHECK_FAILED(GAME->Bind_ShadowMatrices(_shaderCom, "g_ViewMatrix", "g_ProjMatrix"), E_FAIL);
+
+    return S_OK;
+}
+
 HRESULT StaticMeshActor::Initialize_Prototype()
 {
     return GameObject::Initialize_Prototype();
@@ -95,6 +224,17 @@ void StaticMeshActor::Update(float timeDelta)
 void StaticMeshActor::Late_Update(float timeDelta)
 {
     GameObject::Late_Update(timeDelta);
+
+    const int32 currentLevel = GAME->Current_Level();
+    const bool useShadowCaster =
+        (currentLevel == ETOI(ELevelType::GamePlay))
+        ? Should_UseGameplayStaticShadowCaster(*this)
+        : ((currentLevel == ETOI(ELevelType::Konoha))
+            ? Should_UseKonohaStaticShadowCaster(*this)
+            : true);
+
+    if (useShadowCaster)
+        GAME->Add_RenderGroup(ERenderGroup::ShadowStatic, GetSharedPtr());
 
     // 거리비례 짜르기
     if (Is_KonohaDistanceCullEnabled())
@@ -226,12 +366,6 @@ HRESULT StaticMeshActor::Render()
 
         CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
         CHECK_FAILED(_modelCom->Render(static_cast<uint32>(i)), E_FAIL);
-
-        //if (_isOutlineEnabled)
-        //{
-        //    CHECK_FAILED(_shaderCom->Begin_Pass(1), E_FAIL);
-        //    CHECK_FAILED(_modelCom->Render(static_cast<uint32>(i)), E_FAIL);
-        //}
 
     }
     return S_OK;

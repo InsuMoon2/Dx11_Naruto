@@ -133,6 +133,20 @@ void EffectComponent::Update(float timeDelta)
     {
         if (_lifeSpan >= _asset.totalDuration)
         {
+            if (_desc.loopOverride)
+            {
+                _lifeSpan = 0.f;
+
+                for (auto& layer : _layers)
+                {
+                    layer.elapsed = 0.f;
+                    layer.started = false;
+                    layer.finished = false;
+                }
+
+                return;
+            }
+
             Stop_Effect();
             return;
         }
@@ -150,9 +164,14 @@ void EffectComponent::Late_Update(float timeDelta)
     if (!_isPlaying)
         return;
 
-    for (auto& layer : _layers)
+    for (int32 i = 0; i < static_cast<int32>(_layers.size()); ++i)
     {
+        auto& layer = _layers[i];
+
         if (!layer.desc.base.enabled)
+            continue;
+
+        if (!Is_LayerVisibleInPreview(i))
             continue;
 
         if (layer.started && !layer.finished && layer.obj)
@@ -194,6 +213,8 @@ HRESULT EffectComponent::Play_EffectAsset(const FEffectAssetDesc& assetDesc)
     _asset = assetDesc;
     _layers.clear();
     _layers.resize(_asset.layers.size());
+    if (_previewSoloLayerIndex >= static_cast<int32>(_layers.size()))
+        _previewSoloLayerIndex = -1;
 
     for (size_t i = 0; i < _asset.layers.size(); ++i)
     {
@@ -241,6 +262,23 @@ void EffectComponent::Set_ForceVisiblePreview(bool enabled)
         if (meshObj)
             meshObj->Set_ForceVisiblePreview(_forceVisiblePreview);
     }
+}
+
+void EffectComponent::Set_PreviewSoloLayerIndex(int32 layerIndex)
+{
+    if (layerIndex < 0)
+    {
+        _previewSoloLayerIndex = -1;
+        return;
+    }
+
+    if (!_layers.empty() && layerIndex >= static_cast<int32>(_layers.size()))
+    {
+        _previewSoloLayerIndex = -1;
+        return;
+    }
+
+    _previewSoloLayerIndex = layerIndex;
 }
 
 void EffectComponent::Set_RuntimeLocalTransform(const Vec3& localPosition, const Vec3& localRotation,
@@ -365,6 +403,11 @@ bool EffectComponent::Apply_LayerTransform(int32 layerIndex, const FEffectLayerB
     Apply_LayerTransformInternal(layer);
 
     return true;
+}
+
+bool EffectComponent::Is_LayerVisibleInPreview(int32 layerIndex) const
+{
+    return _previewSoloLayerIndex < 0 || _previewSoloLayerIndex == layerIndex;
 }
 
 HRESULT EffectComponent::Create_LayerObject(FActiveLayer& layer)

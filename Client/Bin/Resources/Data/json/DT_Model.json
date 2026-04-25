@@ -253,6 +253,76 @@
             "Level": "Static"
         },
         {
+            "Id": "SandShower_04",
+            "Path": "../../Client/Bin/Resources/Models/Kirin/SandShower_04.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Line_A_01",
+            "Path": "../../Client/Bin/Resources/Models/Line/Line_A_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Line_A_02",
+            "Path": "../../Client/Bin/Resources/Models/Line/Line_A_02.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Line_A_03",
+            "Path": "../../Client/Bin/Resources/Models/Line/Line_A_03.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Line_A_04",
+            "Path": "../../Client/Bin/Resources/Models/Line/Line_A_04.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Line_A_05",
+            "Path": "../../Client/Bin/Resources/Models/Line/Line_A_05.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Line_A_06",
+            "Path": "../../Client/Bin/Resources/Models/Line/Line_A_06.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "AirRibbon_01",
+            "Path": "../../Client/Bin/Resources/Models/AirRibbon/AirRibbon_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "AirRibbon_02",
+            "Path": "../../Client/Bin/Resources/Models/AirRibbon/AirRibbon_02.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "AirRibbon_03",
+            "Path": "../../Client/Bin/Resources/Models/AirRibbon/AirRibbon_03.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
             "Id": "Circle_01",
             "Path": "../../Client/Bin/Resources/Skills/ETC/Meshes/Common/Circle_01.meshbin",
             "Count": 1,
@@ -444,6 +514,48 @@
         {
             "Id": "Stone_04",
             "Path": "../../Client/Bin/Resources/Models/Earth/Stone_04.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Stone_Stone_01",
+            "Path": "../../Client/Bin/Resources/Models/Earth/Stone_Stone_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Stone_Stone_02",
+            "Path": "../../Client/Bin/Resources/Models/Earth/Stone_Stone_02.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Stone_Stone_03",
+            "Path": "../../Client/Bin/Resources/Models/Earth/Stone_Stone_03.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Stone_Stone_04",
+            "Path": "../../Client/Bin/Resources/Models/Earth/Stone_Stone_04.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Planet",
+            "Path": "../../Client/Bin/Resources/Models/Earth/PlanetaryDevastation_A_01.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Wire",
+            "Path": "../../Client/Bin/Resources/Models/Wire/Wire.meshbin",
             "Count": 1,
             "ModelType": "StaticMesh",
             "Level": "Static"

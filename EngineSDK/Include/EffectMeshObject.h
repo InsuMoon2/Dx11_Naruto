@@ -111,7 +111,8 @@ public:
 private:
     HRESULT Ready_Components();
     HRESULT Apply_AnimationSettings();
-    HRESULT Resolve_TextureByGuid(const string& guid, Shared<Texture>& outTexture);
+    // 이펙트 JSON의 GUID 텍스처를 Static/current prototype에서 먼저 찾고, 없을 때만 파일에서 lazy-load할 때 호출한다.
+    HRESULT Resolve_TextureByGuid(const string& guid, Shared<Texture>& outTexture, const char* usageName = "texture");
     HRESULT Resolve_OverrideResources();
 
     uint32 Resolve_PassIndex() const;

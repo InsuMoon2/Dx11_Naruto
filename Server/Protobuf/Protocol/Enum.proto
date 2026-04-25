@@ -58,7 +58,12 @@ enum ComponentID
 
     COMPONENT_TYPE_TEXTURE_SKY_SPHERE   = 223;
 
-    COMPONENT_TYPE_TEXTURE_MISSION = 224;
+    COMPONENT_TYPE_TEXTURE_MISSION      = 224;
+
+    COMPONENT_TYPE_TEXTURE_KO           = 225;
+    COMPONENT_TYPE_TEXTURE_TIMER        = 226;
+    COMPONENT_TYPE_TEXTURE_HALO         = 227;
+    COMPONENT_TYPE_TEXTURE_LOCK_ON      = 228;
 
     // Mesh
     COMPONENT_TYPE_MESH                 = 299;
@@ -169,6 +174,9 @@ enum OBJECT_TYPE
     OBJECT_TYPE_BOSS_PAIN                = 86;
 
     OBJECT_TYPE_WAVE_TRIGGER             = 87;
+    OBJECT_TYPE_CHIBAKU_TENSEI           = 88;
+
+    OBJECT_TYPE_WIRE_MESH_EFFECT         = 89;
 
     // UI : 100+
     OBJECT_TYPE_UI_TEXT                 = 100;
@@ -190,6 +198,10 @@ enum OBJECT_TYPE
     OBJECT_TYPE_UI_BOSS_HP              = 114;
                 
     OBJECT_TYPE_UI_MULTIPLAYER_HP       = 115;
+    OBJECT_TYPE_UI_TIMER                = 116;
+    OBJECT_TYPE_UI_LOCK_ON              = 117;
+
+
 }
 
 enum OBJECT_STATE_TYPE

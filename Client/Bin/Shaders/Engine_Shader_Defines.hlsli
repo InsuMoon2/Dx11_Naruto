@@ -66,6 +66,15 @@ RasterizerState RS_CullFront
     CullMode = Front;
 };
 
+RasterizerState RS_Shadow
+{
+    FillMode = Solid;
+    CullMode = None;
+    DepthBias = 0;
+    SlopeScaledDepthBias = 0.f;
+    DepthBiasClamp = 0.f;
+};
+
 // --- Blend States ---
 BlendState BS_Default
 {

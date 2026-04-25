@@ -39,7 +39,7 @@ public:
     void Set_BaseSrvIndex(uint32 index) { _baseSrvIndex = index; }
     void Set_MaskSrvIndex(uint32 index) { _maskSrvIndex = index; }
     void Set_SrvIndex(uint32 index)     { _iconSrvIndex = index; }
-    void Set_CooldownRatio(float ratio) { _cooldownRatio = ::clamp(ratio, 0.f, 1.f); }
+    void Set_CooldownRatio(float ratio);
 
 private:
     HRESULT Bind_CommonShaderResources();
@@ -49,6 +49,7 @@ private:
 
 protected:
     HRESULT Ready_Components() override;
+    HRESULT Render_ReadyHalo();
 
 private:
     uint32  _baseSrvIndex = 0;
@@ -60,6 +61,9 @@ private:
 
     uint32  _textureComponentType = Protocol::COMPONENT_TYPE_TEXTURE_SKILL_ICON;
 
+    float _readyHaloTimer = 0.f;
+    float _readyHaloDuration = 0.28f;
+
 private:
     Shared<Shader>        _shaderCom;
 
@@ -67,6 +71,8 @@ private:
     Shared<Texture>       _iconTextureCom;
 
     Shared<VIBuffer_Rect> _bufferCom;
+
+    Shared<Texture>       _haloTextureCom;
 
 public:
     static Shared<UI_SkillSlot> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

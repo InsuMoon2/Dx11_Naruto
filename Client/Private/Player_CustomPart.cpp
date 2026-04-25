@@ -72,6 +72,7 @@ void Player_CustomPart::Late_Update(float timeDelta)
     PartObject::Late_Update(timeDelta);
 
     GAME->Add_RenderGroup(ERenderGroup::NonBlend, this->GetSharedPtr());
+    GAME->Add_RenderGroup(ERenderGroup::ShadowDynamic, GetSharedPtr());
 }
 
 HRESULT Player_CustomPart::Render()
@@ -102,6 +103,51 @@ HRESULT Player_CustomPart::Render()
 
     }
 
+    return S_OK;
+}
+
+HRESULT Player_CustomPart::Render_Shadow()
+{
+    if (!_model || !_shader)
+    {
+#ifdef _DEBUG
+        LOG_WARN("[PlayerPartShadow] skipped. model={}, shader={}, name='{}', guid='{}'",
+            _model != nullptr,
+            _shader != nullptr,
+            Utils::ToString(Get_Name()),
+            Get_GUID());
+#endif
+        return S_FALSE;
+    }
+
+    CHECK_FAILED(Bind_ShadowShaderResources(), E_FAIL);
+
+    size_t numMeshes = _model->Get_NumMeshes();
+    if (numMeshes == 0)
+    {
+#ifdef _DEBUG
+        LOG_WARN("[PlayerPartShadow] skipped. numMeshes=0, name='{}', guid='{}'",
+            Utils::ToString(Get_Name()),
+            Get_GUID());
+#endif
+        return S_FALSE;
+    }
+
+    for (size_t i = 0; i < numMeshes; ++i)
+    {
+        CHECK_FAILED(_model->Bind_BoneMatrices(_shader, "g_BoneMatrices"), E_FAIL);
+        CHECK_FAILED(_model->Bind_Material(_shader, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0), E_FAIL);
+        CHECK_FAILED(_shader->Begin_Pass(2), E_FAIL);
+        CHECK_FAILED(_model->Render(i), E_FAIL);
+    }
+
+    return S_OK;
+}
+
+HRESULT Player_CustomPart::Bind_ShadowShaderResources()
+{
+    CHECK_FAILED(_shader->Bind_Matrix("g_WorldMatrix", &_combinedWorldMatrix), E_FAIL);
+    CHECK_FAILED(GAME->Bind_ShadowMatrices(_shader, "g_ViewMatrix", "g_ProjMatrix"), E_FAIL);
     return S_OK;
 }
 

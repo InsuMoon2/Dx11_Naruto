@@ -13,10 +13,8 @@ public:
     void   Execute(const FAnimNotifyContext& context) override;
 
 private:
-    // 등록된 사운드. Sound 클래스를 따로 만들어줄까.
-    // 경로말고 다른거로 
-
-    ESoundChannel _channel = ESoundChannel::END;
+    string _soundFile;
+    ESoundChannel _channel = ESoundChannel::Effect;
 
     float _volume = 1.f;
 

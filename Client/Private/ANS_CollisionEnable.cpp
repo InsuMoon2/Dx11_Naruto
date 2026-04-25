@@ -27,7 +27,7 @@ bool ANS_CollisionEnable::Register_Properties()
     PROPERTY_ENUM_JSON("Hit Reaction Type", "override_hit_reaction_type", _overrideHitReactionType, EHitReactionType);
 
     PROPERTY_BOOL_JSON("Override Launch", "use_launch_override", _useLaunchOverride);
-    PROPERTY_FLOAT_JSON("Launch Power", "override_launch_power", _overrideLaunchPower, 0.f, 50.f);
+    PROPERTY_FLOAT_JSON("Launch Power", "override_launch_power", _overrideLaunchPower, 0.f, 500.f);
     PROPERTY_FLOAT_JSON("Launch Up", "override_launch_up", _overrideLaunchUp, -50.f, 50.f);
 
     return true;

@@ -18,6 +18,10 @@ public:
 
     vector<FBlackboardKeyInfo> Get_AllKeys() const;
 
+    // 에디터에서 선택한 Blackboard 키를 삭제할 때 호출한다.
+    // 같은 이름이 여러 타입 맵에 남아 있어도 한 번에 정리한다.
+    bool Remove_Key(const string& key);
+
 public:
     // 데이터 설정
     void Set_ValueAsInt(const string& key, int32 value);

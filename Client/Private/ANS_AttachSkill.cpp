@@ -9,6 +9,8 @@
 REGISTER_ANIM_NOTIFY_STATE(ANS_AttachSkill);
 IMPLEMENT_REFLECTION(ANS_AttachSkill);
 
+static umap<GameObject*, umap<Protocol::OBJECT_TYPE, Weak<SkillObject_Projectile>>> s_attachSkillFallbackPendingSkills;
+
 bool ANS_AttachSkill::Register_Properties()
 {
     auto& info = GetStaticReflectionInfo();
@@ -55,12 +57,17 @@ void ANS_AttachSkill::On_Begin(const FAnimNotifyContext& context)
     CHECK_NULL(skill);
 
     skill->Set_Owner(context.owner->GetSharedPtr<GameObject>());
+    _attachedSkill = skill;
 
     auto skillCom = context.owner->Get_Component<SkillComponent>();
     if (skillCom)
     {
         skillCom->Set_PendingSkill(_spawnObjectType, skill);
+        Clear_FallbackPendingSkill(context.owner, _spawnObjectType, false);
+        return;
     }
+
+    Set_FallbackPendingSkill(context.owner, _spawnObjectType, skill);
 }
 
 void ANS_AttachSkill::On_Tick(const FAnimNotifyContext& context)
@@ -68,10 +75,16 @@ void ANS_AttachSkill::On_Tick(const FAnimNotifyContext& context)
     if (context.isPreview || !context.owner) return;
 
     auto skillCom = context.owner->Get_Component<SkillComponent>();
-    CHECK_NULL(skillCom);
+    Shared<SkillObject_Projectile> skill = nullptr;
 
-    auto skill = skillCom->Get_PendingSkill(_spawnObjectType).lock();
+    if (skillCom)
+        skill = skillCom->Get_PendingSkill(_spawnObjectType).lock();
+
+    if (!skill)
+        skill = Get_FallbackPendingSkill(context.owner, _spawnObjectType).lock();
+
     if (!skill || skill->Is_Destroy() || skill->IsLaunched()) return;
+    if (!context.model) return;
 
     const Matrix* boneMatrix = context.model->Get_SocketBoneMatrixPtr(_boneName);
     if (!boneMatrix) return;
@@ -94,4 +107,55 @@ void ANS_AttachSkill::On_End(const FAnimNotifyContext& context)
     auto skillComp = context.owner->Get_Component<SkillComponent>();
     if (skillComp)
         skillComp->Clear_PendingSkill(_spawnObjectType);
+    else
+        Clear_FallbackPendingSkill(context.owner, _spawnObjectType, true);
+
+    _attachedSkill.reset();
+}
+
+void ANS_AttachSkill::Set_FallbackPendingSkill(GameObject* owner, Protocol::OBJECT_TYPE type, Shared<SkillObject_Projectile> skill)
+{
+    if (!owner || !skill)
+        return;
+
+    s_attachSkillFallbackPendingSkills[owner][type] = skill;
+}
+
+Weak<SkillObject_Projectile> ANS_AttachSkill::Get_FallbackPendingSkill(GameObject* owner, Protocol::OBJECT_TYPE type)
+{
+    if (!owner)
+        return {};
+
+    auto ownerIter = s_attachSkillFallbackPendingSkills.find(owner);
+    if (ownerIter == s_attachSkillFallbackPendingSkills.end())
+        return {};
+
+    auto skillIter = ownerIter->second.find(type);
+    if (skillIter == ownerIter->second.end())
+        return {};
+
+    return skillIter->second;
+}
+
+void ANS_AttachSkill::Clear_FallbackPendingSkill(GameObject* owner, Protocol::OBJECT_TYPE type, bool destroyIfAttached)
+{
+    if (!owner)
+        return;
+
+    auto ownerIter = s_attachSkillFallbackPendingSkills.find(owner);
+    if (ownerIter == s_attachSkillFallbackPendingSkills.end())
+        return;
+
+    auto skillIter = ownerIter->second.find(type);
+    if (skillIter == ownerIter->second.end())
+        return;
+
+    auto skill = skillIter->second.lock();
+    if (destroyIfAttached && skill && !skill->IsLaunched())
+        skill->Set_Destroy(true);
+
+    ownerIter->second.erase(skillIter);
+
+    if (ownerIter->second.empty())
+        s_attachSkillFallbackPendingSkills.erase(ownerIter);
 }

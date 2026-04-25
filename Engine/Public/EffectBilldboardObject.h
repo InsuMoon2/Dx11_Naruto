@@ -59,6 +59,7 @@ private:
     Shared<Texture>       _ringTextureCom;                  // Billboard 외곽 보조 링을 렌더링할 때 사용하는 텍스처 컴포넌트다.
     Shared<Texture>       _ringOpacityTextureCom;           // Billboard 링 알파를 원본 opacity map처럼 별도 제어할 때 사용하는 텍스처 컴포넌트다.
     Shared<Texture>       _ringOpacityGradationTextureCom;  // Billboard 링 opacity 값을 GMO 계열 텍스처로 리매핑할 때 사용하는 텍스처 컴포넌트다.
+    Shared<Texture>       _screenDistortionNormalTextureCom; // ScreenDistortion 모드에서 SceneColorCopy UV를 흔드는 노멀/노이즈 텍스처 컴포넌트다.
 
     FEffectLayerDesc      _layerDesc{}; 
     string                _resolvedBaseTextureGuid;         // 현재 _baseTextureCom이 어떤 GUID를 가리키는지 기억해서 불필요한 재로딩을 막는다.
@@ -68,6 +69,7 @@ private:
     string                _resolvedRingTextureGuid;         // 현재 _ringTextureCom이 어떤 GUID를 가리키는지 기억해서 불필요한 재로딩을 막는다.
     string                _resolvedRingOpacityTextureGuid;  // 현재 _ringOpacityTextureCom이 어떤 GUID를 가리키는지 기억해서 불필요한 재로딩을 막는다.
     string                _resolvedRingOpacityGradationTextureGuid; // 현재 _ringOpacityGradationTextureCom이 어떤 GUID를 가리키는지 기억해서 불필요한 재로딩을 막는다.
+    string                _resolvedScreenDistortionNormalTextureGuid; // 현재 _screenDistortionNormalTextureCom이 어떤 GUID를 가리키는지 기억한다.
     bool                  _useRuntimeBaseOpacityOverride = false; // true면 baseOpacity 대신 런타임 보간 opacity를 셰이더에 바인딩한다.
     float                 _runtimeBaseOpacity = 1.f;              // 레이어 수명 보간으로 계산된 현재 중심 opacity 값이다.
     bool                  _useRuntimeRingOpacityOverride = false; // true면 ringOpacity 대신 런타임 보간 opacity를 셰이더에 바인딩한다.

@@ -3,7 +3,6 @@
 #include "Level.h"
 #include "MovementComponent.h"
 #include "CollisionProxy_Manager.h"
-#include "Collision_SurfaceCache.h"
 
 NS_BEGIN(Engine)
 class Model;
@@ -32,6 +31,33 @@ public:
     static Matrix Build_CollisionModelPreTransform();
 
 private:
+    struct FCollisionCellCoord
+    {
+        int32 x = 0;
+        int32 z = 0;
+
+        bool operator==(const FCollisionCellCoord& rhs) const
+        {
+            return x == rhs.x && z == rhs.z;
+        }
+    };
+
+    struct FCollisionCellCoordHasher
+    {
+        size_t operator()(const FCollisionCellCoord& key) const
+        {
+            const size_t hx = std::hash<int32>{}(key.x);
+            const size_t hz = std::hash<int32>{}(key.z);
+            return hx ^ (hz << 1);
+        }
+    };
+
+    struct FCollisionCellBucket
+    {
+        vector<uint32> surfaceIndices;
+        vector<uint32> worldBlockIndices;
+    };
+
     HRESULT         Ready_Lights();
     HRESULT         Ready_Layer_Camera(const wstring& layerTag);
     HRESULT         Ready_Layer_PlayerStart(const wstring& layerTag);
@@ -40,19 +66,14 @@ private:
     HRESULT         Ready_Layer_SkySphere();
 
     HRESULT         Ready_UI();
+    // 활성 카메라/플레이어 기준으로 shadow 전용 카메라를 다시 맞출 때 호출한다.
+    void            Update_DynamicShadowLightFromView();
 
-    HRESULT         Ready_SurfaceCache();
-    HRESULT         Build_SurfaceCacheCellModels();
-    fs::path        Build_SurfaceCachePath() const;
-    void            Query_SurfaceCacheBoundsModels(
+    HRESULT         Build_CollisionProxyCellModels();
+    void            Query_CollisionProxyBoundsModels(
         const BoundingBox& queryBounds,
         vector<MovementComponent::FCollisionModelInstance>& outSurfaceModels,
         vector<MovementComponent::FCollisionModelInstance>& outWorldBlockModels) const;
-    Shared<Model>   Find_SurfaceCacheModel(const string& modelGuid);
-    static Collision_SurfaceCache::FCellCoord Build_SurfaceCacheCellCoord(
-        const Vec3& worldPosition,
-        float cellSize);
-    static Matrix   Build_SurfaceCacheWorldMatrix(const Collision_SurfaceCache::FEntry& entry);
 
 private:
     void Disable_LocalWaveTriggers_ForServerMode();
@@ -67,6 +88,13 @@ private:
     HRESULT Rebuild_CollisionProxyCache();
     HRESULT Collect_CollisionProxyActorsFromLayer(const wstring& layerTag);
     HRESULT Append_CollisionProxyInstance(Shared<CollisionProxyActor> actor);
+    // Konoha proxy들을 PhysX scene에 등록해서 좌표/normal 검증용으로 사용한다.
+    HRESULT Register_PhysXProxiesForTest(const Vec3& playerStartPos);
+    // proxy/model 인스턴스 하나를 PhysX triangle mesh 입력 배열로 합쳐 등록할 때 사용한다.
+    bool Register_PhysXProxyInstanceForTest(
+        const MovementComponent::FCollisionModelInstance& instance,
+        const string& debugName,
+        ECollisionProxyType proxyType) const;
 
    static bool Try_BuildWorldBoundsFromModel(
         Shared<Model> model,
@@ -86,13 +114,6 @@ private:
 
     void                    Remove_LocalMonsters_ForServerMode();
     
-private:
-    struct FSurfaceCacheCellBucket
-    {
-        vector<uint32> surfaceIndices;
-        vector<uint32> worldBlockIndices;
-    };
-
     Shared<UI_PlayerHUD> _playerHUD;
     FDelegateHandle      _playerObjectSpawnedHandle = {};
                          
@@ -105,13 +126,13 @@ private:
     vector<MovementComponent::FCollisionModelInstance> _defaultGroundModels;
     vector<MovementComponent::FCollisionModelInstance> _surfaceProxyModels;
     vector<MovementComponent::FCollisionModelInstance> _worldBlockProxyModels;
+    vector<ECollisionProxyType> _surfaceProxyTypes; // _surfaceProxyModels와 같은 index로 Walkable/WallRun 타입을 보관한다.
+    Vec3 _physXTestProxyCenter = Vec3::Zero; // PlayerStart 주변에 등록한 PhysX 테스트 proxy 중 가장 가까운 중심 위치다.
+    bool _hasPhysXTestProxy = false; // F3 디버그에서 테스트 proxy 방향 ray를 그릴지 판단한다.
 
 private:
-    Unique<Collision_SurfaceCache> _surfaceCache;
-    umap<string, Shared<Model>> _surfaceCacheModels;
-    std::unordered_map<Collision_SurfaceCache::FCellCoord, FSurfaceCacheCellBucket, Collision_SurfaceCache::FCellCoordHasher> _surfaceCacheCellModels;
-    vector<MovementComponent::FCollisionModelInstance> _surfaceCacheSurfaceModels;
-    vector<MovementComponent::FCollisionModelInstance> _surfaceCacheWorldBlockModels;
+    std::unordered_map<FCollisionCellCoord, FCollisionCellBucket, FCollisionCellCoordHasher> _collisionProxyCellModels;
+    float _collisionProxyCellSize = 10.f;
 
 public:
     static Shared<Level_Konoha> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode);

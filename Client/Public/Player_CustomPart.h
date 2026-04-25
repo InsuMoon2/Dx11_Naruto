@@ -26,6 +26,9 @@ public:
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
 
+    HRESULT Render_Shadow() override;
+    HRESULT Bind_ShadowShaderResources();
+
 public:
     //const Matrix* Get_SocketBoneMatrixPtr();
 

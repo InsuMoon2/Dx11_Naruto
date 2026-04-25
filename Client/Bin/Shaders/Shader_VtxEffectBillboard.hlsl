@@ -7,6 +7,8 @@ Texture2D g_BaseOpacityGradationTexture;
 Texture2D g_RingTexture;
 Texture2D g_RingOpacityTexture;
 Texture2D g_RingOpacityGradationTexture;
+Texture2D g_SceneColorTexture;
+Texture2D g_ScreenDistortionNormalTexture;
 
 float4 g_BaseTint;
 float4 g_RingTint;
@@ -15,6 +17,16 @@ float g_RingOpacity;
 float g_BaseEmissiveStrength;
 float g_RingEmissiveStrength;
 float g_ElapsedTime;
+float2 g_BaseUvOffset;
+float2 g_BaseUvScale;
+float2 g_RingUvOffset;
+float2 g_RingUvScale;
+float2 g_ScreenDistortionInvViewportSize;
+float2 g_ScreenDistortionNormalTiling;
+float2 g_ScreenDistortionScrollA;
+float2 g_ScreenDistortionScrollB;
+float g_ScreenDistortionStrength;
+float g_ScreenDistortionRadialStrength;
 
 int g_UseRing;
 int g_RenderMode;
@@ -37,6 +49,7 @@ float g_RingFlipbookFps;
 int g_RingFlipbookStartFrame;
 int g_RingFlipbookEndFrame;
 int g_RingFlipbookLoop;
+int g_HasScreenDistortionNormalTexture;
 
 struct VS_IN
 {
@@ -101,7 +114,14 @@ float BuildRimMask(float radial)
     return saturate(outer - inner);
 }
 
-// Flipbook billboard layers need deterministic frame addressing from elapsed time.
+// Manual UV crop lets atlas textures use one chosen source region without showing the whole sprite sheet.
+float2 ApplyManualUvRect(float2 uv, float2 offset, float2 scale)
+{
+    float2 safeScale = max(scale, float2(0.0001f, 0.0001f));
+    return uv * safeScale + offset;
+}
+
+// Flipbook billboard layers need deterministic frame addressing inside the selected source UV region.
 float2 BuildFlipbookUV(
     float2 uv,
     int enabled,
@@ -110,13 +130,16 @@ float2 BuildFlipbookUV(
     float fps,
     int startFrame,
     int endFrame,
-    int loopMode)
+    int loopMode,
+    float2 sourceOffset,
+    float2 sourceScale)
 {
     int safeColumns = max(columns, 1);
     int safeRows = max(rows, 1);
+    float2 safeSourceScale = max(sourceScale, float2(0.0001f, 0.0001f));
 
     if (enabled == 0 || (safeColumns == 1 && safeRows == 1))
-        return uv;
+        return ApplyManualUvRect(uv, sourceOffset, safeSourceScale);
 
     int frameCount = safeColumns * safeRows;
     int clampedStartFrame = clamp(startFrame, 0, frameCount - 1);
@@ -140,10 +163,9 @@ float2 BuildFlipbookUV(
     int columnIndex = frameIndex % safeColumns;
     int rowIndex = frameIndex / safeColumns;
 
-    float2 tileSize = float2(1.f / safeColumns, 1.f / safeRows);
+    float2 tileSize = safeSourceScale / float2(safeColumns, safeRows);
     float2 tileUV = uv * tileSize;
-    tileUV.x += columnIndex * tileSize.x;
-    tileUV.y += rowIndex * tileSize.y;
+    tileUV += sourceOffset + float2(columnIndex, rowIndex) * tileSize;
 
     return tileUV;
 }
@@ -290,6 +312,54 @@ float4 BuildDistortionColor(
     return float4(finalRgb, finalAlpha);
 }
 
+// ScreenDistortion samples the already-rendered scene and offsets screen UVs inside the billboard mask.
+float4 BuildScreenDistortionColor(
+    float4 sampledColor,
+    float2 uv,
+    float4 tint,
+    float opacity,
+    float maskSample,
+    float opacityMask,
+    float opacityGradationMask,
+    float4 screenPosition)
+{
+    float distortionMask = ResolveDistortionMask(
+        sampledColor,
+        uv,
+        maskSample,
+        opacityMask,
+        opacityGradationMask);
+
+    float2 centeredUV = uv * 2.f - 1.f;
+    float radial = length(centeredUV);
+    float2 radialDir = centeredUV / max(radial, 0.0001f);
+    float2 normalOffset = float2(0.f, 0.f);
+
+    if (g_HasScreenDistortionNormalTexture != 0)
+    {
+        float normalTilingA = max(g_ScreenDistortionNormalTiling.x, 0.0001f);
+        float normalTilingB = max(g_ScreenDistortionNormalTiling.y, 0.0001f);
+        float2 normalUvA = uv * normalTilingA + g_ScreenDistortionScrollA * g_ElapsedTime;
+        float2 normalUvB = uv * normalTilingB + g_ScreenDistortionScrollB * g_ElapsedTime;
+
+        float2 normalA = g_ScreenDistortionNormalTexture.Sample(DefaultSampler, normalUvA).rg * 2.f - 1.f;
+        float2 normalB = g_ScreenDistortionNormalTexture.Sample(DefaultSampler, normalUvB).rg * 2.f - 1.f;
+        normalOffset = (normalA + normalB) * 0.5f * g_ScreenDistortionStrength;
+    }
+
+    float radialFalloff = 1.f - smoothstep(0.15f, 0.95f, radial);
+    float2 radialOffset = radialDir * g_ScreenDistortionRadialStrength * radialFalloff;
+    float2 screenUV = screenPosition.xy * g_ScreenDistortionInvViewportSize;
+    float2 finalOffset = (normalOffset + radialOffset) * distortionMask;
+    float finalAlpha = saturate(distortionMask * opacity * tint.a);
+
+    if (finalAlpha < 0.01f)
+        discard;
+
+    float3 distortedScene = g_SceneColorTexture.Sample(BillboardClampSampler, saturate(screenUV + finalOffset)).rgb;
+    return float4(distortedScene, finalAlpha);
+}
+
 float4 PS_MAIN(VS_OUT In) : SV_TARGET0
 {
     float2 baseUV = BuildFlipbookUV(
@@ -300,7 +370,9 @@ float4 PS_MAIN(VS_OUT In) : SV_TARGET0
         g_BaseFlipbookFps,
         g_BaseFlipbookStartFrame,
         g_BaseFlipbookEndFrame,
-        g_BaseFlipbookLoop);
+        g_BaseFlipbookLoop,
+        g_BaseUvOffset,
+        g_BaseUvScale);
 
     float4 baseTex = g_BaseTexture.Sample(BillboardClampSampler, baseUV);
     float4 baseColor;
@@ -358,6 +430,33 @@ float4 PS_MAIN(VS_OUT In) : SV_TARGET0
             baseOpacityMask,
             baseOpacityGradationMask);
     }
+    else if (g_RenderMode == 3)
+    {
+        float baseMaskSample = 1.f;
+        float baseOpacityMask = 1.f;
+        float baseOpacityGradationMask = 0.f;
+
+        if (g_HasBaseMaskTexture != 0)
+            baseMaskSample = SampleMask(g_BaseMaskTexture.Sample(BillboardClampSampler, baseUV));
+
+        if (g_HasBaseOpacityTexture != 0)
+            baseOpacityMask = SampleMask(g_BaseOpacityTexture.Sample(BillboardClampSampler, baseUV));
+
+        if (g_HasBaseOpacityGradationTexture != 0)
+            baseOpacityGradationMask = g_BaseOpacityGradationTexture.Sample(
+                BillboardClampSampler,
+                float2(saturate(SampleMask(baseTex) * baseOpacityMask), 0.5f)).r;
+
+        baseColor = BuildScreenDistortionColor(
+            baseTex,
+            In.vTexcoord,
+            g_BaseTint,
+            g_BaseOpacity,
+            baseMaskSample,
+            baseOpacityMask,
+            baseOpacityGradationMask,
+            In.vPosition);
+    }
     else
     {
         baseColor = BuildCoreSphereBaseColor(
@@ -368,7 +467,7 @@ float4 PS_MAIN(VS_OUT In) : SV_TARGET0
             max(g_BaseEmissiveStrength, 0.f));
     }
 
-    if (g_UseRing == 0)
+    if (g_RenderMode == 3 || g_UseRing == 0)
         return baseColor;
 
     float2 ringUV = BuildFlipbookUV(
@@ -379,7 +478,9 @@ float4 PS_MAIN(VS_OUT In) : SV_TARGET0
         g_RingFlipbookFps,
         g_RingFlipbookStartFrame,
         g_RingFlipbookEndFrame,
-        g_RingFlipbookLoop);
+        g_RingFlipbookLoop,
+        g_RingUvOffset,
+        g_RingUvScale);
 
     float4 ringTex = g_RingTexture.Sample(BillboardClampSampler, ringUV);
     float4 ringColor;

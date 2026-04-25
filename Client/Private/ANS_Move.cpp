@@ -12,6 +12,18 @@
 REGISTER_ANIM_NOTIFY_STATE(ANS_Move);
 IMPLEMENT_REFLECTION(ANS_Move);
 
+static Vec3 Resolve_ANSMoveRotationDirection(GameObject* owner, Vec3 lookDir)
+{
+    if (!owner)
+        return lookDir;
+
+    auto movement = owner->Get_Component<MovementComponent>();
+    if (movement)
+        lookDir.y = 0.f;
+
+    return lookDir;
+}
+
 bool ANS_Move::Register_Properties()
 {
     auto& info = GetStaticReflectionInfo();
@@ -66,7 +78,7 @@ void ANS_Move::On_Begin(const FAnimNotifyContext& context)
         _directionSource == EMoveDirectionSource::TargetDirection &&
         _rotationSpeed <= 0.f)
     {
-        Vec3 lookDir = _moveDir;
+        Vec3 lookDir = Resolve_ANSMoveRotationDirection(owner, _moveDir);
 
         if (_ignoreY || _constrainToGround)
             lookDir.y = 0.f;
@@ -105,7 +117,7 @@ void ANS_Move::On_Tick(const FAnimNotifyContext& context)
         Vec3 targetDir = Vec3::Zero;
         if (Set_TargetDirection(context, targetDir))
         {
-            Vec3 lookDir = targetDir;
+            Vec3 lookDir = Resolve_ANSMoveRotationDirection(owner, targetDir);
 
             if (_ignoreY || _constrainToGround)
                 lookDir.y = 0.f;

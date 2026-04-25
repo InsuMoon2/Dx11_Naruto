@@ -7,6 +7,7 @@
 #include "Prototype_Manager.h"
 #include "UI_Manager.h"
 #include "CollisionProxy_Manager.h"
+#include "PhysXMgr.h"
 
 NS_BEGIN(Engine)
     /* Device */
@@ -28,7 +29,9 @@ class Sound_Manager;
 class Collision_Manager;
 class Debug_Manager;
 class CollisionProxy_Manager;
+class PhysXMgr;
 class Target_Manager;
+class Shadow;
 
 class Renderer;
 class PipeLine;
@@ -267,9 +270,21 @@ public: /* DelegateHub */
 public: /* Light */
     const FLightDesc*               Get_LightDesc(uint32 index);
     HRESULT                         Add_Light(const FLightDesc& desc);
+    // 현재 primary shadow directional light의 설정을 교체할 때 호출한다.
+    HRESULT                         Update_PrimaryShadowLightDesc(const FLightDesc& desc);
     void                            Clear_Lights();
 
     HRESULT                         Render_Lights(Shared<Shader> shader, Shared<VIBuffer_Rect> viBuffer);
+
+    const                           FLightDesc* Get_PrimaryShadowLightDesc() const;
+    // 에디터가 primary shadow light 자동 갱신을 잠그고 수동 제어를 시작하거나 끝낼 때 호출한다.
+    void                            Set_EditorPrimaryShadowLightOverrideEnabled(bool enabled);
+    // 에디터가 현재 primary shadow light를 수동 제어 중인지 확인할 때 호출한다.
+    bool                            Is_EditorPrimaryShadowLightOverrideEnabled() const { return _editorPrimaryShadowLightOverrideEnabled; }
+    // 에디터 인스펙터에서 편집한 primary shadow light 설정을 즉시 반영할 때 호출한다.
+    HRESULT                         Set_EditorPrimaryShadowLightOverrideDesc(const FLightDesc& desc);
+    // 에디터가 현재 수동 제어 중인 primary shadow light 설정을 읽을 때 호출한다.
+    const FLightDesc*               Get_EditorPrimaryShadowLightOverrideDesc() const;
 
 public: /* Asset */
     string                          Find_AssetGUID(const wstring& filePath);
@@ -388,17 +403,55 @@ public: /* Collision Proxy */
 
     void Clear_CollisionProxy();
 
+public: /* PhysX */
+    // 레벨 로드 중 충돌 전용 메시를 PhysX static triangle mesh로 등록할 때 호출한다.
+    bool Register_PhysXStaticTriangleMesh(
+        const string& name,
+        const vector<Vec3>& vertices,
+        const vector<uint32>& indices,
+        const Matrix& worldMatrix,
+        ECollisionProxyType proxyType);
+    // Movement/Editor 디버그에서 PhysX scene 기준 raycast를 확인할 때 호출한다.
+    bool Raycast_PhysX(
+        const Vec3& origin,
+        const Vec3& direction,
+        float distance,
+        FPhysXRaycastHit& outHit,
+        ECollisionProxyType requiredProxyType = ECollisionProxyType::END) const;
+    // 레벨 전환 또는 PhysX 충돌 데이터 재구축 전에 등록된 static geometry를 비울 때 호출한다.
+    void Clear_PhysXScene();
+
 public: /* Target Manager */
-    HRESULT     Add_RenderTarget(const wstring& targetTag, uint32 sizeX, uint32 sizeY, DXGI_FORMAT format, const Color& clearColor);
+    HRESULT     Add_RenderTarget(const wstring& targetTag, uint32 sizeX, uint32 sizeY, DXGI_FORMAT format, const Color& clearColor, bool resizeWithViewport = true);
     HRESULT     Add_MRT(const wstring& mrtTag, const wstring& targetTag);
-    HRESULT     Begin_MRT(const wstring& mrtTag);
+
+    HRESULT     Copy_CurrentRenderTargetToRT(const wstring& targetTag);
+
+    HRESULT     Begin_MRT(const wstring& mrtTag, ComPtr<DepthStencil> customDSV = nullptr);
     HRESULT     End_MRT();
     HRESULT     Bind_RT_ShaderResource(Shared<Shader> shader, const char* constantName, const wstring& targetTag);
     HRESULT     Resize_MRTs(uint32 width, uint32 height);
 #ifdef _DEBUG
     HRESULT     Ready_RT_Debug(const wstring& targetTag, float x, float y, float sizeX, float sizeY);
     HRESULT     Render_RT_Debug(Shared<VIBuffer_Rect> viBuffer, Shared<Shader> shader, const wstring& mrtTag);
+
+    // Debug shadow/RT 진단용: 지정 RT의 float 픽셀 통계를 로그로 찍어 shadow pass 결과를 확인한다.
+    HRESULT     Log_RT_DebugFloatStats(const wstring& targetTag);
 #endif
+
+public:
+    // 현재 primary directional light를 shadow 클래스에 동기화할 때 호출한다.
+    bool Update_PrimaryShadowLight();
+    // deferred 합성이나 shadow 리소스 준비에 쓰는 현재 shadow light desc다.
+    const FLightDesc* Get_ShadowLightDesc() const;
+    HRESULT Bind_ShadowMatrices(
+        Shared<Shader> shader,
+        const char* viewName,
+        const char* projName);
+
+    const Matrix* Get_ShadowViewMatrix() const;
+    const Matrix* Get_ShadowProjMatrix() const;
+    void Invalidate_StaticShadowMap();
 
 private: /* Manager */
 	Unique<Graphic_Device>          _graphicDevice  {};
@@ -417,7 +470,9 @@ private: /* Manager */
     Unique<Collision_Manager>       _collisionManager{};
     Unique<Debug_Manager>           _debugManager{}; // 충돌 여부와 무관한 디버그 도형 요청을 모아 렌더하는 매니저
     Unique<CollisionProxy_Manager>  _collisionProxyManager{};
+    Unique<PhysXMgr>                _physXMgr{}; // PhysX 충돌 scene과 static triangle mesh를 관리하는 실험용 매니저
     Unique<Target_Manager>          _targetManager;
+    Unique<Shadow>                  _shadow{}; // 수업코드 스타일로 분리한 shadow 행렬/설정 소유자다.
 
     Unique<Renderer>                _renderer {};
     Unique<PipeLine>                _pipeLine {};
@@ -436,6 +491,10 @@ private:
     EGameState                      _gameState = EGameState::Play;
     bool                            _gameInputEnabled = false;
     bool                            _editorRuntime = false;
+    // 에디터가 primary shadow light를 잠가서 레벨 코드의 자동 업데이트보다 우선 적용할지 결정하는 스위치다.
+    bool                            _editorPrimaryShadowLightOverrideEnabled = false;
+    // 에디터 인스펙터에서 직접 조정 중인 primary shadow light의 최신 설정이다.
+    FLightDesc                      _editorPrimaryShadowLightOverrideDesc{};
 
 private:
     float                           _uiViewportWidth = 0.f;

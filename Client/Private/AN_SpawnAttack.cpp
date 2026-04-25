@@ -25,6 +25,11 @@ bool AN_SpawnAttack::Register_Properties()
     PROPERTY_FLOAT_JSON("충돌 반지름", "collider_radius", _colliderRadius, 0.1f, 10.f);
     PROPERTY_FLOAT_JSON("수명(초)", "lifetime", _lifetime, 0.05f, 10.f);
     PROPERTY_BOOL_JSON("Owner Forward 사용", "use_owner_forward", _useOwnerForward);
+    PROPERTY_BOOL_JSON("Override Hit Reaction", "use_hit_reaction_override", _useHitReactionOverride);
+    PROPERTY_ENUM_JSON("Hit Reaction Type", "override_hit_reaction_type", _overrideHitReactionType, EHitReactionType);
+    PROPERTY_BOOL_JSON("Override Launch", "use_launch_override", _useLaunchOverride);
+    PROPERTY_FLOAT_JSON("Launch Power", "override_launch_power", _overrideLaunchPower, 0.f, 500.f);
+    PROPERTY_FLOAT_JSON("Launch Up", "override_launch_up", _overrideLaunchUp, -50.f, 50.f);
     PROPERTY_STRING_JSON("레이어 태그", "layer_tag", _layerTag);
 
     return true;
@@ -53,6 +58,11 @@ void AN_SpawnAttack::Execute(const FAnimNotifyContext& context)
     desc.spawnPosition = Calculate_WorldSpawnPosition(spawnBasisMatrix, _localOffset);
     desc.spawnRotation = Vec3::Zero;
     desc.scale = Vec3::One;
+    desc.useHitReactionOverride = _useHitReactionOverride;
+    desc.hitReactionType = _overrideHitReactionType;
+    desc.useLaunchOverride = _useLaunchOverride;
+    desc.launchPower = _overrideLaunchPower;
+    desc.launchUp = _overrideLaunchUp;
 
     if (_useOwnerForward)
         desc.direction = ownerTransform->Get_WorldForward();

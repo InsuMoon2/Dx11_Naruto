@@ -50,6 +50,8 @@ struct VS_OUT
     float2 vTexcoord : TEXCOORD0;
     float2 vTexcoord1 : TEXCOORD1;
     float4 vWorldPos : TEXCOORD2;
+    float4 vProjPos : TEXCOORD3;
+    float4 vLightViewPos : TEXCOORD4;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -66,6 +68,8 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vTexcoord1 = In.vTexcoord1;
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vProjPos = Out.vPosition;
+    Out.vLightViewPos = mul(Out.vWorldPos, g_ViewMatrix);
 
     return Out;
 }
@@ -87,6 +91,8 @@ VS_OUT VS_OUTLINE(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vTexcoord1 = In.vTexcoord1;
     Out.vWorldPos = worldPos;
+    Out.vProjPos = Out.vPosition;
+    Out.vLightViewPos = mul(worldPos, g_ViewMatrix);
 
     return Out;
 }
@@ -98,12 +104,15 @@ struct PS_IN
     float2 vTexcoord : TEXCOORD0;
     float2 vTexcoord1 : TEXCOORD1;
     float4 vWorldPos : TEXCOORD2;
+    float4 vProjPos : TEXCOORD3;
+    float4 vLightViewPos : TEXCOORD4;
 };
 
 struct PS_OUT
 {
     vector vDiffuse : SV_TARGET0;
     vector vNormal  : SV_TARGET1;
+    vector vDepth   : SV_TARGET2;
 };
 
 float2 SelectMaterialUV(float2 uv0, float2 uv1, int uvChannel, float uvScale)
@@ -178,6 +187,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
     Out.vDiffuse = vector(mtrlDiffuse.rgb, 1.f);
     Out.vNormal = vector(normalize(In.vNormal.xyz) * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / max(In.vProjPos.w, 0.0001f), In.vProjPos.w, 0.f, 1.f);
 
     return Out;
 }
@@ -194,6 +204,7 @@ PS_OUT PS_MAIN_SIMPLE(PS_IN In)
 
     Out.vDiffuse = vector(baseDiffuse.rgb, 1.f);
     Out.vNormal = vector(normalize(In.vNormal.xyz) * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / max(In.vProjPos.w, 0.0001f), In.vProjPos.w, 0.f, 1.f);
 
     return Out;
 }
@@ -205,7 +216,23 @@ PS_OUT PS_OUTLINE(PS_IN In)
     Out.vDiffuse = g_OutlineColor;
     Out.vDiffuse.a = 1.f;
     Out.vNormal = vector(0.5f, 0.5f, 1.f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / max(In.vProjPos.w, 0.0001f), In.vProjPos.w, 0.f, 1.f);
 
+    return Out;
+}
+
+struct PS_OUT_SHADOW
+{
+    float4 vDepth : SV_TARGET0;
+};
+
+PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
+{
+    PS_OUT_SHADOW Out;
+
+    float lightDepth = In.vProjPos.z / max(In.vProjPos.w, 0.0001f);
+    // clear 색(1,1,1,1)과 실제 shadow 기록 픽셀을 구분하기 위한 alpha 마커다.
+    Out.vDepth = float4(lightDepth, In.vProjPos.w / 1000.f, 0.f, 0.f);
     return Out;
 }
 
@@ -242,5 +269,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SIMPLE();
+    }
+
+    pass ShadowPass
+    {
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetRasterizerState(RS_Shadow);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
 }

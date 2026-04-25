@@ -31,12 +31,15 @@ public:
 
     Shared<GameObject>  Create_StaticMesh(const string& guid, const Vec3& position);
 
+    Shared<GameObject>  Create_AttachedEffect(const string& effectAssetName, const Vec3& position);
+
     Shared<GameObject>  Create_CollisionProxy(
                 const CollisionProxyActor::FCollisionProxyDesc& desc);
 
     void                Create_CollisionProxySetFromStaticMesh(Shared<GameObject> sourceObj);
 
     bool Should_RenderRTDebug() const { return _showRenderTargetDebug; }
+    void Toggle_RenderRTDebug() { _showRenderTargetDebug = !_showRenderTargetDebug; }
 
 private:
     ImGuiWindowFlags    Get_WindowFlags() const;
@@ -65,6 +68,7 @@ private:
 
     // Camera
     void                Update_CameraLerp(float timeDelta);
+    void                Update_EditorDroppedEffects(float timeDelta);
 
 private:
     Ray Build_PickingRay(Vec2 localMousePos) const;

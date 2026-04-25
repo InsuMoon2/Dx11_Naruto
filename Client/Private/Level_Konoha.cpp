@@ -22,7 +22,6 @@
 #include "CollisionProxyActor.h"
 #include "SkySphereActor.h"
 #include "WaveTrigger.h"
-#include "Collision_SurfaceCache.h"
 
 Level_Konoha::Level_Konoha(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -32,6 +31,84 @@ Level_Konoha::Level_Konoha(ComPtr<Device> device, ComPtr<DeviceContext> context)
 Level_Konoha::~Level_Konoha()
 {
 
+}
+
+// Konoha도 Gameplay처럼 플레이어 주변을 좁은 ortho shadow frustum으로 추적한다.
+static constexpr float KONOHA_SHADOW_TARGET_HEIGHT_OFFSET = 3.f;
+// Shadow Eye는 ortho mode에서는 디버그/인스펙터 표시용으로 유지하고, 실제 범위는 Ortho Width/Height가 결정한다.
+static constexpr float KONOHA_SHADOW_EYE_DISTANCE = 95.f;
+// Editor에서 perspective debug로 전환했을 때 쓸 fallback FOV이며, 기본 Konoha shadow는 ortho를 사용한다.
+static constexpr float KONOHA_FIXED_SHADOW_FOV_Y = 126.f;
+// near가 커지면 플레이어 주변 caster가 잘릴 수 있어서 Gameplay와 같은 낮은 값을 유지한다.
+static constexpr float KONOHA_FIXED_SHADOW_NEAR = 0.1f;
+// far가 너무 크면 Konoha 원거리 건물/산맥이 shadow RT를 잡아먹으므로 Gameplay와 같은 값으로 제한한다.
+static constexpr float KONOHA_FIXED_SHADOW_FAR = 220.f;
+// Konoha도 Gameplay와 같은 texel 밀도를 쓰기 위해 shadow coverage를 동일하게 맞춘다.
+static constexpr float KONOHA_SHADOW_ORTHO_WIDTH = 80.f;
+// 16:9 shadow RT 기준 Gameplay에서 검증된 높이다.
+static constexpr float KONOHA_SHADOW_ORTHO_HEIGHT = 45.f;
+
+// 코노하에서 RT write가 실제로 보였던 플레이어/카메라 추적 shadow helper다.
+static bool Try_BuildShadowCameraFromCurrentView(uint32 levelIndex, Vec3& outShadowEye, Vec3& outShadowTarget)
+{
+    bool hasTarget = false;
+    Vec3 playerPosition = Vec3::Zero; // shadow focus의 기준이 되는 플레이어 월드 좌표다.
+
+    const auto gameObjects = GAME->Get_GameObjects(levelIndex);
+    for (const auto& obj : gameObjects)
+    {
+        if (!obj || obj->Get_ObjectType() != Protocol::OBJECT_TYPE_PLAYER)
+            continue;
+
+        auto transform = obj->Get_Transform();
+        if (!transform)
+            continue;
+
+        playerPosition = transform->Get_WorldPosition();
+        outShadowTarget = playerPosition + Vec3(0.f, KONOHA_SHADOW_TARGET_HEIGHT_OFFSET, 0.f);
+        hasTarget = true;
+        break;
+    }
+
+    if (hasTarget)
+    {
+        outShadowEye = outShadowTarget + Vec3(0.f, 18.f, -14.f);
+        return true;
+    }
+
+    // 플레이어 생성 전 첫 프레임에도 shadow matrix가 산맥/월드 원거리로 튀지 않도록 Konoha 기본 원점 근처를 본다.
+    outShadowTarget = Vec3(0.f, KONOHA_SHADOW_TARGET_HEIGHT_OFFSET, 0.f);
+    outShadowEye = outShadowTarget + Vec3(0.f, 18.f, -14.f);
+    return true;
+}
+
+// Konoha 레벨에서 서버 입장/로컬 스폰/PhysX 테스트 기준점을 같은 PlayerStart로 맞출 때 호출한다.
+// 레벨 JSON에 저장된 PlayerStart를 우선 사용하고, 아직 준비되지 않았으면 false를 반환한다.
+static bool Try_FindKonohaPlayerStartTransform(uint32 levelIndex, Vec3& outSpawnPos, float& outSpawnRotY)
+{
+    outSpawnPos = Vec3::Zero;
+    outSpawnRotY = 0.f;
+    // PlayerStart가 중복 저장된 경우 파일 뒤쪽에 있는 최신 항목을 최종 스폰 기준으로 사용한다.
+    bool foundPlayerStart = false;
+
+    const auto gameObjects = GAME->Get_GameObjects(levelIndex);
+    for (const auto& obj : gameObjects)
+    {
+        if (!obj || obj->Get_ObjectType() != Protocol::OBJECT_TYPE_PLAYER_START)
+            continue;
+
+        auto transform = obj->Get_Transform();
+        if (!transform)
+            continue;
+
+        outSpawnPos = transform->Get_WorldPosition();
+        // Quaternion::ToEuler는 radian을 반환하므로 Transform/패킷에서 쓰는 degree yaw로 변환한다.
+        const Vec3 playerStartEulerRad = transform->Get_WorldRotation().ToEuler();
+        outSpawnRotY = XMConvertToDegrees(playerStartEulerRad.y);
+        foundPlayerStart = true;
+    }
+
+    return foundPlayerStart;
 }
 
 HRESULT Level_Konoha::Initialize(EGameplaySpawnMode spawnMode)
@@ -46,8 +123,6 @@ HRESULT Level_Konoha::Initialize(EGameplaySpawnMode spawnMode)
 
     CHECK_FAILED(Ready_DefaultGroundCollision(), E_FAIL);
     CHECK_FAILED(Rebuild_CollisionProxyCache(), E_FAIL);
-    CHECK_FAILED(Ready_SurfaceCache(), E_FAIL);
-
     CHECK_FAILED(Ready_Layer_PlayerStart(TEXT("Layer_PlayerStart")), E_FAIL);
     //CHECK_FAILED(Ready_Effect(), E_FAIL);
 
@@ -77,6 +152,7 @@ HRESULT Level_Konoha::Initialize(EGameplaySpawnMode spawnMode)
 void Level_Konoha::Update(float timeDelta)
 {
     Level::Update(timeDelta);
+    Update_DynamicShadowLightFromView();
 
     Refresh_NearbyCollisionModels(timeDelta);
 
@@ -107,6 +183,10 @@ HRESULT Level_Konoha::Render()
 HRESULT Level_Konoha::On_LevelChunkLoaded(const wstring& fileName)
 {
     CHECK_FAILED(Rebuild_CollisionProxyCache(), E_FAIL);
+    CHECK_FAILED(Register_PhysXProxiesForTest(Vec3(0.f, 20.3f, -12.2f)), E_FAIL);
+
+    // Konoha 청크가 늦게 붙으면 static mesh caster가 바뀌므로 static shadow RT를 다시 찍어야 한다.
+    GAME->Invalidate_StaticShadowMap();
 
     return S_OK;
 }
@@ -179,17 +259,95 @@ bool Level_Konoha::Try_BuildWorldBoundsFromModel(
 
 HRESULT Level_Konoha::Ready_Lights()
 {
+    // Konoha 기본 shadow 설정이 Editor Override에 막히지 않도록 레벨 진입 시 override를 초기화한다.
+    GAME->Set_EditorPrimaryShadowLightOverrideEnabled(false);
+
+    // 새 레벨 라이트를 등록하기 전에 이전 레벨에서 남은 라이트를 정리한다.
+    GAME->Clear_Lights();
+
     FLightDesc lightDesc{};
 
     lightDesc.type = ELightType::Directional;
-    lightDesc.direction = Vec4(0.55f, -0.85f, 0.35f, 0.f);
+    lightDesc.direction = Vec4(-1.f, -1.f, -1.f, 0.f);
     lightDesc.diffuse = Vec4(0.92f, 0.74f, 0.58f, 1.f);
     lightDesc.ambient = Vec4(0.14f, 0.12f, 0.16f, 1.f);
     lightDesc.specular = Vec4(0.42f, 0.32f, 0.25f, 1.f);
 
+    lightDesc.castShadow = true;
+    lightDesc.shadowMapSize = 2048;
+    lightDesc.shadowCenter = Vec3::Zero;
+    lightDesc.shadowOrthoWidth = KONOHA_SHADOW_ORTHO_WIDTH;
+    lightDesc.shadowOrthoHeight = KONOHA_SHADOW_ORTHO_HEIGHT;
+    lightDesc.useShadowCamera = false;
+    lightDesc.shadowTarget = Vec3::Zero;
+    lightDesc.shadowFovY = XMConvertToRadians(KONOHA_FIXED_SHADOW_FOV_Y);
+    lightDesc.shadowAspect = max(1.f, GAME->Get_ViewportWidth()) / max(1.f, GAME->Get_ViewportHeight());
+    lightDesc.shadowNear = KONOHA_FIXED_SHADOW_NEAR;
+    lightDesc.shadowFar = KONOHA_FIXED_SHADOW_FAR;
+    lightDesc.shadowBias = 0.00025f;
+    lightDesc.shadowStrength = 0.68f;
+    lightDesc.shadowSoftness = 0.35f;
+
+    Vec3 lightDir = Vec3(lightDesc.direction.x, lightDesc.direction.y, lightDesc.direction.z); // 수업코드처럼 shadow camera를 directional light 방향 축으로 배치하기 위한 광원 방향 벡터다.
+    if (lightDir.LengthSquared() <= FLT_EPSILON)
+        lightDir = Vec3(-1.f, -1.f, -1.f);
+    else
+        lightDir.Normalize();
+
+    lightDesc.shadowEye = lightDesc.shadowTarget - lightDir * KONOHA_SHADOW_EYE_DISTANCE;
+
     CHECK_FAILED(GAME->Add_Light(lightDesc), E_FAIL);
 
     return S_OK;
+}
+
+void Level_Konoha::Update_DynamicShadowLightFromView()
+{
+    FLightDesc lightDesc{};
+
+    lightDesc.type = ELightType::Directional;
+    lightDesc.direction = Vec4(-1.f, -1.f, -1.f, 0.f);
+    lightDesc.diffuse = Vec4(0.92f, 0.74f, 0.58f, 1.f);
+    lightDesc.ambient = Vec4(0.14f, 0.12f, 0.16f, 1.f);
+    lightDesc.specular = Vec4(0.42f, 0.32f, 0.25f, 1.f);
+
+    lightDesc.castShadow = true;
+    lightDesc.shadowMapSize = 2048;
+    lightDesc.shadowCenter = Vec3::Zero;
+    lightDesc.shadowOrthoWidth = KONOHA_SHADOW_ORTHO_WIDTH;
+    lightDesc.shadowOrthoHeight = KONOHA_SHADOW_ORTHO_HEIGHT;
+    lightDesc.useShadowCamera = false;
+    lightDesc.shadowTarget = Vec3::Zero;
+    lightDesc.shadowFovY = XMConvertToRadians(KONOHA_FIXED_SHADOW_FOV_Y);
+    lightDesc.shadowAspect = max(1.f, GAME->Get_ViewportWidth()) / max(1.f, GAME->Get_ViewportHeight());
+    lightDesc.shadowNear = KONOHA_FIXED_SHADOW_NEAR;
+    lightDesc.shadowFar = KONOHA_FIXED_SHADOW_FAR;
+    lightDesc.shadowBias = 0.00025f;
+    lightDesc.shadowStrength = 0.68f;
+    lightDesc.shadowSoftness = 0.35f;
+
+    Vec3 dynamicShadowEye = Vec3::Zero;
+    Vec3 dynamicShadowTarget = Vec3::Zero;
+    if (Try_BuildShadowCameraFromCurrentView(ETOI(ELevelType::Konoha), dynamicShadowEye, dynamicShadowTarget))
+    {
+        lightDesc.shadowTarget = dynamicShadowTarget;
+        lightDesc.shadowCenter = dynamicShadowTarget;
+    }
+
+    Vec3 lightDir = Vec3(lightDesc.direction.x, lightDesc.direction.y, lightDesc.direction.z); // active camera 위치 대신 directional light 방향으로 shadow eye를 다시 맞추기 위한 벡터다.
+    if (lightDir.LengthSquared() <= FLT_EPSILON)
+        lightDir = Vec3(-1.f, -1.f, -1.f);
+    else
+        lightDir.Normalize();
+
+    // 수업코드처럼 shadow target만 추적하고, shadow eye는 항상 빛 방향 축 위에 둔다.
+    lightDesc.shadowEye = lightDesc.shadowTarget - lightDir * KONOHA_SHADOW_EYE_DISTANCE;
+
+    const HRESULT updateHr = GAME->Update_PrimaryShadowLightDesc(lightDesc);
+    if (FAILED(updateHr))
+    {
+        LOG_WARN("[Level_Konoha] Update_DynamicShadowLightFromView failed. hr=0x{:08X}", static_cast<uint32>(updateHr));
+    }
 }
 
 HRESULT Level_Konoha::Ready_Layer_Camera(const wstring& layerTag)
@@ -239,6 +397,15 @@ HRESULT Level_Konoha::Ready_Layer_Camera(const wstring& layerTag)
 HRESULT Level_Konoha::Ready_Layer_PlayerStart(const wstring& layerTag)
 {
     const uint32 levelIndex = ETOI(ELevelType::Konoha);
+    Vec3 existingSpawnPos = Vec3::Zero;
+    float existingSpawnRotY = 0.f;
+
+    // 레벨에 저장된 PlayerStart가 이미 있으면 그 좌표를 그대로 쓰고 fallback 생성은 건너뛴다.
+    if (Try_FindKonohaPlayerStartTransform(levelIndex, existingSpawnPos, existingSpawnRotY))
+    {
+        CHECK_FAILED(Register_PhysXProxiesForTest(existingSpawnPos), E_FAIL);
+        return S_OK;
+    }
 
     // TODO : Spawn Point Save&Load로 위치 세팅
     {
@@ -247,6 +414,7 @@ HRESULT Level_Konoha::Ready_Layer_PlayerStart(const wstring& layerTag)
         desc.spawnIndex = 0;
 
         CHECK_FAILED(GAME->Add_GameObject(levelIndex, Protocol::OBJECT_TYPE_PLAYER_START, layerTag, &desc), E_FAIL);
+        CHECK_FAILED(Register_PhysXProxiesForTest(desc.position), E_FAIL);
     }
 
     return S_OK;
@@ -385,148 +553,12 @@ HRESULT Level_Konoha::Ready_UI()
     return S_OK;
 }
 
-HRESULT Level_Konoha::Ready_SurfaceCache()
-{
-    _surfaceCache = Collision_SurfaceCache::Create();
-    CHECK_NULL(_surfaceCache, E_FAIL);
-
-    const fs::path cachePath = Build_SurfaceCachePath();
-
-    if (!fs::exists(cachePath))
-    {
-        LOG_INFO("[Level_Konoha] Surface cache missing : {}", cachePath.string());
-        return S_OK;
-    }
-
-    CHECK_FAILED(_surfaceCache->Load(cachePath), E_FAIL);
-
-    _surfaceCache->Build_GridIndex(10.f);
-    CHECK_FAILED(Build_SurfaceCacheCellModels(), E_FAIL);
-
-    LOG_INFO("[Level_Konoha] Surface cache total      = {}", _surfaceCache->Get_TotalCount());
-    LOG_INFO("[Level_Konoha] Surface cache walkable   = {}", _surfaceCache->Get_Count(Collision_SurfaceCache::EEntryType::Walkable));
-    LOG_INFO("[Level_Konoha] Surface cache wallrun    = {}", _surfaceCache->Get_Count(Collision_SurfaceCache::EEntryType::WallRun));
-    LOG_INFO("[Level_Konoha] Surface cache worldblock = {}", _surfaceCache->Get_Count(Collision_SurfaceCache::EEntryType::WorldBlock));
-    LOG_INFO("[Level_Konoha] Surface cache cell size  = {}", _surfaceCache->Get_CellSize());
-    LOG_INFO("[Level_Konoha] Surface cache cell bucket = {}", _surfaceCacheCellModels.size());
-
-    return S_OK;
-}
-
-fs::path Level_Konoha::Build_SurfaceCachePath() const
-{
-    return fs::path(L"../Bin/Resources/Data/bin/CollisionSurfaceCache/KonohaVillage.surfacecache.bin");
-}
-
-Collision_SurfaceCache::FCellCoord Level_Konoha::Build_SurfaceCacheCellCoord(
-    const Vec3& worldPosition,
-    float cellSize)
-{
-    Collision_SurfaceCache::FCellCoord cell{};
-    cell.x = static_cast<int32>(floorf(worldPosition.x / cellSize));
-    cell.z = static_cast<int32>(floorf(worldPosition.z / cellSize));
-    return cell;
-}
-
-HRESULT Level_Konoha::Build_SurfaceCacheCellModels()
-{
-    _surfaceCacheCellModels.clear();
-    _surfaceCacheModels.clear();
-    _surfaceCacheSurfaceModels.clear();
-    _surfaceCacheWorldBlockModels.clear();
-
-    if (!_surfaceCache || _surfaceCache->Get_TotalCount() == 0)
-        return S_OK;
-
-    const float cellSize = _surfaceCache->Get_CellSize();
-    if (cellSize <= 0.f)
-        return E_FAIL;
-
-    const auto& entries = _surfaceCache->Get_Entries();
-    for (const auto& entry : entries)
-    {
-        auto model = Find_SurfaceCacheModel(entry.modelGuid);
-        if (!model)
-            continue;
-
-        MovementComponent::FCollisionModelInstance instance{};
-        instance.model = model;
-        instance.worldMatrix = Build_SurfaceCacheWorldMatrix(entry);
-        instance.hasWorldBounds = Try_BuildWorldBoundsFromModel(
-            model,
-            instance.worldMatrix,
-            instance.worldBounds);
-
-        if (!instance.hasWorldBounds)
-            continue;
-
-        uint32 instanceIndex = 0;
-
-        switch (entry.type)
-        {
-        case Collision_SurfaceCache::EEntryType::WallRun:
-            instanceIndex = static_cast<uint32>(_surfaceCacheSurfaceModels.size());
-            _surfaceCacheSurfaceModels.push_back(instance);
-            break;
-
-        case Collision_SurfaceCache::EEntryType::WorldBlock:
-            instanceIndex = static_cast<uint32>(_surfaceCacheWorldBlockModels.size());
-            _surfaceCacheWorldBlockModels.push_back(instance);
-            break;
-
-        default:
-            break;
-        }
-
-        if (entry.type != Collision_SurfaceCache::EEntryType::WallRun &&
-            entry.type != Collision_SurfaceCache::EEntryType::WorldBlock)
-        {
-            continue;
-        }
-
-        const Vec3 boundsCenter = Vec3(
-            instance.worldBounds.Center.x,
-            instance.worldBounds.Center.y,
-            instance.worldBounds.Center.z);
-        const Vec3 boundsExtents = Vec3(
-            instance.worldBounds.Extents.x,
-            instance.worldBounds.Extents.y,
-            instance.worldBounds.Extents.z);
-        const Vec3 minPos = boundsCenter - boundsExtents;
-        const Vec3 maxPos = boundsCenter + boundsExtents;
-
-        const int32 minCellX = static_cast<int32>(floorf(minPos.x / cellSize));
-        const int32 maxCellX = static_cast<int32>(floorf(maxPos.x / cellSize));
-        const int32 minCellZ = static_cast<int32>(floorf(minPos.z / cellSize));
-        const int32 maxCellZ = static_cast<int32>(floorf(maxPos.z / cellSize));
-
-        for (int32 cellZ = minCellZ; cellZ <= maxCellZ; ++cellZ)
-        {
-            for (int32 cellX = minCellX; cellX <= maxCellX; ++cellX)
-            {
-                Collision_SurfaceCache::FCellCoord cell{};
-                cell.x = cellX;
-                cell.z = cellZ;
-
-                auto& bucket = _surfaceCacheCellModels[cell];
-
-                if (entry.type == Collision_SurfaceCache::EEntryType::WallRun)
-                    bucket.surfaceIndices.push_back(instanceIndex);
-                else
-                    bucket.worldBlockIndices.push_back(instanceIndex);
-            }
-        }
-    }
-
-    return S_OK;
-}
-
-void Level_Konoha::Query_SurfaceCacheBoundsModels(
+void Level_Konoha::Query_CollisionProxyBoundsModels(
     const BoundingBox& queryBounds,
     vector<MovementComponent::FCollisionModelInstance>& outSurfaceModels,
     vector<MovementComponent::FCollisionModelInstance>& outWorldBlockModels) const
 {
-    if (!_surfaceCache || _surfaceCache->Get_CellSize() <= 0.f || _surfaceCacheCellModels.empty())
+    if (_collisionProxyCellSize <= 0.f || _collisionProxyCellModels.empty())
         return;
 
     const Vec3 boundsCenter = Vec3(
@@ -539,12 +571,11 @@ void Level_Konoha::Query_SurfaceCacheBoundsModels(
         queryBounds.Extents.z);
     const Vec3 minPos = boundsCenter - boundsExtents;
     const Vec3 maxPos = boundsCenter + boundsExtents;
-    const float cellSize = _surfaceCache->Get_CellSize();
 
-    const int32 minCellX = static_cast<int32>(floorf(minPos.x / cellSize));
-    const int32 maxCellX = static_cast<int32>(floorf(maxPos.x / cellSize));
-    const int32 minCellZ = static_cast<int32>(floorf(minPos.z / cellSize));
-    const int32 maxCellZ = static_cast<int32>(floorf(maxPos.z / cellSize));
+    const int32 minCellX = static_cast<int32>(floorf(minPos.x / _collisionProxyCellSize));
+    const int32 maxCellX = static_cast<int32>(floorf(maxPos.x / _collisionProxyCellSize));
+    const int32 minCellZ = static_cast<int32>(floorf(minPos.z / _collisionProxyCellSize));
+    const int32 maxCellZ = static_cast<int32>(floorf(maxPos.z / _collisionProxyCellSize));
 
     uset<uint32> addedSurfaceIndices;
     uset<uint32> addedWorldBlockIndices;
@@ -553,12 +584,12 @@ void Level_Konoha::Query_SurfaceCacheBoundsModels(
     {
         for (int32 cellX = minCellX; cellX <= maxCellX; ++cellX)
         {
-            Collision_SurfaceCache::FCellCoord cell{};
+            FCollisionCellCoord cell{};
             cell.x = cellX;
             cell.z = cellZ;
 
-            const auto iter = _surfaceCacheCellModels.find(cell);
-            if (iter == _surfaceCacheCellModels.end())
+            const auto iter = _collisionProxyCellModels.find(cell);
+            if (iter == _collisionProxyCellModels.end())
                 continue;
 
             for (uint32 surfaceIndex : iter->second.surfaceIndices)
@@ -566,10 +597,10 @@ void Level_Konoha::Query_SurfaceCacheBoundsModels(
                 if (!addedSurfaceIndices.insert(surfaceIndex).second)
                     continue;
 
-                if (surfaceIndex >= _surfaceCacheSurfaceModels.size())
+                if (surfaceIndex >= _surfaceProxyModels.size())
                     continue;
 
-                const auto& instance = _surfaceCacheSurfaceModels[surfaceIndex];
+                const auto& instance = _surfaceProxyModels[surfaceIndex];
                 if (instance.hasWorldBounds && !queryBounds.Intersects(instance.worldBounds))
                     continue;
 
@@ -581,10 +612,10 @@ void Level_Konoha::Query_SurfaceCacheBoundsModels(
                 if (!addedWorldBlockIndices.insert(worldBlockIndex).second)
                     continue;
 
-                if (worldBlockIndex >= _surfaceCacheWorldBlockModels.size())
+                if (worldBlockIndex >= _worldBlockProxyModels.size())
                     continue;
 
-                const auto& instance = _surfaceCacheWorldBlockModels[worldBlockIndex];
+                const auto& instance = _worldBlockProxyModels[worldBlockIndex];
                 if (instance.hasWorldBounds && !queryBounds.Intersects(instance.worldBounds))
                     continue;
 
@@ -592,54 +623,6 @@ void Level_Konoha::Query_SurfaceCacheBoundsModels(
             }
         }
     }
-}
-
-Matrix Level_Konoha::Build_SurfaceCacheWorldMatrix(const Collision_SurfaceCache::FEntry& entry)
-{
-    const Matrix scaleMatrix = Matrix::CreateScale(entry.scale);
-    const Quat rotationQuat = Quat::CreateFromYawPitchRoll(
-        XMConvertToRadians(entry.rotation.y),
-        XMConvertToRadians(entry.rotation.x),
-        XMConvertToRadians(entry.rotation.z));
-    const Matrix rotationMatrix = Matrix::CreateFromQuaternion(rotationQuat);
-    const Matrix translationMatrix = Matrix::CreateTranslation(entry.position);
-
-    return scaleMatrix * rotationMatrix * translationMatrix;
-}
-
-Shared<Model> Level_Konoha::Find_SurfaceCacheModel(const string& modelGuid)
-{
-    if (modelGuid.empty())
-        return nullptr;
-
-    const auto iter = _surfaceCacheModels.find(modelGuid);
-    if (iter != _surfaceCacheModels.end())
-        return iter->second;
-
-    const wstring resolvedPath = GAME->Resolve_AssetPath(modelGuid);
-    if (resolvedPath.empty())
-    {
-        LOG_WARN("[Level_Konoha] Surface cache model resolve failed : {}", modelGuid);
-        return nullptr;
-    }
-
-    const Matrix preTransform = Build_CollisionModelPreTransform();
-    auto model = Model::Create(
-        _device,
-        _context,
-        EMeshVertexType::StaticMesh,
-        Utils::ToString(resolvedPath),
-        preTransform,
-        true);
-
-    if (!model)
-    {
-        LOG_WARN("[Level_Konoha] Surface cache model load failed : {}", modelGuid);
-        return nullptr;
-    }
-
-    _surfaceCacheModels.emplace(modelGuid, model);
-    return model;
 }
 
 void Level_Konoha::Disable_LocalWaveTriggers_ForServerMode()
@@ -757,9 +740,12 @@ HRESULT Level_Konoha::Append_CollisionInstancesFromDirectory(
 HRESULT Level_Konoha::Rebuild_CollisionProxyCache()
 {
     _surfaceProxyModels.clear();
+    _surfaceProxyTypes.clear();
     _worldBlockProxyModels.clear();
+    _collisionProxyCellModels.clear();
 
     CHECK_FAILED(Collect_CollisionProxyActorsFromLayer(TEXT("Layer_CollisionProxy")), E_FAIL);
+    CHECK_FAILED(Build_CollisionProxyCellModels(), E_FAIL);
 
     vector<FProxyEntry> proxyEntries;
     Build_CollisionProxyEntries(proxyEntries);
@@ -795,6 +781,62 @@ HRESULT Level_Konoha::Collect_CollisionProxyActorsFromLayer(const wstring& layer
     return S_OK;
 }
 
+HRESULT Level_Konoha::Build_CollisionProxyCellModels()
+{
+    _collisionProxyCellModels.clear();
+
+    if (_collisionProxyCellSize <= 0.f)
+        return E_FAIL;
+
+    const auto appendInstances =
+        [&](const vector<MovementComponent::FCollisionModelInstance>& instances, bool isSurface)
+        {
+            for (uint32 instanceIndex = 0; instanceIndex < instances.size(); ++instanceIndex)
+            {
+                const auto& instance = instances[instanceIndex];
+                if (!instance.hasWorldBounds)
+                    continue;
+
+                const Vec3 boundsCenter = Vec3(
+                    instance.worldBounds.Center.x,
+                    instance.worldBounds.Center.y,
+                    instance.worldBounds.Center.z);
+                const Vec3 boundsExtents = Vec3(
+                    instance.worldBounds.Extents.x,
+                    instance.worldBounds.Extents.y,
+                    instance.worldBounds.Extents.z);
+                const Vec3 minPos = boundsCenter - boundsExtents;
+                const Vec3 maxPos = boundsCenter + boundsExtents;
+
+                const int32 minCellX = static_cast<int32>(floorf(minPos.x / _collisionProxyCellSize));
+                const int32 maxCellX = static_cast<int32>(floorf(maxPos.x / _collisionProxyCellSize));
+                const int32 minCellZ = static_cast<int32>(floorf(minPos.z / _collisionProxyCellSize));
+                const int32 maxCellZ = static_cast<int32>(floorf(maxPos.z / _collisionProxyCellSize));
+
+                for (int32 cellZ = minCellZ; cellZ <= maxCellZ; ++cellZ)
+                {
+                    for (int32 cellX = minCellX; cellX <= maxCellX; ++cellX)
+                    {
+                        FCollisionCellCoord cell{};
+                        cell.x = cellX;
+                        cell.z = cellZ;
+
+                        auto& bucket = _collisionProxyCellModels[cell];
+                        if (isSurface)
+                            bucket.surfaceIndices.push_back(instanceIndex);
+                        else
+                            bucket.worldBlockIndices.push_back(instanceIndex);
+                    }
+                }
+            }
+        };
+
+    appendInstances(_surfaceProxyModels, true);
+    appendInstances(_worldBlockProxyModels, false);
+
+    return S_OK;
+}
+
 HRESULT Level_Konoha::Append_CollisionProxyInstance(Shared<CollisionProxyActor> actor)
 {
     if (!actor || !actor->Is_Enabled())
@@ -819,6 +861,7 @@ HRESULT Level_Konoha::Append_CollisionProxyInstance(Shared<CollisionProxyActor> 
     case ECollisionProxyType::Walkable:
     case ECollisionProxyType::WallRun:
         _surfaceProxyModels.push_back(instance);
+        _surfaceProxyTypes.push_back(actor->Get_ProxyType());
         break;
 
     case ECollisionProxyType::WorldBlock:
@@ -830,6 +873,139 @@ HRESULT Level_Konoha::Append_CollisionProxyInstance(Shared<CollisionProxyActor> 
     }
 
     return S_OK;
+}
+
+HRESULT Level_Konoha::Register_PhysXProxiesForTest(const Vec3& playerStartPos)
+{
+    // PhysX 검증 단계에서는 가까운 거리 제한 없이 proxy 전체를 등록해서 ray miss 원인을 분리한다.
+    GAME->Clear_PhysXScene();
+    _hasPhysXTestProxy = false;
+    _physXTestProxyCenter = Vec3::Zero;
+
+    const MovementComponent::FCollisionModelInstance* nearestInstance = nullptr;
+    float nearestDistanceSq = FLT_MAX;
+    int32 registeredCount = 0;
+    int32 registeredWalkableCount = 0;
+    int32 registeredWallRunCount = 0;
+    int32 registeredWorldBlockCount = 0;
+
+    const auto registerInstances =
+        [&playerStartPos, &nearestInstance, &nearestDistanceSq,
+            &registeredCount, &registeredWalkableCount, &registeredWallRunCount, &registeredWorldBlockCount, this](
+            const vector<MovementComponent::FCollisionModelInstance>& instances,
+            const string& debugPrefix,
+            ECollisionProxyType fallbackProxyType,
+            const vector<ECollisionProxyType>* proxyTypes = nullptr)
+        {
+            uint32 instanceIndex = 0;
+            for (const auto& instance : instances)
+            {
+                if (!instance.model || !instance.hasWorldBounds)
+                {
+                    ++instanceIndex;
+                    continue;
+                }
+
+                const Vec3 toCenter = instance.worldBounds.Center - playerStartPos;
+                const float distanceSq = toCenter.LengthSquared();
+                const string debugName = debugPrefix + "_" + to_string(instanceIndex);
+                ECollisionProxyType proxyType = fallbackProxyType;
+                if (proxyTypes && instanceIndex < proxyTypes->size())
+                    proxyType = (*proxyTypes)[instanceIndex];
+
+                if (Register_PhysXProxyInstanceForTest(instance, debugName, proxyType))
+                {
+                    ++registeredCount;
+
+                    switch (proxyType)
+                    {
+                    case ECollisionProxyType::Walkable:
+                        ++registeredWalkableCount;
+                        break;
+                    case ECollisionProxyType::WallRun:
+                        ++registeredWallRunCount;
+                        break;
+                    case ECollisionProxyType::WorldBlock:
+                        ++registeredWorldBlockCount;
+                        break;
+                    default:
+                        break;
+                    }
+
+                    if (distanceSq < nearestDistanceSq)
+                    {
+                        nearestDistanceSq = distanceSq;
+                        nearestInstance = &instance;
+                    }
+                }
+
+                ++instanceIndex;
+            }
+        };
+
+    registerInstances(_defaultGroundModels, "Konoha_PhysX_DefaultGround", ECollisionProxyType::Walkable);
+    registerInstances(_surfaceProxyModels, "Konoha_PhysX_SurfaceProxy", ECollisionProxyType::WallRun, &_surfaceProxyTypes);
+    registerInstances(_worldBlockProxyModels, "Konoha_PhysX_WorldBlockProxy", ECollisionProxyType::WorldBlock);
+
+    if (registeredCount <= 0 || !nearestInstance)
+    {
+        LOG_WARN("[Level_Konoha] PhysX test proxy registration found no valid proxy.");
+        return S_OK;
+    }
+
+    LOG_INFO(
+        "[Level_Konoha] PhysX test proxies registered. count={}, walkable={}, wallRun={}, worldBlock={}, nearestCenter=({}, {}, {}), nearestDistance={}",
+        registeredCount,
+        registeredWalkableCount,
+        registeredWallRunCount,
+        registeredWorldBlockCount,
+        nearestInstance->worldBounds.Center.x,
+        nearestInstance->worldBounds.Center.y,
+        nearestInstance->worldBounds.Center.z,
+        sqrtf(nearestDistanceSq));
+
+    _physXTestProxyCenter = nearestInstance->worldBounds.Center;
+    _hasPhysXTestProxy = true;
+
+    return S_OK;
+}
+
+bool Level_Konoha::Register_PhysXProxyInstanceForTest(
+    const MovementComponent::FCollisionModelInstance& instance,
+    const string& debugName,
+    ECollisionProxyType proxyType) const
+{
+    // Model 안의 여러 mesh를 하나의 vertex/index 배열로 합쳐 PhysX triangle mesh 하나로 등록한다.
+    if (!instance.model)
+        return false;
+
+    vector<Vec3> vertices;
+    vector<uint32> indices;
+
+    for (const auto& mesh : instance.model->Get_Meshes())
+    {
+        if (!mesh)
+            continue;
+
+        const auto& meshPositions = mesh->Get_CPUPositions();
+        const auto& meshIndices = mesh->Get_CPUIndices();
+        if (meshPositions.empty() || meshIndices.empty())
+            continue;
+
+        const uint32 baseVertex = static_cast<uint32>(vertices.size());
+        vertices.insert(vertices.end(), meshPositions.begin(), meshPositions.end());
+
+        indices.reserve(indices.size() + meshIndices.size());
+        for (const uint32 meshIndex : meshIndices)
+        {
+            indices.push_back(baseVertex + meshIndex);
+        }
+    }
+
+    if (vertices.empty() || indices.size() < 3)
+        return false;
+
+    return GAME->Register_PhysXStaticTriangleMesh(debugName, vertices, indices, instance.worldMatrix, proxyType);
 }
 
 void Level_Konoha::Draw_StaticMeshRender()
@@ -845,6 +1021,7 @@ void Level_Konoha::Draw_StaticMeshRender()
     const uint32 levelIndex = ETOI(ELevelType::Konoha);
 
     Vec3 debugCenter = Vec3::Zero;
+    Vec3 debugForward = Vec3(0.f, 0.f, 1.f);
     bool hasDebugCenter = false;
 
     const auto gameObjects = GAME->Get_GameObjects(levelIndex);
@@ -861,6 +1038,7 @@ void Level_Konoha::Draw_StaticMeshRender()
             continue;
 
         debugCenter = transform->Get_WorldPosition();
+        debugForward = transform->Get_WorldForward();
 
         auto moveCom = obj->Get_Component<MovementComponent>();
         if (moveCom)
@@ -876,6 +1054,7 @@ void Level_Konoha::Draw_StaticMeshRender()
         if (activeCamera && activeCamera->Get_Transform())
         {
             debugCenter = activeCamera->Get_Transform()->Get_WorldPosition();
+            debugForward = activeCamera->Get_Transform()->Get_WorldForward();
             hasDebugCenter = true;
         }
     }
@@ -950,34 +1129,100 @@ void Level_Konoha::Draw_StaticMeshRender()
 
     FDebugSphereDesc debugSphereDesc{};
     debugSphereDesc.center = debugCenter;
-    debugSphereDesc.radius = 0.3f;
-    debugSphereDesc.style.color = Color(1.f, 1.f, 0.f, 1.f);
+    debugSphereDesc.radius = 0.18f;
+    debugSphereDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
     debugSphereDesc.style.duration = 0.f;
     debugSphereDesc.style.depthEnabled = false;
 
     GAME->Draw_DebugSphere(debugSphereDesc);
+
+    if (debugForward.LengthSquared() > 0.000001f)
+        debugForward.Normalize();
+
+    const Vec3 rayStart = debugCenter + Vec3(0.f, 1.0f, 0.f);
+    const float rayDistance = 30.f;
+
+    FPhysXRaycastHit physXHit{};
+    const bool physXHitResult = GAME->Raycast_PhysX(rayStart, debugForward, rayDistance, physXHit);
+
+    FDebugLineDesc physXRayDesc{};
+    physXRayDesc.start = rayStart;
+    physXRayDesc.end = physXHitResult ? physXHit.position : rayStart + debugForward * rayDistance;
+    physXRayDesc.style.color = physXHitResult
+        ? Color(1.f, 0.9f, 0.f, 1.f)
+        : Color(1.f, 0.1f, 0.1f, 1.f);
+    physXRayDesc.style.duration = 0.f;
+    physXRayDesc.style.depthEnabled = false;
+    GAME->Draw_DebugLine(physXRayDesc);
+
+    if (physXHitResult)
+    {
+        FDebugSphereDesc hitSphereDesc{};
+        hitSphereDesc.center = physXHit.position;
+        hitSphereDesc.radius = 0.28f;
+        hitSphereDesc.style.color = Color(1.f, 0.9f, 0.f, 1.f);
+        hitSphereDesc.style.duration = 0.f;
+        hitSphereDesc.style.depthEnabled = false;
+        GAME->Draw_DebugSphere(hitSphereDesc);
+
+        FDebugLineDesc normalDesc{};
+        normalDesc.start = physXHit.position;
+        normalDesc.end = physXHit.position + physXHit.normal * 1.5f;
+        normalDesc.style.color = Color(0.f, 0.8f, 1.f, 1.f);
+        normalDesc.style.duration = 0.f;
+        normalDesc.style.depthEnabled = false;
+        GAME->Draw_DebugLine(normalDesc);
+    }
+
+    if (_hasPhysXTestProxy)
+    {
+        const Vec3 toTestProxy = _physXTestProxyCenter - rayStart;
+        const float testProxyDistance = toTestProxy.Length();
+
+        if (testProxyDistance > 0.001f)
+        {
+            Vec3 testProxyDir = toTestProxy / testProxyDistance;
+            FPhysXRaycastHit testProxyHit{};
+            const bool testProxyHitResult = GAME->Raycast_PhysX(
+                rayStart,
+                testProxyDir,
+                testProxyDistance + 3.f,
+                testProxyHit);
+
+            FDebugLineDesc testProxyRayDesc{};
+            testProxyRayDesc.start = rayStart;
+            testProxyRayDesc.end = testProxyHitResult ? testProxyHit.position : _physXTestProxyCenter;
+            testProxyRayDesc.style.color = testProxyHitResult
+                ? Color(0.2f, 1.f, 1.f, 1.f)
+                : Color(1.f, 0.f, 1.f, 1.f);
+            testProxyRayDesc.style.duration = 0.f;
+            testProxyRayDesc.style.depthEnabled = false;
+            GAME->Draw_DebugLine(testProxyRayDesc);
+
+            FDebugSphereDesc testProxyCenterDesc{};
+            testProxyCenterDesc.center = _physXTestProxyCenter;
+            testProxyCenterDesc.radius = 0.25f;
+            testProxyCenterDesc.style.color = Color(0.2f, 1.f, 1.f, 1.f);
+            testProxyCenterDesc.style.duration = 0.f;
+            testProxyCenterDesc.style.depthEnabled = false;
+            GAME->Draw_DebugSphere(testProxyCenterDesc);
+        }
+    }
 }
 
 void Level_Konoha::Spawn_LocalPlayer()
 {
     const uint32 levelIndex = ETOI(ELevelType::Konoha);
-
-    auto gameObjects = GAME->Get_GameObjects(levelIndex);
-
-    Vec3 spawnPos = Vec3(0.f, 0.f, 0.f);
-
-    for (auto& obj : gameObjects)
-    {
-        if (obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER_START)
-        {
-            spawnPos = obj->Get_Component<Transform>()->Get_WorldPosition();
-            break;
-        }
-    }
+    // 레벨 JSON에 저장된 PlayerStart 위치를 로컬 플레이어의 최초 스폰 기준으로 사용한다.
+    Vec3 spawnPos = Vec3::Zero;
+    // PlayerStart yaw를 함께 적용해 로컬/서버 진입 시 바라보는 방향 차이를 없앤다.
+    float spawnRotY = 0.f;
+    Try_FindKonohaPlayerStartTransform(levelIndex, spawnPos, spawnRotY);
 
     auto playerObj = Spawn_Helper::Prefab("TestPlayer2")
         .AtLevel(levelIndex)
         .Position(spawnPos)
+        .Rotation(Vec3(0.f, spawnRotY, 0.f))
         .InLayer(TEXT("Layer_Player"))
         .Spawn();
 
@@ -1043,120 +1288,10 @@ void Level_Konoha::Apply_CollisionModelsToPlayer(const Shared<GameObject>& obj)
     if (!obj)
         return;
 
-    auto character = dynamic_pointer_cast<Character>(obj);
-    if (!character)
-        return;
-
     auto moveCom = obj->Get_Component<MovementComponent>();
     if (!moveCom)
         return;
 
-    auto transform = obj->Get_Transform();
-    if (!transform)
-        return;
-
-    vector<MovementComponent::FCollisionModelInstance> nearbySurfaceModels = _defaultGroundModels;
-    vector<MovementComponent::FCollisionModelInstance> nearbyWorldBlockModels;
-
-    const auto buildInstanceKey =
-        [](const MovementComponent::FCollisionModelInstance& instance)
-        {
-            string key = std::to_string(reinterpret_cast<uintptr_t>(instance.model.get()));
-
-            if (instance.hasWorldBounds)
-            {
-                key += "|";
-                key += std::to_string(static_cast<int32>(roundf(instance.worldBounds.Center.x * 10.f)));
-                key += "|";
-                key += std::to_string(static_cast<int32>(roundf(instance.worldBounds.Center.y * 10.f)));
-                key += "|";
-                key += std::to_string(static_cast<int32>(roundf(instance.worldBounds.Center.z * 10.f)));
-            }
-
-            return key;
-        };
-
-    uset<string> addedSurfaceKeys;
-    uset<string> addedWorldBlockKeys;
-
-    const auto appendUniqueInstances =
-        [&](const vector<MovementComponent::FCollisionModelInstance>& source,
-            vector<MovementComponent::FCollisionModelInstance>& destination,
-            uset<string>& addedKeys)
-        {
-            for (const auto& instance : source)
-            {
-                const string key = buildInstanceKey(instance);
-                if (!addedKeys.insert(key).second)
-                    continue;
-
-                destination.push_back(instance);
-            }
-        };
-
-    for (const auto& instance : nearbySurfaceModels)
-    {
-        addedSurfaceKeys.insert(buildInstanceKey(instance));
-    }
-
-    const Vec3 playerPos = transform->Get_WorldPosition();
-    Vec3 queryDir = moveCom->Get_Velocity();
-    queryDir.y = 0.f;
-
-    if (queryDir.LengthSquared() <= 0.01f && moveCom->Is_WallRunning())
-    {
-        queryDir = moveCom->Build_WallRunMoveDirection();
-        queryDir.y = 0.f;
-    }
-
-    if (queryDir.LengthSquared() > 0.01f)
-        queryDir = Utils::Safe_Normalize(queryDir, Vec3::Forward);
-    else
-        queryDir = Vec3::Zero;
-
-    const Vec3 queryCenter = playerPos + Vec3(0.f, moveCom->Is_WallRunning() ? 1.2f : 0.8f, 0.f);
-    Vec3 halfExtents = moveCom->Is_WallRunning()
-        ? Vec3(14.f, 8.f, 14.f)
-        : (moveCom->Is_OnGround() ? Vec3(9.f, 5.f, 9.f) : Vec3(12.f, 7.f, 12.f));
-
-    Vec3 minPos = queryCenter - halfExtents;
-    Vec3 maxPos = queryCenter + halfExtents;
-
-    if (queryDir.LengthSquared() > 0.0f)
-    {
-        const float forwardDistance = moveCom->Is_WallRunning() ? 16.f : (moveCom->Is_OnGround() ? 8.f : 12.f);
-
-        if (queryDir.x >= 0.f)
-            maxPos.x += queryDir.x * forwardDistance;
-        else
-            minPos.x += queryDir.x * forwardDistance;
-
-        if (queryDir.z >= 0.f)
-            maxPos.z += queryDir.z * forwardDistance;
-        else
-            minPos.z += queryDir.z * forwardDistance;
-    }
-
-    BoundingBox queryBounds{};
-    queryBounds.Center = (minPos + maxPos) * 0.5f;
-    queryBounds.Extents = (maxPos - minPos) * 0.5f;
-
-    if (_surfaceCache && _surfaceCache->Get_TotalCount() > 0)
-    {
-        vector<MovementComponent::FCollisionModelInstance> querySurfaceModels;
-        vector<MovementComponent::FCollisionModelInstance> queryWorldBlockModels;
-
-        Query_SurfaceCacheBoundsModels(
-            queryBounds,
-            querySurfaceModels,
-            queryWorldBlockModels);
-
-        appendUniqueInstances(querySurfaceModels, nearbySurfaceModels, addedSurfaceKeys);
-        appendUniqueInstances(queryWorldBlockModels, nearbyWorldBlockModels, addedWorldBlockKeys);
-    }
-
-    moveCom->Set_SurfaceCollisionModels(nearbySurfaceModels);
-    moveCom->Set_BlockCollisionModels(nearbyWorldBlockModels);
     moveCom->Set_TraceDebugEnabled(_showCollisionDebug);
 }
 
@@ -1170,23 +1305,12 @@ void Level_Konoha::Try_SendEnterGamePacket()
 
     const uint32 levelIndex = ETOI(ELevelType::Konoha);
 
-    Vec3 spawnPos = Vec3(0.f, 0.f, 0.f);
+    Vec3 spawnPos = Vec3::Zero;
     float spawnRotY = 0.f;
 
-    auto gameObjects = GAME->Get_GameObjects(levelIndex);
-    for (auto& obj : gameObjects)
-    {
-        if (obj->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER_START)
-        {
-            auto transform = obj->Get_Component<Transform>();
-            if (transform)
-            {
-                spawnPos = transform->Get_WorldPosition();
-                spawnRotY = transform->Get_LocalRotation().ToEuler().y;
-            }
-            break;
-        }
-    }
+    // PlayerStart를 아직 못 찾았으면 0,0,0 fallback 패킷을 보내지 않고 다음 프레임에 다시 시도한다.
+    if (!Try_FindKonohaPlayerStartTransform(levelIndex, spawnPos, spawnRotY))
+        return;
 
     auto buf = Client_PacketHandler::Make_C_EnterGame(spawnPos, spawnRotY);
     if (!buf)

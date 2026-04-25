@@ -14,8 +14,27 @@
 #include "Background.h"
 #include "GameInstance.h"
 #include "UI_BossHp.h"
+#include "Monster.h"
+#include "Character.h"
+#include "UI_Timer.h"
+#include "UI_WireLockOn.h"
 
 REGISTER_GAMEOBJECT(UI_PlayerHUD, Protocol::OBJECT_TYPE_UI_PLAYER_HUD)
+
+IMPLEMENT_REFLECTION(UI_PlayerHUD)
+
+bool UI_PlayerHUD::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "UI_PlayerHUD";
+
+    PROPERTY_FLOAT("Combo Announce Offset X", _comboAnnounceOffsetX, -1000.f, 1000.f);
+    PROPERTY_FLOAT("Combo Announce Offset Y", _comboAnnounceOffsetY, -1000.f, 1000.f);
+    PROPERTY_FLOAT("KO Announce Offset X", _koAnnounceOffsetX, -1000.f, 1000.f);
+    PROPERTY_FLOAT("KO Announce Offset Y", _koAnnounceOffsetY, -1000.f, 1000.f);
+
+    return true;
+}
 
 UI_PlayerHUD::UI_PlayerHUD(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : HUD(device, context)
@@ -25,6 +44,10 @@ UI_PlayerHUD::UI_PlayerHUD(ComPtr<Device> device, ComPtr<DeviceContext> context)
 
 UI_PlayerHUD::UI_PlayerHUD(const UI_PlayerHUD& rhs)
     : HUD(rhs)
+    , _comboAnnounceOffsetX(rhs._comboAnnounceOffsetX)
+    , _comboAnnounceOffsetY(rhs._comboAnnounceOffsetY)
+    , _koAnnounceOffsetX(rhs._koAnnounceOffsetX)
+    , _koAnnounceOffsetY(rhs._koAnnounceOffsetY)
 {
 }
 
@@ -43,11 +66,18 @@ HRESULT UI_PlayerHUD::Initialize(void* arg)
 
     _remotePlayerSpawnedHandle = GAME->Get_DelegateHub().OnRemotePlayerObjectSpawned.Add(
         this, &UI_PlayerHUD::Handle_RemotePlayerObjectSpawned);
+
     _comboHitHandle = GAME->Get_DelegateHub().OnPlayerComboHit.Add(
         this, &UI_PlayerHUD::On_PlayerComboHit);
 
     _bossObjectSpawnedHandle = GAME->Get_DelegateHub().OnBossObjectSpawned.Add(
         this, &UI_PlayerHUD::Handle_BossSpawned);
+
+    _deadHandle = GAME->Get_DelegateHub().OnDead.Add(
+        this, &UI_PlayerHUD::Handle_CharacterDead);
+
+    _wireLockOnVisibleHandle = GAME->Get_DelegateHub().OnWireLockOnVisible.Add(
+            this, &UI_PlayerHUD::Handle_WireLockOnVisible);
 
     return S_OK;
 }
@@ -58,6 +88,8 @@ void UI_PlayerHUD::Update(float timeDelta)
 
     Update_RemotePlayerStatusList();
     Update_CombatLineBurst(timeDelta);
+    Update_KOAnnounce(timeDelta);
+    Apply_AnnouncePositions();
 
     const bool bossVisible = _bossHp && _bossHp->Is_Visibility();
 
@@ -223,6 +255,42 @@ void UI_PlayerHUD::Handle_BossSpawned(Shared<GameObject> obj)
 
     if (_bossIcon)
         _bossIcon->Set_Visibility(true);
+}
+
+void UI_PlayerHUD::Handle_CharacterDead(Shared<Character> deadCharacter, Shared<GameObject> damageCauser)
+{
+    (void)damageCauser;
+
+    auto deadMonster = dynamic_pointer_cast<Monster>(deadCharacter);
+    if (!deadMonster)
+        return;
+
+    Show_KOAnnounce();
+}
+
+void UI_PlayerHUD::Handle_WireLockOnVisible(bool visible)
+{
+    if (visible)
+        Show_WireLockOn();
+    else
+        Hide_WireLockOn();
+}
+
+void UI_PlayerHUD::Show_WireLockOn()
+{
+    if (!_wireLockOn)
+        return;
+
+    const float x = GAME->Get_UIReferenceWidth() * 0.5f;
+    const float y = GAME->Get_UIReferenceHeight() * 0.5f;
+
+    _wireLockOn->Show_LockOn(x, y);
+}
+
+void UI_PlayerHUD::Hide_WireLockOn()
+{
+    if (_wireLockOn)
+        _wireLockOn->Hide_LockOn();
 }
 
 HRESULT UI_PlayerHUD::Ready_CombatLines()
@@ -417,6 +485,165 @@ void UI_PlayerHUD::Stop_CombatLineBurst()
     }
 }
 
+HRESULT UI_PlayerHUD::Ready_KOAnnounce()
+{
+    const float uiRefWidth = GAME->Get_UIReferenceWidth(); 
+    const float uiRefHeight = GAME->Get_UIReferenceHeight();
+    const float announceX = (uiRefWidth * 0.5f) + _koAnnounceOffsetX; 
+    const float announceY = (uiRefHeight * 0.30f) + _koAnnounceOffsetY; 
+
+    Background::FBackgroundDesc koBgDesc{};
+    koBgDesc.name = L"KO_BG";
+    koBgDesc.posX = announceX;
+    koBgDesc.posY = announceY;
+    koBgDesc.sizeX = KO_BG_BASE_WIDTH;
+    koBgDesc.sizeY = KO_BG_BASE_HEIGHT;
+    koBgDesc.zOrder = _zOrder + 0.30f;
+    koBgDesc.levelIndex = _levelIndex;
+    koBgDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_KO;
+    koBgDesc.textureIndex = 1;
+    koBgDesc.shaderPassIndex = 1;
+
+    _koBackground = Create_Child<Background>(
+        Protocol::OBJECT_TYPE_BACKGROUND,
+        EUILayer::Overlay,
+        &koBgDesc);
+    CHECK_NULL(_koBackground, E_FAIL);
+
+    Background::FBackgroundDesc koTextDesc{}; 
+    koTextDesc.name = L"KO_Text";
+    koTextDesc.posX = announceX;
+    koTextDesc.posY = announceY;
+    koTextDesc.sizeX = KO_TEXT_BASE_WIDTH;
+    koTextDesc.sizeY = KO_TEXT_BASE_HEIGHT;
+    koTextDesc.zOrder = _zOrder + 0.31f;
+    koTextDesc.levelIndex = _levelIndex;
+    koTextDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_KO;
+    koTextDesc.textureIndex = 0;
+    koTextDesc.shaderPassIndex = 1;
+
+    _koText = Create_Child<Background>(
+        Protocol::OBJECT_TYPE_BACKGROUND,
+        EUILayer::Overlay,
+        &koTextDesc);
+    CHECK_NULL(_koText, E_FAIL);
+
+    Hide_KOAnnounce();
+
+    return S_OK;
+}
+
+void UI_PlayerHUD::Show_KOAnnounce()
+{
+    _isKOVisible = true;
+    _koVisibleTimer = KO_ANNOUNCE_VISIBLE_TIME;
+
+    if (_koBackground)
+    {
+        _koBackground->Set_Visibility(true);
+        _koBackground->Set_UIRotationZ(0.f);
+        _koBackground->Set_UIScale(KO_BG_BASE_WIDTH, KO_BG_BASE_HEIGHT);
+        _koBackground->Set_UIOpacity(0.f);
+    }
+
+    if (_koText)
+    {
+        _koText->Set_Visibility(false);
+        _koText->Set_UIRotationZ(KO_ANNOUNCE_ROTATION_DEGREE);
+        _koText->Set_UIScale(KO_TEXT_BASE_WIDTH * KO_ANNOUNCE_START_SCALE, KO_TEXT_BASE_HEIGHT * KO_ANNOUNCE_START_SCALE);
+        _koText->Set_UIOpacity(0.f);
+    }
+}
+
+void UI_PlayerHUD::Hide_KOAnnounce()
+{
+    _isKOVisible = false;
+    _koVisibleTimer = 0.f;
+
+    if (_koBackground)
+    {
+        _koBackground->Set_UIOpacity(0.f);
+        _koBackground->Set_Visibility(false);
+    }
+
+    if (_koText)
+    {
+        _koText->Set_UIOpacity(0.f);
+        _koText->Set_Visibility(false);
+    }
+}
+
+void UI_PlayerHUD::Update_KOAnnounce(float timeDelta)
+{
+    if (!_isKOVisible)
+        return;
+
+    _koVisibleTimer = max(0.f, _koVisibleTimer - timeDelta);
+
+    const float elapsedTime = KO_ANNOUNCE_VISIBLE_TIME - _koVisibleTimer;
+    const float bgIntroRatio = (KO_BG_FADE_IN_TIME > FLT_EPSILON)
+        ? elapsedTime / KO_BG_FADE_IN_TIME
+        : 1.f; 
+    const float clampedBgIntroRatio = clamp(bgIntroRatio, 0.f, 1.f);
+
+    const float textElapsedTime = elapsedTime - KO_TEXT_DELAY_TIME;
+    const float textIntroRatio = (KO_ANNOUNCE_INTRO_TIME > FLT_EPSILON)
+        ? textElapsedTime / KO_ANNOUNCE_INTRO_TIME
+        : 1.f;
+    const float clampedTextIntroRatio = clamp(textIntroRatio, 0.f, 1.f);
+    const bool isTextVisible = textElapsedTime >= 0.f;
+
+    const float fadeAlpha = (_koVisibleTimer < KO_ANNOUNCE_FADE_TIME)
+        ? clamp(_koVisibleTimer / KO_ANNOUNCE_FADE_TIME, 0.f, 1.f)
+        : 1.f; 
+
+    const float bgAlpha = clampedBgIntroRatio * fadeAlpha; 
+    const float textAlpha = isTextVisible ? fadeAlpha : 0.f;
+    const float popScale = ::lerp(KO_ANNOUNCE_START_SCALE, 1.f, clampedTextIntroRatio);
+
+    if (_koBackground)
+    {
+        _koBackground->Set_UIRotationZ(0.f);
+        _koBackground->Set_UIScale(KO_BG_BASE_WIDTH, KO_BG_BASE_HEIGHT);
+        _koBackground->Set_UIOpacity(bgAlpha);
+    }
+
+    if (_koText)
+    {
+        _koText->Set_Visibility(isTextVisible);
+        _koText->Set_UIRotationZ(KO_ANNOUNCE_ROTATION_DEGREE);
+        _koText->Set_UIScale(KO_TEXT_BASE_WIDTH * popScale, KO_TEXT_BASE_HEIGHT * popScale);
+        _koText->Set_UIOpacity(textAlpha);
+    }
+
+    if (_koVisibleTimer <= 0.f)
+        Hide_KOAnnounce();
+}
+
+void UI_PlayerHUD::Apply_AnnouncePositions()
+{
+    const float uiRefWidth = GAME->Get_UIReferenceWidth();
+    const float uiRefHeight = GAME->Get_UIReferenceHeight();
+    const float uiScale = GAME->Get_UIScale();
+    const float safeScale = max(uiScale, FLT_EPSILON);
+
+    if (_announceCombo)
+    {
+        const float comboX = (uiRefWidth * 0.55f) + (_comboAnnounceOffsetX / safeScale);
+        const float comboY = (uiRefHeight * 0.5f) - 100.f + (_comboAnnounceOffsetY / safeScale);
+        _announceCombo->Set_AnnouncePosition(comboX, comboY);
+    }
+
+    const float koX = (uiRefWidth * 0.5f) + (_koAnnounceOffsetX / safeScale);
+    const float koY = (uiRefHeight * 0.30f) + (_koAnnounceOffsetY / safeScale);
+
+    if (_koBackground)
+        _koBackground->Set_UIPosition(koX, koY);
+
+    if (_koText)
+        _koText->Set_UIPosition(koX, koY);
+}
+
 HRESULT UI_PlayerHUD::Ready_UI(void* arg)
 {
     UIObject::FUIDesc statDesc;
@@ -461,6 +688,7 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
 
     _announceCombo = Create_Child<UI_AnnounceCombo>(Protocol::OBJECT_TYPE_UI_ANNOUNCE_COMBO, EUILayer::HUD, &announceDesc);
     CHECK_NULL(_announceCombo, E_FAIL);
+    Apply_AnnouncePositions();
 
     UIObject::FUIDesc targetDesc;
     targetDesc.posX = 0.f;
@@ -534,7 +762,52 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
     }
 
     CHECK_FAILED(Ready_CombatLines(), E_FAIL);
+    CHECK_FAILED(Ready_KOAnnounce(), E_FAIL);
+    CHECK_FAILED(Ready_Timer(), E_FAIL);
+    CHECK_FAILED(Ready_WireLockOn(), E_FAIL);
 
+    return S_OK;
+}
+
+HRESULT UI_PlayerHUD::Ready_Timer()
+{
+    UI_Timer::FTimerDesc timerDesc{};
+
+    timerDesc.posX = GAME->Get_UIReferenceWidth() - 210.f;
+    timerDesc.posY = 72.f;
+    timerDesc.sizeX = 1.f;
+    timerDesc.sizeY = 1.f;
+    timerDesc.zOrder = _zOrder + 0.20f;
+    timerDesc.levelIndex = _levelIndex;
+    timerDesc.startSeconds = 600.f;
+
+    _timer = Create_Child<UI_Timer>(
+        Protocol::OBJECT_TYPE_UI_TIMER,
+        EUILayer::HUD,
+        &timerDesc);
+
+    return S_OK;
+}
+
+HRESULT UI_PlayerHUD::Ready_WireLockOn()
+{
+    UI_WireLockOn::FWireLockOnDesc desc{};
+
+    desc.posX = GAME->Get_UIReferenceWidth() * 0.5f;
+    desc.posY = GAME->Get_UIReferenceHeight() * 0.5f;
+    desc.sizeX = 1.f;
+    desc.sizeY = 1.f;
+    desc.zOrder = _zOrder + 0.40f;
+    desc.levelIndex = _levelIndex;
+
+    _wireLockOn = Create_Child<UI_WireLockOn>(
+        Protocol::OBJECT_TYPE_UI_LOCK_ON,
+        EUILayer::Overlay,
+        &desc);
+
+    CHECK_NULL(_wireLockOn, E_FAIL);
+
+    _wireLockOn->Hide_LockOn();
 
     return S_OK;
 }
@@ -586,6 +859,18 @@ void UI_PlayerHUD::Free()
     {
         hub.OnBossObjectSpawned.Remove(_bossObjectSpawnedHandle);
         _bossObjectSpawnedHandle.Reset();
+    }
+
+    if (_deadHandle.IsValid())
+    {
+        hub.OnDead.Remove(_deadHandle);
+        _deadHandle.Reset();
+    }
+
+    if (_wireLockOnVisibleHandle.IsValid())
+    {
+        hub.OnWireLockOnVisible.Remove(_wireLockOnVisibleHandle);
+        _wireLockOnVisibleHandle.Reset();
     }
 
     HUD::Free();

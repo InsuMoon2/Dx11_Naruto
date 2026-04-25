@@ -90,6 +90,7 @@ private:
     float _leftPanelWidth = 300.f;
     float _thumbnailSize = 64.f;
     char _searchBuffer[128] = "";
+    char _assetSearchBuffer[128] = "";
 
     vector<Shared<Texture>> _iconFiles;
 

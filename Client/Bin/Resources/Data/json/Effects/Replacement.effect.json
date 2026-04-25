@@ -64,7 +64,7 @@
             "layerName": "Tree",
             "localPosition": [
                 0.0,
-                1.0,
+                1.7000000476837158,
                 0.0
             ],
             "localRotation": [
@@ -275,10 +275,10 @@
             "rotateInLocalSpace": true,
             "rotationAxis": [
                 0.0,
-                1.0,
+                0.0,
                 0.0
             ],
-            "rotationSpeed": 0.0,
+            "rotationSpeed": 146.8000030517578,
             "roughness": 0.5,
             "roughnessTextureGuid": "",
             "scaleDuration": 0.20000000298023224,
@@ -323,15 +323,15 @@
                 "rows": 4,
                 "startFrame": 0
             },
-            "baseMaskTextureGuid": "fefcd38f-23ae-4c6d-a3f2-fee90fd97152",
+            "baseMaskTextureGuid": "",
             "baseOpacity": 1.0,
             "baseOpacityGradationTextureGuid": "",
             "baseOpacityTextureGuid": "",
             "baseTextureGuid": "5266a787-d6f6-420e-b57e-b1a9ac1ae525",
             "baseTint": [
-                1.0,
-                1.0,
-                1.0,
+                0.37634408473968506,
+                0.37634408473968506,
+                0.37634408473968506,
                 1.0
             ],
             "billboardToCamera": true,

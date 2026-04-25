@@ -34,6 +34,7 @@ public:
     bool CanSave() const override { return true; }
     void Save() override;
 
+    bool Load_EffectFile(const string& filePath);
 private:
     void Ensure_PreviewGridResources();
     void Draw_PreviewGrid() const;
@@ -50,7 +51,6 @@ private:
 
     // 파일 세션 관련
     void New_EffectAsset();
-    bool Load_EffectFile(const string& filePath);
     bool Save_CurrentFile();
     bool Save_AsEffect(const string& fileName);
 
@@ -95,6 +95,7 @@ private:
     void Apply_SelectedLayerPreview(bool transformChanged, bool materialChanged, bool resourceChanged);
 
     void Restart_PreviewEffect();
+    void Apply_PreviewSoloLayer();
 
 private:
     Shared<GameObject> _previewObject;
@@ -108,6 +109,7 @@ private:
     vector<fs::path> _effectFiles;
     
     int _selectedLayerIdx = -1;
+    int _previewSoloLayerIdx = -1;
 
     bool _isPlaying = true;
     bool _showPreviewGrid = true;

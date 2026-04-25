@@ -32,6 +32,8 @@ public:
 private:
     void Draw_SearchBar();
     void Draw_ObjectList();
+    // Hierarchy 상단의 Lighting 섹션에서 primary shadow light 항목을 그릴 때 호출한다.
+    void Draw_LightingNode();
     void Draw_ObjectNode(Shared<GameObject> gameObject, int index);
 
     void Handle_Shotcuts();
@@ -44,6 +46,8 @@ private:
 
     vector<Shared<GameObject>>      _selectedObjects;
     vector<Shared<GameObject>>      _copiedObjects;
+    // Hierarchy에서 가짜 primary shadow light 항목이 선택되었는지 나타낸다.
+    bool _isPrimaryShadowLightSelected = false;
 
     // 검색 필터
     string _currentSearchFilter;

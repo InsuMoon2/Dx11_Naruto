@@ -30,7 +30,7 @@ void PlayerState_SuperJump::Enter(PlayerStateMachine* state)
     movement->Start_SuperJump(velocity);
     movement->Set_OrientRotationToMovement(true);
 
-    GAME->Set_BlurStrength(0.5f);
+    GAME->Set_BlurStrength(0.45f);
     GAME->Set_BlurDirection(Vec2(0.f, 1.f));
 
     state->Play_AnimState(EPlayerState::SuperJump);
@@ -65,8 +65,14 @@ void PlayerState_SuperJump::Update(PlayerStateMachine* state, float timeDelta)
         return;
     }
 
-    if (frame.wireDash)
+    if (frame.wireLockOnDown)
     {
+        state->Begin_WireLockOn();
+    }
+
+    if (state->Is_WireLockOn() && frame.wireDashStart)
+    {
+        state->End_WireLockOn();
         state->Change_State(EPlayerState::WireDash);
         return;
     }
@@ -105,6 +111,9 @@ void PlayerState_SuperJump::Update(PlayerStateMachine* state, float timeDelta)
 
 void PlayerState_SuperJump::Exit(PlayerStateMachine* state)
 {
+    if (state)
+        state->End_WireLockOn();
+
     GAME->Set_BlurStrength(0.f);
 }
 

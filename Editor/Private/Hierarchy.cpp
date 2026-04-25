@@ -78,6 +78,8 @@ void Hierarchy::Draw_SearchBar()
     for (auto& [layerTag, layer] : _levelLayers)
     {
         if (!layer) continue;
+        if (layerTag == TEXT("Layer_CollisionProxy")) continue;
+
         auto& objects = layer->Get_GameObjects();
 
         totalCount += static_cast<int>(objects.size());
@@ -108,12 +110,16 @@ void Hierarchy::Draw_ObjectList()
 {
 #pragma region Layer별로 출력
 
+    Draw_LightingNode();
+
     // 검색어 있을 때는 기존처럼.
     if (!_currentSearchFilter.empty())
     {
         for (auto& [layerTag, layer] : _levelLayers)
         {
             if (!layer)
+                continue;
+            if (layerTag == TEXT("Layer_CollisionProxy"))
                 continue;
 
             auto& objects = layer->Get_GameObjects();
@@ -165,6 +171,8 @@ void Hierarchy::Draw_ObjectList()
     for (auto& [layerTag, layer] : _levelLayers)
     {
         if (!layer)
+            continue;
+        if (layerTag == TEXT("Layer_CollisionProxy"))
             continue;
 
         auto& objects = layer->Get_GameObjects();
@@ -224,6 +232,47 @@ void Hierarchy::Draw_ObjectList()
 
 #pragma endregion
 
+}
+
+void Hierarchy::Draw_LightingNode()
+{
+    const bool hasPrimaryShadowLight = (GAME->Get_PrimaryShadowLightDesc() != nullptr);
+    const ImGuiTreeNodeFlags rootFlags =
+        ImGuiTreeNodeFlags_DefaultOpen |
+        ImGuiTreeNodeFlags_SpanAvailWidth;
+
+    if (!ImGui::TreeNodeEx("Lighting", rootFlags))
+        return;
+
+    if (!hasPrimaryShadowLight)
+        ImGui::BeginDisabled();
+
+    ImGuiTreeNodeFlags itemFlags =
+        ImGuiTreeNodeFlags_Leaf |
+        ImGuiTreeNodeFlags_NoTreePushOnOpen |
+        ImGuiTreeNodeFlags_SpanAvailWidth;
+
+    if (_isPrimaryShadowLightSelected)
+        itemFlags |= ImGuiTreeNodeFlags_Selected;
+
+    ImGui::TreeNodeEx("Primary Shadow Light", itemFlags, ICON_FA_SUN " Directional Light");
+
+    if (ImGui::IsItemClicked() && hasPrimaryShadowLight)
+    {
+        vector<Shared<GameObject>> prevSelected = _selectedObjects;
+        _selectedObjects.clear();
+        _isPrimaryShadowLightSelected = true;
+        Update_SelectOutline(prevSelected);
+
+        auto inspector = dynamic_pointer_cast<Inspector>(EDITOR->Get_Window(TEXT("Inspector")));
+        if (inspector)
+            inspector->Set_PrimaryShadowLightTarget(true);
+    }
+
+    if (!hasPrimaryShadowLight)
+        ImGui::EndDisabled();
+
+    ImGui::TreePop();
 }
 
 void Hierarchy::Draw_ObjectNode(shared_ptr<GameObject> gameObject, int index)
@@ -322,6 +371,7 @@ bool  Hierarchy::Is_Selected(shared_ptr<GameObject> obj)
 void Hierarchy::Select_Object(shared_ptr<GameObject> obj, bool isMultiSelect)
 {
     vector<Shared<GameObject>> prevSelected = _selectedObjects;
+    _isPrimaryShadowLightSelected = false;
 
     if (isMultiSelect)
     {
@@ -349,6 +399,8 @@ void Hierarchy::Select_Object(shared_ptr<GameObject> obj, bool isMultiSelect)
 
     if (inspector)
     {
+        inspector->Set_PrimaryShadowLightTarget(false);
+
         if (!_selectedObjects.empty())
             inspector->Set_Target(_selectedObjects.back());
 

@@ -1,85 +1,46 @@
 {
     "blackboard": {
         "bools": {
-            "IsHit": false
+            "BossDisableAerialAttack": false,
+            "CanUseAerialAttack": false,
+            "IsHit": false,
+            "ShouldAirApproach": false,
+            "ShouldGroundChase": true,
+            "ShouldMeleeCombo": false,
+            "ShouldRetreat": false,
+            "ShouldStrafe": false,
+            "ShouldUseBansho": false,
+            "ShouldUseChibakuTensei": false,
+            "ShouldUseShinra": false,
+            "ShouldWaitLanding": false,
+            "TargetIsAirborne": false
         },
-        "floats": {},
+        "floats": {
+            "BanshoTeninCooldownRemain": 0.0,
+            "BossSkillGlobalCooldownRemain": 0.0,
+            "ChibakuTenseiCooldownRemain": 0.0,
+            "ShinraTenseiCooldownRemain": 0.0,
+            "TargetAirborneTime": 0.0,
+            "TargetDistance": 0.0,
+            "TargetHeightDelta": 0.0
+        },
         "ints": {
-            "TestInt": 3
+            "AirAttackCycleIndex": 0,
+            "AnimReplaySerial": 0,
+            "DesiredCombatMode": 0,
+            "GroundAttackCycleIndex": 0,
+            "HitReactionSerial": 0
         },
-        "strings": {},
+        "strings": {
+            "SelectedAttackState": ""
+        },
         "vectors": {}
     },
     "links": [
         {
-            "end": 19,
-            "id": 20,
-            "start": 5
-        },
-        {
-            "end": 35,
-            "id": 36,
-            "start": 23
-        },
-        {
-            "end": 38,
-            "id": 39,
-            "start": 24
-        },
-        {
-            "end": 41,
-            "id": 44,
-            "start": 28
-        },
-        {
-            "end": 83,
-            "id": 88,
-            "start": 72
-        },
-        {
-            "end": 75,
-            "id": 103,
-            "start": 99
-        },
-        {
-            "end": 75,
-            "id": 118,
-            "start": 110
-        },
-        {
-            "end": 75,
-            "id": 138,
-            "start": 132
-        },
-        {
             "end": 152,
             "id": 163,
             "start": 2
-        },
-        {
-            "end": 171,
-            "id": 186,
-            "start": 50
-        },
-        {
-            "end": 69,
-            "id": 187,
-            "start": 52
-        },
-        {
-            "end": 72,
-            "id": 188,
-            "start": 54
-        },
-        {
-            "end": 60,
-            "id": 189,
-            "start": 180
-        },
-        {
-            "end": 63,
-            "id": 190,
-            "start": 183
         },
         {
             "end": 211,
@@ -87,19 +48,219 @@
             "start": 209
         },
         {
-            "end": 208,
-            "id": 213,
-            "start": 156
+            "end": 410,
+            "id": 421,
+            "start": 405
         },
         {
-            "end": 47,
-            "id": 214,
+            "end": 430,
+            "id": 432,
+            "start": 384
+        },
+        {
+            "end": 434,
+            "id": 445,
+            "start": 431
+        },
+        {
+            "end": 449,
+            "id": 450,
+            "start": 439
+        },
+        {
+            "end": 447,
+            "id": 451,
+            "start": 441
+        },
+        {
+            "end": 424,
+            "id": 469,
+            "start": 411
+        },
+        {
+            "end": 223,
+            "id": 470,
+            "start": 413
+        },
+        {
+            "end": 244,
+            "id": 471,
+            "start": 416
+        },
+        {
+            "end": 69,
+            "id": 472,
+            "start": 418
+        },
+        {
+            "end": 72,
+            "id": 473,
+            "start": 420
+        },
+        {
+            "end": 475,
+            "id": 477,
+            "start": 367
+        },
+        {
+            "end": 348,
+            "id": 478,
+            "start": 368
+        },
+        {
+            "end": 404,
+            "id": 479,
+            "start": 370
+        },
+        {
+            "end": 483,
+            "id": 484,
+            "start": 380
+        },
+        {
+            "end": 486,
+            "id": 487,
+            "start": 381
+        },
+        {
+            "end": 489,
+            "id": 521,
+            "start": 511
+        },
+        {
+            "end": 491,
+            "id": 522,
+            "start": 512
+        },
+        {
+            "end": 453,
+            "id": 523,
+            "start": 514
+        },
+        {
+            "end": 455,
+            "id": 524,
+            "start": 515
+        },
+        {
+            "end": 465,
+            "id": 525,
+            "start": 516
+        },
+        {
+            "end": 459,
+            "id": 527,
+            "start": 519
+        },
+        {
+            "end": 535,
+            "id": 546,
             "start": 157
         },
         {
-            "end": 174,
-            "id": 215,
-            "start": 160
+            "end": 208,
+            "id": 547,
+            "start": 538
+        },
+        {
+            "end": 601,
+            "id": 560,
+            "start": 158
+        },
+        {
+            "end": 586,
+            "id": 587,
+            "start": 565
+        },
+        {
+            "end": 621,
+            "id": 588,
+            "start": 569
+        },
+        {
+            "end": 590,
+            "id": 591,
+            "start": 577
+        },
+        {
+            "end": 624,
+            "id": 592,
+            "start": 580
+        },
+        {
+            "end": 613,
+            "id": 616,
+            "start": 602
+        },
+        {
+            "end": 615,
+            "id": 617,
+            "start": 603
+        },
+        {
+            "end": 531,
+            "id": 626,
+            "start": 622
+        },
+        {
+            "end": 533,
+            "id": 627,
+            "start": 625
+        },
+        {
+            "end": 643,
+            "id": 648,
+            "start": 632
+        },
+        {
+            "end": 646,
+            "id": 649,
+            "start": 644
+        },
+        {
+            "end": 663,
+            "id": 668,
+            "start": 652
+        },
+        {
+            "end": 666,
+            "id": 669,
+            "start": 664
+        },
+        {
+            "end": 683,
+            "id": 690,
+            "start": 672
+        },
+        {
+            "end": 686,
+            "id": 691,
+            "start": 684
+        },
+        {
+            "end": 688,
+            "id": 692,
+            "start": 673
+        },
+        {
+            "end": 713,
+            "id": 724,
+            "start": 607
+        },
+        {
+            "end": 733,
+            "id": 735,
+            "start": 699
+        },
+        {
+            "end": 740,
+            "id": 741,
+            "start": 734
+        },
+        {
+            "end": 743,
+            "id": 744,
+            "start": 702
         }
     ],
     "nodes": [
@@ -111,58 +272,9 @@
                 2
             ],
             "parameters": {},
-            "pos_x": 146.0,
+            "pos_x": 34.0,
             "pos_y": 186.0,
             "type": "Root"
-        },
-        {
-            "id": 46,
-            "input_pin_id": 47,
-            "name": "Sequence",
-            "output_pin_ids": [
-                48,
-                49,
-                50,
-                51,
-                52,
-                53,
-                54,
-                55,
-                56,
-                57
-            ],
-            "parameters": {},
-            "pos_x": 185.0,
-            "pos_y": 566.0,
-            "type": "Sequence"
-        },
-        {
-            "id": 59,
-            "input_pin_id": 60,
-            "name": "Task_FindClosestTarget",
-            "output_pin_ids": [],
-            "parameters": {},
-            "pos_x": 536.0,
-            "pos_y": 764.0,
-            "type": "Task_FindClosestTarget"
-        },
-        {
-            "acceptance_radius": 2.5,
-            "id": 62,
-            "idle_anim_state": "Idle",
-            "input_pin_id": 63,
-            "move_anim_state": "Run",
-            "name": "Task_Move",
-            "output_pin_ids": [],
-            "parameters": {},
-            "pos_x": 728.0,
-            "pos_y": 764.0,
-            "target_location": "TargetLocationKey",
-            "target_object": "TargetObjectKey",
-            "type": "Task_Move",
-            "use_move_anim": true,
-            "use_sprint": false,
-            "write_anim_direction": true
         },
         {
             "State Name": "Idle",
@@ -171,22 +283,22 @@
             "name": "Task_SetAnimState",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 136.0,
-            "pos_y": 764.0,
+            "pos_x": -1270.0,
+            "pos_y": 1266.0,
             "state_name": "Idle",
             "type": "Task_SetAnimState"
         },
         {
-            "Wiat Time": 1.2000000476837158,
+            "Wiat Time": 0.25,
             "id": 71,
             "input_pin_id": 72,
             "name": "Task_Wait",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 312.0,
-            "pos_y": 764.0,
+            "pos_x": -1110.0,
+            "pos_y": 1266.0,
             "type": "Task_Wait",
-            "wait_time": 1.2000000476837158
+            "wait_time": 0.25
         },
         {
             "id": 151,
@@ -205,50 +317,9 @@
                 162
             ],
             "parameters": {},
-            "pos_x": 139.0,
-            "pos_y": 342.0,
+            "pos_x": 4.0,
+            "pos_y": 300.0,
             "type": "Selector"
-        },
-        {
-            "attack_anim_state_01": "Attack_01",
-            "attack_anim_state_02": "Attack_02",
-            "attack_anim_state_03": "Attack_04",
-            "attack_cycle_index_key": "AttackCycleIndex",
-            "attack_range": 2.5,
-            "face_target": true,
-            "id": 170,
-            "input_pin_id": 171,
-            "name": "Task_Attack",
-            "output_pin_ids": [],
-            "parameters": {},
-            "pos_x": -40.0,
-            "pos_y": 764.0,
-            "request_anim_end": false,
-            "selected_attack_state_key": "SelectedAttackState",
-            "target_object_key": "TargetObjectKey",
-            "type": "Task_Attack",
-            "use_round_robin": true
-        },
-        {
-            "id": 173,
-            "input_pin_id": 174,
-            "name": "Sequence",
-            "output_pin_ids": [
-                175,
-                176,
-                177,
-                178,
-                179,
-                180,
-                181,
-                182,
-                183,
-                184
-            ],
-            "parameters": {},
-            "pos_x": 565.0,
-            "pos_y": 572.0,
-            "type": "Sequence"
         },
         {
             "expected_value": true,
@@ -259,8 +330,8 @@
                 209
             ],
             "parameters": {},
-            "pos_x": -126.0,
-            "pos_y": 476.0,
+            "pos_x": -398.0,
+            "pos_y": 556.0,
             "target_bb_key": "IsHit",
             "type": "Decorator_Blackboard"
         },
@@ -283,11 +354,1056 @@
             "name": "Task_Hit",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": -126.0,
-            "pos_y": 604.0,
+            "pos_x": -398.0,
+            "pos_y": 684.0,
             "request_anim_end": false,
             "type": "Task_Hit",
             "use_blackboard_hit_anim_override": true
+        },
+        {
+            "acceptance_radius": 2.5,
+            "air_approach_anim_state": "AirApproach",
+            "desired_combat_mode_key": "DesiredCombatMode",
+            "disable_gravity_during_approach": true,
+            "hard_lock_after": 0.2199999988079071,
+            "homing_interval": 0.10000000149011612,
+            "horizontal_speed": 12.0,
+            "id": 222,
+            "input_pin_id": 223,
+            "jump_start_anim_state": "Jump",
+            "max_approach_duration": 0.6499999761581421,
+            "name": "Task_JumpToTarget",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -1590.0,
+            "pos_y": 1266.0,
+            "startup_duration": 0.11999999731779099,
+            "target_lead_time": 0.11999999731779099,
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_JumpToTarget",
+            "vertical_approach_speed": 8.0,
+            "vertical_lerp_speed": 6.0
+        },
+        {
+            "attack_anim_state_01": "Attack_01",
+            "attack_anim_state_02": "Attack_02",
+            "attack_anim_state_03": "",
+            "attack_anim_state_04": "",
+            "attack_cycle_index_key": "AttackCycleIndex",
+            "attack_range": 1.2000000476837158,
+            "face_target": true,
+            "id": 243,
+            "input_pin_id": 244,
+            "name": "Task_Attack",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -1430.0,
+            "pos_y": 1266.0,
+            "request_anim_end": false,
+            "selected_attack_state_key": "SelectedAttackState",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_Attack",
+            "use_round_robin": true
+        },
+        {
+            "air_approach_cooldown": 2.0,
+            "air_approach_max_distance": 10.0,
+            "air_approach_min_airborne_time": 0.2800000011920929,
+            "air_approach_min_distance": 3.0,
+            "air_approach_min_height_delta": 1.100000023841858,
+            "airborne_height_threshold": 1.2000000476837158,
+            "bansho_chance": 0.44999998807907104,
+            "bansho_cooldown_remain_key": "BanshoTeninCooldownRemain",
+            "bansho_max_range": 14.0,
+            "bansho_min_range": 6.0,
+            "can_use_aerial_attack_key": "CanUseAerialAttack",
+            "chibaku_chance": 0.20000000298023224,
+            "chibaku_cooldown_remain_key": "ChibakuTenseiCooldownRemain",
+            "chibaku_max_range": 8.0,
+            "chibaku_min_range": 3.0,
+            "decision_refresh_interval": 0.3499999940395355,
+            "global_skill_cooldown_key": "BossSkillGlobalCooldownRemain",
+            "id": 347,
+            "input_pin_id": 348,
+            "melee_combo_range": 2.799999952316284,
+            "name": "Task_UpdateBossContext",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -1578.0,
+            "pos_y": 946.0,
+            "retreat_range": 2.0,
+            "shinra_chance": 0.18000000715255737,
+            "shinra_cooldown_remain_key": "ShinraTenseiCooldownRemain",
+            "shinra_range": 4.5,
+            "should_air_approach_key": "ShouldAirApproach",
+            "should_ground_chase_key": "ShouldGroundChase",
+            "should_melee_combo_key": "ShouldMeleeCombo",
+            "should_retreat_key": "ShouldRetreat",
+            "should_strafe_key": "ShouldStrafe",
+            "should_use_bansho_key": "ShouldUseBansho",
+            "should_use_chibaku_tensei_key": "ShouldUseChibakuTensei",
+            "should_use_shinra_key": "ShouldUseShinra",
+            "should_wait_landing_key": "ShouldWaitLanding",
+            "strafe_chance": 0.25,
+            "strafe_max_range": 6.0,
+            "strafe_min_range": 2.5,
+            "target_airborne_time_key": "TargetAirborneTime",
+            "target_distance_key": "TargetDistance",
+            "target_height_delta_key": "TargetHeightDelta",
+            "target_is_airborne_key": "TargetIsAirborne",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_UpdateBossContext",
+            "wait_landing_max_airborne_time": 0.44999998807907104
+        },
+        {
+            "id": 364,
+            "input_pin_id": 365,
+            "name": "AirApproach Sequence",
+            "output_pin_ids": [
+                366,
+                367,
+                368,
+                369,
+                370,
+                371,
+                372,
+                373,
+                374,
+                375
+            ],
+            "parameters": {},
+            "pos_x": -1556.0,
+            "pos_y": 770.0,
+            "type": "Sequence"
+        },
+        {
+            "id": 377,
+            "input_pin_id": 378,
+            "name": "WaitLanding Sequence",
+            "output_pin_ids": [
+                379,
+                380,
+                381,
+                382,
+                383,
+                384,
+                385,
+                386,
+                387,
+                388
+            ],
+            "parameters": {},
+            "pos_x": -940.0,
+            "pos_y": 812.0,
+            "type": "Sequence"
+        },
+        {
+            "expected_value": true,
+            "id": 403,
+            "input_pin_id": 404,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                405
+            ],
+            "parameters": {},
+            "pos_x": -1354.0,
+            "pos_y": 946.0,
+            "target_bb_key": "ShouldAirApproach",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "id": 409,
+            "input_pin_id": 410,
+            "name": "Sequence",
+            "output_pin_ids": [
+                411,
+                412,
+                413,
+                414,
+                415,
+                416,
+                417,
+                418,
+                419,
+                420
+            ],
+            "parameters": {},
+            "pos_x": -1512.0,
+            "pos_y": 1084.0,
+            "type": "Sequence"
+        },
+        {
+            "air_attack_cycle_index_key": "AirAttackCycleIndex",
+            "air_attack_state_01": "Attack_Air_01",
+            "air_attack_state_02": "Attack_Air_02",
+            "air_attack_state_03": "Attack_Air_03",
+            "air_attack_state_04": "Attack_Air_04",
+            "airborne_height_threshold": 1.2000000476837158,
+            "can_use_aerial_attack_key": "CanUseAerialAttack",
+            "desired_combat_mode_key": "DesiredCombatMode",
+            "ground_attack_cycle_index_key": "GroundAttackCycleIndex",
+            "ground_attack_state_01": "Attack_01",
+            "ground_attack_state_02": "Attack_02",
+            "ground_attack_state_03": "Attack_03",
+            "ground_attack_state_04": "Attack_04",
+            "id": 423,
+            "input_pin_id": 424,
+            "name": "Task_SelectAttackType",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -1750.0,
+            "pos_y": 1266.0,
+            "selected_attack_state_key": "SelectedAttackState",
+            "target_height_delta_key": "TargetHeightDelta",
+            "target_is_airborne_key": "TargetIsAirborne",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_SelectAttackType"
+        },
+        {
+            "expected_value": true,
+            "id": 429,
+            "input_pin_id": 430,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                431
+            ],
+            "parameters": {},
+            "pos_x": -758.0,
+            "pos_y": 1004.0,
+            "target_bb_key": "ShouldWaitLanding",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "id": 433,
+            "input_pin_id": 434,
+            "name": "Sequence",
+            "output_pin_ids": [
+                435,
+                436,
+                437,
+                438,
+                439,
+                440,
+                441,
+                442,
+                443,
+                444
+            ],
+            "parameters": {},
+            "pos_x": -804.0,
+            "pos_y": 1122.0,
+            "type": "Sequence"
+        },
+        {
+            "Wiat Time": 0.20000000298023224,
+            "id": 446,
+            "input_pin_id": 447,
+            "name": "Task_Wait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -598.0,
+            "pos_y": 1266.0,
+            "type": "Task_Wait",
+            "wait_time": 0.20000000298023224
+        },
+        {
+            "State Name": "Idle",
+            "id": 448,
+            "input_pin_id": 449,
+            "name": "Task_SetAnimState",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -822.0,
+            "pos_y": 1266.0,
+            "state_name": "Idle",
+            "type": "Task_SetAnimState"
+        },
+        {
+            "acceptance_radius": 2.0,
+            "id": 452,
+            "idle_anim_state": "Idle",
+            "input_pin_id": 453,
+            "move_anim_state": "Run",
+            "name": "Task_Move",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 2002.0,
+            "pos_y": 1058.0,
+            "target_location": "TargetLocationKey",
+            "target_object": "TargetObjectKey",
+            "type": "Task_Move",
+            "use_move_anim": true,
+            "use_sprint": false,
+            "write_anim_direction": true
+        },
+        {
+            "air_attack_cycle_index_key": "AirAttackCycleIndex",
+            "air_attack_state_01": "Attack_Air_01",
+            "air_attack_state_02": "Attack_Air_02",
+            "air_attack_state_03": "Attack_Air_03",
+            "air_attack_state_04": "Attack_Air_04",
+            "airborne_height_threshold": 1.2000000476837158,
+            "can_use_aerial_attack_key": "BossDisableAerialAttack",
+            "desired_combat_mode_key": "DesiredCombatMode",
+            "ground_attack_cycle_index_key": "GroundAttackCycleIndex",
+            "ground_attack_state_01": "Attack_01",
+            "ground_attack_state_02": "Attack_02",
+            "ground_attack_state_03": "Attack_03",
+            "ground_attack_state_04": "Attack_04",
+            "id": 454,
+            "input_pin_id": 455,
+            "name": "Task_SelectAttackType",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 2162.0,
+            "pos_y": 1058.0,
+            "selected_attack_state_key": "SelectedAttackState",
+            "target_height_delta_key": "TargetHeightDelta",
+            "target_is_airborne_key": "TargetIsAirborne",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_SelectAttackType"
+        },
+        {
+            "State Name": "Idle",
+            "id": 456,
+            "input_pin_id": 457,
+            "name": "Task_SetAnimState",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 2466.0,
+            "pos_y": 1058.0,
+            "state_name": "Idle",
+            "type": "Task_SetAnimState"
+        },
+        {
+            "Wiat Time": 0.25,
+            "id": 458,
+            "input_pin_id": 459,
+            "name": "Task_Wait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 2626.0,
+            "pos_y": 1058.0,
+            "type": "Task_Wait",
+            "wait_time": 0.25
+        },
+        {
+            "attack_anim_state_01": "Attack_01",
+            "attack_anim_state_02": "Attack_02",
+            "attack_anim_state_03": "Attack_03",
+            "attack_anim_state_04": "Attack_04",
+            "attack_cycle_index_key": "AttackCycleIndex",
+            "attack_range": 2.0,
+            "face_target": true,
+            "id": 464,
+            "input_pin_id": 465,
+            "name": "Task_Attack",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 2306.0,
+            "pos_y": 1058.0,
+            "request_anim_end": false,
+            "selected_attack_state_key": "SelectedAttackState",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_Attack",
+            "use_round_robin": true
+        },
+        {
+            "id": 474,
+            "input_pin_id": 475,
+            "name": "Task_FindClosestTarget",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -1738.0,
+            "pos_y": 946.0,
+            "type": "Task_FindClosestTarget"
+        },
+        {
+            "id": 482,
+            "input_pin_id": 483,
+            "name": "Task_FindClosestTarget",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -1110.0,
+            "pos_y": 1010.0,
+            "type": "Task_FindClosestTarget"
+        },
+        {
+            "air_approach_cooldown": 2.0,
+            "air_approach_max_distance": 10.0,
+            "air_approach_min_airborne_time": 0.2800000011920929,
+            "air_approach_min_distance": 3.0,
+            "air_approach_min_height_delta": 1.100000023841858,
+            "airborne_height_threshold": 1.2000000476837158,
+            "bansho_chance": 0.0,
+            "bansho_cooldown_remain_key": "BanshoTeninCooldownRemain",
+            "bansho_max_range": 14.0,
+            "bansho_min_range": 6.0,
+            "can_use_aerial_attack_key": "CanUseAerialAttack",
+            "chibaku_chance": 0.20000000298023224,
+            "chibaku_cooldown_remain_key": "ChibakuTenseiCooldownRemain",
+            "chibaku_max_range": 8.0,
+            "chibaku_min_range": 3.0,
+            "decision_refresh_interval": 0.3499999940395355,
+            "global_skill_cooldown_key": "BossSkillGlobalCooldownRemain",
+            "id": 485,
+            "input_pin_id": 486,
+            "melee_combo_range": 2.799999952316284,
+            "name": "Task_UpdateBossContext",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -950.0,
+            "pos_y": 1010.0,
+            "retreat_range": 2.0,
+            "shinra_chance": 0.18000000715255737,
+            "shinra_cooldown_remain_key": "ShinraTenseiCooldownRemain",
+            "shinra_range": 4.5,
+            "should_air_approach_key": "ShouldAirApproach",
+            "should_ground_chase_key": "ShouldGroundChase",
+            "should_melee_combo_key": "ShouldMeleeCombo",
+            "should_retreat_key": "ShouldRetreat",
+            "should_strafe_key": "ShouldStrafe",
+            "should_use_bansho_key": "ShouldUseBansho",
+            "should_use_chibaku_tensei_key": "ShouldUseChibakuTensei",
+            "should_use_shinra_key": "ShouldUseShinra",
+            "should_wait_landing_key": "ShouldWaitLanding",
+            "strafe_chance": 0.25,
+            "strafe_max_range": 6.0,
+            "strafe_min_range": 2.5,
+            "target_airborne_time_key": "TargetAirborneTime",
+            "target_distance_key": "TargetDistance",
+            "target_height_delta_key": "TargetHeightDelta",
+            "target_is_airborne_key": "TargetIsAirborne",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_UpdateBossContext",
+            "wait_landing_max_airborne_time": 0.44999998807907104
+        },
+        {
+            "id": 488,
+            "input_pin_id": 489,
+            "name": "Task_FindClosestTarget",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 1682.0,
+            "pos_y": 1058.0,
+            "type": "Task_FindClosestTarget"
+        },
+        {
+            "air_approach_cooldown": 2.0,
+            "air_approach_max_distance": 10.0,
+            "air_approach_min_airborne_time": 0.2800000011920929,
+            "air_approach_min_distance": 3.0,
+            "air_approach_min_height_delta": 1.100000023841858,
+            "airborne_height_threshold": 1.2000000476837158,
+            "bansho_chance": 0.44999998807907104,
+            "bansho_cooldown_remain_key": "BanshoTeninCooldownRemain",
+            "bansho_max_range": 14.0,
+            "bansho_min_range": 6.0,
+            "can_use_aerial_attack_key": "CanUseAerialAttack",
+            "chibaku_chance": 0.20000000298023224,
+            "chibaku_cooldown_remain_key": "ChibakuTenseiCooldownRemain",
+            "chibaku_max_range": 8.0,
+            "chibaku_min_range": 3.0,
+            "decision_refresh_interval": 0.3499999940395355,
+            "global_skill_cooldown_key": "BossSkillGlobalCooldownRemain",
+            "id": 490,
+            "input_pin_id": 491,
+            "melee_combo_range": 2.799999952316284,
+            "name": "Task_UpdateBossContext",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 1842.0,
+            "pos_y": 1058.0,
+            "retreat_range": 2.0,
+            "shinra_chance": 0.18000000715255737,
+            "shinra_cooldown_remain_key": "ShinraTenseiCooldownRemain",
+            "shinra_range": 4.5,
+            "should_air_approach_key": "ShouldAirApproach",
+            "should_ground_chase_key": "ShouldGroundChase",
+            "should_melee_combo_key": "ShouldMeleeCombo",
+            "should_retreat_key": "ShouldRetreat",
+            "should_strafe_key": "ShouldStrafe",
+            "should_use_bansho_key": "ShouldUseBansho",
+            "should_use_chibaku_tensei_key": "ShouldUseChibakuTensei",
+            "should_use_shinra_key": "ShouldUseShinra",
+            "should_wait_landing_key": "ShouldWaitLanding",
+            "strafe_chance": 0.25,
+            "strafe_max_range": 6.0,
+            "strafe_min_range": 2.5,
+            "target_airborne_time_key": "TargetAirborneTime",
+            "target_distance_key": "TargetDistance",
+            "target_height_delta_key": "TargetHeightDelta",
+            "target_is_airborne_key": "TargetIsAirborne",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_UpdateBossContext",
+            "wait_landing_max_airborne_time": 0.44999998807907104
+        },
+        {
+            "id": 509,
+            "input_pin_id": 510,
+            "name": "GroundCombat Sequence",
+            "output_pin_ids": [
+                511,
+                512,
+                513,
+                514,
+                515,
+                516,
+                517,
+                518,
+                519,
+                520
+            ],
+            "parameters": {},
+            "pos_x": 1668.0,
+            "pos_y": 700.0,
+            "type": "Sequence"
+        },
+        {
+            "affect_all_players_in_range": true,
+            "cooldown": 3.0,
+            "cooldown_remain_key": "ShinraTenseiCooldownRemain",
+            "damage": 10.0,
+            "effect_asset_name": "ShinraTensei3",
+            "effect_scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "face_target": true,
+            "global_cooldown": 2.0,
+            "global_cooldown_remain_key": "BossSkillGlobalCooldownRemain",
+            "hit_anim_state_override": "Hit_Launch",
+            "id": 530,
+            "impact_time": 0.3499999940395355,
+            "input_pin_id": 531,
+            "launch_power": 40.0,
+            "launch_up": 5.0,
+            "max_range": 8.0,
+            "min_range": 0.0,
+            "name": "Task_ShinraTensei",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -38.0,
+            "pos_y": 972.0,
+            "request_anim_end": true,
+            "skill_anim_state": "Skill_ShinraTensei",
+            "skill_duration": 1.0,
+            "skill_type": 1,
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_PainForceSkill"
+        },
+        {
+            "affect_all_players_in_range": false,
+            "cooldown": 10.0,
+            "cooldown_remain_key": "BanshoTeninCooldownRemain",
+            "damage": 1.0,
+            "effect_asset_name": "BanshoTenin",
+            "effect_scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "face_target": true,
+            "global_cooldown": 4.0,
+            "global_cooldown_remain_key": "BossSkillGlobalCooldownRemain",
+            "hit_anim_state_override": "Hit_Pull",
+            "id": 532,
+            "impact_time": 0.44999998807907104,
+            "input_pin_id": 533,
+            "launch_power": 24.0,
+            "launch_up": 2.0,
+            "max_range": 14.0,
+            "min_range": 5.0,
+            "name": "Task_BanshoTenin",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 978.0,
+            "pos_y": 978.0,
+            "request_anim_end": true,
+            "skill_anim_state": "Skill_BanshoTenin",
+            "skill_duration": 2.0,
+            "skill_type": 0,
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_PainForceSkill"
+        },
+        {
+            "id": 600,
+            "input_pin_id": 601,
+            "name": "Combat Main Sequence",
+            "output_pin_ids": [
+                602,
+                603,
+                604,
+                605,
+                606,
+                607,
+                608,
+                609,
+                610,
+                611
+            ],
+            "parameters": {},
+            "pos_x": 4.0,
+            "pos_y": 412.0,
+            "type": "Sequence"
+        },
+        {
+            "id": 612,
+            "input_pin_id": 613,
+            "name": "Task_FindClosestTarget",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -158.0,
+            "pos_y": 556.0,
+            "type": "Task_FindClosestTarget"
+        },
+        {
+            "air_approach_cooldown": 2.0,
+            "air_approach_max_distance": 10.0,
+            "air_approach_min_airborne_time": 0.2800000011920929,
+            "air_approach_min_distance": 3.0,
+            "air_approach_min_height_delta": 1.100000023841858,
+            "airborne_height_threshold": 1.2000000476837158,
+            "bansho_chance": 0.0,
+            "bansho_cooldown_remain_key": "BanshoTeninCooldownRemain",
+            "bansho_max_range": 14.0,
+            "bansho_min_range": 6.0,
+            "can_use_aerial_attack_key": "CanUseAerialAttack",
+            "chibaku_chance": 0.0,
+            "chibaku_cooldown_remain_key": "ChibakuTenseiCooldownRemain",
+            "chibaku_max_range": 9.100000381469727,
+            "chibaku_min_range": 9.0,
+            "decision_refresh_interval": 0.3499999940395355,
+            "global_skill_cooldown_key": "BossSkillGlobalCooldownRemain",
+            "id": 614,
+            "input_pin_id": 615,
+            "melee_combo_range": 0.10000000149011612,
+            "name": "Task_UpdateBossContext",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 66.0,
+            "pos_y": 556.0,
+            "retreat_range": 2.0,
+            "shinra_chance": 1.0,
+            "shinra_cooldown_remain_key": "ShinraTenseiCooldownRemain",
+            "shinra_range": 8.0,
+            "should_air_approach_key": "ShouldAirApproach",
+            "should_ground_chase_key": "ShouldGroundChase",
+            "should_melee_combo_key": "ShouldMeleeCombo",
+            "should_retreat_key": "ShouldRetreat",
+            "should_strafe_key": "ShouldStrafe",
+            "should_use_bansho_key": "ShouldUseBansho",
+            "should_use_chibaku_tensei_key": "ShouldUseChibakuTensei",
+            "should_use_shinra_key": "ShouldUseShinra",
+            "should_wait_landing_key": "ShouldWaitLanding",
+            "strafe_chance": 0.0,
+            "strafe_max_range": 6.0,
+            "strafe_min_range": 2.5,
+            "target_airborne_time_key": "TargetAirborneTime",
+            "target_distance_key": "TargetDistance",
+            "target_height_delta_key": "TargetHeightDelta",
+            "target_is_airborne_key": "TargetIsAirborne",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_UpdateBossContext",
+            "wait_landing_max_airborne_time": 0.44999998807907104
+        },
+        {
+            "expected_value": true,
+            "id": 620,
+            "input_pin_id": 621,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                622
+            ],
+            "parameters": {},
+            "pos_x": -38.0,
+            "pos_y": 854.0,
+            "target_bb_key": "ShouldUseShinra",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "expected_value": true,
+            "id": 623,
+            "input_pin_id": 624,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                625
+            ],
+            "parameters": {},
+            "pos_x": 978.0,
+            "pos_y": 850.0,
+            "target_bb_key": "ShouldUseBansho",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "id": 630,
+            "input_pin_id": 631,
+            "name": "Retreat Sequence",
+            "output_pin_ids": [
+                632,
+                633,
+                634,
+                635,
+                636,
+                637,
+                638,
+                639,
+                640,
+                641
+            ],
+            "parameters": {},
+            "pos_x": 1076.0,
+            "pos_y": 700.0,
+            "type": "Sequence"
+        },
+        {
+            "expected_value": true,
+            "id": 642,
+            "input_pin_id": 643,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                644
+            ],
+            "parameters": {},
+            "pos_x": 1202.0,
+            "pos_y": 844.0,
+            "target_bb_key": "ShouldRetreat",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "face_target": true,
+            "id": 645,
+            "input_pin_id": 646,
+            "lock_facing_to_target": true,
+            "name": "Task_RetreatAndWait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 1202.0,
+            "pos_y": 972.0,
+            "request_anim_end": false,
+            "retreat_anim_state": "Run",
+            "retreat_duration": 0.44999998807907104,
+            "stop_movement_on_finish": true,
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_RetreatAndWait",
+            "use_sprint": false
+        },
+        {
+            "id": 650,
+            "input_pin_id": 651,
+            "name": "Strafe Sequence",
+            "output_pin_ids": [
+                652,
+                653,
+                654,
+                655,
+                656,
+                657,
+                658,
+                659,
+                660,
+                661
+            ],
+            "parameters": {},
+            "pos_x": 1360.0,
+            "pos_y": 700.0,
+            "type": "Sequence"
+        },
+        {
+            "expected_value": true,
+            "id": 662,
+            "input_pin_id": 663,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                664
+            ],
+            "parameters": {},
+            "pos_x": 1474.0,
+            "pos_y": 850.0,
+            "target_bb_key": "ShouldStrafe",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "distance_correction_strength": 0.3499999940395355,
+            "id": 665,
+            "ideal_distance": 3.200000047683716,
+            "input_pin_id": 666,
+            "lock_facing_to_target": true,
+            "name": "Task_StrafeAroundTarget",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 1474.0,
+            "pos_y": 960.0,
+            "stop_movement_on_finish": true,
+            "strafe_anim_state": "Run",
+            "strafe_duration": 0.44999998807907104,
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_StrafeAroundTarget",
+            "use_sprint": false
+        },
+        {
+            "id": 670,
+            "input_pin_id": 671,
+            "name": "Close Combo Sequence",
+            "output_pin_ids": [
+                672,
+                673,
+                674,
+                675,
+                676,
+                677,
+                678,
+                679,
+                680,
+                681
+            ],
+            "parameters": {},
+            "pos_x": 188.0,
+            "pos_y": 694.0,
+            "type": "Sequence"
+        },
+        {
+            "expected_value": true,
+            "id": 682,
+            "input_pin_id": 683,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                684
+            ],
+            "parameters": {},
+            "pos_x": 170.0,
+            "pos_y": 860.0,
+            "target_bb_key": "ShouldMeleeCombo",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "air_attack_cycle_index_key": "AirAttackCycleIndex",
+            "air_attack_state_01": "Attack_Air_01",
+            "air_attack_state_02": "Attack_Air_02",
+            "air_attack_state_03": "Attack_Air_03",
+            "air_attack_state_04": "Attack_Air_04",
+            "airborne_height_threshold": 1.2000000476837158,
+            "can_use_aerial_attack_key": "BossDisableAerialAttack",
+            "desired_combat_mode_key": "DesiredCombatMode",
+            "ground_attack_cycle_index_key": "GroundAttackCycleIndex",
+            "ground_attack_state_01": "Attack_01",
+            "ground_attack_state_02": "Attack_02",
+            "ground_attack_state_03": "Attack_03",
+            "ground_attack_state_04": "",
+            "id": 685,
+            "input_pin_id": 686,
+            "name": "Task_SelectAttackType",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 170.0,
+            "pos_y": 972.0,
+            "selected_attack_state_key": "SelectedAttackState",
+            "target_height_delta_key": "TargetHeightDelta",
+            "target_is_airborne_key": "TargetIsAirborne",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_SelectAttackType"
+        },
+        {
+            "attack_anim_state_01": "Attack_01",
+            "attack_anim_state_02": "Attack_02",
+            "attack_anim_state_03": "Attack_03",
+            "attack_anim_state_04": "",
+            "attack_cycle_index_key": "GroundAttackCycleIndex",
+            "attack_range": 2.799999952316284,
+            "face_target": true,
+            "id": 687,
+            "input_pin_id": 688,
+            "name": "Task_Attack",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 330.0,
+            "pos_y": 860.0,
+            "request_anim_end": false,
+            "selected_attack_state_key": "SelectedAttackState",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_Attack",
+            "use_round_robin": true
+        },
+        {
+            "id": 534,
+            "input_pin_id": 535,
+            "name": "Hit Sequence",
+            "output_pin_ids": [
+                536,
+                537,
+                538,
+                539,
+                540,
+                541,
+                542,
+                543,
+                544,
+                545
+            ],
+            "parameters": {},
+            "pos_x": -340.0,
+            "pos_y": 396.0,
+            "type": "Sequence"
+        },
+        {
+            "id": 561,
+            "input_pin_id": 562,
+            "name": "ShinraTensei Sequence",
+            "output_pin_ids": [
+                563,
+                564,
+                565,
+                566,
+                567,
+                568,
+                569,
+                570,
+                571,
+                572
+            ],
+            "parameters": {},
+            "pos_x": -108.0,
+            "pos_y": 694.0,
+            "type": "Sequence"
+        },
+        {
+            "id": 573,
+            "input_pin_id": 574,
+            "name": "BanshoTenin Sequence",
+            "output_pin_ids": [
+                575,
+                576,
+                577,
+                578,
+                579,
+                580,
+                581,
+                582,
+                583,
+                584
+            ],
+            "parameters": {},
+            "pos_x": 796.0,
+            "pos_y": 700.0,
+            "type": "Sequence"
+        },
+        {
+            "id": 585,
+            "input_pin_id": 586,
+            "name": "Task_FindClosestTarget",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -262.0,
+            "pos_y": 860.0,
+            "type": "Task_FindClosestTarget"
+        },
+        {
+            "id": 589,
+            "input_pin_id": 590,
+            "name": "Task_FindClosestTarget",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 786.0,
+            "pos_y": 850.0,
+            "type": "Task_FindClosestTarget"
+        },
+        {
+            "id": 693,
+            "input_pin_id": 694,
+            "name": "ChibakuTensei Sequence",
+            "output_pin_ids": [
+                695,
+                696,
+                697,
+                698,
+                699,
+                700,
+                701,
+                702,
+                703,
+                704
+            ],
+            "parameters": {},
+            "pos_x": 464.0,
+            "pos_y": 694.0,
+            "type": "Sequence"
+        },
+        {
+            "id": 712,
+            "input_pin_id": 713,
+            "name": "Combat Selector",
+            "output_pin_ids": [
+                714,
+                715,
+                716,
+                717,
+                718,
+                719,
+                720,
+                721,
+                722,
+                723
+            ],
+            "parameters": {},
+            "pos_x": 452.0,
+            "pos_y": 492.0,
+            "type": "Selector"
+        },
+        {
+            "expected_value": true,
+            "id": 732,
+            "input_pin_id": 733,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                734
+            ],
+            "parameters": {},
+            "pos_x": 498.0,
+            "pos_y": 860.0,
+            "target_bb_key": "ShouldUseChibakuTensei",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "approach_duration": 2.0,
+            "attack_anim_state": "Skill_ChibakuTensei_End",
+            "attack_duration": 1.0,
+            "attack_start_range": 2.5,
+            "cooldown": 4.0,
+            "cooldown_remain_key": "ChibakuTenseiCooldownRemain",
+            "damage": 2.0,
+            "face_target": true,
+            "global_cooldown": 3.0,
+            "global_cooldown_remain_key": "BossSkillGlobalCooldownRemain",
+            "hit_anim_state_override": "Hit_Air",
+            "hit_range": 3.200000047683716,
+            "id": 739,
+            "impact_time": 0.3499999940395355,
+            "input_pin_id": 740,
+            "launch_power": 8.0,
+            "launch_up": 15.0,
+            "name": "Task_ChibakuTensei",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 498.0,
+            "pos_y": 988.0,
+            "request_anim_end": true,
+            "start_anim_state": "Skill_ChibakuTensei_Start",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_ChibakuTensei",
+            "use_sprint": true
+        },
+        {
+            "Wiat Time": 0.800000011920929,
+            "id": 742,
+            "input_pin_id": 743,
+            "name": "Task_Wait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 706.0,
+            "pos_y": 988.0,
+            "type": "Task_Wait",
+            "wait_time": 0.800000011920929
         }
     ],
     "root_node_id": 1

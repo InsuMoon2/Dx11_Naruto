@@ -453,7 +453,7 @@ void PlayerSession_Manager::Restore_SceneSnapshot()
 
     // 현재 월드 다 비우고
     GAME->Clear_Layers(levelIndex);
-    GAME->Clear_UI_ByLevel(levelIndex);
+    //GAME->Clear_UI_ByLevel(levelIndex);
 
     // 카메라만 다시 세팅
     for (auto& [obj, layerTag] : preserved)

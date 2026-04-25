@@ -80,7 +80,12 @@ HRESULT Prototype_Manager::Add_Component_Prototype(uint32 levelIndex, uint32 com
 shared_ptr<Component> Prototype_Manager::Clone_Component(uint32 levelIndex, uint32 componentID, void* arg)
 {
     auto component = Find_Component_Prototype(levelIndex, componentID);
-    CHECK_NULL(component, nullptr);
+
+    if (!component)
+    {
+        LOG_ERROR("Clone_Component failed. levelIndex={}, componentID={}", levelIndex, componentID);
+        return nullptr;
+    }
 
     return component->Clone(arg);
 }
@@ -93,7 +98,14 @@ shared_ptr<Component> Prototype_Manager::Clone_Component(uint32 componentID, voi
     if (!component)
         component = Find_Component_Prototype(GAME->Current_Level(), componentID);
 
-    CHECK_NULL(component, nullptr);
+    if (!component)
+    {
+        LOG_ERROR("Clone_Component failed. searched Static and current level. currentLevel={}, componentID={}",
+            GAME->Current_Level(),
+            componentID);
+
+        return nullptr;
+    }
 
     return component->Clone(arg);
 }

@@ -226,6 +226,9 @@
                 },
                 {
                     "name": "Notify State Track"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
@@ -234,14 +237,14 @@
                     "payload": {
                         "left_foot": false,
                         "left_hand": false,
-                        "override_hit_reaction_type": 0,
-                        "override_launch_power": 0.0,
-                        "override_launch_up": 0.0,
+                        "override_hit_reaction_type": 5,
+                        "override_launch_power": 4.0,
+                        "override_launch_up": 5.0,
                         "right_foot": false,
                         "right_hand": true,
                         "target": "hitbox",
-                        "use_hit_reaction_override": false,
-                        "use_launch_override": false
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true
                     },
                     "start_sec": 0.20000000298023224,
                     "track_index": 0,
@@ -253,6 +256,26 @@
                     "start_sec": 0.30000001192092896,
                     "track_index": 1,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.20000000298023224,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.23333333432674408,
+                    "track_index": 2,
+                    "type": "ANS_Move"
                 }
             ],
             "notify_tracks": [
@@ -271,6 +294,9 @@
                 },
                 {
                     "name": "Notify State Track"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
@@ -279,14 +305,14 @@
                     "payload": {
                         "left_foot": false,
                         "left_hand": false,
-                        "override_hit_reaction_type": 0,
-                        "override_launch_power": 0.0,
-                        "override_launch_up": 0.0,
+                        "override_hit_reaction_type": 5,
+                        "override_launch_power": 4.0,
+                        "override_launch_up": 7.0,
                         "right_foot": true,
                         "right_hand": false,
                         "target": "hitbox",
-                        "use_hit_reaction_override": false,
-                        "use_launch_override": false
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true
                     },
                     "start_sec": 0.20000000298023224,
                     "track_index": 0,
@@ -298,6 +324,26 @@
                     "start_sec": 0.36666667461395264,
                     "track_index": 1,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.20000000298023224,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.13333334028720856,
+                    "track_index": 2,
+                    "type": "ANS_Move"
                 }
             ],
             "notify_tracks": [
@@ -316,6 +362,9 @@
                 },
                 {
                     "name": "Notify State Track"
+                },
+                {
+                    "name": "Notify State Track 4"
                 }
             ],
             "notify_states": [
@@ -324,14 +373,14 @@
                     "payload": {
                         "left_foot": false,
                         "left_hand": false,
-                        "override_hit_reaction_type": 0,
-                        "override_launch_power": 0.0,
-                        "override_launch_up": 0.0,
+                        "override_hit_reaction_type": 5,
+                        "override_launch_power": 4.0,
+                        "override_launch_up": 6.0,
                         "right_foot": true,
                         "right_hand": false,
                         "target": "hitbox",
-                        "use_hit_reaction_override": false,
-                        "use_launch_override": false
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true
                     },
                     "start_sec": 0.6333333253860474,
                     "track_index": 0,
@@ -342,14 +391,14 @@
                     "payload": {
                         "left_foot": true,
                         "left_hand": false,
-                        "override_hit_reaction_type": 0,
-                        "override_launch_power": 0.0,
-                        "override_launch_up": 0.0,
+                        "override_hit_reaction_type": 5,
+                        "override_launch_power": 4.0,
+                        "override_launch_up": 6.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": false,
-                        "use_launch_override": false
+                        "use_launch_override": true
                     },
                     "start_sec": 1.399999976158142,
                     "track_index": 0,
@@ -361,6 +410,46 @@
                     "start_sec": 1.4333332777023315,
                     "track_index": 1,
                     "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.23333333432674408,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.6000000238418579,
+                    "track_index": 2,
+                    "type": "ANS_Move"
+                },
+                {
+                    "duration_sec": 0.23333333432674408,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 1.4333332777023315,
+                    "track_index": 2,
+                    "type": "ANS_Move"
                 }
             ],
             "notify_tracks": [
@@ -384,14 +473,14 @@
                     "payload": {
                         "left_foot": false,
                         "left_hand": false,
-                        "override_hit_reaction_type": 0,
-                        "override_launch_power": 0.0,
-                        "override_launch_up": 0.0,
+                        "override_hit_reaction_type": 6,
+                        "override_launch_power": 15.0,
+                        "override_launch_up": -5.0,
                         "right_foot": true,
                         "right_hand": false,
                         "target": "hitbox",
-                        "use_hit_reaction_override": false,
-                        "use_launch_override": false
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true
                     },
                     "start_sec": 0.8666666746139526,
                     "track_index": 0,
@@ -1440,7 +1529,12 @@
                             1.0,
                             1.5
                         ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
                         "spawn_object_type": 23,
+                        "use_hit_reaction_override": false,
+                        "use_launch_override": false,
                         "use_owner_forward": true
                     },
                     "time_sec": 0.1666666716337204,
@@ -2280,7 +2374,7 @@
                         "constrain_to_ground": true,
                         "direction_source": "TargetDirection",
                         "ignore_y": true,
-                        "move_speed": 4.0,
+                        "move_speed": 10.0,
                         "move_velocity": [
                             0.0,
                             0.0,
@@ -2468,6 +2562,31 @@
                     "type": "ANS_Move"
                 }
             ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Beaten_Left",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "전환 상태": 0
+                    },
+                    "time_sec": 0.8666666746139526,
+                    "track_index": 0,
+                    "type": "AN_ChangePlayerState"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
             "notify_tracks": [
                 {
                     "name": "Notifies"

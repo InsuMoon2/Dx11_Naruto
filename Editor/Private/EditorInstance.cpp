@@ -305,6 +305,27 @@ void EditorInstance::Resume()
         GAME->Set_ActiveCamera(targetCam);
 }
 
+void EditorInstance::Set_RuntimeTimeScale(float timeScale)
+{
+    _runtimeTimeScale = Clamp_RuntimeTimeScale(timeScale);
+}
+
+void EditorInstance::Reset_RuntimeTimeScale()
+{
+    _runtimeTimeScale = 1.f;
+}
+
+float EditorInstance::Clamp_RuntimeTimeScale(float timeScale)
+{
+    if (timeScale < 0.1f)
+        return 0.1f;
+
+    if (timeScale > 3.f)
+        return 3.f;
+
+    return timeScale;
+}
+
 shared_ptr<EditorWindow> EditorInstance::Get_Window(const wstring& key)
 {
     return _editorManager->Get_Window(key);

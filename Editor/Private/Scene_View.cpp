@@ -14,6 +14,7 @@
 #include "CollisionProxyActor.h"
 #include "Spawn_Helper.h"
 #include "StaticMeshActor.h"
+#include "AttachedEffectObject.h"
 #include "Model.h"
 #include "Notification_Manager.h"
 
@@ -655,12 +656,15 @@ static bool Try_BuildWallProxyDescFromCluster(
 // 이름 규칙이 고정되어 있으므로, baseName + suffix 조합으로 찾아서 삭제 이벤트를 발행한다.
 static void Delete_ExistingCollisionProxySet(const wstring& baseName)
 {
-    static const array<wstring, 5> legacySuffixes = {
+    static const array<wstring, 8> legacySuffixes = {
         L"_WallFrontProxy",
         L"_WallBackProxy",
         L"_WallLeftProxy",
         L"_WallRightProxy",
-        L"_WalkableProxy"
+        L"_WalkableProxy",
+        L"_WallRun",
+        L"_WorldBlock",
+        L"_Walkable"
     };
 
     const auto objects = GAME->Get_GameObjects(GAME->Current_Level());
@@ -842,6 +846,7 @@ void Scene_View::Update(float timeDelta)
     EditorWindow::Update(timeDelta);
 
     Update_CameraLerp(timeDelta);
+    Update_EditorDroppedEffects(timeDelta);
 
     //Handle_Guizmo_Shotcut();
 }
@@ -923,6 +928,22 @@ void Scene_View::Update_CameraLerp(float timeDelta)
         _isCameraLerping = false;
 }
 
+void Scene_View::Update_EditorDroppedEffects(float timeDelta)
+{
+    if (EDITOR->IsPlaying())
+        return;
+
+    const auto objects = GAME->Get_GameObjects(GAME->Current_Level());
+    for (const auto& object : objects)
+    {
+        auto effectObject = dynamic_pointer_cast<Client::AttachedEffectObject>(object);
+        if (!effectObject)
+            continue;
+
+        effectObject->Update(timeDelta);
+    }
+}
+
 Ray Scene_View::Build_PickingRay(Vec2 localMousePos) const
 {
     float ndcX = (localMousePos.x / _viewportSize.x) * 2.f - 1.f;
@@ -970,13 +991,12 @@ bool Scene_View::Try_RaycastScene(const Ray& ray, Vec3& outHitPoint, Shared<Game
 
         Shared<Model> model = nullptr;
 
+        if (dynamic_pointer_cast<CollisionProxyActor>(obj))
+            continue;
+
         if (auto staticMesh = dynamic_pointer_cast<StaticMeshActor>(obj))
         {
             model = staticMesh->Get_Model();
-        }
-        else if (auto proxyActor = dynamic_pointer_cast<CollisionProxyActor>(obj))
-        {
-            model = proxyActor->Get_Model();
         }
         else
         {
@@ -1108,6 +1128,34 @@ Shared<GameObject> Scene_View::Create_StaticMesh(const string& guid, const Vec3&
         transform->Set_WorldPosition(position);
 
     return meshActor;
+}
+
+Shared<GameObject> Scene_View::Create_AttachedEffect(const string& effectAssetName, const Vec3& position)
+{
+    if (effectAssetName.empty())
+        return nullptr;
+
+    Client::AttachedEffectObject::FAttachedEffectObjectDesc desc{};
+    desc.name = L"EffectPreview_" + Utils::ToWString(effectAssetName);
+    desc.position = position;
+    desc.effectAssetName = effectAssetName;
+    desc.loopOverride = true;
+
+    auto effectObject = Client::AttachedEffectObject::Create(GAME->Get_Device(), GAME->Get_Context());
+    if (!effectObject)
+        return nullptr;
+
+    if (FAILED(effectObject->Initialize(&desc)))
+    {
+        LOG_ERROR("Create_AttachedEffect failed. effect='{}'", effectAssetName);
+        return nullptr;
+    }
+
+    auto transform = effectObject->Get_Component<Transform>();
+    if (transform)
+        transform->Set_WorldPosition(position);
+
+    return effectObject;
 }
 
 Shared<GameObject> Scene_View::Create_CollisionProxy(
@@ -1401,6 +1449,16 @@ void Scene_View::Render_Viewport()
             {
                 string guid = (const char*)payload->Data;
                 auto obj = _previewObject ? nullptr : Create_StaticMesh(guid, worldPos);
+
+                Handle_DragDrop(obj, worldPos, payload);
+            }
+
+            if (auto* payload = ImGui::AcceptDragDropPayload(
+                "CONTENT_EFFECT",
+                ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_AcceptNoDrawDefaultRect))
+            {
+                string effectAssetName = (const char*)payload->Data;
+                auto obj = _previewObject ? nullptr : Create_AttachedEffect(effectAssetName, worldPos);
 
                 Handle_DragDrop(obj, worldPos, payload);
             }
@@ -1727,6 +1785,14 @@ void Scene_View::Render_Preview()
 {
     if (!_previewObject)
         return;
+
+    if (auto effectObject = dynamic_pointer_cast<Client::AttachedEffectObject>(_previewObject))
+    {
+        const float previewDelta = ImGui::GetIO().DeltaTime;
+        effectObject->Update(previewDelta);
+        effectObject->Late_Update(previewDelta);
+        return;
+    }
 
     GAME->Add_RenderGroup(ERenderGroup::NonBlend, _previewObject);
 }

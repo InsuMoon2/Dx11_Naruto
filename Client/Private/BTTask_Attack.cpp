@@ -18,7 +18,7 @@ bool BTTask_Attack::Register_Properties()
     PROPERTY_STRING_JSON("Attack Anim State 01", "attack_anim_state_01", _attackAnimState01);
     PROPERTY_STRING_JSON("Attack Anim State 02", "attack_anim_state_02", _attackAnimState02);
     PROPERTY_STRING_JSON("Attack Anim State 03", "attack_anim_state_03", _attackAnimState03);
-    PROPERTY_STRING_JSON("Attack Anim State 04", "attack_anim_state_03", _attackAnimState04);
+    PROPERTY_STRING_JSON("Attack Anim State 04", "attack_anim_state_04", _attackAnimState04);
 
     PROPERTY_FLOAT_JSON("Attack Range", "attack_range", _attackRange, 0.1f, 100.f);
     PROPERTY_BOOL_JSON("Face Target", "face_target", _faceTarget);
@@ -131,10 +131,19 @@ EBTNodeResult BTTask_Attack::Update(float timeDelta)
 
         blackboard->Set_ValueAsString("AnimState", _selectedAttackAnimState);
 
+        const int32 nextReplaySerial = blackboard->HasKey("AnimReplaySerial")
+            ? blackboard->Get_ValueAsInt("AnimReplaySerial") + 1
+            : 1;
+
+        blackboard->Set_ValueAsInt("AnimReplaySerial", nextReplaySerial);
+
         if (_requestAnimEnd)
             blackboard->Set_ValueAsBool("AnimRequestEnd", true);
 
         _startedAttack = true;
+
+        _lastResult = EBTNodeResult::InProgress;
+        return _lastResult;
     }
 
     // 공격 애니메이션이 끝날 떄까지는 진행중으로
