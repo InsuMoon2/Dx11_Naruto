@@ -6,6 +6,9 @@ NS_BEGIN(Engine)
 
 class Shader;
 
+#define PROPERTY_UIOBJECT_FORCE_VISIBLE() \
+    PROPERTY_BOOL("Force Visible", _forceVisibleInspector)
+
 class ENGINE_DLL UIObject abstract : public GameObject
 {
     GENERATED_BODY(UIObject)
@@ -40,6 +43,7 @@ public:
 public:
     virtual void        Set_Visibility(bool active) { _isVisible = active; }
     virtual bool        Is_Visibility() const { return _isVisible; }
+    bool                Is_VisibleForRender() const { return _isVisible || _forceVisibleInspector; }
 
     float               Get_ZOrder() const { return _zOrder; }
     EUILayer            Get_UILayer() const { return _uiLayer; }
@@ -91,6 +95,7 @@ protected:
 
 protected:
     bool        _isVisible  = true; // 화면 표시
+    bool        _forceVisibleInspector = false; // 인스펙터에서 UI 애니메이션 편집 시 숨김 상태를 렌더링만 강제로 우회
     EUILayer    _uiLayer    = EUILayer::HUD;
 
     uint32      _levelIndex = 0;

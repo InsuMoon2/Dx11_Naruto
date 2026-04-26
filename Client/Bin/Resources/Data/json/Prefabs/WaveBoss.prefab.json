@@ -68,6 +68,7 @@
             }
         ],
         "spawn_layer_tag": "Layer_Builder",
+        "show_mission_marker": false,
         "stop_default_effect_on_trigger": true,
         "trigger_effect_asset_name": "",
         "trigger_once": true,

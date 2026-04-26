@@ -412,6 +412,8 @@
     <ClInclude Include="..\Public\UI_WireLockOn.h" />
     <ClInclude Include="..\Public\WireMeshEffect.h" />
     <ClInclude Include="..\Public\Skill_WoodHand.h" />
+    <ClInclude Include="..\Public\UI_MissionMarker.h" />
+    <ClInclude Include="..\Public\UI_ScreenFade.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -807,6 +809,8 @@
     <ClCompile Include="..\Private\UI_WireLockOn.cpp" />
     <ClCompile Include="..\Private\WireMeshEffect.cpp" />
     <ClCompile Include="..\Private\Skill_WoodHand.cpp" />
+    <ClCompile Include="..\Private\UI_MissionMarker.cpp" />
+    <ClCompile Include="..\Private\UI_ScreenFade.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

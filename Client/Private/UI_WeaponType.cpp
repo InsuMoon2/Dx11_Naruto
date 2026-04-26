@@ -6,18 +6,19 @@
 #include "GameObject_Factory.h"
 
 REGISTER_GAMEOBJECT(UI_WeaponType, Protocol::OBJECT_TYPE_UI_WEAPON_TYPE)
-//IMPLEMENT_REFLECTION(UI_WeaponType)
-//
-//bool UI_WeaponType::Register_Properties()
-//{
-//    auto& info = GetStaticReflectionInfo();
-//    info.className = "UI_WeaponType";
-//
-//    PROPERTY_ENUM_CUSTOM("무기 타입", _weaponTypeBG,
-//        (vector<string>{"지원형", "방어형", "격투형", "검술형"}));
-//
-//    return true;
-//}
+IMPLEMENT_REFLECTION(UI_WeaponType)
+
+bool UI_WeaponType::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "UI_WeaponType";
+
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
+    PROPERTY_ENUM_CUSTOM("무기 타입", _weaponTypeBG,
+        (vector<string>{"지원형", "방어형", "격투형", "검술형"}));
+
+    return true;
+}
 
 UI_WeaponType::UI_WeaponType(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Background(device, context)

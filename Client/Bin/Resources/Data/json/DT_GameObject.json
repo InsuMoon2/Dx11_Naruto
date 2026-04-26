@@ -121,6 +121,16 @@
             "Level": "Static"
         },
         {
+            "Id": "Mission_Marker",
+            "ObjectType": "OBJECT_TYPE_UI_MISSION_MARKER",
+            "Level": "Static"
+        },
+        {
+            "Id": "Screen_Fade",
+            "ObjectType": "OBJECT_TYPE_UI_SCREEN_FADE",
+            "Level": "Static"
+        },
+        {
             "Id": "Skill_Object",
             "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
             "Level": "Static"

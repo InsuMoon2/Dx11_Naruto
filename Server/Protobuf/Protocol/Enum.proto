@@ -64,6 +64,7 @@ enum ComponentID
     COMPONENT_TYPE_TEXTURE_TIMER        = 226;
     COMPONENT_TYPE_TEXTURE_HALO         = 227;
     COMPONENT_TYPE_TEXTURE_LOCK_ON      = 228;
+    COMPONENT_TYPE_TEXTURE_MISSION_MARKER = 229;
 
     // Mesh
     COMPONENT_TYPE_MESH                 = 299;
@@ -201,7 +202,8 @@ enum OBJECT_TYPE
     OBJECT_TYPE_UI_TIMER                = 116;
     OBJECT_TYPE_UI_LOCK_ON              = 117;
 
-
+    OBJECT_TYPE_UI_MISSION_MARKER       = 118;
+    OBJECT_TYPE_UI_SCREEN_FADE          = 119;
 }
 
 enum OBJECT_STATE_TYPE

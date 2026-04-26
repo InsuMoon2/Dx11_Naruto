@@ -10,6 +10,7 @@ bool UI_Text::Register_Properties()
     auto& info = GetStaticReflectionInfo();
     info.className = "UI_Text";
 
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
     PROPERTY_STRING("Text", _text);
 
     return true;
@@ -65,7 +66,7 @@ void UI_Text::Late_Update(float timeDelta)
 
 HRESULT UI_Text::Render()
 {
-    if (!_isVisible || _text.empty())
+    if (!Is_VisibleForRender() || _text.empty())
         return S_OK;
 
     RECT rect = Build_ScreenRect();

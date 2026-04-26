@@ -13,6 +13,8 @@ bool UI_Timer::Register_Properties()
     auto& info = GetStaticReflectionInfo();
     info.className = "UI_Timer";
 
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
+
     PROPERTY_FLOAT("BG Width", _bgWidth, 1.f, 512.f);
     PROPERTY_FLOAT("BG Height", _bgHeight, 1.f, 512.f);
 
@@ -93,7 +95,7 @@ void UI_Timer::Update(float timeDelta)
 
 HRESULT UI_Timer::Render()
 {
-    if (!_isVisible)
+    if (!Is_VisibleForRender())
         return S_OK;
 
     CHECK_NULL(_shaderCom, E_FAIL);

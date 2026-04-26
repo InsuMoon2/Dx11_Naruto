@@ -32,6 +32,9 @@ DECLARE_DELEGATE(FOnBossObjectSpawned, Shared<GameObject>);
 
 DECLARE_DELEGATE(FOnWireLockOnVisible, bool);
 
+DECLARE_DELEGATE(FOnMissionMarkerTargetChanged, Shared<GameObject>);
+DECLARE_DELEGATE(FOnMissionMarkerTargetCleared);
+
 // 델리게이트들을 모아놓을 허브 : 매니저 역할이긴하네..
 class ENGINE_DLL DelegateHub : public Base
 {
@@ -41,6 +44,24 @@ public:
 public:
     explicit DelegateHub();
     virtual ~DelegateHub();
+
+public:
+    void Set_MissionMarkerTarget(Shared<GameObject> target)
+    {
+        _missionMarkerTarget = target;
+        OnMissionMarkerTargetChanged.Broadcast(target);
+    }
+
+    void Clear_MissionMarkerTarget()
+    {
+        _missionMarkerTarget.reset();
+        OnMissionMarkerTargetCleared.Broadcast();
+    }
+
+    Shared<GameObject> Get_MissionMarkerTarget() const
+    {
+        return _missionMarkerTarget.lock();
+    }
 
 public:
     // 위치
@@ -71,7 +92,11 @@ public:
     // 와이어 액션
     FOnWireLockOnVisible        OnWireLockOnVisible;
 
-    
+    FOnMissionMarkerTargetChanged OnMissionMarkerTargetChanged;
+    FOnMissionMarkerTargetCleared OnMissionMarkerTargetCleared;
+
+private:
+    Weak<GameObject> _missionMarkerTarget;
 };
 
 NS_END

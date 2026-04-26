@@ -7,6 +7,17 @@
 #include "GameInstance.h"
 
 REGISTER_GAMEOBJECT(UI_AnnounceCombo, Protocol::OBJECT_TYPE_UI_ANNOUNCE_COMBO)
+IMPLEMENT_REFLECTION(UI_AnnounceCombo)
+
+bool UI_AnnounceCombo::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "UI_AnnounceCombo";
+
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
+
+    return true;
+}
 
 UI_AnnounceCombo::UI_AnnounceCombo(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
@@ -46,7 +57,7 @@ HRESULT UI_AnnounceCombo::Initialize(void* arg)
 
 void UI_AnnounceCombo::Update(float timeDelta)
 {
-    if (!_isVisible)
+    if (!Is_VisibleForRender())
         return;
 
     _decayTimer -= timeDelta;
@@ -67,7 +78,7 @@ void UI_AnnounceCombo::Update(float timeDelta)
 
 void UI_AnnounceCombo::Late_Update(float timeDelta)
 {
-    if (!_isVisible)
+    if (!Is_VisibleForRender())
         return;
 
     UIObject::Late_Update(timeDelta);
@@ -75,7 +86,7 @@ void UI_AnnounceCombo::Late_Update(float timeDelta)
 
 HRESULT UI_AnnounceCombo::Render()
 {
-    if (!_isVisible || _comboCount == 0)
+    if (!Is_VisibleForRender() || _comboCount == 0)
         return S_OK;
 
     CHECK_FAILED(__super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", ETransformState::View), E_FAIL);

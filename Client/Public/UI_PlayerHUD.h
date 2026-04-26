@@ -22,6 +22,8 @@ class UI_BossHp;
 class Monster;
 class UI_Timer;
 class UI_WireLockOn;
+class UI_MissionMarker;
+class UI_ScreenFade;
 
 DECLARE_DELEGATE(FOnHUDPlayerBound, Shared<Player>);
 
@@ -81,6 +83,15 @@ public:
     void        Show_WireLockOn();
     void        Hide_WireLockOn();
 
+    void        Set_MissionMarkerTarget(Shared<GameObject> targetObject);
+    void        Clear_MissionMarkerTarget();
+
+public:
+    void        Show_MissionEnd();
+    void        Hide_MissionEnd();
+    void        Set_MissionEndOpacity(float alpha);
+    void        Set_ScreenFadeAlpha(float alpha);
+
 private:
     HRESULT     Ready_CombatLines();
     void        Reset_CombatLineLayout();
@@ -100,10 +111,15 @@ private:
     HRESULT     Ready_UI(void* arg);
     HRESULT     Ready_Timer();
     HRESULT     Ready_WireLockOn();
+    HRESULT     Ready_MissionClearUI();
+
 
 public:
     FOnHUDPlayerBound OnHUDPlayerBound;
     FDelegateHandle   _wireLockOnVisibleHandle = {};
+
+    FDelegateHandle _missionMarkerTargetHandle = {};
+    FDelegateHandle _missionMarkerClearHandle = {};
 
 private:
     Shared<UI_PlayerStatus>     _status;
@@ -111,7 +127,8 @@ private:
     Shared<UI_AnnounceCombo>    _announceCombo;
     Shared<UI_Targeting>        _targeting;
     Shared<UI_Timer>            _timer;
-    Shared<UI_WireLockOn>           _wireLockOn;
+    Shared<UI_WireLockOn>       _wireLockOn;
+    Shared<UI_MissionMarker>    _missionMarker;
 
     vector<FCombatLineLayer>    _combatLineLayers;
     FDelegateHandle             _remotePlayerSpawnedHandle = {};
@@ -140,6 +157,8 @@ private:
     float                       _koAnnounceOffsetX = 167.f;
     float                       _koAnnounceOffsetY = -14.f;
 
+    Shared<Background>      _missionEndBanner;
+    Shared<UI_ScreenFade>   _screenFadePanel;
 
 private:
     static constexpr uint32 COMBAT_LINE_TEXTURE_INDEX_07 = 8;

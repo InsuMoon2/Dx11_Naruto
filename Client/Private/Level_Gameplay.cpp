@@ -167,6 +167,8 @@ void Level_Gameplay::Update(float timeDelta)
     Level::Update(timeDelta);
     Update_DynamicShadowLightFromView();
 
+    Update_MissionClearSequence(timeDelta);
+
     if (_konohaTransitionRequested)
     {
         const EGameplaySpawnMode spawnMode =
@@ -235,7 +237,7 @@ void Level_Gameplay::On_WaveCleared(const string& waveTag)
     if (waveTag != "GamePlayClearWave")
         return;
 
-    Request_EnterKonoha();
+    Start_MissionClearSequence();
 }
 
 void Level_Gameplay::On_WaveStarted(const string& waveTag)
@@ -473,6 +475,60 @@ Matrix Level_Gameplay::Build_CollisionModelPreTransform()
     Matrix rotationMatrix = Matrix::CreateRotationY(XMConvertToRadians(180.f));
 
     return scaleMatrix * rotationMatrix;
+}
+
+void Level_Gameplay::Start_MissionClearSequence()
+{
+    if (_missionClearSequenceActive || _konohaTransitionRequested)
+        return;
+
+    _missionClearSequenceActive = true;
+    _missionClearTransitionRequested = false;
+    _missionClearTimer = 0.f;
+
+    if (_playerHUD)
+    {
+        _playerHUD->Show_MissionEnd();
+        _playerHUD->Set_ScreenFadeAlpha(0.f);
+    }
+}
+
+void Level_Gameplay::Update_MissionClearSequence(float timeDelta)
+{
+    if (!_missionClearSequenceActive)
+        return;
+
+    _missionClearTimer += timeDelta;
+
+    const float fadeStartTime = _missionClearHoldTime;
+    const float fadeEndTime = _missionClearHoldTime + _missionClearFadeOutTime;
+
+    if (_missionClearTimer >= fadeStartTime)
+    {
+        const float fadeRatio =
+            (_missionClearTimer - fadeStartTime) / max(_missionClearFadeOutTime, FLT_EPSILON);
+
+        if (_playerHUD)
+            _playerHUD->Set_ScreenFadeAlpha(clamp(fadeRatio, 0.f, 1.f));
+    }
+
+    if (_missionClearTimer < fadeEndTime)
+        return;
+
+    Finish_MissionClearSequence();
+}
+
+void Level_Gameplay::Finish_MissionClearSequence()
+{
+    if (_missionClearTransitionRequested)
+        return;
+
+    _missionClearTransitionRequested = true;
+
+    if (_playerHUD)
+        _playerHUD->Set_ScreenFadeAlpha(1.f);
+
+    Request_EnterKonoha();
 }
 
 void Level_Gameplay::Disable_LocalWaveTriggers_ForServerMode()

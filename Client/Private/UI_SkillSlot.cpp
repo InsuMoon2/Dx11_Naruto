@@ -6,6 +6,17 @@
 #include "GameObject_Factory.h"
 
 REGISTER_GAMEOBJECT(UI_SkillSlot, Protocol::OBJECT_TYPE_UI_SKILL_SLOT)
+IMPLEMENT_REFLECTION(UI_SkillSlot)
+
+bool UI_SkillSlot::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "UI_SkillSlot";
+
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
+
+    return true;
+}
 
 UI_SkillSlot::UI_SkillSlot(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
@@ -61,7 +72,7 @@ void UI_SkillSlot::Update(float timeDelta)
 
 HRESULT UI_SkillSlot::Render()
 {
-    if (!_isVisible)
+    if (!Is_VisibleForRender())
         return S_OK;
 
     CHECK_FAILED(Bind_CommonShaderResources(), E_FAIL);

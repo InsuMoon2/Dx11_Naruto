@@ -10,6 +10,17 @@
 #include "Level_MainTitle.h"
 
 REGISTER_GAMEOBJECT(Background, Protocol::OBJECT_TYPE_BACKGROUND)
+IMPLEMENT_REFLECTION(Background)
+
+bool Background::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "Background";
+
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
+
+    return true;
+}
 
 Background::Background(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject { device, context }
@@ -68,7 +79,7 @@ void Background::Late_Update(float timeDelta)
 
 HRESULT Background::Render()
 {
-    if (!_isVisible)
+    if (!Is_VisibleForRender())
         return S_OK;
 
     UIObject::Render();

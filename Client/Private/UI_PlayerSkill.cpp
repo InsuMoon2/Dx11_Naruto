@@ -9,6 +9,17 @@
 #include "EquipmentComponent.h"
 
 REGISTER_GAMEOBJECT(UI_PlayerSkill, Protocol::OBJECT_TYPE_UI_PLAYER_SKILL)
+IMPLEMENT_REFLECTION(UI_PlayerSkill)
+
+bool UI_PlayerSkill::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "UI_PlayerSkill";
+
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
+
+    return true;
+}
 
 UI_PlayerSkill::UI_PlayerSkill(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Panel(device, context)

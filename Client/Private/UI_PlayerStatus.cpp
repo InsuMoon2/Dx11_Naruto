@@ -12,6 +12,17 @@
 #include "SkillDataManager.h"
 
 REGISTER_GAMEOBJECT(UI_PlayerStatus, Protocol::OBJECT_TYPE_UI_PLAYER_STATUS)
+IMPLEMENT_REFLECTION(UI_PlayerStatus)
+
+bool UI_PlayerStatus::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "UI_PlayerStatus";
+
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
+
+    return true;
+}
 
 UI_PlayerStatus::UI_PlayerStatus(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Panel(device, context)
@@ -126,7 +137,7 @@ void UI_PlayerStatus::Late_Update(float timeDelta)
 
 HRESULT UI_PlayerStatus::Render()
 {
-    if (!_isVisible) return S_OK;
+    if (!Is_VisibleForRender()) return S_OK;
 
     _shaderCom->Bind_Matrix("g_WorldMatrix", &_worldMatrix);
 

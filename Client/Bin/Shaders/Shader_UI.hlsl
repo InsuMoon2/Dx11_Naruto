@@ -228,6 +228,16 @@ PS_OUT PS_BLACKKEY_UI(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_SOLID_COLOR(PS_IN In)
+{
+    PS_OUT Out;
+
+    Out.vColor = g_BaseColor;
+    Out.vColor.a *= g_Alpha;
+
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     // 0
@@ -303,6 +313,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLACKKEY_UI();
+    }
+
+    // 8
+    pass SolidColorPass
+    {
+        SetDepthStencilState(DSS_None, 0);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SOLID_COLOR();
     }
 }
 

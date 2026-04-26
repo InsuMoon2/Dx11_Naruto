@@ -92,6 +92,7 @@ bool WaveTrigger::Register_Properties()
     PROPERTY_BOOL_JSON("BeginPlay 기본 이펙트", "play_default_effect_on_begin_play", _playDefaultEffectOnBeginPlay);
     PROPERTY_BOOL_JSON("트리거 시 기본 이펙트 중지", "stop_default_effect_on_trigger", _stopDefaultEffectOnTrigger);
     PROPERTY_BOOL_JSON("트리거 시 트리거 이펙트 재생", "play_trigger_effect_on_trigger", _playTriggerEffectOnTrigger);
+    PROPERTY_BOOL_JSON("미션 마커 표시", "show_mission_marker", _showMissionMarker);
 
     return true;
 }
@@ -115,6 +116,7 @@ WaveTrigger::WaveTrigger(const WaveTrigger& rhs)
     , _playDefaultEffectOnBeginPlay(rhs._playDefaultEffectOnBeginPlay)
     , _stopDefaultEffectOnTrigger(rhs._stopDefaultEffectOnTrigger)
     , _playTriggerEffectOnTrigger(rhs._playTriggerEffectOnTrigger)
+    , _showMissionMarker(rhs._showMissionMarker)
     , _spawnEntries(rhs._spawnEntries)
 {
 }
@@ -147,6 +149,9 @@ HRESULT WaveTrigger::Initialize(void* arg)
 void WaveTrigger::BeginPlay()
 {
     GameObject::BeginPlay();
+
+    if (_showMissionMarker)
+        GAME->Get_DelegateHub().Set_MissionMarkerTarget(GetSharedPtr<GameObject>());
 
     if (!_serverAuthoritative)
         Prewarm_Wave();
@@ -294,6 +299,7 @@ json WaveTrigger::To_Json() const
     custom["play_default_effect_on_begin_play"] = _playDefaultEffectOnBeginPlay;
     custom["stop_default_effect_on_trigger"] = _stopDefaultEffectOnTrigger;
     custom["play_trigger_effect_on_trigger"] = _playTriggerEffectOnTrigger;
+    custom["show_mission_marker"] = _showMissionMarker;
 
     json spawnEntriesJson = json::array();
 
@@ -353,6 +359,9 @@ void WaveTrigger::From_Json(const json& data)
 
     if (data.contains("play_trigger_effect_on_trigger"))
         _playTriggerEffectOnTrigger = data["play_trigger_effect_on_trigger"].get<bool>();
+
+    if (data.contains("show_mission_marker"))
+        _showMissionMarker = data["show_mission_marker"].get<bool>();
 
     _spawnEntries.clear();
 
@@ -473,6 +482,9 @@ void WaveTrigger::Try_TriggerWave(Shared<GameObject> otherObject)
             _effectCom->Play_Effect(playDesc);
         }
     }
+
+    if (_showMissionMarker)
+        GAME->Get_DelegateHub().Clear_MissionMarkerTarget();
 
     GAME->Get_DelegateHub().OnWaveStarted.Broadcast(_waveTag);
 

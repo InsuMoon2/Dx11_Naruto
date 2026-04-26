@@ -43,7 +43,7 @@
     ],
     "custom_properties": {
         "clear_delay_sec": 1.0,
-        "default_effect_asset_name": "",
+        "default_effect_asset_name": "RingEffect_Loop",
         "play_default_effect_on_begin_play": true,
         "play_trigger_effect_on_trigger": true,
         "spawn_entries": [
@@ -87,12 +87,13 @@
             }
         ],
         "spawn_layer_tag": "Layer_Builder",
+        "show_mission_marker": true,
         "stop_default_effect_on_trigger": true,
         "trigger_effect_asset_name": "",
         "trigger_once": true,
         "wave_tag": "GamePlayClearWave"
     },
-    "guid": "1f4dc251-f69f-47f4-a665-1b32311fe644",
+    "guid": "b4236004-8ba6-4c26-a0a8-74a3148b8bec",
     "object_type": "OBJECT_TYPE_WAVE_TRIGGER",
     "prefab_name": "WaveTrigger",
     "static_class": "WaveTrigger"

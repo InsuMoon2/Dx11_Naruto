@@ -6,6 +6,17 @@
 #include "GameObject_Factory.h"
 
 REGISTER_GAMEOBJECT(UI_WireLockOn, Protocol::OBJECT_TYPE_UI_LOCK_ON)
+IMPLEMENT_REFLECTION(UI_WireLockOn)
+
+bool UI_WireLockOn::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "UI_WireLockOn";
+
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
+
+    return true;
+}
 
 UI_WireLockOn::UI_WireLockOn(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
@@ -48,7 +59,7 @@ void UI_WireLockOn::Update(float timeDelta)
 {
     UIObject::Update(timeDelta);
 
-    if (!_isVisible)
+    if (!Is_VisibleForRender())
         return;
 
     _animTime += timeDelta;
@@ -63,7 +74,7 @@ void UI_WireLockOn::Update(float timeDelta)
 
 HRESULT UI_WireLockOn::Render()
 {
-    if (!_isVisible)
+    if (!Is_VisibleForRender())
         return S_OK;
 
     CHECK_NULL(_shaderCom, E_FAIL);

@@ -103,6 +103,7 @@ enum ComponentID : int {
   COMPONENT_TYPE_TEXTURE_TIMER = 226,
   COMPONENT_TYPE_TEXTURE_HALO = 227,
   COMPONENT_TYPE_TEXTURE_LOCK_ON = 228,
+  COMPONENT_TYPE_TEXTURE_MISSION_MARKER = 229,
   COMPONENT_TYPE_MESH = 299,
   COMPONENT_TYPE_MODEL_START = 300,
   COMPONENT_TYPE_MODEL_PLAYER = 301,
@@ -226,6 +227,8 @@ enum OBJECT_TYPE : int {
   OBJECT_TYPE_UI_MULTIPLAYER_HP = 115,
   OBJECT_TYPE_UI_TIMER = 116,
   OBJECT_TYPE_UI_LOCK_ON = 117,
+  OBJECT_TYPE_UI_MISSION_MARKER = 118,
+  OBJECT_TYPE_UI_SCREEN_FADE = 119,
   OBJECT_TYPE_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   OBJECT_TYPE_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -235,8 +238,8 @@ enum OBJECT_TYPE : int {
 bool OBJECT_TYPE_IsValid(int value);
 extern const uint32_t OBJECT_TYPE_internal_data_[];
 constexpr OBJECT_TYPE OBJECT_TYPE_MIN = static_cast<OBJECT_TYPE>(0);
-constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(117);
-constexpr int OBJECT_TYPE_ARRAYSIZE = 117 + 1;
+constexpr OBJECT_TYPE OBJECT_TYPE_MAX = static_cast<OBJECT_TYPE>(119);
+constexpr int OBJECT_TYPE_ARRAYSIZE = 119 + 1;
 const ::google::protobuf::EnumDescriptor*
 OBJECT_TYPE_descriptor();
 template <typename T>
@@ -249,7 +252,7 @@ const std::string& OBJECT_TYPE_Name(T value) {
 template <>
 inline const std::string& OBJECT_TYPE_Name(OBJECT_TYPE value) {
   return ::google::protobuf::internal::NameOfDenseEnum<OBJECT_TYPE_descriptor,
-                                                 0, 117>(
+                                                 0, 119>(
       static_cast<int>(value));
 }
 inline bool OBJECT_TYPE_Parse(absl::string_view name, OBJECT_TYPE* value) {

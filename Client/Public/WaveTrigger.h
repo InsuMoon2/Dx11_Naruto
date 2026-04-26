@@ -92,6 +92,7 @@ private:
 
     bool    _stopDefaultEffectOnTrigger = true;
     bool    _playTriggerEffectOnTrigger = true;
+    bool    _showMissionMarker = true;
 
     vector<FWaveSpawnEntry>     _spawnEntries;
     vector<Weak<GameObject>>    _spawnedMonsters;

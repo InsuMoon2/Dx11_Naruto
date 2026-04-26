@@ -7,6 +7,17 @@
 #include "GameObject_Factory.h"
 
 REGISTER_GAMEOBJECT(UI_PlayerHP, Protocol::OBJECT_TYPE_UI_PLAYER_HP)
+IMPLEMENT_REFLECTION(UI_PlayerHP)
+
+bool UI_PlayerHP::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "UI_PlayerHP";
+
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
+
+    return true;
+}
 
 UI_PlayerHP::UI_PlayerHP(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
@@ -59,7 +70,7 @@ void UI_PlayerHP::Late_Update(float timeDelta)
 
 HRESULT UI_PlayerHP::Render()
 {
-    if (!_isVisible) return S_OK;
+    if (!Is_VisibleForRender()) return S_OK;
 
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_worldMatrix), E_FAIL);
     CHECK_FAILED(__super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", ETransformState::View), E_FAIL);

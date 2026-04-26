@@ -482,6 +482,30 @@
             "Level": "Static"
         },
         {
+            "Id": "COMPONENT_TYPE_TEXTURE_MISSION",
+            "Path": "../../Client/Bin/Resources/Textures/UI/TextUI/ingame/Announce/Textures/Last_Finish.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MISSION",
+            "Path": "../../Client/Bin/Resources/Textures/UI/TextUI/ingame/Announce/Textures/MissionTitle_Base.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MISSION_MARKER",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Minimap/T_UI_Flag_Blue_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
+            "Id": "COMPONENT_TYPE_TEXTURE_MISSION_MARKER",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Minimap/T_UI_Boss_BC.png",
+            "Count": 1,
+            "Level": "Static"
+        },
+        {
             "Id": "COMPONENT_TYPE_TEXTURE_SKILL_GAUGE",
             "Path": "../../Client/Bin/Resources/Textures/UI/PlayerStats/T_UI_Skill_Gauge_Base%d_BC.png",
             "Count": 2,

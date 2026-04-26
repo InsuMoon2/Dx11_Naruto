@@ -381,11 +381,13 @@
     <ClInclude Include="..\Public\UI_LoadingProgressBar.h" />
     <ClInclude Include="..\Public\UI_LoadingSpinner.h" />
     <ClInclude Include="..\Public\UI_MainTitleMenuButton.h" />
+    <ClInclude Include="..\Public\UI_MissionMarker.h" />
     <ClInclude Include="..\Public\UI_MonsterHp.h" />
     <ClInclude Include="..\public\UI_PlayerHP.h" />
     <ClInclude Include="..\Public\UI_PlayerHUD.h" />
     <ClInclude Include="..\Public\UI_PlayerSkill.h" />
     <ClInclude Include="..\Public\UI_PlayerStatus.h" />
+    <ClInclude Include="..\Public\UI_ScreenFade.h" />
     <ClInclude Include="..\Public\UI_SkillSlot.h" />
     <ClInclude Include="..\Public\UI_TabButton.h" />
     <ClInclude Include="..\Public\UI_Targeting.h" />
@@ -567,11 +569,13 @@
     <ClCompile Include="..\Private\UI_LoadingProgressBar.cpp" />
     <ClCompile Include="..\Private\UI_LoadingSpinner.cpp" />
     <ClCompile Include="..\Private\UI_MainTitleMenuButton.cpp" />
+    <ClCompile Include="..\Private\UI_MissionMarker.cpp" />
     <ClCompile Include="..\Private\UI_MonsterHp.cpp" />
     <ClCompile Include="..\Private\UI_PlayerHP.cpp" />
     <ClCompile Include="..\Private\UI_PlayerHUD.cpp" />
     <ClCompile Include="..\Private\UI_PlayerSkill.cpp" />
     <ClCompile Include="..\Private\UI_PlayerStatus.cpp" />
+    <ClCompile Include="..\Private\UI_ScreenFade.cpp" />
     <!-- <ClCompile Include="Client.cpp" /> -->
     <ClCompile Include="..\Private\UI_SkillSlot.cpp" />
     <ClCompile Include="..\Private\UI_TabButton.cpp" />

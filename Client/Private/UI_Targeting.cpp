@@ -11,6 +11,17 @@
 #include "GameObject_Factory.h"
 
 REGISTER_GAMEOBJECT(UI_Targeting, Protocol::OBJECT_TYPE_UI_TARGETING)
+IMPLEMENT_REFLECTION(UI_Targeting)
+
+bool UI_Targeting::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "UI_Targeting";
+
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
+
+    return true;
+}
 
 UI_Targeting::UI_Targeting(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : UIObject(device, context)
@@ -135,7 +146,7 @@ void UI_Targeting::Update(float timeDelta)
 
 void UI_Targeting::Late_Update(float timeDelta)
 {
-    if (!_isVisible) return;
+    if (!Is_VisibleForRender()) return;
 
     // 렌더 그룹 등록은 UI_Manager가 담당하므로 여기서는 UI 자체 Late_Update만 수행한다.
     UIObject::Late_Update(timeDelta);
@@ -143,7 +154,7 @@ void UI_Targeting::Late_Update(float timeDelta)
 
 HRESULT UI_Targeting::Render()
 {
-    if (!_isVisible) return S_OK;
+    if (!Is_VisibleForRender()) return S_OK;
 
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_worldMatrix), E_FAIL);
     CHECK_FAILED(__super::Bind_ShaderResource(_shaderCom, "g_ViewMatrix", ETransformState::View), E_FAIL);

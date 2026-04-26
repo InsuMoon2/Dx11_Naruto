@@ -47,10 +47,15 @@ private:
     // 활성 카메라/플레이어 기준으로 shadow 전용 카메라를 다시 맞출 때 호출한다.
     void            Update_DynamicShadowLightFromView();
 
-    static Matrix Build_CollisionModelPreTransform();
+    static Matrix   Build_CollisionModelPreTransform();
 
 private:
-    void Disable_LocalWaveTriggers_ForServerMode();
+    void            Start_MissionClearSequence();
+    void            Update_MissionClearSequence(float timeDelta);
+    void            Finish_MissionClearSequence();
+
+private:
+    void            Disable_LocalWaveTriggers_ForServerMode();
 
     void            Spawn_LocalPlayer();
     void            On_PlayerObjectSpawned(Shared<GameObject> obj);
@@ -110,7 +115,11 @@ private:
     vector<MovementComponent::FCollisionModelInstance> _surfaceProxyModels;
     vector<MovementComponent::FCollisionModelInstance> _worldBlockProxyModels;
 
-
+    bool  _missionClearSequenceActive = false;
+    bool  _missionClearTransitionRequested = false;
+    float _missionClearTimer = 0.f;
+    float _missionClearHoldTime = 5.f;
+    float _missionClearFadeOutTime = 0.8f;
 
 public:
     static Shared<Level_Gameplay> Create(ComPtr<Device> device, ComPtr<DeviceContext> context, EGameplaySpawnMode spawnMode);

@@ -16,6 +16,8 @@
 #include "UI_BossHp.h"
 #include "Monster.h"
 #include "Character.h"
+#include "UI_MissionMarker.h"
+#include "UI_ScreenFade.h"
 #include "UI_Timer.h"
 #include "UI_WireLockOn.h"
 
@@ -27,6 +29,8 @@ bool UI_PlayerHUD::Register_Properties()
 {
     auto& info = GetStaticReflectionInfo();
     info.className = "UI_PlayerHUD";
+
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
 
     PROPERTY_FLOAT("Combo Announce Offset X", _comboAnnounceOffsetX, -1000.f, 1000.f);
     PROPERTY_FLOAT("Combo Announce Offset Y", _comboAnnounceOffsetY, -1000.f, 1000.f);
@@ -78,6 +82,15 @@ HRESULT UI_PlayerHUD::Initialize(void* arg)
 
     _wireLockOnVisibleHandle = GAME->Get_DelegateHub().OnWireLockOnVisible.Add(
             this, &UI_PlayerHUD::Handle_WireLockOnVisible);
+
+    _missionMarkerTargetHandle = GAME->Get_DelegateHub().OnMissionMarkerTargetChanged.Add(
+        this, &UI_PlayerHUD::Set_MissionMarkerTarget);
+
+    _missionMarkerClearHandle = GAME->Get_DelegateHub().OnMissionMarkerTargetCleared.Add(
+        this, &UI_PlayerHUD::Clear_MissionMarkerTarget);
+
+    if (auto missionMarkerTarget = GAME->Get_DelegateHub().Get_MissionMarkerTarget())
+        Set_MissionMarkerTarget(missionMarkerTarget);
 
     return S_OK;
 }
@@ -291,6 +304,58 @@ void UI_PlayerHUD::Hide_WireLockOn()
 {
     if (_wireLockOn)
         _wireLockOn->Hide_LockOn();
+}
+
+void UI_PlayerHUD::Set_MissionMarkerTarget(Shared<GameObject> targetObject)
+{
+    if (!_missionMarker)
+        return;
+
+    _missionMarker->Set_TargetObject(targetObject);
+}
+
+void UI_PlayerHUD::Clear_MissionMarkerTarget()
+{
+    if (!_missionMarker)
+        return;
+
+    _missionMarker->Clear_Target();
+}
+
+void UI_PlayerHUD::Show_MissionEnd()
+{
+    if (!_missionEndBanner)
+        return;
+
+    _missionEndBanner->Set_Visibility(true);
+    _missionEndBanner->Set_UIOpacity(1.f);
+}
+
+void UI_PlayerHUD::Hide_MissionEnd()
+{
+    if (!_missionEndBanner)
+        return;
+
+    _missionEndBanner->Set_UIOpacity(0.f);
+    _missionEndBanner->Set_Visibility(false);
+}
+
+void UI_PlayerHUD::Set_MissionEndOpacity(float alpha)
+{
+    if (!_missionEndBanner)
+        return;
+
+    const float clampedAlpha = clamp(alpha, 0.f, 1.f);
+    _missionEndBanner->Set_Visibility(clampedAlpha > 0.f);
+    _missionEndBanner->Set_UIOpacity(clampedAlpha);
+}
+
+void UI_PlayerHUD::Set_ScreenFadeAlpha(float alpha)
+{
+    if (!_screenFadePanel)
+        return;
+
+    _screenFadePanel->Set_FadeAlpha(alpha);
 }
 
 HRESULT UI_PlayerHUD::Ready_CombatLines()
@@ -701,6 +766,23 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
     _targeting = Create_Child<UI_Targeting>(Protocol::OBJECT_TYPE_UI_TARGETING, EUILayer::Overlay, &targetDesc);
     CHECK_NULL(_targeting, E_FAIL);
 
+    {
+        UI_MissionMarker::FUIMissionMarkerDesc markerDesc;
+        markerDesc.posX = 0.f;
+        markerDesc.posY = 0.f;
+        markerDesc.sizeX = 128.f + 64.f;
+        markerDesc.sizeY = 128.f + 64.f;
+        markerDesc.zOrder = _zOrder + 0.02f;
+        markerDesc.levelIndex = _levelIndex;
+        markerDesc.textureIndex = 0;
+
+        _missionMarker = Create_Child<UI_MissionMarker>(
+            Protocol::OBJECT_TYPE_UI_MISSION_MARKER,
+            EUILayer::Overlay,
+            &markerDesc);
+        CHECK_NULL(_missionMarker, E_FAIL);
+    }
+
     // 보스 체력
     {
         const float bossGaugeX = uiRefWidth * 0.5f;
@@ -765,6 +847,7 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
     CHECK_FAILED(Ready_KOAnnounce(), E_FAIL);
     CHECK_FAILED(Ready_Timer(), E_FAIL);
     CHECK_FAILED(Ready_WireLockOn(), E_FAIL);
+    CHECK_FAILED(Ready_MissionClearUI(), E_FAIL);
 
     return S_OK;
 }
@@ -808,6 +891,51 @@ HRESULT UI_PlayerHUD::Ready_WireLockOn()
     CHECK_NULL(_wireLockOn, E_FAIL);
 
     _wireLockOn->Hide_LockOn();
+
+    return S_OK;
+}
+
+HRESULT UI_PlayerHUD::Ready_MissionClearUI()
+{
+    const float uiRefWidth = GAME->Get_UIReferenceWidth();
+    const float uiRefHeight = GAME->Get_UIReferenceHeight();
+
+    Background::FBackgroundDesc missionDesc{};
+    missionDesc.posX = uiRefWidth * 0.5f;
+    missionDesc.posY = uiRefHeight * 0.32f;
+    missionDesc.sizeX = 1600.f;
+    missionDesc.sizeY = 300.f;
+    missionDesc.zOrder = 0.86f;
+    missionDesc.levelIndex = _levelIndex;
+    missionDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MISSION;
+    missionDesc.textureIndex = 3;
+    missionDesc.shaderPassIndex = 1;
+
+    _missionEndBanner = Create_Child<Background>(
+        Protocol::OBJECT_TYPE_BACKGROUND,
+        EUILayer::Overlay,
+        &missionDesc);
+    CHECK_NULL(_missionEndBanner, E_FAIL);
+
+    _missionEndBanner->Set_Visibility(false);
+    _missionEndBanner->Set_UIOpacity(0.f);
+
+    UI_ScreenFade::FScreenFadeDesc fadeDesc{};
+    fadeDesc.posX = uiRefWidth * 0.5f;
+    fadeDesc.posY = uiRefHeight * 0.5f;
+    fadeDesc.sizeX = uiRefWidth;
+    fadeDesc.sizeY = uiRefHeight;
+    fadeDesc.zOrder = 0.95f;
+    fadeDesc.levelIndex = _levelIndex;
+    fadeDesc.fadeColor = Color(0.f, 0.f, 0.f, 1.f);
+    fadeDesc.initialAlpha = 0.f;
+
+    _screenFadePanel = Create_Child<UI_ScreenFade>(
+        Protocol::OBJECT_TYPE_UI_SCREEN_FADE,
+        EUILayer::Overlay,
+        &fadeDesc);
+
+    CHECK_NULL(_screenFadePanel, E_FAIL);
 
     return S_OK;
 }
@@ -871,6 +999,18 @@ void UI_PlayerHUD::Free()
     {
         hub.OnWireLockOnVisible.Remove(_wireLockOnVisibleHandle);
         _wireLockOnVisibleHandle.Reset();
+    }
+
+    if (_missionMarkerTargetHandle.IsValid())
+    {
+        hub.OnMissionMarkerTargetChanged.Remove(_missionMarkerTargetHandle);
+        _missionMarkerTargetHandle.Reset();
+    }
+
+    if (_missionMarkerClearHandle.IsValid())
+    {
+        hub.OnMissionMarkerTargetCleared.Remove(_missionMarkerClearHandle);
+        _missionMarkerClearHandle.Reset();
     }
 
     HUD::Free();

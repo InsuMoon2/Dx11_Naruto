@@ -14,6 +14,7 @@ UIObject::UIObject(const UIObject& rhs)
     , _sizeX(rhs._sizeX), _sizeY(rhs._sizeY)
     , _viewportWidth(rhs._viewportWidth), _viewportHeight(rhs._viewportHeight)
     , _worldMatrix(rhs._worldMatrix)
+    , _forceVisibleInspector(rhs._forceVisibleInspector)
 {
     memcpy(_transformMatrices, rhs._transformMatrices, sizeof(_transformMatrices));
 }

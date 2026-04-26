@@ -1933,7 +1933,7 @@
                     ],
                     "rotation": [
                         0.0,
-                        -30.999996185302734,
+                        -31.0,
                         0.0
                     ],
                     "scale": [
@@ -2003,7 +2003,7 @@
                     ],
                     "rotation": [
                         -0.0,
-                        30.999996185302734,
+                        31.0,
                         0.0
                     ],
                     "scale": [
@@ -2125,7 +2125,7 @@
                     ],
                     "rotation": [
                         -0.0,
-                        30.999996185302734,
+                        31.0,
                         0.0
                     ],
                     "scale": [
@@ -2169,7 +2169,7 @@
                     ],
                     "rotation": [
                         0.0,
-                        -30.999996185302734,
+                        -31.0,
                         0.0
                     ],
                     "scale": [
@@ -2514,7 +2514,7 @@
                     ],
                     "rotation": [
                         0.0,
-                        -43.835384368896484,
+                        -43.83538818359375,
                         0.0
                     ],
                     "scale": [
@@ -2595,6 +2595,7 @@
                 "default_effect_asset_name": "",
                 "play_default_effect_on_begin_play": true,
                 "play_trigger_effect_on_trigger": true,
+                "show_mission_marker": false,
                 "spawn_entries": [
                     {
                         "object_type_override": "OBJECT_TYPE_MONSTER",
@@ -2617,7 +2618,6 @@
                     }
                 ],
                 "spawn_layer_tag": "Layer_Builder",
-                "show_mission_marker": false,
                 "stop_default_effect_on_trigger": true,
                 "trigger_effect_asset_name": "",
                 "trigger_once": true,
@@ -2633,9 +2633,9 @@
             "components": [
                 {
                     "position": [
-                        3.4353559017181396,
-                        0.0,
-                        10.30479621887207
+                        0.41100001335144043,
+                        -0.021264076232910156,
+                        9.232999801635742
                     ],
                     "rotation": [
                         -0.0,
@@ -2674,9 +2674,10 @@
             ],
             "custom_properties": {
                 "clear_delay_sec": 1.0,
-                "default_effect_asset_name": "",
+                "default_effect_asset_name": "RingEffect_Loop",
                 "play_default_effect_on_begin_play": true,
                 "play_trigger_effect_on_trigger": true,
+                "show_mission_marker": true,
                 "spawn_entries": [
                     {
                         "object_type_override": "OBJECT_TYPE_MONSTER",
@@ -2718,13 +2719,12 @@
                     }
                 ],
                 "spawn_layer_tag": "Layer_Builder",
-                "show_mission_marker": true,
                 "stop_default_effect_on_trigger": true,
                 "trigger_effect_asset_name": "",
                 "trigger_once": true,
                 "wave_tag": "GamePlayClearWave"
             },
-            "guid": "0b072d33-3985-48fe-9789-f552f8d23a9e",
+            "guid": "dd003060-97e8-4415-aa50-133b0b10fac2",
             "layerTag": "Layer_GameObject",
             "object_type": "OBJECT_TYPE_WAVE_TRIGGER",
             "prefab_name": "WaveTrigger",
@@ -2758,5 +2758,5 @@
         }
     ],
     "levelIndex": 6,
-    "levelName": "[20260424]Tutorial"
+    "levelName": "[20260426]Tutorial"
 }

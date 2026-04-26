@@ -166,7 +166,7 @@ private:
     }
 
 private:
-    static constexpr const wchar_t* MAPNAME = L"[20260424]Tutorial";
+    static constexpr const wchar_t* MAPNAME = L"[20260426]Tutorial";
 
     map<uint64, Shared<Player>>     _players;
     map<uint64, Shared<Monster>>    _monsters;

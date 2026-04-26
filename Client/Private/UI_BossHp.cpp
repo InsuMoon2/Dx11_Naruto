@@ -13,6 +13,18 @@ REGISTER_GAMEOBJECT(UI_BossHp, Protocol::OBJECT_TYPE_UI_BOSS_HP)
 
 NS_BEGIN(Client)
 
+IMPLEMENT_REFLECTION(UI_BossHp)
+
+bool UI_BossHp::Register_Properties()
+{
+    auto& info = GetStaticReflectionInfo();
+    info.className = "UI_BossHp";
+
+    PROPERTY_UIOBJECT_FORCE_VISIBLE();
+
+    return true;
+}
+
 UI_BossHp::UI_BossHp(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : HUD(device, context)
 {
@@ -58,7 +70,7 @@ void UI_BossHp::Update(float timeDelta)
 
 HRESULT UI_BossHp::Render()
 {
-    if (!_isVisible)
+    if (!Is_VisibleForRender())
         return S_OK;
 
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_worldMatrix), E_FAIL);
