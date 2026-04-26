@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Base.h"
 #include "Component_Factory.h"
@@ -254,6 +254,7 @@ public: /* Camera */
                                         const wstring& sequenceName,
                                         Shared<Transform> anchorTransform,
                                         bool blockGameInput);
+    bool                            Is_CinematicPlaying() const;
 
     void                            Stop_Cinematic();
 

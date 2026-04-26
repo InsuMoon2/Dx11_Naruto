@@ -21,6 +21,8 @@ void PlayerState_Skill::Enter(PlayerStateMachine* state)
     if (!state)
         return;
 
+    GAME->Play_Sound(L"UseSkill.wav", ESoundChannel::Player, 0.4f);
+
     auto input = state->Get_Input();
     auto skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(_mySkill_Id);
     auto movement = state->Get_Movement();

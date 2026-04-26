@@ -23,6 +23,7 @@ bool BTTask_Attack::Register_Properties()
     PROPERTY_FLOAT_JSON("Attack Range", "attack_range", _attackRange, 0.1f, 100.f);
     PROPERTY_BOOL_JSON("Face Target", "face_target", _faceTarget);
     PROPERTY_BOOL_JSON("Request Anim End", "request_anim_end", _requestAnimEnd);
+    PROPERTY_BOOL_JSON("Chain Attack 01 To 02", "chain_attack_01_to_02", _chainAttack01To02);
 
     PROPERTY_STRING_JSON("Attack Cycle Index Key", "attack_cycle_index_key", _attackCycleIndexKey);
     PROPERTY_BOOL_JSON("Use Round Robin", "use_round_robin", _useRoundRobin);
@@ -45,6 +46,7 @@ BTTask_Attack::BTTask_Attack(const BTTask_Attack& rhs)
     , _attackRange(rhs._attackRange)
     , _faceTarget(rhs._faceTarget)
     , _requestAnimEnd(rhs._requestAnimEnd)
+    , _chainAttack01To02(rhs._chainAttack01To02)
     , _attackCycleIndexKey(rhs._attackCycleIndexKey)
     , _useRoundRobin(rhs._useRoundRobin)
     , _selectedAttackAnimState(rhs._selectedAttackAnimState)
@@ -129,16 +131,7 @@ EBTNodeResult BTTask_Attack::Update(float timeDelta)
         blackboard->Set_ValueAsFloat("MoveAxisY", 0.f);
         blackboard->Set_ValueAsBool("Sprint", false);
 
-        blackboard->Set_ValueAsString("AnimState", _selectedAttackAnimState);
-
-        const int32 nextReplaySerial = blackboard->HasKey("AnimReplaySerial")
-            ? blackboard->Get_ValueAsInt("AnimReplaySerial") + 1
-            : 1;
-
-        blackboard->Set_ValueAsInt("AnimReplaySerial", nextReplaySerial);
-
-        if (_requestAnimEnd)
-            blackboard->Set_ValueAsBool("AnimRequestEnd", true);
+        Request_AttackAnimState(blackboard, _selectedAttackAnimState);
 
         _startedAttack = true;
 
@@ -151,6 +144,17 @@ EBTNodeResult BTTask_Attack::Update(float timeDelta)
     {
         _lastResult = EBTNodeResult::InProgress;
 
+        return _lastResult;
+    }
+
+    if (_chainAttack01To02 &&
+        _selectedAttackAnimState == _attackAnimState01 &&
+        !_attackAnimState02.empty())
+    {
+        _selectedAttackAnimState = _attackAnimState02;
+        Request_AttackAnimState(blackboard, _selectedAttackAnimState);
+
+        _lastResult = EBTNodeResult::InProgress;
         return _lastResult;
     }
 
@@ -193,6 +197,9 @@ string BTTask_Attack::Select_AttackAnimState(const Shared<Blackboard>& blackboar
 
     const vector<string> attackStates = Build_AttackAnimStateList();
 
+    if (_chainAttack01To02 && !_attackAnimState01.empty() && !_attackAnimState02.empty())
+        return _attackAnimState01;
+
     // 단일 공격만 할 때 -> 거의 사용안함 Legacy 호환
     if (!_useRoundRobin)
     {
@@ -223,6 +230,23 @@ string BTTask_Attack::Select_AttackAnimState(const Shared<Blackboard>& blackboar
         blackboard->Set_ValueAsInt(_attackCycleIndexKey, nextIndex);
 
     return attackStates[selectedIndex];
+}
+
+void BTTask_Attack::Request_AttackAnimState(const Shared<Blackboard>& blackboard, const string& animState)
+{
+    if (!blackboard || animState.empty())
+        return;
+
+    blackboard->Set_ValueAsString("AnimState", animState);
+
+    const int32 nextReplaySerial = blackboard->HasKey("AnimReplaySerial")
+        ? blackboard->Get_ValueAsInt("AnimReplaySerial") + 1
+        : 1;
+
+    blackboard->Set_ValueAsInt("AnimReplaySerial", nextReplaySerial);
+
+    if (_requestAnimEnd)
+        blackboard->Set_ValueAsBool("AnimRequestEnd", true);
 }
 
 Shared<BTTask_Attack> BTTask_Attack::Create()

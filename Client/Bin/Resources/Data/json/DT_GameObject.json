@@ -131,6 +131,21 @@
             "Level": "Static"
         },
         {
+            "Id": "Monster_Leaf",
+            "ObjectType": "OBJECT_TYPE_MONSTER_LEAF",
+            "Level": "Static"
+        },
+        {
+            "Id": "Monster_Wood",
+            "ObjectType": "OBJECT_TYPE_MONSTER_WOOD",
+            "Level": "Static"
+        },
+        {
+            "Id": "Part_Socket",
+            "ObjectType": "OBJECT_TYPE_PART_SOCKET",
+            "Level": "Static"
+        },
+        {
             "Id": "Skill_Object",
             "ObjectType": "OBJECT_TYPE_SKILL_OBJECT",
             "Level": "Static"
@@ -193,6 +208,16 @@
         {
             "Id": "Skill_Kirin_Hit",
             "ObjectType": "OBJECT_TYPE_KIRIN_HIT",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_WoodHand",
+            "ObjectType": "OBJECT_TYPE_SKILL_WOOD_HAND",
+            "Level": "Static"
+        },
+        {
+            "Id": "Skill_Kamui",
+            "ObjectType": "OBJECT_TYPE_SKILL_KAMUI",
             "Level": "Static"
         },
         {

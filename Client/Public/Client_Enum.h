@@ -65,7 +65,7 @@ namespace Client
         Skill_Chidori,          Skill_Chidori_Air,      Skill_Chidori_End, Skill_Chidori_Landed, Skill_Chidori_Air_End,
         Skill_FireBall,         Skill_FireBall_Air,
 
-        Skill_ShinsuSenju,      Skill_Kirin,        Skill_Kamui,
+        Skill_ShinsuSenju,      Skill_Kamui,
 
         Dead,
         END

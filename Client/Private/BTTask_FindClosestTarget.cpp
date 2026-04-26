@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "GameInstance.h"
+#include "CombatStat.h"
 
 bool BTTask_FindClosestTarget::Register_Properties()
 {
@@ -13,6 +14,26 @@ bool BTTask_FindClosestTarget::Register_Properties()
     PROPERTY_STRING_JSON("Target Object Key", "target_object_key", _targetObjectKey);
     PROPERTY_STRING_JSON("Target Location Key", "target_location_key", _targetLocationKey);
     PROPERTY_FLOAT_JSON("Search Radius", "search_radius", _searchRadius, 0.1f, 9999.f);
+
+    return true;
+}
+
+static bool Is_MonsterTargetObject(const Shared<GameObject>& obj)
+{
+    if (!obj || obj->Is_Destroy())
+        return false;
+
+    const auto objectType = obj->Get_ObjectType();
+
+    if (objectType != Protocol::OBJECT_TYPE_PLAYER &&
+        objectType != Protocol::OBJECT_TYPE_REMOTE_PLAYER)
+    {
+        return false;
+    }
+
+    auto combat = obj->Get_Component<CombatStat>();
+    if (combat && combat->Is_Dead())
+        return false;
 
     return true;
 }
@@ -65,9 +86,8 @@ EBTNodeResult BTTask_FindClosestTarget::Update(float timeDelta)
         if (!obj || obj == owner || obj->Is_Destroy())
             continue;
 
-        if (obj->Get_ObjectType() != Protocol::OBJECT_TYPE_PLAYER)
+        if (!Is_MonsterTargetObject(obj))
             continue;
-            //|| obj->Get_ObjectType() != Protocol::OBJECT_TYPE_REMOTE_PLAYER)
 
         auto targetTransform = obj->Get_Transform();
         if (!targetTransform)

@@ -93,6 +93,9 @@ struct FEffectMeshMaterialOverrideDesc
     float emissiveStrength = 1.f;
     float fresnelPower = 0.f;
     float fresnelMultiplier = 1.f;
+    bool useScreenDistortion = false;          // true면 이 material override가 색을 그리지 않고 SceneColorCopy를 굴절시키는 Mesh distortion pass를 사용한다.
+    float screenDistortionStrength = 0.03f;    // UV distortion 텍스처가 화면 UV를 흔드는 강도다.
+    float screenDistortionRadialStrength = 0.f;// 메쉬 UV 중심 기준으로 화면을 바깥/안쪽으로 밀어 빨림 느낌을 만드는 강도다.
 
     bool twoSided = false;
     bool useOpacityAsTransparency = false;
@@ -199,6 +202,9 @@ struct FEffectMeshLayerDesc
     float specularStrength = 1.f;              // 최종 스페큘러 강도 보정값이다.
     float specularPower = 32.f;                // 러프니스가 0에 가까울 때 사용할 하이라이트 집중도다.
     float emissiveStrength = 1.f;              // emissive 텍스처 밝기를 추가로 증폭/감쇠할 때 쓰는 값이다.
+    bool useScreenDistortion = false;          // true면 이 Mesh 레이어가 색상 대신 SceneColorCopy를 샘플링해 화면 굴절만 출력한다.
+    float screenDistortionStrength = 0.03f;    // uvDistortionTextureGuid 샘플이 화면 UV를 흔드는 기본 강도다.
+    float screenDistortionRadialStrength = 0.f;// UV 중심 기준 방사형 화면 UV 오프셋 강도다. 음수면 중심으로 빨려 들어가는 느낌을 만든다.
     bool useColorTintOverTime = false;         // true면 colorTint에서 endColorTint로 레이어 수명 동안 보간한다.
     Vec4 endColorTint = Vec4(1.f, 1.f, 1.f, 1.f); // Mesh 레이어 수명 끝에서 도달할 틴트 색상이다.
     bool useOpacityOverTime = false;           // true면 opacity에서 endOpacity로 레이어 수명 동안 보간한다.

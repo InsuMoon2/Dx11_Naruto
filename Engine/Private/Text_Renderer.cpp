@@ -182,6 +182,8 @@ HRESULT Text_Renderer::Create_DeviceResources()
         reinterpret_cast<IUnknown**>(_writeFactory.GetAddressOf()));
     CHECK_FAILED(hr, E_FAIL);
 
+    CHECK_FAILED(Load_DefaultUIFont(), E_FAIL);
+
     hr = D2D1CreateFactory(
         D2D1_FACTORY_TYPE_MULTI_THREADED,
         _d2dFactory.GetAddressOf());
@@ -226,6 +228,50 @@ HRESULT Text_Renderer::Create_TargetBitmap()
     CHECK_FAILED(hr, E_FAIL);
 
     _d2dContext->SetTarget(_targetBitmap.Get());
+
+    return S_OK;
+}
+
+HRESULT Text_Renderer::Load_DefaultUIFont()
+{
+    _defaultUIFontCollection.Reset();
+
+    if (_writeFactory == nullptr)
+        return E_FAIL;
+
+    const fs::path fontPath(UI_DEFAULT_FONT_FILE);
+    if (!fs::exists(fontPath))
+    {
+        LOG_ERROR("Text_Renderer::Load_DefaultUIFont - font file not found: {}", Utils::ToString(fontPath.wstring()));
+        return E_FAIL;
+    }
+
+    ComPtr<IDWriteFactory5> writeFactory5;
+    HRESULT hr = _writeFactory.As(&writeFactory5);
+    CHECK_FAILED(hr, E_FAIL);
+
+    ComPtr<IDWriteFontSetBuilder1> fontSetBuilder;
+    hr = writeFactory5->CreateFontSetBuilder(fontSetBuilder.GetAddressOf());
+    CHECK_FAILED(hr, E_FAIL);
+
+    ComPtr<IDWriteFontFile> fontFile;
+    hr = _writeFactory->CreateFontFileReference(
+        fontPath.c_str(),
+        nullptr,
+        fontFile.GetAddressOf());
+    CHECK_FAILED(hr, E_FAIL);
+
+    hr = fontSetBuilder->AddFontFile(fontFile.Get());
+    CHECK_FAILED(hr, E_FAIL);
+
+    ComPtr<IDWriteFontSet> fontSet;
+    hr = fontSetBuilder->CreateFontSet(fontSet.GetAddressOf());
+    CHECK_FAILED(hr, E_FAIL);
+
+    hr = writeFactory5->CreateFontCollectionFromFontSet(
+        fontSet.Get(),
+        _defaultUIFontCollection.GetAddressOf());
+    CHECK_FAILED(hr, E_FAIL);
 
     return S_OK;
 }
@@ -288,9 +334,15 @@ IDWriteTextFormat* Text_Renderer::Find_Or_CreateFormat(const FTextStyle& style)
     entry.vAlign = style.vAlign;
     entry.wordWrap = style.wordWrap;
 
+    IDWriteFontCollection* fontCollection = nullptr;
+    if (entry.fontFamily == UI_DEFAULT_FONT_FAMILY && _defaultUIFontCollection != nullptr)
+    {
+        fontCollection = _defaultUIFontCollection.Get();
+    }
+
     hr = _writeFactory->CreateTextFormat(
         entry.fontFamily.c_str(),
-        nullptr,
+        fontCollection,
         DWRITE_FONT_WEIGHT_NORMAL,
         DWRITE_FONT_STYLE_NORMAL,
         DWRITE_FONT_STRETCH_NORMAL,

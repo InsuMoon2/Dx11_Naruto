@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "HUD.h"
 
@@ -27,6 +27,16 @@ class UI_ScreenFade;
 
 DECLARE_DELEGATE(FOnHUDPlayerBound, Shared<Player>);
 
+enum class ECineTransitionState
+{
+    Idle,           
+    BarsIn,         
+    FadeOut,        
+    ReadyToPlay,
+    Playing,
+    BarsOut
+};
+
 class UI_PlayerHUD : public HUD
 {
     GENERATED_BODY(UI_PlayerHUD)
@@ -37,6 +47,7 @@ private:
         uint64 networkId = 0; 
         Weak<Player> player; 
         Weak<CombatStat> combat;
+        Shared<Background> hpBackground;
         Shared<UI_PlayerHP> hpBar;
         Shared<UI_Text> nameText; 
     };
@@ -86,11 +97,35 @@ public:
     void        Set_MissionMarkerTarget(Shared<GameObject> targetObject);
     void        Clear_MissionMarkerTarget();
 
+    void        Show_MissionTitle(const wstring& text, float displayTime = 2.f);
+    void        Hide_MissionTitle();
+
 public:
     void        Show_MissionEnd();
     void        Hide_MissionEnd();
     void        Set_MissionEndOpacity(float alpha);
     void        Set_ScreenFadeAlpha(float alpha);
+
+public: /* 보스 시네마틱 */
+    void        Handle_WaveStarted(const string& waveTag);
+    HRESULT     Ready_CinematicTransition();
+    void        Update_CinematicTransition(float timeDelta);
+    void        Set_HUDVisibilityForCinematic(bool isVisible);
+    void        On_CinematicFinished();
+
+    FDelegateHandle             _waveStartedHandle = {};
+    FDelegateHandle             _cineFinishedHandle = {};
+
+private:
+
+    ECineTransitionState        _cineTransitionState = ECineTransitionState::Idle; 
+    float                       _cineTransitionTimer = 0.f;                        
+    
+    string                      _pendingCinematicTag = "";                         
+    
+    static constexpr float      CINE_BARS_IN_TIME = 0.4f;    
+    static constexpr float      CINE_FADE_OUT_TIME = 0.3f;   
+    static constexpr float      CINE_BAR_HEIGHT = 300.f;
 
 private:
     HRESULT     Ready_CombatLines();
@@ -108,6 +143,10 @@ private:
     void        Apply_AnnouncePositions();
 
 private:
+    HRESULT     Ready_MissionTitleUI();
+    void        Update_MissionTitle(float timeDelta);
+
+private:
     HRESULT     Ready_UI(void* arg);
     HRESULT     Ready_Timer();
     HRESULT     Ready_WireLockOn();
@@ -122,6 +161,9 @@ public:
     FDelegateHandle _missionMarkerClearHandle = {};
 
 private:
+    Shared<UI_ScreenFade>       _cineBarTop;             
+    Shared<UI_ScreenFade>       _cineBarBottom;          
+
     Shared<UI_PlayerStatus>     _status;
     Shared<UI_PlayerSkill>      _skillPanel;
     Shared<UI_AnnounceCombo>    _announceCombo;
@@ -129,6 +171,7 @@ private:
     Shared<UI_Timer>            _timer;
     Shared<UI_WireLockOn>       _wireLockOn;
     Shared<UI_MissionMarker>    _missionMarker;
+    Shared<Background>          _missionTitleBanner;
 
     vector<FCombatLineLayer>    _combatLineLayers;
     FDelegateHandle             _remotePlayerSpawnedHandle = {};
@@ -160,7 +203,13 @@ private:
     Shared<Background>      _missionEndBanner;
     Shared<UI_ScreenFade>   _screenFadePanel;
 
+    float               _missionTitleTimer = 0.f;
+    float               _missionTitleBaseX = 0.f;
+
 private:
+    static constexpr float MISSION_TITLE_FADE_TIME   = 0.35f;
+    static constexpr float MISSION_TITLE_SLIDE_DIST  = 80.f;
+
     static constexpr uint32 COMBAT_LINE_TEXTURE_INDEX_07 = 8;
     static constexpr float  COMBAT_LINE_HOLD_TIME = 0.06f;
     static constexpr float  COMBAT_LINE_FADE_TIME = 0.18f;

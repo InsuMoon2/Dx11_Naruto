@@ -31,10 +31,14 @@ private:
     HRESULT Ready_Layer_UI();
 
     HRESULT Ready_PreviewScene();
-    // 로비 프리뷰 카메라를 마우스 휠로 앞뒤 줌할 때 호출한다.
-    // 로비 캐릭터 배치 확인용으로 카메라-타겟 거리만 조정한다.
     void    Update_PreviewCameraZoom();
 
+    HRESULT Ready_PlayerNameplates();
+    void    Update_PlayerNameplates();
+    bool    Project_WorldToLobbyUI(const Vec3& worldPosition, Vec2& outUIPosition) const;
+    void    Update_PreviewPlayerAnimations();
+
+private:
     void Try_SendLobbyJoin();
     void Handle_LobbySnapshot(const Protocol::S_LobbySnapshot& pkt);
 
@@ -44,6 +48,7 @@ private:
     Shared<Player> Ensure_SlotPlayer(uint32 slot);
 
     void Apply_PlayerInfoToPreview(Shared<Player> player, const Protocol::ObjectInfo& info);
+    void Refresh_PreviewPoseForFirstRender(Shared<Player> player);
 
     void Refresh_ChatInputText();
     void Refresh_ChatLogText();
@@ -62,16 +67,23 @@ private:
 
     vector<wstring> _chatLines;
 
-    array<Shared<Player>, 2> _slotPlayers{};
 
+private:
+    struct FLobbyNamePlate
+    {
+        Shared<Background> background;
+        wstring displayedName;
+    };
+
+    array<Shared<Player>, 2> _slotPlayers{};
+    array<FLobbyNamePlate, 2> _slotNameplates{};
+    array<bool, 2> _slotAppearancePlaying{};
+
+private:
     Shared<Camera_Free> _previewCamera;
-    // 로비 프리뷰 카메라가 바라보는 기준점이다.
-    Vec3 _previewLookTarget = Vec3(7.3f, 1.2f, 0.f);
-    // 휠 한 칸당 줌 거리 변화량이다.
+    Vec3 _previewLookTarget = Vec3(7.25f, 1.2f, 0.f);
     float _previewZoomStep = 0.35f;
-    // 로비 프리뷰 카메라 최소 줌 거리다.
     float _previewZoomMinDistance = 2.0f;
-    // 로비 프리뷰 카메라 최대 줌 거리다.
     float _previewZoomMaxDistance = 8.0f;
     Shared<Background> _chatBackground;
     Shared<Background> _chatInputBackground;

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "GameInstance.h"
 
 #include "Asset_Manager.h"
@@ -1248,6 +1248,11 @@ bool GameInstance::Play_Cinematic(const wstring& sequenceName)
 bool GameInstance::Play_Cinematic(const wstring& sequenceName, Shared<Transform> anchorTransform, bool blockGameInput)
 {
     return _cameraManager->Play_Cinematic(sequenceName, anchorTransform, blockGameInput);
+}
+
+bool GameInstance::Is_CinematicPlaying() const
+{
+    return _cameraManager->Is_CinematicPlaying();
 }
 
 void GameInstance::Stop_Cinematic()

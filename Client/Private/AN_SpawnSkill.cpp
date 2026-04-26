@@ -27,6 +27,8 @@ bool AN_SpawnSkill::Register_Properties()
     PROPERTY_VEC3_JSON("로컬 오프셋", "local_offset", _localOffset, 0.1f);
     PROPERTY_BOOL_JSON("Forward 사용", "use_owner_forward", _useOwnerForward);
     PROPERTY_BOOL_JSON("타겟을 향해 던질지", "aim_at_target", _aimAtTarget);
+    PROPERTY_BOOL_JSON("락온 타겟 위치에 스폰", "spawn_at_locked_target", _spawnAtLockedTarget);
+    PROPERTY_VEC3_JSON("타겟 기준 오프셋", "target_offset", _targetOffset, 0.1f);
     PROPERTY_BOOL_JSON("Projectile이면 즉시 발사", "launch_if_projectile", _launchIfProjectile);
 
     return true;
@@ -52,35 +54,37 @@ void AN_SpawnSkill::Execute(const FAnimNotifyContext& context)
     if (!ownerTransform)
         return;
 
-    const Vec3 spawnPosition = Calculate_WorldSpawnPosition(ownerTransform, _localOffset);
-
+    Vec3 spawnPosition = Calculate_WorldSpawnPosition(ownerTransform, _localOffset);
     Vec3 spawnDirection = (_useOwnerForward)
         ? ownerTransform->Get_WorldForward()
         : Vec3::Forward;
 
-    if (_aimAtTarget)
+    auto myPlayer = dynamic_cast<MyPlayer*>(context.owner);
+    Shared<GameObject> lockedTarget = nullptr;
+
+    if (myPlayer)
     {
-        auto myPlayer = dynamic_cast<MyPlayer*>(context.owner);
-        if (myPlayer)
-        {
-            auto targetCom = myPlayer->Get_Component<TargetComponent>();
-            if (targetCom && targetCom->IsLockOn())
-            {
-                auto lockedTarget = targetCom->Get_LockedTarget().lock();
-                if (lockedTarget)
-                {
-                    Vec3 targetPos = lockedTarget->Get_Transform()->Get_WorldPosition();
-                    targetPos.y += 0.5f;
+        auto targetCom = myPlayer->Get_Component<TargetComponent>();
+        if (targetCom && targetCom->IsLockOn())
+            lockedTarget = targetCom->Get_LockedTarget().lock();
+    }
 
-                    spawnDirection = targetPos - spawnPosition;
+    if (_spawnAtLockedTarget && lockedTarget)
+    {
+        spawnPosition = lockedTarget->Get_Transform()->Get_WorldPosition() + _targetOffset;
+    }
 
-                    if (spawnDirection.LengthSquared() > 0.0001f)
-                        spawnDirection.Normalize();
-                    else
-                        spawnDirection = ownerTransform->Get_WorldForward();
-                }
-            }
-        }
+    if (_aimAtTarget && lockedTarget)
+    {
+        Vec3 targetPos = lockedTarget->Get_Transform()->Get_WorldPosition();
+        targetPos.y += 0.5f;
+
+        spawnDirection = targetPos - spawnPosition;
+
+        if (spawnDirection.LengthSquared() > 0.0001f)
+            spawnDirection.Normalize();
+        else
+            spawnDirection = ownerTransform->Get_WorldForward();
     }
 
     SkillObject::FSkillObjectDesc desc{};

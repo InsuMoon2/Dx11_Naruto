@@ -26,7 +26,7 @@ public:
     void Initialize() override;
     EBTNodeResult Update(float timeDelta) override;
 
-    private:
+private:
     // 현재 몬스터가 공중인지 판단해서 애니메이션 재생되게
     bool Is_AirborneHit(const Shared<GameObject>& owner) const;
     vector<string> Build_HitAnimStateList(bool isAirborne) const;
@@ -36,6 +36,11 @@ public:
     string Resolve_HitAnimState(
         const Shared<Blackboard>& blackboard,
         const Shared<GameObject>& owner) const;
+
+    // 선택된 피격 상태가 현재 몬스터 애니메이션 세팅에 없을 때 기본 Hit 상태로 안전하게 되돌린다.
+    string Resolve_PlayableHitAnimState(
+        const Shared<GameObject>& owner,
+        const string& preferredState) const;
 
 private:
     string _hitFlagKey = "IsHit";
@@ -51,6 +56,7 @@ private:
     string _airHitAnimState01 = "Hit_Air";
     string _airHitAnimState02 = "";
     string _airHitAnimState03 = "";
+    string _airborneHoldAnimState = "JumpFall";
 
     // 지상/공중
     string _groundHitCycleIndexKey = "GroundHitCycleIndex";
@@ -62,7 +68,10 @@ private:
     // true면 블랙보드 HitAnimState가 비어있지 않을 때 그 값을 우선해서 사용
     bool   _useBlackboardHitAnimOverride = false;
     bool   _requestAnimEnd = false;
+    bool   _switchToAirborneHoldAfterHit = true;
     bool   _startedHit = false;
+    bool   _startedAsAirHit = false;
+    bool   _airborneHoldStarted = false;
 
     int32 _activeHitSerial = 0;
 

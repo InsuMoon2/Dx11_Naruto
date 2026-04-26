@@ -386,6 +386,12 @@
             "Level": "Static"
         },
         {
+            "Id": "COMPONENT_TYPE_TEXTURE_EQUIPMENT",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Equipment/T_UI_Weapon_InfoWindow_BC.png",
+            "Count": 4,
+            "Level": "Static"
+        },
+        {
             "Id": "COMPONENT_TYPE_TEXTURE_SKY_SPHERE",
             "Path": "../../Client/Bin/Resources/Models/SkySphere/Textures/T_AMVLLG_DenseCloudySky_N.png",
             "Count": 1,
@@ -567,7 +573,7 @@
         },
         {
             "Id": "COMPONENT_TYPE_TEXTURE_SKILL_ICON",
-            "Path": "../../Client/Bin/Resources/Textures/UI/Skill_Icon/T_UI_Skill_Kirin_BC.png",
+            "Path": "../../Client/Bin/Resources/Textures/UI/Skill_Icon/T_UI_Skill_D31NJ2_BC.png",
             "Count": 1,
             "Level": "Static"
         },

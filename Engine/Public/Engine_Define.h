@@ -6,6 +6,7 @@
 #include <d3d11.h>
 #include <d2d1_1.h>
 #include <dwrite.h>
+#include <dwrite_3.h>
 #include <dxgi1_2.h>
 #include <directxtk/SimpleMath.h>
 #include <wrl.h>

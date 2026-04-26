@@ -165,6 +165,9 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
         j["specularStrength"] = mesh.specularStrength;
         j["specularPower"] = mesh.specularPower;
         j["emissiveStrength"] = mesh.emissiveStrength;
+        j["useScreenDistortion"] = mesh.useScreenDistortion;
+        j["screenDistortionStrength"] = mesh.screenDistortionStrength;
+        j["screenDistortionRadialStrength"] = mesh.screenDistortionRadialStrength;
         j["useColorTintOverTime"] = mesh.useColorTintOverTime;
         j["endColorTint"] = { mesh.endColorTint.x, mesh.endColorTint.y, mesh.endColorTint.z, mesh.endColorTint.w };
         j["useOpacityOverTime"] = mesh.useOpacityOverTime;
@@ -223,6 +226,9 @@ json EffectAsset_Serializer::Serialize_Layer(const FEffectLayerDesc& layerDesc)
                 overrideJson["specularStrength"] = overrideDesc.specularStrength;
                 overrideJson["specularPower"] = overrideDesc.specularPower;
                 overrideJson["emissiveStrength"] = overrideDesc.emissiveStrength;
+                overrideJson["useScreenDistortion"] = overrideDesc.useScreenDistortion;
+                overrideJson["screenDistortionStrength"] = overrideDesc.screenDistortionStrength;
+                overrideJson["screenDistortionRadialStrength"] = overrideDesc.screenDistortionRadialStrength;
                 overrideJson["fresnelPower"] = overrideDesc.fresnelPower;
                 overrideJson["fresnelMultiplier"] = overrideDesc.fresnelMultiplier;
                 overrideJson["twoSided"] = overrideDesc.twoSided;
@@ -400,6 +406,9 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
         if (j.contains("specularStrength")) mesh.specularStrength = j["specularStrength"];
         if (j.contains("specularPower")) mesh.specularPower = j["specularPower"];
         if (j.contains("emissiveStrength")) mesh.emissiveStrength = j["emissiveStrength"];
+        if (j.contains("useScreenDistortion")) mesh.useScreenDistortion = j["useScreenDistortion"];
+        if (j.contains("screenDistortionStrength")) mesh.screenDistortionStrength = j["screenDistortionStrength"];
+        if (j.contains("screenDistortionRadialStrength")) mesh.screenDistortionRadialStrength = j["screenDistortionRadialStrength"];
         if (j.contains("useColorTintOverTime")) mesh.useColorTintOverTime = j["useColorTintOverTime"];
         if (j.contains("endColorTint")) mesh.endColorTint = Vec4(j["endColorTint"][0], j["endColorTint"][1], j["endColorTint"][2], j["endColorTint"][3]);
         if (j.contains("useOpacityOverTime")) mesh.useOpacityOverTime = j["useOpacityOverTime"];
@@ -459,6 +468,9 @@ FEffectLayerDesc EffectAsset_Serializer::Deserialize_Layer(const json& j)
                 if (overrideJson.contains("specularStrength")) overrideDesc.specularStrength = overrideJson["specularStrength"];
                 if (overrideJson.contains("specularPower")) overrideDesc.specularPower = overrideJson["specularPower"];
                 if (overrideJson.contains("emissiveStrength")) overrideDesc.emissiveStrength = overrideJson["emissiveStrength"];
+                if (overrideJson.contains("useScreenDistortion")) overrideDesc.useScreenDistortion = overrideJson["useScreenDistortion"];
+                if (overrideJson.contains("screenDistortionStrength")) overrideDesc.screenDistortionStrength = overrideJson["screenDistortionStrength"];
+                if (overrideJson.contains("screenDistortionRadialStrength")) overrideDesc.screenDistortionRadialStrength = overrideJson["screenDistortionRadialStrength"];
                 if (overrideJson.contains("fresnelPower")) overrideDesc.fresnelPower = overrideJson["fresnelPower"];
                 if (overrideJson.contains("fresnelMultiplier")) overrideDesc.fresnelMultiplier = overrideJson["fresnelMultiplier"];
                 if (overrideJson.contains("twoSided")) overrideDesc.twoSided = overrideJson["twoSided"];

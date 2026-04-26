@@ -22,13 +22,6 @@
             "Level": "Static"
         },
         {
-            "Id": "Model_Face_Face1",
-            "Path": "../../Client/Bin/Resources/Models/Custom/Face/Face1.meshbin",
-            "Count": 1,
-            "ModelType": "SkeletalMesh",
-            "Level": "Static"
-        },
-        {
             "Id": "Model_BigSword",
             "Path": "../../Client/Bin/Resources/Models/Weapon/BigSword/BigSword.meshbin",
             "Count": 1,
@@ -71,57 +64,127 @@
             "Level": "Static"
         },
         {
-            "Id": "Model_Headgear_Man_Cap1",
-            "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_Cap1.meshbin",
+            "Id": "Model_Face_Face1",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Face/Face1.meshbin",
             "Count": 1,
             "ModelType": "SkeletalMesh",
             "Level": "Static"
         },
         {
-            "Id": "Model_AllBack",
-            "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_AllBack_01.meshbin",
+            "Id": "Model_Face_Mask1",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Face/Face_Mask1.meshbin",
             "Count": 1,
-            "ModelType": "StaticMesh",
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Face_Mask2",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Face/Face_Mask2.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Upper_Jiraiya",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Upper/Haori_01.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Upper_LeatherJaket",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Upper/Upper_LeatherJaket.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Upper_Logo",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Upper/Upper_Logo.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Upper_Sai",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Upper/Upper_Sai.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Upper_Saske",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Upper/Upper_Saske.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Lower_LeatherPants",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Lower/Lower_LeatherPants.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Lower_Lower_PantsCut",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Lower/Lower_PantsCut.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Lower_Lower_StonePants",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Lower/Lower_StonePants.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_Lower_Lower_Trainer",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Body_Lower/Lower_Trainer.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
             "Level": "Static"
         },
         {
             "Id": "Model_ManHat_03",
             "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_Hat_03.meshbin",
             "Count": 1,
-            "ModelType": "StaticMesh",
+            "ModelType": "SkeletalMesh",
             "Level": "Static"
         },
         {
             "Id": "Model_SnowHead",
             "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_SnowHead.meshbin",
             "Count": 1,
-            "ModelType": "StaticMesh",
+            "ModelType": "SkeletalMesh",
             "Level": "Static"
         },
         {
             "Id": "Model_PajamaHat",
             "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_PajamaHat.meshbin",
             "Count": 1,
-            "ModelType": "StaticMesh",
+            "ModelType": "SkeletalMesh",
             "Level": "Static"
         },
         {
             "Id": "Model_Umbrella",
             "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Man_Umbrella.meshbin",
             "Count": 1,
-            "ModelType": "StaticMesh",
+            "ModelType": "SkeletalMesh",
             "Level": "Static"
         },
         {
-            "Id": "Model_OnePiece_Armor1",
-            "Path": "../../Client/Bin/Resources/Models/Custom/OnePiece/Armor1.meshbin",
+            "Id": "Model_FrogHead",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Frog_Head.meshbin",
             "Count": 1,
             "ModelType": "SkeletalMesh",
             "Level": "Static"
         },
         {
-            "Id": "Model_OnePiece_Coat15",
-            "Path": "../../Client/Bin/Resources/Models/Custom/OnePiece/Coat15.meshbin",
+            "Id": "Model_MadaraHead",
+            "Path": "../../Client/Bin/Resources/Models/Custom/Headgear/Madara_Head.meshbin",
             "Count": 1,
             "ModelType": "SkeletalMesh",
             "Level": "Static"
@@ -143,6 +206,27 @@
         {
             "Id": "Model_OnePiece_Minato",
             "Path": "../../Client/Bin/Resources/Models/Custom/OnePiece/Minato.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_OnePiece_Akachiki",
+            "Path": "../../Client/Bin/Resources/Models/Custom/OnePiece/Akachiki_Coat.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_OnePiece_Frog",
+            "Path": "../../Client/Bin/Resources/Models/Custom/OnePiece/Frogs.meshbin",
+            "Count": 1,
+            "ModelType": "SkeletalMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_OnePiece_Jaket",
+            "Path": "../../Client/Bin/Resources/Models/Custom/OnePiece/Onepiece_Jaket.meshbin",
             "Count": 1,
             "ModelType": "SkeletalMesh",
             "Level": "Static"
@@ -239,24 +323,10 @@
             "Level": "Static"
         },
         {
-            "Id": "Kirin",
-            "Path": "../../Client/Bin/Resources/Models/Kirin/Kirin.meshbin",
-            "Count": 1,
-            "ModelType": "SkeletalMesh",
-            "Level": "Static"
-        },
-        {
             "Id": "ShinsuSenju_Arm_Long",
             "Path": "../../Client/Bin/Resources/Models/ShinsuSenju/ShinsuSenju_Arm_Long.meshbin",
             "Count": 1,
             "ModelType": "SkeletalMesh",
-            "Level": "Static"
-        },
-        {
-            "Id": "SandShower_04",
-            "Path": "../../Client/Bin/Resources/Models/Kirin/SandShower_04.meshbin",
-            "Count": 1,
-            "ModelType": "StaticMesh",
             "Level": "Static"
         },
         {
@@ -570,6 +640,20 @@
         {
             "Id": "Wire",
             "Path": "../../Client/Bin/Resources/Models/Wire/Wire.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_BoxingGlove_Left",
+            "Path": "../../Client/Bin/Resources/Models/BoxingGloves/BoxingGloves_L.meshbin",
+            "Count": 1,
+            "ModelType": "StaticMesh",
+            "Level": "Static"
+        },
+        {
+            "Id": "Model_BoxingGlove_Right",
+            "Path": "../../Client/Bin/Resources/Models/BoxingGloves/BoxingGloves_R.meshbin",
             "Count": 1,
             "ModelType": "StaticMesh",
             "Level": "Static"

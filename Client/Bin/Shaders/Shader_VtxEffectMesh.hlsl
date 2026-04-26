@@ -8,6 +8,8 @@
 // Pass 7 : OpaqueTwoSided
 // Pass 8 : TranslucentNoMaskTwoSided
 // Pass 9 : AdditiveNoMaskTwoSided
+// Pass 10 : ScreenDistortion
+// Pass 11 : ScreenDistortionTwoSided
 
 #include "Engine_Shader_Defines.hlsli"
 
@@ -20,6 +22,7 @@ Texture2D g_UVDistortionTexture;
 Texture2D g_NormalTexture;
 Texture2D g_RoughnessTexture;
 Texture2D g_SpecularTexture;
+Texture2D g_SceneColorTexture;
 
 float2 g_UVOffset;
 float2 g_UVDistortionOffset;
@@ -38,6 +41,9 @@ float g_SpecularStrength;
 float g_SpecularPower;
 float4 g_CustomParams0;
 float4 g_CustomParams1;
+float2 g_ScreenDistortionInvViewportSize;
+float g_ScreenDistortionStrength;
+float g_ScreenDistortionRadialStrength;
 
 // Mesh SubUV/Flipbook playback lets mesh effect layers use frame atlases like Cascade ParticleModuleSubUV.
 float g_ElapsedTime;
@@ -412,6 +418,46 @@ PS_OUT PS_MAIN_NO_MASK(PS_IN In)
     return ResolvePixel(In, false);
 }
 
+// Mesh distortion renders only the copied scene color, offset by the mesh mask and UV/noise data.
+PS_OUT PS_SCREEN_DISTORTION(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 scrolledUV = BuildFinalUV(In.vTexcoord);
+    float2 flipbookUV = BuildFlipbookUV(scrolledUV);
+    float maskValue = ApplyOpacityPipeline(scrolledUV, flipbookUV);
+    float finalAlpha = saturate(maskValue * g_Opacity * g_ColorTint.a);
+
+    if (finalAlpha <= 0.001f)
+        discard;
+
+    float2 screenUV = In.vPosition.xy * g_ScreenDistortionInvViewportSize;
+    float2 distortionOffset = float2(0.f, 0.f);
+
+    float2 centeredUV = In.vTexcoord * 2.f - 1.f;
+    float radialLength = max(length(centeredUV), 0.0001f);
+    float2 radialDir = centeredUV / radialLength;
+    float radialMask = saturate(1.f - radialLength);
+    float2 tangentDir = float2(-radialDir.y, radialDir.x);
+    float scalarDistortionMask = radialMask;
+
+    if (g_HasUVDistortionTexture != 0)
+    {
+        float2 distortionUV = In.vTexcoord * g_UVTiling + g_UVDistortionOffset;
+        scalarDistortionMask *= SampleMask(g_UVDistortionTexture.Sample(DefaultSampler, distortionUV));
+    }
+
+    distortionOffset += tangentDir * (g_ScreenDistortionStrength * scalarDistortionMask);
+    distortionOffset += radialDir * (g_ScreenDistortionRadialStrength * radialMask);
+
+    float2 sampledUV = saturate(screenUV + distortionOffset * finalAlpha);
+    float3 baseSceneColor = g_SceneColorTexture.Sample(DefaultSampler, screenUV).rgb;
+    float3 distortedSceneColor = g_SceneColorTexture.Sample(DefaultSampler, sampledUV).rgb;
+
+    Out.vColor = float4(lerp(baseSceneColor, distortedSceneColor, finalAlpha), 1.f);
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass TranslucentPass
@@ -512,5 +558,25 @@ technique11 DefaultTechnique
 
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_NO_MASK();
+    }
+
+    pass ScreenDistortionPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_ZTest_NoWrite, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_SCREEN_DISTORTION();
+    }
+
+    pass ScreenDistortionTwoSidedPass
+    {
+        SetRasterizerState(RS_CullNone);
+        SetDepthStencilState(DSS_ZTest_NoWrite, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_SCREEN_DISTORTION();
     }
 }

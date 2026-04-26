@@ -1,7 +1,7 @@
 # Dx11_Naruto 프로젝트 구조
 
 > AI 어시스턴트는 매 대화 시작 시 이 파일을 먼저 읽고 현재 구조를 기준으로 판단할 것.
-> 마지막 갱신: 2026-04-11
+> 마지막 갱신: 2026-04-26
 
 ## 문서 보강 규칙
 
@@ -779,5 +779,81 @@ Client/Bin/Resources/
 
 ### [추가] 지금 이 문서를 읽을 때의 우선 해석 규칙
 
-- 최신 실구조 판단은 이 `[변경] 2026-04-22 최신 구조 보강` 섹션을 우선한다.
-- 위 기존 본문과 충돌하면, 실제 파일 스캔 결과가 반영된 이 하단 보강 섹션을 기준으로 본다.
+- 최신 실구조 판단은 이 문서의 **가장 하단 보강 섹션**을 우선한다.
+- 위 기존 본문과 충돌하면, 실제 파일 스캔 결과가 반영된 하단 보강 섹션을 기준으로 본다.
+
+---
+
+## [변경] 2026-04-26 최신 구조 보강
+
+아래 내용은 2026-04-26 기준 실제 폴더/파일을 다시 스캔해 반영한 최신 스냅샷이다.
+기존 위 본문은 보존하고, 현재 구조와 달라진 지점만 아래에 보강한다.
+
+### [변경] 실제 파일 수 기준 프로젝트 스냅샷 (2026-04-26)
+
+| 경로 | 현재 파일 수 | 이전(2026-04-22) 기록 |
+|---|---|---|
+| `Client/Public` | `.h` **165** | 144 |
+| `Client/Private` | `.cpp` **159** | 138 |
+| `Engine/Public` | `.h` **120** (서브디렉터리 제외) | 118 |
+| `Engine/Private` | `.cpp` **102** | 100 |
+| `Editor/Public` | `.h` **58** | 58 |
+| `Editor/Private` | `.cpp` **54** | 54 |
+| `Server/GameServer/Public` | `.h` **10** | 10 |
+| `Server/GameServer/Private` | `.cpp` **7** | 7 |
+
+### [변경] Client 추가 파일 (2022-04-22 → 2026-04-26 신규 확인)
+
+- **FSM 상태**: `PlayerState_Airbone` (기존 목록에 없었음)
+- **스킬**: `Skill_ChibakuTensei`, `Skill_Chidori`, `Skill_Chidori_Hit`, `Skill_FireBall`, `Skill_Kirin`, `Skill_Kirin_Hit`, `Skill_RasenShuriken`, `Skill_RasenShuriken_Hit`, `Skill_Rasengan`, `Skill_Rasengan_Hit`, `Skill_ShinsuSenju`, `Skill_ShinsuSenju_Arm`, `Skill_ShinsuSenju_Impact`, `Skill_WindmillShuriken`, `Skill_WoodHand`
+- **스킬 오브젝트**: `SkillObject`, `SkillObject_MonsterAttack`, `SkillObject_Projectile`
+- **보스**: `Boss_Pain`
+- **몬스터 계열**: `Monster_Leaf`, `EnemyCharacter` (기반 클래스)
+- **BT 태스크 (전투 전용)**: `BTTask_Attack`, `BTTask_ChibakuTensei`, `BTTask_Dash`, `BTTask_DodgeAndWait`, `BTTask_FindClosestTarget`, `BTTask_Hit`, `BTTask_JumpToTarget`, `BTTask_KonohaSenpung`, `BTTask_PainForceSkill`, `BTTask_PlayStateAndWait`, `BTTask_RetreatAndWait`, `BTTask_SelectAttackType`, `BTTask_StrafeAroundTarget`, `BTTask_UpdateBossContext`
+- **이펙트/컴포넌트**: `WireMeshEffect`, `SocketPartObject`, `CharkraMove_Component`
+- **UI 추가**: `UI_MissionMarker`, `UI_ScreenFade`, `UI_Timer`, `UI_WireLockOn`
+- **유틸/충돌**: `Collision_SurfaceCache`
+- **AN/ANS 추가**: `AN_BodyCollisionPreset_Change`, `AN_CameraShake`, `AN_ChangePlayerState`, `AN_ChangeState`, `AN_ClearMeleeSkill`, `AN_EquipMeleeSkill`, `AN_Gravity`, `AN_LightningTrail_Start`, `AN_LightningTrail_Stop`, `AN_SpawnAttack`, `AN_SpawnProjSkill`, `AN_StretchingMesh_End`, `AN_StretchingMesh_Start`, `AN_Trail_Start`, `AN_Trail_Stop`, `ANS_GhostEffect`
+
+### [변경] Engine 추가 파일 (2026-04-26 신규 확인)
+
+- `Shadow.h` / `Shadow.cpp` — 그림자 렌더링 전용 클래스 추가
+- `Target_Manager.h` / `Target_Manager.cpp` — 게임플레이 타겟팅 매니저 (엔진 레벨)
+- `VIBuffer_Instance.h` / `VIBuffer_Instance.cpp` — 인스턴싱 버퍼 추가
+- `PhysXMgr.h` / `PhysXMgr.cpp` — PhysX 매니저 추가 (엔진 레벨)
+- `FMOD/` 서브디렉터리가 `Engine/Public` 아래에 존재 (FMOD 사운드 헤더)
+
+### [변경] 셰이더 현황 (2026-04-26 기준 `Client/Bin/Shaders/`)
+
+| 파일 | 용도 |
+|---|---|
+| `Engine_Shader_Defines.hlsli` | 공용 셰이더 인클루드 |
+| `Shader_Deferred.hlsl` | 디퍼드 라이팅 패스 |
+| `Shader_VtxAnimMesh.hlsl` | 스켈레탈 메쉬 |
+| `Shader_VtxStaticMesh.hlsl` | 정적 메쉬 |
+| `Shader_VtxMesh.hlsl` | 일반 메쉬 |
+| `Shader_VtxNorTex.hlsl` | 노멀/텍스처 기본 |
+| `Shader_Vtxtex.hlsl` | 텍스처 기본 |
+| `Shader_UI.hlsl` | UI 렌더링 |
+| `Shader_VtxEffectBillboard.hlsl` | 이펙트 빌보드 |
+| `Shader_VtxEffectMesh.hlsl` | 이펙트 메쉬 |
+| `Shader_VtxEffectSkeletalMesh.hlsl` | 이펙트 스켈레탈 |
+| `Shader_VtxParticlePoint.hlsl` | 파티클 포인트 |
+| `Shader_SkySphere.hlsl` | 스카이스피어 |
+| `Shader_GhostAfterImage.hlsl` | 고스트 잔상 |
+| `Shader_SmearSkeletal.hlsl` | 스미어 스켈레탈 |
+| `Shader_Sword_Trail.hlsl` | 검 트레일 |
+| `Shader_ChakraMove.hlsl` | 차크라 무브 |
+| `Shader_EditorViewport.hlsl` | 에디터 뷰포트 전용 |
+
+→ 이전 문서에 기록된 셰이더 목록(6개 hlsl)보다 훨씬 많음. **현재 18개 hlsl**이 실제 기준이다.
+
+### [변경] Docs 폴더 현황 (2026-04-26)
+
+- 현재 `Docs/`에는 `CombatSpeedLineOverlay_AtoZ_Guide.md` 1개만 존재.
+- 기존 문서 목록(`BTSkillmd.md`, `skill_object_guideline.md` 등)은 삭제/이동된 것으로 보임. 현재는 이 파일만 유효.
+
+### [추가] 지금 이 문서를 읽을 때의 우선 해석 규칙 (2026-04-26 갱신)
+
+- 최신 실구조 판단은 이 `[변경] 2026-04-26 최신 구조 보강` 섹션을 최우선한다.
+- 위 기존 본문과 충돌하면, 실제 파일 스캔 결과가 반영된 이 하단 섹션을 기준으로 본다.

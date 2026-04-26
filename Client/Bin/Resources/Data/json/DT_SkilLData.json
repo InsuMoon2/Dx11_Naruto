@@ -130,9 +130,9 @@
         },
         {
             "SkillID": 1006,
-            "SkillName": "Kirin",
+            "SkillName": "Kamui",
             "Cooldown": 5,
-            "AnimStateName": "Skill_Kirin",
+            "AnimStateName": "Skill_Kamui",
             "IsHoldSkill": true,
             "hasDashPhase": false,
             "dashSpeed": 0,

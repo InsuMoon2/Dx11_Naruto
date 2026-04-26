@@ -66,7 +66,7 @@ public:
         float   trailWidth = 0.26f;                     
         int32   trailLineCountPerFoot = 2;              
         float   trailJitterRadius = 0.05f;              
-        float   minOwnerMoveSpeed = 5.f;                
+        float   minOwnerMoveSpeed = 1.f;                
     };
 
 public:
@@ -84,7 +84,10 @@ public:
 public:
     void Start_ChakraMove(const vector<FTrailChannelDesc>& channelDescs, float lifespan = 0.16f, float minOwnerMoveSpeed = 5.f);
     void Stop_ChakraMove();                                                                                                       
-    bool Has_ActiveChakraMove() const;           
+    bool Has_ActiveChakraMove() const;
+
+    void Set_TrailTintColor(const Vec4& color) { _trailTintColor = color; }
+    void Set_TrailEmissiveStrength(float strength) { _trailEmissiveStrength = strength; }
 
 private:
     bool Try_GetBoneWorldMatrix(const string& boneName, Matrix& outBoneWorld);
@@ -111,7 +114,7 @@ private:
     bool    _isEmitting = false;                  
     float   _lifespan = 0.36f;                   
     float   _retargetInterval = 0.035f;          
-    float   _minOwnerMoveSpeed = 5.f;          
+    float   _minOwnerMoveSpeed = 1.f;          
 
     Vec3    _prevOwnerWorldPos = Vec3::Zero;      
     bool    _hasPrevOwnerWorldPos = false;

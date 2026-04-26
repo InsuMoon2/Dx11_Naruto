@@ -55,6 +55,13 @@ private:
 
     void Handle_LinkCreation();
     void Handle_Deletion();
+    void Handle_ClipboardShortcuts();
+
+    // 선택된 BT 노드와 선택 노드끼리의 링크를 OS 클립보드 JSON으로 내보낼 때 호출한다.
+    void Copy_SelectedNodesToClipboard();
+
+    // OS 클립보드의 BT 노드 JSON을 현재 마우스 위치 주변에 새 ID로 복제할 때 호출한다.
+    void Paste_NodesFromClipboard();
 
     // 직렬화
     json Serialize_ToJson() const;

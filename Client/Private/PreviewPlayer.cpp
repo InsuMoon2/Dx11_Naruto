@@ -36,12 +36,6 @@ HRESULT PreviewPlayer::Initialize(void* arg)
 void PreviewPlayer::BeginPlay()
 {
     Player::BeginPlay();
-
-    if (_model && _model->Get_AnimationCount() > 0)
-    {
-        _model->Set_Animation(_model->Get_AnimationName(0), true);
-    }
-
 }
 
 void PreviewPlayer::Priority_Update(float timeDelta)

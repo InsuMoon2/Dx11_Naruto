@@ -47,6 +47,10 @@ public: /* Camera Shake */
     virtual void Stop_CameraShake(const string& tag = "") {}
     virtual void Clear_CameraShake() {}
 
+public:
+    // 시네마틱 종료 직후 원래 카메라로 복귀할 때, 카메라별 복귀 보정이 필요하면 override할 수 있다.
+    virtual void On_CinematicFinished() {}
+
 protected:
     // View + Proj 행렬을 PipeLine에 세팅
     void    Update_TransformMatrices();

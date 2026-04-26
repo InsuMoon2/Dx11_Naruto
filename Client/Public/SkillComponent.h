@@ -17,7 +17,7 @@ enum class ESkillType
     Chidori         = 1004,
 
     ShinsuSenju     = 1005,
-    Kirin           = 1006,
+    Kamui           = 1006,
 
     END
 };

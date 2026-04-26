@@ -20,6 +20,8 @@ void PlayerState_Run::Enter(PlayerStateMachine* state)
     if (!state)
         return;
 
+    state->Reset_CombatReturnState();
+
     auto movement = state->Get_Movement();
     if (movement)
     {
@@ -61,9 +63,9 @@ void PlayerState_Run::Update(PlayerStateMachine* state, float timeDelta)
 
     if (frame.attackDown)
     {
-        if (!state->Try_MeleeApproach(EPlayerState::Attack))
-            state->Change_State(EPlayerState::Attack);
-
+        // if (!state->Try_MeleeApproach(EPlayerState::Attack))
+        //     state->Change_State(EPlayerState::Attack);
+        state->Change_State(EPlayerState::Attack);
         return;
     }
 

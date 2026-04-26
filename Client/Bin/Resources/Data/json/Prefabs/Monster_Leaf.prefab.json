@@ -38,7 +38,7 @@
             "type": "COMPONENT_TYPE_COLLIDER"
         },
         {
-            "bt_guid": "",
+            "bt_guid": "112fc4a8-5eb3-443d-9738-659c8592633a",
             "type": "COMPONENT_TYPE_BEHAVIOR"
         },
         {
@@ -105,6 +105,7 @@
                 "SK_CHR_LeafNinja|LeafNinja_HandSeal_RecoveryChakra_Loop",
                 "SK_CHR_LeafNinja|LeafNinja_Beaten_Fall_Behind_Loop",
                 "SK_CHR_LeafNinja|Leaf_Ninjutsu_Teleportation_Loop",
+                "SK_CHR_LeafNinja|CustomMan_Run_Loop",
                 "SK_CHR_LeafNinja|LeafNinja_Dying_Blasted",
                 "SK_CHR_LeafNinja|LeafNinja_Beaten_D45NJ3_Loop",
                 "SK_CHR_LeafNinja|LeafNinja_Beaten_DownToFloor",
@@ -195,17 +196,17 @@
                 {
                     "material_name": "MI_CHR_LeafNinja",
                     "texture_overrides": {
-                        "base_color_0": "d5c22a74-649f-4f81-9bf7-e92cd2358ece"
+                        "base_color_0": "726a9ea7-8d48-4a03-8411-0a5644739825"
                     }
                 },
                 {
                     "material_name": "MI_CHR_LeafNinja_Face",
                     "texture_overrides": {
-                        "base_color_0": "65c2b303-0ad2-4ec6-ae8c-5d18f6d60ac1"
+                        "base_color_0": "ce2eb132-2728-41f3-9e68-e231e9ab4491"
                     }
                 }
             ],
-            "model_guid": "069fee47-b8d0-4bc0-b1a1-db7ed103cbf1",
+            "model_guid": "2e980104-14e4-463f-ab35-f9642dc95f58",
             "model_type": "SkeletalMesh",
             "type": "COMPONENT_TYPE_MODEL"
         },
@@ -235,8 +236,8 @@
             "Ground Y": 5.0,
             "Jump Velocity": 11.0,
             "Launch Control Lock Duration": 0.11999999731779099,
-            "Max Sprint Speed": 4.0,
-            "Max Walk Speed": 2.0,
+            "Max Sprint Speed": 8.0,
+            "Max Walk Speed": 8.0,
             "Wall Attach Offset": 0.15000000596046448,
             "Wall Detect Distance": 1.0,
             "Wall Jump Out Velocity": 6.0,
@@ -324,7 +325,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Run",
+                    "key": "Hit",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -332,8 +333,8 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_LeafNinja|CustomMan_Attack_Hand_StraightPunch",
-                        "loop": true,
+                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Beaten_Left",
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "start": {
@@ -370,7 +371,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Hit",
+                    "key": "Run",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -378,8 +379,8 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Beaten_Left",
-                        "loop": false,
+                        "animationName": "SK_CHR_LeafNinja|CustomMan_Run_Loop",
+                        "loop": true,
                         "playRate": 1.0
                     },
                     "start": {
@@ -462,6 +463,328 @@
                         "loop": true,
                         "playRate": 1.0
                     },
+                    "key": "Skill_Konoha",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|CustomMan_Attack_ChakraBoots_A_cmb_05",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_01",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|CustomMan_Attack_Hand_Punch_Left",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Walk",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Walk_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_02",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|CustomMan_Attack_Hand_StraightPunch",
+                        "loop": false,
+                        "playRate": 2.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit_Air",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_Large_Front_Conect_toFall",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit_Air_Down",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_BlowOff_toFall",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Dash",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
                     "key": "Attack_Dash",
                     "loopClip": {
                         "animationName": "",
@@ -470,7 +793,145 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Ninjutsu_Teleportation_Charge_Loop",
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Dodge_Run_Left",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Dodge_Run_Left",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Dodge_Run_Right",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|LeafNinja_Dodge_Run_Right",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "DashStep_Behind",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_LeafNinja|LeafNinja_DashStep_Behind",
                         "loop": false,
                         "playRate": 1.0
                     },
@@ -483,10 +944,137 @@
             ],
             "current_state": "Idle",
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
+        },
+        {
+            "type": "COMPONENT_TYPE_CHAKRA_MOVE"
         }
     ],
-    "guid": "aa528f2b-7858-407a-8ff5-45d42fcd9db1",
-    "object_type": "OBJECT_TYPE_MONSTER",
+    "custom_properties": {
+        "part_objects": {
+            "Accessory": {
+                "components": [
+                    {
+                        "position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotation": [
+                            -81.99999237060547,
+                            0.0,
+                            0.0
+                        ],
+                        "scale": [
+                            0.013000000268220901,
+                            0.013000000268220901,
+                            0.013000000268220901
+                        ],
+                        "type": "COMPONENT_TYPE_TRANSFORM"
+                    },
+                    {
+                        "type": "COMPONENT_TYPE_SHADER"
+                    },
+                    {
+                        "materials": [
+                            {
+                                "material_name": "MI_WEP_BoxingGloves",
+                                "texture_overrides": {
+                                    "base_color_0": "72d8ca1c-4a59-4d2a-8fd1-4804c59446e9"
+                                }
+                            }
+                        ],
+                        "model_guid": "74899278-d2f0-47d2-8f9b-97be792f50b1",
+                        "model_type": "StaticMesh",
+                        "type": "COMPONENT_TYPE_MODEL"
+                    }
+                ],
+                "guid": "ed9710db-eefd-45c8-943d-5a257e4348a9",
+                "object_type": "OBJECT_TYPE_PART_SOCKET",
+                "static_class": "SocketPartObject"
+            },
+            "Weapon": {
+                "components": [
+                    {
+                        "position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotation": [
+                            -55.99999237060547,
+                            179.99989318847656,
+                            179.99989318847656
+                        ],
+                        "scale": [
+                            0.013000000268220901,
+                            0.013000000268220901,
+                            0.013000000268220901
+                        ],
+                        "type": "COMPONENT_TYPE_TRANSFORM"
+                    },
+                    {
+                        "type": "COMPONENT_TYPE_SHADER"
+                    },
+                    {
+                        "materials": [
+                            {
+                                "material_name": "MI_WEP_BoxingGloves",
+                                "texture_overrides": {
+                                    "base_color_0": "72d8ca1c-4a59-4d2a-8fd1-4804c59446e9"
+                                }
+                            }
+                        ],
+                        "model_guid": "73ec9d6d-4e18-4521-adc4-364e1353621c",
+                        "model_type": "StaticMesh",
+                        "type": "COMPONENT_TYPE_MODEL"
+                    }
+                ],
+                "guid": "5e6539d5-d81a-43a1-a0c6-a1edfcb90f3b",
+                "object_type": "OBJECT_TYPE_PART_SOCKET",
+                "static_class": "SocketPartObject"
+            }
+        },
+        "part_transforms": {
+            "Accessory": {
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    -81.99999237060547,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    0.013000000268220901,
+                    0.013000000268220901,
+                    0.013000000268220901
+                ],
+                "type": "COMPONENT_TYPE_TRANSFORM"
+            },
+            "Weapon": {
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    -55.99999237060547,
+                    179.99989318847656,
+                    179.99989318847656
+                ],
+                "scale": [
+                    0.013000000268220901,
+                    0.013000000268220901,
+                    0.013000000268220901
+                ],
+                "type": "COMPONENT_TYPE_TRANSFORM"
+            }
+        }
+    },
+    "guid": "4fced615-1ab2-4690-81a2-bb077b4dbc66",
+    "object_type": "OBJECT_TYPE_MONSTER_LEAF",
     "prefab_name": "Monster_Leaf",
     "static_class": "Monster_Leaf"
 }

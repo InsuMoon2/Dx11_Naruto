@@ -1,0 +1,3144 @@
+{
+    "gameObjects": [
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Rock"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "Material_4"
+                        }
+                    ],
+                    "model_guid": "cf39416a-a738-4ff0-93e0-852d16606827",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "f33ce117-8467-4014-9889-46d2b291071e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "cf39416a-a738-4ff0-93e0-852d16606827",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaA_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Rock"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "Material_4"
+                        }
+                    ],
+                    "model_guid": "cf39416a-a738-4ff0-93e0-852d16606827",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "520657f4-618d-4781-a878-ba3a4b967fcc",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "cf39416a-a738-4ff0-93e0-852d16606827",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaA_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Glass"
+                        },
+                        {
+                            "material_name": "MI_Rock"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_5"
+                        }
+                    ],
+                    "model_guid": "37e4d81a-421b-48eb-98cd-5d382837962c",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "af5b32a8-37ae-4a63-99df-f427ce764c58",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "37e4d81a-421b-48eb-98cd-5d382837962c",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaB_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Glass"
+                        },
+                        {
+                            "material_name": "MI_Rock"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_5"
+                        }
+                    ],
+                    "model_guid": "37e4d81a-421b-48eb-98cd-5d382837962c",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "e564b0df-42ec-418e-85a5-570a5f94cd29",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "37e4d81a-421b-48eb-98cd-5d382837962c",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaB_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Glass"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "705aafd1-ac49-40a6-be39-f6642f606337",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "ff7e3fdb-7a2c-4e45-9f14-4e7cb3d72dac",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "705aafd1-ac49-40a6-be39-f6642f606337",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaB_6_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Glass"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "705aafd1-ac49-40a6-be39-f6642f606337",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "ed4c01df-ba85-46a2-8fe2-81fb06f49caa",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "705aafd1-ac49-40a6-be39-f6642f606337",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaB_6_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Rock"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "MI_Glass"
+                        },
+                        {
+                            "material_name": "Material_5"
+                        }
+                    ],
+                    "model_guid": "460cbccf-97b8-48ee-a93a-178aac6a931b",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "28455f6c-bf7e-4f9b-a4ff-9b2633339269",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "460cbccf-97b8-48ee-a93a-178aac6a931b",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaC_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Rock"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "MI_Glass"
+                        },
+                        {
+                            "material_name": "Material_5"
+                        }
+                    ],
+                    "model_guid": "460cbccf-97b8-48ee-a93a-178aac6a931b",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "a65f108e-a8c1-498c-b25d-d097b1cb025f",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "460cbccf-97b8-48ee-a93a-178aac6a931b",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaC_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "a6a29d3c-ed1c-4bfa-9419-c18479c03391",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "aef5772d-7bbf-4e67-872f-758f03aba2c7",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "a6a29d3c-ed1c-4bfa-9419-c18479c03391",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaC_3_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "a6a29d3c-ed1c-4bfa-9419-c18479c03391",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "eae80c12-0806-454d-80c2-c5a0ad8fa823",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "a6a29d3c-ed1c-4bfa-9419-c18479c03391",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaC_3_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "db131406-5f5f-4ad1-a98e-15f4e4784819",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "2435352b-9a0d-4ebd-9a68-fb115e8cb4cf",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "db131406-5f5f-4ad1-a98e-15f4e4784819",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaD_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "db131406-5f5f-4ad1-a98e-15f4e4784819",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "73c17c55-538b-4eaf-a660-c56a27384ce4",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "db131406-5f5f-4ad1-a98e-15f4e4784819",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaD_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "65a533c6-5af6-40af-8bde-19c4a13be6b5",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "94321053-e7f6-447c-8c21-e49255e3549c",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "65a533c6-5af6-40af-8bde-19c4a13be6b5",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaE_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "65a533c6-5af6-40af-8bde-19c4a13be6b5",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "e75f9f6d-43db-4e98-8a5a-d9f12dfcae85",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "65a533c6-5af6-40af-8bde-19c4a13be6b5",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaE_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7992e0bb-164a-4f16-80e9-88312f81015f",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "16425f54-5c8b-4d95-9d77-d546cab562b1",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7992e0bb-164a-4f16-80e9-88312f81015f",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaE_3_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7992e0bb-164a-4f16-80e9-88312f81015f",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "95cd77e5-e325-45b0-ab92-33b48971f0cd",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7992e0bb-164a-4f16-80e9-88312f81015f",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaE_3_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "MI_Rock"
+                        },
+                        {
+                            "material_name": "Material_5"
+                        }
+                    ],
+                    "model_guid": "651dd0da-8121-4ca5-ae79-b6b23a710e7f",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "edb79cdd-21fb-4fc6-9189-94a7e08194b3",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "651dd0da-8121-4ca5-ae79-b6b23a710e7f",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaF_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "MI_Rock"
+                        },
+                        {
+                            "material_name": "Material_5"
+                        }
+                    ],
+                    "model_guid": "651dd0da-8121-4ca5-ae79-b6b23a710e7f",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "63049022-6907-4a05-a9b7-89d6526bd950",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "651dd0da-8121-4ca5-ae79-b6b23a710e7f",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaF_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "a9ed751a-e9af-40cc-bd1e-fa9edbd53aa5",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "52846379-2730-45d2-9911-5638e7e4b5cf",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "a9ed751a-e9af-40cc-bd1e-fa9edbd53aa5",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaG_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "a9ed751a-e9af-40cc-bd1e-fa9edbd53aa5",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "938c6026-4aaf-433d-9b57-d6577ed3bf6e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "a9ed751a-e9af-40cc-bd1e-fa9edbd53aa5",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaG_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Grass"
+                        },
+                        {
+                            "material_name": "Material_4"
+                        }
+                    ],
+                    "model_guid": "0ce2077d-500d-444d-879e-311373a32cc6",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "f9af9dba-d3a1-4f12-908d-cc57d1aa1c68",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "0ce2077d-500d-444d-879e-311373a32cc6",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaH_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Grass"
+                        },
+                        {
+                            "material_name": "Material_4"
+                        }
+                    ],
+                    "model_guid": "0ce2077d-500d-444d-879e-311373a32cc6",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "1d96fc6f-d2b9-46f3-9242-4caea75e178c",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "0ce2077d-500d-444d-879e-311373a32cc6",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaH_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "46453480-dba5-4098-9d66-dfe0688b4e0b",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "debe3dcd-e576-4fdb-bb51-cf8296932e82",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "46453480-dba5-4098-9d66-dfe0688b4e0b",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaJ_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "46453480-dba5-4098-9d66-dfe0688b4e0b",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "f53f7bd3-19d6-4f8d-aa48-499b4df3a1eb",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "46453480-dba5-4098-9d66-dfe0688b4e0b",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaJ_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7f2a200b-b7d5-4cc2-912e-bb4e5d0111af",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "2b4c8399-7400-4a25-b16b-81dd12bbcf35",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7f2a200b-b7d5-4cc2-912e-bb4e5d0111af",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaK_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "7f2a200b-b7d5-4cc2-912e-bb4e5d0111af",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "d54242c5-74a2-49e9-9206-d186a4f2e24b",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7f2a200b-b7d5-4cc2-912e-bb4e5d0111af",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaK_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "Material_2"
+                        }
+                    ],
+                    "model_guid": "59511391-99d0-4939-8956-66c7d001c7b3",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "2e1c92bf-b947-44ca-927b-bd2056026eff",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "59511391-99d0-4939-8956-66c7d001c7b3",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_areaK_3_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "MI_Wood"
+                        },
+                        {
+                            "material_name": "Material_2"
+                        }
+                    ],
+                    "model_guid": "59511391-99d0-4939-8956-66c7d001c7b3",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "dc162fd4-7bc4-4825-83de-7b53c02f7575",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "59511391-99d0-4939-8956-66c7d001c7b3",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_areaK_3_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Dirt"
+                        },
+                        {
+                            "material_name": "MI_Grass"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "cfcb8124-18db-46e4-b60b-2f654a09a41d",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "62bd2969-68fd-4900-8908-1aff2d5d815c",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "cfcb8124-18db-46e4-b60b-2f654a09a41d",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_Map_23_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Dirt"
+                        },
+                        {
+                            "material_name": "MI_Grass"
+                        },
+                        {
+                            "material_name": "MI_Concrete"
+                        },
+                        {
+                            "material_name": "Material_3"
+                        }
+                    ],
+                    "model_guid": "cfcb8124-18db-46e4-b60b-2f654a09a41d",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "7bcf9af2-d7a5-4942-a695-a24df1982aaf",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "cfcb8124-18db-46e4-b60b-2f654a09a41d",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_Map_23_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -67.6500015258789,
+                        41.70000076293945,
+                        77.4000015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        89.99994659423828,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "2ea50e48-cd05-4329-a78e-8ac29f7f2a56",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A3_9_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -67.6500015258789,
+                        41.70000076293945,
+                        77.4000015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        89.99994659423828,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "c739a99a-5e94-4780-b1f6-e8edbd7eaab8",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A3_9_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -24.549999237060547,
+                        29.950000762939453,
+                        42.5
+                    ],
+                    "rotation": [
+                        -0.0,
+                        89.99994659423828,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "2d9dd720-39aa-4cba-8da9-8c050539ced9",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A4_12_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -24.549999237060547,
+                        29.950000762939453,
+                        42.5
+                    ],
+                    "rotation": [
+                        -0.0,
+                        89.99994659423828,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "3795e322-5cc3-4aec-b783-ac0a6de2b566",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A4_12_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        39.900001525878906,
+                        29.5,
+                        59.099998474121094
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "8d0b9371-587c-492e-866f-8a69851b236e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A5_15_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        39.900001525878906,
+                        29.5,
+                        59.099998474121094
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "e8cc7399-947b-41c4-8417-4d96c2e3cb02",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A5_15_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        59.849998474121094,
+                        14.199999809265137,
+                        49.79999923706055
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "9cb05d8d-82fd-4153-a661-36db665eb460",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A6_18_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        59.849998474121094,
+                        14.199999809265137,
+                        49.79999923706055
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "79b25c7d-8548-4076-8a90-df915cf21ca1",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A6_18_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        104.25,
+                        16.799999237060547,
+                        18.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        -175.00003051757813,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "0ab60888-e49d-401a-a75a-585131114b4f",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A7_21_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        104.25,
+                        16.799999237060547,
+                        18.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        -175.00003051757813,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "7ff85e98-5e8f-4a38-a049-e14f486d073c",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "f36967df-930a-4934-9233-fc93487c4ce2",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_A7_21_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -69.79000091552734,
+                        22.530000686645508,
+                        78.97000122070313
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.99990844726563,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "9403fd2c-4949-405f-9501-a8104bf35bec",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_B2_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -69.79000091552734,
+                        22.530000686645508,
+                        78.97000122070313
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.99990844726563,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "05c78c5c-b0d0-4e23-89cb-701d8c375f28",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_B2_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        104.0999984741211,
+                        16.799999237060547,
+                        15.800000190734863
+                    ],
+                    "rotation": [
+                        -0.0,
+                        179.99989318847656,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "7795530e-e41f-4bd0-bb82-77d50c54cf61",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_B_45_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        104.0999984741211,
+                        16.799999237060547,
+                        15.800000190734863
+                    ],
+                    "rotation": [
+                        -0.0,
+                        179.99989318847656,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "3f2cb064-fb22-4749-a7ae-fe7db5df01f7",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "fbe52d9a-2c37-47a8-b636-9835603aa8e1",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_B_45_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        77.59773254394531,
+                        19.164897918701172,
+                        50.461341857910156
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.9998779296875,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "a87f56c5-8b64-4d84-b812-8be7655a21c1",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C2_71_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        77.59773254394531,
+                        19.164897918701172,
+                        50.461341857910156
+                    ],
+                    "rotation": [
+                        0.0,
+                        -89.9998779296875,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "670fb9a4-9484-4b8e-aff5-f17200b4ff2e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C2_71_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        44.04999923706055,
+                        25.5,
+                        -32.79999923706055
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.999755859375,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "5bad7cef-8e6e-4f01-8e9c-0a1ec6a6b551",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C3_74_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        44.04999923706055,
+                        25.5,
+                        -32.79999923706055
+                    ],
+                    "rotation": [
+                        0.0,
+                        -179.999755859375,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "16592016-8f8c-480c-9cda-6527700a843e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C3_74_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -1.2000000476837158,
+                        45.0,
+                        -80.6500015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "6725774b-3df3-41ff-9f6d-a2d9cbfc57d0",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C4_79_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -1.2000000476837158,
+                        45.0,
+                        -80.6500015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "216783a6-f9dd-4cc0-9d2b-4ec0356275b9",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C4_79_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        19.674833297729492,
+                        29.515417098999023,
+                        52.86735916137695
+                    ],
+                    "rotation": [
+                        -0.0,
+                        135.0001220703125,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "42a184df-c900-487a-815e-79e8081b0ab8",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C_68_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        19.674833297729492,
+                        29.515417098999023,
+                        52.86735916137695
+                    ],
+                    "rotation": [
+                        -0.0,
+                        135.0001220703125,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "01019e95-0937-4b4e-9d75-d361ec36347f",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "297ce38f-f425-477c-8ad4-a5ead2e52714",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_C_68_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -91.5,
+                        54.04999923706055,
+                        112.25
+                    ],
+                    "rotation": [
+                        -0.0,
+                        174.99977111816406,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "97fc6404-34cd-4583-92eb-6f7e7e245179",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_D2_88_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -91.5,
+                        54.04999923706055,
+                        112.25
+                    ],
+                    "rotation": [
+                        -0.0,
+                        174.99977111816406,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "ea40a7ca-2ad7-4822-a864-770d276f374d",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_D2_88_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -92.07772827148438,
+                        48.856834411621094,
+                        12.123791694641113
+                    ],
+                    "rotation": [
+                        0.0,
+                        -84.99993133544922,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "11cbae29-2cd6-4656-aaff-68bfed04277d",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_D_85_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -92.07772827148438,
+                        48.856834411621094,
+                        12.123791694641113
+                    ],
+                    "rotation": [
+                        0.0,
+                        -84.99993133544922,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "d0a1b2a2-f3b0-4b1a-a6e9-ecca6e01c0ef",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "8c623b8d-9f13-42c4-8e14-8a7e61c200c6",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_D_85_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -34.97740173339844,
+                        62.0,
+                        -64.80354309082031
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.59481811523438,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "e883f763-8036-4419-912e-163d42dc93fb",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E11_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -34.97740173339844,
+                        62.0,
+                        -64.80354309082031
+                    ],
+                    "rotation": [
+                        0.0,
+                        -90.59481811523438,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "d05eaf12-8ce4-4504-bcd0-072f7930ef2a",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E11_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        52.29999923706055,
+                        24.600000381469727,
+                        83.6500015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        89.99994659423828,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "95cf82a4-7feb-4cc3-b932-4b95bdb084a0",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E3_111_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        52.29999923706055,
+                        24.600000381469727,
+                        83.6500015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        89.99994659423828,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "a97426c2-3236-4785-88d3-98ed0315634e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E3_111_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -27.200000762939453,
+                        44.54999923706055,
+                        -12.149999618530273
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "9419045f-bb4e-4625-82ca-baf419e1e506",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E5_127_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -27.200000762939453,
+                        44.54999923706055,
+                        -12.149999618530273
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "29b9eff5-0522-4689-b863-e406481239e1",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E5_127_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -27.200000762939453,
+                        44.54999923706055,
+                        -18.299999237060547
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "4172bf96-94b2-4631-af0c-655956895c23",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E6_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -27.200000762939453,
+                        44.54999923706055,
+                        -18.299999237060547
+                    ],
+                    "rotation": [
+                        -0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "e7d18fb8-af04-415b-a662-e7942251c49e",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E6_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        76.4000015258789,
+                        24.600000381469727,
+                        83.6500015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        99.99998474121094,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "128718aa-c598-4a25-a4a7-8c29861043ac",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_105_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        76.4000015258789,
+                        24.600000381469727,
+                        83.6500015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        99.99998474121094,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "55595077-317c-426e-9c61-8acac40ca6e7",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_105_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        4.699999809265137,
+                        55.0,
+                        82.4000015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        95.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.25,
+                        1.25,
+                        1.25
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "71f3d909-af3d-462e-b7bc-f4540e8e0788",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_roof_01_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        4.699999809265137,
+                        55.0,
+                        82.4000015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        95.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.25,
+                        1.25,
+                        1.25
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "c20e5071-f1ba-49fd-8b4b-d3f8f22fe14d",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_roof_01_WorldBlock"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -17.350000381469727,
+                        55.0,
+                        82.4000015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        95.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.25,
+                        1.25,
+                        1.25
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "7e7cda09-5ab2-481f-86c5-1e273f56eb0b",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WallRun",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_roof_02_WallRun"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        -17.350000381469727,
+                        55.0,
+                        82.4000015258789
+                    ],
+                    "rotation": [
+                        -0.0,
+                        95.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.25,
+                        1.25,
+                        1.25
+                    ],
+                    "type": "COMPONENT_TYPE_TRANSFORM"
+                },
+                {
+                    "materials": [
+                        {
+                            "material_name": "MI_Metal"
+                        },
+                        {
+                            "material_name": "Material_1"
+                        }
+                    ],
+                    "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+                    "model_type": "StaticMesh",
+                    "type": "COMPONENT_TYPE_MODEL"
+                }
+            ],
+            "enabled": true,
+            "guid": "a798a996-5255-4ec4-a99d-3b88c86c00b0",
+            "layerTag": "Layer_CollisionProxy",
+            "model_guid": "7541c09f-ff99-48bd-8bce-1176e89bcca8",
+            "object_type": "OBJECT_TYPE_COLLISION_PROXY",
+            "proxy_type": "WorldBlock",
+            "static_class": "COL_SM_ENV_KNVLLG_WaterTank_E_roof_02_WorldBlock"
+        }
+    ],
+    "levelIndex": 7,
+    "levelName": "[20260427]Konoha"
+}

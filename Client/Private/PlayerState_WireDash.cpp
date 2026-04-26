@@ -39,6 +39,8 @@ void PlayerState_WireDash::Enter(PlayerStateMachine* state)
     input->Set_InputMode(EPlayerInputMode::LookOnly);
 
     _isWireAttach = false;
+    _wireAttachGround = false;
+    _wireTargetDistance = 0.f;
     _wireAttachPosition = Vec3::Zero;
     _wireMeshEffect.reset();
 
@@ -62,8 +64,8 @@ void PlayerState_WireDash::Enter(PlayerStateMachine* state)
         if (lookDir.LengthSquared() > 0.0001f)
             transform->LookAt(transform->Get_WorldPosition() + lookDir);
 
-        MovementComponent::FSurfaceHit wallHit{};
-        bool isHit = movement->Try_WireDash_WallTrace(traceStart, traceDir, wallHit);
+        MovementComponent::FWireDashSurfaceHit surfaceHit{};
+        const bool isHit = movement->Try_WireDash_SurfaceTrace(traceStart, traceDir, surfaceHit);
 
         /*{
             FDebugTraceLineDesc traceDesc{};
@@ -81,30 +83,48 @@ void PlayerState_WireDash::Enter(PlayerStateMachine* state)
             GAME->Draw_DebugTraceLine(traceDesc);
         }*/
 
-        const Vec3 wireTargetPosition = isHit ? wallHit.hitPoint : traceEnd;
+        const Vec3 wireTargetPosition = isHit ? surfaceHit.surfaceHit.hitPoint : traceEnd;
         Spawn_WireMesh(state, wireTargetPosition);
 
         if (isHit)
         {
             _isWireAttach = true;
-
-            const float attachOffset = movement->Get_MoveDesc().wallAttachOffset;
-            _wireAttachPosition = wallHit.hitPoint + wallHit.hitNormal * attachOffset;
+            _wireTargetDistance = max(0.f, (wireTargetPosition - transform->Get_WorldPosition()).Length());
 
             auto airApproach = state->Get_State<PlayerState_AirApproach>(EPlayerState::AirApproach);
             if (airApproach)
             {
                 PlayerState_AirApproach::FApproachDesc desc{};
-                desc.targetPosition = _wireAttachPosition;
                 desc.stopDistance = movement->Get_WireDashDesc().stopDistance;
                 desc.moveSpeed = movement->Get_WireDashDesc().approachSpeed;
                 desc.maxApproachTime = 0.8f;
-                desc.arriveAction = PlayerState_AirApproach::EArriveAction::WallAttach;
                 desc.nextStateOnFail = EPlayerState::JumpFall;
-                desc.wallNormal = wallHit.hitNormal;
                 desc.wireMeshEffect = Consume_WireMeshEffect();
 
-                airApproach->Set_AirApproachDesc(desc);
+                if (surfaceHit.surfaceType == MovementComponent::EWireDashSurfaceType::Wall)
+                {
+                    const float attachOffset = movement->Get_MoveDesc().wallAttachOffset;
+                    _wireAttachPosition = surfaceHit.surfaceHit.hitPoint + surfaceHit.surfaceHit.hitNormal * attachOffset;
+                    desc.targetPosition = _wireAttachPosition;
+                    desc.arriveAction = PlayerState_AirApproach::EArriveAction::WallAttach;
+                    desc.wallNormal = surfaceHit.surfaceHit.hitNormal;
+                }
+                else if (surfaceHit.surfaceType == MovementComponent::EWireDashSurfaceType::Ground)
+                {
+                    _wireAttachGround = true;
+                    _wireAttachPosition = surfaceHit.surfaceHit.hitPoint;
+                    desc.targetPosition = surfaceHit.surfaceHit.hitPoint;
+                    desc.stopDistance = max(desc.stopDistance, 1.1f);
+                    desc.maxApproachTime = 0.45f;
+                    desc.arriveAction = PlayerState_AirApproach::EArriveAction::GroundLand;
+                }
+                else
+                {
+                    _isWireAttach = false;
+                }
+
+                if (_isWireAttach)
+                    airApproach->Set_AirApproachDesc(desc);
             }
         }
     }
@@ -122,6 +142,12 @@ void PlayerState_WireDash::Update(PlayerStateMachine* state, float timeDelta)
     auto cmd = state->Init_MoveCommand();
     cmd.jump = false;
     cmd.doublejump = false;
+
+    if (_isWireAttach && Should_BeginAirApproachEarly(state))
+    {
+        state->Change_State(EPlayerState::AirApproach);
+        return;
+    }
 
     if (state->Is_AnimStateFinished())
     {
@@ -153,6 +179,23 @@ void PlayerState_WireDash::Exit(PlayerStateMachine* state)
 
     movement->Set_GravityEnabled(true);
     input->Set_InputMode(EPlayerInputMode::Normal);
+}
+
+bool PlayerState_WireDash::Should_BeginAirApproachEarly(PlayerStateMachine* state) const
+{
+    if (!state || !_isWireAttach || !_wireAttachGround)
+        return false;
+
+    // 가까운 바닥 목표는 와이어 발사 모션 전체를 기다리면 이동보다 대기 시간이 더 길어 보여 질질 끄는 느낌이 강해진다.
+    if (_wireTargetDistance > 14.f)
+        return false;
+
+    const float animDurationSec = state->Get_AnimDurationSec();
+    if (animDurationSec <= FLT_EPSILON)
+        return true;
+
+    const float earlyTransitionTime = min(animDurationSec * 0.35f, 0.12f);
+    return state->Get_AnimTrackPositionSec() >= earlyTransitionTime;
 }
 
 bool PlayerState_WireDash::Build_ViewportCenterRay(Vec3& outStart, Vec3& outDir) const

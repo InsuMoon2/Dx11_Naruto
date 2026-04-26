@@ -49,7 +49,13 @@ void AnimationStateComponent::BeginPlay()
 {
     Component::BeginPlay();
 
-    _model = Resolve_Model();
+    if (!_model)
+        _model = Resolve_Model();
+}
+
+void AnimationStateComponent::Set_Model(Shared<Model> model)
+{
+    _model = model;
 }
 
 Shared<Model> AnimationStateComponent::Resolve_Model()
@@ -897,7 +903,6 @@ bool AnimationStateComponent::Requires_ForceRestart(EPlayerState state)
     case EPlayerState::Skill_FireBall:
     case EPlayerState::Skill_FireBall_Air:
     case EPlayerState::Skill_ShinsuSenju:
-    case EPlayerState::Skill_Kirin:
     case EPlayerState::Skill_Kamui:
         return true;
 
@@ -961,7 +966,6 @@ Protocol::OBJECT_STATE_TYPE AnimationStateComponent::To_ReplicatedState(EPlayerS
     case EPlayerState::Skill_FireBall_Air:  return Protocol::OBJECT_STATE_TYPE_SKILL_FIREBALL_AIR;
     case EPlayerState::Shuriken:            return Protocol::OBJECT_STATE_TYPE_SHURIKEN;
     case EPlayerState::Skill_ShinsuSenju:   return Protocol::OBJECT_STATE_TYPE_SKILL_SHINSUSENJU;
-    case EPlayerState::Skill_Kirin:         return Protocol::OBJECT_STATE_TYPE_SKILL_KIRIN;
     case EPlayerState::Skill_Kamui:         return Protocol::OBJECT_STATE_TYPE_SKILL_KAMUI;
     case EPlayerState::Dead:                return Protocol::OBJECT_STATE_TYPE_DEAD;
     default:                                return Protocol::OBJECT_STATE_TYPE_IDLE;
@@ -1016,7 +1020,6 @@ EPlayerState AnimationStateComponent::To_LocalState(Protocol::OBJECT_STATE_TYPE 
     case Protocol::OBJECT_STATE_TYPE_SKILL_FIREBALL_AIR:    return EPlayerState::Skill_FireBall_Air;
     case Protocol::OBJECT_STATE_TYPE_SHURIKEN:              return EPlayerState::Shuriken;
     case Protocol::OBJECT_STATE_TYPE_SKILL_SHINSUSENJU:     return EPlayerState::Skill_ShinsuSenju;
-    case Protocol::OBJECT_STATE_TYPE_SKILL_KIRIN:           return EPlayerState::Skill_Kirin;
     case Protocol::OBJECT_STATE_TYPE_SKILL_KAMUI:           return EPlayerState::Skill_Kamui;
     case Protocol::OBJECT_STATE_TYPE_DEAD:                  return EPlayerState::Dead;
     default:                                                return EPlayerState::Idle;

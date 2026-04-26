@@ -50,6 +50,9 @@ private:
     HRESULT                 Create_DeviceResources();
     HRESULT                 Create_TargetBitmap();
 
+    // 로컬 리소스 폰트 파일을 DirectWrite 전용 컬렉션으로 등록할 때 호출한다.
+    HRESULT                 Load_DefaultUIFont();
+
     ID2D1SolidColorBrush*   Find_Or_CreateBrush(const Color& color);
     IDWriteTextFormat*      Find_Or_CreateFormat(const FTextStyle& style);
 
@@ -61,6 +64,8 @@ private:
     ComPtr<ID2D1Device>         _d2dDevice;
     ComPtr<ID2D1DeviceContext>  _d2dContext;
     ComPtr<IDWriteFactory>      _writeFactory;
+    // OpenSans SemiBold를 시스템 설치 없이 사용할 수 있게 들고 있는 전용 폰트 컬렉션이다.
+    ComPtr<IDWriteFontCollection1> _defaultUIFontCollection;
     ComPtr<ID2D1Bitmap1>        _targetBitmap;
 
     vector<FCachedBrush>        _brushCache;

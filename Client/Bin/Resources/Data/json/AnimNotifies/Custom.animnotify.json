@@ -506,13 +506,16 @@
                 },
                 {
                     "name": "Notify State Track"
+                },
+                {
+                    "name": "Notify State Track"
                 }
             ],
             "notify_states": [
                 {
                     "duration_sec": 0.3333333432674408,
                     "payload": {},
-                    "start_sec": 0.5,
+                    "start_sec": 0.6333333253860474,
                     "track_index": 0,
                     "type": "ANS_ComboWindow"
                 },
@@ -543,9 +546,29 @@
                         "top_bone": "R_Hand_Weapon_cnt_tr",
                         "width": 2.5
                     },
-                    "start_sec": 0.46666666865348816,
+                    "start_sec": 0.5,
                     "track_index": 2,
                     "type": "ANS_SwordTrail"
+                },
+                {
+                    "duration_sec": 0.30000001192092896,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.23333333432674408,
+                    "track_index": 3,
+                    "type": "ANS_Move"
                 }
             ],
             "notify_tracks": [
@@ -557,10 +580,25 @@
         {
             "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_TurnSlashing_Right",
             "display_fps": 30,
-            "notifies": [],
+            "notifies": [
+                {
+                    "payload": {
+                        "Next State": 0
+                    },
+                    "time_sec": 1.2999999523162842,
+                    "track_index": 0,
+                    "type": "AN_ChangeState"
+                }
+            ],
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
+                },
+                {
+                    "name": "Notify State Track 4"
                 },
                 {
                     "name": "Notify State Track"
@@ -591,6 +629,39 @@
                     "start_sec": 0.6333333253860474,
                     "track_index": 1,
                     "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "bot_bone": "",
+                        "lifespan": 0.18000000715255737,
+                        "texture_index": 2,
+                        "top_bone": "R_Hand_Weapon_cnt_tr",
+                        "width": 2.5
+                    },
+                    "start_sec": 0.6333333253860474,
+                    "track_index": 2,
+                    "type": "ANS_SwordTrail"
+                },
+                {
+                    "duration_sec": 0.36666667461395264,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 5.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.4000000059604645,
+                    "track_index": 3,
+                    "type": "ANS_Move"
                 }
             ],
             "notify_tracks": [
@@ -647,30 +718,78 @@
         {
             "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_BothHandsSlashingHorizontally",
             "display_fps": 30,
-            "notifies": [],
+            "notifies": [
+                {
+                    "payload": {
+                        "Next State": 0
+                    },
+                    "time_sec": 2.5333333015441895,
+                    "track_index": 0,
+                    "type": "AN_ChangeState"
+                }
+            ],
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track 1"
+                },
+                {
+                    "name": "Notify State Track 2"
                 }
             ],
             "notify_states": [
+                {
+                    "duration_sec": 0.6333333253860474,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.2666666805744171,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                },
                 {
                     "duration_sec": 0.3333333432674408,
                     "payload": {
                         "left_foot": false,
                         "left_hand": false,
-                        "override_hit_reaction_type": 0,
-                        "override_launch_power": 0.0,
-                        "override_launch_up": 0.0,
+                        "override_hit_reaction_type": 2,
+                        "override_launch_power": 4.0,
+                        "override_launch_up": 4.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "weapon",
-                        "use_hit_reaction_override": false,
-                        "use_launch_override": false
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true
                     },
-                    "start_sec": 0.8666666746139526,
-                    "track_index": 0,
+                    "start_sec": 0.8999999761581421,
+                    "track_index": 1,
                     "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.36666667461395264,
+                    "payload": {
+                        "bot_bone": "",
+                        "lifespan": 0.18000000715255737,
+                        "texture_index": 2,
+                        "top_bone": "R_Hand_Weapon_cnt_tr",
+                        "width": 2.5
+                    },
+                    "start_sec": 0.8999999761581421,
+                    "track_index": 2,
+                    "type": "ANS_SwordTrail"
                 }
             ],
             "notify_tracks": [
@@ -841,7 +960,7 @@
                     "payload": {
                         "attach_to_bone": false,
                         "bone_name": "CharacterRoot",
-                        "effect_name": "SmokeRing",
+                        "effect_name": "Dash_Smoke",
                         "local_offset": [
                             0.0,
                             -1.5,
@@ -1307,6 +1426,9 @@
                 },
                 {
                     "name": "Notify Track"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -1457,7 +1579,13 @@
                             1.2000000476837158,
                             1.7999999523162842
                         ],
+                        "spawn_at_locked_target": false,
                         "spawn_type": 20,
+                        "target_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "use_owner_forward": false
                     },
                     "time_sec": 0.4333333373069763,
@@ -1587,6 +1715,16 @@
                     "time_sec": 0.0,
                     "track_index": 0,
                     "type": "AN_SpawnParticle"
+                },
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Rasengan_Voice.wav",
+                        "volume": 0.4000000059604645
+                    },
+                    "time_sec": 0.0,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -1598,13 +1736,44 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
         {
             "clip_name": "SK_CHR_NormalModel|CustomMan_Aerial_Dash_Loop",
             "display_fps": 30,
-            "notifies": [],
+            "notifies": [
+                {
+                    "payload": {
+                        "attach_to_bone": false,
+                        "bone_name": "CharacterRoot",
+                        "effect_name": "Dash_Smoke",
+                        "local_offset": [
+                            0.0,
+                            -1.5,
+                            -0.5
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            1.5,
+                            1.0,
+                            1.5
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": true
+                    },
+                    "time_sec": 0.0,
+                    "track_index": 0,
+                    "type": "AN_SpawnParticle"
+                }
+            ],
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
@@ -2034,7 +2203,13 @@
                             1.2000000476837158,
                             1.7999999523162842
                         ],
+                        "spawn_at_locked_target": false,
                         "spawn_type": 25,
+                        "target_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "use_owner_forward": true
                     },
                     "time_sec": 1.0,
@@ -2055,7 +2230,7 @@
             ]
         },
         {
-            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Kirin",
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Beaten_Kamui_Loop",
             "display_fps": 30,
             "notifies": [
                 {
@@ -2068,7 +2243,13 @@
                             2.0,
                             5.0
                         ],
-                        "spawn_type": 28,
+                        "spawn_at_locked_target": false,
+                        "spawn_type": 42,
+                        "target_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "use_owner_forward": true
                     },
                     "time_sec": 0.800000011920929,
@@ -2085,7 +2266,13 @@
                             0.0,
                             5.0
                         ],
-                        "spawn_type": 26,
+                        "spawn_at_locked_target": false,
+                        "spawn_type": 42,
+                        "target_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "use_owner_forward": true
                     },
                     "time_sec": 5.599999904632568,
@@ -2332,7 +2519,7 @@
                     "payload": {
                         "전환 상태": 0
                     },
-                    "time_sec": 1.7999999523162842,
+                    "time_sec": 1.5333333015441895,
                     "track_index": 0,
                     "type": "AN_ChangePlayerState"
                 }
@@ -2579,6 +2766,192 @@
                     "time_sec": 0.8666666746139526,
                     "track_index": 0,
                     "type": "AN_ChangePlayerState"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_DoubleJump",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "attach_to_bone": false,
+                        "bone_name": "CharacterRoot",
+                        "effect_name": "Dash_Smoke",
+                        "local_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ],
+                        "local_scale": [
+                            1.5,
+                            1.0,
+                            1.5
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
+                    },
+                    "time_sec": 0.13333334028720856,
+                    "track_index": 0,
+                    "type": "AN_SpawnParticle"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_SSp_7Sword_cmb_07",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "Next State": 0
+                    },
+                    "time_sec": 1.9666666984558105,
+                    "track_index": 0,
+                    "type": "AN_ChangeState"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track 1"
+                },
+                {
+                    "name": "Notify State Track 2"
+                },
+                {
+                    "name": "Notify State Track"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.5333333611488342,
+                    "payload": {},
+                    "start_sec": 1.100000023841858,
+                    "track_index": 0,
+                    "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "weapon",
+                        "use_hit_reaction_override": false,
+                        "use_launch_override": false
+                    },
+                    "start_sec": 0.9666666388511658,
+                    "track_index": 1,
+                    "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.36666667461395264,
+                    "payload": {
+                        "bot_bone": "",
+                        "lifespan": 0.18000000715255737,
+                        "texture_index": 2,
+                        "top_bone": "R_Hand_Weapon_cnt_tr",
+                        "width": 2.5
+                    },
+                    "start_sec": 0.9333333373069763,
+                    "track_index": 2,
+                    "type": "ANS_SwordTrail"
+                },
+                {
+                    "duration_sec": 0.4333333373069763,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 6.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.699999988079071,
+                    "track_index": 3,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_KamuiKakashi",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "block_game_input": true,
+                        "sequence_name": "Kamui"
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlayCinematic"
+                },
+                {
+                    "payload": {
+                        "aim_at_target": false,
+                        "collision_preset": 3,
+                        "launch_if_projectile": false,
+                        "local_offset": [
+                            0.0,
+                            1.2000000476837158,
+                            1.7999999523162842
+                        ],
+                        "spawn_at_locked_target": true,
+                        "spawn_type": 42,
+                        "target_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 2.0333333015441895,
+                    "track_index": 0,
+                    "type": "AN_SpawnSkill"
                 }
             ],
             "notify_state_tracks": [

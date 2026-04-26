@@ -122,6 +122,8 @@ public:
 
     Shared<Transform> Get_Transform() const { return _transformCom; }
 
+    virtual void On_RemovedFromLevel() {}
+
 public:
     template<typename T = GameObject>
     shared_ptr<T> GetSharedPtr()

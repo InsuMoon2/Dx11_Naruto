@@ -6,11 +6,11 @@
             "animationLoop": true,
             "animationName": "",
             "animationPlayRate": 1.0,
-            "blendMode": 0,
+            "blendMode": 1,
             "colorTint": [
+                0.0,
+                0.19354844093322754,
                 1.0,
-                0.0,
-                0.0,
                 1.0
             ],
             "customParams0": [
@@ -28,7 +28,7 @@
             "diffuseTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
             "duration": -1.0,
             "emissiveGradationTextureGuid": "",
-            "emissiveStrength": 1.0,
+            "emissiveStrength": 4.0,
             "emissiveTextureGuid": "",
             "enabled": true,
             "endColorTint": [
@@ -58,8 +58,8 @@
                 "rows": 1,
                 "startFrame": 0
             },
-            "fresnelMultiplier": 1.0,
-            "fresnelPower": 0.0,
+            "fresnelMultiplier": 3.5,
+            "fresnelPower": 2.5,
             "kind": 1,
             "layerName": "NewMeshEmitter",
             "localPosition": [
@@ -73,8 +73,8 @@
                 0.0
             ],
             "localScale": [
-                10.0,
-                10.0,
+                3.0,
+                1.0,
                 10.0
             ],
             "loop": false,

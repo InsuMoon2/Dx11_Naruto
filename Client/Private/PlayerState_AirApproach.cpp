@@ -93,6 +93,12 @@ void PlayerState_AirApproach::Update(PlayerStateMachine* state, float timeDelta)
             return;
             }
 
+        case EArriveAction::GroundLand:
+            transform->Set_WorldPosition(_approachDesc.targetPosition);
+            movement->Set_Velocity(Vec3::Zero);
+            state->Change_State(EPlayerState::JumpFall);
+            return;
+
         case EArriveAction::ChangeState:
             if (_approachDesc.nextStateOnArrive != EPlayerState::END)
             {

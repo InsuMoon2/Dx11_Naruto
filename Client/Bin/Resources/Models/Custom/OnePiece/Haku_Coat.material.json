@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_Man_Hakunormal_01",
+      "textures": [
+        {
+          "slot": "normal",
+          "index": 0,
+          "path": "Textures/T_CHR_Man_Hakunormal_BC.png"
+        }
+      ]
+    }
+  ]
+}

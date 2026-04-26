@@ -25,12 +25,16 @@
                     0.44999998807907104,
                     0.0
                 ],
-                "radius": 0.699999988079071
+                "extents": [
+                    0.5,
+                    0.6000000238418579,
+                    0.5
+                ]
             },
             "channel": "Monster_Body",
             "collision_preset": "Monster_Body",
             "is_active": true,
-            "shape": "Sphere",
+            "shape": "OBB",
             "type": "COMPONENT_TYPE_COLLIDER"
         },
         {
@@ -205,6 +209,7 @@
             "Ground Walkable Min Up Dot": 0.550000011920929,
             "Ground Y": 0.0,
             "Jump Velocity": 8.0,
+            "Launch Control Lock Duration": 0.11999999731779099,
             "Max Sprint Speed": 4.0,
             "Max Walk Speed": 2.0,
             "Wall Attach Offset": 0.15000000596046448,
@@ -212,6 +217,8 @@
             "Wall Jump Out Velocity": 6.0,
             "Wall Jump Up Velocity": 8.0,
             "Wall Runnable Max Up Dot": 0.3499999940395355,
+            "Wall Top Landing Forward Offset": 0.20000000298023224,
+            "Wall Top Landing Max Height Delta": 0.550000011920929,
             "Wall Trace Start Offset Y": 1.0,
             "Yaw Speed": 0.20000000298023224,
             "type": "COMPONENT_TYPE_MOVEMENT"
@@ -348,6 +355,52 @@
                     "single": {
                         "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_Punch_Left",
                         "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Walk",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Walk_Loop",
+                        "loop": true,
                         "playRate": 1.0
                     },
                     "start": {
@@ -522,7 +575,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Run",
+                    "key": "Hit",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -530,8 +583,8 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Run_Loop",
-                        "loop": true,
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Left",
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "start": {
@@ -568,7 +621,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Hit",
+                    "key": "Run",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -576,8 +629,8 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Left",
-                        "loop": false,
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Run_Loop",
+                        "loop": true,
                         "playRate": 1.0
                     },
                     "start": {
@@ -631,13 +684,151 @@
                         "loop": true,
                         "playRate": 1.0
                     }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit_Air",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_UniversalPull_Start",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit_Air_Down",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_BlowOff_toFall",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "JumpFall",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Fall_Front_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
                 }
             ],
             "current_state": "",
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
         }
     ],
-    "guid": "2462b767-6e7a-4a9b-af82-b70dbae1b674",
+    "guid": "25a3e2fb-e628-41f7-be6f-eabf9377440b",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster2",
     "static_class": "Monster2"

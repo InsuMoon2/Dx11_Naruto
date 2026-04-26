@@ -4,6 +4,7 @@
 #include "Background.h"
 #include "Loader.h"
 #include "GameInstance.h"
+#include "Level_CharacterSetup.h"
 #include "Level_Loading.h"
 #include "NetworkManager.h"
 #include "UI_MainTitleMenuButton.h"
@@ -21,6 +22,8 @@ HRESULT Level_MainTitle::Initialize()
 {
     if (FAILED(Ready_Layer_UI()))
         return E_FAIL;
+
+    GAME->Play_BGM(L"BGM/MainTitle_Long.wav", 0.2f, true, 0.45f);
 
     Apply_TitlePhase();
     Apply_MenuSelection();
@@ -189,6 +192,8 @@ void Level_MainTitle::Update_PressPhase()
 {
     if (INPUT->KeyDown(KEY_TYPE::SPACE))
     {
+        GAME->Play_Sound(L"Title_UI.wav", ESoundChannel::UI, 0.4f);
+
         _titleState = ETitleState::SelectMenu;
         Apply_TitlePhase();
         Apply_MenuSelection();
@@ -232,6 +237,8 @@ void Level_MainTitle::Apply_TitlePhase()
 
 void Level_MainTitle::Apply_MenuSelection()
 {
+    GAME->Play_Sound(L"UI_Select.wav", ESoundChannel::UI, 0.4f);
+
     for (int32 i = 0; i < 3; ++i)
     {
         if (_menuText[i])
@@ -246,6 +253,8 @@ void Level_MainTitle::Apply_MenuSelection()
 
 void Level_MainTitle::Execute_SelectedMenu()
 {
+    GAME->Play_Sound(L"Title_UI.wav", ESoundChannel::UI, 0.4f);
+
     switch (_selectedIndex)
     {
     case 0: // 게임 시작
@@ -270,8 +279,8 @@ void Level_MainTitle::Execute_SelectedMenu()
 
     case 1: // CharacterSetup
         GAME->Change_Level(
-            ETOI(ELevelType::Loading),
-            Level_Loading::Create(_device, _context, ELevelType::CharacterSetup, true, EGameplaySpawnMode::LocalOnly));
+            ETOI(ELevelType::CharacterSetup),
+            Level_CharacterSetup::Create(_device, _context));
         break;
 
     case 2: // Konoha

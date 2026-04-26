@@ -1905,7 +1905,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Skill_Kirin",
+                    "key": "Skill_Kamui",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -1913,7 +1913,7 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Kirin",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Kamui_Loop",
                         "loop": false,
                         "playRate": 2.0
                     },
@@ -2465,7 +2465,7 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Kirin",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Kamui_Loop",
                         "loop": false,
                         "playRate": 1.0
                     },
@@ -2642,7 +2642,7 @@
                 "SK_CHR_NormalModel|CustomMan_Attack_SSp_7Sword_cmb_07",
                 "SK_CHR_NormalModel|CustomMan_Throw_WindmillShuriken",
                 "SK_CHR_NormalModel|Hashirama_Ninjutsu_ShinsuSenju",
-                "SK_CHR_NormalModel|CustomMan_Ninjutsu_Kirin"
+                "SK_CHR_NormalModel|CustomMan_Beaten_Kamui_Loop"
             ],
             "materials": [
                 {

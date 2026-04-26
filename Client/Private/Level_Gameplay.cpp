@@ -122,6 +122,9 @@ static bool Try_BuildGameplayShadowCameraFromCurrentView(uint32 levelIndex, Vec3
 
 HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
 {
+    // Gameplay에 실제 진입하는 순간 이전 화면에서 재생 중이던 BGM을 정리한다.
+    GAME->Stop_SoundChannel(ESoundChannel::BGM, 0.45f);
+
     _spawnMode = spawnMode;
 
     CHECK_FAILED(Ready_Lights(), E_FAIL);
@@ -169,6 +172,9 @@ void Level_Gameplay::Update(float timeDelta)
 
     Update_MissionClearSequence(timeDelta);
 
+    if (INPUT->KeyDown(KEY_TYPE::KEY_0))
+        Request_EnterKonoha();
+
     if (_konohaTransitionRequested)
     {
         const EGameplaySpawnMode spawnMode =
@@ -176,8 +182,6 @@ void Level_Gameplay::Update(float timeDelta)
             ? EGameplaySpawnMode::Server
             : EGameplaySpawnMode::LocalOnly;
 
-        // Gameplay 진입 시 shared resource는 이미 로드되어 있으므로,
-        // Konoha 복귀에서는 맵 오브젝트만 다시 구성하고 공용 테이블은 재큐잉하지 않는다.
         GAME->Change_Level(
             ETOI(ELevelType::Loading),
             Level_Loading::Create(_device, _context, ELevelType::Konoha, false, spawnMode));
@@ -246,6 +250,9 @@ void Level_Gameplay::On_WaveStarted(const string& waveTag)
         return;
 
     GAME->Play_Cinematic(L"GamePlayClearWave");
+
+    if (_playerHUD)
+        _playerHUD->Show_MissionTitle(L"적을 쓰러뜨려라!", 2.f);
 }
 
 HRESULT Level_Gameplay::Ready_Lights()

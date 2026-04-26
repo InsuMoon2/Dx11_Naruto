@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Base.h"
 #include "Delegate.h"
@@ -31,6 +31,7 @@ DECLARE_DELEGATE(FOnWaveCleared, const string&);
 DECLARE_DELEGATE(FOnBossObjectSpawned, Shared<GameObject>);
 
 DECLARE_DELEGATE(FOnWireLockOnVisible, bool);
+DECLARE_DELEGATE(FOnCinematicFinished);
 
 DECLARE_DELEGATE(FOnMissionMarkerTargetChanged, Shared<GameObject>);
 DECLARE_DELEGATE(FOnMissionMarkerTargetCleared);
@@ -91,6 +92,7 @@ public:
 
     // 와이어 액션
     FOnWireLockOnVisible        OnWireLockOnVisible;
+    FOnCinematicFinished        OnCinematicFinished;
 
     FOnMissionMarkerTargetChanged OnMissionMarkerTargetChanged;
     FOnMissionMarkerTargetCleared OnMissionMarkerTargetCleared;

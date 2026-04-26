@@ -1,0 +1,64 @@
+{
+    "name": "Kamui",
+    "track": {
+        "fps": 60,
+        "keys": [
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7853981852531433,
+                "frame": 0,
+                "pitch": 0.0,
+                "position": [
+                    0.6520000100135803,
+                    1.399999976158142,
+                    3.322999954223633
+                ],
+                "rotation": [
+                    0.011254635639488697,
+                    -0.9883176684379578,
+                    0.09185385704040527,
+                    0.12109624594449997
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "OwnerRelative",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7853981852531433,
+                "frame": 50,
+                "pitch": 0.0,
+                "position": [
+                    0.4519999921321869,
+                    1.399999976158142,
+                    1.6230000257492065
+                ],
+                "rotation": [
+                    -0.011254638433456421,
+                    0.9883177280426025,
+                    -0.09185387194156647,
+                    -0.12109622359275818
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            }
+        ],
+        "total_frames": 80,
+        "track_name": "Camera"
+    }
+}

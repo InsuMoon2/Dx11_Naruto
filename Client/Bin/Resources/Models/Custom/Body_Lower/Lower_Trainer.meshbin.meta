@@ -1,0 +1,152 @@
+{
+    "boneCount": 24,
+    "bones": [
+        {
+            "depth": 0,
+            "index": 0,
+            "name": "RootNode",
+            "parentIndex": -1
+        },
+        {
+            "depth": 1,
+            "index": 1,
+            "name": "SK_CHR_Man_TrainerPants_05",
+            "parentIndex": 0
+        },
+        {
+            "depth": 2,
+            "index": 2,
+            "name": "CharacterRoot",
+            "parentIndex": 1
+        },
+        {
+            "depth": 3,
+            "index": 3,
+            "name": "Hips",
+            "parentIndex": 2
+        },
+        {
+            "depth": 4,
+            "index": 4,
+            "name": "Spine",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 5,
+            "name": "LeftUpLeg",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 6,
+            "name": "LeftLeg",
+            "parentIndex": 5
+        },
+        {
+            "depth": 6,
+            "index": 7,
+            "name": "LeftFoot",
+            "parentIndex": 6
+        },
+        {
+            "depth": 7,
+            "index": 8,
+            "name": "LeftToeBase",
+            "parentIndex": 7
+        },
+        {
+            "depth": 6,
+            "index": 9,
+            "name": "LeftLegBend02",
+            "parentIndex": 6
+        },
+        {
+            "depth": 6,
+            "index": 10,
+            "name": "LeftLegBend01",
+            "parentIndex": 6
+        },
+        {
+            "depth": 6,
+            "index": 11,
+            "name": "LeftLegBend03",
+            "parentIndex": 6
+        },
+        {
+            "depth": 5,
+            "index": 12,
+            "name": "LeftUpLegBend01",
+            "parentIndex": 5
+        },
+        {
+            "depth": 5,
+            "index": 13,
+            "name": "LeftUpLegBend02",
+            "parentIndex": 5
+        },
+        {
+            "depth": 4,
+            "index": 14,
+            "name": "RightUpLeg",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 15,
+            "name": "RightLeg",
+            "parentIndex": 14
+        },
+        {
+            "depth": 6,
+            "index": 16,
+            "name": "RightFoot",
+            "parentIndex": 15
+        },
+        {
+            "depth": 7,
+            "index": 17,
+            "name": "RightToeBase",
+            "parentIndex": 16
+        },
+        {
+            "depth": 6,
+            "index": 18,
+            "name": "RightLegBend01",
+            "parentIndex": 15
+        },
+        {
+            "depth": 6,
+            "index": 19,
+            "name": "RightLegBend02",
+            "parentIndex": 15
+        },
+        {
+            "depth": 6,
+            "index": 20,
+            "name": "RightLegBend03",
+            "parentIndex": 15
+        },
+        {
+            "depth": 5,
+            "index": 21,
+            "name": "RightUpLegBend02",
+            "parentIndex": 14
+        },
+        {
+            "depth": 5,
+            "index": 22,
+            "name": "RightUpLegBend01",
+            "parentIndex": 14
+        },
+        {
+            "depth": 1,
+            "index": 23,
+            "name": "SK_CHR_Man_TrainerPants_05.001",
+            "parentIndex": 0
+        }
+    ],
+    "guid": "4951e667-9234-4cd3-8ab2-efc8822cba22",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

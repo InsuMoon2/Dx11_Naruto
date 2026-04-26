@@ -51,7 +51,13 @@ void Layer::Delete_GameObject(shared_ptr<GameObject> gameObject)
     auto iter = find(_gameObjects.begin(), _gameObjects.end(), gameObject);
 
     if (iter != _gameObjects.end())
+    {
+        if (*iter)
+            (*iter)->On_RemovedFromLevel();
+
         _gameObjects.erase(iter);
+    }
+        
 }
 
 void Layer::Cleanup_DestroyedObjects()

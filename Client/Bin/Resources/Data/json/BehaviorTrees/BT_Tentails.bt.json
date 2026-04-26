@@ -3,56 +3,38 @@
         "bools": {
             "HasAppeared": false,
             "IsDead": false,
-            "IsHit": false
+            "IsHit": false,
+            "Sprint": false,
+            "TargetIsAirborne": false
         },
-        "floats": {},
+        "floats": {
+            "MoveAxisX": 0.0,
+            "MoveAxisY": 0.0,
+            "TargetDistance": 0.0,
+            "TargetHeightDelta": 0.0
+        },
         "ints": {
+            "AirHitCycleIndex": 0,
+            "AnimReplaySerial": 0,
+            "AttackCycleIndex": 0,
+            "GroundHitCycleIndex": 0,
+            "HitReactionSerial": 0,
             "TestInt": 3
         },
-        "strings": {},
-        "vectors": {}
+        "strings": {
+            "AnimState": "",
+            "HitAnimState": "",
+            "SelectedAttackState": ""
+        },
+        "vectors": {
+            "TargetLocationKey": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
     },
     "links": [
-        {
-            "end": 19,
-            "id": 20,
-            "start": 5
-        },
-        {
-            "end": 35,
-            "id": 36,
-            "start": 23
-        },
-        {
-            "end": 38,
-            "id": 39,
-            "start": 24
-        },
-        {
-            "end": 41,
-            "id": 44,
-            "start": 28
-        },
-        {
-            "end": 83,
-            "id": 88,
-            "start": 72
-        },
-        {
-            "end": 75,
-            "id": 103,
-            "start": 99
-        },
-        {
-            "end": 75,
-            "id": 118,
-            "start": 110
-        },
-        {
-            "end": 75,
-            "id": 138,
-            "start": 132
-        },
         {
             "end": 152,
             "id": 163,
@@ -104,14 +86,14 @@
             "start": 49
         },
         {
-            "end": 171,
-            "id": 249,
-            "start": 51
+            "end": 254,
+            "id": 255,
+            "start": 50
         },
         {
-            "end": 239,
-            "id": 250,
-            "start": 53
+            "end": 171,
+            "id": 256,
+            "start": 52
         },
         {
             "end": 243,
@@ -169,7 +151,7 @@
             "type": "Task_FindClosestTarget"
         },
         {
-            "acceptance_radius": 2.5,
+            "acceptance_radius": 2.0,
             "id": 62,
             "idle_anim_state": "Idle",
             "input_pin_id": 63,
@@ -193,7 +175,7 @@
             "name": "Task_Wait",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 834.0,
+            "pos_x": 1074.0,
             "pos_y": 972.0,
             "type": "Task_Wait",
             "wait_time": 0.5
@@ -223,17 +205,19 @@
             "attack_anim_state_01": "Attack_01",
             "attack_anim_state_02": "Attack_02",
             "attack_anim_state_03": "Attack_04",
+            "attack_anim_state_04": "Attack_04",
             "attack_cycle_index_key": "AttackCycleIndex",
-            "attack_range": 2.5,
+            "attack_range": 2.799999952316284,
             "face_target": true,
             "id": 170,
             "input_pin_id": 171,
             "name": "Task_Attack",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 354.0,
+            "pos_x": 562.0,
             "pos_y": 972.0,
             "request_anim_end": false,
+            "selected_attack_state_key": "SelectedAttackState",
             "target_object_key": "TargetObjectKey",
             "type": "Task_Attack",
             "use_round_robin": true
@@ -253,8 +237,20 @@
             "type": "Decorator_Blackboard"
         },
         {
-            "hit_anim_state": "Hit",
+            "air_hit_anim_state_01": "Hit_Air",
+            "air_hit_anim_state_02": "",
+            "air_hit_anim_state_03": "",
+            "airborne_hold_anim_state": "JumpFall",
+            "air_hit_cycle_index_key": "AirHitCycleIndex",
+            "anim_replay_serial_key": "AnimReplaySerial",
+            "ground_hit_anim_state_01": "Hit",
+            "ground_hit_anim_state_02": "Hit",
+            "ground_hit_anim_state_03": "Hit",
+            "ground_hit_cycle_index_key": "GroundHitCycleIndex",
+            "hit_anim_select_mode": 1,
+            "hit_anim_state_key": "HitAnimState",
             "hit_flag_key": "IsHit",
+            "hit_serial_key": "HitReactionSerial",
             "id": 210,
             "input_pin_id": 211,
             "name": "Task_Hit",
@@ -263,7 +259,9 @@
             "pos_x": 82.0,
             "pos_y": 668.0,
             "request_anim_end": false,
-            "type": "Task_Hit"
+            "switch_to_airborne_hold_after_hit": true,
+            "type": "Task_Hit",
+            "use_blackboard_hit_anim_override": true
         },
         {
             "expected_value": false,
@@ -333,7 +331,7 @@
             "name": "Task_RetreatAndWait",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 514.0,
+            "pos_x": 754.0,
             "pos_y": 972.0,
             "request_anim_end": false,
             "retreat_anim_state": "Retreat",
@@ -350,10 +348,28 @@
             "name": "Task_SetAnimState",
             "output_pin_ids": [],
             "parameters": {},
-            "pos_x": 674.0,
+            "pos_x": 914.0,
             "pos_y": 972.0,
             "state_name": "Idle",
             "type": "Task_SetAnimState"
+        },
+        {
+            "distance_correction_strength": 0.20000000298023224,
+            "id": 253,
+            "ideal_distance": 2.0999999046325684,
+            "input_pin_id": 254,
+            "lock_facing_to_target": true,
+            "name": "Task_StrafeAroundTarget",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 386.0,
+            "pos_y": 972.0,
+            "stop_movement_on_finish": true,
+            "strafe_anim_state": "Walk",
+            "strafe_duration": 0.30000001192092896,
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_StrafeAroundTarget",
+            "use_sprint": false
         }
     ],
     "root_node_id": 1

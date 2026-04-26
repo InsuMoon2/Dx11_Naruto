@@ -45,6 +45,16 @@ void PlayerState_Airbone::Update(PlayerStateMachine* state, float timeDelta)
     if (!input || !movement)
         return;
 
+    const auto& frame = input->Get_Frame();
+    const float currentFrame = state->Get_AnimTrackPositionTicks();
+
+    if (currentFrame >= 30.f &&
+        frame.jumpDown && movement->Is_OnGround())
+    {
+        state->Change_State(EPlayerState::Jump);
+        return;
+    }
+
     if (!state->Is_AnimStateFinished())
         return;
 

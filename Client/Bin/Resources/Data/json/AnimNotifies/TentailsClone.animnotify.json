@@ -16,7 +16,12 @@
                             1.0,
                             1.5
                         ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
                         "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_launch_override": false,
                         "use_owner_forward": true
                     },
                     "time_sec": 0.4000000059604645,
@@ -52,10 +57,97 @@
                             1.0,
                             1.5
                         ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
                         "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_launch_override": false,
                         "use_owner_forward": true
                     },
                     "time_sec": 0.46666666865348816,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_DownStrike",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_launch_override": false,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.46666666865348816,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Attack_Rush",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_launch_override": false,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.7333333492279053,
                     "track_index": 0,
                     "type": "AN_SpawnAttack"
                 }

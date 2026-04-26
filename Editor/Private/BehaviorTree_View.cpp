@@ -225,6 +225,7 @@ void BehaviorTree_View::OnGui()
         {
             Handle_LinkCreation();
             Handle_Deletion();
+            Handle_ClipboardShortcuts();
             Draw_ContextMenu();
         }
         else
@@ -1150,6 +1151,209 @@ void BehaviorTree_View::Delete_Link(ed::LinkId linkId)
         _links.erase(it, _links.end());
         _isDirty = true;
     }
+}
+
+void BehaviorTree_View::Handle_ClipboardShortcuts()
+{
+    if (_isDebugMode)
+        return;
+
+    ImGuiIO& io = ImGui::GetIO();
+    if (!io.KeyCtrl)
+        return;
+
+    if (ImGui::IsPopupOpen(nullptr, ImGuiPopupFlags_AnyPopupId))
+        return;
+
+    if (ImGui::IsKeyPressed(ImGuiKey_C, false))
+        Copy_SelectedNodesToClipboard();
+
+    if (ImGui::IsKeyPressed(ImGuiKey_V, false))
+        Paste_NodesFromClipboard();
+}
+
+void BehaviorTree_View::Copy_SelectedNodesToClipboard()
+{
+    const int selectedObjectCount = ed::GetSelectedObjectCount();
+    if (selectedObjectCount <= 0)
+        return;
+
+    vector<ed::NodeId> selectedNodeIds(selectedObjectCount);
+    const int selectedNodeCount = ed::GetSelectedNodes(selectedNodeIds.data(), selectedObjectCount);
+    if (selectedNodeCount <= 0)
+        return;
+
+    set<int> selectedNodeIdSet;
+    for (int i = 0; i < selectedNodeCount; ++i)
+        selectedNodeIdSet.insert(selectedNodeIds[i].Get());
+
+    json nodesArray = json::array();
+    for (const auto& node : _nodes)
+    {
+        if (!selectedNodeIdSet.contains(node.id.Get()))
+            continue;
+
+        if (node.nodeType == "Root")
+            continue;
+
+        json nodeJson;
+        nodeJson["id"] = node.id.Get();
+        nodeJson["name"] = node.name;
+        nodeJson["type"] = node.nodeType;
+        nodeJson["pos_x"] = node.position.x;
+        nodeJson["pos_y"] = node.position.y;
+        nodeJson["parameters"] = node.parameters;
+        nodeJson["input_pin_id"] = node.inputPin.Get();
+
+        json outPinsArray = json::array();
+        for (const auto& pin : node.outputPins)
+            outPinsArray.push_back(pin.Get());
+        nodeJson["output_pin_ids"] = outPinsArray;
+
+        if (node.runtimeInstance)
+        {
+            json runtimeData = node.runtimeInstance->Serialize_ToJson();
+            nodeJson.merge_patch(runtimeData);
+        }
+
+        nodesArray.push_back(nodeJson);
+    }
+
+    if (nodesArray.empty())
+        return;
+
+    json linksArray = json::array();
+    for (const auto& link : _links)
+    {
+        const int startNodeId = Find_NodeIdByPin(link.startPinId).Get();
+        const int endNodeId = Find_NodeIdByPin(link.endPinId).Get();
+        if (!selectedNodeIdSet.contains(startNodeId) || !selectedNodeIdSet.contains(endNodeId))
+            continue;
+
+        json linkJson;
+        linkJson["id"] = link.id.Get();
+        linkJson["start"] = link.startPinId.Get();
+        linkJson["end"] = link.endPinId.Get();
+        linksArray.push_back(linkJson);
+    }
+
+    json clipboardJson;
+    clipboardJson["kind"] = "Dx11Naruto.BehaviorTree.Nodes";
+    clipboardJson["version"] = 1;
+    clipboardJson["nodes"] = nodesArray;
+    clipboardJson["links"] = linksArray;
+
+    ImGui::SetClipboardText(clipboardJson.dump().c_str());
+}
+
+void BehaviorTree_View::Paste_NodesFromClipboard()
+{
+    const char* clipboardText = ImGui::GetClipboardText();
+    if (!clipboardText || clipboardText[0] == '\0')
+        return;
+
+    json clipboardJson;
+    try
+    {
+        clipboardJson = json::parse(clipboardText);
+    }
+    catch (...)
+    {
+        return;
+    }
+
+    if (!clipboardJson.contains("kind") ||
+        clipboardJson["kind"].get<string>() != "Dx11Naruto.BehaviorTree.Nodes" ||
+        !clipboardJson.contains("nodes") ||
+        !clipboardJson["nodes"].is_array())
+    {
+        return;
+    }
+
+    const auto& sourceNodes = clipboardJson["nodes"];
+    if (sourceNodes.empty())
+        return;
+
+    float minX = FLT_MAX;
+    float minY = FLT_MAX;
+    for (const auto& nodeJson : sourceNodes)
+    {
+        minX = min(minX, nodeJson.value("pos_x", 0.f));
+        minY = min(minY, nodeJson.value("pos_y", 0.f));
+    }
+
+    const ImVec2 pasteOrigin = ed::ScreenToCanvas(ImGui::GetMousePos());
+    map<int, int> nodeIdRemap;
+    map<int, int> pinIdRemap;
+    vector<ed::NodeId> pastedNodeIds;
+
+    for (const auto& nodeJson : sourceNodes)
+    {
+        FBTEditorNode node;
+
+        const int oldNodeId = nodeJson["id"].get<int>();
+        node.id = ed::NodeId(_nextId++);
+        nodeIdRemap[oldNodeId] = node.id.Get();
+
+        node.name = nodeJson.value("name", string("Node"));
+        node.nodeType = nodeJson.value("type", string(""));
+        node.position = ImVec2(
+            pasteOrigin.x + nodeJson.value("pos_x", 0.f) - minX,
+            pasteOrigin.y + nodeJson.value("pos_y", 0.f) - minY);
+
+        if (nodeJson.contains("parameters"))
+            node.parameters = nodeJson["parameters"].get<map<string, string>>();
+
+        const int oldInputPinId = nodeJson.value("input_pin_id", 0);
+        if (oldInputPinId != 0)
+        {
+            node.inputPin = ed::PinId(_nextId++);
+            pinIdRemap[oldInputPinId] = node.inputPin.Get();
+        }
+
+        if (nodeJson.contains("output_pin_ids"))
+        {
+            for (const auto& pinJson : nodeJson["output_pin_ids"])
+            {
+                const int oldPinId = pinJson.get<int>();
+                ed::PinId newPinId(_nextId++);
+                node.outputPins.push_back(newPinId);
+                pinIdRemap[oldPinId] = newPinId.Get();
+            }
+        }
+
+        node.runtimeInstance = GAME->Instantiate_BTNode(node.nodeType);
+        if (node.runtimeInstance)
+            node.runtimeInstance->Deserialize_FromJson(nodeJson);
+
+        pastedNodeIds.push_back(node.id);
+        _pendingPositions.insert(node.id.Get());
+        _nodes.push_back(node);
+    }
+
+    if (clipboardJson.contains("links") && clipboardJson["links"].is_array())
+    {
+        for (const auto& linkJson : clipboardJson["links"])
+        {
+            const int oldStartPin = linkJson.value("start", 0);
+            const int oldEndPin = linkJson.value("end", 0);
+
+            if (!pinIdRemap.contains(oldStartPin) || !pinIdRemap.contains(oldEndPin))
+                continue;
+
+            FBTEditorLink link;
+            link.id = ed::LinkId(_nextId++);
+            link.startPinId = ed::PinId(pinIdRemap[oldStartPin]);
+            link.endPinId = ed::PinId(pinIdRemap[oldEndPin]);
+            _links.push_back(link);
+        }
+    }
+
+    ed::ClearSelection();
+    for (const auto& nodeId : pastedNodeIds)
+        ed::SelectNode(nodeId, true);
+
+    _isDirty = true;
 }
 
 void BehaviorTree_View::Handle_LinkCreation()

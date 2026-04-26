@@ -228,16 +228,21 @@ void Player::Sync(const Protocol::ObjectInfo& info)
 
 HRESULT Player::Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetTag)
 {
+    const bool isUnequipRequest = (modelAssetTag == TEXT("None") || modelAssetTag.empty());
+
     if (_equipment)
     {
-        // 장착 해제
-        if (modelAssetTag == TEXT("None") || modelAssetTag.empty())
+        if (isUnequipRequest)
             _equipment->Unequip_Part(slot);
         else
             _equipment->Equip_Part(slot, modelAssetTag);
     }
 
-    // 슬롯이 무기인 경우
+    if (isUnequipRequest)
+    {
+        return Change_PartObject(slot, 0, nullptr);
+    }
+
     if (slot == EPartSlot::Weapon)
     {
         Weapon::FWeaponDesc weaponDesc{};
@@ -263,7 +268,6 @@ HRESULT Player::Apply_CustomizingPart(EPartSlot slot, const wstring& modelAssetT
         return hr;
     }
 
-    // 일반 파츠인 경우
     else
     {
         PartObject::FPartObjectDesc partDesc{};

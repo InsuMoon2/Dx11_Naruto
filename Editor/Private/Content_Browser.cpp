@@ -390,7 +390,9 @@ void Content_Browser::Draw_AssetView()
 
     // 그리드 레이아웃
     float panelWidth = ImGui::GetContentRegionAvail().x;
-    int columnCount = static_cast<int>(panelWidth / (_thumbnailSize + 20.f));
+    // 긴 파일명이 접혀 보일 수 있도록 썸네일보다 넓게 잡은 에셋 타일 기준 폭이다.
+    const float assetTileWidth = max(_thumbnailSize + 72.f, 136.f);
+    int columnCount = static_cast<int>(panelWidth / assetTileWidth);
     if (columnCount < 1) columnCount = 1;
 
     ImGui::Columns(columnCount, 0, false);
@@ -611,15 +613,14 @@ void Content_Browser::Draw_AssetView()
 
             else
             {
-                float textWidth = ImGui::CalcTextSize(pureName.c_str()).x;
-                float columnWidth = _thumbnailSize;
-
-                // 가운데 정렬
-                float offset = (columnWidth - textWidth) * 0.5f;
-                if (offset > 0)
-                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
+                // 현재 컬럼 안에서 파일명 라벨이 사용할 실제 줄바꿈 폭이다.
+                float columnWidth = max(1.f, min(ImGui::GetColumnWidth() - ImGui::GetStyle().ItemSpacing.x, assetTileWidth - 8.f));
+                // 파일명 라벨이 썸네일 왼쪽 기준에서 시작하도록 고정하는 X 위치다.
+                float labelStartX = ImGui::GetCursorPosX();
 
                 // 있다면, 초록색으로 세팅, 없다면 레거시 파일 새로고침 필요
+                ImGui::SetCursorPosX(labelStartX);
+                ImGui::PushTextWrapPos(labelStartX + columnWidth);
                 if (Editor_Helper::IsEditorManagedAsset(assetType))
                 {
                     ImGui::TextColored(ImVec4(0.5f, 1.f, 0.5f, 1.f), "%s", pureName.c_str());
@@ -628,6 +629,10 @@ void Content_Browser::Draw_AssetView()
                 {
                     ImGui::TextWrapped("%s", pureName.c_str());
                 }
+                ImGui::PopTextWrapPos();
+
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("%s", fileName.c_str());
             }
 
 

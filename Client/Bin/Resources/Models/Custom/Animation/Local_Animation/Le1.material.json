@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "blinn1",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "surfaceShader1",
+      "textures": [
+      ]
+    }
+  ]
+}

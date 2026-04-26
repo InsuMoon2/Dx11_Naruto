@@ -1,0 +1,342 @@
+{
+    "clips": [
+        {
+            "clip_name": "SK_CHR_LeafNinja|CustomMan_Attack_ChakraBoots_A_cmb_05",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 3.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.4000000059604645,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 2,
+                        "override_launch_power": 4.0,
+                        "override_launch_up": 5.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": true,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.8666666746139526,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "attach_to_bone": false,
+                        "bone_name": "CharacterRoot",
+                        "effect_name": "KonohaSenpung",
+                        "local_offset": [
+                            0.0,
+                            0.20000000298023224,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            3.0,
+                            2.0,
+                            3.0
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
+                    },
+                    "time_sec": 0.4000000059604645,
+                    "track_index": 1,
+                    "type": "AN_SpawnParticle"
+                },
+                {
+                    "payload": {
+                        "attach_to_bone": false,
+                        "bone_name": "CharacterRoot",
+                        "effect_name": "KonohaSenpung",
+                        "local_offset": [
+                            0.0,
+                            0.6000000238418579,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            3.0,
+                            2.0,
+                            3.0
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
+                    },
+                    "time_sec": 0.8666666746139526,
+                    "track_index": 1,
+                    "type": "AN_SpawnParticle"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Boxer_LeafAttack2.wav",
+                        "volume": 0.4000000059604645
+                    },
+                    "time_sec": 0.13333334028720856,
+                    "track_index": 2,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "Direction Source": 65792,
+                        "constrain_to_ground": true,
+                        "direction_source": "OwnerForward",
+                        "ignore_y": true,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.13333334028720856,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                },
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "Direction Source": 65792,
+                        "constrain_to_ground": true,
+                        "direction_source": "OwnerForward",
+                        "ignore_y": true,
+                        "move_speed": 2.5,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.699999988079071,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
+                },
+                {
+                    "name": "Notify Track"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_LeafNinja|CustomMan_Attack_Hand_Punch_Left",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 3.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.1666666716337204,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.13333334028720856,
+                    "payload": {
+                        "Direction Source": 256,
+                        "constrain_to_ground": true,
+                        "direction_source": "OwnerForward",
+                        "ignore_y": false,
+                        "move_speed": 5.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.13333334028720856,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_LeafNinja|CustomMan_Attack_Hand_StraightPunch",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 4.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.699999988079071,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.23333333432674408,
+                    "payload": {
+                        "Direction Source": 256,
+                        "constrain_to_ground": true,
+                        "direction_source": "OwnerForward",
+                        "ignore_y": false,
+                        "move_speed": 6.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.5,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_LeafNinja|LeafNinja_DashStep_Behind",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.6333333253860474,
+                    "payload": {
+                        "Direction Source": 257,
+                        "constrain_to_ground": true,
+                        "direction_source": "OwnerBackward",
+                        "ignore_y": false,
+                        "move_speed": 8.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        }
+    ],
+    "model_guid": "2e980104-14e4-463f-ab35-f9642dc95f58"
+}

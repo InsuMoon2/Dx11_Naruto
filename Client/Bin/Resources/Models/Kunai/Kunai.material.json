@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_WEP_Kunai_02",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_WEP_Kunai_BC.png"
+        }
+      ]
+    },
+    {
+      "material_name": "MI_WEP_Kunai",
+      "textures": [
+      ]
+    }
+  ]
+}

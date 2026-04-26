@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_CHR_Man_LeatherPants_01",
+      "textures": [
+        {
+          "slot": "base_color",
+          "index": 0,
+          "path": "Textures/T_CHR_Man_LeatherJacket_01_A_BC.png"
+        }
+      ]
+    }
+  ]
+}

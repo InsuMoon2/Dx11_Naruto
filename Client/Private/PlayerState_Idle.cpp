@@ -20,6 +20,8 @@ void PlayerState_Idle::Enter(PlayerStateMachine* state)
     if (!state)
         return;
 
+    state->Reset_CombatReturnState();
+
     state->Play_AnimState(EPlayerState::Idle);
 }
 
@@ -49,10 +51,9 @@ void PlayerState_Idle::Update(PlayerStateMachine* state, float timeDelta)
 
     if (frame.attackDown)
     {
-        // 이미 근접하거나 타겟이 없으면 공격
-        if (!state->Try_MeleeApproach(EPlayerState::Attack))
-            state->Change_State(EPlayerState::Attack);
-
+        // if (!state->Try_MeleeApproach(EPlayerState::Attack))
+        //     state->Change_State(EPlayerState::Attack);
+        state->Change_State(EPlayerState::Attack);
         return;
     }
 

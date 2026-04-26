@@ -35,10 +35,12 @@ public:
     bool  _startedAttack = false;
     bool  _faceTarget = true;        // 공격 시작 전에 타겟 방향으로 회전할지
     bool  _requestAnimEnd = false;   // Sequence 애니메이션이면 End 요청을 줄지
+    bool  _chainAttack01To02 = false; // Attack_01 종료 직후 Attack_02를 이어 재생할지 여부
 
 private:
     vector<string> Build_AttackAnimStateList() const;
     string Select_AttackAnimState(const Shared<Blackboard>& blackboard);
+    void Request_AttackAnimState(const Shared<Blackboard>& blackboard, const string& animState);
 
 public:
     static Shared<BTTask_Attack> Create();

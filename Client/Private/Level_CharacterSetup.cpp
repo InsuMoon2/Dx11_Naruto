@@ -15,16 +15,16 @@
 #include "NetworkManager.h"
 #include "Spawn_Helper.h"
 #include "Customizer_Manager.h"
+#include "AnimationStateComponent.h"
+#include "Model.h"
 
-// 카메라 줌인 프리셋
 static const FCameraPreset s_CameraPresets[] =
 {
-    { Vec3(6.6f, 1.7f, 0.78f),   Vec3(9.6f, 169.f, 0.f) }, // Headgear
-    { Vec3(6.6f, 1.7f, 0.78f),   Vec3(9.6f, 169.f, 0.f) }, // Face
-    { Vec3(6.6f, 1.1f, 1.48f),  Vec3(9.6f, 169.f, 0.f) }, // Onepiece
-    { Vec3(6.6f, 1.1f, 1.48f),  Vec3(9.6f, 169.f, 0.f) }, // BodyUpper
-    { Vec3(6.6f, 1.1f, 1.48f),  Vec3(9.6f, 169.f, 0.f) }, // BodyLower
-    { Vec3(6.8f, 1.2f, 2.18f), Vec3(9.6f, 163.f, 0.f) }, // Accessory
+    { Vec3(6.6f, 1.7f, 0.78f),   Vec3(9.6f, 169.f, 0.f) },
+    { Vec3(6.6f, 1.7f, 0.78f),   Vec3(9.6f, 169.f, 0.f) },
+    { Vec3(6.6f, 1.1f, 1.48f),  Vec3(9.6f, 169.f, 0.f) },
+    { Vec3(6.6f, 1.1f, 1.48f),  Vec3(9.6f, 169.f, 0.f) },
+    { Vec3(6.6f, 1.1f, 1.48f),  Vec3(9.6f, 169.f, 0.f) },
 };
 
 Level_CharacterSetup::Level_CharacterSetup(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -35,6 +35,7 @@ Level_CharacterSetup::Level_CharacterSetup(ComPtr<Device> device, ComPtr<DeviceC
 HRESULT Level_CharacterSetup::Initialize()
 {
     Build_PartCatalog();
+    Sync_EquippedIndicesFromCustomizer();
 
     CHECK_FAILED(Ready_Layer_UI(), E_FAIL);
     CHECK_FAILED(Ready_PreviewScene(), E_FAIL);
@@ -42,17 +43,14 @@ HRESULT Level_CharacterSetup::Initialize()
     CHECK_FAILED(Ready_NameInputUI(), E_FAIL);
 
     _selectedTabIndex = 0;
-    _selectedOptionIndex = 0;
+    _selectedOptionIndex = _equippedIndices[_selectedTabIndex];
 
     Refresh_TabSelection();
     Refresh_SelectDescText();
 
     Refresh_UI_Visibility();
 
-    if (!Get_SelectedOptions().empty())
-    {
-        Apply_SelectedOption();
-    }
+    Apply_CustomizerToPreview();
 
     return S_OK;
 }
@@ -65,7 +63,6 @@ void Level_CharacterSetup::Update(float timeDelta)
 
     Update_CameraLerp(timeDelta);
 
-    // 플레이어 회전
     Handle_RotationInput(timeDelta);
 
     if (_setupState == ESetupState::Category)
@@ -104,7 +101,6 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
 {
     const Vec2 viewport = { GAME->Get_UIReferenceWidth(), GAME->Get_UIReferenceHeight() };
 
-    // Background
     {
         Background::FBackgroundDesc desc{};
         desc.name = TEXT("CharacterSetup_Background");
@@ -129,7 +125,6 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
         mainTitle->Set_RenderGroup(ERenderGroup::BackgroundUI);
     }
 
-    // Window
     Background::FBackgroundDesc windowDesc{};
     windowDesc.name = TEXT("Setup_Window");
     windowDesc.posX = viewport.x * 0.3f - 60.f;
@@ -152,7 +147,6 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
     if (!window)
         return E_FAIL;
 
-    // WinTitle
     Background::FBackgroundDesc wintitleDesc{};
     wintitleDesc.name = TEXT("WinTitle");
     wintitleDesc.posX = windowDesc.posX;
@@ -170,7 +164,7 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
     wintitleDesc.textDesc.offset = Vec2(0.f, 0.f);
     wintitleDesc.textDesc.size = Vec2(420.f, 52.f);
     wintitleDesc.textDesc.zOrderOffset = 0.01f;
-    wintitleDesc.textDesc.style.fontFamily = L"Malgun Gothic";
+    wintitleDesc.textDesc.style.fontFamily = UI_DEFAULT_FONT_FAMILY;
     wintitleDesc.textDesc.style.fontSize = 26.f;
     wintitleDesc.textDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
     wintitleDesc.textDesc.style.hAlign = ETextHAlign::Center;
@@ -186,23 +180,21 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
     if (!winTitle)
         return E_FAIL;
 
-    // Menu Button
     {
-        const array<wstring, 6> menuLabels =
+        const array<wstring, TAB_COUNT> menuLabels =
         {
             L"머리",
             L"얼굴장식",
             L"한벌옷",
             L"상의",
-            L"하의",
-            L"악세사리"
+            L"하의"
         };
 
         const float spacing = 15.f;
         const float tabWidth = 718.f * 0.75f;
         const float tabHeight = 64.f * 0.65f;
 
-        for (int32 i = 0; i < 6; ++i)
+        for (int32 i = 0; i < static_cast<int32>(TAB_COUNT); ++i)
         {
             UI_TabButton::FUITabDesc tabDesc{};
             tabDesc.name = ::format(L"TabButton {}", i);
@@ -233,7 +225,6 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
         }
     }
 
-    // Select Button
     UI_TabButton::FUITabDesc selectButtonDesc{};
     selectButtonDesc.name = TEXT("SelectButton");
     selectButtonDesc.posX = windowDesc.posX;
@@ -262,7 +253,6 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
 
     CHECK_NULL(_selectButton, E_FAIL);
 
-    // Select Desc
     Background::FBackgroundDesc selectDesc{};
     selectDesc.name = TEXT("Select Desc");
     selectDesc.sizeX = 664.f * 1.4f;
@@ -280,7 +270,7 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
     selectDesc.textDesc.offset = Vec2(0.f, 0.f);
     selectDesc.textDesc.size = Vec2(420.f, 52.f);
     selectDesc.textDesc.zOrderOffset = 0.01f;
-    selectDesc.textDesc.style.fontFamily = L"Malgun Gothic";
+    selectDesc.textDesc.style.fontFamily = UI_DEFAULT_FONT_FAMILY;
     selectDesc.textDesc.style.fontSize = 26.f;
     selectDesc.textDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
     selectDesc.textDesc.style.hAlign = ETextHAlign::Center;
@@ -295,7 +285,6 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
 
     CHECK_NULL(_selectDescBg, E_FAIL);
 
-    // Title Bg
     Background::FBackgroundDesc titleBgDesc{};
     titleBgDesc.name = TEXT("Title BG");
     titleBgDesc.sizeX = 738.f;
@@ -317,7 +306,6 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
 
     CHECK_NULL(titleBg, E_FAIL);
 
-    // Title Symbol
     Background::FBackgroundDesc titleSymbolDesc{};
     titleSymbolDesc.name = TEXT("Title Symbol");
     titleSymbolDesc.posX = titleBgDesc.posX - 300.f;
@@ -339,7 +327,6 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
 
     CHECK_NULL(titleSymbol, E_FAIL);
 
-    // 캐릭터 작성 텍스트
     Background::FBackgroundDesc charSetupTextDesc{};
     charSetupTextDesc.name = TEXT("Character Setup Text");
     charSetupTextDesc.posX = titleBgDesc.posX + 200.f;
@@ -366,22 +353,20 @@ HRESULT Level_CharacterSetup::Ready_Layer_UI()
 
 HRESULT Level_CharacterSetup::Ready_PreviewScene()
 {
-    // 프리뷰용 라이트를 등록하기 전에 이전 레벨에서 남은 라이트를 정리한다.
     GAME->Clear_Lights();
 
-    // 라이트
     {
         FLightDesc lightDesc{};
         lightDesc.type = ELightType::Directional;
-        lightDesc.direction = Vec4(1.f, -1.f, 1.f, 0.f);
-        lightDesc.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
-        lightDesc.ambient = Vec4(0.8f, 0.8f, 0.8f, 1.f);
-        lightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+        lightDesc.direction = Vec4(0.15f, -0.55f, -0.82f, 0.f);
+        lightDesc.diffuse = Vec4(1.f, 0.96f, 0.9f, 1.f);
+        lightDesc.ambient = Vec4(0.35f, 0.35f, 0.38f, 1.f);
+        lightDesc.specular = Vec4(0.65f, 0.65f, 0.65f, 1.f);
+        lightDesc.castShadow = false;
 
         CHECK_FAILED(GAME->Add_Light(lightDesc), E_FAIL);
     }
 
-    // 프리뷰 카메라
     {
         Camera_Target::FCameraTargetDesc cameraDesc{};
         cameraDesc.speedPerSec = 10.f;
@@ -412,7 +397,6 @@ HRESULT Level_CharacterSetup::Ready_PreviewScene()
             
     }
 
-    // 프리뷰 플레이어
     {
         auto previewObj = Spawn_Helper::Prefab("PreviewPlayer")
             .AtLevel(ETOI(ELevelType::CharacterSetup))
@@ -426,6 +410,14 @@ HRESULT Level_CharacterSetup::Ready_PreviewScene()
 
         _previewPlayer = dynamic_pointer_cast<Player>(previewObj);
         CHECK_NULL(_previewPlayer, E_FAIL);
+
+        if (auto animState = _previewPlayer->Get_Component<AnimationStateComponent>())
+        {
+            animState->Play_State("Setup_Idle");
+
+            if (auto model = _previewPlayer->Get_Component<Model>())
+                model->Play_Animation(0.f, false);
+        }
     }
 
     return S_OK;
@@ -433,29 +425,117 @@ HRESULT Level_CharacterSetup::Ready_PreviewScene()
 
 void Level_CharacterSetup::Build_PartCatalog()
 {
-    // 실제로 존재하는 리소스만 카탈로그에 넣기. 일단 테스트용은 하드코딩. 귀찮은데 그냥 하드코딩 ㄱ
     _catalog[ETOI(ContainerObject::EPartSlot::Headegear)] =
     {
-        { L"기본 모자", L"Model_Headgear_Man_Cap1" },
-        {L"머리 3", L"Model_ManHat_03" },
-        {L"스노우 머리통", L"Model_SnowHead" },
-        {L"파자마 머리통", L"Model_PajamaHat" },
-        {L"우산 머리통", L"Model_Umbrella" },
+        { L"모자 03", L"Model_ManHat_03" },
+        { L"스노우 머리", L"Model_SnowHead" },
+        { L"파자마 모자", L"Model_PajamaHat" },
+        { L"우산 모자", L"Model_Umbrella" },
+        { L"개구리 머리", L"Model_FrogHead" },
+        { L"마다라 머리", L"Model_MadaraHead" },
     };
 
     _catalog[ETOI(ContainerObject::EPartSlot::Face)] =
     {
-        { L"기본 얼굴장식", L"Model_Face_Face1" }
+        { L"기본 얼굴장식", L"Model_Face_Face1" },
+        { L"마스크 1", L"Model_Face_Mask1" },
+        { L"마스크 2", L"Model_Face_Mask2" },
     };
 
     _catalog[ETOI(ContainerObject::EPartSlot::Onepiece)] =
     {
-        { L"코트", L"Model_OnePiece_Coat15" },
-        { L"방어구1",  L"Model_OnePiece_Armor1" },
-        { L"방어구2",  L"Model_OnePiece_Armor2" },
-        { L"방어구3",  L"Model_OnePiece_Armor3" },
-        { L"방어구4",  L"Model_OnePiece_Minato" },
+        { L"방어구 2", L"Model_OnePiece_Armor2" },
+        { L"방어구 3", L"Model_OnePiece_Armor3" },
+        { L"미나토", L"Model_OnePiece_Minato" },
+        { L"아카츠키 코트", L"Model_OnePiece_Akachiki" },
+        { L"개구리 의상", L"Model_OnePiece_Frog" },
+        { L"재킷", L"Model_OnePiece_Jaket" },
     };
+
+    _catalog[ETOI(ContainerObject::EPartSlot::BodyUpper)] =
+    {
+        { L"지라이야 하오리", L"Model_Upper_Jiraiya" },
+        { L"가죽 재킷", L"Model_Upper_LeatherJaket" },
+        { L"로고 상의", L"Model_Upper_Logo" },
+        { L"사이 상의", L"Model_Upper_Sai" },
+        { L"사스케 상의", L"Model_Upper_Saske" },
+    };
+
+    _catalog[ETOI(ContainerObject::EPartSlot::BodyLower)] =
+    {
+        { L"가죽 바지", L"Model_Lower_LeatherPants" },
+        { L"컷 팬츠", L"Model_Lower_Lower_PantsCut" },
+        { L"스톤 팬츠", L"Model_Lower_Lower_StonePants" },
+        { L"트레이너 하의", L"Model_Lower_Lower_Trainer" },
+    };
+}
+
+void Level_CharacterSetup::Sync_EquippedIndicesFromCustomizer()
+{
+    const auto& customDesc = GET_SINGLE(Customizer_Manager)->Get_CustomizerDesc();
+
+    const wstring& onepieceTag = customDesc.Get_Part(ContainerObject::EPartSlot::Onepiece);
+    const wstring& upperTag = customDesc.Get_Part(ContainerObject::EPartSlot::BodyUpper);
+    const wstring& lowerTag = customDesc.Get_Part(ContainerObject::EPartSlot::BodyLower);
+
+    const bool hasOnepiece = !onepieceTag.empty() && onepieceTag != TEXT("None");
+    const bool hasUpper = !upperTag.empty() && upperTag != TEXT("None");
+    const bool hasLower = !lowerTag.empty() && lowerTag != TEXT("None");
+
+    _usesOnepieceOutfit = hasOnepiece || (!hasUpper && !hasLower);
+
+    for (uint32 i = 0; i < TAB_COUNT; ++i)
+    {
+        const ContainerObject::EPartSlot slot = _tabSlots[i];
+        const wstring& assetTag = customDesc.Get_Part(slot);
+
+        _equippedIndices[i] = Find_CatalogIndex(slot, assetTag);
+    }
+}
+
+void Level_CharacterSetup::Apply_CustomizerToPreview()
+{
+    if (!_previewPlayer)
+        return;
+
+    const auto& customDesc = GET_SINGLE(Customizer_Manager)->Get_CustomizerDesc();
+
+    for (uint32 i = 0; i < TAB_COUNT; ++i)
+    {
+        const ContainerObject::EPartSlot slot = _tabSlots[i];
+
+        if (_usesOnepieceOutfit &&
+            (slot == ContainerObject::EPartSlot::BodyUpper || slot == ContainerObject::EPartSlot::BodyLower))
+        {
+            CHECK_FAILED(_previewPlayer->Apply_CustomizingPart(slot, TEXT("None")));
+            continue;
+        }
+
+        if (!_usesOnepieceOutfit && slot == ContainerObject::EPartSlot::Onepiece)
+        {
+            CHECK_FAILED(_previewPlayer->Apply_CustomizingPart(slot, TEXT("None")));
+            continue;
+        }
+
+        const wstring& assetTag = customDesc.Get_Part(slot);
+        if (!assetTag.empty() && assetTag != TEXT("None"))
+        {
+            CHECK_FAILED(_previewPlayer->Apply_CustomizingPart(slot, assetTag));
+        }
+    }
+}
+
+int32 Level_CharacterSetup::Find_CatalogIndex(ContainerObject::EPartSlot slot, const wstring& modelAssetTag) const
+{
+    const auto& options = _catalog[ETOI(slot)];
+
+    for (int32 i = 0; i < static_cast<int32>(options.size()); ++i)
+    {
+        if (options[i].modelAssetTag == modelAssetTag)
+            return i;
+    }
+
+    return 0;
 }
 
 void Level_CharacterSetup::Build_OptionButtons()
@@ -564,11 +644,12 @@ void Level_CharacterSetup::Refresh_SelectDescText()
 
 void Level_CharacterSetup::Handle_TabInput()
 {
-    // 탭 6개 + 버튼 1개
     const int32 tabCount = static_cast<int32>(TAB_COUNT) + 1;
 
     if (INPUT->KeyDown(KEY_TYPE::UP) || INPUT->KeyDown(KEY_TYPE::W))
     {
+        GAME->Play_Sound(L"UI_Select.wav", ESoundChannel::UI, 0.4f);
+
         _selectedTabIndex = (_selectedTabIndex - 1 + tabCount) % tabCount;
 
         Refresh_TabSelection();
@@ -577,6 +658,8 @@ void Level_CharacterSetup::Handle_TabInput()
 
     if (INPUT->KeyDown(KEY_TYPE::DOWN) || INPUT->KeyDown(KEY_TYPE::S))
     {
+        GAME->Play_Sound(L"UI_Select.wav", ESoundChannel::UI, 0.4f);
+
         _selectedTabIndex = (_selectedTabIndex + 1) % tabCount;
         Refresh_TabSelection();
         Refresh_SelectDescText();
@@ -584,10 +667,11 @@ void Level_CharacterSetup::Handle_TabInput()
 
     if (INPUT->KeyDown(KEY_TYPE::ENTER) || INPUT->KeyDown(KEY_TYPE::SPACE))
     {
+        GAME->Play_Sound(L"UI_OK.wav", ESoundChannel::UI, 0.45f);
+
         if (_selectedTabIndex == static_cast<int32>(TAB_COUNT))
         {
             Enter_NameInput();
-            //Finish_CharacterSetup();
 
             return;
         }
@@ -602,7 +686,7 @@ void Level_CharacterSetup::Handle_TabInput()
 
         if (!options.empty())
         {
-            _selectedOptionIndex = 0;
+            _selectedOptionIndex = _equippedIndices[_selectedTabIndex];
         }
 
         Refresh_OptionSelection();
@@ -614,6 +698,8 @@ void Level_CharacterSetup::Handle_OptionInput()
 {
     if (INPUT->KeyDown(KEY_TYPE::ESCAPE) || INPUT->KeyDown(KEY_TYPE::BACK))
     {
+        GAME->Play_Sound(L"UI_Cancel.wav", ESoundChannel::UI, 0.45f);
+
         _setupState = ESetupState::Category;
         Refresh_UI_Visibility();
 
@@ -633,6 +719,8 @@ void Level_CharacterSetup::Handle_OptionInput()
 
     if (INPUT->KeyDown(KEY_TYPE::UP) || INPUT->KeyDown(KEY_TYPE::W))
     {
+        GAME->Play_Sound(L"UI_Select.wav", ESoundChannel::UI, 0.4f);
+
         _selectedOptionIndex = (_selectedOptionIndex - 1 + totalCount) % totalCount;
         Refresh_OptionSelection();
         Refresh_SelectDescText();
@@ -640,6 +728,8 @@ void Level_CharacterSetup::Handle_OptionInput()
 
     if (INPUT->KeyDown(KEY_TYPE::DOWN) || INPUT->KeyDown(KEY_TYPE::S))
     {
+        GAME->Play_Sound(L"UI_Select.wav", ESoundChannel::UI, 0.4f);
+
         _selectedOptionIndex = (_selectedOptionIndex + 1 + totalCount) % totalCount;
         Refresh_OptionSelection();
         Refresh_SelectDescText();
@@ -647,10 +737,11 @@ void Level_CharacterSetup::Handle_OptionInput()
 
     if (INPUT->KeyDown(KEY_TYPE::ENTER) || INPUT->KeyDown(KEY_TYPE::SPACE))
     {
+        GAME->Play_Sound(L"UI_OK.wav", ESoundChannel::UI, 0.45f);
+
         if (_selectedOptionIndex == optionCount)
         {
 			Enter_NameInput();
-            //Finish_CharacterSetup();
             return;
         }
 
@@ -683,7 +774,6 @@ void Level_CharacterSetup::Handle_RotationInput(float timeDelta)
     {
         Vec2 mouseDelta = INPUT->GetMouseDelta();
 
-        // x축으로 이동량이 있을 때만
         if (std::abs(mouseDelta.x) > 0.001f)
         {
             auto transform = _previewPlayer->Get_Transform();
@@ -709,7 +799,46 @@ void Level_CharacterSetup::Apply_SelectedOption()
         return;
 
     const auto& option = options[_selectedOptionIndex];
-    CHECK_FAILED(_previewPlayer->Apply_CustomizingPart(Get_SelectSlot(), option.modelAssetTag));
+    const ContainerObject::EPartSlot selectedSlot = Get_SelectSlot();
+    CHECK_FAILED(_previewPlayer->Apply_CustomizingPart(selectedSlot, option.modelAssetTag));
+
+    if (selectedSlot == ContainerObject::EPartSlot::Onepiece)
+    {
+        _usesOnepieceOutfit = true;
+
+        CHECK_FAILED(_previewPlayer->Apply_CustomizingPart(ContainerObject::EPartSlot::BodyUpper, TEXT("None")));
+        CHECK_FAILED(_previewPlayer->Apply_CustomizingPart(ContainerObject::EPartSlot::BodyLower, TEXT("None")));
+    }
+    else if (selectedSlot == ContainerObject::EPartSlot::BodyUpper ||
+             selectedSlot == ContainerObject::EPartSlot::BodyLower)
+    {
+        _usesOnepieceOutfit = false;
+
+        CHECK_FAILED(_previewPlayer->Apply_CustomizingPart(ContainerObject::EPartSlot::Onepiece, TEXT("None")));
+    }
+
+    if (selectedSlot == ContainerObject::EPartSlot::BodyUpper)
+    {
+        const ContainerObject::EPartSlot lowerSlot = ContainerObject::EPartSlot::BodyLower;
+        const auto& lowerOptions = _catalog[ETOI(lowerSlot)];
+
+        if (!lowerOptions.empty() && _previewPlayer->Get_PartObject(lowerSlot) == nullptr)
+        {
+            const int32 defaultLowerIndex = 0;
+            CHECK_FAILED(_previewPlayer->Apply_CustomizingPart(
+                lowerSlot,
+                lowerOptions[defaultLowerIndex].modelAssetTag));
+
+            for (uint32 i = 0; i < TAB_COUNT; ++i)
+            {
+                if (_tabSlots[i] == lowerSlot)
+                {
+                    _equippedIndices[i] = defaultLowerIndex;
+                    break;
+                }
+            }
+        }
+    }
 
     _equippedIndices[_selectedTabIndex] = _selectedOptionIndex;
 }
@@ -765,7 +894,6 @@ const tchar* Level_CharacterSetup::Get_SlotLabel(ContainerObject::EPartSlot slot
     case ContainerObject::EPartSlot::Onepiece:  return L"한벌옷";
     case ContainerObject::EPartSlot::BodyUpper: return L"상의";
     case ContainerObject::EPartSlot::BodyLower: return L"하의";
-    case ContainerObject::EPartSlot::Accessory: return L"악세사리";
     default:                                    return L"알 수 없음";
     }
 }
@@ -788,9 +916,6 @@ const tchar* Level_CharacterSetup::Get_SelectDescText(ContainerObject::EPartSlot
 
     case ContainerObject::EPartSlot::BodyLower:
         return TEXT("하의 선택중입니다.");
-
-    case ContainerObject::EPartSlot::Accessory:
-        return TEXT("악세사리 선택중입니다.");
 
     default:
         return TEXT("파츠 선택중입니다.");
@@ -828,10 +953,23 @@ void Level_CharacterSetup::Finish_CharacterSetup()
 {
     auto custom = GET_SINGLE(Customizer_Manager);
 
-    // 인게임에 가져갈 수 있도록 게임인스턴스에 저장
     for (int i = 0; i < TAB_COUNT; ++i)
     {
         ContainerObject::EPartSlot slot = _tabSlots[i];
+
+        if (_usesOnepieceOutfit &&
+            (slot == ContainerObject::EPartSlot::BodyUpper || slot == ContainerObject::EPartSlot::BodyLower))
+        {
+            custom->Set_Part(slot, TEXT("None"));
+            continue;
+        }
+
+        if (!_usesOnepieceOutfit && slot == ContainerObject::EPartSlot::Onepiece)
+        {
+            custom->Set_Part(slot, TEXT("None"));
+            continue;
+        }
+
         if (!_catalog[ETOI(slot)].empty())
         {
             const wstring& assetTag = _catalog[ETOI(slot)][_equippedIndices[i]].modelAssetTag;
@@ -839,8 +977,6 @@ void Level_CharacterSetup::Finish_CharacterSetup()
         }
     }
 
-    // 로비 진입은 실제 연결 완료 여부가 아니라 네트워크 사용 의도 기준으로 판단한다.
-    // 서버를 같이 켠 직후에는 아직 IsConnected()가 false일 수 있어서 LocalOnly로 빠지면 안 된다.
     const EGameplaySpawnMode spawnMode =
         GAME->Is_EditorRuntime() ? EGameplaySpawnMode::LocalOnly
                                  : EGameplaySpawnMode::Server;
@@ -868,11 +1004,10 @@ void Level_CharacterSetup::On_CharInput(wchar_t ch)
     if (_setupState != ESetupState::NameInput)
         return;
 
-    // 12자 제한
     if (ch >= 0x20 && _pendingPlayerName.size() < 12)
     {
         _pendingPlayerName += ch;
-        Refresh_NameInputText(); // UI 갱신
+        Refresh_NameInputText();
     }
 }
 
@@ -880,7 +1015,6 @@ HRESULT Level_CharacterSetup::Ready_NameInputUI()
 {
     const Vec2 viewport = { GAME->Get_UIReferenceWidth(), GAME->Get_UIReferenceHeight() }; 
 
-    // 입력창 배경 설정
     Background::FBackgroundDesc bgDesc{};
     bgDesc.name = TEXT("NameInput_Background"); 
     bgDesc.posX = viewport.x * 0.5f;
@@ -892,16 +1026,11 @@ HRESULT Level_CharacterSetup::Ready_NameInputUI()
     bgDesc.textureIndex = ETOI(ECharacterSetupTexture::PlayerTextBG);
     bgDesc.zOrder = 0.6f; 
 
-    //bgDesc.textDesc.text = L""; 
-    //bgDesc.textDesc.style.fontSize = 22.f; 
-    //bgDesc.textDesc.style.hAlign = ETextHAlign::Center; 
-
     _nameInputBg = static_pointer_cast<Background>(
         GAME->Add_UI(Protocol::OBJECT_TYPE_BACKGROUND, EUILayer::Overlay, &bgDesc)); 
 
     _nameInputBg->Set_Visibility(false); 
 
-    // 실시간 입력 텍스트 UI 
     UI_Text::FUITextDesc textDesc{}; 
     textDesc.name = L"NameInput_Text"; 
     textDesc.levelIndex = ETOI(ELevelType::CharacterSetup);
@@ -939,7 +1068,10 @@ void Level_CharacterSetup::Handle_NameInput()
     if (INPUT->KeyDown(KEY_TYPE::ENTER)) 
     {
         if (!_pendingPlayerName.empty())
+        {
+            GAME->Play_Sound(L"UI_OK.wav", ESoundChannel::UI, 0.45f);
             Finish_CharacterSetup();
+        }
 
         return;
     }
@@ -948,6 +1080,8 @@ void Level_CharacterSetup::Handle_NameInput()
     {
         if (!_pendingPlayerName.empty())
         {
+            GAME->Play_Sound(L"UI_Cancel.wav", ESoundChannel::UI, 0.35f);
+
             _pendingPlayerName.pop_back(); 
             Refresh_NameInputText();
         }
@@ -956,9 +1090,9 @@ void Level_CharacterSetup::Handle_NameInput()
 
     if (INPUT->KeyDown(KEY_TYPE::ESCAPE)) 
     {
-        _setupState = ESetupState::Category; 
+        GAME->Play_Sound(L"UI_Cancel.wav", ESoundChannel::UI, 0.45f);
 
-        // 이게 필요한가 근데?
+        _setupState = ESetupState::Category; 
     }
 
 }

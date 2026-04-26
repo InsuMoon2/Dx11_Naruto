@@ -437,7 +437,6 @@ CustomMan_Ninjutsu_GreatBreach.psa
 CustomMan_Ninjutsu_HidingInAsh_Appear.psa
 CustomMan_Ninjutsu_HidingInAsh_Loop.psa
 CustomMan_Ninjutsu_HidingInAsh_Start.psa
-CustomMan_Ninjutsu_Kirin.psa
 CustomMan_Ninjutsu_LightningStrike.psa
 CustomMan_Ninjutsu_MultipleSnake.psa
 CustomMan_Ninjutsu_PhoenixFlower.psa

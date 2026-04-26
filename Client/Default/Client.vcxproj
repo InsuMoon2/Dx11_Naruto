@@ -271,8 +271,10 @@
     <ClInclude Include="..\Public\Boss_Pain.h" />
     <ClInclude Include="..\Public\BTTask_Attack.h" />
     <ClInclude Include="..\Public\BTTask_ChibakuTensei.h" />
+    <ClInclude Include="..\Public\BTTask_Dash.h" />
     <ClInclude Include="..\Public\BTTask_DodgeAndWait.h" />
     <ClInclude Include="..\Public\BTTask_JumpToTarget.h" />
+    <ClInclude Include="..\Public\BTTask_KonohaSenpung.h" />
     <ClInclude Include="..\Public\BTTask_PainForceSkill.h" />
     <ClInclude Include="..\Public\BTTask_RetreatAndWait.h" />
     <ClInclude Include="..\Public\BTTask_StrafeAroundTarget.h" />
@@ -310,6 +312,8 @@
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MeshDebrisObject.h" />
     <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\Monster_Leaf.h" />
+    <ClInclude Include="..\Public\Monster_Wood.h" />
     <ClInclude Include="..\Public\MyPlayer.h" />
     <ClInclude Include="..\Public\NetworkManager.h" />
     <ClInclude Include="..\Public\PlayerController.h" />
@@ -355,9 +359,8 @@
     <ClInclude Include="..\Public\Skill_Chidori.h" />
     <ClInclude Include="..\Public\Skill_Chidori_Hit.h" />
     <ClInclude Include="..\Public\Skill_FireBall.h" />
-    <ClInclude Include="..\Public\Skill_Kirin_Hit.h" />
+    <ClInclude Include="..\Public\Skill_Kamui.h" />
     <ClInclude Include="..\Public\Skill_ShinsuSenju.h" />
-    <ClInclude Include="..\Public\Skill_Kirin.h" />
     <ClInclude Include="..\Public\Skill_Rasengan.h" />
     <ClInclude Include="..\Public\Skill_Rasengan_Hit.h" />
     <ClInclude Include="..\Public\Skill_RasenShuriken.h" />
@@ -368,6 +371,7 @@
     <ClInclude Include="..\Public\Skill_WoodHand.h" />
     <ClInclude Include="..\Public\SkySphereActor.h" />
     <ClInclude Include="..\Public\SmearEffect_Component.h" />
+    <ClInclude Include="..\Public\SocketPartObject.h" />
     <ClInclude Include="..\Public\Spawn_Helper.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\StaticMeshActor.h" />
@@ -466,8 +470,10 @@
     <ClCompile Include="..\Private\Boss_Pain.cpp" />
     <ClCompile Include="..\Private\BTTask_Attack.cpp" />
     <ClCompile Include="..\Private\BTTask_ChibakuTensei.cpp" />
+    <ClCompile Include="..\Private\BTTask_Dash.cpp" />
     <ClCompile Include="..\Private\BTTask_DodgeAndWait.cpp" />
     <ClCompile Include="..\Private\BTTask_JumpToTarget.cpp" />
+    <ClCompile Include="..\Private\BTTask_KonohaSenpung.cpp" />
     <ClCompile Include="..\Private\BTTask_PainForceSkill.cpp" />
     <ClCompile Include="..\Private\BTTask_RetreatAndWait.cpp" />
     <ClCompile Include="..\Private\BTTask_StrafeAroundTarget.cpp" />
@@ -499,6 +505,8 @@
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MeshDebrisObject.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\Monster_Leaf.cpp" />
+    <ClCompile Include="..\Private\Monster_Wood.cpp" />
     <ClCompile Include="..\Private\MyPlayer.cpp" />
     <ClCompile Include="..\Private\NetworkManager.cpp" />
     <ClCompile Include="..\Private\PlayerController.cpp" />
@@ -543,9 +551,8 @@
     <ClCompile Include="..\Private\Skill_Chidori.cpp" />
     <ClCompile Include="..\Private\Skill_Chidori_Hit.cpp" />
     <ClCompile Include="..\Private\Skill_FireBall.cpp" />
-    <ClCompile Include="..\Private\Skill_Kirin_Hit.cpp" />
+    <ClCompile Include="..\Private\Skill_Kamui.cpp" />
     <ClCompile Include="..\Private\Skill_ShinsuSenju.cpp" />
-    <ClCompile Include="..\Private\Skill_Kirin.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan.cpp" />
     <ClCompile Include="..\Private\Skill_Rasengan_Hit.cpp" />
     <ClCompile Include="..\Private\Skill_RasenShuriken.cpp" />
@@ -556,6 +563,7 @@
     <ClCompile Include="..\Private\Skill_WoodHand.cpp" />
     <ClCompile Include="..\Private\SkySphereActor.cpp" />
     <ClCompile Include="..\Private\SmearEffect_Component.cpp" />
+    <ClCompile Include="..\Private\SocketPartObject.cpp" />
     <ClCompile Include="..\Private\Spawn_Helper.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\StaticMeshActor.cpp" />

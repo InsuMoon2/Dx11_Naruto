@@ -85,6 +85,9 @@ public:
     // 플레이어 강제 상태 변경
     void                        Force_Enter_State(EPlayerState stateID);
 
+    // Idle/Run처럼 전투가 끝난 상태에 진입할 때 콤보와 무기 부착 위치를 기본값으로 되돌린다.
+    void                        Reset_CombatReturnState();
+
     void                        Set_PendingSuperJumpVelocity(float velocity) { _pendingSuperJumpVelocity = velocity; }
     void                        Set_PendingLandingDir(Vec3 dir) { _pendingLandDirection= dir; }
 

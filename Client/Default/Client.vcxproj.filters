@@ -362,12 +362,6 @@
     <ClInclude Include="..\Public\Skill_ShinsuSenju.h">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Skill_Kirin.h">
-      <Filter>02. GameObject\07. Skill</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Skill_Kirin_Hit.h">
-      <Filter>02. GameObject\07. Skill</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Skill_ShinsuSenju_Arm.h">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClInclude>
@@ -414,6 +408,12 @@
     <ClInclude Include="..\Public\Skill_WoodHand.h" />
     <ClInclude Include="..\Public\UI_MissionMarker.h" />
     <ClInclude Include="..\Public\UI_ScreenFade.h" />
+    <ClInclude Include="..\Public\BTTask_KonohaSenpung.h" />
+    <ClInclude Include="..\Public\Monster_Leaf.h" />
+    <ClInclude Include="..\Public\SocketPartObject.h" />
+    <ClInclude Include="..\Public\BTTask_Dash.h" />
+    <ClInclude Include="..\Public\Monster_Wood.h" />
+    <ClInclude Include="..\Public\Skill_Kamui.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -759,12 +759,6 @@
     <ClCompile Include="..\Private\Skill_ShinsuSenju.cpp">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Skill_Kirin.cpp">
-      <Filter>02. GameObject\07. Skill</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Skill_Kirin_Hit.cpp">
-      <Filter>02. GameObject\07. Skill</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Skill_ShinsuSenju_Arm.cpp">
       <Filter>02. GameObject\07. Skill</Filter>
     </ClCompile>
@@ -811,6 +805,12 @@
     <ClCompile Include="..\Private\Skill_WoodHand.cpp" />
     <ClCompile Include="..\Private\UI_MissionMarker.cpp" />
     <ClCompile Include="..\Private\UI_ScreenFade.cpp" />
+    <ClCompile Include="..\Private\BTTask_KonohaSenpung.cpp" />
+    <ClCompile Include="..\Private\Monster_Leaf.cpp" />
+    <ClCompile Include="..\Private\SocketPartObject.cpp" />
+    <ClCompile Include="..\Private\BTTask_Dash.cpp" />
+    <ClCompile Include="..\Private\Monster_Wood.cpp" />
+    <ClCompile Include="..\Private\Skill_Kamui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Defines">

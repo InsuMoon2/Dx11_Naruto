@@ -1,0 +1,64 @@
+{
+    "name": "Boss_Entry",
+    "track": {
+        "fps": 60,
+        "keys": [
+            {
+                "anchor_space": "WorldAbsolute",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7853981852531433,
+                "frame": 0,
+                "pitch": 0.0,
+                "position": [
+                    91.08599853515625,
+                    34.5,
+                    -39.803897857666016
+                ],
+                "rotation": [
+                    0.0633121207356453,
+                    -0.9339589476585388,
+                    0.2090398073196411,
+                    0.2828684151172638
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "WorldAbsolute",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7853981852531433,
+                "frame": 110,
+                "pitch": 0.0,
+                "position": [
+                    72.68599700927734,
+                    34.5,
+                    -39.803897857666016
+                ],
+                "rotation": [
+                    0.04969016835093498,
+                    0.9502663612365723,
+                    -0.21269018948078156,
+                    0.22200828790664673
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            }
+        ],
+        "total_frames": 300,
+        "track_name": "Camera"
+    }
+}

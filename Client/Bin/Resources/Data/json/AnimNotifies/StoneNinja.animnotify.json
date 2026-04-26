@@ -1,0 +1,39 @@
+{
+    "clips": [
+        {
+            "clip_name": "SK_CHR_StoneNinja|StoneNinja_Ninjutsu_MudWall",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "aim_at_target": false,
+                        "collision_preset": 6,
+                        "launch_if_projectile": false,
+                        "local_offset": [
+                            0.0,
+                            1.2000000476837158,
+                            1.7999999523162842
+                        ],
+                        "spawn_type": 41,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.9666666388511658,
+                    "track_index": 0,
+                    "type": "AN_SpawnSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        }
+    ],
+    "model_guid": "442198a7-fa05-47a9-a12e-54035366ad56"
+}

@@ -79,7 +79,10 @@ HRESULT MainApp::Ready_StartLevel(ELevelType startLevelID)
         (startLevelID == ELevelType::GamePlay) ||
         (startLevelID == ELevelType::Konoha);
 
-    const bool loadSharedResources = isRuntimeBattleLevel;
+    const bool loadSharedResources =
+        startLevelID == ELevelType::MainTitle ||
+        startLevelID == ELevelType::CharacterSetup ||
+        isRuntimeBattleLevel;
 
     // 에디터 멀티플레이 테스트 실행에서는 battle level일 때 서버 스폰 모드를 사용한다.
     const bool useServerMode = isRuntimeBattleLevel && _startInServerGameplayMode;

@@ -24,8 +24,8 @@ enum class ECharacterSetupTexture
     SelectDesc,
     TitleBG,
     Title_Symbol,
-    SelectButton, // 결정
-    TabButton,    // 하얀색 탭
+    SelectButton,
+    TabButton,
     TabSelectedButton,
     SelectedButton,
 
@@ -44,11 +44,11 @@ enum class ECharacterSetupTexture
 
     Lobby_Background,
 
+	RemoteHpBackground,
 
     END
 };
 
-// 선택된 탭 별로 카메라 위치 설정
 struct FCameraPreset
 {
     Vec3 position;
@@ -82,6 +82,9 @@ private:
 
 private:
     void            Build_PartCatalog();
+    void            Sync_EquippedIndicesFromCustomizer();
+    void            Apply_CustomizerToPreview();
+    int32           Find_CatalogIndex(ContainerObject::EPartSlot slot, const wstring& modelAssetTag) const;
     void            Build_OptionButtons();
     void            Refresh_TabSelection();
     void            Refresh_OptionSelection();
@@ -109,14 +112,13 @@ public:
     void            On_CharInput(wchar_t ch) override;
 
 private:
-    // 이름 입력
     HRESULT Ready_NameInputUI();
     void    Enter_NameInput();
     void    Handle_NameInput();
     void    Refresh_NameInputText();
 
 private:
-    static constexpr uint32 TAB_COUNT = 6;
+    static constexpr uint32 TAB_COUNT = 5;
 
     array<ContainerObject::EPartSlot, TAB_COUNT> _tabSlots =
     {
@@ -124,11 +126,10 @@ private:
         ContainerObject::EPartSlot::Face,
         ContainerObject::EPartSlot::Onepiece,
         ContainerObject::EPartSlot::BodyUpper,
-        ContainerObject::EPartSlot::BodyLower,
-        ContainerObject::EPartSlot::Accessory
+        ContainerObject::EPartSlot::BodyLower
     };
 
-    array<Shared<UI_TabButton>, 6> _tabButtons {};
+    array<Shared<UI_TabButton>, TAB_COUNT> _tabButtons {};
     vector<Shared<UI_TabButton>> _optionButtons {};
     array<vector<FCustomizeOption>, ETOI(ContainerObject::EPartSlot::END)> _catalog{};
 
@@ -137,14 +138,13 @@ private:
 
     Shared<UI_TabButton> _selectButton;
 
-    // 파츠 선택 인덱스
     int32 _selectedTabIndex = 0;
     int32 _selectedOptionIndex = 0;
 
-    // 마지막으로 고른 파츠 인덱스 번호
-    array<int32, TAB_COUNT> _equippedIndices = { 0, 0, 0, 0, 0, 0 };
+    array<int32, TAB_COUNT> _equippedIndices = { 0, 0, 0, 0, 0 };
 
-    // 카메라 이동
+    bool _usesOnepieceOutfit = true;
+
     Shared<Camera_Free> _previewCamera;
     Vec3                _cameraTargetPos = Vec3(6.8f, 1.2f, 2.18f);
     Vec3                _cameraTargetRot = Vec3(9.6f, 163.f, 0.f);
@@ -156,7 +156,7 @@ private:
     bool                _isDragging = false;
     float               _rotSensitivity = 0.4f;
 
-private: /* Local Player Name */
+private:
     wstring             _pendingPlayerName = L"";
     Shared<Background>  _nameInputBg;
     Shared<Background>  _nameTextBg;

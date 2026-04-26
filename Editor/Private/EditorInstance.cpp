@@ -88,6 +88,12 @@ void EditorInstance::Play()
 
     _pausedPreviousCamera.reset();
     GAME->Stop_Cinematic();
+    // Edit 모드에서 남아 있던 사운드를 Play 시작 시점에 정리해서 반복 Play마다 같은 상태에서 출발하게 한다.
+    GAME->Stop_AllSounds(0.f);
+    // MainTitle은 에디터 Play에서 레벨 Initialize가 다시 호출되지 않으므로 BGM을 명시적으로 다시 시작한다.
+    if (GAME->Current_Level() == ETOI(ELevelType::MainTitle))
+        GAME->Play_BGM(L"BGM/MainTitle_Long.wav", 0.2f, true, 0.f);
+
     GAME->Set_GameInputEnabled(true);
     INPUT->Reset();
     _playerSessionManager->Begin_PlaySession();
@@ -251,6 +257,8 @@ void EditorInstance::Stop()
 {
     _pausedPreviousCamera.reset();
     GAME->Stop_Cinematic();
+    // Play 모드에서 재생되던 BGM/UI/효과음을 Edit 복귀 전에 모두 정리한다.
+    GAME->Stop_AllSounds(0.f);
     GAME->Set_GameInputEnabled(true);
     INPUT->Reset();
     GAME->Set_GameState(EGameState::Edit);

@@ -90,7 +90,11 @@ HRESULT ContainerObject::Change_PartObject(EPartSlot slot, uint32 objID, void* a
     string slotName = Get_PartSlotName(slot);
     if (_cachedPartObjects.contains(slotName) && _partObjects[index])
     {
-        _partObjects[index]->From_Json(_cachedPartObjects[slotName]);
+        json partJson = _cachedPartObjects[slotName];
+        partJson.erase("static_class");
+        partJson.erase("object_type");
+        partJson.erase("guid");
+        _partObjects[index]->From_Json(partJson);
     }
 
     if (_cachedPartTransforms.contains(slotName) && _partObjects[index])
@@ -188,7 +192,11 @@ void ContainerObject::From_Json(const json& data)
                 string slotName = Get_PartSlotName(static_cast<EPartSlot>(i));
                 if (_cachedPartObjects.contains(slotName))
                 {
-                    _partObjects[i]->From_Json(_cachedPartObjects[slotName]);
+                    json partJson = _cachedPartObjects[slotName];
+                    partJson.erase("static_class");
+                    partJson.erase("object_type");
+                    partJson.erase("guid");
+                    _partObjects[i]->From_Json(partJson);
                 }
 
                 if (_cachedPartTransforms.contains(slotName))
@@ -220,7 +228,11 @@ HRESULT ContainerObject::Add_PartObject(EPartSlot slot, uint32 objID, void* arg)
     string slotName = Get_PartSlotName(slot);
     if (_cachedPartObjects.contains(slotName) && _partObjects[ETOI(slot)])
     {
-        _partObjects[ETOI(slot)]->From_Json(_cachedPartObjects[slotName]);
+        json partJson = _cachedPartObjects[slotName];
+        partJson.erase("static_class");
+        partJson.erase("object_type");
+        partJson.erase("guid");
+        _partObjects[ETOI(slot)]->From_Json(partJson);
     }
 
     if (_cachedPartTransforms.contains(slotName) && _partObjects[ETOI(slot)])

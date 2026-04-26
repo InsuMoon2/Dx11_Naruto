@@ -65,6 +65,7 @@
 // Behavior
 #include "BTTask_Attack.h"
 #include "BTTask_ChibakuTensei.h"
+#include "BTTask_Dash.h"
 #include "BTTask_FindClosestTarget.h"
 #include "BTTask_Hit.h"
 #include "BTTask_PlayStateAndWait.h"
@@ -76,6 +77,7 @@
 #include "BTTask_UpdateBossContext.h"
 #include "BTTask_PainForceSkill.h"
 #include "BTTask_StrafeAroundTarget.h"
+#include "BTTask_KonohaSenpung.h"
 
 static bool Try_GetLevelObjectType(const json& objJson, Protocol::OBJECT_TYPE& outObjectType)
 {
@@ -403,6 +405,12 @@ void Loader::Initialize_BT_Nodes()
 
     GAME->Register_BTNode("Task", "Task_ChibakuTensei",
     []() { return BTTask_ChibakuTensei::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_KonohaSenpung",
+    []() { return BTTask_KonohaSenpung::Create(); });
+
+    GAME->Register_BTNode("Task", "Task_Dash",
+    []() { return BTTask_Dash::Create(); });
 }
 
 float Loader::Get_ProgressRatio() const
@@ -657,6 +665,9 @@ HRESULT Loader::Loading_For_Maintitle()
 
         CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
             TEXT("../../Client/Bin/Resources/Data/json/DT_SkillData.json"), jobs), E_FAIL);
+
+        CHECK_FAILED(_resourceLoader->Build_AllResourceJobs(
+            TEXT("../../Client/Bin/Resources/Data/json/DT_GameObject.json"), jobs), E_FAIL);
     }
 
     {
@@ -853,7 +864,7 @@ HRESULT Loader::Loading_For_Konoha()
     //CHECK_FAILED(pushChunk("BM_KonohaVillage_Props"), E_FAIL);
     //CHECK_FAILED(pushChunk("BM_Konoha_Village_Env_WaterTank"), E_FAIL);
 
-    CHECK_FAILED(pushChunk("[20260423]Konoha"), E_FAIL);
+    CHECK_FAILED(pushChunk("[20260427]Konoha"), E_FAIL);
 
     {
         scoped_lock lock(_jobMutex);

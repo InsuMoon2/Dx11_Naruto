@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "Utils.h"
+#include "MyPlayer.h"
 
 REGISTER_ANIM_NOTIFY(AN_PlayCinematic)
 IMPLEMENT_REFLECTION(AN_PlayCinematic)
@@ -34,6 +35,13 @@ void AN_PlayCinematic::Execute(const FAnimNotifyContext& context)
         return;
 
     if (_sequenceName.empty())
+        return;
+
+    if (!context.owner->Is_Local())
+        return;
+
+    auto myPlayer = dynamic_cast<MyPlayer*>(context.owner);
+    if (!myPlayer)
         return;
 
     auto ownerTransform = context.owner->Get_Transform();

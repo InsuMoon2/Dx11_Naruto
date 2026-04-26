@@ -403,7 +403,10 @@ void Prefab_Manager::Apply_PartObjectDataToContainer(const json& customPropertie
         if (!partObject)
             continue;
 
-        const json& partJson = partObjects[slotName];
+        json partJson = partObjects[slotName];
+        partJson.erase("static_class");
+        partJson.erase("object_type");
+        partJson.erase("guid");
         partObject->From_Json(partJson);
 
         if (partJson.contains("components"))

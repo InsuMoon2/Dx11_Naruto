@@ -954,7 +954,7 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_TurnSlashingShoulder_UpRight",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_SSp_7Sword_cmb_07",
                         "loop": false,
                         "playRate": 1.5
                     },
@@ -1093,6 +1093,52 @@
                     "mode": "Single",
                     "single": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Attack_Lv3_End",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Skill_Kamui",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_KamuiKakashi",
                         "loop": false,
                         "playRate": 1.0
                     },
@@ -2004,52 +2050,6 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Skill_Kirin",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Kirin",
-                        "loop": false,
-                        "playRate": 2.0
-                    },
-                    "start": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
                     "key": "Attack_Sword_04",
                     "loopClip": {
                         "animationName": "",
@@ -2060,7 +2060,7 @@
                     "single": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_Attack_BigSword_BothHandsSlashingHorizontally",
                         "loop": false,
-                        "playRate": 1.2999999523162842
+                        "playRate": 1.600000023841858
                     },
                     "start": {
                         "animationName": "",
@@ -2610,7 +2610,7 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Kirin",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Kamui_Loop",
                         "loop": false,
                         "playRate": 1.0
                     },
@@ -2851,7 +2851,7 @@
                     }
                 }
             ],
-            "current_state": "JumpFall",
+            "current_state": "BigSword_Idle",
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
         },
         {
@@ -2971,7 +2971,7 @@
                 "SK_CHR_NormalModel|CustomMan_Attack_SSp_7Sword_cmb_07",
                 "SK_CHR_NormalModel|CustomMan_Throw_WindmillShuriken",
                 "SK_CHR_NormalModel|Hashirama_Ninjutsu_ShinsuSenju",
-                "SK_CHR_NormalModel|CustomMan_Ninjutsu_Kirin",
+                "SK_CHR_NormalModel|CustomMan_Beaten_Kamui_Loop",
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_D70NJ1_Start_SusaSasuke",
                 "SK_CHR_NormalModel|CustomMan_Beaten_Fall_Behind_Loop",
                 "SK_CHR_NormalModel|CustomMan_Hand_Walk_End",
@@ -3139,7 +3139,6 @@
                 "SK_CHR_NormalModel|CustomMan_Beaten_GuardReverseBlowOff",
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_RasenganInvisible_Charge_Lv1",
                 "SK_CHR_NormalModel|CustomMan_Beaten_Hide_Loop",
-                "SK_CHR_NormalModel|CustomMan_Beaten_Kamui_Loop",
                 "SK_CHR_NormalModel|CustomMan_Beaten_Kunai",
                 "SK_CHR_NormalModel|CustomMan_Ninjutsu_D73NJ2_Satetsu_Aerial_Finish",
                 "SK_CHR_NormalModel|CustomMan_Beaten_Left_Head",
@@ -3436,10 +3435,10 @@
                 "SK_CHR_NormalModel|Naruto_Attack_Punch_Large",
                 "SK_CHR_NormalModel|Naruto_Attack_Punch_Left",
                 "SK_CHR_NormalModel|Naruto_Attack_Punch_Right",
-                "SK_CHR_NormalModel|Sasuke_Ninjutsu_Kirin",
                 "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengun_Charge_Lv1",
                 "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_TrueRasenShuriken",
-                "SK_CHR_NormalModel|CustomMan_Attack_Hand_BackKick"
+                "SK_CHR_NormalModel|CustomMan_Attack_Hand_BackKick",
+                "SK_CHR_NormalModel|CustomMan_Ninjutsu_KamuiKakashi"
             ],
             "materials": [
                 {
@@ -3505,7 +3504,7 @@
                         "type": "COMPONENT_TYPE_MODEL"
                     }
                 ],
-                "guid": "a160ebcd-3762-4ea3-aeac-6397557e5175",
+                "guid": "7658f98b-f9a5-4199-b317-66fe2e6cf6db",
                 "object_type": "OBJECT_TYPE_PART_OBJECT",
                 "static_class": "Player_CustomPart"
             },
@@ -3547,7 +3546,7 @@
                         "type": "COMPONENT_TYPE_MODEL"
                     }
                 ],
-                "guid": "6329d272-a298-454e-b697-c1694b387924",
+                "guid": "239c02e4-1a61-46aa-9861-171a6e0b9e88",
                 "object_type": "OBJECT_TYPE_PART_OBJECT",
                 "static_class": "Player_CustomPart"
             },
@@ -3588,7 +3587,7 @@
                         "type": "COMPONENT_TYPE_MODEL"
                     }
                 ],
-                "guid": "1c71ec42-fbbc-4eae-afc0-16f530c5504d",
+                "guid": "0ef2eab9-4cc1-472c-b1eb-fa2106999593",
                 "object_type": "OBJECT_TYPE_PART_OBJECT",
                 "static_class": "Player_CustomPart"
             },
@@ -3648,7 +3647,7 @@
                         "type": "COMPONENT_TYPE_MODEL"
                     }
                 ],
-                "guid": "193d0e91-1839-4e4e-aea2-543be3a0fe96",
+                "guid": "4ad023b6-e297-4006-9f85-23d1892790d1",
                 "object_type": "OBJECT_TYPE_PART_WEAPON",
                 "static_class": "Weapon"
             }
@@ -3728,7 +3727,7 @@
             }
         }
     },
-    "guid": "0db8a473-df5e-4efa-a117-5211e2c0980b",
+    "guid": "0793af77-2dab-43db-b6da-0b9486e664d9",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"

@@ -1,0 +1,29 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                90.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.009999999776482582,
+                0.009999999776482582,
+                0.009999999776482582
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "type": "COMPONENT_TYPE_SHADER"
+        }
+    ],
+    "guid": "a1204d36-60a5-43ba-9380-b68b4d07333c",
+    "object_type": "OBJECT_TYPE_SKILL_WOOD_HAND",
+    "prefab_name": "Skill_WoodHand",
+    "static_class": "Skill_WoodHand"
+}

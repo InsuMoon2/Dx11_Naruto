@@ -53,9 +53,17 @@ HRESULT Monster::Initialize_Prototype()
 HRESULT Monster::Initialize(void* arg)
 {
     CHECK_FAILED(EnemyCharacter::Initialize(arg), E_FAIL);
-    CHECK_FAILED(Ready_UI(), E_FAIL);
 
     return S_OK;
+}
+
+void Monster::BeginPlay()
+{
+    EnemyCharacter::BeginPlay();
+
+    // Initialize 단계에서는 웨이브 프리웜 몬스터도 지나가므로 실제 소환 이후에만 HP UI를 붙인다.
+    if (!_hpBar)
+        CHECK_FAILED(Ready_UI());
 }
 
 json Monster::To_Json() const
@@ -68,6 +76,17 @@ json Monster::To_Json() const
 void Monster::From_Json(const json& data)
 {
     Character::From_Json(data);
+}
+
+void Monster::On_RemovedFromLevel()
+{
+    if (_hpBar)
+    {
+        GAME->Remove_UI(static_pointer_cast<UIObject>(_hpBar));
+		_hpBar.reset();
+    }
+
+	EnemyCharacter::On_RemovedFromLevel();
 }
 
 HRESULT Monster::Ready_Components()
@@ -143,7 +162,14 @@ HRESULT Monster::Ready_UI()
     hpDesc.textureIndex = 0;
     hpDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_DEFAULT;
 
-    Shared<UIObject> uiObj = GAME->Add_UI(Protocol::OBJECT_TYPE_UI_MONSTER_HP, EUILayer::HUD, &hpDesc);
+    Shared<UIObject> uiObj = GAME->Clone_UI(Protocol::OBJECT_TYPE_UI_MONSTER_HP, &hpDesc);
+    CHECK_NULL(uiObj, E_FAIL);
+
+    uiObj->Set_Name(
+        Get_Name() + L".MonsterHp_" + to_wstring(reinterpret_cast<uintptr_t>(this)));
+
+    CHECK_FAILED(GAME->Register_UI(EUILayer::HUD, uiObj), E_FAIL);
+
     _hpBar = static_pointer_cast<UI_MonsterHp>(uiObj);
 
     if (_hpBar)
@@ -154,6 +180,7 @@ HRESULT Monster::Ready_UI()
 
     return S_OK;
 }
+
 
 Shared<Monster> Monster::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
 {

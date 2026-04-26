@@ -1,0 +1,242 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                -0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "bounding": {
+                "center": [
+                    0.0,
+                    0.699999988079071,
+                    0.0
+                ],
+                "extents": [
+                    0.5,
+                    0.6000000238418579,
+                    0.5
+                ]
+            },
+            "channel": "Monster_Body",
+            "collision_preset": "Monster_Body",
+            "is_active": true,
+            "shape": "OBB",
+            "type": "COMPONENT_TYPE_COLLIDER"
+        },
+        {
+            "bt_guid": "",
+            "type": "COMPONENT_TYPE_BEHAVIOR"
+        },
+        {
+            "animations": [
+                "SK_CHR_LeafNinja|LeafNinja_Idle_Type02_Loop"
+            ],
+            "materials": [
+                {
+                    "material_name": "MI_CHR_LeafNinja",
+                    "texture_overrides": {
+                        "base_color_0": "726a9ea7-8d48-4a03-8411-0a5644739825"
+                    }
+                },
+                {
+                    "material_name": "MI_CHR_LeafNinja_Face",
+                    "texture_overrides": {
+                        "base_color_0": "ce2eb132-2728-41f3-9e68-e231e9ab4491"
+                    }
+                }
+            ],
+            "model_guid": "2e980104-14e4-463f-ab35-f9642dc95f58",
+            "model_type": "SkeletalMesh",
+            "type": "COMPONENT_TYPE_MODEL"
+        },
+        {
+            "type": "COMPONENT_TYPE_SHADER"
+        },
+        {
+            "Attack": 10.0,
+            "Defense": 5.0,
+            "HP": 100.0,
+            "MP": 100.0,
+            "Max HP": 100.0,
+            "Max MP": 100.0,
+            "Speed": 5.0,
+            "type": "COMPONENT_TYPE_COMBAT_STAT"
+        },
+        {
+            "type": "COMPONENT_TYPE_AI_CONTROLLER"
+        },
+        {
+            "Acceleration": 20.0,
+            "Dash Distance": 6.0,
+            "Dash Duration": 0.18000000715255737,
+            "Deceleration": 24.0,
+            "Gravity": -20.0,
+            "Ground Walkable Min Up Dot": 0.550000011920929,
+            "Ground Y": 5.0,
+            "Jump Velocity": 11.0,
+            "Launch Control Lock Duration": 0.11999999731779099,
+            "Max Sprint Speed": 4.0,
+            "Max Walk Speed": 2.0,
+            "Wall Attach Offset": 0.15000000596046448,
+            "Wall Detect Distance": 1.0,
+            "Wall Jump Out Velocity": 6.0,
+            "Wall Jump Up Velocity": 8.0,
+            "Wall Runnable Max Up Dot": 0.3499999940395355,
+            "Wall Top Landing Forward Offset": 0.20000000298023224,
+            "Wall Top Landing Max Height Delta": 0.550000011920929,
+            "Wall Trace Start Offset Y": 1.0,
+            "Yaw Speed": 360.0,
+            "type": "COMPONENT_TYPE_MOVEMENT"
+        },
+        {
+            "animation_states": [],
+            "current_state": "",
+            "type": "COMPONENT_TYPE_ANIMATION_STATE"
+        },
+        {
+            "type": "COMPONENT_TYPE_CHAKRA_MOVE"
+        }
+    ],
+    "custom_properties": {
+        "part_objects": {
+            "Accessory": {
+                "components": [
+                    {
+                        "position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotation": [
+                            0.0,
+                            -179.9999542236328,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "type": "COMPONENT_TYPE_TRANSFORM"
+                    },
+                    {
+                        "type": "COMPONENT_TYPE_SHADER"
+                    },
+                    {
+                        "materials": [
+                            {
+                                "material_name": "MI_WEP_BoxingGloves",
+                                "texture_overrides": {
+                                    "base_color_0": "72d8ca1c-4a59-4d2a-8fd1-4804c59446e9"
+                                }
+                            }
+                        ],
+                        "model_guid": "74899278-d2f0-47d2-8f9b-97be792f50b1",
+                        "model_type": "StaticMesh",
+                        "type": "COMPONENT_TYPE_MODEL"
+                    }
+                ],
+                "guid": "49cf032c-955e-4440-a5e6-0ce5c1668b68",
+                "object_type": "OBJECT_TYPE_PART_SOCKET",
+                "static_class": "SocketPartObject"
+            },
+            "Weapon": {
+                "components": [
+                    {
+                        "position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotation": [
+                            0.0,
+                            -179.9999542236328,
+                            0.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "type": "COMPONENT_TYPE_TRANSFORM"
+                    },
+                    {
+                        "type": "COMPONENT_TYPE_SHADER"
+                    },
+                    {
+                        "materials": [
+                            {
+                                "material_name": "MI_WEP_BoxingGloves",
+                                "texture_overrides": {
+                                    "base_color_0": "72d8ca1c-4a59-4d2a-8fd1-4804c59446e9"
+                                }
+                            }
+                        ],
+                        "model_guid": "73ec9d6d-4e18-4521-adc4-364e1353621c",
+                        "model_type": "StaticMesh",
+                        "type": "COMPONENT_TYPE_MODEL"
+                    }
+                ],
+                "guid": "d472fcfe-d01f-4f0f-9ca0-bd70bfec24a1",
+                "object_type": "OBJECT_TYPE_PART_SOCKET",
+                "static_class": "SocketPartObject"
+            }
+        },
+        "part_transforms": {
+            "Accessory": {
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -179.9999542236328,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "type": "COMPONENT_TYPE_TRANSFORM"
+            },
+            "Weapon": {
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -179.9999542236328,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "type": "COMPONENT_TYPE_TRANSFORM"
+            }
+        }
+    },
+    "guid": "75be7e7b-9fe3-4bee-9479-6694a3082c3d",
+    "object_type": "OBJECT_TYPE_MONSTER_LEAF",
+    "prefab_name": "TestLeaf",
+    "static_class": "TestLeaf"
+}

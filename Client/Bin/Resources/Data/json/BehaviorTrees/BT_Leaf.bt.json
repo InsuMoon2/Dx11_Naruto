@@ -1,12 +1,137 @@
 {
     "blackboard": {
-        "bools": {},
-        "floats": {},
-        "ints": {},
-        "strings": {},
-        "vectors": {}
+        "bools": {
+            "HasAppeared": false,
+            "IsDead": false,
+            "IsHit": false,
+            "Sprint": false,
+            "TargetIsAirborne": false
+        },
+        "floats": {
+            "KonohaSenpungCooldownRemain": 0.0,
+            "MoveAxisX": 0.0,
+            "MoveAxisY": 0.0,
+            "TargetDistance": 0.0,
+            "TargetHeightDelta": 0.0
+        },
+        "ints": {
+            "AirHitCycleIndex": 0,
+            "AnimReplaySerial": 0,
+            "AttackCycleIndex": 0,
+            "GroundHitCycleIndex": 0,
+            "HitReactionSerial": 0,
+            "TestInt": 3
+        },
+        "strings": {
+            "AnimState": "",
+            "HitAnimState": "",
+            "SelectedAttackState": ""
+        },
+        "vectors": {
+            "TargetLocationKey": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
     },
-    "links": [],
+    "links": [
+        {
+            "end": 152,
+            "id": 163,
+            "start": 2
+        },
+        {
+            "end": 211,
+            "id": 212,
+            "start": 209
+        },
+        {
+            "end": 208,
+            "id": 213,
+            "start": 154
+        },
+        {
+            "end": 47,
+            "id": 214,
+            "start": 157
+        },
+        {
+            "end": 223,
+            "id": 224,
+            "start": 218
+        },
+        {
+            "end": 226,
+            "id": 227,
+            "start": 221
+        },
+        {
+            "end": 220,
+            "id": 228,
+            "start": 153
+        },
+        {
+            "end": 217,
+            "id": 229,
+            "start": 155
+        },
+        {
+            "end": 60,
+            "id": 232,
+            "start": 48
+        },
+        {
+            "end": 63,
+            "id": 248,
+            "start": 49
+        },
+        {
+            "end": 301,
+            "id": 255,
+            "start": 50
+        },
+        {
+            "end": 261,
+            "id": 260,
+            "start": 51
+        },
+        {
+            "end": 243,
+            "id": 261,
+            "start": 52
+        },
+        {
+            "end": 72,
+            "id": 262,
+            "start": 53
+        },
+        {
+            "end": 303,
+            "id": 263,
+            "start": 54
+        },
+        {
+            "end": 305,
+            "id": 264,
+            "start": 55
+        },
+        {
+            "end": 280,
+            "id": 290,
+            "start": 156
+        },
+        {
+            "end": 284,
+            "id": 291,
+            "start": 281
+        },
+        {
+            "end": 171,
+            "id": 292,
+            "start": 282
+        }
+    ],
     "nodes": [
         {
             "id": 1,
@@ -16,9 +141,334 @@
                 2
             ],
             "parameters": {},
-            "pos_x": 100.0,
-            "pos_y": 300.0,
+            "pos_x": 146.0,
+            "pos_y": 186.0,
             "type": "Root"
+        },
+        {
+            "id": 46,
+            "input_pin_id": 47,
+            "name": "AttackLoop Sequence",
+            "output_pin_ids": [
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55
+            ],
+            "parameters": {},
+            "pos_x": 524.0,
+            "pos_y": 700.0,
+            "type": "Sequence"
+        },
+        {
+            "id": 59,
+            "input_pin_id": 60,
+            "name": "Task_FindClosestTarget",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 226.0,
+            "pos_y": 908.0,
+            "type": "Task_FindClosestTarget"
+        },
+        {
+            "acceptance_radius": 2.0,
+            "id": 62,
+            "idle_anim_state": "Idle",
+            "input_pin_id": 63,
+            "move_anim_state": "Run",
+            "name": "Task_Move",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 242.0,
+            "pos_y": 1020.0,
+            "target_location": "TargetLocationKey",
+            "target_object": "TargetObjectKey",
+            "type": "Task_Move",
+            "use_move_anim": true,
+            "use_sprint": false,
+            "write_anim_direction": true
+        },
+        {
+            "backward_blend_power": 0.28,
+            "dash_duration": 0.18000000715255737,
+            "dash_move_power": 0.42,
+            "face_target": true,
+            "id": 300,
+            "input_pin_id": 301,
+            "left_anim_state": "Dodge_Run_Left",
+            "name": "Task_Dash",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 418.0,
+            "pos_y": 988.0,
+            "request_anim_end": false,
+            "right_anim_state": "Dodge_Run_Right",
+            "stop_movement_on_finish": true,
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_Dash",
+            "use_sprint": false
+        },
+        {
+            "attack_anim_state_01": "Attack_01",
+            "attack_anim_state_02": "Attack_02",
+            "attack_anim_state_03": "",
+            "attack_anim_state_04": "",
+            "attack_cycle_index_key": "AttackCycleIndex",
+            "attack_range": 2.5,
+            "chain_attack_01_to_02": true,
+            "face_target": true,
+            "id": 262,
+            "input_pin_id": 261,
+            "name": "Task_Attack",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 586.0,
+            "pos_y": 988.0,
+            "request_anim_end": true,
+            "selected_attack_state_key": "SelectedAttackState",
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_Attack",
+            "use_round_robin": true
+        },
+        {
+            "State Name": "Idle",
+            "id": 242,
+            "input_pin_id": 243,
+            "name": "Task_SetAnimState",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 786.0,
+            "pos_y": 988.0,
+            "state_name": "Idle",
+            "type": "Task_SetAnimState"
+        },
+        {
+            "Wiat Time": 0.10000000149011612,
+            "id": 71,
+            "input_pin_id": 72,
+            "name": "Task_Wait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 986.0,
+            "pos_y": 988.0,
+            "type": "Task_Wait",
+            "wait_time": 0.10000000149011612
+        },
+        {
+            "face_target": true,
+            "id": 302,
+            "input_pin_id": 303,
+            "lock_facing_to_target": true,
+            "name": "Task_BackStep",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 1186.0,
+            "pos_y": 988.0,
+            "request_anim_end": false,
+            "retreat_anim_state": "DashStep_Behind",
+            "retreat_duration": 0.2199999988079071,
+            "stop_movement_on_finish": true,
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_RetreatAndWait",
+            "use_sprint": false
+        },
+        {
+            "Wiat Time": 0.20000000298023224,
+            "id": 304,
+            "input_pin_id": 305,
+            "name": "Task_Wait_End",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 1386.0,
+            "pos_y": 988.0,
+            "type": "Task_Wait",
+            "wait_time": 0.20000000298023224
+        },
+        {
+            "id": 151,
+            "input_pin_id": 152,
+            "name": "Selector",
+            "output_pin_ids": [
+                153,
+                154,
+                155,
+                156,
+                157,
+                158,
+                159,
+                160,
+                161,
+                162
+            ],
+            "parameters": {},
+            "pos_x": 139.0,
+            "pos_y": 342.0,
+            "type": "Selector"
+        },
+        {
+            "cooldown": 5.0,
+            "cooldown_remain_key": "KonohaSenpungCooldownRemain",
+            "face_target": true,
+            "id": 170,
+            "input_pin_id": 171,
+            "max_range": 3.0,
+            "min_range": 0.0,
+            "name": "Task_KonohaSenpung",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 18.0,
+            "pos_y": 956.0,
+            "request_anim_end": true,
+            "skill_anim_state": "Skill_Konoha",
+            "skill_duration": 1.0,
+            "target_object_key": "TargetObjectKey",
+            "type": "Task_KonohaSenpung"
+        },
+        {
+            "expected_value": true,
+            "id": 207,
+            "input_pin_id": 208,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                209
+            ],
+            "parameters": {},
+            "pos_x": 82.0,
+            "pos_y": 524.0,
+            "target_bb_key": "IsHit",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "air_hit_anim_state_01": "Hit_Air",
+            "air_hit_anim_state_02": "",
+            "air_hit_anim_state_03": "",
+            "air_hit_cycle_index_key": "AirHitCycleIndex",
+            "airborne_hold_anim_state": "JumpFall",
+            "anim_replay_serial_key": "AnimReplaySerial",
+            "ground_hit_anim_state_01": "Hit",
+            "ground_hit_anim_state_02": "Hit",
+            "ground_hit_anim_state_03": "Hit",
+            "ground_hit_cycle_index_key": "GroundHitCycleIndex",
+            "hit_anim_select_mode": 1,
+            "hit_anim_state_key": "HitAnimState",
+            "hit_flag_key": "IsHit",
+            "hit_serial_key": "HitReactionSerial",
+            "id": 210,
+            "input_pin_id": 211,
+            "name": "Task_Hit",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": 82.0,
+            "pos_y": 668.0,
+            "request_anim_end": false,
+            "switch_to_airborne_hold_after_hit": true,
+            "type": "Task_Hit",
+            "use_blackboard_hit_anim_override": true
+        },
+        {
+            "expected_value": false,
+            "id": 216,
+            "input_pin_id": 217,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                218
+            ],
+            "parameters": {},
+            "pos_x": -110.0,
+            "pos_y": 524.0,
+            "target_bb_key": "HasAppeared",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "expected_value": true,
+            "id": 219,
+            "input_pin_id": 220,
+            "name": "Decorator_Blackboard",
+            "output_pin_ids": [
+                221
+            ],
+            "parameters": {},
+            "pos_x": -302.0,
+            "pos_y": 524.0,
+            "target_bb_key": "IsDead",
+            "type": "Decorator_Blackboard"
+        },
+        {
+            "hold_on_finished": false,
+            "id": 222,
+            "input_pin_id": 223,
+            "name": "Task_PlayStateAndWait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -110.0,
+            "pos_y": 668.0,
+            "request_anim_end": true,
+            "set_false_flag_key": "",
+            "set_true_flag_key": "HasAppeared",
+            "state_name": "Appearance",
+            "stop_movement": true,
+            "type": "Task_PlayStateAndWait"
+        },
+        {
+            "hold_on_finished": true,
+            "id": 225,
+            "input_pin_id": 226,
+            "name": "Task_PlayStateAndWait",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -302.0,
+            "pos_y": 668.0,
+            "request_anim_end": true,
+            "set_false_flag_key": "",
+            "set_true_flag_key": "",
+            "state_name": "Dead",
+            "stop_movement": true,
+            "type": "Task_PlayStateAndWait"
+        },
+        {
+            "id": 270,
+            "input_pin_id": 280,
+            "name": "KonohaSequence",
+            "output_pin_ids": [
+                281,
+                282
+            ],
+            "parameters": {},
+            "pos_x": 100.0,
+            "pos_y": 700.0,
+            "type": "Sequence"
+        },
+        {
+            "id": 271,
+            "input_pin_id": 284,
+            "name": "Task_FindClosestTarget",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -328.0,
+            "pos_y": 956.0,
+            "type": "Task_FindClosestTarget"
+        },
+        {
+            "acceptance_radius": 2.5,
+            "id": 272,
+            "idle_anim_state": "Idle",
+            "input_pin_id": 285,
+            "move_anim_state": "Run",
+            "name": "Task_Move",
+            "output_pin_ids": [],
+            "parameters": {},
+            "pos_x": -174.0,
+            "pos_y": 956.0,
+            "target_location": "TargetLocationKey",
+            "target_object": "TargetObjectKey",
+            "type": "Task_Move",
+            "use_move_anim": true,
+            "use_sprint": false,
+            "write_anim_direction": true
         }
     ],
     "root_node_id": 1

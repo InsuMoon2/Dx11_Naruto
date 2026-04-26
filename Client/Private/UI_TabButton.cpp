@@ -127,7 +127,7 @@ HRESULT UI_TabButton::Ready_ChildText(const FUITabDesc* desc)
     textDesc.levelIndex = desc->levelIndex;
 
     textDesc.text = desc->labelText;
-    textDesc.style.fontFamily = L"Malgun Gothic";
+    textDesc.style.fontFamily = UI_DEFAULT_FONT_FAMILY;
     textDesc.style.fontSize = desc->fontSize;
     textDesc.style.color = _labelColor;
     textDesc.style.hAlign = ETextHAlign::Center;

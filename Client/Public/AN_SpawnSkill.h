@@ -19,20 +19,18 @@ public:
 private:
     Protocol::OBJECT_TYPE _spawnObjectType = Protocol::OBJECT_TYPE_SKILL_RASENSHURIKEN;
 
-    Vec3    _localOffset = Vec3(0.f, 1.2f, 1.8f);
-
-    // owner의 전방 발사 방향으로 사용할지?
+    Vec3 _localOffset = Vec3(0.f, 1.2f, 1.8f);
     Collision_Preset _collisionPreset = Collision_Preset::Projectile;
 
-    bool    _useOwnerForward = true;
-    bool    _aimAtTarget = false;
+    bool _useOwnerForward = true;
+    bool _aimAtTarget = false;
+    bool _spawnAtLockedTarget = false;
+    Vec3 _targetOffset = Vec3(0.f, 0.f, 0.f);
 
     bool _launchIfProjectile = true;
 
 private:
-    // owner의 Transform 기준 로컬 오프셋을 월드 좌표로 변환해서 사용하게
     static Vec3 Calculate_WorldSpawnPosition(Shared<Transform> transform, const Vec3& localOffset);
-
 };
 
 NS_END

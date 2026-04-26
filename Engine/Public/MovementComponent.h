@@ -41,11 +41,25 @@ public:
 
     struct FWireDashDesc
     {
-        float maxDistance = 10.f;
+        float maxDistance = 100.f;
         float approachSpeed = 28.f;
         float stopDistance = 0.4f;
         float traceStartOffsetY = 1.f;
         float fanAngleDegree = 8.f;
+    };
+
+    enum class EWireDashSurfaceType
+    {
+        None,
+        Wall,
+        Ground,
+        END
+    };
+
+    struct FWireDashSurfaceHit
+    {
+        EWireDashSurfaceType surfaceType = EWireDashSurfaceType::None; // 와이어 대쉬가 벽에 붙는지, 바닥에 꽂히는지 후속 상태가 분기할 때 사용한다.
+        FSurfaceHit surfaceHit{}; // 선택된 표면의 위치/법선을 그대로 넘겨 AirApproach에서 도착 처리를 이어받는다.
     };
 
     struct FMovementDesc
@@ -154,6 +168,7 @@ public:
     const FWireDashDesc& Get_WireDashDesc() const { return _wireDashDesc; }
 
     bool Try_WireDash_WallTrace(const Vec3& traceStart, const Vec3& traceDir, FSurfaceHit& outHit) const;
+    bool Try_WireDash_SurfaceTrace(const Vec3& traceStart, const Vec3& traceDir, FWireDashSurfaceHit& outHit) const; // 와이어가 먼저 닿은 벽/바닥 표면을 골라서 WireDash 상태 진입 분기를 단순화할 때 사용한다.
 
     void Enter_WallRun(const FSurfaceHit& wallHit);
     void Exit_WallRun();
@@ -196,6 +211,7 @@ private:
     bool Is_GroundLikeNormal(const Vec3& hitNormal) const;
     bool Is_WallLikeNormal(const Vec3& hitNormal) const;
     void Draw_TraceDebug(const Vec3& start, const Vec3& end, const FSurfaceHit& hit) const;
+    float Calculate_BodyTraceRadius(float fallbackRadius) const; // 점프/낙하 ray가 몸통 가장자리 충돌을 놓치지 않도록 현재 몸통 콜라이더의 수평 반경을 구한다.
     bool Trace_WallRunSurface(const Vec3& currentPos, const Vec3& wallNormal, FSurfaceHit& outHit) const; // 벽 바깥쪽에서 안쪽으로 다시 쏴서 현재 붙어야 할 벽 표면을 찾는다.
 
     static bool Is_CharacterBodyChannel(Collision_Channel channel);

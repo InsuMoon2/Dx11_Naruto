@@ -41,6 +41,8 @@ public:
     void    Update(float timeDelta) override;
     void    Late_Update(float timeDelta) override;
     HRESULT Render() override;
+    // 시네마틱 종료 직후 플레이어 뒤 시점으로 즉시 재정렬할 때 호출한다.
+    void    On_CinematicFinished() override;
 
 public:
     void    Set_TargetTransform(Shared<Transform> target) { _targetTransform = target; }

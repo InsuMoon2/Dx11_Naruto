@@ -65,7 +65,7 @@ void UI_MonsterHp::Update(float timeDelta)
 	Set_Ratio(combat->Get_HpRatio());
 
 	Vec3 worldPos = monster->Get_Transform()->Get_WorldPosition();
-	worldPos.y += 1.f;
+	worldPos.y += 2.f;
 
 	Matrix viewMatrix = *GAME->Get_Transform(ETransformState::View);
 	Matrix projMatrix = *GAME->Get_Transform(ETransformState::Proj);

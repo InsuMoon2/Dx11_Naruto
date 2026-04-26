@@ -14,6 +14,7 @@ public:
     {
         None,
         WallAttach,
+        GroundLand,
         ChangeState,
         END
     };

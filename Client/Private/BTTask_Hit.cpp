@@ -23,6 +23,7 @@ bool BTTask_Hit::Register_Properties()
     PROPERTY_STRING_JSON("Air Hit Anim 01", "air_hit_anim_state_01", _airHitAnimState01);
     PROPERTY_STRING_JSON("Air Hit Anim 02", "air_hit_anim_state_02", _airHitAnimState02);
     PROPERTY_STRING_JSON("Air Hit Anim 03", "air_hit_anim_state_03", _airHitAnimState03);
+    PROPERTY_STRING_JSON("Airborne Hold Anim State", "airborne_hold_anim_state", _airborneHoldAnimState);
 
     PROPERTY_STRING_JSON("Ground Hit Cycle Index Key", "ground_hit_cycle_index_key", _groundHitCycleIndexKey);
     PROPERTY_STRING_JSON("Air Hit Cycle Index Key", "air_hit_cycle_index_key", _airHitCycleIndexKey);
@@ -30,6 +31,7 @@ bool BTTask_Hit::Register_Properties()
     PROPERTY_ENUM_JSON("Hit Anim Select Mode", "hit_anim_select_mode", _hitAnimSelectMode, EHitAnimSelectMode);
     PROPERTY_BOOL_JSON("Use Blackboard Hit Anim Override", "use_blackboard_hit_anim_override", _useBlackboardHitAnimOverride);
     PROPERTY_BOOL_JSON("Request Anim End", "request_anim_end", _requestAnimEnd);
+    PROPERTY_BOOL_JSON("Switch To Airborne Hold After Hit", "switch_to_airborne_hold_after_hit", _switchToAirborneHoldAfterHit);
 
     return true;
 }
@@ -50,12 +52,16 @@ BTTask_Hit::BTTask_Hit(const BTTask_Hit& rhs)
     , _airHitAnimState01(rhs._airHitAnimState01)
     , _airHitAnimState02(rhs._airHitAnimState02)
     , _airHitAnimState03(rhs._airHitAnimState03)
+    , _airborneHoldAnimState(rhs._airborneHoldAnimState)
     , _groundHitCycleIndexKey(rhs._groundHitCycleIndexKey)
     , _airHitCycleIndexKey(rhs._airHitCycleIndexKey)
     , _hitAnimSelectMode(rhs._hitAnimSelectMode)
     , _useBlackboardHitAnimOverride(rhs._useBlackboardHitAnimOverride)
     , _requestAnimEnd(rhs._requestAnimEnd)
+    , _switchToAirborneHoldAfterHit(rhs._switchToAirborneHoldAfterHit)
     , _startedHit(false)
+    , _startedAsAirHit(false)
+    , _airborneHoldStarted(false)
     , _activeHitSerial(0)
 {
 }
@@ -69,6 +75,8 @@ void BTTask_Hit::Initialize()
     BTTask::Initialize();
 
     _startedHit = false;
+    _startedAsAirHit = false;
+    _airborneHoldStarted = false;
     _activeHitSerial = 0;
 }
 
@@ -94,6 +102,8 @@ EBTNodeResult BTTask_Hit::Update(float timeDelta)
     if (!isHit)
     {
         _startedHit = false;
+        _startedAsAirHit = false;
+        _airborneHoldStarted = false;
         _activeHitSerial = 0;
         _lastResult = EBTNodeResult::Failed;
         return _lastResult;
@@ -115,6 +125,9 @@ EBTNodeResult BTTask_Hit::Update(float timeDelta)
         const string hitAnimState = Resolve_HitAnimState(blackboard, owner);
         blackboard->Set_ValueAsString("AnimState", hitAnimState);
 
+        _startedAsAirHit = Is_AirborneHit(owner);
+        _airborneHoldStarted = false;
+
         // 같은 AnimState라도 serial을 올려서 AIController가 다시 재생
         blackboard->Set_ValueAsInt(_animReplaySerialKey, incomingHitSerial);
 
@@ -134,7 +147,32 @@ EBTNodeResult BTTask_Hit::Update(float timeDelta)
         return _lastResult;
     }
 
+    if (_switchToAirborneHoldAfterHit && _startedAsAirHit && Is_AirborneHit(owner))
+    {
+        blackboard->Set_ValueAsFloat("MoveAxisX", 0.f);
+        blackboard->Set_ValueAsFloat("MoveAxisY", 0.f);
+        blackboard->Set_ValueAsBool("Sprint", false);
+
+        if (!_airborneHoldStarted && !_airborneHoldAnimState.empty())
+        {
+            const string holdAnimState = Resolve_PlayableHitAnimState(owner, _airborneHoldAnimState);
+            blackboard->Set_ValueAsString("AnimState", holdAnimState);
+
+            const int32 nextReplaySerial = blackboard->HasKey(_animReplaySerialKey)
+                ? blackboard->Get_ValueAsInt(_animReplaySerialKey) + 1
+                : 1;
+
+            blackboard->Set_ValueAsInt(_animReplaySerialKey, nextReplaySerial);
+            _airborneHoldStarted = true;
+        }
+
+        _lastResult = EBTNodeResult::InProgress;
+        return _lastResult;
+    }
+
     _startedHit = false;
+    _startedAsAirHit = false;
+    _airborneHoldStarted = false;
     _activeHitSerial = 0;
 
     blackboard->Set_ValueAsBool(_hitFlagKey, false);
@@ -233,12 +271,39 @@ string BTTask_Hit::Resolve_HitAnimState(const Shared<Blackboard>& blackboard, co
     {
         const string hitAnimState = blackboard->Get_ValueAsString(_hitAnimStateKey);
         if (!hitAnimState.empty())
-            return hitAnimState;
+            return Resolve_PlayableHitAnimState(owner, hitAnimState);
     }
 
     const bool isAirborne = Is_AirborneHit(owner);
 
-    return Select_HitAnimState(blackboard, isAirborne);
+    return Resolve_PlayableHitAnimState(owner, Select_HitAnimState(blackboard, isAirborne));
+}
+
+string BTTask_Hit::Resolve_PlayableHitAnimState(
+    const Shared<GameObject>& owner,
+    const string& preferredState) const
+{
+    // 데이터가 없는 피격 상태를 요청해도 애니메이션 재생이 통째로 실패하지 않게 보정한다.
+    auto animState = owner ? owner->Get_Component<AnimationStateComponent>() : nullptr;
+    if (!animState)
+        return preferredState;
+
+    if (!preferredState.empty() && animState->Find_State(preferredState))
+        return preferredState;
+
+    if (animState->Find_State("Hit"))
+        return "Hit";
+
+    if (!_groundHitAnimState01.empty() && animState->Find_State(_groundHitAnimState01))
+        return _groundHitAnimState01;
+
+    if (!_groundHitAnimState02.empty() && animState->Find_State(_groundHitAnimState02))
+        return _groundHitAnimState02;
+
+    if (!_groundHitAnimState03.empty() && animState->Find_State(_groundHitAnimState03))
+        return _groundHitAnimState03;
+
+    return preferredState;
 }
 
 Shared<BTTask_Hit> BTTask_Hit::Create()

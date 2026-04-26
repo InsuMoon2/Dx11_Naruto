@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "UI_PlayerHUD.h"
 #include "GameInstance.h"
 #include "UI_PlayerStatus.h"
@@ -12,6 +12,7 @@
 #include "UI_Text.h"
 #include "CombatStat.h"
 #include "Background.h"
+#include "Level_CharacterSetup.h"
 #include "GameInstance.h"
 #include "UI_BossHp.h"
 #include "Monster.h"
@@ -81,7 +82,7 @@ HRESULT UI_PlayerHUD::Initialize(void* arg)
         this, &UI_PlayerHUD::Handle_CharacterDead);
 
     _wireLockOnVisibleHandle = GAME->Get_DelegateHub().OnWireLockOnVisible.Add(
-            this, &UI_PlayerHUD::Handle_WireLockOnVisible);
+        this, &UI_PlayerHUD::Handle_WireLockOnVisible);
 
     _missionMarkerTargetHandle = GAME->Get_DelegateHub().OnMissionMarkerTargetChanged.Add(
         this, &UI_PlayerHUD::Set_MissionMarkerTarget);
@@ -91,6 +92,12 @@ HRESULT UI_PlayerHUD::Initialize(void* arg)
 
     if (auto missionMarkerTarget = GAME->Get_DelegateHub().Get_MissionMarkerTarget())
         Set_MissionMarkerTarget(missionMarkerTarget);
+
+    _waveStartedHandle = GAME->Get_DelegateHub().OnWaveStarted.Add(
+        this, &UI_PlayerHUD::Handle_WaveStarted);
+
+    _cineFinishedHandle = GAME->Get_DelegateHub().OnCinematicFinished.Add(
+        this, &UI_PlayerHUD::On_CinematicFinished);
 
     return S_OK;
 }
@@ -102,6 +109,9 @@ void UI_PlayerHUD::Update(float timeDelta)
     Update_RemotePlayerStatusList();
     Update_CombatLineBurst(timeDelta);
     Update_KOAnnounce(timeDelta);
+    Update_MissionTitle(timeDelta);
+    Update_CinematicTransition(timeDelta);
+
     Apply_AnnouncePositions();
 
     const bool bossVisible = _bossHp && _bossHp->Is_Visibility();
@@ -141,11 +151,27 @@ void UI_PlayerHUD::Add_RemotePlayer(Shared<Player> player)
     entry.player = player;
     entry.combat = player->Get_Component<CombatStat>();
 
+    Background::FBackgroundDesc hpBackgroundDesc{};
+    hpBackgroundDesc.posX = 0.f;
+    hpBackgroundDesc.posY = 0.f;
+    hpBackgroundDesc.sizeX = 320.f;
+    hpBackgroundDesc.sizeY = 96.f;
+    hpBackgroundDesc.zOrder = _zOrder + 0.035f;
+    hpBackgroundDesc.levelIndex = _levelIndex;
+    hpBackgroundDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_EQUIPMENT;
+    hpBackgroundDesc.textureIndex = ETOI(ECharacterSetupTexture::RemoteHpBackground);
+    hpBackgroundDesc.shaderPassIndex = 1;
+
+    entry.hpBackground = Create_Child<Background>(
+        Protocol::OBJECT_TYPE_BACKGROUND,
+        EUILayer::HUD,
+        &hpBackgroundDesc);
+
     UI_PlayerHP::FPlayerHPDesc hpDesc{};
     hpDesc.posX = 0.f;
     hpDesc.posY = 0.f;
-    hpDesc.sizeX = 220.f;
-    hpDesc.sizeY = 34.f;
+    hpDesc.sizeX = 280.f;
+    hpDesc.sizeY = 42.f;
     hpDesc.zOrder = _zOrder + 0.04f;
     hpDesc.levelIndex = _levelIndex;
     hpDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_PLAYER_STATUS;
@@ -158,20 +184,20 @@ void UI_PlayerHUD::Add_RemotePlayer(Shared<Player> player)
     if (entry.hpBar)
     {
         entry.hpBar->Set_FillRange(98.f / 512.f, 413.f / 512.f);
-        entry.hpBar->Get_Transform()->Set_LocalScale(220.f, 34.f, 1.f);
+        entry.hpBar->Get_Transform()->Set_LocalScale(280.f, 42.f, 1.f);
     }
 
     UI_Text::FUITextDesc nameDesc{};
     nameDesc.posX = 0.f;
     nameDesc.posY = 0.f;
-    nameDesc.sizeX = 220.f;
-    nameDesc.sizeY = 28.f;
+    nameDesc.sizeX = 280.f;
+    nameDesc.sizeY = 30.f;
     nameDesc.zOrder = _zOrder + 0.05f;
     nameDesc.levelIndex = _levelIndex;
     nameDesc.text = player->Get_PlayerName().empty() ? L"Player" : player->Get_PlayerName();
-    nameDesc.style.fontSize = 18.f;
+    nameDesc.style.fontSize = 20.f;
     nameDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
-    nameDesc.style.hAlign = ETextHAlign::Left;
+    nameDesc.style.hAlign = ETextHAlign::Center;
     nameDesc.style.vAlign = ETextVAlign::Middle;
 
     entry.nameText = Create_Child<UI_Text>(
@@ -193,6 +219,9 @@ void UI_PlayerHUD::Update_RemotePlayerStatusList()
 
                 if (shouldRemove)
                 {
+                    if (entry.hpBackground)
+                        entry.hpBackground->Set_Destroy(true);
+
                     if (entry.hpBar)
                         entry.hpBar->Set_Destroy(true);
 
@@ -204,19 +233,31 @@ void UI_PlayerHUD::Update_RemotePlayerStatusList()
             }),
         _remotePlayerStatuses.end());
 
-    const float baseX = 40.f;
-    const float baseY = 120.f;
-    const float gapY = 58.f;
+    const float baseX = 20.f;
+    const float baseY = 258.f;
+    const float hpWidth = 280.f;
+    const float hpHeight = 42.f;
+    const float nameHeight = 30.f;
+    const float nameGap = 4.f;
+    const float backgroundHeight = 96.f;
+    const float gapY = 104.f;
 
     for (size_t i = 0; i < _remotePlayerStatuses.size(); ++i)
     {
         auto& entry = _remotePlayerStatuses[i];
 
         const float y = baseY + static_cast<float>(i) * gapY;
+        const float centerX = baseX + hpWidth * 0.5f;
+        const float nameY = y + nameHeight * 0.5f;
+        const float hpY = y + nameHeight + nameGap + hpHeight * 0.5f;
+        const float backgroundY = y + backgroundHeight * 0.5f;
+
+        if (auto hpBackground = entry.hpBackground)
+            hpBackground->Get_Transform()->Set_LocalPosition(centerX, backgroundY, _zOrder + 0.035f);
 
         if (auto hpBar = entry.hpBar)
         {
-            hpBar->Get_Transform()->Set_LocalPosition(baseX + 110.f, y + 24.f, _zOrder + 0.04f);
+            hpBar->Get_Transform()->Set_LocalPosition(centerX, hpY, _zOrder + 0.04f);
 
             auto combat = entry.combat.lock();
             hpBar->Set_Ratio(combat ? combat->Get_HpRatio() : 1.f);
@@ -228,7 +269,7 @@ void UI_PlayerHUD::Update_RemotePlayerStatusList()
             if (player)
                 nameText->Set_Text(player->Get_PlayerName());
 
-            nameText->Get_Transform()->Set_LocalPosition(baseX + 110.f, y, _zOrder + 0.05f);
+            nameText->Get_Transform()->Set_LocalPosition(centerX, nameY, _zOrder + 0.05f);
         }
     }
 }
@@ -263,6 +304,12 @@ void UI_PlayerHUD::Handle_BossSpawned(Shared<GameObject> obj)
     if (_bossHp)
         _bossHp->Bind_Boss(obj);
 
+    if (_cineTransitionState != ECineTransitionState::Idle && 
+        _cineTransitionState != ECineTransitionState::BarsOut)
+    {
+        return;
+    }
+
     if (_bossGauge)
         _bossGauge->Set_Visibility(true);
 
@@ -272,13 +319,25 @@ void UI_PlayerHUD::Handle_BossSpawned(Shared<GameObject> obj)
 
 void UI_PlayerHUD::Handle_CharacterDead(Shared<Character> deadCharacter, Shared<GameObject> damageCauser)
 {
-    (void)damageCauser;
-
     auto deadMonster = dynamic_pointer_cast<Monster>(deadCharacter);
     if (!deadMonster)
         return;
 
-    Show_KOAnnounce();
+    auto causer = damageCauser;
+    while (causer)
+    {
+        if (causer->Get_ObjectType() == Protocol::OBJECT_TYPE_PLAYER && causer->Is_Local())
+        {
+            Show_KOAnnounce();
+            return;
+        }
+
+        auto owner = causer->Get_Owner();
+        if (owner == causer)
+            break;
+
+        causer = owner;
+    }
 }
 
 void UI_PlayerHUD::Handle_WireLockOnVisible(bool visible)
@@ -322,6 +381,82 @@ void UI_PlayerHUD::Clear_MissionMarkerTarget()
     _missionMarker->Clear_Target();
 }
 
+void UI_PlayerHUD::Show_MissionTitle(const wstring& text, float displayTime)
+{
+    if (!_missionTitleBanner)
+        return;
+
+    _missionTitleBanner->Set_LabelText(text);
+    _missionTitleBanner->Set_UIOpacity(1.f);
+    _missionTitleBanner->Set_Visibility(true);
+
+    _missionTitleBaseX = _missionTitleBanner->Get_Transform()->Get_LocalPosition().x;
+    _missionTitleTimer = displayTime;
+}
+
+void UI_PlayerHUD::Hide_MissionTitle()
+{
+    if (!_missionTitleBanner)
+        return;
+
+    _missionTitleBanner->Set_Visibility(false);
+    _missionTitleTimer = 0.f;
+}
+
+HRESULT UI_PlayerHUD::Ready_MissionTitleUI()
+{
+    const float uiRefWidth = GAME->Get_UIReferenceWidth();
+    const float uiRefHeight = GAME->Get_UIReferenceHeight();
+
+    Background::FBackgroundDesc desc{};
+    desc.posX = uiRefWidth * 0.5f;
+    desc.posY = uiRefHeight * 0.18f;
+    desc.sizeX = 1000.f;
+    desc.sizeY = 80.f;
+    desc.zOrder = 0.75f;
+    desc.levelIndex = _levelIndex;
+    desc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MISSION;
+    desc.textureIndex = 5;
+    desc.shaderPassIndex = 1;
+
+    desc.textDesc.text = L"적을 쓰러뜨려라!";
+    desc.textDesc.offset = Vec2(0.f, 0.f);
+    desc.textDesc.size = Vec2(900.f, 60.f);
+    desc.textDesc.style.fontSize = 28.f;
+    desc.textDesc.style.color = Vec4(1.f, 1.f, 1.f, 1.f);
+    desc.textDesc.style.hAlign = ETextHAlign::Center;
+    desc.textDesc.style.vAlign = ETextVAlign::Middle;
+
+    _missionTitleBanner = Create_Child<Background>(
+        Protocol::OBJECT_TYPE_BACKGROUND, EUILayer::Overlay, &desc);
+    CHECK_NULL(_missionTitleBanner, E_FAIL);
+    _missionTitleBanner->Set_Visibility(false);
+    _missionTitleTimer = 0.f;
+
+    return S_OK;
+}
+
+
+void UI_PlayerHUD::Update_MissionTitle(float timeDelta)
+{
+    if (_missionTitleTimer <= 0.f)
+        return;
+
+    _missionTitleTimer -= timeDelta;
+
+    if (_missionTitleTimer <= MISSION_TITLE_FADE_TIME)
+    {
+        const float ratio = max(0.f, _missionTitleTimer / MISSION_TITLE_FADE_TIME);
+        const float slideX = _missionTitleBaseX - (MISSION_TITLE_SLIDE_DIST * (1.f - ratio));
+
+        _missionTitleBanner->Set_UIPosition(slideX, _missionTitleBanner->Get_Transform()->Get_LocalPosition().y);
+        _missionTitleBanner->Set_UIOpacity(ratio);
+    }
+
+    if (_missionTitleTimer <= 0.f)
+        Hide_MissionTitle();
+}
+
 void UI_PlayerHUD::Show_MissionEnd()
 {
     if (!_missionEndBanner)
@@ -356,6 +491,174 @@ void UI_PlayerHUD::Set_ScreenFadeAlpha(float alpha)
         return;
 
     _screenFadePanel->Set_FadeAlpha(alpha);
+}
+
+void UI_PlayerHUD::Set_HUDVisibilityForCinematic(bool isVisible)
+{
+    if (_status) _status->Set_Visibility(isVisible);
+    if (_skillPanel) _skillPanel->Set_Visibility(isVisible);
+    if (_timer) _timer->Set_Visibility(isVisible);
+    if (_targeting) _targeting->Set_Visibility(isVisible);
+    
+    if (_bossHp) _bossHp->Set_Visibility(isVisible);
+    if (_bossGauge) _bossGauge->Set_Visibility(isVisible);
+    if (_bossIcon) _bossIcon->Set_Visibility(isVisible);
+}
+
+void UI_PlayerHUD::On_CinematicFinished()
+{
+    if (_cineTransitionState == ECineTransitionState::Playing)
+    {
+        Set_HUDVisibilityForCinematic(true);
+        
+        _cineTransitionState = ECineTransitionState::BarsOut;
+        _cineTransitionTimer = 0.f;
+    }
+}
+
+void UI_PlayerHUD::Handle_WaveStarted(const string& waveTag)
+{
+     if (waveTag == "Wave_Boss")
+    {
+        GAME->Set_GameInputEnabled(false);
+        Set_HUDVisibilityForCinematic(false);
+        
+        if (_cineBarTop) _cineBarTop->Set_Visibility(true);
+        if (_cineBarBottom) _cineBarBottom->Set_Visibility(true);
+
+        _cineTransitionState = ECineTransitionState::BarsIn;
+        _cineTransitionTimer = 0.f;
+        _pendingCinematicTag = "Boss_Entry"; // 이건 바꿔야함
+    }
+}
+
+HRESULT UI_PlayerHUD::Ready_CinematicTransition()
+{
+    const float uiRefWidth = GAME->Get_UIReferenceWidth();
+    const float uiRefHeight = GAME->Get_UIReferenceHeight();
+    UI_ScreenFade::FScreenFadeDesc desc{};
+    desc.sizeX = uiRefWidth;
+    desc.sizeY = CINE_BAR_HEIGHT;
+    desc.zOrder = 0.95f; 
+    desc.levelIndex = _levelIndex;
+    desc.fadeColor = Color(0.f, 0.f, 0.f, 1.f); 
+    desc.initialAlpha = 1.f;
+
+    desc.posX = uiRefWidth * 0.5f;
+    desc.posY = -(CINE_BAR_HEIGHT * 0.5f);
+    _cineBarTop = Create_Child<UI_ScreenFade>(Protocol::OBJECT_TYPE_UI_SCREEN_FADE, EUILayer::Overlay, &desc);
+    
+    desc.posY = uiRefHeight + (CINE_BAR_HEIGHT * 0.5f);
+    _cineBarBottom = Create_Child<UI_ScreenFade>(Protocol::OBJECT_TYPE_UI_SCREEN_FADE, EUILayer::Overlay, &desc);
+
+    if (_cineBarTop) _cineBarTop->Set_Visibility(false);
+    if (_cineBarBottom) _cineBarBottom->Set_Visibility(false);
+
+    return S_OK;
+}
+
+void UI_PlayerHUD::Update_CinematicTransition(float timeDelta)
+{
+    if (_cineTransitionState == ECineTransitionState::Idle)
+        return;
+    const float uiRefWidth = GAME->Get_UIReferenceWidth();
+    const float uiRefHeight = GAME->Get_UIReferenceHeight();
+    _cineTransitionTimer += timeDelta;
+    switch (_cineTransitionState)
+    {
+    case ECineTransitionState::BarsIn:
+    {
+        // 목표 시간 대비 현재 진행도 (0.0 ~ 1.0)
+        const float ratio = std::clamp(_cineTransitionTimer / CINE_BARS_IN_TIME, 0.f, 1.f);
+        
+        // EaseOut Cubic 적용: 바가 처음엔 빠르게, 목표 위치에 도달할 때쯤 부드럽게 감속되도록 보간 가중치 조절
+        const float t = 1.f - powf(1.f - ratio, 3.f);
+        if (_cineBarTop)
+        {
+            float startY = -(CINE_BAR_HEIGHT * 0.5f);
+            float endY = (CINE_BAR_HEIGHT * 0.5f);
+            _cineBarTop->Set_UIPosition(uiRefWidth * 0.5f, std::lerp(startY, endY, t));
+        }
+        if (_cineBarBottom)
+        {
+            float startY = uiRefHeight + (CINE_BAR_HEIGHT * 0.5f);
+            float endY = uiRefHeight - (CINE_BAR_HEIGHT * 0.5f);
+            _cineBarBottom->Set_UIPosition(uiRefWidth * 0.5f, std::lerp(startY, endY, t));
+        }
+        // 바 슬라이드가 완료되면 전체 화면 페이드 아웃 상태로 전환
+        if (ratio >= 1.f)
+        {
+            _cineTransitionState = ECineTransitionState::FadeOut;
+            _cineTransitionTimer = 0.f;
+        }
+        break;
+    }
+    case ECineTransitionState::FadeOut:
+    {
+        const float ratio = std::clamp(_cineTransitionTimer / CINE_FADE_OUT_TIME, 0.f, 1.f);
+        
+        // UI_PlayerHUD가 이미 보유하고 있는 스크린 페이드 패널을 이용해 점진적 암전 처리
+        if (_screenFadePanel)
+            _screenFadePanel->Set_FadeAlpha(ratio); 
+        // 암전이 완전해지면 재생 대기 상태로 전환
+        if (ratio >= 1.f)
+        {
+            _cineTransitionState = ECineTransitionState::ReadyToPlay;
+        }
+        break;
+    }
+    case ECineTransitionState::ReadyToPlay:
+    {
+        // 1. 완전히 까매진 상태에서 실제 런타임 시네마틱 재생을 엔진에 요청
+        // 3번째 인자 true는 시네마틱 재생 도중에도 엔진 차원의 입력 차단을 유지함을 의미
+        GAME->Play_Cinematic(Utils::ToWString(_pendingCinematicTag), nullptr, true);
+        
+        _cineTransitionState = ECineTransitionState::Playing;
+        _cineTransitionTimer = 0.f;
+        
+        // 3. 시네마틱 시퀀스 재생 시 첫 프레임부터 화면을 보여줘야 하므로 페이드는 즉시 걷어냄
+        // (필요에 따라 시네마틱 시퀀스 트랙 내부에서 0~1초간 카메라 페이드를 걷어내는 로직과 연계 가능)
+        if (_screenFadePanel) 
+            _screenFadePanel->Set_FadeAlpha(0.f); 
+        break;
+    }
+    case ECineTransitionState::Playing:
+    {
+        break;
+    }
+    case ECineTransitionState::BarsOut:
+    {
+        const float uiRefWidth = GAME->Get_UIReferenceWidth();
+        const float uiRefHeight = GAME->Get_UIReferenceHeight();
+
+        const float ratio = std::clamp(_cineTransitionTimer / CINE_BARS_IN_TIME, 0.f, 1.f);
+        const float t = powf(ratio, 3.f);
+
+        if (_cineBarTop)
+        {
+            float startY = (CINE_BAR_HEIGHT * 0.5f);
+            float endY = -(CINE_BAR_HEIGHT * 0.5f);
+            _cineBarTop->Set_UIPosition(uiRefWidth * 0.5f, std::lerp(startY, endY, t));
+        }
+
+        if (_cineBarBottom)
+        {
+            float startY = uiRefHeight - (CINE_BAR_HEIGHT * 0.5f);
+            float endY = uiRefHeight + (CINE_BAR_HEIGHT * 0.5f);
+            _cineBarBottom->Set_UIPosition(uiRefWidth * 0.5f, std::lerp(startY, endY, t));
+        }
+
+        if (ratio >= 1.f)
+        {
+            if (_cineBarTop) _cineBarTop->Set_Visibility(false);
+            if (_cineBarBottom) _cineBarBottom->Set_Visibility(false);
+
+            _cineTransitionState = ECineTransitionState::Idle;
+            _cineTransitionTimer = 0.f;
+        }
+        break;
+    }
+    }
 }
 
 HRESULT UI_PlayerHUD::Ready_CombatLines()
@@ -552,10 +855,10 @@ void UI_PlayerHUD::Stop_CombatLineBurst()
 
 HRESULT UI_PlayerHUD::Ready_KOAnnounce()
 {
-    const float uiRefWidth = GAME->Get_UIReferenceWidth(); 
+    const float uiRefWidth = GAME->Get_UIReferenceWidth();
     const float uiRefHeight = GAME->Get_UIReferenceHeight();
-    const float announceX = (uiRefWidth * 0.5f) + _koAnnounceOffsetX; 
-    const float announceY = (uiRefHeight * 0.30f) + _koAnnounceOffsetY; 
+    const float announceX = (uiRefWidth * 0.5f) + _koAnnounceOffsetX;
+    const float announceY = (uiRefHeight * 0.30f) + _koAnnounceOffsetY;
 
     Background::FBackgroundDesc koBgDesc{};
     koBgDesc.name = L"KO_BG";
@@ -575,7 +878,7 @@ HRESULT UI_PlayerHUD::Ready_KOAnnounce()
         &koBgDesc);
     CHECK_NULL(_koBackground, E_FAIL);
 
-    Background::FBackgroundDesc koTextDesc{}; 
+    Background::FBackgroundDesc koTextDesc{};
     koTextDesc.name = L"KO_Text";
     koTextDesc.posX = announceX;
     koTextDesc.posY = announceY;
@@ -648,7 +951,7 @@ void UI_PlayerHUD::Update_KOAnnounce(float timeDelta)
     const float elapsedTime = KO_ANNOUNCE_VISIBLE_TIME - _koVisibleTimer;
     const float bgIntroRatio = (KO_BG_FADE_IN_TIME > FLT_EPSILON)
         ? elapsedTime / KO_BG_FADE_IN_TIME
-        : 1.f; 
+        : 1.f;
     const float clampedBgIntroRatio = clamp(bgIntroRatio, 0.f, 1.f);
 
     const float textElapsedTime = elapsedTime - KO_TEXT_DELAY_TIME;
@@ -660,9 +963,9 @@ void UI_PlayerHUD::Update_KOAnnounce(float timeDelta)
 
     const float fadeAlpha = (_koVisibleTimer < KO_ANNOUNCE_FADE_TIME)
         ? clamp(_koVisibleTimer / KO_ANNOUNCE_FADE_TIME, 0.f, 1.f)
-        : 1.f; 
+        : 1.f;
 
-    const float bgAlpha = clampedBgIntroRatio * fadeAlpha; 
+    const float bgAlpha = clampedBgIntroRatio * fadeAlpha;
     const float textAlpha = isTextVisible ? fadeAlpha : 0.f;
     const float popScale = ::lerp(KO_ANNOUNCE_START_SCALE, 1.f, clampedTextIntroRatio);
 
@@ -848,6 +1151,8 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
     CHECK_FAILED(Ready_Timer(), E_FAIL);
     CHECK_FAILED(Ready_WireLockOn(), E_FAIL);
     CHECK_FAILED(Ready_MissionClearUI(), E_FAIL);
+    CHECK_FAILED(Ready_MissionTitleUI(), E_FAIL);
+    CHECK_FAILED(Ready_CinematicTransition(), E_FAIL);
 
     return S_OK;
 }
@@ -1011,6 +1316,18 @@ void UI_PlayerHUD::Free()
     {
         hub.OnMissionMarkerTargetCleared.Remove(_missionMarkerClearHandle);
         _missionMarkerClearHandle.Reset();
+    }
+
+    if (_waveStartedHandle.IsValid())
+    {
+        GAME->Get_DelegateHub().OnWaveStarted.Remove(_waveStartedHandle);
+        _waveStartedHandle.Reset();
+    }
+    
+    if (_cineFinishedHandle.IsValid())
+    {
+        GAME->Get_DelegateHub().OnCinematicFinished.Remove(_cineFinishedHandle);
+        _cineFinishedHandle.Reset();
     }
 
     HUD::Free();

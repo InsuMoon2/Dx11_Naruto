@@ -5,6 +5,7 @@
 #include "EditorInstance.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "Loader.h"
 #include "ResourceLoader.h"
 #include "VIBuffer_Rect.h"
 #include "Event_Manager.h"
@@ -138,6 +139,10 @@ HRESULT Editor_MainApp::Ready_StaticLevel()
     CHECK_FAILED(resourceLoader->Load_TextureTable(
         TEXT("../../Client/Bin/Resources/Data/json/DT_Texture.json")), E_FAIL);
 
+    Loader componentRegistrar(_device, _context);
+    componentRegistrar.Register_Components();
+    componentRegistrar.Initialize_BT_Nodes();
+
     CHECK_FAILED(GAME->Add_Component_Prototype(
         ETOI(ELevelType::Static),
         Protocol::COMPONENT_TYPE_RECT,
@@ -170,7 +175,14 @@ HRESULT Editor_MainApp::Ready_StartLevel(ELevelType startLevelID)
     if (ELevelType::Loading == startLevelID)
         return E_FAIL;
 
-    const bool loadSharedResources = false;
+    const bool isRuntimeBattleLevel =
+        (startLevelID == ELevelType::GamePlay) ||
+        (startLevelID == ELevelType::Konoha);
+
+    const bool loadSharedResources =
+        startLevelID == ELevelType::MainTitle ||
+        startLevelID == ELevelType::CharacterSetup ||
+        isRuntimeBattleLevel;
 
     if (FAILED(GAME->Change_Level(ETOI(ELevelType::Loading),
         Level_Loading::Create(_device, _context, startLevelID, loadSharedResources))))

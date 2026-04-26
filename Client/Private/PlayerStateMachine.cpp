@@ -160,7 +160,7 @@ void PlayerStateMachine::BeginPlay()
     Register_Skill(ETOI(ESkillType::FireBall));
 
     Register_Skill(ETOI(ESkillType::ShinsuSenju));
-    Register_Skill(ETOI(ESkillType::Kirin));
+    Register_Skill(ETOI(ESkillType::Kamui));
 
     Change_State(EPlayerState::Idle);
 }
@@ -707,6 +707,27 @@ void PlayerStateMachine::Force_Enter_State(EPlayerState stateID)
 
 	if (_currentState)
 		_currentState->Enter(this);
+}
+
+void PlayerStateMachine::Reset_CombatReturnState()
+{
+    // Idle/Run 진입 시 이전 공격 상태의 콤보 진행도를 초기화해 다음 평타가 1타부터 시작되게 한다.
+    if (auto attackState = Get_State<PlayerState_Attack>(EPlayerState::Attack))
+    {
+        attackState->Reset_Combo();
+    }
+
+    // 공중 공격에서 Idle/Run으로 강제 복귀한 경우에도 공중 콤보 진행도를 남기지 않는다.
+    if (auto jumpAttackState = Get_State<PlayerState_JumpAttack>(EPlayerState::JumpAttack))
+    {
+        jumpAttackState->Reset_Combo();
+    }
+
+    // 현재 상태 기준으로 무기 소켓을 다시 계산해 검술 무기가 손에 남아있지 않게 한다.
+    if (auto player = dynamic_pointer_cast<Player>(Get_Owner()))
+    {
+        player->Refresh_WeaponAttachment_ByCurrentState();
+    }
 }
 
 json PlayerStateMachine::To_Json() const

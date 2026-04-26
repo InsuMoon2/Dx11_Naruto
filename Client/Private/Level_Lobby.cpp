@@ -12,9 +12,10 @@
 #include "Spawn_Helper.h"
 #include "UI_Text.h"
 #include "Level_Loading.h"
+#include "AnimationStateComponent.h"
+#include "Model.h"
+#include "PartObject.h"
 
-// 서버에서 받은 UTF-8 채팅 문자열을 UI에 표시하기 위해 wide 문자열로 변환한다.
-// 로비 채팅 표시 경로에만 사용하는 국소 변환 함수다.
 static wstring Utf8ToWString(const string& value)
 {
     if (value.empty())
@@ -75,6 +76,8 @@ void Level_Lobby::Update(float timeDelta)
     Level::Update(timeDelta);
 
     Update_PreviewCameraZoom();
+    Update_PlayerNameplates();
+    Update_PreviewPlayerAnimations();
 
     Try_SendLobbyJoin();
 
@@ -121,7 +124,6 @@ HRESULT Level_Lobby::Ready_Layer_UI()
 {
     const Vec2 viewport = { GAME->Get_UIReferenceWidth(), GAME->Get_UIReferenceHeight() };
 
-    // Background
     Background::FBackgroundDesc backDesc{};
     backDesc.name = TEXT("CharacterSetup_Background");
     backDesc.posX = viewport.x * 0.5f;
@@ -144,7 +146,6 @@ HRESULT Level_Lobby::Ready_Layer_UI()
     CHECK_NULL(mainTitle, E_FAIL);
     mainTitle->Set_RenderGroup(ERenderGroup::BackgroundUI);
 
-    // Chatting Chang
     Background::FBackgroundDesc chatChagDesc{};
     chatChagDesc.name = TEXT("ChattingChang");
     chatChagDesc.posX = viewport.x * 0.3f - 260.f;
@@ -167,7 +168,6 @@ HRESULT Level_Lobby::Ready_Layer_UI()
     if (!_chatBackground)
         return E_FAIL;
 
-    // 채팅창 입력 창
     Background::FBackgroundDesc chatInputDesc{};
     chatInputDesc.name = TEXT("ChattingChang_Input");
     chatInputDesc.posX = chatChagDesc.posX - 26.f;
@@ -190,7 +190,6 @@ HRESULT Level_Lobby::Ready_Layer_UI()
     if (!_chatInputBackground)
         return E_FAIL;
 
-    // 쿠나이 모양
     Background::FBackgroundDesc kunaiDesc{};
     kunaiDesc.name = TEXT("Roll_Selected");
     kunaiDesc.posX = 217.f;
@@ -215,7 +214,6 @@ HRESULT Level_Lobby::Ready_Layer_UI()
     if (!kunai)
         return E_FAIL;
 
-       // 채팅 로그 본문 텍스트 설명이다.
     {
         UI_Text::FUITextDesc chatLogDesc{};
         chatLogDesc.name = L"Lobby_Chat_Log";
@@ -226,7 +224,7 @@ HRESULT Level_Lobby::Ready_Layer_UI()
         chatLogDesc.sizeY = 360.f;
         chatLogDesc.zOrder = 0.52f;
         chatLogDesc.text = L"[Debug] Chat Log Ready";
-        chatLogDesc.style.fontFamily = L"Malgun Gothic";
+        chatLogDesc.style.fontFamily = UI_DEFAULT_FONT_FAMILY;
         chatLogDesc.style.fontSize = 18.f;
         chatLogDesc.style.color = Color(0.22f, 0.12f, 0.05f, 1.f);
         chatLogDesc.style.hAlign = ETextHAlign::Left;
@@ -242,7 +240,6 @@ HRESULT Level_Lobby::Ready_Layer_UI()
         CHECK_FAILED(GAME->Register_UI(EUILayer::HUD, _chatLogText), E_FAIL);
     }
 
-    // 현재 입력 중인 문자열을 보여주는 입력 텍스트 설명이다.
     {
         UI_Text::FUITextDesc chatInputDesc{};
         chatInputDesc.name = L"Lobby_Chat_Input";
@@ -253,7 +250,7 @@ HRESULT Level_Lobby::Ready_Layer_UI()
         chatInputDesc.sizeY = 40.f;
         chatInputDesc.zOrder = 0.53f;
         chatInputDesc.text = L"> _";
-        chatInputDesc.style.fontFamily = L"Malgun Gothic";
+        chatInputDesc.style.fontFamily = UI_DEFAULT_FONT_FAMILY;
         chatInputDesc.style.fontSize = 18.f;
         chatInputDesc.style.color = Color(0.18f, 0.08f, 0.04f, 1.f);
         chatInputDesc.style.hAlign = ETextHAlign::Left;
@@ -269,7 +266,6 @@ HRESULT Level_Lobby::Ready_Layer_UI()
         CHECK_FAILED(GAME->Register_UI(EUILayer::HUD, _chatInputText), E_FAIL);
     }
 
-    // 호스트 시작 안내를 보여주는 텍스트 설명이다.
     {
         UI_Text::FUITextDesc startGuideDesc{};
         startGuideDesc.name = L"Lobby_Start_Guide";
@@ -280,7 +276,7 @@ HRESULT Level_Lobby::Ready_Layer_UI()
         startGuideDesc.sizeY = 28.f;
         startGuideDesc.zOrder = 0.53f;
         startGuideDesc.text = L"Waiting for host...";
-        startGuideDesc.style.fontFamily = L"Malgun Gothic";
+        startGuideDesc.style.fontFamily = UI_DEFAULT_FONT_FAMILY;
         startGuideDesc.style.fontSize = 15.f;
         startGuideDesc.style.color = Color(0.35f, 0.18f, 0.08f, 1.f);
         startGuideDesc.style.hAlign = ETextHAlign::Center;
@@ -296,36 +292,35 @@ HRESULT Level_Lobby::Ready_Layer_UI()
         CHECK_FAILED(GAME->Register_UI(EUILayer::HUD, _startGuideText), E_FAIL);
     }
 
+    CHECK_FAILED(Ready_PlayerNameplates(), E_FAIL);
+
     Refresh_ChatLogText();
     Refresh_ChatInputText();
-
 
     return S_OK;
 }
 
 HRESULT Level_Lobby::Ready_PreviewScene()
 {
-    // 프리뷰용 라이트를 등록하기 전에 이전 레벨에서 남은 라이트를 정리한다.
     GAME->Clear_Lights();
 
-    // 로비 프리뷰 캐릭터를 안정적으로 보기 위한 기본 방향광이다.
     {
         FLightDesc lightDesc{};
         lightDesc.type = ELightType::Directional;
-        lightDesc.direction = Vec4(1.f, -1.f, 1.f, 0.f);
-        lightDesc.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
-        lightDesc.ambient = Vec4(0.8f, 0.8f, 0.8f, 1.f);
-        lightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+        lightDesc.direction = Vec4(0.15f, -0.55f, -0.82f, 0.f);
+        lightDesc.diffuse = Vec4(1.f, 0.96f, 0.9f, 1.f);
+        lightDesc.ambient = Vec4(0.35f, 0.35f, 0.38f, 1.f);
+        lightDesc.specular = Vec4(0.65f, 0.65f, 0.65f, 1.f);
+        lightDesc.castShadow = false;
 
         CHECK_FAILED(GAME->Add_Light(lightDesc), E_FAIL);
     }
 
-    // 로비 프리뷰 카메라다. 채팅창을 피해 오른쪽 슬롯 두 명을 보는 구도로 둔다.
     {
         Camera_Free::FCameraFreeDesc cameraDesc{};
         cameraDesc.speedPerSec = 10.f;
         cameraDesc.mouseSensor = 0.1f;
-        cameraDesc.eye = Vec3(7.1f, 1.45f, 3.35f);
+        cameraDesc.eye = Vec3(7.5f, 1.45f, 2.35f);
         cameraDesc.at = _previewLookTarget;
         cameraDesc.fovY = XMConvertToRadians(60.f);
         cameraDesc.nearZ = 0.1f;
@@ -378,6 +373,160 @@ void Level_Lobby::Update_PreviewCameraZoom()
     cameraPos = _previewLookTarget + toCamera * distance;
     transform->Set_LocalPosition(cameraPos);
     transform->LookAt(_previewLookTarget);
+}
+
+HRESULT Level_Lobby::Ready_PlayerNameplates()
+{
+    for (uint32 i = 0; i < static_cast<uint32>(_slotNameplates.size()); ++i)
+    {
+        Background::FBackgroundDesc nameplateDesc{};
+        nameplateDesc.name = format(L"Lobby_Player_Nameplate_{}", i + 1);
+        nameplateDesc.levelIndex = ETOI(ELevelType::Lobby);
+        nameplateDesc.posX = 0.f;
+        nameplateDesc.posY = 0.f;
+        nameplateDesc.sizeX = 260.f;
+        nameplateDesc.sizeY = 42.f;
+        nameplateDesc.zOrder = 0.56f;
+        nameplateDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_EQUIPMENT;
+        nameplateDesc.textureIndex = ETOI(ECharacterSetupTexture::SelectButton);
+
+        nameplateDesc.textDesc.text = L" ";
+        nameplateDesc.textDesc.offset = Vec2(0.f, 0.f);
+        nameplateDesc.textDesc.size = Vec2(235.f, 34.f);
+        nameplateDesc.textDesc.zOrderOffset = 0.01f;
+        nameplateDesc.textDesc.style.fontFamily = UI_DEFAULT_FONT_FAMILY;
+        nameplateDesc.textDesc.style.fontSize = 18.f;
+        nameplateDesc.textDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
+        nameplateDesc.textDesc.style.hAlign = ETextHAlign::Center;
+        nameplateDesc.textDesc.style.vAlign = ETextVAlign::Middle;
+        nameplateDesc.textDesc.style.wordWrap = false;
+
+        auto nameplate = static_pointer_cast<Background>(
+            GAME->Add_UI(
+                Protocol::OBJECT_TYPE_BACKGROUND,
+                EUILayer::HUD,
+                &nameplateDesc));
+
+        CHECK_NULL(nameplate, E_FAIL);
+
+        nameplate->Set_LabelText(L"");
+        nameplate->Set_Visibility(false);
+
+        _slotNameplates[i].background = nameplate;
+        _slotNameplates[i].displayedName.clear();
+    }
+
+    return S_OK;
+}
+
+void Level_Lobby::Update_PlayerNameplates()
+{
+    for (uint32 i = 0; i < static_cast<uint32>(_slotPlayers.size()); ++i)
+    {
+        auto player = _slotPlayers[i];
+        auto& nameplate = _slotNameplates[i];
+
+        if (!nameplate.background)
+            continue;
+
+        if (!player)
+        {
+            nameplate.background->Set_Visibility(false);
+            continue;
+        }
+
+        Vec3 nameWorldPosition = player->Get_Transform()->Get_WorldPosition();
+        nameWorldPosition.y += 2.15f;
+
+        Vec2 uiPosition{};
+        if (!Project_WorldToLobbyUI(nameWorldPosition, uiPosition))
+        {
+            nameplate.background->Set_Visibility(false);
+            continue;
+        }
+
+        const wstring& playerName = player->Get_PlayerName();
+        if (nameplate.displayedName != playerName)
+        {
+            nameplate.displayedName = playerName;
+            nameplate.background->Set_LabelText(playerName);
+        }
+
+        nameplate.background->Set_UIPosition(uiPosition.x, 68.f);
+        nameplate.background->Set_Visibility(true);
+    }
+}
+
+bool Level_Lobby::Project_WorldToLobbyUI(const Vec3& worldPosition, Vec2& outUIPosition) const
+{
+    const float uiScale = GAME->Get_UIScale();
+    if (uiScale <= FLT_EPSILON)
+        return false;
+
+    const Matrix* viewMatrix = GAME->Get_Transform(ETransformState::View);
+    const Matrix* projMatrix = GAME->Get_Transform(ETransformState::Proj);
+
+    if (!viewMatrix || !projMatrix)
+        return false;
+
+    Vec4 clipSpace = XMVector4Transform(
+        Vec4(worldPosition.x, worldPosition.y, worldPosition.z, 1.f),
+        (*viewMatrix) * (*projMatrix));
+
+    if (clipSpace.w <= FLT_EPSILON)
+        return false;
+
+    const float invW = 1.f / clipSpace.w;
+    const float ndcX = clipSpace.x * invW;
+    const float ndcY = clipSpace.y * invW;
+
+    if (ndcX < -1.f || ndcX > 1.f || ndcY < -1.f || ndcY > 1.f)
+        return false;
+
+    const float screenX = (ndcX * 0.5f + 0.5f) * GAME->Get_UIViewportWidth();
+    const float screenY = (-ndcY * 0.5f + 0.5f) * GAME->Get_UIViewportHeight();
+
+    const Vec2 uiOffset = GAME->Get_UIViewportOffset();
+
+    outUIPosition.x = (screenX - uiOffset.x) / uiScale;
+    outUIPosition.y = (screenY - uiOffset.y) / uiScale;
+
+    return true;
+}
+
+void Level_Lobby::Update_PreviewPlayerAnimations()
+{
+    for (uint32 i = 0; i < static_cast<uint32>(_slotPlayers.size()); ++i)
+    {
+        if (!_slotAppearancePlaying[i])
+            continue;
+
+        auto player = _slotPlayers[i];
+        if (!player)
+        {
+            _slotAppearancePlaying[i] = false;
+            continue;
+        }
+
+        auto animState = player->Get_Component<AnimationStateComponent>();
+        if (!animState)
+        {
+            _slotAppearancePlaying[i] = false;
+            continue;
+        }
+
+        if (animState->Get_CurrentStateName() != "Appearance")
+        {
+            _slotAppearancePlaying[i] = false;
+            continue;
+        }
+
+        if (animState->Is_CurrentStateFinished())
+        {
+            animState->Play_State("Lobby_Idle");
+            _slotAppearancePlaying[i] = false;
+        }
+    }
 }
 
 void Level_Lobby::Try_SendLobbyJoin()
@@ -460,8 +609,8 @@ Shared<Player> Level_Lobby::Ensure_SlotPlayer(uint32 slot)
         return _slotPlayers[index];
 
     const Vec3 slotPosition = (slot == 1)
-        ? Vec3(7.1f, 0.f, 0.f)
-        : Vec3(5.5f, 0.f, 0.f);
+        ? Vec3(7.15f, 0.f, 0.f)
+        : Vec3(5.65f, 0.f, 0.f);
 
     auto previewObj = Spawn_Helper::Prefab("PreviewPlayer")
         .AtLevel(ETOI(ELevelType::Lobby))
@@ -476,6 +625,16 @@ Shared<Player> Level_Lobby::Ensure_SlotPlayer(uint32 slot)
 
     player->Get_Transform()->Set_LocalRotation(0.f, 0.f, 0.f);
     _slotPlayers[index] = player;
+
+    if (auto animState = player->Get_Component<AnimationStateComponent>())
+    {
+        if (animState->Play_State("Appearance"))
+            _slotAppearancePlaying[index] = true;
+        else
+            animState->Play_State("Lobby_Idle");
+
+        Refresh_PreviewPoseForFirstRender(player);
+    }
 
     return player;
 }
@@ -493,6 +652,24 @@ void Level_Lobby::Apply_PlayerInfoToPreview(Shared<Player> player, const Protoco
         ContainerObject::EPartSlot slot = static_cast<ContainerObject::EPartSlot>(pair.first);
         const wstring assetTag = Utils::ToWString(pair.second);
         player->Apply_CustomizingPart(slot, assetTag);
+    }
+
+    Refresh_PreviewPoseForFirstRender(player);
+}
+
+void Level_Lobby::Refresh_PreviewPoseForFirstRender(Shared<Player> player)
+{
+    if (!player)
+        return;
+
+    if (auto model = player->Get_Component<Model>())
+        model->Play_Animation(0.f, false);
+
+    for (int32 i = 0; i < ETOI(ContainerObject::EPartSlot::END); ++i)
+    {
+        auto part = player->Get_PartObject(static_cast<ContainerObject::EPartSlot>(i));
+        if (part)
+            part->Update(0.f);
     }
 }
 
@@ -547,6 +724,8 @@ void Level_Lobby::Request_StartGame()
     if (!sendBuffer)
         return;
 
+    GAME->Play_Sound(L"OutfitSelect_StartGame.wav", ESoundChannel::UI, 0.55f);
+
     NetworkManager::GetInstance()->Send_Packet(sendBuffer);
     _startRequested = true;
 }
@@ -567,7 +746,6 @@ Shared<Level_Lobby> Level_Lobby::Create(ComPtr<Device> device, ComPtr<DeviceCont
 
 void Level_Lobby::Free()
 {
-    // 델리게이트 정리해야함
     GAME->Get_DelegateHub().OnLobbySnapshotReceived.Remove(_lobbySnapshotHandle);
     GAME->Get_DelegateHub().OnLobbyChatReceived.Remove(_lobbyChatHandle);
     GAME->Get_DelegateHub().OnLobbyStartGameReceived.Remove(_lobbyStartHandle);

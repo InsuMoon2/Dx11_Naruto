@@ -168,6 +168,33 @@ HRESULT Camera_Target::Render()
     return S_OK;
 }
 
+void Camera_Target::On_CinematicFinished()
+{
+    auto target = _targetTransform.lock();
+    if (!target || !_transformCom)
+        return;
+
+    Vec3 targetForward = target->Get_WorldForward();
+    targetForward.y = 0.f;
+    targetForward = Utils::Safe_Normalize(targetForward, Vec3::Forward);
+
+    _yaw = XMConvertToDegrees(atan2f(targetForward.x, targetForward.z));
+
+    Vec3 targetPos = target->Get_WorldPosition();
+    targetPos.y += _heightOffset;
+
+    const float pitchRad = XMConvertToRadians(_pitch);
+    const float yawRad = XMConvertToRadians(_yaw);
+
+    Vec3 camOffset;
+    camOffset.x = -cosf(pitchRad) * sinf(yawRad) * _distance;
+    camOffset.y = sinf(pitchRad) * _distance;
+    camOffset.z = -cosf(pitchRad) * cosf(yawRad) * _distance;
+
+    _transformCom->Set_LocalPosition(targetPos + camOffset);
+    _transformCom->LookAt(targetPos);
+}
+
 void Camera_Target::Request_CameraShake(const FCameraShakeDesc& request)
 {
     if (request.durationSec <= 0.f)

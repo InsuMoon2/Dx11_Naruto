@@ -1,0 +1,12 @@
+Diffuse=T_EFF_Default_02_M
+Normal=T_EFF_Noise_15_N
+Opacity=T_EFF_Noise_33_M
+Emissive=T_EFF_Noise_33_M
+Other[0]=T_EFF_GMS_Smoke_01_M
+Other[1]=T_EFF_GMO_03_M
+Other[2]=T_EFF_Gradation_08_M
+Other[3]=T_EFF_GMT_D55NJ2_04_BC
+Other[4]=T_EFF_Sphere_03_M
+Other[5]=T_EFF_GMO__Default_01_M
+Other[6]=T_EFF_GMT__Default_01_BC
+Other[7]=DefaultTexture

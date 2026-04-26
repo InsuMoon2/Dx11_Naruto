@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "EnemyCharacter.h"
 
 #include "CombatStat.h"
@@ -101,7 +101,10 @@ void EnemyCharacter::Update(float timeDelta)
     }
     else if (_aiController)
     {
-        _aiController->Update(timeDelta);
+        if (!GAME->Is_CinematicPlaying())
+        {
+            _aiController->Update(timeDelta);
+        }
     }
 
     if (_model)
@@ -254,10 +257,23 @@ void EnemyCharacter::OnDamaged(const FDamageEvent& damageEvent)
             blackboard->Set_ValueAsInt("HitReactionType", static_cast<int32>(damageEvent.hitReactionType));
             blackboard->Set_ValueAsInt("HitReactionSerial", sHitReactionSerial);
             blackboard->Set_ValueAsString("HitAnimState", hitAnimState);
+
+            if (damageEvent.damageCauser && !damageEvent.damageCauser->Is_Destroy())
+            {
+                blackboard->Set_ValueAsObject("LastDamageCauser", damageEvent.damageCauser);
+                blackboard->Set_ValueAsObject("TargetObjectKey", damageEvent.damageCauser);
+
+                auto causerTransform = damageEvent.damageCauser->Get_Transform();
+                if (causerTransform)
+                {
+                    blackboard->Set_ValueAsVector(
+                        "TargetLocationKey",
+                        causerTransform->Get_WorldPosition());
+                }
+            }
         }
     }
 }
-
 
 void EnemyCharacter::OnDead(const FDamageEvent& damageEvent)
 {

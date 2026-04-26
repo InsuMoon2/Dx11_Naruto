@@ -49,6 +49,9 @@ public:
         float emissiveStrength = 1.f;
         float fresnelPower = 0.f;
         float fresnelMultiplier = 1.f;
+        bool useScreenDistortion = false;            // true면 이 material은 Mesh 전용 화면 굴절 패스로 렌더링된다.
+        float screenDistortionStrength = 0.03f;      // UV distortion 텍스처가 SceneColorCopy 샘플 UV를 흔드는 강도다.
+        float screenDistortionRadialStrength = 0.f;  // 메쉬 UV 중심 기준으로 화면을 밀거나 빨아들이는 방사형 강도다.
         Vec4 customParams0 = Vec4::Zero; // 장벽/림 같은 Mesh 전용 셰이더 옵션을 런타임에 넘길 사용자 정의 파라미터 0번 슬롯이다.
         Vec4 customParams1 = Vec4::Zero; // 장벽/림 같은 Mesh 전용 셰이더 옵션을 런타임에 넘길 사용자 정의 파라미터 1번 슬롯이다.
 
@@ -121,6 +124,7 @@ private:
     uint32 Resolve_ShaderComponentId() const;
     bool   Has_OpacityTexture(const FEffectMeshMaterialRuntimeDesc& meshDesc) const;
     bool   Has_NonOpaquePass() const;
+    bool   Has_ScreenDistortionPass() const; // ScreenDistortion 렌더 그룹에 등록해야 하는 Mesh material이 있는지 확인한다.
     FEffectMeshMaterialRuntimeDesc Resolve_RuntimeMeshDesc(uint32 meshIndex) const;
     const FResolvedMaterialResources* Resolve_RuntimeMaterialResources(uint32 meshIndex) const;
 

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Camera_Manager.h"
 
 #include "Camera.h"
@@ -368,7 +368,12 @@ void Camera_Manager::Stop_Cinematic()
     _cineAnchorTransform.reset();
 
     if (auto origin = _originCamera.lock())
+    {
         Set_ActiveCamera(origin);
+        origin->On_CinematicFinished();
+    }
+
+    GAME->Get_DelegateHub().OnCinematicFinished.Broadcast();
 
     // 이번 시네마틱이 입력을 막았던 경우에만 복구
     if (_blockGameInputOnCinematic)

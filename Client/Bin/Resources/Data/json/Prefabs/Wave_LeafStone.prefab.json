@@ -1,0 +1,100 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                -0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "type": "COMPONENT_TYPE_EFFECT"
+        },
+        {
+            "bounding": {
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "extents": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            },
+            "channel": "",
+            "collision_preset": "Trigger",
+            "is_active": true,
+            "shape": "OBB",
+            "type": "COMPONENT_TYPE_COLLIDER"
+        }
+    ],
+    "custom_properties": {
+        "clear_delay_sec": 1.0,
+        "default_effect_asset_name": "",
+        "play_default_effect_on_begin_play": true,
+        "play_trigger_effect_on_trigger": true,
+        "show_mission_marker": true,
+        "spawn_entries": [
+            {
+                "object_type_override": "OBJECT_TYPE_MONSTER_LEAF",
+                "position": [
+                    1.100000023841858,
+                    0.0,
+                    0.0
+                ],
+                "prefab_name": "Monster_Leaf",
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            {
+                "object_type_override": "OBJECT_TYPE_MONSTER_WOOD",
+                "position": [
+                    -1.2999999523162842,
+                    0.0,
+                    0.0
+                ],
+                "prefab_name": "Monster_Wood",
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        ],
+        "spawn_layer_tag": "Layer_Builder",
+        "stop_default_effect_on_trigger": true,
+        "trigger_effect_asset_name": "",
+        "trigger_once": false,
+        "wave_tag": "GamePlayClearWave"
+    },
+    "guid": "8b468c29-1f4c-4869-a5ec-50ae45f507d1",
+    "object_type": "OBJECT_TYPE_WAVE_TRIGGER",
+    "prefab_name": "Wave_LeafStone",
+    "static_class": "Wave_LeafStone"
+}

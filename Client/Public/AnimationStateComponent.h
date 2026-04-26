@@ -51,6 +51,9 @@ public:
     void    BeginPlay() override;
 
 public:
+    // 스킬 오브젝트처럼 한 오브젝트에 여러 Model이 붙는 경우, 이 애니메이션 스테이트가 제어할 Model을 직접 지정한다.
+    void    Set_Model(Shared<Model> model);
+
     // stateKey에 해당하는 애니메이션 재생되게
     bool    Play_State(const string& stateKey);
 

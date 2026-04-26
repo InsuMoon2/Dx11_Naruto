@@ -140,7 +140,9 @@ void EffectMeshObject::Late_Update(float timeDelta)
 {
     GameObject::Late_Update(timeDelta);
 
-    if (Has_NonOpaquePass())
+    if (Has_ScreenDistortionPass())
+        GAME->Add_RenderGroup(ERenderGroup::ScreenDistortion, GetSharedPtr());
+    else if (Has_NonOpaquePass())
         GAME->Add_RenderGroup(ERenderGroup::Blend, GetSharedPtr());
     else
         GAME->Add_RenderGroup(ERenderGroup::NonBlend, GetSharedPtr());
@@ -174,6 +176,17 @@ HRESULT EffectMeshObject::Bind_ShaderResources()
 
 HRESULT EffectMeshObject::Bind_ShaderResources(uint32 meshIndex)
 {
+    // Mesh shader variants can differ between static/skeletal effects, so new distortion uniforms are optional.
+    auto BindOptionalRaw = [this](const char* name, const void* data, uint32 size)
+        {
+            _shaderCom->Bind_RawValue(name, data, size);
+        };
+
+    auto BindOptionalNullSrv = [this](const char* name)
+        {
+            _shaderCom->Bind_SRV(name, nullptr);
+        };
+
     const FEffectMeshMaterialRuntimeDesc meshDesc = Resolve_RuntimeMeshDesc(meshIndex);
     const FResolvedMaterialResources* materialResources = Resolve_RuntimeMaterialResources(meshIndex);
     Shared<Texture> diffuseTexture = materialResources ? materialResources->diffuseTexture : _diffuseTexture;
@@ -206,6 +219,14 @@ HRESULT EffectMeshObject::Bind_ShaderResources(uint32 meshIndex)
     const int flipbookColumns = (std::max)(meshDesc.flipbook.columns, 1);
     const int flipbookRows = (std::max)(meshDesc.flipbook.rows, 1);
     const int flipbookLoop = meshDesc.flipbook.loop ? 1 : 0;
+    Vec2 screenDistortionInvViewportSize = Vec2(1.f, 1.f); // 현재 viewport 픽셀 좌표를 화면 UV로 변환하기 위한 역해상도다.
+
+    UINT viewportCount = 1; // Mesh distortion이 Scene/Game/Effect View 크기를 직접 따르도록 현재 viewport 하나를 읽는다.
+    D3D11_VIEWPORT viewport{};
+    _context->RSGetViewports(&viewportCount, &viewport);
+
+    if (viewport.Width > 0.f && viewport.Height > 0.f)
+        screenDistortionInvViewportSize = Vec2(1.f / viewport.Width, 1.f / viewport.Height);
 
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_WorldMatrix", &_transformCom->Get_WorldMatrix()), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_Matrix("g_ViewMatrix", GAME->Get_Transform(ETransformState::View)), E_FAIL);
@@ -260,6 +281,9 @@ HRESULT EffectMeshObject::Bind_ShaderResources(uint32 meshIndex)
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookStartFrame", &meshDesc.flipbook.startFrame, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookEndFrame", &meshDesc.flipbook.endFrame, sizeof(int)), E_FAIL);
     CHECK_FAILED(_shaderCom->Bind_RawValue("g_FlipbookLoop", &flipbookLoop, sizeof(int)), E_FAIL);
+    BindOptionalRaw("g_ScreenDistortionInvViewportSize", &screenDistortionInvViewportSize, sizeof(Vec2));
+    BindOptionalRaw("g_ScreenDistortionStrength", &meshDesc.screenDistortionStrength, sizeof(float));
+    BindOptionalRaw("g_ScreenDistortionRadialStrength", &meshDesc.screenDistortionRadialStrength, sizeof(float));
 
     if (diffuseTexture)
         {CHECK_FAILED(diffuseTexture->Bind_SRV(_shaderCom, "g_DiffuseTexture", 0), E_FAIL);}
@@ -315,6 +339,15 @@ HRESULT EffectMeshObject::Bind_ShaderResources(uint32 meshIndex)
         {CHECK_FAILED(specularTexture->Bind_SRV(_shaderCom, "g_SpecularTexture", 0), E_FAIL);}
     else
         {CHECK_FAILED(_shaderCom->Bind_SRV("g_SpecularTexture", nullptr), E_FAIL);}
+
+    if (meshDesc.useScreenDistortion && !Is_SkeletalLayer())
+    {
+        CHECK_FAILED(GAME->Bind_RT_ShaderResource(_shaderCom, "g_SceneColorTexture", L"Target_SceneColorCopy"), E_FAIL);
+    }
+    else
+    {
+        BindOptionalNullSrv("g_SceneColorTexture");
+    }
 
     return S_OK;
 }
@@ -709,6 +742,9 @@ uint32 EffectMeshObject::Resolve_PassIndex(const FEffectMeshMaterialRuntimeDesc&
     const EEffectBlendMode runtimeBlendMode = Resolve_RuntimeBlendMode(meshDesc);
     const bool hasOpacity = Has_OpacityTexture(meshDesc);
 
+    if (meshDesc.useScreenDistortion && !Is_SkeletalLayer())
+        return twoSided ? 11 : 10;
+
     if (!twoSided)
     {
         if (runtimeBlendMode == EEffectBlendMode::Opaque)
@@ -751,6 +787,23 @@ bool EffectMeshObject::Has_NonOpaquePass() const
     return false;
 }
 
+bool EffectMeshObject::Has_ScreenDistortionPass() const
+{
+    if (Is_SkeletalLayer())
+        return false;
+
+    if (!_modelCom || _modelCom->Get_NumMeshes() == 0)
+        return Resolve_RuntimeMeshDesc(0).useScreenDistortion;
+
+    for (uint32 i = 0; i < static_cast<uint32>(_modelCom->Get_NumMeshes()); ++i)
+    {
+        if (Resolve_RuntimeMeshDesc(i).useScreenDistortion)
+            return true;
+    }
+
+    return false;
+}
+
 EffectMeshObject::FEffectMeshMaterialRuntimeDesc EffectMeshObject::Resolve_RuntimeMeshDesc(uint32 meshIndex) const
 {
     FEffectMeshMaterialRuntimeDesc result{};
@@ -781,6 +834,9 @@ EffectMeshObject::FEffectMeshMaterialRuntimeDesc EffectMeshObject::Resolve_Runti
     result.emissiveStrength = _layerDesc.mesh.emissiveStrength;
     result.fresnelPower = _layerDesc.mesh.fresnelPower;
     result.fresnelMultiplier = _layerDesc.mesh.fresnelMultiplier;
+    result.useScreenDistortion = _layerDesc.mesh.useScreenDistortion;
+    result.screenDistortionStrength = _layerDesc.mesh.screenDistortionStrength;
+    result.screenDistortionRadialStrength = _layerDesc.mesh.screenDistortionRadialStrength;
     result.customParams0 = _layerDesc.mesh.customParams0;
     result.customParams1 = _layerDesc.mesh.customParams1;
     result.twoSided = _layerDesc.mesh.twoSided;
@@ -829,6 +885,9 @@ EffectMeshObject::FEffectMeshMaterialRuntimeDesc EffectMeshObject::Resolve_Runti
         result.emissiveStrength = overrideDesc.emissiveStrength;
         result.fresnelPower = overrideDesc.fresnelPower;
         result.fresnelMultiplier = overrideDesc.fresnelMultiplier;
+        result.useScreenDistortion = overrideDesc.useScreenDistortion;
+        result.screenDistortionStrength = overrideDesc.screenDistortionStrength;
+        result.screenDistortionRadialStrength = overrideDesc.screenDistortionRadialStrength;
         result.twoSided = overrideDesc.twoSided;
         result.useOpacityAsTransparency = overrideDesc.useOpacityAsTransparency;
         break;

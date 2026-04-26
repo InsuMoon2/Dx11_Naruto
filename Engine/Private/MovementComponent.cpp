@@ -481,6 +481,55 @@ bool MovementComponent::Try_WireDash_WallTrace(
     return true;
 }
 
+bool MovementComponent::Try_WireDash_SurfaceTrace(
+    const Vec3& traceStart,
+    const Vec3& traceDir,
+    FWireDashSurfaceHit& outHit) const
+{
+    outHit = FWireDashSurfaceHit{};
+
+    Vec3 dir = Utils::Safe_Normalize(traceDir, Vec3::Forward);
+
+    FWireDashSurfaceHit bestSurfaceHit{};
+
+    FSurfaceHit wallHit{};
+    if (Try_WireDash_WallTrace(traceStart, dir, wallHit))
+    {
+        bestSurfaceHit.surfaceType = EWireDashSurfaceType::Wall;
+        bestSurfaceHit.surfaceHit = wallHit;
+    }
+
+    FPhysXRaycastHit physXGroundHit{};
+    const bool isGroundHit = GAME->Raycast_PhysX(
+        traceStart,
+        dir,
+        _wireDashDesc.maxDistance,
+        physXGroundHit,
+        ECollisionProxyType::Walkable);
+
+    if (isGroundHit)
+    {
+        FSurfaceHit groundHit{};
+        groundHit.hitPoint = physXGroundHit.position;
+        groundHit.hitNormal = Utils::Safe_Normalize(physXGroundHit.normal, Vec3::Up);
+        groundHit.hitDistance = physXGroundHit.distance;
+        groundHit.isValid = true;
+
+        if (Is_GroundLikeNormal(groundHit.hitNormal) &&
+            (!bestSurfaceHit.surfaceHit.isValid || groundHit.hitDistance < bestSurfaceHit.surfaceHit.hitDistance))
+        {
+            bestSurfaceHit.surfaceType = EWireDashSurfaceType::Ground;
+            bestSurfaceHit.surfaceHit = groundHit;
+        }
+    }
+
+    if (bestSurfaceHit.surfaceType == EWireDashSurfaceType::None || !bestSurfaceHit.surfaceHit.isValid)
+        return false;
+
+    outHit = bestSurfaceHit;
+    return true;
+}
+
 void MovementComponent::Update_Rotation(float timeDelta, Shared<Transform> transform)
 {
     if (!_bOrientRotationToMovement)
@@ -566,6 +615,9 @@ void MovementComponent::Update_Velocity(float timeDelta, Shared<Transform> trans
         _velocity.y = ::lerp(_velocity.y, targetVelocity.y, alpha);
         _velocity.z = ::lerp(_velocity.z, targetVelocity.z, alpha);
 
+        // 이전 tick의 벽 법선이 남긴 안쪽 속도 성분을 제거해서 얇은 벽/코너로 계속 파고드는 누적을 막는다.
+        _velocity = Utils::Project_OnPlane(_velocity, _currentWallNormal);
+
         return;
     }
 
@@ -621,7 +673,7 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
 
         if (_isWallRunning)
         {
-            const float wallRunLostContactGrace = 0.25f;
+            const float wallRunLostContactGrace = 0.10f; // 작은 표면 틈은 넘기되, 모서리 뒤쪽으로 오래 끌려가지 않도록 짧게 제한한다.
             const float wallRunStepDelta = timeDelta / static_cast<float>(subStepCount);
 
             // 벽타기 중 먼저 상단 착지 가능 여부를 본다.
@@ -653,12 +705,10 @@ void MovementComponent::Apply_Movement(float timeDelta, Shared<Transform> transf
             _wallRunLostContactElapsed += wallRunStepDelta;
             if (_wallRunLostContactElapsed < wallRunLostContactGrace)
             {
-                FSurfaceHit fallbackHit{};
-                fallbackHit.hitNormal = _currentWallNormal;
-                fallbackHit.hitPoint = _currentWallHitPoint;
-                fallbackHit.isValid = true;
-
-                if (Resolve_WallRunContact(transform, previousPos, fallbackHit))
+                FSurfaceHit recoveredHit{};
+                if (Trace_WallRunSurface(currentPos, _currentWallNormal, recoveredHit) &&
+                    recoveredHit.hitNormal.Dot(_currentWallNormal) >= 0.55f &&
+                    Resolve_WallRunContact(transform, previousPos, recoveredHit))
                 {
                     currentPos = transform->Get_WorldPosition();
                     continue;
@@ -1009,41 +1059,67 @@ Vec3 MovementComponent::Build_WallRunMoveDirection() const
 
 bool MovementComponent::Detect_FloorBelow(const Vec3& currentPos, FSurfaceHit& outHit) const
 {
-    const Vec3 rayStart = currentPos + Vec3(0.f, _moveDesc.groundTraceStartOffsetY, 0.f);
     const float traceDistance = _moveDesc.groundTraceStartOffsetY + 2.0f;
-    const Vec3 rayEnd = rayStart + Vec3(0.f, -1.f, 0.f) * traceDistance;
-
-    FPhysXRaycastHit physXHit{};
-    const bool isHit = GAME->Raycast_PhysX(
-        rayStart,
-        Vec3(0.f, -1.f, 0.f),
-        traceDistance,
-        physXHit);
-
-    FSurfaceHit hit{};
-    if (isHit)
+    const float bodyTraceRadius = Calculate_BodyTraceRadius(_moveDesc.wallAttachOffset); // 낙하 중 지붕 가장자리를 중앙 ray 하나로 놓치지 않기 위한 몸통 반경이다.
+    const float edgeSampleOffset = bodyTraceRadius * 0.60f; // 너무 바깥을 찍어 허공 착지하지 않도록 몸통 반경보다 안쪽에서 보조 ray를 쏜다.
+    const Vec3 floorSampleOffsets[5] =
     {
-        hit.hitPoint = physXHit.position;
-        hit.hitNormal = Utils::Safe_Normalize(physXHit.normal, Vec3::Up);
-        hit.hitDistance = physXHit.distance;
-        hit.isValid = true;
+        Vec3::Zero,
+        Vec3(edgeSampleOffset, 0.f, 0.f),
+        Vec3(-edgeSampleOffset, 0.f, 0.f),
+        Vec3(0.f, 0.f, edgeSampleOffset),
+        Vec3(0.f, 0.f, -edgeSampleOffset)
+    };
+
+    FSurfaceHit bestHit{};
+    Vec3 debugStart = currentPos + Vec3(0.f, _moveDesc.groundTraceStartOffsetY, 0.f);
+    Vec3 debugEnd = debugStart + Vec3(0.f, -1.f, 0.f) * traceDistance;
+
+    for (const Vec3& sampleOffset : floorSampleOffsets)
+    {
+        const Vec3 rayStart = currentPos + sampleOffset + Vec3(0.f, _moveDesc.groundTraceStartOffsetY, 0.f);
+        const Vec3 rayEnd = rayStart + Vec3(0.f, -1.f, 0.f) * traceDistance;
+
+        FPhysXRaycastHit physXHit{};
+        const bool isHit = GAME->Raycast_PhysX(
+            rayStart,
+            Vec3(0.f, -1.f, 0.f),
+            traceDistance,
+            physXHit);
+
+        FSurfaceHit hit{};
+        if (isHit)
+        {
+            hit.hitPoint = physXHit.position;
+            hit.hitNormal = Utils::Safe_Normalize(physXHit.normal, Vec3::Up);
+            hit.hitDistance = physXHit.distance;
+            hit.isValid = true;
+        }
+
+        Draw_TraceDebug(rayStart, rayEnd, hit);
+
+        if (!isHit)
+            continue;
+
+        if (!Is_GroundLikeNormal(hit.hitNormal))
+            continue;
+
+        if (!bestHit.isValid || hit.hitDistance < bestHit.hitDistance)
+        {
+            bestHit = hit;
+            debugStart = rayStart;
+            debugEnd = rayEnd;
+        }
     }
 
-    Draw_TraceDebug(rayStart, rayEnd, hit);
-
-    if (!isHit)
+    if (!bestHit.isValid)
     {
         outHit = FSurfaceHit{};
         return false;
     }
 
-    if (!Is_GroundLikeNormal(hit.hitNormal))
-    {
-        outHit = FSurfaceHit{};
-        return false;
-    }
-
-    outHit = hit;
+    Draw_TraceDebug(debugStart, debugEnd, bestHit);
+    outHit = bestHit;
     return true;
 }
 
@@ -1271,7 +1347,7 @@ bool MovementComponent::Resolve_WallRunContact(Shared<Transform> transform, cons
     // 코너나 경사면에서 다른 표면을 집는 경우를 줄이기 위해 법선 방향이 너무 다르면 실패로 본다.
     const Vec3 requestedNormal = Utils::Safe_Normalize(wallHit.hitNormal, Vec3::Up);
     const Vec3 verifiedNormal = Utils::Safe_Normalize(verifiedHit.hitNormal, Vec3::Up);
-    if (requestedNormal.Dot(verifiedNormal) < 0.15f)
+    if (requestedNormal.Dot(verifiedNormal) < 0.35f)
         return false;
 
     Apply_WallRunPosition(transform, verifiedHit);
@@ -1583,10 +1659,26 @@ void MovementComponent::Apply_CeilingBlock(const Vec3& previousPos, Shared<Trans
 
     const float headTraceStartOffsetY = _moveDesc.wallTraceStartOffsetY + 0.35f;
     const float traceDistance = moveDelta.y + 0.10f;
-    const Vec3 rayStart = previousPos + Vec3(0.f, headTraceStartOffsetY, 0.f);
-    const Vec3 rayEnd = rayStart + Vec3::Up * traceDistance;
+    const float bodyTraceRadius = Calculate_BodyTraceRadius(_moveDesc.wallAttachOffset); // 상승 점프에서 몸통 가장자리가 지붕 하부를 먼저 치는 경우를 잡기 위한 반경이다.
+    const float edgeSampleOffset = bodyTraceRadius * 0.70f; // 지붕 모서리 검출은 넓게 보되, 완전히 바깥 허공까지 찍지 않도록 살짝 안쪽으로 줄인다.
+    Vec3 forwardSampleDir = transform->Get_WorldForward(); // 캐릭터 회전 기준 앞뒤 머리 가장자리 ray 방향이다.
+    forwardSampleDir.y = 0.f;
+    forwardSampleDir = Utils::Safe_Normalize(forwardSampleDir, Vec3::Forward);
+    Vec3 rightSampleDir = transform->Get_WorldRight(); // 캐릭터 회전 기준 좌우 머리 가장자리 ray 방향이다.
+    rightSampleDir.y = 0.f;
+    rightSampleDir = Utils::Safe_Normalize(rightSampleDir, Vec3::Right);
+    const Vec3 ceilingSampleOffsets[5] =
+    {
+        Vec3::Zero,
+        rightSampleDir * edgeSampleOffset,
+        -rightSampleDir * edgeSampleOffset,
+        forwardSampleDir * edgeSampleOffset,
+        -forwardSampleDir * edgeSampleOffset
+    };
 
     FSurfaceHit bestHit{};
+    Vec3 debugStart = previousPos + Vec3(0.f, headTraceStartOffsetY, 0.f);
+    Vec3 debugEnd = debugStart + Vec3::Up * traceDistance;
 
     const ECollisionProxyType proxyTypes[2] =
     {
@@ -1594,30 +1686,45 @@ void MovementComponent::Apply_CeilingBlock(const Vec3& previousPos, Shared<Trans
         ECollisionProxyType::Walkable
     };
 
-    for (ECollisionProxyType proxyType : proxyTypes)
+    for (const Vec3& sampleOffset : ceilingSampleOffsets)
     {
-        FPhysXRaycastHit physXHit{};
-        const bool isHit = GAME->Raycast_PhysX(
-            rayStart,
-            Vec3::Up,
-            traceDistance,
-            physXHit,
-            proxyType);
+        const Vec3 rayStart = previousPos + sampleOffset + Vec3(0.f, headTraceStartOffsetY, 0.f);
+        const Vec3 rayEnd = rayStart + Vec3::Up * traceDistance;
 
-        if (!isHit)
-            continue;
+        for (ECollisionProxyType proxyType : proxyTypes)
+        {
+            FPhysXRaycastHit physXHit{};
+            const bool isHit = GAME->Raycast_PhysX(
+                rayStart,
+                Vec3::Up,
+                traceDistance,
+                physXHit,
+                proxyType);
 
-        FSurfaceHit hit{};
-        hit.hitPoint = physXHit.position;
-        hit.hitNormal = Utils::Safe_Normalize(physXHit.normal, Vec3::Down);
-        hit.hitDistance = physXHit.distance;
-        hit.isValid = true;
+            FSurfaceHit hit{};
+            if (isHit)
+            {
+                hit.hitPoint = physXHit.position;
+                hit.hitNormal = Utils::Safe_Normalize(physXHit.normal, Vec3::Down);
+                hit.hitDistance = physXHit.distance;
+                hit.isValid = true;
+            }
 
-        if (!bestHit.isValid || hit.hitDistance < bestHit.hitDistance)
-            bestHit = hit;
+            Draw_TraceDebug(rayStart, rayEnd, hit);
+
+            if (!isHit)
+                continue;
+
+            if (!bestHit.isValid || hit.hitDistance < bestHit.hitDistance)
+            {
+                bestHit = hit;
+                debugStart = rayStart;
+                debugEnd = rayEnd;
+            }
+        }
     }
 
-    Draw_TraceDebug(rayStart, rayEnd, bestHit);
+    Draw_TraceDebug(debugStart, debugEnd, bestHit);
 
     if (!bestHit.isValid)
         return;
@@ -1627,6 +1734,15 @@ void MovementComponent::Apply_CeilingBlock(const Vec3& previousPos, Shared<Trans
 
     if (_velocity.y > 0.f)
         _velocity.y = 0.f;
+}
+
+float MovementComponent::Calculate_BodyTraceRadius(float fallbackRadius) const
+{
+    auto owner = _owner.lock();
+    Shared<Collider> bodyCollider = owner ? owner->Get_Component<Collider>() : nullptr;
+
+    // 위/아래 ray 샘플 폭은 벽 차단과 같은 몸통 수평 반경 기준을 사용한다.
+    return Calculate_BodyWallClearance(bodyCollider, fallbackRadius);
 }
 
 void MovementComponent::Apply_WallBlock(const Vec3& previousPos, Shared<Transform> transform)

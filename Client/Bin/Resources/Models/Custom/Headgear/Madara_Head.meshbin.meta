@@ -1,0 +1,134 @@
+{
+    "boneCount": 21,
+    "bones": [
+        {
+            "depth": 0,
+            "index": 0,
+            "name": "RootNode",
+            "parentIndex": -1
+        },
+        {
+            "depth": 1,
+            "index": 1,
+            "name": "SK_CHR_Man_LongSpikyHair_04",
+            "parentIndex": 0
+        },
+        {
+            "depth": 2,
+            "index": 2,
+            "name": "CharacterRoot",
+            "parentIndex": 1
+        },
+        {
+            "depth": 3,
+            "index": 3,
+            "name": "Hips",
+            "parentIndex": 2
+        },
+        {
+            "depth": 4,
+            "index": 4,
+            "name": "Spine",
+            "parentIndex": 3
+        },
+        {
+            "depth": 5,
+            "index": 5,
+            "name": "Spine1",
+            "parentIndex": 4
+        },
+        {
+            "depth": 6,
+            "index": 6,
+            "name": "Neck",
+            "parentIndex": 5
+        },
+        {
+            "depth": 7,
+            "index": 7,
+            "name": "Head",
+            "parentIndex": 6
+        },
+        {
+            "depth": 8,
+            "index": 8,
+            "name": "FaceHair",
+            "parentIndex": 7
+        },
+        {
+            "depth": 9,
+            "index": 9,
+            "name": "hair_T02",
+            "parentIndex": 8
+        },
+        {
+            "depth": 9,
+            "index": 10,
+            "name": "hair_T01",
+            "parentIndex": 8
+        },
+        {
+            "depth": 9,
+            "index": 11,
+            "name": "hair_TL01",
+            "parentIndex": 8
+        },
+        {
+            "depth": 9,
+            "index": 12,
+            "name": "hair_TR01",
+            "parentIndex": 8
+        },
+        {
+            "depth": 9,
+            "index": 13,
+            "name": "hair_B01",
+            "parentIndex": 8
+        },
+        {
+            "depth": 10,
+            "index": 14,
+            "name": "hair_B11",
+            "parentIndex": 13
+        },
+        {
+            "depth": 10,
+            "index": 15,
+            "name": "hair_B02",
+            "parentIndex": 13
+        },
+        {
+            "depth": 11,
+            "index": 16,
+            "name": "hair_B03",
+            "parentIndex": 15
+        },
+        {
+            "depth": 12,
+            "index": 17,
+            "name": "hair_B04",
+            "parentIndex": 16
+        },
+        {
+            "depth": 10,
+            "index": 18,
+            "name": "hair_BR01",
+            "parentIndex": 13
+        },
+        {
+            "depth": 10,
+            "index": 19,
+            "name": "hair_BL01",
+            "parentIndex": 13
+        },
+        {
+            "depth": 1,
+            "index": 20,
+            "name": "SK_CHR_Man_LongSpikyHair_04.001",
+            "parentIndex": 0
+        }
+    ],
+    "guid": "2e0a0ea3-cb6e-4829-bbb7-35aa980e0c80",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

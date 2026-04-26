@@ -85,7 +85,7 @@ void UI_WeaponType::Setup_DefaultTextDesc(FBackgroundTextDesc& textDesc)
     textDesc.size = Vec2(180.f, 32.f);
     textDesc.zOrderOffset = 0.01f;
 
-    textDesc.style.fontFamily = L"Malgun Gothic";
+    textDesc.style.fontFamily = UI_DEFAULT_FONT_FAMILY;
     textDesc.style.fontSize = 22.f;
     textDesc.style.color = Color(1.f, 1.f, 1.f, 1.f);
     textDesc.style.hAlign = ETextHAlign::Center;

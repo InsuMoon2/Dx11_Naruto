@@ -30,6 +30,11 @@ void AN_PlaySound::Execute(const FAnimNotifyContext& context)
     if (!context.owner || !context.model)
         return;
 
+    if (context.wrapped)
+    {
+        return;
+    }
+
     if (_soundFile.empty())
     {
         LOG_WARN("사운드 파일이 없음. clip='{}'", context.clipName);

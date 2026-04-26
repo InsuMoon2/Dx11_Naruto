@@ -3,6 +3,9 @@
     "effectName": "NewEffect",
     "layers": [
         {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
             "blendMode": 1,
             "colorTint": [
                 1.0,
@@ -35,7 +38,7 @@
                 1.0
             ],
             "endEmissiveStrength": 0.0,
-            "endOpacity": 0.0,
+            "endOpacity": 0.1340000033378601,
             "endPosition": [
                 0.0,
                 0.0,
@@ -71,7 +74,7 @@
             ],
             "localScale": [
                 1.0,
-                0.5,
+                1.0,
                 1.0
             ],
             "loop": false,
@@ -84,6 +87,7 @@
             "opacitySubUvTextureGuid": "",
             "opacityTextureGuid": "6f67b946-6275-4daf-95e5-a3b7c0005768",
             "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
             "rotationAxis": [
                 0.0,
                 1.0,
@@ -92,6 +96,7 @@
             "rotationSpeed": 0.0,
             "roughness": 0.5,
             "roughnessTextureGuid": "",
+            "scaleDuration": 0.25,
             "shadingMode": 0,
             "specularPower": 32.0,
             "specularStrength": 1.0,
@@ -114,7 +119,7 @@
             ],
             "uvDistortionTextureGuid": "",
             "uvScrollSpeed": [
-                1.649999976158142,
+                1.600000023841858,
                 0.0
             ],
             "uvTiling": [

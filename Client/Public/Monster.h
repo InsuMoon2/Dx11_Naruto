@@ -19,8 +19,13 @@ public:
     HRESULT Initialize_Prototype() override;
     HRESULT Initialize(void* arg) override;
 
+    // 웨이브 프리웜이 끝나고 실제 레벨에 등록되는 시점에 HP UI를 생성한다.
+    void    BeginPlay() override;
+
     json    To_Json() const override;
     void    From_Json(const json& data) override;
+
+    void On_RemovedFromLevel() override;
 
 protected:
     HRESULT Ready_Components() override;
