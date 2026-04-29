@@ -1,6 +1,6 @@
 #include "Engine_Shader_Defines.hlsli"
 
-row_major matrix g_BoneMatrices[512];
+row_major matrix g_BoneMatrices[MAX_SHADER_BONES];
 
 float4 g_SmearBaseColor = float4(0.05f, 0.08f, 0.25f, 1.f); 
 float4 g_SmearEdgeColor = float4(0.45f, 0.65f, 1.f, 1.f); 

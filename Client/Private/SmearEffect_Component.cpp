@@ -209,7 +209,8 @@ HRESULT SmearEffect_Component::Render_Snapshot(const FSmearSnapshot& snapshot)
 
     const Vec3 offset = -smearDir * (_settings.smearLength * clampedAgeRatio);
 
-    constexpr uint32 MAX_SMEAR_BONES = 512;
+    // 스미어 스냅샷이 셰이더의 g_BoneMatrices 배열 크기와 같은 개수로 바인딩되도록 맞춘다.
+    constexpr uint32 MAX_SMEAR_BONES = 768;
 
     for (const auto& renderable : snapshot.renderables)
     {

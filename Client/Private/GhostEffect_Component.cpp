@@ -90,7 +90,8 @@ HRESULT GhostEffect_Component::Render()
     CHECK_FAILED(_ghostShader->Bind_Matrix("g_ProjMatrix", GAME->Get_Transform(ETransformState::Proj)), E_FAIL);
     CHECK_FAILED(GAME->Bind_CamPosition(_ghostShader, "g_CamPosition"), E_FAIL);
 
-    constexpr uint32 MAX_GHOST_BONES = 512;
+    // 고스트 스냅샷이 셰이더의 g_BoneMatrices 배열 크기와 같은 개수로 바인딩되도록 맞춘다.
+    constexpr uint32 MAX_GHOST_BONES = 768;
     vector<Matrix> paddedBoneMatrices;
     paddedBoneMatrices.resize(MAX_GHOST_BONES, Matrix::Identity);
 

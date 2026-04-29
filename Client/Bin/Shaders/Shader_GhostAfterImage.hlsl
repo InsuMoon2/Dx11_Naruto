@@ -1,6 +1,6 @@
 #include "Engine_Shader_Defines.hlsli"
 
-row_major matrix g_BoneMatrices[512];
+row_major matrix g_BoneMatrices[MAX_SHADER_BONES];
 
 float4 g_GhostColor = float4(0.02f, 0.02f, 0.02f, 1.f);  // 몸체 색상과 유사하게
 float4 g_RimColor = float4(0.1f, 0.4f, 1.f, 1.f);        // 외곽선 색상

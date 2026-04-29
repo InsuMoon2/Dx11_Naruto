@@ -5,8 +5,10 @@ float g_OutlineThickness = 0.0035f;
 
 float4 g_HitColor = float4(1.f, 1.f, 1.f, 1.f);
 float g_HitColorStrength = 0.f;
+// BaseColor 텍스처가 없는 메시를 분홍색 fallback으로 표시하기 위한 플래그다.
+int g_HasDiffuseTexture = 1;
 
-row_major matrix g_BoneMatrices[512];
+row_major matrix g_BoneMatrices[MAX_SHADER_BONES];
 
 struct VS_IN
 {
@@ -133,7 +135,9 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
 
-    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vMtrlDiffuse = g_HasDiffuseTexture != 0
+        ? g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord)
+        : float4(1.f, 0.f, 1.f, 1.f);
 
     if (vMtrlDiffuse.a < 0.3f)
         discard;

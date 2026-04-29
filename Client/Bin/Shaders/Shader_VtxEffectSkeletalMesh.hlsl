@@ -1,6 +1,6 @@
 #include "Engine_Shader_Defines.hlsli"
 
-row_major matrix g_BoneMatrices[512];
+row_major matrix g_BoneMatrices[MAX_SHADER_BONES];
 
 Texture2D g_EmissiveTexture;
 Texture2D g_OpacityTexture;

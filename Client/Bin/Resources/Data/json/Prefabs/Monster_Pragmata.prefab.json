@@ -43,7 +43,7 @@
         },
         {
             "animations": [
-                "ch0000_General_1101_Idle_Tension_Loop"
+                "ch0000_General_0211_Land_Jog"
             ],
             "materials": [
                 {
@@ -135,7 +135,7 @@
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
         }
     ],
-    "guid": "f4ee1fd6-9e18-4e57-a639-c1f0b4cfcc76",
+    "guid": "79521132-ebef-43b4-9699-084610c91cda",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster_Pragmata",
     "static_class": "Monster_Pragmata"

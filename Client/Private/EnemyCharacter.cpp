@@ -220,7 +220,10 @@ HRESULT EnemyCharacter::Render()
 
     for (size_t i = 0; i < numMeshes; ++i)
     {
-        _model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0);
+        // BaseColor 텍스처가 비어 있으면 셰이더가 분홍색 fallback으로 렌더링하게 알려준다.
+        const int hasDiffuseTexture =
+            SUCCEEDED(_model->Bind_Material(_shaderCom, "g_DiffuseTexture", i, EMaterialTextureSlot::BaseColor, 0)) ? 1 : 0;
+        CHECK_FAILED(_shaderCom->Bind_RawValue("g_HasDiffuseTexture", &hasDiffuseTexture, sizeof(int)), E_FAIL);
 
         CHECK_FAILED(_shaderCom->Begin_Pass(0), E_FAIL);
         CHECK_FAILED(_model->Render(static_cast<uint32>(i)), E_FAIL);
