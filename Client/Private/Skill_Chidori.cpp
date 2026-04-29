@@ -26,8 +26,8 @@ Skill_Chidori::Skill_Chidori(const Skill_Chidori& rhs)
 HRESULT Skill_Chidori::Initialize_Prototype()
 {
     _lifetime        = 15.f;
-    _maxHitCount     = 1;
-    _hitInterval     = 0.05f;   
+    _maxHitCount     = 6;
+    _hitInterval     = 0.08f;   
     _hitLaunchForce  = 0.f; 
 
     _colliderRadius  = 0.3f;
@@ -67,35 +67,24 @@ void Skill_Chidori::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other
 
     CHECK_NULL(otherOwner);
 
-    if (_hitCount >= _maxHitCount)
+    Process_MultiHit(character, otherOwner.get());
+}
+
+void Skill_Chidori::OnStayOverlap(Shared<Collider> self, Shared<Collider> other)
+{
+    SkillObject::OnStayOverlap(self, other);
+
+    if (Is_Destroy())
         return;
 
-    Vec3 hitDir = _transformCom->Get_WorldForward();
-    hitDir = Utils::Safe_Normalize(hitDir);
+    auto character = Find_HitCharacter(other);
+    if (!character)
+        return;
 
-    FDamageEvent event{};
-    event.damage = 10.f;
-    event.damageCauser = Get_Owner();
-    event.hasCustomDir = true;
-    event.damageDir = hitDir;
-    event.launchPower = 2.5f;
-    event.launchUp = 0.f;
+    auto otherOwner = other->Get_Owner();
+    CHECK_NULL(otherOwner);
 
-    character->TakeDamage(event);
-
-    auto myPlayer = dynamic_pointer_cast<MyPlayer>(Get_Owner());
-    if (myPlayer)
-        myPlayer->Add_ComboHit();
-
-    _hitCount++;
-
-    if (_collider)
-        _collider->Set_IsActive(false);
-
-    _lifetime = min(_lifetime, _elapsedTime + 0.08f);
-
-    // 히트되면 카메라 연출
-
+    Process_MultiHit(character, otherOwner.get());
 }
 
 void Skill_Chidori::OnEndOverlap(Shared<Collider> self, Shared<Collider> other)
@@ -140,6 +129,9 @@ void Skill_Chidori::Process_MultiHit(Character* hitted, GameObject* targetKey)
 
     if (!Apply_Skill_Hit(hitted, 10.f, _hitLaunchForce, 0.f))
         return;
+
+    if (_hitCount == 0)
+        GAME->Play_Sound(L"Chidori_Hit.wav", ESoundChannel::Player, 0.4f);
 
     _hitCooldowns[targetKey] = _hitInterval;
     _hitCount++;

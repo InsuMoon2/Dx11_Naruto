@@ -21,7 +21,7 @@ void PlayerState_Skill::Enter(PlayerStateMachine* state)
     if (!state)
         return;
 
-    GAME->Play_Sound(L"UseSkill.wav", ESoundChannel::Player, 0.4f);
+    GAME->Play_Sound(L"UseSkill.wav", ESoundChannel::Player, 0.2f);
 
     auto input = state->Get_Input();
     auto skillData = GET_SINGLE(SkillDataManager)->Get_SkillData(_mySkill_Id);
@@ -36,6 +36,31 @@ void PlayerState_Skill::Enter(PlayerStateMachine* state)
     auto transform = owner->Get_Component<Transform>();
     if (!transform)
         return;
+
+    // 카무이와 진수천수는 락온된 대상을 향해 시전하는 연출이 중요하므로,
+    // 스킬 진입 순간 플레이어 yaw를 타겟 쪽으로 맞춰서 정면 고정 시전처럼 보이지 않게 한다.
+    if (_mySkill_Id == ETOI(ESkillType::Kamui) ||
+        _mySkill_Id == ETOI(ESkillType::ShinsuSenju))
+    {
+        auto targetCom = owner->Get_Component<TargetComponent>();
+        if (targetCom && targetCom->IsLockOn())
+        {
+            auto lockedTarget = targetCom->Get_LockedTarget().lock();
+            if (lockedTarget)
+            {
+                auto targetTransform = lockedTarget->Get_Transform();
+                if (targetTransform)
+                {
+                    Vec3 lookDir = targetTransform->Get_WorldPosition() - transform->Get_WorldPosition();
+                    lookDir.y = 0.f;
+                    lookDir = Utils::Safe_Normalize(lookDir, Vec3::Forward);
+
+                    if (lookDir.LengthSquared() > FLT_EPSILON)
+                        transform->LookAt(transform->Get_WorldPosition() + lookDir);
+                }
+            }
+        }
+    }
 
     if (skillData && movement)
     {
@@ -146,6 +171,10 @@ void PlayerState_Skill::Update(PlayerStateMachine* state, float timeDelta)
 void PlayerState_Skill::Exit(PlayerStateMachine* state)
 {
     if (!state) return;
+
+    // 치도리 차지 루프음은 상태가 중간에 끊겨도 남지 않도록 Exit에서 한 번 더 정리한다.
+    if (_mySkill_Id == ETOI(ESkillType::Chidori))
+        GAME->Stop_Sound(L"Chidori_Loop.wav");
 
     auto movement = state->Get_Movement();
     if (movement)
@@ -303,14 +332,19 @@ void PlayerState_Skill::Update_Dashing(PlayerStateMachine* state, float timeDelt
     Vec3 currentPos = transform->Get_WorldPosition();
     bool shouldAttack = false;
 
-    // 대 대쉬 거리 도달 체크
+    // 대쉬 시간 초과 체크 (장애물에 막혔을 때 무한 대쉬 방지)
+    _dashElapsed += timeDelta;
+    if (_dashElapsed >= _dashMaxDuration)
+        shouldAttack = true;
+
+    // 대쉬 거리 도달 체크
     {
         Vec3 travelVec = currentPos - _dashStartPos;
         float travelDistance = travelVec.Length();
 
         if (travelDistance >= skillData->maxDashDistance)
             shouldAttack = true;
-    }   
+    }
 
     if (!shouldAttack)
     {
@@ -396,6 +430,10 @@ void PlayerState_Skill::Begin_DashPhase(PlayerStateMachine* state)
 {
     _subPhase = ESkillSubPhase::Dashing;
 
+    // 치도리 차지 루프음은 실제 돌진이 시작되는 이 시점에 바로 끊어준다.
+    if (_mySkill_Id == ETOI(ESkillType::Chidori))
+        GAME->Stop_Sound(L"Chidori_Loop.wav");
+
     auto owner = state->Get_Owner();
     auto transform = owner ? owner->Get_Component<Transform>() : nullptr;
     auto movement = state->Get_Movement();
@@ -444,6 +482,11 @@ void PlayerState_Skill::Begin_DashPhase(PlayerStateMachine* state)
     }
 
     float duration = skillData->maxDashDistance / skillData->dashSpeed;
+    
+    // 타임아웃은 실제 도달 시간보다 50% 여유를 더 준다.
+    _dashMaxDuration = duration * 1.5f;
+    _dashElapsed = 0.f;
+
     movement->Start_Dash(_dashDirection, skillData->maxDashDistance, duration);
 }
 

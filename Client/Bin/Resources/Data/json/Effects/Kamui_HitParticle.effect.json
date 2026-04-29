@@ -1,0 +1,250 @@
+{
+    "autoPlay": true,
+    "effectName": "Kamui_HitParticle",
+    "layers": [
+        {
+            "blendMode": 1,
+            "center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "colorTint": [
+                0.5600000023841858,
+                0.05999999865889549,
+                0.03999999910593033,
+                1.0
+            ],
+            "customParams0": [
+                0.30000001192092896,
+                1.6399999856948853,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "duration": 0.5,
+            "emissiveStrength": 2.200000047683716,
+            "enabled": true,
+            "endColorTint": [
+                0.15000000596046448,
+                0.009999999776482582,
+                0.009999999776482582,
+                1.0
+            ],
+            "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "flipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "isLoop": false,
+            "kind": 0,
+            "layerName": "CoreHit",
+            "lifeTime": [
+                0.03999999910593033,
+                0.07000000029802322
+            ],
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                180.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "lockWorldOnSpawn": false,
+            "loop": false,
+            "maskTextureGuid": "",
+            "moveMode": 1,
+            "numInstances": 20,
+            "opacity": 0.6800000071525574,
+            "opacityTextureGuid": "",
+            "pivot": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "positionDuration": 1.0,
+            "range": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3499999940395355,
+                0.05000000074505806
+            ],
+            "scaleDuration": 1.0,
+            "spawnHeight": 1.0,
+            "spawnInnerRadius": 0.05000000074505806,
+            "spawnRadius": 1.3799999952316284,
+            "spawnShape": 1,
+            "speed": [
+                1.600000023841858,
+                3.200000047683716
+            ],
+            "startDelay": 0.0,
+            "textureGuid": "6bdf42d5-3c70-42a5-967c-7e7706a49dd1",
+            "useColorTintOverTime": false,
+            "useOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useScaleOverTime": true
+        },
+        {
+            "baseEmissiveStrength": 1.0,
+            "baseFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "baseMaskTextureGuid": "",
+            "baseOpacity": 0.8500000238418579,
+            "baseOpacityGradationTextureGuid": "",
+            "baseOpacityTextureGuid": "",
+            "baseTextureGuid": "76a7e73d-d857-455f-b980-8fab7b34c4a4",
+            "baseTint": [
+                0.14000000059604645,
+                0.009999999776482582,
+                0.009999999776482582,
+                1.0
+            ],
+            "baseUvOffset": [
+                0.0,
+                0.0
+            ],
+            "baseUvScale": [
+                1.0,
+                1.0
+            ],
+            "billboardToCamera": true,
+            "blendMode": 1,
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "duration": 0.18000000715255737,
+            "enabled": true,
+            "endBaseOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endRingOpacity": 0.0,
+            "endScale": [
+                5.300000190734863,
+                5.300000190734863,
+                5.300000190734863
+            ],
+            "kind": 2,
+            "layerName": "HitShockwave_Distortion",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "loop": false,
+            "positionDuration": 1.0,
+            "renderMode": 3,
+            "ringEmissiveStrength": 1.0,
+            "ringFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "ringOpacity": 0.41999998688697815,
+            "ringOpacityGradationTextureGuid": "",
+            "ringOpacityTextureGuid": "",
+            "ringTextureGuid": "",
+            "ringTint": [
+                0.7200000286102295,
+                0.07999999821186066,
+                0.05999999865889549,
+                1.0
+            ],
+            "ringUvOffset": [
+                0.0,
+                0.0
+            ],
+            "ringUvScale": [
+                1.0,
+                1.0
+            ],
+            "scaleDuration": 0.18000000715255737,
+            "screenDistortionNormalTextureGuid": "",
+            "screenDistortionNormalTiling": [
+                2.0,
+                3.0
+            ],
+            "screenDistortionRadialStrength": -0.18000000715255737,
+            "screenDistortionScrollA": [
+                0.20000000298023224,
+                1.0
+            ],
+            "screenDistortionScrollB": [
+                -0.20000000298023224,
+                1.0
+            ],
+            "screenDistortionStrength": 0.009999999776482582,
+            "startDelay": 0.0,
+            "useBaseOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useRing": true,
+            "useRingOpacityOverTime": true,
+            "useScaleOverTime": true
+        }
+    ],
+    "totalDuration": -1.0
+}

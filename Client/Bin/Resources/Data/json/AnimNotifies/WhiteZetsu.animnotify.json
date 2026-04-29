@@ -16,12 +16,30 @@
                             1.0,
                             1.5
                         ],
+                        "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
                         "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
+                        "use_launch_override": false,
                         "use_owner_forward": true
                     },
                     "time_sec": 0.5666666626930237,
                     "track_index": 0,
                     "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Jetsu_UseSkill.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.6000000238418579,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -33,6 +51,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -52,7 +73,15 @@
                             1.0,
                             1.5
                         ],
+                        "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
                         "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
+                        "use_launch_override": false,
                         "use_owner_forward": true
                     },
                     "time_sec": 0.8333333134651184,
@@ -71,12 +100,40 @@
                             1.0,
                             1.5
                         ],
+                        "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
                         "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
+                        "use_launch_override": false,
                         "use_owner_forward": true
                     },
                     "time_sec": 1.2666666507720947,
                     "track_index": 0,
                     "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Jetsu_UseSkill.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.8666666746139526,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Jetsu_UseSkill.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 1.2999999523162842,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -88,6 +145,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -107,12 +167,158 @@
                             1.0,
                             1.5
                         ],
+                        "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
                         "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
+                        "use_launch_override": false,
                         "use_owner_forward": true
                     },
                     "time_sec": 0.6666666865348816,
                     "track_index": 0,
                     "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Jetsu_UseSkill.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.6666666865348816,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_etc_Appearance_Type01",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "attach_to_bone": false,
+                        "bone_name": "CharacterRoot",
+                        "effect_name": "Test_Smoke",
+                        "local_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
+                    },
+                    "time_sec": 0.5666666626930237,
+                    "track_index": 0,
+                    "type": "AN_SpawnParticle"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Left",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Jetsu_Hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_Large_Front_Conect_toFall",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Jetsu_Hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_WhiteZetsuCrowdForm|SK_CHR_WhiteZetsuCrowdForm|WhiteZetsuCrowdForm_Beaten_Aerial_BlowOff_toFall",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Jetsu_Hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.1666666716337204,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [

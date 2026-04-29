@@ -1,0 +1,142 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                -0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "bounding": {
+                "center": [
+                    0.0,
+                    0.699999988079071,
+                    0.0
+                ],
+                "extents": [
+                    0.5,
+                    0.6000000238418579,
+                    0.5
+                ]
+            },
+            "channel": "Monster_Body",
+            "collision_preset": "Monster_Body",
+            "is_active": true,
+            "shape": "OBB",
+            "type": "COMPONENT_TYPE_COLLIDER"
+        },
+        {
+            "bt_guid": "",
+            "type": "COMPONENT_TYPE_BEHAVIOR"
+        },
+        {
+            "animations": [
+                "ch0000_General_1101_Idle_Tension_Loop"
+            ],
+            "materials": [
+                {
+                    "material_name": "ch0000_00_NThruster"
+                },
+                {
+                    "material_name": "ch0000_00_Fabric"
+                },
+                {
+                    "material_name": "ch0000_00_NMechParts"
+                },
+                {
+                    "material_name": "ch0000_00_NMechParts_Emissive"
+                },
+                {
+                    "material_name": "ch0000_00_NRegArmor"
+                },
+                {
+                    "material_name": "ch0000_00_NMechParts_Toe_Emissive"
+                },
+                {
+                    "material_name": "ch0000_00_Hand"
+                },
+                {
+                    "material_name": "wp7200_00_Body"
+                },
+                {
+                    "material_name": "ch0000_00_NBackPack"
+                },
+                {
+                    "material_name": "ch0000_00_NRobotArm"
+                },
+                {
+                    "material_name": "ch0000_00_Head"
+                },
+                {
+                    "material_name": "ch0000_00_DetailDecal"
+                },
+                {
+                    "material_name": "wp9104_Body"
+                }
+            ],
+            "model_guid": "b26fa342-0d10-428f-baea-589a884af57a",
+            "model_type": "SkeletalMesh",
+            "type": "COMPONENT_TYPE_MODEL"
+        },
+        {
+            "type": "COMPONENT_TYPE_SHADER"
+        },
+        {
+            "Attack": 10.0,
+            "Defense": 5.0,
+            "HP": 100.0,
+            "MP": 100.0,
+            "Max HP": 100.0,
+            "Max MP": 100.0,
+            "Speed": 5.0,
+            "type": "COMPONENT_TYPE_COMBAT_STAT"
+        },
+        {
+            "type": "COMPONENT_TYPE_AI_CONTROLLER"
+        },
+        {
+            "Acceleration": 20.0,
+            "Dash Distance": 6.0,
+            "Dash Duration": 0.18000000715255737,
+            "Deceleration": 24.0,
+            "Gravity": -20.0,
+            "Ground Walkable Min Up Dot": 0.550000011920929,
+            "Ground Y": 5.0,
+            "Jump Velocity": 11.0,
+            "Launch Control Lock Duration": 0.11999999731779099,
+            "Max Sprint Speed": 4.0,
+            "Max Walk Speed": 2.0,
+            "Wall Attach Offset": 0.15000000596046448,
+            "Wall Detect Distance": 1.0,
+            "Wall Jump Out Velocity": 6.0,
+            "Wall Jump Up Velocity": 8.0,
+            "Wall Runnable Max Up Dot": 0.3499999940395355,
+            "Wall Top Landing Forward Offset": 0.20000000298023224,
+            "Wall Top Landing Max Height Delta": 0.550000011920929,
+            "Wall Trace Start Offset Y": 1.0,
+            "Yaw Speed": 360.0,
+            "type": "COMPONENT_TYPE_MOVEMENT"
+        },
+        {
+            "animation_states": [],
+            "current_state": "",
+            "type": "COMPONENT_TYPE_ANIMATION_STATE"
+        }
+    ],
+    "guid": "f4ee1fd6-9e18-4e57-a639-c1f0b4cfcc76",
+    "object_type": "OBJECT_TYPE_MONSTER",
+    "prefab_name": "Monster_Pragmata",
+    "static_class": "Monster_Pragmata"
+}

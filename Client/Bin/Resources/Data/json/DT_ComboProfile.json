@@ -11,7 +11,7 @@
             "canCancel": true,
             "launchPower": 3,
             "launchUp": 0,
-            "hitSound": 0,
+            "hitSound": "Hand_Hit.wav",
             "hitReactionType": "Hit"
         },
         {
@@ -25,7 +25,7 @@
             "canCancel": true,
             "launchPower": 2,
             "launchUp": 0,
-            "hitSound": 0,
+            "hitSound": "Hand_Hit.wav",
             "hitReactionType": "Hit"
         },
         {
@@ -39,7 +39,7 @@
             "canCancel": true,
             "launchPower": 3,
             "launchUp": 0,
-            "hitSound": 0,
+            "hitSound": "Hand_Hit.wav",
             "hitReactionType": "Hit"
         },
         {
@@ -53,7 +53,7 @@
             "canCancel": false,
             "launchPower": 4,
             "launchUp": 0,
-            "hitSound": 0,
+            "hitSound": "Hand_Hit.wav",
             "hitReactionType": "Down"
         },
         {
@@ -67,7 +67,7 @@
             "canCancel": true,
             "launchPower": 2,
             "launchUp": 2,
-            "hitSound": 0,
+            "hitSound": "Hand_Hit.wav",
             "hitReactionType": "Hit_Air"
         },
         {
@@ -81,7 +81,7 @@
             "canCancel": true,
             "launchPower": 2,
             "launchUp": 3,
-            "hitSound": 0,
+            "hitSound": "Hand_Hit.wav",
             "hitReactionType": "Hit_Air"
         },
         {
@@ -95,7 +95,7 @@
             "canCancel": false,
             "launchPower": 2,
             "launchUp": 3,
-            "hitSound": 0,
+            "hitSound": "Hand_Hit.wav",
             "hitReactionType": "Hit_Air"
         },
         {
@@ -109,7 +109,7 @@
             "canCancel": false,
             "launchPower": 3,
             "launchUp": -3,
-            "hitSound": 0,
+            "hitSound": "Hand_Hit.wav",
             "hitReactionType": "Hit_Air_Down"
         },
         {
@@ -123,7 +123,7 @@
             "canCancel": true,
             "launchPower": 5,
             "launchUp": 5,
-            "hitSound": 0
+            "hitSound": "SwordAttack1.wav"
         },
         {
             "profileName": "검술형 일반",
@@ -136,7 +136,7 @@
             "canCancel": true,
             "launchPower": 5,
             "launchUp": 4,
-            "hitSound": 0
+            "hitSound": "SwordAttack2.wav"
         },
         {
             "profileName": "검술형 일반",
@@ -149,7 +149,7 @@
             "canCancel": false,
             "launchPower": 5,
             "launchUp": 4,
-            "hitSound": 0
+            "hitSound": "SwordKunaiHit.wav"
         },
         {
             "profileName": "검술형 일반",
@@ -162,7 +162,7 @@
             "canCancel": false,
             "launchPower": 4,
             "launchUp": 4,
-            "hitSound": 0
+            "hitSound": "SwordAttack1.wav"
         },
         {
             "profileName": "검술형 공중",
@@ -171,11 +171,12 @@
             "isAerial": true,
             "comboIndex": 0,
             "animStateKey": "Attack_SwordAir_01",
-            "damageMultiplier": 2.0,
+            "damageMultiplier": 1.0,
             "canCancel": true,
-            "launchPower": 0,
-            "launchUp": 0,
-            "hitSound": 0
+            "launchPower": 2,
+            "launchUp": 2,
+            "hitSound": 0,
+            "hitReactionType": "Hit_Air"
         },
         {
             "profileName": "검술형 공중",
@@ -184,11 +185,38 @@
             "isAerial": true,
             "comboIndex": 1,
             "animStateKey": "Attack_SwordAir_02",
-            "damageMultiplier": 3.0,
+            "damageMultiplier": 1.3,
+            "canCancel": true,
+            "launchPower": 2,
+            "launchUp": 3,
+            "hitSound": 0,
+            "hitReactionType": "Hit_Air"
+        },
+        {
+            "profileType": "BigSword_Aerial",
+            "weaponType": "BigSwrod",
+            "isAerial": true,
+            "comboIndex": 2,
+            "animStateKey": "Attack_SwordAir_03",
+            "damageMultiplier": 1.8,
             "canCancel": false,
-            "launchPower": 0,
-            "launchUp": 0,
-            "hitSound": 0
+            "launchPower": 2,
+            "launchUp": 3,
+            "hitSound": 0,
+            "hitReactionType": "Hit_Air"
+        },
+        {
+            "profileType": "BigSword_Aerial",
+            "weaponType": "BigSwrod",
+            "isAerial": true,
+            "comboIndex": 3,
+            "animStateKey": "Attack_SwordAir_04",
+            "damageMultiplier": 2.0,
+            "canCancel": false,
+            "launchPower": 3,
+            "launchUp": -3,
+            "hitSound": 0,
+            "hitReactionType": "Hit_Air_Down"
         }
     ]
 }

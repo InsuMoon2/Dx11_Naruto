@@ -29,6 +29,7 @@ private:
     string _skillAnimState = "Skill_ShinraTensei";
     string _cooldownRemainKey = "ShinraTenseiCooldownRemain";
     string _globalCooldownRemainKey = "BossSkillGlobalCooldownRemain"; // 모든 보스 스킬이 공유하는 쿨타임 블랙보드 키다.
+    string _forceSkillCycleCooldownRemainKey = "PainForceSkillCycleCooldownRemain"; // 신라천정/만상천인이 교대로 바로 이어지지 않게 묶는 전용 공용 쿨 키다.
 
     EPainForceSkillType _skillType = EPainForceSkillType::ShinraTensei;
 
@@ -37,6 +38,7 @@ private:
 
     float _cooldown = 8.f;
     float _globalCooldown = 4.f; // 스킬 하나가 끝난 뒤 다른 스킬을 막는 공용 쿨타임이다.
+    float _forceSkillCycleCooldown = 5.5f; // 신라천정/만상천인 사이에 숨을 주기 위한 추가 템포 쿨타임이다.
     float _impactTime = 0.35f;
 
     float _skillDuration = 1.f;

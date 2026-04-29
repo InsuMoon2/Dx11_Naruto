@@ -21,6 +21,8 @@ void PlayerState_WallRun::Enter(PlayerStateMachine* state)
     auto movement = state->Get_Movement();
     if (movement) movement->Set_OrientRotationToMovement(false);
 
+    GAME->Stop_Sound(L"RunLoop.wav");
+    GAME->Play_LoopSound(L"RunLoop.wav", ESoundChannel::Player, 0.2f, false);
     state->Play_AnimState(EPlayerState::Wall_Run);
 }
 
@@ -98,7 +100,10 @@ void PlayerState_WallRun::Update(PlayerStateMachine* state, float timeDelta)
 
 void PlayerState_WallRun::Exit(PlayerStateMachine* state)
 {
-    
+    if (!state)
+        return;
+
+    GAME->Stop_Sound(L"RunLoop.wav");
 }
 
 Shared<PlayerState_WallRun> PlayerState_WallRun::Create()

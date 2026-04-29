@@ -27,6 +27,7 @@ void PlayerState_DoubleJump::Enter(PlayerStateMachine* state)
     movement->Set_OrientRotationToMovement(true);
 
     movement->Start_DoubleJump();
+    GAME->Play_Sound(L"DoubleJump.wav", ESoundChannel::Player, 0.3f);
     state->Play_AnimState(EPlayerState::DoubleJump);
 }
 

@@ -17,10 +17,13 @@
                             1.5
                         ],
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 5.0,
                         "override_launch_up": 0.0,
                         "spawn_object_type": 40,
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true,
                         "use_owner_forward": true
                     },
@@ -58,10 +61,13 @@
                             1.5
                         ],
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 5.0,
                         "override_launch_up": 0.0,
                         "spawn_object_type": 40,
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true,
                         "use_owner_forward": true
                     },
@@ -99,10 +105,13 @@
                             1.5
                         ],
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 5.0,
                         "override_launch_up": 0.0,
                         "spawn_object_type": 40,
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true,
                         "use_owner_forward": true
                     },
@@ -140,16 +149,29 @@
                             1.5
                         ],
                         "override_hit_reaction_type": 2,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 10.0,
                         "override_launch_up": 5.0,
                         "spawn_object_type": 40,
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true,
                         "use_owner_forward": true
                     },
                     "time_sec": 0.3333333432674408,
                     "track_index": 0,
                     "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Pain_Attack1.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.3333333432674408,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -161,6 +183,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -181,10 +206,13 @@
                             1.5
                         ],
                         "override_hit_reaction_type": 5,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 5.0,
                         "override_launch_up": 6.0,
                         "spawn_object_type": 40,
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true,
                         "use_owner_forward": true
                     },
@@ -222,10 +250,13 @@
                             1.5
                         ],
                         "override_hit_reaction_type": 5,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 5.0,
                         "override_launch_up": 6.0,
                         "spawn_object_type": 40,
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true,
                         "use_owner_forward": true
                     },
@@ -254,7 +285,7 @@
                     "payload": {
                         "channel": 5,
                         "sound_file": "Pain/ShinraTensei.wav",
-                        "volume": 1.0
+                        "volume": 0.30000001192092896
                     },
                     "time_sec": 0.06666667014360428,
                     "track_index": 0,
@@ -281,10 +312,20 @@
                     "payload": {
                         "channel": 5,
                         "sound_file": "Pain/BanshoTenin.wav",
-                        "volume": 1.0
+                        "volume": 0.30000001192092896
                     },
                     "time_sec": 0.06666667014360428,
                     "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
+                        "channel": 5,
+                        "sound_file": "BanshoTenin_VFX.wav",
+                        "volume": 0.20000000298023224
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 1,
                     "type": "AN_PlaySound"
                 }
             ],
@@ -297,6 +338,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -317,16 +361,29 @@
                             1.5
                         ],
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 5.0,
                         "override_launch_up": 0.0,
                         "spawn_object_type": 40,
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true,
                         "use_owner_forward": true
                     },
                     "time_sec": 0.8999999761581421,
                     "track_index": 0,
                     "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Pain_Attack1.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.8999999761581421,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -359,6 +416,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -379,10 +439,13 @@
                             1.5
                         ],
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 5.0,
                         "override_launch_up": 0.0,
                         "spawn_object_type": 40,
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true,
                         "use_owner_forward": true
                     },
@@ -403,16 +466,39 @@
                             1.5
                         ],
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 5.0,
                         "override_launch_up": 0.0,
                         "spawn_object_type": 40,
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true,
                         "use_owner_forward": true
                     },
                     "time_sec": 0.8333333134651184,
                     "track_index": 0,
                     "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Pain_Attack2.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.30000001192092896,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Pain_Attack1.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.8333333134651184,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -465,6 +551,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -485,16 +574,29 @@
                             1.5
                         ],
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 5.0,
                         "override_launch_up": 0.0,
                         "spawn_object_type": 40,
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true,
                         "use_owner_forward": true
                     },
                     "time_sec": 0.7333333492279053,
                     "track_index": 0,
                     "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Pain_Attack3.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.4000000059604645,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -527,6 +629,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -588,6 +693,249 @@
                 },
                 {
                     "name": "Notify Track"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Dodge_Behind",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Dash.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Beaten_Left",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Pain_Hit_R.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Beaten_Left_Head",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Pain_Hit_R.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Beaten_Aerial_Large_Front_Conect_toFall",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Pain_Hit_R.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Beaten_Aerial_Small_Conect_toFall",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Pain_Hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.0,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Beaten_Aerial_BlowOff_toFall",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Pain_Hit_R.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Beaten_GuardReverseBlowOff",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Pain_Hit1.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Beaten_SpinBlowOff_Conect_toDown",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Pain_Hit_R.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_Pain|Pain_Beaten_Blasted",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Pain_Hit_R.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.4333333373069763,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
                 }
             ]
         }

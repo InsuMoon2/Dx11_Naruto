@@ -24,6 +24,7 @@ void PlayerState_Jump::Enter(PlayerStateMachine* state)
 
     movement->Set_OrientRotationToMovement(true);
 	movement->Start_Jump();
+    GAME->Play_Sound(L"Jump.wav", ESoundChannel::Player, 0.3f);
 
 	state->Play_AnimState(EPlayerState::Jump);
 }

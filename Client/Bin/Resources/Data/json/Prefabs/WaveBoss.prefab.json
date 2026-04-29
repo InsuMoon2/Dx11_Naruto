@@ -46,13 +46,14 @@
         "default_effect_asset_name": "",
         "play_default_effect_on_begin_play": true,
         "play_trigger_effect_on_trigger": true,
+        "show_mission_marker": true,
         "spawn_entries": [
             {
                 "object_type_override": "OBJECT_TYPE_MONSTER",
                 "position": [
                     0.0,
                     0.0,
-                    0.0
+                    -20.700000762939453
                 ],
                 "prefab_name": "Boss",
                 "rotation": [
@@ -68,13 +69,12 @@
             }
         ],
         "spawn_layer_tag": "Layer_Builder",
-        "show_mission_marker": false,
         "stop_default_effect_on_trigger": true,
         "trigger_effect_asset_name": "",
         "trigger_once": true,
         "wave_tag": "BossPainWave"
     },
-    "guid": "d0d75d15-2558-485d-bf9e-0a02567c867c",
+    "guid": "7613b7ed-f0c4-4304-bdb2-a7bb92bccfc6",
     "object_type": "OBJECT_TYPE_WAVE_TRIGGER",
     "prefab_name": "WaveBoss",
     "static_class": "WaveBoss"

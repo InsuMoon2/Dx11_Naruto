@@ -4,15 +4,15 @@
   "profile": "flat_color_normal",
   "parent": "M_ENV_FlatColorNormal",
   "base_color_factor": [
-    0.5171512500000001,
-    0.544663,
-    0.5771,
+    0.81,
+    0.753659,
+    0.5427,
     1.0
   ],
   "shadow_color": [
-    1.0,
-    1.0,
-    1.0,
+    0.93,
+    0.88,
+    0.72,
     1.0
   ],
   "normal_strength": 1.0,

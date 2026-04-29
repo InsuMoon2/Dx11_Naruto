@@ -2,6 +2,7 @@
 #include "Monster_Leaf.h"
 
 #include "CharkraMove_Component.h"
+#include "CombatStat.h"
 #include "GameObject_Factory.h"
 #include "PartObject.h"
 #include "Model.h"
@@ -43,6 +44,7 @@ HRESULT Monster_Leaf::Initialize(void* arg)
     // 글러브 준비 플래그를 초기화한다.
     // (BeginPlay에서 단 한 번만 Ready_GloveParts를 호출하기 위해 여기서 리셋)
     _glovePartsReady = false;
+    _glovePartsClearedOnDeath = false;
 
     return S_OK;
 }
@@ -64,6 +66,9 @@ void Monster_Leaf::BeginPlay()
 void Monster_Leaf::Update(float timeDelta)
 {
     Monster::Update(timeDelta);
+
+    if (!_glovePartsClearedOnDeath && _combatStat && _combatStat->Is_Dead())
+        Clear_GloveParts_OnDeath();
 
     if (_chakraTrail)
         _chakraTrail->Update_ChakraMove(timeDelta);
@@ -137,6 +142,19 @@ HRESULT Monster_Leaf::Ready_GloveParts()
     }
 
     return S_OK;
+}
+
+void Monster_Leaf::Clear_GloveParts_OnDeath()
+{
+    _glovePartsClearedOnDeath = true;
+
+    auto leftGlove = Get_PartObject(EPartSlot::Accessory);
+    if (leftGlove)
+        leftGlove->Set_Destroy(true);
+
+    auto rightGlove = Get_PartObject(EPartSlot::Weapon);
+    if (rightGlove)
+        rightGlove->Set_Destroy(true);
 }
 
 Shared<Monster_Leaf> Monster_Leaf::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

@@ -114,7 +114,7 @@ bool Skill_Rasengan::Try_TriggerImpact(Shared<Collider> other)
     if (!otherOwner)
         return false;
 
-    if (!Apply_Skill_Hit(character, 10.f, _hitLaunchForce, 0.f))
+    if (!Apply_Skill_Hit(character, 5.f, _hitLaunchForce, 0.f))
         return false;
 
     _hasSpawnedImpact = true;

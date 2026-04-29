@@ -144,6 +144,8 @@ void Skill_Rasengan_Hit::Process_MultiHit(Character* hitted, GameObject* targetK
     {
         if (!Apply_Skill_Hit(hitted, _baseDamage, 0.f, _midHitLaunchUp))
             return;
+
+        GAME->Play_Sound(L"Rasengan_hit.wav", ESoundChannel::Effect, 0.25f);
     }
     else
     {
@@ -154,6 +156,7 @@ void Skill_Rasengan_Hit::Process_MultiHit(Character* hitted, GameObject* targetK
         event.launchUp = _finalHitLaunchUp;
 
         hitted->TakeDamage(event);
+        GAME->Play_Sound(L"Rasengan_hit.wav", ESoundChannel::Effect, 0.25f);
 
         auto myPlayer = dynamic_pointer_cast<MyPlayer>(Get_Owner());
         if (myPlayer)

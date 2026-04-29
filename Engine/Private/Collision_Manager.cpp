@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Collision_Manager.h"
 #include "Collision_Define.h"
 #include "Collider.h"
@@ -66,39 +66,53 @@ void Collision_Manager::Update()
                     bool srcStatic = (src->Get_Channel() == Collision_Channel::Enviroment);
                     bool dstStatic = (dst->Get_Channel() == Collision_Channel::Enviroment);
 
-                    if (srcStatic && !dstStatic)
+                    bool srcIsPlayer  = (src->Get_Channel() == Collision_Channel::Player_Body);
+                    bool dstIsPlayer  = (dst->Get_Channel() == Collision_Channel::Player_Body);
+                    bool srcIsMonster = (src->Get_Channel() == Collision_Channel::Monster_Body);
+                    bool dstIsMonster = (dst->Get_Channel() == Collision_Channel::Monster_Body);
+
+                    // ── Player ↔ Monster: Soft Push (50:50, 감쇄) ──────────────────────
+                    // 딱딱하게 튕기지 않고 서로 부드럽게 밀어낸다.
+                    // depth에 감쇄 계수(0.4)를 곱해 급격한 위치 변화를 줄인다.
+                    if ((srcIsPlayer && dstIsMonster) || (srcIsMonster && dstIsPlayer))
+                    {
+                        constexpr float SOFT_PUSH_DAMPING = 0.4f;
+                        const float adjustedDepth = depth * SOFT_PUSH_DAMPING;
+
+                        // 몬스터는 고정, 플레이어만 밀어냄 (몬스터 AI 경로가 흔들리지 않도록)
+                        if (srcIsPlayer)
+                        {
+                            if (auto t = srcOwner->Get_Transform())
+                                t->Add_WorldOffset(-normal * adjustedDepth);
+                        }
+                        else
+                        {
+                            if (auto t = dstOwner->Get_Transform())
+                                t->Add_WorldOffset(normal * adjustedDepth);
+                        }
+                    }
+                    // ── Enviroment vs 기타: 기존 로직 유지 ────────────────────────────
+                    else if (srcStatic && !dstStatic)
                     {
                         srcRatio = 0.f;
                         dstRatio = 1.f;
+
+                        if (auto t = dstOwner->Get_Transform())
+                            t->Add_WorldOffset(normal * depth * dstRatio);
                     }
                     else if (!srcStatic && dstStatic)
                     {
                         srcRatio = 1.f;
                         dstRatio = 0.f;
-                    }
-                    else
-                    {
-                        bool srcIsPlayer = (src->Get_Channel() == Collision_Channel::Player_Body);
-                        bool dstIsPlayer = (dst->Get_Channel() == Collision_Channel::Player_Body);
-                        if (srcIsPlayer && !dstIsPlayer)
-                        {
-                            srcRatio = 1.f;
-                            dstRatio = 0.f;
-                        }
-                        else if (!srcIsPlayer && dstIsPlayer)
-                        {
-                            srcRatio = 0.f;
-                            dstRatio = 1.f;
-                        }
-                    }
 
-                    if (srcRatio > 0.f)
-                    {
                         if (auto t = srcOwner->Get_Transform())
                             t->Add_WorldOffset(-normal * depth * srcRatio);
                     }
-                    if (dstRatio > 0.f)
+                    else
                     {
+                        // 기타 동적 vs 동적: 기존 50:50
+                        if (auto t = srcOwner->Get_Transform())
+                            t->Add_WorldOffset(-normal * depth * srcRatio);
                         if (auto t = dstOwner->Get_Transform())
                             t->Add_WorldOffset(normal * depth * dstRatio);
                     }

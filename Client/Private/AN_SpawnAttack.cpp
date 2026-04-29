@@ -30,6 +30,9 @@ bool AN_SpawnAttack::Register_Properties()
     PROPERTY_BOOL_JSON("Override Launch", "use_launch_override", _useLaunchOverride);
     PROPERTY_FLOAT_JSON("Launch Power", "override_launch_power", _overrideLaunchPower, 0.f, 500.f);
     PROPERTY_FLOAT_JSON("Launch Up", "override_launch_up", _overrideLaunchUp, -50.f, 50.f);
+    PROPERTY_BOOL_JSON("Override Hit Sound", "use_hit_sound_override", _useHitSoundOverride);
+    PROPERTY_INT_JSON("Hit Sound", "override_hit_sound", _overrideHitSound, 0, 999);
+    PROPERTY_STRING_JSON("Hit Sound File", "override_hit_sound_file", _overrideHitSoundFile);
     PROPERTY_STRING_JSON("레이어 태그", "layer_tag", _layerTag);
 
     return true;
@@ -63,6 +66,9 @@ void AN_SpawnAttack::Execute(const FAnimNotifyContext& context)
     desc.useLaunchOverride = _useLaunchOverride;
     desc.launchPower = _overrideLaunchPower;
     desc.launchUp = _overrideLaunchUp;
+    desc.useHitSoundOverride = _useHitSoundOverride;
+    desc.hitSound = _overrideHitSound;
+    desc.hitSoundFile = _overrideHitSoundFile;
 
     if (_useOwnerForward)
         desc.direction = ownerTransform->Get_WorldForward();

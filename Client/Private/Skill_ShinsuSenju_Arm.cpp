@@ -1,9 +1,10 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Skill_ShinsuSenju_Arm.h"
 #include "GameObject_Factory.h"
 #include "GameObject.h"
 #include "Collider.h"
 #include "Character.h"
+#include "Camera_Types.h"
 #include "MeshDebrisObject.h"
 #include "Shader.h"
 #include "Model.h"
@@ -21,13 +22,23 @@ Skill_ShinsuSenju_Arm::Skill_ShinsuSenju_Arm(const Skill_ShinsuSenju_Arm& rhs)
     , _shader(rhs._shader)
     , _model(rhs._model)
     , _isStop(false)
+    , _groundDebrisCount(rhs._groundDebrisCount)
+    , _groundSmokeEffectName(rhs._groundSmokeEffectName)
+    , _groundSmokeEffectScale(rhs._groundSmokeEffectScale)
+    , _groundSmokeRadius(rhs._groundSmokeRadius)
+    , _groundSmokeBurstCount(rhs._groundSmokeBurstCount)
+    , _groundImpactShakeTag(rhs._groundImpactShakeTag)
+    , _groundImpactShakeDuration(rhs._groundImpactShakeDuration)
+    , _groundImpactShakeFrequency(rhs._groundImpactShakeFrequency)
+    , _groundImpactShakePosAmplitude(rhs._groundImpactShakePosAmplitude)
+    , _groundImpactShakeRotAmplitudeDeg(rhs._groundImpactShakeRotAmplitudeDeg)
 {
 
 }
 
 HRESULT Skill_ShinsuSenju_Arm::Initialize_Prototype()
 {
-    _lifetime = 15.f;
+    _lifetime = 2.f;
 
     _colliderRadius = 10.2f;
     _collisionPreset = Collision_Preset::Player_Attack;
@@ -50,15 +61,13 @@ HRESULT Skill_ShinsuSenju_Arm::Initialize(void* arg)
     if (_transformCom)
     {
         _transformCom->Set_LocalScale(0.0005f, 0.0005f, 0.0005f);
-
-        
     }
+
     auto* desc = static_cast<FProjectileSkillDesc*>(arg);
     if (desc)
     {
         _targetPoint = desc->targetPoint;
         _hasTargetPoint = desc->hasTargetPoint;
-
     }
 
     _collider->Set_IsActive(true);
@@ -78,7 +87,7 @@ void Skill_ShinsuSenju_Arm::Update(float timeDelta)
         const Vec3 currentPos = _transformCom->Get_WorldPosition();
         const float remainingDist = Vec3::Distance(currentPos, _targetPoint);
 
-        // 목표지점 도달
+        // 목표 지점에 도달하면 파티클/연막/카메라 쉐이크를 발동하고 이동을 멈춘다.
         if (remainingDist <= _stopDistance)
         {
             _isMoving = false;
@@ -87,11 +96,12 @@ void Skill_ShinsuSenju_Arm::Update(float timeDelta)
             if (_collider)
                 _collider->Set_IsActive(false);
 
-            Spawn_Particle("SmallRock", 10);
+            Spawn_Particle("SmallRock", _groundDebrisCount);
+            Spawn_GroundImpactSmokeBurst();
+            Spawn_GroundImpactCameraShake();
+            GAME->Play_Sound(L"WoodArm.wav", ESoundChannel::Effect, 0.3f);
         }
     }
-
-
 }
 
 void Skill_ShinsuSenju_Arm::Late_Update(float timeDelta)
@@ -164,8 +174,6 @@ void Skill_ShinsuSenju_Arm::OnBeginOverlap(Shared<Collider> self, Shared<Collide
 
     if (!Apply_Skill_Hit(character, _damage, _hitLaunchForce, 0.f))
         return;
-
-
 }
 
 HRESULT Skill_ShinsuSenju_Arm::Ready_Components()
@@ -208,13 +216,15 @@ void Skill_ShinsuSenju_Arm::Spawn_Particle(const string& assetName, int32 spawnI
 
         debrisDesc.spawnScale = Vec3(1.f, 1.f, 1.f);
 
-        const float randomScale = Utils::RandomRange(0.10f, 0.18f);
+        // 돌덩이가 더 눈에 띄도록 크기 증가
+        const float randomScale = Utils::RandomRange(0.18f, 0.35f);
         debrisDesc.effectLocalScale = Vec3(randomScale, randomScale, randomScale);
 
+        // 강하게 위와 옆으로 튀도록 속도 증가
         debrisDesc.initialVelocity = Vec3(
-            Utils::RandomRange(-3.5f, 3.5f),
-            Utils::RandomRange(7.f, 10.f),
-            Utils::RandomRange(-3.5f, 3.5f));
+            Utils::RandomRange(-8.5f, 8.5f),
+            Utils::RandomRange(16.f, 24.f),
+            Utils::RandomRange(-8.5f, 8.5f));
 
         debrisDesc.gravity = -24.f;
 
@@ -236,7 +246,39 @@ void Skill_ShinsuSenju_Arm::Spawn_Particle(const string& assetName, int32 spawnI
             TEXT("Layer_Effect"),
             &debrisDesc);
     }
+}
 
+void Skill_ShinsuSenju_Arm::Spawn_GroundImpactSmokeBurst()
+{
+    SkillObject::Spawn_Effect_Once(_groundSmokeEffectName, _targetPoint, _groundSmokeEffectScale);
+
+    const int32 safeBurstCount = max(0, _groundSmokeBurstCount);
+    if (safeBurstCount <= 0)
+        return;
+
+    for (int32 burstIndex = 0; burstIndex < safeBurstCount; ++burstIndex)
+    {
+        const float angle = XM_2PI * (static_cast<float>(burstIndex) / static_cast<float>(safeBurstCount));
+        const Vec3 radialOffset = Vec3(cosf(angle), 0.f, sinf(angle)) * _groundSmokeRadius;
+        SkillObject::Spawn_Effect_Once(
+            _groundSmokeEffectName,
+            _targetPoint + radialOffset,
+            _groundSmokeEffectScale);
+    }
+}
+
+void Skill_ShinsuSenju_Arm::Spawn_GroundImpactCameraShake()
+{
+    FCameraShakeDesc request{};
+    request.tag = _groundImpactShakeTag;
+    request.durationSec = _groundImpactShakeDuration;
+    request.frequency = _groundImpactShakeFrequency;
+    request.blendInSec = 0.01f;
+    request.blendOutSec = 0.12f;
+    request.localPosAmplitude = _groundImpactShakePosAmplitude;
+    request.localRotAmplitudeDeg = _groundImpactShakeRotAmplitudeDeg;
+
+    GAME->Request_CameraShake(request);
 }
 
 Shared<GameObject> Skill_ShinsuSenju_Arm::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -246,7 +288,6 @@ Shared<GameObject> Skill_ShinsuSenju_Arm::Create(ComPtr<Device> device, ComPtr<D
     if (FAILED(instance->Initialize_Prototype()))
     {
         MSG_BOX("Failed to Create : Skill_ShinsuSenju_Arm");
-
         return nullptr;
     }
 
@@ -260,7 +301,6 @@ Shared<GameObject> Skill_ShinsuSenju_Arm::Clone(void* arg)
     if (FAILED(clone->Initialize(arg)))
     {
         MSG_BOX("Failed to Clone : Skill_ShinsuSenju_Arm");
-
         return nullptr;
     }
 

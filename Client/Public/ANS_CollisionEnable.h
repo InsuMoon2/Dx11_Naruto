@@ -29,6 +29,10 @@ private:
     bool    _useLaunchOverride = false;
     float   _overrideLaunchPower = 0.f;
     float   _overrideLaunchUp = 0.f;
+
+    bool    _useHitSoundOverride = false; // 현재 타격 구간에서 콤보 프로파일 대신 notify가 직접 피격음을 지정할지 여부다.
+    int32   _overrideHitSound = 0; // useHitSoundOverride가 켜졌을 때 사용할 정수 기반 피격 사운드 ID다.
+    string  _overrideHitSoundFile = ""; // useHitSoundOverride가 켜졌을 때 사용할 직접 피격 사운드 파일명이다.
 };
 
 NS_END

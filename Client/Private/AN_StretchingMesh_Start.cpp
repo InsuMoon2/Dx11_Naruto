@@ -40,6 +40,14 @@ void AN_StretchingMesh_Start::Execute(const FAnimNotifyContext& context)
     if (!skillCom)
         return;
 
+    // 치도리 전용 Lightning_Follow 스트레칭 연출은 현재 사용하지 않으므로
+    // 기존 스폰 코드를 지우지 않고 이 지점에서만 막아둔다.
+    if (_effectAssetName == "Lightning_Follow")
+    {
+        skillCom->Destroy_AllStretchingMeshes();
+        return;
+    }
+
     skillCom->Destroy_AllStretchingMeshes();
 
     Matrix boneWorldMatrix = context.owner->Get_Transform()->Get_WorldMatrix();

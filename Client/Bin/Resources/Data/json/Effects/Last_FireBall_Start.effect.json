@@ -1,99 +1,378 @@
 {
     "autoPlay": true,
     "effectName": "Last_FireBall_Start",
-    "totalDuration": 0.65,
     "layers": [
         {
-            "layerName": "Last_Start_MeshRing_B",
-            "enabled": true,
-            "kind": 1,
-            "startDelay": 0.0,
-            "duration": 0.5,
-            "loop": false,
-            "localPosition": [0.0, 0.0, 0.0],
-            "localRotation": [0.0, 0.0, -90.0],
-            "localScale": [0.12, 0.12, 0.12],
-            "useScaleOverTime": true,
-            "endScale": [0.85, 0.85, 0.85],
-            "scaleDuration": 0.5,
-            "modelGuid": "e3e74e99-2ffa-4497-ad95-4a8240463e71",
-            "emissiveTextureGuid": "94626772-0395-4ade-857d-3e75727a4259",
-            "emissiveGradationTextureGuid": "b4ba563d-b2f3-437c-8757-107997eacb24",
-            "opacityTextureGuid": "7591fd3e-4140-4519-acec-da04e8982481",
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
             "blendMode": 0,
-            "shadingMode": 0,
-            "colorTint": [1.0, 0.36, 0.05, 1.0],
-            "opacity": 0.75,
-            "emissiveStrength": 4.2,
-            "useOpacityOverTime": true,
-            "endOpacity": 0.0,
-            "useEmissiveStrengthOverTime": true,
-            "endEmissiveStrength": 0.0,
-            "rotationAxis": [0.0, 1.0, 0.0],
-            "rotationSpeed": 280.0,
-            "twoSided": true,
-            "useOpacityAsTransparency": true
-        },
-        {
-            "layerName": "Last_Start_CoreFlash",
-            "enabled": true,
-            "kind": 2,
-            "startDelay": 0.0,
-            "duration": 0.32,
-            "loop": false,
-            "localPosition": [0.0, 0.0, 0.0],
-            "localRotation": [0.0, 0.0, 0.0],
-            "localScale": [1.2, 1.2, 1.0],
-            "useScaleOverTime": true,
-            "endScale": [3.9, 3.9, 1.0],
-            "scaleDuration": 0.32,
-            "baseTextureGuid": "b87d724c-7b0b-4036-9428-b550442a23f5",
-            "blendMode": 1,
-            "renderMode": 1,
-            "baseTint": [1.0, 0.22, 0.02, 1.0],
-            "baseOpacity": 0.95,
-            "baseEmissiveStrength": 4.5,
-            "useBaseOpacityOverTime": true,
-            "endBaseOpacity": 0.0,
-            "useRing": false,
-            "billboardToCamera": true
-        },
-        {
-            "layerName": "Last_Start_FireTongues",
-            "enabled": true,
-            "kind": 0,
-            "startDelay": 0.03,
+            "colorTint": [
+                1.0,
+                0.36000001430511475,
+                0.05000000074505806,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "diffuseTextureGuid": "",
             "duration": 0.5,
-            "loop": false,
-            "localPosition": [0.0, 0.0, 0.0],
-            "localRotation": [0.0, 0.0, 0.0],
-            "localScale": [1.0, 1.0, 1.0],
-            "textureGuid": "16acbf64-bc73-4ec1-8a2c-0d62e9412695",
-            "numInstances": 16,
-            "center": [0.0, 0.0, 0.0],
-            "range": [0.35, 0.35, 0.35],
-            "spawnShape": 1,
-            "spawnRadius": 0.35,
-            "scale": [0.55, 1.25],
-            "speed": [0.8, 2.4],
-            "lifeTime": [0.25, 0.48],
-            "isLoop": false,
-            "blendMode": 1,
-            "colorTint": [1.0, 0.28, 0.04, 1.0],
-            "opacity": 0.9,
-            "emissiveStrength": 3.5,
-            "useOpacityOverTime": true,
+            "emissiveGradationTextureGuid": "b4ba563d-b2f3-437c-8757-107997eacb24",
+            "emissiveStrength": 4.199999809265137,
+            "emissiveTextureGuid": "94626772-0395-4ade-857d-3e75727a4259",
+            "enabled": true,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endEmissiveStrength": 0.0,
             "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                0.8500000238418579,
+                0.8500000238418579,
+                0.8500000238418579
+            ],
             "flipbook": {
-                "enabled": true,
-                "columns": 8,
-                "rows": 8,
-                "fps": 36.0,
-                "startFrame": 0,
+                "columns": 1,
+                "enabled": false,
                 "endFrame": -1,
-                "loop": false
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
             },
-            "moveMode": 1
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "Last_Start_MeshRing_B",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                90.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                0.11999999731779099,
+                0.11999999731779099,
+                0.11999999731779099
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "e3e74e99-2ffa-4497-ad95-4a8240463e71",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
+            "opacity": 0.75,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "",
+            "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
+            "rotationAxis": [
+                0.0,
+                0.0,
+                1.0
+            ],
+            "rotationSpeed": 280.0,
+            "roughness": 0.5,
+            "roughnessTextureGuid": "",
+            "scaleDuration": 0.5,
+            "screenDistortionRadialStrength": 0.0,
+            "screenDistortionStrength": 0.029999999329447746,
+            "shadingMode": 0,
+            "specularPower": 32.0,
+            "specularStrength": 1.0,
+            "specularTextureGuid": "",
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useColorTintOverTime": false,
+            "useEmissiveStrengthOverTime": true,
+            "useOpacityAsTransparency": true,
+            "useOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useScaleOverTime": true,
+            "useScreenDistortion": false,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "baseEmissiveStrength": 4.5,
+            "baseFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "baseMaskTextureGuid": "",
+            "baseOpacity": 0.949999988079071,
+            "baseOpacityGradationTextureGuid": "",
+            "baseOpacityTextureGuid": "",
+            "baseTextureGuid": "b87d724c-7b0b-4036-9428-b550442a23f5",
+            "baseTint": [
+                1.0,
+                0.2199999988079071,
+                0.019999999552965164,
+                1.0
+            ],
+            "baseUvOffset": [
+                0.0,
+                0.0
+            ],
+            "baseUvScale": [
+                1.0,
+                1.0
+            ],
+            "billboardToCamera": true,
+            "blendMode": 1,
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "duration": 0.3199999928474426,
+            "enabled": false,
+            "endBaseOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endRingOpacity": 0.0,
+            "endScale": [
+                3.9000000953674316,
+                3.9000000953674316,
+                1.0
+            ],
+            "kind": 2,
+            "layerName": "Last_Start_CoreFlash",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.2000000476837158,
+                1.2000000476837158,
+                1.0
+            ],
+            "loop": false,
+            "positionDuration": 1.0,
+            "renderMode": 1,
+            "ringEmissiveStrength": 1.0,
+            "ringFlipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "ringOpacity": 0.44999998807907104,
+            "ringOpacityGradationTextureGuid": "",
+            "ringOpacityTextureGuid": "",
+            "ringTextureGuid": "",
+            "ringTint": [
+                0.8500000238418579,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "ringUvOffset": [
+                0.0,
+                0.0
+            ],
+            "ringUvScale": [
+                1.0,
+                1.0
+            ],
+            "scaleDuration": 0.3199999928474426,
+            "screenDistortionNormalTextureGuid": "",
+            "screenDistortionNormalTiling": [
+                2.0,
+                3.0
+            ],
+            "screenDistortionRadialStrength": 0.012000000104308128,
+            "screenDistortionScrollA": [
+                0.20000000298023224,
+                1.0
+            ],
+            "screenDistortionScrollB": [
+                -0.20000000298023224,
+                1.0
+            ],
+            "screenDistortionStrength": 0.017999999225139618,
+            "startDelay": 0.0,
+            "useBaseOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useRing": false,
+            "useRingOpacityOverTime": false,
+            "useScaleOverTime": true
+        },
+        {
+            "blendMode": 1,
+            "center": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "colorTint": [
+                1.0,
+                0.2800000011920929,
+                0.03999999910593033,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "duration": 0.5,
+            "emissiveStrength": 3.5,
+            "enabled": false,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "flipbook": {
+                "columns": 8,
+                "enabled": true,
+                "endFrame": -1,
+                "fps": 36.0,
+                "loop": false,
+                "rows": 8,
+                "startFrame": 0
+            },
+            "isLoop": false,
+            "kind": 0,
+            "layerName": "Last_Start_FireTongues",
+            "lifeTime": [
+                0.25,
+                0.47999998927116394
+            ],
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "lockWorldOnSpawn": false,
+            "loop": false,
+            "maskTextureGuid": "",
+            "moveMode": 1,
+            "numInstances": 16,
+            "opacity": 0.8999999761581421,
+            "opacityTextureGuid": "",
+            "pivot": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "positionDuration": 1.0,
+            "range": [
+                0.3499999940395355,
+                0.3499999940395355,
+                0.3499999940395355
+            ],
+            "scale": [
+                0.550000011920929,
+                1.25
+            ],
+            "scaleDuration": 1.0,
+            "spawnHeight": 1.0,
+            "spawnInnerRadius": 0.0,
+            "spawnRadius": 0.3499999940395355,
+            "spawnShape": 1,
+            "speed": [
+                0.800000011920929,
+                2.4000000953674316
+            ],
+            "startDelay": 0.029999999329447746,
+            "textureGuid": "16acbf64-bc73-4ec1-8a2c-0d62e9412695",
+            "useColorTintOverTime": false,
+            "useOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useScaleOverTime": false
         }
-    ]
+    ],
+    "totalDuration": 0.6499999761581421
 }

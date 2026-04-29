@@ -5,6 +5,8 @@
 #include "Character.h"
 #include "Collider.h"
 #include "GameObject_Factory.h"
+#include "MeshDebrisObject.h"
+#include "MovementComponent.h"
 #include "Transform.h"
 #include "Utils.h"
 
@@ -24,6 +26,22 @@ Skill_ChibakuTensei::Skill_ChibakuTensei(const Skill_ChibakuTensei& rhs)
     , _sequenceLifetime(rhs._sequenceLifetime)
     , _attachRadius(rhs._attachRadius)
     , _startRadius(rhs._startRadius)
+    , _targetHoldDelay(rhs._targetHoldDelay)
+    , _targetHoldDuration(rhs._targetHoldDuration)
+    , _releaseDropSpeed(rhs._releaseDropSpeed)
+    , _bindMultiHitDelay(rhs._bindMultiHitDelay)
+    , _bindMultiHitInterval(rhs._bindMultiHitInterval)
+    , _bindMultiHitDamage(rhs._bindMultiHitDamage)
+    , _bindHitAnimStateOverride(rhs._bindHitAnimStateOverride)
+    , _coreImpactEffectName(rhs._coreImpactEffectName)
+    , _coreImpactEffectScale(rhs._coreImpactEffectScale)
+    , _landingSmokeEffectName(rhs._landingSmokeEffectName)
+    , _landingSmokeEffectScale(rhs._landingSmokeEffectScale)
+    , _landingSmokeRadius(rhs._landingSmokeRadius)
+    , _landingSmokeBurstCount(rhs._landingSmokeBurstCount)
+    , _landingDebrisEffectName(rhs._landingDebrisEffectName)
+    , _landingDebrisBurstCount(rhs._landingDebrisBurstCount)
+    , _landingDebrisRadius(rhs._landingDebrisRadius)
 {
 }
 
@@ -52,6 +70,15 @@ HRESULT Skill_ChibakuTensei::Initialize(void* arg)
     _coreShellSpawned = false;
     _sequenceElapsed = 0.f;
     _nextStoneIndex = 0;
+    _targetHoldStarted = false;
+    _targetHoldFinished = false;
+    _hasSavedTargetGravityState = false;
+    _targetDropTriggered = false;
+    _landingBurstTriggered = false;
+    _targetHoldElapsed = 0.f;
+    _savedTargetGravityEnabled = true;
+    _bindMultiHitStarted = false;
+    _bindMultiHitElapsed = 0.f;
 
     return S_OK;
 }
@@ -69,6 +96,8 @@ void Skill_ChibakuTensei::Update(float timeDelta)
     _sequenceElapsed += timeDelta;
 
     Update_TargetHold(timeDelta);
+    Update_BindMultiHit(timeDelta);
+    Update_LandingBurst(timeDelta);
 
     Spawn_ReadyStones();
     Update_AttachedStones(timeDelta);
@@ -118,6 +147,15 @@ void Skill_ChibakuTensei::Begin_AttachSequence(Character* target)
     _sequenceElapsed = 0.f;
     _nextStoneIndex = 0;
     _stones.clear();
+    _targetHoldStarted = false;
+    _targetHoldFinished = false;
+    _hasSavedTargetGravityState = false;
+    _targetDropTriggered = false;
+    _landingBurstTriggered = false;
+    _targetHoldElapsed = 0.f;
+    _savedTargetGravityEnabled = true;
+    _bindMultiHitStarted = false;
+    _bindMultiHitElapsed = 0.f;
 
     _isMoving = false;
 
@@ -229,6 +267,8 @@ void Skill_ChibakuTensei::Spawn_CoreShell()
         Vec3(0.f, 0.f, 0.f),
         Vec3(1.08f, 1.08f, 1.08f));
 
+    Spawn_Effect_Once(_coreImpactEffectName, targetCenter, _coreImpactEffectScale);
+
     _coreShellSpawned = true;
 }
 
@@ -298,7 +338,12 @@ void Skill_ChibakuTensei::Update_TargetHold(float timeDelta)
         _targetHoldPosition = targetTransform->Get_WorldPosition();
 
         if (targetMovement)
+        {
+            _savedTargetGravityEnabled = targetMovement->Is_GravityEnabled();
+            _hasSavedTargetGravityState = true;
+            targetMovement->Set_GravityEnabled(false);
             targetMovement->Set_Velocity(Vec3::Zero);
+        }
     }
 
     if (_targetHoldElapsed < _targetHoldDuration)
@@ -313,6 +358,191 @@ void Skill_ChibakuTensei::Update_TargetHold(float timeDelta)
     }
 
     _targetHoldFinished = true;
+    Release_TargetHold(true);
+}
+
+void Skill_ChibakuTensei::Update_BindMultiHit(float timeDelta)
+{
+    if (!_targetHoldStarted || _targetHoldFinished)
+        return;
+
+    if (_targetHoldElapsed < _bindMultiHitDelay)
+        return;
+
+    auto target = _attachTarget.lock();
+    auto owner = _owner.lock();
+    if (!target || target->Is_Destroy() || !owner)
+        return;
+
+    auto character = dynamic_pointer_cast<Character>(target);
+    if (!character)
+        return;
+
+    auto ownerTransform = owner->Get_Component<Transform>();
+    auto targetTransform = target->Get_Component<Transform>();
+    if (!ownerTransform || !targetTransform)
+        return;
+
+    _bindMultiHitStarted = true;
+    _bindMultiHitElapsed += timeDelta;
+
+    while (_bindMultiHitElapsed >= _bindMultiHitInterval)
+    {
+        _bindMultiHitElapsed -= _bindMultiHitInterval;
+
+        Vec3 hitDir = targetTransform->Get_WorldPosition() - ownerTransform->Get_WorldPosition();
+        hitDir.y = 0.f;
+        hitDir = Utils::Safe_Normalize(hitDir, ownerTransform->Get_WorldForward());
+
+        static uint32 sChibakuBindHitSerial = 100000;
+        ++sChibakuBindHitSerial;
+
+        FDamageEvent damageEvent{};
+        damageEvent.damage = _bindMultiHitDamage;
+        damageEvent.damageCauser = owner;
+        damageEvent.hasCustomDir = true;
+        damageEvent.damageDir = hitDir;
+        damageEvent.launchPower = 0.f;
+        damageEvent.launchUp = 0.f;
+        damageEvent.hitReactionType = EHitReactionType::Stagger;
+        damageEvent.hitReactionSerial = sChibakuBindHitSerial;
+        damageEvent.hitAnimStateOverride = _bindHitAnimStateOverride;
+        damageEvent.forceHitRestart = true;
+
+        character->TakeDamage(damageEvent);
+    }
+}
+
+void Skill_ChibakuTensei::Release_TargetHold(bool forceDrop)
+{
+    auto target = _attachTarget.lock();
+    if (!target || target->Is_Destroy())
+        return;
+
+    auto targetMovement = target->Get_Component<MovementComponent>();
+    if (!targetMovement)
+        return;
+
+    if (_hasSavedTargetGravityState)
+        targetMovement->Set_GravityEnabled(_savedTargetGravityEnabled);
+    else
+        targetMovement->Set_GravityEnabled(true);
+
+    if (forceDrop && !_targetDropTriggered)
+    {
+        targetMovement->Set_Velocity(Vec3(0.f, _releaseDropSpeed, 0.f));
+        _targetDropTriggered = true;
+    }
+}
+
+void Skill_ChibakuTensei::Update_LandingBurst(float timeDelta)
+{
+    UNREFERENCED_PARAMETER(timeDelta);
+
+    if (!_targetDropTriggered || _landingBurstTriggered)
+        return;
+
+    auto target = _attachTarget.lock();
+    if (!target || target->Is_Destroy())
+        return;
+
+    auto targetTransform = target->Get_Transform();
+    auto targetMovement = target->Get_Component<MovementComponent>();
+    if (!targetTransform || !targetMovement)
+        return;
+
+    if (!targetMovement->Is_OnGround())
+        return;
+
+    const Vec3 landingCenter = targetTransform->Get_WorldPosition();
+
+    Cleanup_AttachedEffects();
+    // 지폭천성 마지막 착지 폭발 순간에는 파이어볼 히트 사운드를 함께 재생해서 더 강한 임팩트를 만든다.
+    GAME->Play_Sound(L"Fireball_Hit.wav", ESoundChannel::Effect, 0.3f);
+    Spawn_LandingSmokeBurst(landingCenter);
+    Spawn_LandingMeshDebrisBurst(landingCenter);
+    targetMovement->Set_Velocity(Vec3::Zero);
+
+    _landingBurstTriggered = true;
+    Set_Destroy(true);
+}
+
+void Skill_ChibakuTensei::Cleanup_AttachedEffects()
+{
+    for (FAttachedStone& stone : _stones)
+    {
+        auto effect = stone.effectObject.lock();
+        if (effect && !effect->Is_Destroy())
+            effect->Set_Destroy(true);
+    }
+
+    auto core = _coreShell.lock();
+    if (core && !core->Is_Destroy())
+        core->Set_Destroy(true);
+}
+
+void Skill_ChibakuTensei::Spawn_LandingSmokeBurst(const Vec3& center)
+{
+    if (_landingSmokeBurstCount <= 0)
+        return;
+
+    Spawn_Effect_Once(_landingSmokeEffectName, center, _landingSmokeEffectScale);
+
+    for (int32 burstIndex = 0; burstIndex < _landingSmokeBurstCount; ++burstIndex)
+    {
+        const float angle = XM_2PI * (static_cast<float>(burstIndex) / static_cast<float>(_landingSmokeBurstCount));
+        const Vec3 radialOffset = Vec3(cosf(angle), 0.f, sinf(angle)) * _landingSmokeRadius;
+        const Vec3 burstPosition = center + radialOffset;
+        Spawn_Effect_Once(_landingSmokeEffectName, burstPosition, _landingSmokeEffectScale);
+    }
+}
+
+void Skill_ChibakuTensei::Spawn_LandingMeshDebrisBurst(const Vec3& center)
+{
+    const int32 safeBurstCount = max(0, _landingDebrisBurstCount);
+    if (safeBurstCount <= 0)
+        return;
+
+    for (int32 burstIndex = 0; burstIndex < safeBurstCount; ++burstIndex)
+    {
+        const float angle = XM_2PI * (static_cast<float>(burstIndex) / static_cast<float>(safeBurstCount));
+        const Vec3 radialDir = Vec3(cosf(angle), 0.f, sinf(angle));
+        const float radiusJitter = Utils::RandomRange(0.35f, 1.0f);
+
+        MeshDebrisObject::FMeshDebrisDesc debrisDesc{};
+        debrisDesc.effectAssetName = _landingDebrisEffectName;
+        debrisDesc.position = center + radialDir * (_landingDebrisRadius * radiusJitter);
+        debrisDesc.spawnRotation = Vec3(
+            Utils::RandomRange(0.f, 360.f),
+            Utils::RandomRange(0.f, 360.f),
+            Utils::RandomRange(0.f, 360.f));
+        debrisDesc.spawnScale = Vec3(1.f, 1.f, 1.f);
+
+        const float randomScale = Utils::RandomRange(0.18f, 0.34f);
+        debrisDesc.effectLocalScale = Vec3(randomScale, randomScale, randomScale);
+
+        debrisDesc.initialVelocity = Vec3(
+            radialDir.x * Utils::RandomRange(4.5f, 8.5f),
+            Utils::RandomRange(10.f, 15.f),
+            radialDir.z * Utils::RandomRange(4.5f, 8.5f));
+
+        debrisDesc.gravity = -28.f;
+        debrisDesc.angularVelocityDeg = Vec3(
+            Utils::RandomRange(-540.f, 540.f),
+            Utils::RandomRange(-540.f, 540.f),
+            Utils::RandomRange(-540.f, 540.f));
+        debrisDesc.lifetime = Utils::RandomRange(1.0f, 1.6f);
+        debrisDesc.groundY = center.y;
+        debrisDesc.destroyOnGroundHit = false;
+        debrisDesc.stopOnGroundHit = true;
+
+        GAME->Clone_And_Add_GameObject(
+            ETOI(ELevelType::Static),
+            Protocol::OBJECT_TYPE_MESH_DEBRIS,
+            GAME->Current_Level(),
+            TEXT("Layer_Effect"),
+            &debrisDesc);
+    }
 }
 
 Vec3 Skill_ChibakuTensei::Build_AttachOffset(int32 stoneIndex) const
@@ -394,16 +624,8 @@ Shared<GameObject> Skill_ChibakuTensei::Clone(void* arg)
 
 void Skill_ChibakuTensei::Free()
 {
-    for (FAttachedStone& stone : _stones)
-    {
-        auto effect = stone.effectObject.lock();
-        if (effect && !effect->Is_Destroy())
-            effect->Set_Destroy(true);
-    }
-
-    auto core = _coreShell.lock();
-    if (core && !core->Is_Destroy())
-        core->Set_Destroy(true);
+    Release_TargetHold(true);
+    Cleanup_AttachedEffects();
 
     SkillObject_Projectile::Free();
 }

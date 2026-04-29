@@ -44,6 +44,9 @@ HRESULT Level_Loading::Initialize(ELevelType nextLevelID, bool loadSharedResourc
     _loadSharedResources = loadSharedResources;
     _gameplaySpawnMode = spawnMode;
 
+    // 로딩 화면으로 넘어갈 때 이전 레벨의 BGM / 효과음 등 모든 사운드를 즉시 정지한다.
+    GAME->Stop_AllSounds();
+
     if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
         return E_FAIL;
 

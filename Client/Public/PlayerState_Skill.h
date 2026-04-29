@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "IPlayerState.h"
 
@@ -60,6 +60,9 @@ private:
     bool         _startedOnGround = false;
     bool         _hasLanded = false;
     bool         _chargeReady = false;
+
+    float        _dashElapsed = 0.f;
+    float        _dashMaxDuration = 0.f;
 
 
 private:

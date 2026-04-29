@@ -7,7 +7,13 @@
     },
     {
       "material_name": "Material_1",
-      "textures": []
+      "textures": [],
+      "base_color_factor": [
+        0.66,
+        0.64,
+        0.6,
+        1.0
+      ]
     }
   ]
 }

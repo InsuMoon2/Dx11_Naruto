@@ -233,7 +233,7 @@
             "Deceleration": 24.0,
             "Gravity": -20.0,
             "Ground Walkable Min Up Dot": 0.550000011920929,
-            "Ground Y": 5.0,
+            "Ground Y": 0.0,
             "Jump Velocity": 11.0,
             "Launch Control Lock Duration": 0.11999999731779099,
             "Max Sprint Speed": 8.0,
@@ -988,7 +988,7 @@
                         "type": "COMPONENT_TYPE_MODEL"
                     }
                 ],
-                "guid": "ed9710db-eefd-45c8-943d-5a257e4348a9",
+                "guid": "d48aea7a-a76f-41e0-83b4-a53dbac96273",
                 "object_type": "OBJECT_TYPE_PART_SOCKET",
                 "static_class": "SocketPartObject"
             },
@@ -1029,7 +1029,7 @@
                         "type": "COMPONENT_TYPE_MODEL"
                     }
                 ],
-                "guid": "5e6539d5-d81a-43a1-a0c6-a1edfcb90f3b",
+                "guid": "8e09ac50-b087-4791-b7c7-22dffa168ded",
                 "object_type": "OBJECT_TYPE_PART_SOCKET",
                 "static_class": "SocketPartObject"
             }
@@ -1073,7 +1073,7 @@
             }
         }
     },
-    "guid": "4fced615-1ab2-4690-81a2-bb077b4dbc66",
+    "guid": "7747fea2-9462-4e17-ab81-97cf4947a4bb",
     "object_type": "OBJECT_TYPE_MONSTER_LEAF",
     "prefab_name": "Monster_Leaf",
     "static_class": "Monster_Leaf"

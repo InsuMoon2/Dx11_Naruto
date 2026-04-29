@@ -37,11 +37,6 @@ void Game_View::OnGui()
         Update_WindowState();
 
         Render_Viewport();
-
-        ImGui::SetCursorPos(ImVec2(12.f, 30.f));
-        ImGui::BeginChild("##GameViewOverlay", ImVec2(170.f, 34.f), false, ImGuiWindowFlags_NoScrollbar);
-        ImGui::Checkbox("RT Debug", &_showRenderTargetDebug);
-        ImGui::EndChild();
     }
     ImGui::End();
     ImGui::PopStyleVar();

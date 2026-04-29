@@ -5,7 +5,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_01_WallRun",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "ba610698-d075-4aec-99c0-74b931b6a2d3",
+            "guid": "1353a8c0-71a3-4fa9-96c0-2a0e322d49ec",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "b67834ae-f651-4787-9d8f-7bf1a2ec6062",
             "proxy_type": "WallRun",
@@ -34,7 +34,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_01_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "4d19ba42-c5b9-47d7-87b5-22e9f9016787",
+            "guid": "1daa45a4-cc0f-4375-9756-66464c9de717",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "b67834ae-f651-4787-9d8f-7bf1a2ec6062",
             "proxy_type": "WorldBlock",
@@ -63,7 +63,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_02_WallRun",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "9a52f904-396b-4d6c-8b6d-9bc2f3ad6ae6",
+            "guid": "34def58f-8384-4c62-be54-16391bb7c4da",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "8b51464d-afbd-48c2-bb44-80ec1055d77b",
             "proxy_type": "WallRun",
@@ -92,7 +92,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_02_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "630b3f8e-2541-4503-b5ec-2607ee3f43b0",
+            "guid": "2e45e19d-93e4-41b5-8077-5eae1f8a29b2",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "8b51464d-afbd-48c2-bb44-80ec1055d77b",
             "proxy_type": "WorldBlock",
@@ -121,7 +121,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_03_WallRun",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "01fdf6ce-5b9e-420d-8cfc-7b27088b89eb",
+            "guid": "8a2a58a1-c55c-45b0-8d0f-a0332da0317d",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "02e45348-1481-43a9-9859-a9c370b51020",
             "proxy_type": "WallRun",
@@ -150,7 +150,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_03_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "a4718ed9-0084-4e9d-b74f-5ef3babf841e",
+            "guid": "ecab7e4f-f1b0-4470-bcfc-b125d69cf937",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "02e45348-1481-43a9-9859-a9c370b51020",
             "proxy_type": "WorldBlock",
@@ -179,7 +179,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_04_WallRun",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "3020a1a1-7ffc-4958-a62f-3e94d42f1ea0",
+            "guid": "aa636560-b6dd-456c-bd61-b1a6202e3051",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "d94d8917-484f-4fb0-ba72-f852d13d5dba",
             "proxy_type": "WallRun",
@@ -208,7 +208,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_04_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "b8e85dab-3b9b-4b79-8a20-6c2dcc912b0e",
+            "guid": "adc2ff02-0521-47c7-9ba2-8b78cd55c0ab",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "d94d8917-484f-4fb0-ba72-f852d13d5dba",
             "proxy_type": "WorldBlock",
@@ -237,7 +237,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_05_WallRun",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "c7664e86-31c8-4410-a4f0-553ed36e8b1e",
+            "guid": "8e3bbb28-0243-4a69-8b7e-78a0fb147603",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "5855127a-b5ad-4704-84f4-46eb8ee55490",
             "proxy_type": "WallRun",
@@ -266,7 +266,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_05_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "624c4f81-1294-4692-aa79-efffc6421d9b",
+            "guid": "1aa791c4-9d87-455b-acf1-ed8b0d9facde",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "5855127a-b5ad-4704-84f4-46eb8ee55490",
             "proxy_type": "WorldBlock",
@@ -295,7 +295,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_06_WallRun",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "73722c3b-8504-4604-b75f-0110b46bf50d",
+            "guid": "57575d8e-a016-4d0e-b047-b666c7982a7c",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "b061d1a6-6b2a-4f45-959e-f650055bd262",
             "proxy_type": "WallRun",
@@ -324,7 +324,7 @@
         {
             "static_class": "MERGED_SM_ENV_KNVLLG_Fence_06_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "2cb30146-82f4-48dd-82cc-f8dc396ac945",
+            "guid": "37e4ecb5-6767-4391-a293-a0e964bd751b",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "b061d1a6-6b2a-4f45-959e-f650055bd262",
             "proxy_type": "WorldBlock",
@@ -353,7 +353,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Fence_Large_2_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "c6ee165a-b1cd-49e8-a548-9a4e04c9c39a",
+            "guid": "d2c7d066-d10b-413f-9aa0-70f0a7e732aa",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "6cc275d5-9552-4e1f-b4f5-761a6fca4c2b",
             "proxy_type": "WorldBlock",
@@ -382,7 +382,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Stall_A2_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "b8e41d09-442e-4a26-9110-20d6868b87fd",
+            "guid": "02b2883e-dc9e-4b2f-b16d-a9eab387f098",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "0746d71b-1b2f-4708-a48d-6c260e0e49f3",
             "proxy_type": "WorldBlock",
@@ -411,7 +411,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Stall_B_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "41af7f9e-13cb-4584-b778-ff189c1ef005",
+            "guid": "fbcfdd9f-1b25-4d68-a51d-ea48ebfb394c",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "2893481b-e0c8-4689-895c-11408a910ca5",
             "proxy_type": "WorldBlock",
@@ -440,7 +440,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Stall_B3_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "14d37916-7303-4697-a17f-cfef78df399f",
+            "guid": "57652e73-ce76-4761-b447-301d1b49d7fb",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "2893481b-e0c8-4689-895c-11408a910ca5",
             "proxy_type": "WorldBlock",
@@ -469,7 +469,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Stall_B4_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "ccb4af70-f15d-415e-8ef3-60bed5b5aae9",
+            "guid": "e39403b7-44b4-4012-84e7-4874ff7f0dad",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "2893481b-e0c8-4689-895c-11408a910ca5",
             "proxy_type": "WorldBlock",
@@ -498,7 +498,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Stall_C_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "e1c414bb-3fd3-401b-871b-060ba9a47808",
+            "guid": "44b81f60-eeeb-42b5-8ce8-7939d802ea7b",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "1b020deb-d5db-41a5-a19e-2135f2a6351c",
             "proxy_type": "WorldBlock",
@@ -527,7 +527,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Stall_C2_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "ab0b074b-be21-4a02-9f24-cb0dc9a3c3fe",
+            "guid": "2b714a67-99c3-4770-8ce6-88061b2b982c",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "1b020deb-d5db-41a5-a19e-2135f2a6351c",
             "proxy_type": "WorldBlock",
@@ -556,7 +556,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Stall_D_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "d676f5b3-4581-496c-b733-930c8f2699c2",
+            "guid": "80759c69-7b35-4bd8-9e1d-906578c49ff9",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "b5247574-e48b-4027-adce-5245a7e456a3",
             "proxy_type": "WorldBlock",
@@ -585,7 +585,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Stall_D_38_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "b3056784-2549-41d3-921c-d4129de21aeb",
+            "guid": "63c89efb-faac-41b2-a00e-83f0bf662163",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "b5247574-e48b-4027-adce-5245a7e456a3",
             "proxy_type": "WorldBlock",
@@ -614,7 +614,7 @@
         {
             "static_class": "SM_ENV_KNVLLG_Stall_E2_WorldBlock",
             "object_type": "OBJECT_TYPE_COLLISION_PROXY",
-            "guid": "f1609020-647e-43ee-8183-50e19ce0c52e",
+            "guid": "f2a93a65-6a55-4d5e-83cf-d3d0a27a9548",
             "layerTag": "Layer_CollisionProxy",
             "model_guid": "70ba54cd-7ee0-403a-bb8b-09722e2b702e",
             "proxy_type": "WorldBlock",

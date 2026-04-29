@@ -57,6 +57,21 @@ def run_command(command: list[str], title: str):
         raise RuntimeError(f"{title} failed with exit code {result.returncode}")
 
 
+def run_command_allow_returncodes(command: list[str], title: str, allowed_returncodes: set[int]):
+    # [추가] `run_command_allow_returncodes` keeps long batch pipelines moving when a known non-fatal tool exit code appears.
+    # [추가] KonohaVillage static mesh export occasionally returns code 2 after a single meshbin write failure, but existing outputs can still be reused.
+    print("")
+    print(f"[{title}]")
+    print(" ".join(f"\"{item}\"" if " " in item else item for item in command))
+
+    result = subprocess.run(command, check=False)
+    if result.returncode in allowed_returncodes:
+        print(f"[{title}] warning: continuing after tolerated exit code {result.returncode}")
+        return
+
+    raise RuntimeError(f"{title} failed with exit code {result.returncode}")
+
+
 def build_mesh_guid_map(mesh_root: Path, out_path: Path):
     # Read generated *.meshbin.meta files and emit basename -> guid mapping.
     guid_map = {}
@@ -352,7 +367,10 @@ def main():
         print("[ASSIMP CONVERT] dry-run skipped")
         print(" ".join(f"\"{item}\"" if " " in item else item for item in assimp_command))
     else:
-        run_command(assimp_command, "ASSIMP CONVERT")
+        # [추가] `assimp_allowed_returncodes` tolerates KonohaVillage's intermittent single-file meshbin write failure.
+        # [추가] The pipeline should still rebuild GUIDs, material instances, and levels from the successfully generated mesh outputs.
+        assimp_allowed_returncodes = {0, 2}
+        run_command_allow_returncodes(assimp_command, "ASSIMP CONVERT", assimp_allowed_returncodes)
 
     convert_col_meshes(args)
     convert_ground_collision_meshes(args)

@@ -46,6 +46,9 @@ void PlayerState_AirApproach::Enter(PlayerStateMachine* state)
     _elapsedTime = 0.f;
     _arrived = false;
 
+    // AirApproach 진입 시에도 지상 Dash와 같은 진입 사운드를 한 번 재생해 이동 피드백을 맞춘다.
+    GAME->Play_Sound(L"Dash.wav", ESoundChannel::Player, 0.3f);
+
 	state->Play_AnimState(_approachDesc.animState);
 }
 

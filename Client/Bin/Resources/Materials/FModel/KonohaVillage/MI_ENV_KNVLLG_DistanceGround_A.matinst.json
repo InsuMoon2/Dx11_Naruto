@@ -5,8 +5,8 @@
   "parent": "M_GenericPBR",
   "base_color_factor": [
     1.0,
-    0.762598,
-    0.585,
+    1.0,
+    1.0,
     1.0
   ],
   "shadow_color": [
@@ -17,24 +17,38 @@
   ],
   "normal_strength": 1.0,
   "blend_normal_strength": 1.0,
-  "mask_scale": 1.0,
-  "mask_threshold": 1.0,
+  "mask_scale": 0.85,
+  "mask_threshold": 0.25,
   "uneven_color_scale": 1.0,
   "blend_mode": 0,
   "textures": [
-    {
-      "slot": "base_color",
-      "index": 0,
-      "path": "../../../Textures/FModel/KonohaVillage/T_ENV_KNVLLG_GrassBase_BC.png",
-      "uv_channel": 0,
-      "sampling_scale": 1.0
-    },
     {
       "slot": "uneven_color",
       "index": 0,
       "path": "../../../Textures/FModel/KonohaVillage/T_ENV_KNVLLG_Noize_06_UC.png",
       "uv_channel": 0,
       "sampling_scale": 1.0
+    },
+    {
+      "slot": "base_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/KonohaVillage/T_ENV_KNVLLG_Ground_Sand_BC.png",
+      "uv_channel": 0,
+      "sampling_scale": 6.0
+    },
+    {
+      "slot": "blend_base_color",
+      "index": 0,
+      "path": "../../../Textures/FModel/KonohaVillage/T_ENV_KNVLLG_GrassBase_BC.png",
+      "uv_channel": 0,
+      "sampling_scale": 2.5
+    },
+    {
+      "slot": "mask",
+      "index": 0,
+      "path": "../../../Textures/FModel/KonohaVillage/T_ENV_KNVLLG_Mask_01_M.png",
+      "uv_channel": 0,
+      "sampling_scale": 0.32
     }
   ],
   "source": {

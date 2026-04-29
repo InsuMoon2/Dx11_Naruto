@@ -1,0 +1,139 @@
+{
+    "components": [
+        {
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                -0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "COMPONENT_TYPE_TRANSFORM"
+        },
+        {
+            "type": "COMPONENT_TYPE_EFFECT"
+        },
+        {
+            "bounding": {
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "extents": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            },
+            "channel": "",
+            "collision_preset": "Trigger",
+            "is_active": true,
+            "shape": "OBB",
+            "type": "COMPONENT_TYPE_COLLIDER"
+        }
+    ],
+    "custom_properties": {
+        "activate_on_wave_clear_tag": "Wave_Tutorial_01",
+        "clear_delay_sec": 1.0,
+        "default_effect_asset_name": "Wave_Effect",
+        "play_default_effect_on_begin_play": true,
+        "play_trigger_effect_on_trigger": true,
+        "show_mission_marker": true,
+        "spawn_entries": [
+            {
+                "object_type_override": "OBJECT_TYPE_MONSTER",
+                "position": [
+                    -6.5,
+                    0.0,
+                    6.0
+                ],
+                "prefab_name": "Monster",
+                "rotation": [
+                    0.0,
+                    20.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            {
+                "object_type_override": "OBJECT_TYPE_MONSTER",
+                "position": [
+                    -6.5,
+                    0.0,
+                    -6.0
+                ],
+                "prefab_name": "Monster",
+                "rotation": [
+                    0.0,
+                    -20.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            {
+                "object_type_override": "OBJECT_TYPE_MONSTER",
+                "position": [
+                    6.5,
+                    0.0,
+                    6.0
+                ],
+                "prefab_name": "Monster2",
+                "rotation": [
+                    0.0,
+                    110.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            {
+                "object_type_override": "OBJECT_TYPE_MONSTER",
+                "position": [
+                    6.5,
+                    0.0,
+                    -6.0
+                ],
+                "prefab_name": "Monster2",
+                "rotation": [
+                    0.0,
+                    70.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        ],
+        "spawn_layer_tag": "Layer_Builder",
+        "stop_default_effect_on_trigger": true,
+        "trigger_effect_asset_name": "",
+        "trigger_once": true,
+        "wave_tag": "Wave_Tutorial_02"
+    },
+    "guid": "3f7a3fe8-97ff-434b-9546-1f18535c2520",
+    "object_type": "OBJECT_TYPE_WAVE_TRIGGER",
+    "prefab_name": "Wave_Tutorial_2",
+    "static_class": "Wave_Tutorial_2"
+}

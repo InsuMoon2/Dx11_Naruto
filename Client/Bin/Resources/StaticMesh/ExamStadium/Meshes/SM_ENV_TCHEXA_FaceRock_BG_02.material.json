@@ -3,7 +3,13 @@
   "materials": [
     {
       "material_name": "MI_ENV_LKNVLD_Wall_A_BG",
-      "textures": []
+      "textures": [],
+      "base_color_factor": [
+        0.81,
+        0.753659,
+        0.5427,
+        1.0
+      ]
     },
     {
       "material_name": "Material_1",

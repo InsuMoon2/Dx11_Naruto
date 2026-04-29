@@ -35,6 +35,10 @@ public:
         bool  useLaunchOverride = false;
         float launchPower = 0.f;
         float launchUp = 0.f;
+
+        bool   useHitSoundOverride = false; // ANS_CollisionEnable 같은 notify가 현재 타격 구간의 피격음을 직접 지정할지 여부다.
+        int32  hitSound = 0; // useHitSoundOverride가 켜졌을 때 정수 기반 피격 사운드 ID를 FDamageEvent에 실어 보낸다.
+        string hitSoundFile = ""; // useHitSoundOverride가 켜졌을 때 파일명 기반 피격 사운드를 FDamageEvent에 실어 보낸다.
     };
 
 

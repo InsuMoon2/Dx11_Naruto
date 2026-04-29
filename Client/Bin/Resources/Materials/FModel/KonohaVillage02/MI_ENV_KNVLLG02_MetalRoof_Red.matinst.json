@@ -16,9 +16,9 @@
     1.0
   ],
   "normal_strength": 2.0,
-  "blend_normal_strength": 1.0,
-  "mask_scale": 1.35,
-  "mask_threshold": 2.0,
+  "blend_normal_strength": 0.0,
+  "mask_scale": 1.0,
+  "mask_threshold": 1.0,
   "uneven_color_scale": 1.0,
   "blend_mode": 0,
   "textures": [
@@ -30,13 +30,6 @@
       "sampling_scale": 1.0
     },
     {
-      "slot": "blend_base_color",
-      "index": 0,
-      "path": "../../../Textures/FModel/KonohaVillage02/T_ENV_KNVLLG02_SnowBase02_BC.png",
-      "uv_channel": 1,
-      "sampling_scale": 5.0
-    },
-    {
       "slot": "normal",
       "index": 0,
       "path": "../../../Textures/FModel/KonohaVillage02/T_ENV_KNVLLG_MetalRoof_N.png",
@@ -44,25 +37,11 @@
       "sampling_scale": 1.0
     },
     {
-      "slot": "blend_normal",
-      "index": 0,
-      "path": "../../../Textures/FModel/KonohaVillage02/T_ENV_KNVLLG02_Ground_Snow_N.png",
-      "uv_channel": 1,
-      "sampling_scale": 5.0
-    },
-    {
       "slot": "uneven_color",
       "index": 0,
       "path": "../../../Textures/FModel/KonohaVillage02/T_ENV_KNVLLG_Noize_06_UC.png",
       "uv_channel": 0,
       "sampling_scale": 1.0
-    },
-    {
-      "slot": "mask",
-      "index": 0,
-      "path": "../../../Textures/FModel/KonohaVillage02/T_ENV_KNVLLG02_Mask_Snow01_M.png",
-      "uv_channel": 0,
-      "sampling_scale": 1.34375
     }
   ],
   "source": {

@@ -18,14 +18,15 @@ Skill_RasenShuriken::Skill_RasenShuriken(ComPtr<Device> device, ComPtr<DeviceCon
 
 Skill_RasenShuriken::Skill_RasenShuriken(const Skill_RasenShuriken& rhs)
     : SkillObject_Projectile(rhs)
+    , _hasExploded(rhs._hasExploded)
 {
 }
 
 HRESULT Skill_RasenShuriken::Initialize_Prototype()
 {
     _speed = 28.f;
-    _maxDistance = 35.f;
-    _lifetime = 5.5f;
+    _maxDistance = 7.f;
+    _lifetime = 2.5f;
     _colliderRadius = 1.35f;
 
     _collisionPreset = Collision_Preset::Player_Attack;
@@ -40,6 +41,7 @@ HRESULT Skill_RasenShuriken::Initialize(void* arg)
     CHECK_FAILED(SkillObject_Projectile::Initialize(arg), E_FAIL);
 
     _isMoving = false;
+    _hasExploded = false;
 
     EffectComponent::FPlayDesc playDesc{};
     playDesc.effectAssetName = "RasenganShuriken";
@@ -54,9 +56,10 @@ void Skill_RasenShuriken::Update(float timeDelta)
     SkillObject_Projectile::Update(timeDelta);
 
     if (Is_Destroy())
+    {
+        Explode_RasenShuriken();
         return;
-
-    
+    }
 }
 
 void Skill_RasenShuriken::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
@@ -73,20 +76,16 @@ void Skill_RasenShuriken::OnBeginOverlap(Shared<Collider> self, Shared<Collider>
 
     // 1타 적용
     Apply_Skill_Hit(character, 10.f, 2.5f, 0.f); 
-
-    Skill_RasenShuriken_Hit::FHitDesc desc{};
-    desc.damageCauser = Get_Owner();
-    desc.spawnPosition = _transformCom->Get_WorldPosition();
-    desc.collisionPreset = Collision_Preset::Player_Attack;
-
-    auto hitActor = GAME->Clone_And_Add_GameObject(
-        ETOI(ELevelType::Static),
-        Protocol::OBJECT_TYPE_SKILL_RASENSHURIKEN_HIT,
-        GAME->Current_Level(),
-        TEXT("Layer_Skill"), &desc);
-
-    // 자기 자신은 소멸
-    Set_Destroy(true);
+    auto targetTransform = otherOwner->Get_Transform();
+    if (targetTransform)
+    {
+        Vec3 explosionPosition = targetTransform->Get_WorldPosition();
+        Explode_RasenShuriken(&explosionPosition);
+    }
+    else
+    {
+        Explode_RasenShuriken();
+    }
 }
 
 void Skill_RasenShuriken::OnStayOverlap(Shared<Collider> self, Shared<Collider> other)
@@ -116,6 +115,31 @@ Character* Skill_RasenShuriken::Find_HitCharacter(Shared<Collider> other)
         return nullptr;
 
     return dynamic_cast<Character*>(otherOwner.get());
+}
+
+void Skill_RasenShuriken::Explode_RasenShuriken(const Vec3* overrideExplosionPosition)
+{
+    if (_hasExploded)
+        return;
+
+    _hasExploded = true;
+    const Vec3 explosionPosition =
+        overrideExplosionPosition
+        ? *overrideExplosionPosition
+        : (_transformCom ? _transformCom->Get_WorldPosition() : Vec3::Zero);
+
+    Skill_RasenShuriken_Hit::FHitDesc desc{};
+    desc.damageCauser = Get_Owner();
+    desc.spawnPosition = explosionPosition;
+    desc.collisionPreset = Collision_Preset::Player_Attack;
+
+    GAME->Clone_And_Add_GameObject(
+        ETOI(ELevelType::Static),
+        Protocol::OBJECT_TYPE_SKILL_RASENSHURIKEN_HIT,
+        GAME->Current_Level(),
+        TEXT("Layer_Skill"), &desc);
+
+    Set_Destroy(true);
 }
 
 Shared<GameObject> Skill_RasenShuriken::Create(ComPtr<Device> device, ComPtr<DeviceContext> context)

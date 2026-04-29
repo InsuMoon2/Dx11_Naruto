@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "UI_PlayerHUD.h"
 #include "GameInstance.h"
 #include "UI_PlayerStatus.h"
@@ -111,6 +111,7 @@ void UI_PlayerHUD::Update(float timeDelta)
     Update_KOAnnounce(timeDelta);
     Update_MissionTitle(timeDelta);
     Update_CinematicTransition(timeDelta);
+    Update_BattleStartAnnounce(timeDelta);
 
     Apply_AnnouncePositions();
 
@@ -296,16 +297,26 @@ void UI_PlayerHUD::Handle_RemotePlayerObjectSpawned(Shared<GameObject> obj)
 
 void UI_PlayerHUD::On_PlayerComboHit(uint32 combo)
 {
-    Trigger_CombatLineBurst(Compute_CombatLineIntensity(combo));
+    // 콤보 히트 시 화면 가장자리 Radial/CombatLine 연출을 잠시 비활성화한다.
+    // 필요할 때 아래 버스트 트리거 호출을 다시 살리면 기존 연출이 복구된다.
+    // Trigger_CombatLineBurst(Compute_CombatLineIntensity(combo));
 }
 
 void UI_PlayerHUD::Handle_BossSpawned(Shared<GameObject> obj)
 {
+    if (_cineTransitionState != ECineTransitionState::Idle && 
+        _cineTransitionState != ECineTransitionState::FadeInToGame)
+    {
+        // 시네마틱이 끝난 후 바인딩 및 등장 연출을 위해 임시 저장
+        _pendingBossObject = obj;
+        return;
+    }
+
     if (_bossHp)
         _bossHp->Bind_Boss(obj);
 
     if (_cineTransitionState != ECineTransitionState::Idle && 
-        _cineTransitionState != ECineTransitionState::BarsOut)
+        _cineTransitionState != ECineTransitionState::FadeInToGame)
     {
         return;
     }
@@ -319,9 +330,17 @@ void UI_PlayerHUD::Handle_BossSpawned(Shared<GameObject> obj)
 
 void UI_PlayerHUD::Handle_CharacterDead(Shared<Character> deadCharacter, Shared<GameObject> damageCauser)
 {
-    auto deadMonster = dynamic_pointer_cast<Monster>(deadCharacter);
-    if (!deadMonster)
+    auto deadEnemy = dynamic_pointer_cast<EnemyCharacter>(deadCharacter);
+    if (!deadEnemy)
         return;
+
+    if (deadEnemy->Get_ObjectType() == Protocol::OBJECT_TYPE_BOSS_PAIN)
+    {
+        GAME->Play_Sound(L"WinPanel.wav", ESoundChannel::UI, 0.6f);
+
+        if (_bossLastFinish)
+            _bossLastFinish->Set_Visibility(true);
+    }
 
     auto causer = damageCauser;
     while (causer)
@@ -409,8 +428,8 @@ HRESULT UI_PlayerHUD::Ready_MissionTitleUI()
     const float uiRefHeight = GAME->Get_UIReferenceHeight();
 
     Background::FBackgroundDesc desc{};
-    desc.posX = uiRefWidth * 0.5f;
-    desc.posY = uiRefHeight * 0.18f;
+    desc.posX = uiRefWidth * 0.5f;  // 덼포트 수평 정중앙
+    desc.posY = uiRefHeight * 0.10f; // 기존 0.18에서 0.10으로 더 위로 이동
     desc.sizeX = 1000.f;
     desc.sizeY = 80.f;
     desc.zOrder = 0.75f;
@@ -462,6 +481,8 @@ void UI_PlayerHUD::Show_MissionEnd()
     if (!_missionEndBanner)
         return;
 
+    GAME->Play_Sound(L"WinPanel.wav", ESoundChannel::UI, 0.6f);
+
     _missionEndBanner->Set_Visibility(true);
     _missionEndBanner->Set_UIOpacity(1.f);
 }
@@ -509,51 +530,91 @@ void UI_PlayerHUD::On_CinematicFinished()
 {
     if (_cineTransitionState == ECineTransitionState::Playing)
     {
+        // 시네마틱 종료 이벤트가 들어온 즉시 레터박스를 먼저 숨겨서
+        // HUD가 복귀하는 페이드 구간에 위/아래 검은 띠가 남아 보이지 않게 한다.
+        if (_letterBoxTop) _letterBoxTop->Set_FadeAlpha(0.f);
+        if (_letterBoxBottom) _letterBoxBottom->Set_FadeAlpha(0.f);
+
+        // 레벨 진입 시네마틱은 HUD를 다시 보여준다.
+        // 보스 시네마틱도 동일하지만, 보스 HP 바인딩 로직은 보스 진입에만 적용한다.
         Set_HUDVisibilityForCinematic(true);
         
-        _cineTransitionState = ECineTransitionState::BarsOut;
+        if (!_isLevelEntryCinematic)
+        {
+            // 시네마틱이 끝나고 원래 화면으로 돌아올 때 보스 HP 바인딩 & 인트로 시작
+            if (auto boss = _pendingBossObject.lock())
+            {
+                if (_bossHp) _bossHp->Bind_Boss(boss);
+                if (_bossGauge) _bossGauge->Set_Visibility(true);
+                if (_bossIcon) _bossIcon->Set_Visibility(true);
+                _pendingBossObject.reset();
+            }
+        }
+
+        if (_bossCineText)
+            _bossCineText->Set_Visibility(false);
+
+        if (_screenFadePanel)
+            _screenFadePanel->Set_FadeAlpha(1.f);
+            
+        _cineTransitionState = ECineTransitionState::FadeInToGame;
         _cineTransitionTimer = 0.f;
     }
 }
 
+void UI_PlayerHUD::Trigger_LevelEntryCinematic(
+    const string& cinematicTag,
+    const wstring& introSoundFile,
+    const wstring& gameplayBgmFile)
+{
+    // 이미 시네마틱이 진행 중이면 무시한다.
+    if (_cineTransitionState != ECineTransitionState::Idle)
+        return;
+
+    GAME->Set_GameInputEnabled(false);
+    Set_HUDVisibilityForCinematic(false);
+    // 레벨 진입 시네마틱이 시작되는 동안에는 기존 BGM이나 이전 레벨에서 남은 BGM이 끼어들지 않도록 먼저 정리한다.
+    GAME->Stop_SoundChannel(ESoundChannel::BGM, 0.f);
+
+    GAME->Set_CinematicTransition(true);
+    _isLevelEntryCinematic = true;
+    _isCineDialoguePlayed = true; // 레벨 진입 시네마틱은 다이얼로그 없음
+    _pendingCinematicTag = cinematicTag;
+    _pendingLevelEntryIntroSoundFile = introSoundFile;
+    _pendingLevelEntryGameplayBgmFile = gameplayBgmFile;
+    _battleStartTimer = -1.f;
+    _cineTransitionState = ECineTransitionState::FadeOutToBlack;
+    _cineTransitionTimer = 0.f;
+}
+
 void UI_PlayerHUD::Handle_WaveStarted(const string& waveTag)
 {
-     if (waveTag == "Wave_Boss")
+    // 웨이브가 실제로 시작된 프레임에 플레이어에게 미션 경보음을 먼저 들려준다.
+    // 로컬 트리거/서버 authoritative 시작 모두 OnWaveStarted로 합류하므로 여기서 공통 처리한다.
+    GAME->Play_Sound(L"MissionAlert.wav", ESoundChannel::UI, 0.6f);
+
+    // 일반 웨이브는 레벨 종류나 웨이브 태그와 상관없이 공용 미션 고지를 띄운다.
+    // 기존처럼 특정 레벨의 특정 태그에만 묶어두면 코노하/추가 웨이브에서 UI가 빠질 수 있다.
+    if (waveTag != "BossPainWave" && waveTag != "Wave_Boss")
+        Show_MissionTitle(L"적을 쓰러뜨려라!", 2.f);
+
+    if (waveTag == "BossPainWave" || waveTag == "Wave_Boss")
     {
         GAME->Set_GameInputEnabled(false);
         Set_HUDVisibilityForCinematic(false);
-        
-        if (_cineBarTop) _cineBarTop->Set_Visibility(true);
-        if (_cineBarBottom) _cineBarBottom->Set_Visibility(true);
 
-        _cineTransitionState = ECineTransitionState::BarsIn;
+        GAME->Play_BGM(L"BGM/Pain_BGM.mp3", 0.25f, true, 1.0f);
+        
+        GAME->Set_CinematicTransition(true); // 에디터 강제 개입 방지용
+        _cineTransitionState = ECineTransitionState::FadeOutToBlack;
         _cineTransitionTimer = 0.f;
-        _pendingCinematicTag = "Boss_Entry"; // 이건 바꿔야함
+        _pendingCinematicTag = "Boss_Entry";
+        _isCineDialoguePlayed = false;
     }
 }
 
 HRESULT UI_PlayerHUD::Ready_CinematicTransition()
 {
-    const float uiRefWidth = GAME->Get_UIReferenceWidth();
-    const float uiRefHeight = GAME->Get_UIReferenceHeight();
-    UI_ScreenFade::FScreenFadeDesc desc{};
-    desc.sizeX = uiRefWidth;
-    desc.sizeY = CINE_BAR_HEIGHT;
-    desc.zOrder = 0.95f; 
-    desc.levelIndex = _levelIndex;
-    desc.fadeColor = Color(0.f, 0.f, 0.f, 1.f); 
-    desc.initialAlpha = 1.f;
-
-    desc.posX = uiRefWidth * 0.5f;
-    desc.posY = -(CINE_BAR_HEIGHT * 0.5f);
-    _cineBarTop = Create_Child<UI_ScreenFade>(Protocol::OBJECT_TYPE_UI_SCREEN_FADE, EUILayer::Overlay, &desc);
-    
-    desc.posY = uiRefHeight + (CINE_BAR_HEIGHT * 0.5f);
-    _cineBarBottom = Create_Child<UI_ScreenFade>(Protocol::OBJECT_TYPE_UI_SCREEN_FADE, EUILayer::Overlay, &desc);
-
-    if (_cineBarTop) _cineBarTop->Set_Visibility(false);
-    if (_cineBarBottom) _cineBarBottom->Set_Visibility(false);
-
     return S_OK;
 }
 
@@ -566,93 +627,76 @@ void UI_PlayerHUD::Update_CinematicTransition(float timeDelta)
     _cineTransitionTimer += timeDelta;
     switch (_cineTransitionState)
     {
-    case ECineTransitionState::BarsIn:
+    case ECineTransitionState::FadeOutToBlack:
     {
-        // 목표 시간 대비 현재 진행도 (0.0 ~ 1.0)
-        const float ratio = std::clamp(_cineTransitionTimer / CINE_BARS_IN_TIME, 0.f, 1.f);
-        
-        // EaseOut Cubic 적용: 바가 처음엔 빠르게, 목표 위치에 도달할 때쯤 부드럽게 감속되도록 보간 가중치 조절
-        const float t = 1.f - powf(1.f - ratio, 3.f);
-        if (_cineBarTop)
-        {
-            float startY = -(CINE_BAR_HEIGHT * 0.5f);
-            float endY = (CINE_BAR_HEIGHT * 0.5f);
-            _cineBarTop->Set_UIPosition(uiRefWidth * 0.5f, std::lerp(startY, endY, t));
-        }
-        if (_cineBarBottom)
-        {
-            float startY = uiRefHeight + (CINE_BAR_HEIGHT * 0.5f);
-            float endY = uiRefHeight - (CINE_BAR_HEIGHT * 0.5f);
-            _cineBarBottom->Set_UIPosition(uiRefWidth * 0.5f, std::lerp(startY, endY, t));
-        }
-        // 바 슬라이드가 완료되면 전체 화면 페이드 아웃 상태로 전환
+        const float ratio = std::clamp(_cineTransitionTimer / CINE_FADE_OUT_TIME, 0.f, 1.f);
+        if (_screenFadePanel) _screenFadePanel->Set_FadeAlpha(ratio); 
+
         if (ratio >= 1.f)
         {
-            _cineTransitionState = ECineTransitionState::FadeOut;
+            if (_isLevelEntryCinematic && !_pendingLevelEntryIntroSoundFile.empty())
+                GAME->Play_Sound(_pendingLevelEntryIntroSoundFile, ESoundChannel::BGM, 0.35f);
+
+            const bool cinePlayed = GAME->Play_Cinematic(Utils::ToWString(_pendingCinematicTag), nullptr, true);
+
+            // 레벨 진입 시네마틱이 아닐 때만(보스 진입) 보스 텍스트를 표시한다.
+            if (!_isLevelEntryCinematic && _bossCineText)
+                _bossCineText->Set_Visibility(true);
+
+            if (_letterBoxTop) _letterBoxTop->Set_FadeAlpha(1.f);
+            if (_letterBoxBottom) _letterBoxBottom->Set_FadeAlpha(1.f);
+
+            // Play_Cinematic 실패 시(파일 없음) FadeInToCine을 건너뛰고 바로 Playing으로 전환
+            if (cinePlayed)
+                _cineTransitionState = ECineTransitionState::FadeInToCine;
+            else
+                _cineTransitionState = ECineTransitionState::Playing;
+
             _cineTransitionTimer = 0.f;
         }
         break;
     }
-    case ECineTransitionState::FadeOut:
+    case ECineTransitionState::FadeInToCine:
     {
         const float ratio = std::clamp(_cineTransitionTimer / CINE_FADE_OUT_TIME, 0.f, 1.f);
-        
-        // UI_PlayerHUD가 이미 보유하고 있는 스크린 페이드 패널을 이용해 점진적 암전 처리
-        if (_screenFadePanel)
-            _screenFadePanel->Set_FadeAlpha(ratio); 
-        // 암전이 완전해지면 재생 대기 상태로 전환
+        if (_screenFadePanel) _screenFadePanel->Set_FadeAlpha(1.f - ratio); 
+
         if (ratio >= 1.f)
         {
-            _cineTransitionState = ECineTransitionState::ReadyToPlay;
+            _cineTransitionState = ECineTransitionState::Playing;
+            _cineTransitionTimer = 0.f;
         }
-        break;
-    }
-    case ECineTransitionState::ReadyToPlay:
-    {
-        // 1. 완전히 까매진 상태에서 실제 런타임 시네마틱 재생을 엔진에 요청
-        // 3번째 인자 true는 시네마틱 재생 도중에도 엔진 차원의 입력 차단을 유지함을 의미
-        GAME->Play_Cinematic(Utils::ToWString(_pendingCinematicTag), nullptr, true);
-        
-        _cineTransitionState = ECineTransitionState::Playing;
-        _cineTransitionTimer = 0.f;
-        
-        // 3. 시네마틱 시퀀스 재생 시 첫 프레임부터 화면을 보여줘야 하므로 페이드는 즉시 걷어냄
-        // (필요에 따라 시네마틱 시퀀스 트랙 내부에서 0~1초간 카메라 페이드를 걷어내는 로직과 연계 가능)
-        if (_screenFadePanel) 
-            _screenFadePanel->Set_FadeAlpha(0.f); 
         break;
     }
     case ECineTransitionState::Playing:
     {
+        if (!_isCineDialoguePlayed && _cineTransitionTimer >= 1.0f)
+        {
+            GAME->Play_Sound(L"BGM/Pain_Dialogue.wav", ESoundChannel::Voice, 1.0f);
+            _isCineDialoguePlayed = true;
+        }
         break;
     }
-    case ECineTransitionState::BarsOut:
+    case ECineTransitionState::FadeInToGame:
     {
-        const float uiRefWidth = GAME->Get_UIReferenceWidth();
-        const float uiRefHeight = GAME->Get_UIReferenceHeight();
-
-        const float ratio = std::clamp(_cineTransitionTimer / CINE_BARS_IN_TIME, 0.f, 1.f);
-        const float t = powf(ratio, 3.f);
-
-        if (_cineBarTop)
-        {
-            float startY = (CINE_BAR_HEIGHT * 0.5f);
-            float endY = -(CINE_BAR_HEIGHT * 0.5f);
-            _cineBarTop->Set_UIPosition(uiRefWidth * 0.5f, std::lerp(startY, endY, t));
-        }
-
-        if (_cineBarBottom)
-        {
-            float startY = uiRefHeight - (CINE_BAR_HEIGHT * 0.5f);
-            float endY = uiRefHeight + (CINE_BAR_HEIGHT * 0.5f);
-            _cineBarBottom->Set_UIPosition(uiRefWidth * 0.5f, std::lerp(startY, endY, t));
-        }
+        const float ratio = std::clamp(_cineTransitionTimer / CINE_FADE_OUT_TIME, 0.f, 1.f);
+        if (_screenFadePanel) _screenFadePanel->Set_FadeAlpha(1.f - ratio);
+        if (_letterBoxTop) _letterBoxTop->Set_FadeAlpha(0.f);
+        if (_letterBoxBottom) _letterBoxBottom->Set_FadeAlpha(0.f);
 
         if (ratio >= 1.f)
         {
-            if (_cineBarTop) _cineBarTop->Set_Visibility(false);
-            if (_cineBarBottom) _cineBarBottom->Set_Visibility(false);
+            GAME->Set_CinematicTransition(false); // 시네마틱 트랜지션 완전 종료
+            GAME->Set_GameInputEnabled(true);
+            
+            if (_letterBoxTop) _letterBoxTop->Set_FadeAlpha(0.f);
+            if (_letterBoxBottom) _letterBoxBottom->Set_FadeAlpha(0.f);
 
+            // 코노하 레벨 진입 시네마틱이었다면 전투 개시 연출을 시작한다.
+            if (_isLevelEntryCinematic)
+                Show_BattleStartAnnounce();
+
+            _isLevelEntryCinematic = false; // 레벨 진입 시네마틱 플래그 리셋
             _cineTransitionState = ECineTransitionState::Idle;
             _cineTransitionTimer = 0.f;
         }
@@ -1125,6 +1169,24 @@ HRESULT UI_PlayerHUD::Ready_UI(void* arg)
             &iconDesc);
         CHECK_NULL(_bossIcon, E_FAIL);
 
+        Background::FBackgroundDesc cineTextDesc{};
+        cineTextDesc.posX = 220.f; // 조금 더 왼쪽으로
+        cineTextDesc.posY = 280.f; // 레터박스에 안 잘리게 아래로
+        cineTextDesc.sizeX = 512.f; // 텍스트 크기에 맞게 조정
+        cineTextDesc.sizeY = 512.f;
+        cineTextDesc.zOrder = _zOrder + 0.02f;
+        cineTextDesc.levelIndex = _levelIndex;
+        cineTextDesc.textureType = Protocol::COMPONENT_TYPE_BOSS_HP;
+        cineTextDesc.textureIndex = 3;
+        cineTextDesc.shaderPassIndex = 1;
+
+        _bossCineText = Create_Child<Background>(
+            Protocol::OBJECT_TYPE_BACKGROUND,
+            EUILayer::HUD,
+            &cineTextDesc);
+        CHECK_NULL(_bossCineText, E_FAIL);
+        _bossCineText->Set_Visibility(false);
+
         UIObject::FUIDesc bossHpDesc{};
         bossHpDesc.posX = bossGaugeX + 36.5f;
         bossHpDesc.posY = bossGaugeY + 2.9f;
@@ -1225,6 +1287,48 @@ HRESULT UI_PlayerHUD::Ready_MissionClearUI()
     _missionEndBanner->Set_Visibility(false);
     _missionEndBanner->Set_UIOpacity(0.f);
 
+    // 전투 개시 고지 배너 (TEXTURE_MISSION 인덱스 1 - Mission Start)
+    // 코노하 레벨 진입 시네마틱이 끝난 직후 스케일업 + 페이드아웃 연출에 사용한다.
+    {
+        Background::FBackgroundDesc battleDesc{};
+        battleDesc.posX = uiRefWidth * 0.5f;
+        battleDesc.posY = uiRefHeight * 0.5f;
+        battleDesc.sizeX = 1344.f; // 1920 * 0.7
+        battleDesc.sizeY = 266.f;  // 380 * 0.7
+        battleDesc.zOrder = 0.88f;
+        battleDesc.levelIndex = _levelIndex;
+        battleDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MISSION;
+        battleDesc.textureIndex = 1;   // Mission Start 이미지
+        battleDesc.shaderPassIndex = 1;
+
+        _battleStartBanner = Create_Child<Background>(
+            Protocol::OBJECT_TYPE_BACKGROUND,
+            EUILayer::Overlay,
+            &battleDesc);
+        CHECK_NULL(_battleStartBanner, E_FAIL);
+
+        _battleStartBanner->Set_Visibility(false);
+        _battleStartBanner->Set_UIOpacity(0.f);
+    }
+
+    Background::FBackgroundDesc lastFinishDesc{};
+    lastFinishDesc.posX = uiRefWidth * 0.5f;
+    lastFinishDesc.posY = uiRefHeight * 0.5f;
+    lastFinishDesc.sizeX = 1637.f;
+    lastFinishDesc.sizeY = 960.f;
+    lastFinishDesc.zOrder = 0.96f; // 페이드나 다른 오버레이보다 위에 오게
+    lastFinishDesc.levelIndex = _levelIndex;
+    lastFinishDesc.textureType = Protocol::COMPONENT_TYPE_TEXTURE_MISSION;
+    lastFinishDesc.textureIndex = 4;
+    lastFinishDesc.shaderPassIndex = 1;
+
+    _bossLastFinish = Create_Child<Background>(
+        Protocol::OBJECT_TYPE_BACKGROUND,
+        EUILayer::Overlay,
+        &lastFinishDesc);
+    CHECK_NULL(_bossLastFinish, E_FAIL);
+    _bossLastFinish->Set_Visibility(false);
+
     UI_ScreenFade::FScreenFadeDesc fadeDesc{};
     fadeDesc.posX = uiRefWidth * 0.5f;
     fadeDesc.posY = uiRefHeight * 0.5f;
@@ -1241,6 +1345,38 @@ HRESULT UI_PlayerHUD::Ready_MissionClearUI()
         &fadeDesc);
 
     CHECK_NULL(_screenFadePanel, E_FAIL);
+
+    UI_ScreenFade::FScreenFadeDesc letterBoxTopDesc{};
+    letterBoxTopDesc.posX = uiRefWidth * 0.5f;
+    letterBoxTopDesc.posY = 75.f; // 150 높이의 절반
+    letterBoxTopDesc.sizeX = uiRefWidth;
+    letterBoxTopDesc.sizeY = 150.f;
+    letterBoxTopDesc.zOrder = 0.94f; // 스크린 페이드보다는 아래
+    letterBoxTopDesc.levelIndex = _levelIndex;
+    letterBoxTopDesc.fadeColor = Color(0.f, 0.f, 0.f, 1.f);
+    letterBoxTopDesc.initialAlpha = 0.f;
+
+    _letterBoxTop = Create_Child<UI_ScreenFade>(
+        Protocol::OBJECT_TYPE_UI_SCREEN_FADE,
+        EUILayer::Overlay,
+        &letterBoxTopDesc);
+    CHECK_NULL(_letterBoxTop, E_FAIL);
+
+    UI_ScreenFade::FScreenFadeDesc letterBoxBottomDesc{};
+    letterBoxBottomDesc.posX = uiRefWidth * 0.5f;
+    letterBoxBottomDesc.posY = uiRefHeight - 75.f;
+    letterBoxBottomDesc.sizeX = uiRefWidth;
+    letterBoxBottomDesc.sizeY = 150.f;
+    letterBoxBottomDesc.zOrder = 0.94f;
+    letterBoxBottomDesc.levelIndex = _levelIndex;
+    letterBoxBottomDesc.fadeColor = Color(0.f, 0.f, 0.f, 1.f);
+    letterBoxBottomDesc.initialAlpha = 0.f;
+
+    _letterBoxBottom = Create_Child<UI_ScreenFade>(
+        Protocol::OBJECT_TYPE_UI_SCREEN_FADE,
+        EUILayer::Overlay,
+        &letterBoxBottomDesc);
+    CHECK_NULL(_letterBoxBottom, E_FAIL);
 
     return S_OK;
 }
@@ -1331,4 +1467,66 @@ void UI_PlayerHUD::Free()
     }
 
     HUD::Free();
+}
+
+void UI_PlayerHUD::Show_BattleStartAnnounce()
+{
+    if (!_battleStartBanner)
+        return;
+
+    if (!_pendingLevelEntryGameplayBgmFile.empty())
+    {
+        GAME->Play_BGM(_pendingLevelEntryGameplayBgmFile, 0.2f, true, 0.45f);
+        _pendingLevelEntryGameplayBgmFile.clear();
+    }
+
+    // Set_UIScale은 배율이 아니라 UIReferenceWidth 기준 픽셀 크기입니다. 1920x380의 0.7배율 크기로 리셋합니다.
+    _battleStartBanner->Set_UIScale(1344.f, 266.f);
+    _battleStartBanner->Set_UIOpacity(1.f);
+    _battleStartBanner->Set_Visibility(true);
+
+    _battleStartTimer = 0.f; // 0 이상 = 활성
+}
+
+void UI_PlayerHUD::Update_BattleStartAnnounce(float timeDelta)
+{
+    // 음수이면 비활성 상태이므로 무시한다.
+    if (_battleStartTimer < 0.f || !_battleStartBanner)
+        return;
+
+    _battleStartTimer += timeDelta;
+
+    const float totalTime = BATTLE_START_HOLD_TIME + BATTLE_START_ZOOM_TIME;
+
+    if (_battleStartTimer >= totalTime)
+    {
+        // 연출 완료 → 숨기고 비활성화
+        _battleStartBanner->Set_Visibility(false);
+        _battleStartBanner->Set_UIOpacity(0.f);
+        _battleStartTimer = -1.f;
+        return;
+    }
+
+    if (_battleStartTimer < BATTLE_START_HOLD_TIME)
+    {
+        // Hold 구간: 기본 크기(1344x266), 완전 불투명
+        _battleStartBanner->Set_UIScale(1344.f, 266.f);
+        _battleStartBanner->Set_UIOpacity(1.f);
+    }
+    else
+    {
+        // Zoom + FadeOut 구간
+        const float zoomElapsed = _battleStartTimer - BATTLE_START_HOLD_TIME;
+        const float ratio = std::clamp(zoomElapsed / BATTLE_START_ZOOM_TIME, 0.f, 1.f);
+
+        // 스케일: 기본 크기 -> 기본 크기 * BATTLE_START_SCALE_END (선형 보간)
+        const float scaleMultiplier = 1.f + (BATTLE_START_SCALE_END - 1.f) * ratio;
+        const float currentSizeX = 1344.f * scaleMultiplier;
+        const float currentSizeY = 266.f * scaleMultiplier;
+        
+        _battleStartBanner->Set_UIScale(currentSizeX, currentSizeY);
+
+        // 투명도: 1.0 → 0.0 (선형 감소)
+        _battleStartBanner->Set_UIOpacity(1.f - ratio);
+    }
 }

@@ -1,8 +1,10 @@
-﻿#pragma once
+#pragma once
 
 #include "EnemyCharacter.h"
 
 NS_BEGIN(Client)
+
+class CharkraMove_Component;
 
 class Boss_Pain final : public EnemyCharacter
 {
@@ -22,6 +24,10 @@ public:
     json    To_Json() const override;
     void    From_Json(const json& data) override;
 
+    void    Update(float timeDelta) override;
+    void    Late_Update(float timeDelta) override;
+    HRESULT Render() override;
+
 protected:
     HRESULT Ready_Components() override;
 
@@ -38,6 +44,8 @@ private:
     Vec3 _bodyColliderExtents = Vec3(0.5f, 0.6f, 0.5f);
 
     uint32 _modelComponentID = static_cast<uint32>(std::hash<string>{}("Model_Pain")); 
+
+    Shared<CharkraMove_Component> _chakraTrail;
 
 public:
     static Shared<Boss_Pain> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

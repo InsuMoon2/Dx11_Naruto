@@ -30,7 +30,12 @@ protected:
     Protocol::OBJECT_TYPE Get_EnemyObjectType() const override;
 
 private:
-    bool _glovePartsReady = false;
+    bool _glovePartsReady = false; // BeginPlay에서 글러브 소켓 파츠를 이미 준비했는지 추적한다.
+    bool _glovePartsClearedOnDeath = false; // 사망 시 글러브 파츠를 중복 제거하지 않도록 한 번만 처리했는지 추적한다.
+
+    // Monster_Leaf가 죽는 순간 양손 글러브 파츠를 즉시 숨기기 위해 호출한다.
+    // Update에서 사망 상태를 감지했을 때 한 번만 실행된다.
+    void Clear_GloveParts_OnDeath();
 
     HRESULT Ready_GloveParts();
 

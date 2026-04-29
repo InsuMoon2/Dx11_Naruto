@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "HUD.h"
 
@@ -30,11 +30,10 @@ DECLARE_DELEGATE(FOnHUDPlayerBound, Shared<Player>);
 enum class ECineTransitionState
 {
     Idle,           
-    BarsIn,         
-    FadeOut,        
-    ReadyToPlay,
-    Playing,
-    BarsOut
+    FadeOutToBlack, // 진입 시 까매짐
+    FadeInToCine,   // 시네마틱 시작하며 밝아짐
+    Playing,        // 시네마틱 재생 중 대기
+    FadeInToGame    // 시네마틱 종료 후 겜 화면으로 밝아짐
 };
 
 class UI_PlayerHUD : public HUD
@@ -106,12 +105,19 @@ public:
     void        Set_MissionEndOpacity(float alpha);
     void        Set_ScreenFadeAlpha(float alpha);
 
-public: /* 보스 시네마틱 */
+public: /* 시네마틱 공통 */
     void        Handle_WaveStarted(const string& waveTag);
     HRESULT     Ready_CinematicTransition();
     void        Update_CinematicTransition(float timeDelta);
     void        Set_HUDVisibilityForCinematic(bool isVisible);
     void        On_CinematicFinished();
+
+    /** 코노하 레벨 입장 시 자동 재생되는 레벨 진입 시네마틱을 트리거한다.
+     *  Ready_UI() 완료 후 Level_Konoha::Ready_UI()에서 직접 호출한다. */
+    void        Trigger_LevelEntryCinematic(
+        const string& cinematicTag,
+        const wstring& introSoundFile = L"",
+        const wstring& gameplayBgmFile = L"");
 
     FDelegateHandle             _waveStartedHandle = {};
     FDelegateHandle             _cineFinishedHandle = {};
@@ -122,10 +128,12 @@ private:
     float                       _cineTransitionTimer = 0.f;                        
     
     string                      _pendingCinematicTag = "";                         
+    wstring                     _pendingLevelEntryIntroSoundFile = L""; // 레벨 입장 컷신이 시작될 때 1회 재생할 전용 사운드 파일 경로다.
+    wstring                     _pendingLevelEntryGameplayBgmFile = L""; // 레벨 입장 컷신이 끝나고 Mission Start가 뜰 때 재생할 메인 BGM 파일 경로다.
+    bool                        _isCineDialoguePlayed = false;
+    bool                        _isLevelEntryCinematic = false; // 레벨 진입 시네마틱 여부 (보스와 구분)
     
-    static constexpr float      CINE_BARS_IN_TIME = 0.4f;    
-    static constexpr float      CINE_FADE_OUT_TIME = 0.3f;   
-    static constexpr float      CINE_BAR_HEIGHT = 300.f;
+    static constexpr float      CINE_FADE_OUT_TIME = 0.4f;   
 
 private:
     HRESULT     Ready_CombatLines();
@@ -152,6 +160,11 @@ private:
     HRESULT     Ready_WireLockOn();
     HRESULT     Ready_MissionClearUI();
 
+    /** 코노하 시네마틱 종료 후 전투 개시 텍스트를 표시하는 산율 연출을 시작한다. */
+    void        Show_BattleStartAnnounce();
+    /** 매 프레임 코 업 + 페이드 아웃 연출을 업데이트한다. */
+    void        Update_BattleStartAnnounce(float timeDelta);
+
 
 public:
     FOnHUDPlayerBound OnHUDPlayerBound;
@@ -161,9 +174,7 @@ public:
     FDelegateHandle _missionMarkerClearHandle = {};
 
 private:
-    Shared<UI_ScreenFade>       _cineBarTop;             
-    Shared<UI_ScreenFade>       _cineBarBottom;          
-
+    Weak<GameObject>        _pendingBossObject;
     Shared<UI_PlayerStatus>     _status;
     Shared<UI_PlayerSkill>      _skillPanel;
     Shared<UI_AnnounceCombo>    _announceCombo;
@@ -185,6 +196,8 @@ private:
 
     Shared<Background>          _bossGauge;
     Shared<Background>          _bossIcon;
+    Shared<Background>          _bossCineText;
+    Shared<Background>          _bossLastFinish;
 
     Shared<UI_BossHp>           _bossHp;
     FDelegateHandle             _bossObjectSpawnedHandle = {};
@@ -203,12 +216,23 @@ private:
     Shared<Background>      _missionEndBanner;
     Shared<UI_ScreenFade>   _screenFadePanel;
 
+    Shared<UI_ScreenFade>   _letterBoxTop;
+    Shared<UI_ScreenFade>   _letterBoxBottom;
+
+    Shared<Background>      _battleStartBanner; // 전투 개시 고지 (TEXTURE_MISSION 인덱스 1)
+
     float               _missionTitleTimer = 0.f;
     float               _missionTitleBaseX = 0.f;
 
 private:
     static constexpr float MISSION_TITLE_FADE_TIME   = 0.35f;
     static constexpr float MISSION_TITLE_SLIDE_DIST  = 80.f;
+
+    // 전투 개시 연출 상수
+    static constexpr float  BATTLE_START_HOLD_TIME  = 0.5f;  // 케이지 전 홀드 시간
+    static constexpr float  BATTLE_START_ZOOM_TIME  = 0.6f;  // 케이지의 스케일업 + 페이드 아웃 시간
+    static constexpr float  BATTLE_START_SCALE_END  = 1.5f;  // 케이지 완료 시 스케일
+    float                   _battleStartTimer = -1.f;         // 음수 = 비활성
 
     static constexpr uint32 COMBAT_LINE_TEXTURE_INDEX_07 = 8;
     static constexpr float  COMBAT_LINE_HOLD_TIME = 0.06f;

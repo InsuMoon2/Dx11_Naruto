@@ -119,12 +119,18 @@ bool CombatStat::Apply_Damage(Character* hitted)
         }
     }
 
+    // 공중 평타 계열(JumpAttack, Airbone)은 콤보 프로파일 사운드가 비어 있어도 기본 손 타격음을 보정해준다.
+    const bool isAerialMeleeHit = (state != nullptr &&
+        (state->Get_CurrentStateID() == EPlayerState::JumpAttack ||
+         state->Get_CurrentStateID() == EPlayerState::Attack_Airbone));
+
     if (entry)
     {
         eventDesc.damage = baseDamage + entry->damageMultiplier;
         eventDesc.launchPower = entry->launchPower;
         eventDesc.launchUp = entry->launchUp;
         eventDesc.hitSound = entry->hitSound;
+        eventDesc.hitSoundFile = entry->hitSoundFile;
         eventDesc.hitReactionType = entry->hitReactionType;
         eventDesc.forceHitRestart = true;
     }
@@ -134,8 +140,15 @@ bool CombatStat::Apply_Damage(Character* hitted)
         eventDesc.launchPower = 0.f;
         eventDesc.launchUp = 0.f;
         eventDesc.hitSound = 0;
+        eventDesc.hitSoundFile.clear();
         eventDesc.hitReactionType = EHitReactionType::Default;
         eventDesc.forceHitRestart = true;
+    }
+
+    // 공중 평타는 콤보 프로파일에 hitSound가 비어 있어도 기본 손 타격음을 들려주도록 보정한다.
+    if (isAerialMeleeHit && eventDesc.hitSound <= 0 && eventDesc.hitSoundFile.empty())
+    {
+        eventDesc.hitSoundFile = "Hand_Hit.wav";
     }
 
     if (_attackSwingOverride.useHitReactionOverride)
@@ -148,6 +161,12 @@ bool CombatStat::Apply_Damage(Character* hitted)
     {
         eventDesc.launchPower = _attackSwingOverride.launchPower;
         eventDesc.launchUp = _attackSwingOverride.launchUp;
+    }
+
+    if (_attackSwingOverride.useHitSoundOverride)
+    {
+        eventDesc.hitSound = _attackSwingOverride.hitSound;
+        eventDesc.hitSoundFile = _attackSwingOverride.hitSoundFile;
     }
 
     hitted->TakeDamage(eventDesc);

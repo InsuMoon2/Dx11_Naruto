@@ -11,6 +11,7 @@
 #include "GameObject_Factory.h"
 #include "Bounding_OBB.h"
 #include "Collider.h"
+#include "CharkraMove_Component.h"
 
 REGISTER_GAMEOBJECT(Boss_Pain, Protocol::OBJECT_TYPE_BOSS_PAIN)
 
@@ -31,6 +32,7 @@ Boss_Pain::Boss_Pain(const Boss_Pain& rhs)
     , _bodyColliderCenter(rhs._bodyColliderCenter)
     , _bodyColliderExtents(rhs._bodyColliderExtents)
     , _modelComponentID(rhs._modelComponentID)
+    , _chakraTrail(rhs._chakraTrail)
 {
 }
 
@@ -110,6 +112,29 @@ void Boss_Pain::From_Json(const json& data)
         _idleStateName = data["idle_state_name"].get<string>();
 }
 
+void Boss_Pain::Update(float timeDelta)
+{
+    EnemyCharacter::Update(timeDelta);
+
+    if (_chakraTrail)
+        _chakraTrail->Update_ChakraMove(timeDelta);
+}
+
+void Boss_Pain::Late_Update(float timeDelta)
+{
+    EnemyCharacter::Late_Update(timeDelta);
+}
+
+HRESULT Boss_Pain::Render()
+{
+    CHECK_FAILED(EnemyCharacter::Render(), E_FAIL);
+
+    if (_chakraTrail)
+        CHECK_FAILED(_chakraTrail->Render(), E_FAIL);
+
+    return S_OK;
+}
+
 HRESULT Boss_Pain::Ready_Components()
 {
     CHECK_FAILED(Character::Ready_Components(), E_FAIL);
@@ -145,6 +170,15 @@ HRESULT Boss_Pain::Ready_Components()
 
         CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_COLLIDER_OBB, _collider, &obbDesc), E_FAIL);
         _collider->Set_CollisionPreset(Collision_Preset::Monster_Body);
+    }
+
+    CHECK_FAILED(Add_Component(Protocol::COMPONENT_TYPE_CHAKRA_MOVE, _chakraTrail), E_FAIL);
+
+    if (_chakraTrail)
+    {
+        // Pain 차크라무브가 배경에 묻히지 않도록 선명한 붉은 틴트를 준다.
+        _chakraTrail->Set_TrailTintColor(Vec4(1.00f, 0.12f, 0.12f, 1.f));
+        _chakraTrail->Set_TrailEmissiveStrength(2.0f);
     }
 
     return S_OK;

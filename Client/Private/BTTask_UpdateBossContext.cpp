@@ -29,6 +29,7 @@ bool BTTask_UpdateBossContext::Register_Properties()
     PROPERTY_STRING_JSON("Should Retreat Key", "should_retreat_key", _shouldRetreatKey);
     PROPERTY_STRING_JSON("Should Strafe Key", "should_strafe_key", _shouldStrafeKey);
     PROPERTY_STRING_JSON("Global Skill Cooldown Key", "global_skill_cooldown_key", _globalSkillCooldownKey);
+    PROPERTY_STRING_JSON("Pain Force Skill Cycle Cooldown Key", "pain_force_skill_cycle_cooldown_key", _painForceSkillCycleCooldownKey);
     PROPERTY_STRING_JSON("Shinra Cooldown Remain Key", "shinra_cooldown_remain_key", _shinraCooldownRemainKey);
     PROPERTY_STRING_JSON("Bansho Cooldown Remain Key", "bansho_cooldown_remain_key", _banshoCooldownRemainKey);
 
@@ -48,6 +49,7 @@ bool BTTask_UpdateBossContext::Register_Properties()
     PROPERTY_FLOAT_JSON("Strafe Max Range", "strafe_max_range", _strafeMaxRange, 0.1f, 30.f);
     PROPERTY_FLOAT_JSON("Shinra Chance", "shinra_chance", _shinraChance, 0.f, 1.f);
     PROPERTY_FLOAT_JSON("Bansho Chance", "bansho_chance", _banshoChance, 0.f, 1.f);
+    PROPERTY_FLOAT_JSON("Retreat Chance", "retreat_chance", _retreatChance, 0.f, 1.f);
     PROPERTY_FLOAT_JSON("Strafe Chance", "strafe_chance", _strafeChance, 0.f, 1.f);
     PROPERTY_FLOAT_JSON("Decision Refresh Interval", "decision_refresh_interval", _decisionRefreshInterval, 0.05f, 5.f);
 
@@ -82,6 +84,7 @@ BTTask_UpdateBossContext::BTTask_UpdateBossContext(const BTTask_UpdateBossContex
     , _shouldRetreatKey(rhs._shouldRetreatKey)
     , _shouldStrafeKey(rhs._shouldStrafeKey)
     , _globalSkillCooldownKey(rhs._globalSkillCooldownKey)
+    , _painForceSkillCycleCooldownKey(rhs._painForceSkillCycleCooldownKey)
     , _shinraCooldownRemainKey(rhs._shinraCooldownRemainKey)
     , _banshoCooldownRemainKey(rhs._banshoCooldownRemainKey)
     , _airborneHeightThreshold(rhs._airborneHeightThreshold)
@@ -100,6 +103,7 @@ BTTask_UpdateBossContext::BTTask_UpdateBossContext(const BTTask_UpdateBossContex
     , _strafeMaxRange(rhs._strafeMaxRange)
     , _shinraChance(rhs._shinraChance)
     , _banshoChance(rhs._banshoChance)
+    , _retreatChance(rhs._retreatChance)
     , _strafeChance(rhs._strafeChance)
     , _decisionRefreshInterval(rhs._decisionRefreshInterval)
     , _shouldUseChibakuTenseiKey(rhs._shouldUseChibakuTenseiKey)
@@ -119,7 +123,11 @@ void BTTask_UpdateBossContext::Initialize()
     _decisionRefreshElapsed = 0.f;
     _shinraDecisionRoll = 1.f;
     _banshoDecisionRoll = 1.f;
+    _retreatDecisionRoll = 1.f;
     _strafeDecisionRoll = 1.f;
+    _painForceSkillCycleIndex = 0;
+    _latchedPainForceSkillIndex = -1;
+    _painForceSkillSelectionLatched = false;
 }
 
 EBTNodeResult BTTask_UpdateBossContext::Update(float timeDelta)
@@ -151,6 +159,7 @@ EBTNodeResult BTTask_UpdateBossContext::Update(float timeDelta)
     {
         _shinraDecisionRoll = Utils::RandomRange(0.f, 1.f);
         _banshoDecisionRoll = Utils::RandomRange(0.f, 1.f);
+        _retreatDecisionRoll = Utils::RandomRange(0.f, 1.f);
         _strafeDecisionRoll = Utils::RandomRange(0.f, 1.f);
 
         _chibakuDecisionRoll = Utils::RandomRange(0.f, 1.f);
@@ -160,6 +169,10 @@ EBTNodeResult BTTask_UpdateBossContext::Update(float timeDelta)
 
     float globalSkillCooldown = blackboard->HasKey(_globalSkillCooldownKey)
         ? blackboard->Get_ValueAsFloat(_globalSkillCooldownKey)
+        : 0.f;
+
+    float painForceSkillCycleCooldown = blackboard->HasKey(_painForceSkillCycleCooldownKey)
+        ? blackboard->Get_ValueAsFloat(_painForceSkillCycleCooldownKey)
         : 0.f;
 
     float shinraCooldown = blackboard->HasKey(_shinraCooldownRemainKey)
@@ -175,11 +188,13 @@ EBTNodeResult BTTask_UpdateBossContext::Update(float timeDelta)
         : 0.f;
 
     globalSkillCooldown = max(0.f, globalSkillCooldown - timeDelta);
+    painForceSkillCycleCooldown = max(0.f, painForceSkillCycleCooldown - timeDelta);
     shinraCooldown = max(0.f, shinraCooldown - timeDelta);
     banshoCooldown = max(0.f, banshoCooldown - timeDelta);
     chibakuCooldown = max(0.f, chibakuCooldown - timeDelta);
 
     blackboard->Set_ValueAsFloat(_globalSkillCooldownKey, globalSkillCooldown);
+    blackboard->Set_ValueAsFloat(_painForceSkillCycleCooldownKey, painForceSkillCycleCooldown);
     blackboard->Set_ValueAsFloat(_shinraCooldownRemainKey, shinraCooldown);
     blackboard->Set_ValueAsFloat(_banshoCooldownRemainKey, banshoCooldown);
 
@@ -227,10 +242,21 @@ EBTNodeResult BTTask_UpdateBossContext::Update(float timeDelta)
         !shouldWaitLanding;
 
     const bool canUseGlobalSkill = globalSkillCooldown <= 0.f;
-    const bool canUseShinra = canUseGlobalSkill && shinraCooldown <= 0.f;
-    const bool canUseBansho = canUseGlobalSkill && banshoCooldown <= 0.f;
+    const bool canUsePainForceSkillCycle = painForceSkillCycleCooldown <= 0.f;
+    const bool canUseShinra = canUseGlobalSkill && canUsePainForceSkillCycle && shinraCooldown <= 0.f;
+    const bool canUseBansho = canUseGlobalSkill && canUsePainForceSkillCycle && banshoCooldown <= 0.f;
 
     const bool canUseChibaku = canUseGlobalSkill && chibakuCooldown <= 0.f;
+
+    if (_painForceSkillSelectionLatched && globalSkillCooldown > 0.f)
+    {
+        _painForceSkillSelectionLatched = false;
+
+        if (_latchedPainForceSkillIndex >= 0)
+            _painForceSkillCycleIndex = (_latchedPainForceSkillIndex + 1) % 3;
+
+        _latchedPainForceSkillIndex = -1;
+    }
 
     bool shouldUseShinra = false;
     bool shouldUseBansho = false;
@@ -243,7 +269,13 @@ EBTNodeResult BTTask_UpdateBossContext::Update(float timeDelta)
 
     if (!shouldAirApproach && !shouldWaitLanding)
     {
-        if (targetDistance <= _meleeComboRange)
+        if (targetDistance <= _retreatRange && _retreatDecisionRoll < _retreatChance)
+        {
+            shouldRetreat = true;
+            shouldGroundChase = false;
+        }
+
+        else if (targetDistance <= _meleeComboRange)
         {
             shouldMeleeCombo = true;
             shouldGroundChase = false;
@@ -301,6 +333,81 @@ EBTNodeResult BTTask_UpdateBossContext::Update(float timeDelta)
         else
         {
             shouldGroundChase = true;
+        }
+    }
+
+    if (!shouldAirApproach && !shouldWaitLanding && !shouldRetreat && !shouldMeleeCombo)
+    {
+        bool cycleSelected = false;
+        int32 selectedSkillIndex = _latchedPainForceSkillIndex;
+
+        const bool canUseShinraByRange = canUseShinra && targetDistance <= _shinraRange;
+        const bool canUseBanshoByRange =
+            canUseBansho &&
+            targetDistance >= _banshoMinRange &&
+            targetDistance <= _banshoMaxRange;
+        const bool canUseChibakuByRange =
+            canUseChibaku &&
+            targetDistance >= _chibakuMinRange &&
+            targetDistance <= _chibakuMaxRange;
+
+        if (_painForceSkillSelectionLatched)
+        {
+            if (selectedSkillIndex == 0 && canUseShinraByRange)
+            {
+                shouldUseShinra = true;
+                cycleSelected = true;
+            }
+            else if (selectedSkillIndex == 1 && canUseBanshoByRange)
+            {
+                shouldUseBansho = true;
+                cycleSelected = true;
+            }
+            else if (selectedSkillIndex == 2 && canUseChibakuByRange)
+            {
+                shouldUseChibakuTensei = true;
+                cycleSelected = true;
+            }
+        }
+
+        if (!cycleSelected && canUseGlobalSkill)
+        {
+            for (int32 offset = 0; offset < 3; ++offset)
+            {
+                const int32 candidateIndex = (_painForceSkillCycleIndex + offset) % 3;
+
+                if (candidateIndex == 0 && canUseShinraByRange)
+                {
+                    shouldUseShinra = true;
+                    selectedSkillIndex = candidateIndex;
+                    cycleSelected = true;
+                    break;
+                }
+
+                if (candidateIndex == 1 && canUseBanshoByRange)
+                {
+                    shouldUseBansho = true;
+                    selectedSkillIndex = candidateIndex;
+                    cycleSelected = true;
+                    break;
+                }
+
+                if (candidateIndex == 2 && canUseChibakuByRange)
+                {
+                    shouldUseChibakuTensei = true;
+                    selectedSkillIndex = candidateIndex;
+                    cycleSelected = true;
+                    break;
+                }
+            }
+        }
+
+        if (cycleSelected)
+        {
+            shouldGroundChase = false;
+            shouldStrafe = false;
+            _painForceSkillSelectionLatched = true;
+            _latchedPainForceSkillIndex = selectedSkillIndex;
         }
     }
 

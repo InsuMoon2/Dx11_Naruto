@@ -203,6 +203,16 @@
                     "time_sec": 0.1666666716337204,
                     "track_index": 0,
                     "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Boxer_attack1.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.1666666716337204,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -235,6 +245,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -265,6 +278,16 @@
                     "time_sec": 0.699999988079071,
                     "track_index": 0,
                     "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Boxer_attack2.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.699999988079071,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -297,6 +320,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -331,6 +357,198 @@
                     "type": "ANS_Move"
                 }
             ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_LeafNinja|LeafNinja_Dying_Type01",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Boxer_die.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.20000000298023224,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_LeafNinja|LeafNinja_Beaten_Left",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Boxer_hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_Large_Front_Conect_toFall",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Boxer_hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_LeafNinja|LeafNinja_Beaten_Aerial_BlowOff_toFall",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Boxer_hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_LeafNinja|CustomMan_Run_Loop",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "RunLoop.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.0,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "RunLoop.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.1666666716337204,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "RunLoop.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.36666667461395264,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_LeafNinja|LeafNinja_Walk_Loop",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Boxer_hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.2666666805744171,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Boxer_hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 1.1666666269302368,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
             "notify_tracks": [
                 {
                     "name": "Notifies"

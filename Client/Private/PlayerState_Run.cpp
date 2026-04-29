@@ -28,6 +28,8 @@ void PlayerState_Run::Enter(PlayerStateMachine* state)
         movement->Set_OrientRotationToMovement(true);
     }
 
+    GAME->Stop_Sound(L"RunLoop.wav");
+    GAME->Play_LoopSound(L"RunLoop.wav", ESoundChannel::Player, 0.2f, false);
     state->Play_AnimState(EPlayerState::Run);
 }
 
@@ -136,6 +138,8 @@ void PlayerState_Run::Exit(PlayerStateMachine* state)
 {
     if (!state)
         return;
+
+    GAME->Stop_Sound(L"RunLoop.wav");
 
     auto movement = state->Get_Movement();
     if (movement)

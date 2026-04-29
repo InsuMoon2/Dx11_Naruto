@@ -69,17 +69,28 @@ void AN_SpawnSkill::Execute(const FAnimNotifyContext& context)
             lockedTarget = targetCom->Get_LockedTarget().lock();
     }
 
+    Vec3 lockedTargetPosition = Vec3::Zero;
+    if (lockedTarget)
+    {
+        auto targetTransform = lockedTarget->Get_Transform();
+        if (targetTransform)
+            lockedTargetPosition = targetTransform->Get_WorldPosition();
+    }
+
     if (_spawnAtLockedTarget && lockedTarget)
     {
-        spawnPosition = lockedTarget->Get_Transform()->Get_WorldPosition() + _targetOffset;
+        spawnPosition = lockedTargetPosition + _targetOffset;
     }
 
     if (_aimAtTarget && lockedTarget)
     {
-        Vec3 targetPos = lockedTarget->Get_Transform()->Get_WorldPosition();
+        // 락온 타겟 위치에 바로 스폰되는 스킬은 spawnPosition과 targetPos가 같아질 수 있으므로,
+        // 그 경우에는 owner 기준으로 방향을 계산해 스킬 오브젝트가 타겟을 향해 회전하게 만든다.
+        Vec3 targetPos = lockedTargetPosition;
         targetPos.y += 0.5f;
 
-        spawnDirection = targetPos - spawnPosition;
+        const Vec3 directionOrigin = _spawnAtLockedTarget ? ownerTransform->Get_WorldPosition() : spawnPosition;
+        spawnDirection = targetPos - directionOrigin;
 
         if (spawnDirection.LengthSquared() > 0.0001f)
             spawnDirection.Normalize();

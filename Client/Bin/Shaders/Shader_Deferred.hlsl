@@ -282,7 +282,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 
     float ndotl = max(dot(lightDir, normalWS), 0.f);
     float toonShade = ComputeToonShade(ndotl);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.f), 50.f);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.f), 120.f);
 
     Out.vShade = float4(g_LightDiffuse.rgb * toonShade, 1.f);
     Out.vSpecular = float4(g_LightSpecular.rgb * spec, 0.f);
@@ -309,7 +309,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float3 viewDir = normalize(g_CamPosition.xyz - worldPos);
     float3 reflectDir = reflect(-lightDir, normalWS);
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.f), 50.f) * attenuation;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.f), 120.f) * attenuation;
 
     Out.vShade = float4(g_LightDiffuse.rgb * toonShade * attenuation, 1.f);
     Out.vSpecular = float4(g_LightSpecular.rgb * spec, 0.f);
@@ -330,7 +330,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     float3 worldPos = ReconstructWorldPos(In.vTexcoord);
     float shadowVisibility = ComputeShadowVisibility(worldPos);
 
-    float3 litColor = (vDiffuse.rgb * vShade.rgb + vSpecular.rgb) * shadowVisibility;
+    float3 litColor = (vDiffuse.rgb * vShade.rgb + vSpecular.rgb * 0.2f) * shadowVisibility;
     float3 blurredLitColor = ApplyDirectionalScreenBlur(In.vTexcoord, litColor);
 
     float outlineMask = ComputePostOutlineMask(In.vTexcoord);

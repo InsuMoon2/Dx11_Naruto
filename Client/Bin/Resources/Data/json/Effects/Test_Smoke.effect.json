@@ -8,7 +8,7 @@
             "enabled": true,
             "kind": 1,
             "startDelay": 0.0,
-            "duration": 0.45,
+            "duration": 0.55,
             "loop": false,
             "localPosition": [
                 0.0,
@@ -21,15 +21,15 @@
                 0.0
             ],
             "localScale": [
-                0.18,
-                0.45,
-                0.18
+                0.28,
+                0.6,
+                0.28
             ],
             "useScaleOverTime": true,
             "endScale": [
-                2.2,
-                0.4,
-                2.2
+                3.4,
+                0.55,
+                3.4
             ],
             "scaleDuration": 0.45,
             "modelGuid": "457439ac-ef22-41d9-89ee-c487a71540f2",
@@ -43,7 +43,7 @@
                 0.88,
                 1.0
             ],
-            "opacity": 0.65,
+            "opacity": 0.75,
             "emissiveStrength": 1.2,
             "useOpacityOverTime": true,
             "endOpacity": 0.0,
@@ -62,7 +62,7 @@
             "enabled": true,
             "kind": 2,
             "startDelay": 0.0,
-            "duration": 0.7,
+            "duration": 0.85,
             "loop": false,
             "localPosition": [
                 0.0,
@@ -75,15 +75,15 @@
                 0.0
             ],
             "localScale": [
-                1.8,
-                1.8,
-                1.8
+                2.5,
+                2.5,
+                2.5
             ],
             "useScaleOverTime": true,
             "endScale": [
-                3.2,
-                3.2,
-                3.2
+                4.8,
+                4.8,
+                4.8
             ],
             "scaleDuration": 0.6,
             "baseTextureGuid": "5266a787-d6f6-420e-b57e-b1a9ac1ae525",
@@ -95,7 +95,7 @@
                 0.88,
                 1.0
             ],
-            "baseOpacity": 0.85,
+            "baseOpacity": 0.95,
             "baseEmissiveStrength": 1.2,
             "useBaseOpacityOverTime": true,
             "endBaseOpacity": 0.0,
@@ -186,26 +186,26 @@
                 1.0
             ],
             "textureGuid": "fefcd38f-23ae-4c6d-a3f2-fee90fd97152",
-            "numInstances": 28,
+            "numInstances": 40,
             "center": [
                 0.0,
                 0.0,
                 0.0
             ],
             "range": [
-                0.8,
-                0.3,
-                0.8
+                1.2,
+                0.4,
+                1.2
             ],
             "spawnShape": 1,
-            "spawnRadius": 0.7,
+            "spawnRadius": 1.1,
             "scale": [
-                0.5,
-                1.6
+                0.8,
+                2.2
             ],
             "speed": [
-                0.3,
-                1.4
+                0.5,
+                1.9
             ],
             "lifeTime": [
                 0.45,
@@ -219,7 +219,7 @@
                 0.85,
                 1.0
             ],
-            "opacity": 0.5,
+            "opacity": 0.62,
             "useOpacityOverTime": true,
             "endOpacity": 0.0,
             "flipbook": {
@@ -254,8 +254,8 @@
             ],
             "positionDuration": 1.0,
             "scaleDuration": 1.0,
-            "spawnHeight": 1.0,
-            "spawnInnerRadius": 0.2,
+            "spawnHeight": 1.3,
+            "spawnInnerRadius": 0.3,
             "useColorTintOverTime": false,
             "usePositionOverTime": false,
             "useScaleOverTime": false

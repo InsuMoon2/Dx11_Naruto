@@ -58,7 +58,20 @@ bool ComboProfile_Manager::Load_FromJson(const string& filePath)
 
         entry.launchPower = item.value("launchPower", 0.f);
         entry.launchUp = item.value("launchUp", 0.f);
-        entry.hitSound = item.value("hitSound", 0);
+        entry.hitSound = 0;
+        entry.hitSoundFile.clear();
+        if (item.contains("hitSound"))
+        {
+            const json& hitSoundValue = item["hitSound"];
+            if (hitSoundValue.is_number_integer())
+            {
+                entry.hitSound = hitSoundValue.get<int32>();
+            }
+            else if (hitSoundValue.is_string())
+            {
+                entry.hitSoundFile = hitSoundValue.get<string>();
+            }
+        }
 
         const string hitReactionTypeStr = item.value("hitReactionType", "Default");
         const auto hitReactionOpt = magic_enum::enum_cast<EHitReactionType>(hitReactionTypeStr);

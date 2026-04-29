@@ -1,0 +1,118 @@
+{
+    "name": "Tutorial_Entry",
+    "track": {
+        "fps": 60,
+        "keys": [
+            {
+                "anchor_space": "WorldAbsolute",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7853981852531433,
+                "frame": 0,
+                "pitch": 0.0,
+                "position": [
+                    -27.453163146972656,
+                    39.3427734375,
+                    42.69427490234375
+                ],
+                "rotation": [
+                    0.006238805595785379,
+                    0.9935397505760193,
+                    -0.08995320647954941,
+                    0.06890807300806046
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "WorldAbsolute",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7853981852531433,
+                "frame": 69,
+                "pitch": 0.0,
+                "position": [
+                    -19.55299949645996,
+                    40.74300003051758,
+                    9.793999671936035
+                ],
+                "rotation": [
+                    0.006238805595785379,
+                    0.9935397505760193,
+                    -0.08995320647954941,
+                    0.06890807300806046
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "WorldAbsolute",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7853981852531433,
+                "frame": 133,
+                "pitch": 0.0,
+                "position": [
+                    72.14700317382813,
+                    41.34299850463867,
+                    5.593999862670898
+                ],
+                "rotation": [
+                    0.10622535645961761,
+                    -0.7361422777175903,
+                    0.11887967586517334,
+                    0.6577829122543335
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "WorldAbsolute",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7853981852531433,
+                "frame": 198,
+                "pitch": 0.0,
+                "position": [
+                    -0.15299999713897705,
+                    1.5429999828338623,
+                    36.79399871826172
+                ],
+                "rotation": [
+                    -0.004754589404910803,
+                    -0.9941298961639404,
+                    -0.04908197000622749,
+                    0.09630168974399567
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            }
+        ],
+        "total_frames": 300,
+        "track_name": "Camera"
+    }
+}

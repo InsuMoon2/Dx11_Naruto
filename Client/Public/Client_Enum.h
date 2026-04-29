@@ -51,7 +51,7 @@ namespace Client
         Attack_01,              Attack_02,              Attack_03,          Attack_04,
         Attack_Air_01,          Attack_Air_02,          Attack_Air_03,      Attack_Air_04,
         Attack_Sword_01,        Attack_Sword_02,        Attack_Sword_03,    Attack_Sword_04,
-        Attack_SwordAir_01,     Attack_SwordAir_02,
+        Attack_SwordAir_01,     Attack_SwordAir_02,     Attack_SwordAir_03, Attack_SwordAir_04,
 
         Hit, Hit_Launch, Hit_BlowOff, Hit_Down, Hit_Air, Hit_Air_Down, Hit_Pull,
         Dash,

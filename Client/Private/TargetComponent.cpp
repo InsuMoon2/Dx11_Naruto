@@ -77,7 +77,11 @@ void TargetComponent::Update_Targeting(float timeDelta)
         return;
     }
 
-     if (_isLocked == false)
+    if (_isLocked)
+    {
+        Auto_SwitchToNearestTarget();
+    }
+    else
     {
         LockOn_NearestTarget(false);
     }
@@ -153,6 +157,23 @@ void TargetComponent::Refresh_LockedTarget()
     {
         Clear_Lock();
     }
+}
+
+void TargetComponent::Auto_SwitchToNearestTarget()
+{
+    if (_isLocked == false)
+        return;
+
+    Shared<Character> nearestTarget = Find_NearestTarget(false);
+    if (nearestTarget == nullptr)
+        return;
+
+    Shared<Character> currentLockedTarget = _lockedTarget.lock();
+    if (currentLockedTarget == nearestTarget)
+        return;
+
+    _lockedTarget = nearestTarget;
+    _isLocked = true;
 }
 
 void TargetComponent::Clear_Lock()

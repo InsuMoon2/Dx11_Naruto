@@ -47,6 +47,12 @@ public:
 
 protected:
     virtual HRESULT Ready_Components();
+    // FDamageEvent의 hitSound 값을 실제 사운드 파일로 해석해서 피격음을 재생한다.
+    void Play_HitSoundFromDamageEvent(const FDamageEvent& damageEvent);
+    // ComboProfile에서 문자열 파일명으로 들어온 피격음을 우선 재생한다.
+    bool Try_PlayDirectHitSoundFile(const FDamageEvent& damageEvent);
+    // ComboProfile 등에서 넘긴 hitSound 정수값을 실제 리소스 파일명으로 매핑한다.
+    static const wchar_t* Resolve_HitSoundFile(int32 hitSound);
 
 protected:
     void Start_HitColor();

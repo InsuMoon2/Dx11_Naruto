@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Camera_Target.h"
 
 #include "GameObject_Factory.h"
@@ -106,6 +106,12 @@ void Camera_Target::Priority_Update(float timeDelta)
 
     if (_enableMouseRotation)
     {
+        if (_skipMouseInputOnce)
+        {
+            _skipMouseInputOnce = false;
+            INPUT->Reset();
+        }
+
         const float dx = INPUT->GetMouseDelta().x;
         const float dy = INPUT->GetMouseDelta().y;
 
@@ -179,6 +185,38 @@ void Camera_Target::On_CinematicFinished()
     targetForward = Utils::Safe_Normalize(targetForward, Vec3::Forward);
 
     _yaw = XMConvertToDegrees(atan2f(targetForward.x, targetForward.z));
+
+    Vec3 targetPos = target->Get_WorldPosition();
+    targetPos.y += _heightOffset;
+
+    const float pitchRad = XMConvertToRadians(_pitch);
+    const float yawRad = XMConvertToRadians(_yaw);
+
+    Vec3 camOffset;
+    camOffset.x = -cosf(pitchRad) * sinf(yawRad) * _distance;
+    camOffset.y = sinf(pitchRad) * _distance;
+    camOffset.z = -cosf(pitchRad) * cosf(yawRad) * _distance;
+
+    _transformCom->Set_LocalPosition(targetPos + camOffset);
+    _transformCom->LookAt(targetPos);
+}
+
+void Camera_Target::Set_TargetTransform(Shared<Transform> target)
+{
+    _targetTransform = target;
+    _skipMouseInputOnce = true;
+
+    if (!target || !_transformCom)
+        return;
+
+    Vec3 targetForward = target->Get_WorldForward();
+    targetForward.y = 0.f;
+    targetForward = Utils::Safe_Normalize(targetForward, Vec3::Forward);
+
+    _yaw = XMConvertToDegrees(atan2f(targetForward.x, targetForward.z));
+    _pitch = ::clamp(_pitch, _pitchMin, _pitchMax);
+    _distance = ::clamp(_distance, _distanceMin, _distanceMax);
+    _targetDistance = ::clamp(_targetDistance, _distanceMin, _distanceMax);
 
     Vec3 targetPos = target->Get_WorldPosition();
     targetPos.y += _heightOffset;
@@ -351,13 +389,17 @@ Matrix Camera_Target::Build_ShakenViewMatrix(const Vec3& localPosOffset, const V
     return XMMatrixLookAtLH(shakenPos, shakenPos + finalForward, finalUp);
 }
 
-void Camera_Target::On_Damaged(Shared<Engine::Character> damagedCharacter, float damage)
+void Camera_Target::On_Damaged(Shared<Engine::Character> damagedCharacter, float damage, Shared<Engine::GameObject> damageCauser)
 {
     if (damage <= 0.f)
         return;
 
     auto myPlayer = dynamic_pointer_cast<MyPlayer>(damagedCharacter);
     if (!myPlayer)
+        return;
+
+    // 공격자가 일반 몬스터면 카메라 쉐이크를 제외한다.
+    if (damageCauser && damageCauser->Get_ObjectType() == Protocol::OBJECT_TYPE_MONSTER)
         return;
 
     FCameraShakeDesc request{};

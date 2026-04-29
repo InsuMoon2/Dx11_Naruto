@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "SkillObject.h"
 #include "Model.h"
 #include "Shader.h"
@@ -50,6 +50,9 @@ SkillObject::SkillObject(const SkillObject& rhs)
     , _useLaunchOverride(rhs._useLaunchOverride)
     , _launchPower(rhs._launchPower)
     , _launchUp(rhs._launchUp)
+    , _useHitSoundOverride(rhs._useHitSoundOverride)
+    , _hitSound(rhs._hitSound)
+    , _hitSoundFile(rhs._hitSoundFile)
 {
 }
 
@@ -80,6 +83,9 @@ HRESULT SkillObject::Initialize(void* arg)
         _useLaunchOverride = desc->useLaunchOverride;
         _launchPower = desc->launchPower;
         _launchUp = desc->launchUp;
+        _useHitSoundOverride = desc->useHitSoundOverride;
+        _hitSound = desc->hitSound;
+        _hitSoundFile = desc->hitSoundFile;
 
         if (_transformCom)
         {
@@ -260,8 +266,11 @@ bool SkillObject::Apply_Skill_Hit(Character* hitted, float damage, float launchF
 
     damageEvent.damage = damage;
     damageEvent.damageCauser = owner;
+    damageEvent.damageSourceType = Get_ObjectType();
     damageEvent.launchPower = finalLaunchPower;
     damageEvent.launchUp = finalLaunchUp;
+    damageEvent.hitSound = _useHitSoundOverride ? _hitSound : 0;
+    damageEvent.hitSoundFile = _useHitSoundOverride ? _hitSoundFile : "";
     damageEvent.forceHitRestart = true;
 
     const Vec3 damageDir = Resolve_SkillHitDamageDirection(_transformCom);

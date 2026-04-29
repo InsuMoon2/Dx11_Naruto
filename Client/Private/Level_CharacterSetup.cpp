@@ -427,46 +427,46 @@ void Level_CharacterSetup::Build_PartCatalog()
 {
     _catalog[ETOI(ContainerObject::EPartSlot::Headegear)] =
     {
-        { L"모자 03", L"Model_ManHat_03" },
-        { L"스노우 머리", L"Model_SnowHead" },
-        { L"파자마 모자", L"Model_PajamaHat" },
-        { L"우산 모자", L"Model_Umbrella" },
-        { L"개구리 머리", L"Model_FrogHead" },
-        { L"마다라 머리", L"Model_MadaraHead" },
+        { L"머리 1", L"Model_ManHat_03" },
+        { L"머리 2", L"Model_SnowHead" },
+        { L"머리 3", L"Model_PajamaHat" },
+        { L"머리 4", L"Model_Umbrella" },
+        { L"머리 5", L"Model_FrogHead" },
+        { L"머리 6", L"Model_MadaraHead" },
     };
 
     _catalog[ETOI(ContainerObject::EPartSlot::Face)] =
     {
-        { L"기본 얼굴장식", L"Model_Face_Face1" },
-        { L"마스크 1", L"Model_Face_Mask1" },
-        { L"마스크 2", L"Model_Face_Mask2" },
+        { L"얼굴 1", L"Model_Face_Face1" },
+        { L"얼굴 2", L"Model_Face_Mask1" },
+        { L"얼굴 3", L"Model_Face_Mask2" },
     };
 
     _catalog[ETOI(ContainerObject::EPartSlot::Onepiece)] =
     {
-        { L"방어구 2", L"Model_OnePiece_Armor2" },
-        { L"방어구 3", L"Model_OnePiece_Armor3" },
-        { L"미나토", L"Model_OnePiece_Minato" },
-        { L"아카츠키 코트", L"Model_OnePiece_Akachiki" },
-        { L"개구리 의상", L"Model_OnePiece_Frog" },
-        { L"재킷", L"Model_OnePiece_Jaket" },
+        { L"한벌옷 1", L"Model_OnePiece_Armor2" },
+        { L"한벌옷 2", L"Model_OnePiece_Armor3" },
+        { L"한벌옷 3", L"Model_OnePiece_Minato" },
+        { L"한벌옷 4", L"Model_OnePiece_Akachiki" },
+        { L"한벌옷 5", L"Model_OnePiece_Frog" },
+        { L"한벌옷 6", L"Model_OnePiece_Jaket" },
     };
 
     _catalog[ETOI(ContainerObject::EPartSlot::BodyUpper)] =
     {
-        { L"지라이야 하오리", L"Model_Upper_Jiraiya" },
-        { L"가죽 재킷", L"Model_Upper_LeatherJaket" },
-        { L"로고 상의", L"Model_Upper_Logo" },
-        { L"사이 상의", L"Model_Upper_Sai" },
-        { L"사스케 상의", L"Model_Upper_Saske" },
+        { L"상의 1", L"Model_Upper_Jiraiya" },
+        { L"상의 2", L"Model_Upper_LeatherJaket" },
+        { L"상의 3", L"Model_Upper_Logo" },
+        { L"상의 4", L"Model_Upper_Sai" },
+        { L"상의 5", L"Model_Upper_Saske" },
     };
 
     _catalog[ETOI(ContainerObject::EPartSlot::BodyLower)] =
     {
-        { L"가죽 바지", L"Model_Lower_LeatherPants" },
-        { L"컷 팬츠", L"Model_Lower_Lower_PantsCut" },
-        { L"스톤 팬츠", L"Model_Lower_Lower_StonePants" },
-        { L"트레이너 하의", L"Model_Lower_Lower_Trainer" },
+        { L"하의 1", L"Model_Lower_LeatherPants" },
+        { L"하의 2", L"Model_Lower_Lower_PantsCut" },
+        { L"하의 3", L"Model_Lower_Lower_StonePants" },
+        { L"하의 4", L"Model_Lower_Lower_Trainer" },
     };
 }
 

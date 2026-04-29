@@ -225,7 +225,7 @@
             "Deceleration": 24.0,
             "Gravity": -20.0,
             "Ground Walkable Min Up Dot": 0.550000011920929,
-            "Ground Y": 5.0,
+            "Ground Y": 0.0,
             "Jump Velocity": 11.0,
             "Launch Control Lock Duration": 0.11999999731779099,
             "Max Sprint Speed": 8.0,
@@ -757,7 +757,7 @@
             "type": "COMPONENT_TYPE_CHAKRA_MOVE"
         }
     ],
-    "guid": "f09c96e4-2674-4f8c-998f-06747177ab23",
+    "guid": "27731ba1-cf30-47f4-9532-1cf842d38cb6",
     "object_type": "OBJECT_TYPE_MONSTER_WOOD",
     "prefab_name": "Monster_Wood",
     "static_class": "Monster_Wood"

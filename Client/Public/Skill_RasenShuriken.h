@@ -26,6 +26,12 @@ private:
     // 충둘된 놈이 실제로 타격 가능한지 판단
     Character*  Find_HitCharacter(Shared<Collider> other);
 
+    // 충돌하거나 최대 비행 거리에 도달했을 때 나선수리검 폭발 히트 오브젝트를 한 번만 생성한다.
+    void        Explode_RasenShuriken(const Vec3* overrideExplosionPosition = nullptr);
+
+private:
+    bool        _hasExploded = false;      // 나선수리검 종료 시 폭발 히트 오브젝트가 중복 생성되는 것을 막는 상태값이다.
+
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);
     Shared<GameObject> Clone(void* arg) override;

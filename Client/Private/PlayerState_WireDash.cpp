@@ -37,6 +37,7 @@ void PlayerState_WireDash::Enter(PlayerStateMachine* state)
     movement->Set_Velocity(Vec3(movement->Get_Velocity().x, 0.f, movement->Get_Velocity().z));
 
     input->Set_InputMode(EPlayerInputMode::LookOnly);
+    GAME->Play_Sound(L"FrontDash1.wav", ESoundChannel::Player, 0.3f);
 
     _isWireAttach = false;
     _wireAttachGround = false;

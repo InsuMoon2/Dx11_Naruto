@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Level_MainTitle.h"
 #include "UI_Text.h"
 #include "Background.h"
@@ -151,7 +151,7 @@ HRESULT Level_MainTitle::Ready_Layer_UI()
         {
             L"게임 시작",
             L"게임 설정",
-            L"나뭇잎 마을"
+            L"게임 종료"
         };
 
         const float startY = viewport.y * 0.7f;
@@ -257,7 +257,13 @@ void Level_MainTitle::Execute_SelectedMenu()
 
     switch (_selectedIndex)
     {
-    case 0: // 게임 시작
+    case 0: // 게임 설정 -> CharacterSetup
+        GAME->Change_Level(
+            ETOI(ELevelType::CharacterSetup),
+            Level_CharacterSetup::Create(_device, _context));
+        break;
+
+    case 1: // 게임 시작 -> GamePlay
     {
         const EGameplaySpawnMode spawnMode =
             GAME->Is_EditorRuntime() ? EGameplaySpawnMode::LocalOnly
@@ -276,12 +282,6 @@ void Level_MainTitle::Execute_SelectedMenu()
             Level_Loading::Create(_device, _context, ELevelType::GamePlay, true, spawnMode));
         break;
     }
-
-    case 1: // CharacterSetup
-        GAME->Change_Level(
-            ETOI(ELevelType::CharacterSetup),
-            Level_CharacterSetup::Create(_device, _context));
-        break;
 
     case 2: // Konoha
     {

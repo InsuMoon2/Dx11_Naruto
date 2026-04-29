@@ -25,6 +25,9 @@ Skill_Kamui::Skill_Kamui(const Skill_Kamui& rhs)
     , _finalHitLaunchForce(rhs._finalHitLaunchForce)
     , _finalHitLaunchUp(rhs._finalHitLaunchUp)
     , _currentHitStep(rhs._currentHitStep)
+    , _finalExplosionSoundFile(rhs._finalExplosionSoundFile)
+    , _tickHitSoundFile(rhs._tickHitSoundFile)
+    , _hasPlayedFinalExplosionSound(rhs._hasPlayedFinalExplosionSound)
 {
 }
 
@@ -57,6 +60,7 @@ HRESULT Skill_Kamui::Initialize(void* arg)
 
     _currentHitStep = 0;
     _lastAppliedStepByTarget.clear();
+    _hasPlayedFinalExplosionSound = false;
 
     EffectComponent::FPlayDesc playDesc{};
     playDesc.effectAssetName = "Kamui";
@@ -93,6 +97,8 @@ void Skill_Kamui::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
     auto otherOwner = other->Get_Owner();
     CHECK_NULL(otherOwner);
 
+    // 카무이는 접촉 시작 순간의 흡입/찢김 느낌이 중요하므로 첫 overlap에서 전용 히트 파티클을 먼저 재생한다.
+    Spawn_KamuiHitEffect(character);
     Process_MultiHit(character, otherOwner.get());
 }
 
@@ -142,6 +148,24 @@ Character* Skill_Kamui::Find_HitCharacter(Shared<Collider> other)
     return dynamic_cast<Character*>(otherOwner.get());
 }
 
+void Skill_Kamui::Spawn_KamuiHitEffect(Character* hitted)
+{
+    // 카무이에 닿은 대상의 중심보다 약간 위에서 이펙트를 터뜨려 얼굴/상체 쪽 임팩트가 더 잘 보이게 만든다.
+    CHECK_NULL(hitted);
+
+    if (_hitEffectAssetName.empty())
+        return;
+
+    auto targetTransform = hitted->Get_Transform();
+    if (!targetTransform)
+        return;
+
+    Vec3 hitEffectPosition = targetTransform->Get_WorldPosition();
+    hitEffectPosition.y += 1.0f;
+
+    Spawn_Effect_Once(_hitEffectAssetName, hitEffectPosition, Vec3(1.1f));
+}
+
 void Skill_Kamui::Process_MultiHit(Character* hitted, GameObject* targetKey)
 {
     CHECK_NULL(hitted);
@@ -159,9 +183,19 @@ void Skill_Kamui::Process_MultiHit(Character* hitted, GameObject* targetKey)
     {
         if (!Apply_Skill_Hit(hitted, _baseDamage, _midHitLaunchForce, _midHitLaunchUp))
             return;
+
+        // 카무이 지속 흡입은 틱 데미지가 들어갈 때마다 작은 히트음을 재생해서 연속 타격감을 준다.
+        GAME->Play_Sound(_tickHitSoundFile, ESoundChannel::Effect, 0.3f);
     }
     else
     {
+        if (!_hasPlayedFinalExplosionSound)
+        {
+            // 마지막 폭발 타이밍에는 생성/흡입 단계와 구분되는 전용 폭발 사운드를 1회 재생한다.
+            GAME->Play_Sound(_finalExplosionSoundFile, ESoundChannel::Effect, 0.45f);
+            _hasPlayedFinalExplosionSound = true;
+        }
+
         FDamageEvent damageEvent{};
         damageEvent.damage = _finalDamage;
         damageEvent.damageCauser = Get_Owner();

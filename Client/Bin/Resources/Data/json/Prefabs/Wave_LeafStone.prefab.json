@@ -42,8 +42,9 @@
         }
     ],
     "custom_properties": {
+        "activate_on_wave_clear_tag": "",
         "clear_delay_sec": 1.0,
-        "default_effect_asset_name": "",
+        "default_effect_asset_name": "Wave_Effect",
         "play_default_effect_on_begin_play": true,
         "play_trigger_effect_on_trigger": true,
         "show_mission_marker": true,
@@ -51,7 +52,7 @@
             {
                 "object_type_override": "OBJECT_TYPE_MONSTER_LEAF",
                 "position": [
-                    1.100000023841858,
+                    -1.5,
                     0.0,
                     0.0
                 ],
@@ -70,7 +71,7 @@
             {
                 "object_type_override": "OBJECT_TYPE_MONSTER_WOOD",
                 "position": [
-                    -1.2999999523162842,
+                    2.299999952316284,
                     0.0,
                     0.0
                 ],
@@ -90,10 +91,10 @@
         "spawn_layer_tag": "Layer_Builder",
         "stop_default_effect_on_trigger": true,
         "trigger_effect_asset_name": "",
-        "trigger_once": false,
+        "trigger_once": true,
         "wave_tag": "GamePlayClearWave"
     },
-    "guid": "8b468c29-1f4c-4869-a5ec-50ae45f507d1",
+    "guid": "be7fc2c6-14ea-4ed2-ba01-872489ad3ab2",
     "object_type": "OBJECT_TYPE_WAVE_TRIGGER",
     "prefab_name": "Wave_LeafStone",
     "static_class": "Wave_LeafStone"

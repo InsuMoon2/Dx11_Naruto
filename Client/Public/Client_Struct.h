@@ -55,6 +55,7 @@ namespace Client
         float   launchPower = 0.f;
         float   launchUp = 0.f;
         int32   hitSound = 0;
+        string  hitSoundFile = ""; // ComboProfile에서 직접 파일명을 적었을 때 피격 사운드 파일명으로 사용한다.
 
         EHitReactionType hitReactionType = EHitReactionType::Default;
     };

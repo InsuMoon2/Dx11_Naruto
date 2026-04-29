@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "SkillObject.h"
 
@@ -48,14 +48,14 @@ private:
     Shared<Model>  _model;
 
 private:
-    float  _initialFireDelay = 0.25f;
-    float   _burstInterval = 1.12f;
+    float   _initialFireDelay = 0.45f; // 너무 빨리 시작하는 현상 수정을 위해 발동 선딜레이 증가 (기존 0.15 -> 0.45)
+    float   _burstInterval = 0.08f; // 너무 빠른 연타로 프레임 드랍 발생을 예방하기 위해 간격 소폭 증가
 
-    int32   _maxBurstCount = 5;
+    int32   _maxBurstCount = 8; // 성능 밸런스를 위해 15타에서 8타로 축소
 
     float   _forwardRange = 14.f;
-    float   _impactRadius = 10.f;
-    float   _armSpeed = 130.f;
+    float   _impactRadius = 12.f; // 타격 범위를 조금 넓힘
+    float   _armSpeed = 150.f; // 투사체 속도 증가
 
     Vec3    _burstCenter = Vec3::Zero;
 
@@ -64,8 +64,9 @@ private:
 
     bool    _isBurstFinished = false;
 
-    float _armSpawnRadius = 10.f;
-    float _armSpawnHeight = 8.f;
+    // 더 높고 더 넓게 둥귀래 퍼지도록 반경과 높이 증가 (10->22, 8->22)
+    float _armSpawnRadius = 22.f;
+    float _armSpawnHeight = 22.f;
 
 public:
     static Shared<GameObject> Create(ComPtr<Device> device, ComPtr<DeviceContext> context);

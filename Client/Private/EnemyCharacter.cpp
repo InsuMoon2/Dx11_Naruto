@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "EnemyCharacter.h"
 
 #include "CombatStat.h"
@@ -13,8 +13,46 @@
 #include "SkillObject.h"
 #include "Client_PacketHandler.h"
 #include "NetworkManager.h"
+#include "AttachedEffectObject.h"
 
 NS_BEGIN(Client)
+
+// 몬스터/보스가 피격 반응으로 주목할 수 있는 전투 대상인지 검사한다.
+// 플레이어/리모트 플레이어만 허용하고, 이미 파괴됐거나 죽은 객체는 제외한다.
+static bool Is_ValidCombatTargetObject(const Shared<GameObject>& obj)
+{
+    if (!obj || obj->Is_Destroy())
+        return false;
+
+    const auto objectType = obj->Get_ObjectType();
+    if (objectType != Protocol::OBJECT_TYPE_PLAYER &&
+        objectType != Protocol::OBJECT_TYPE_REMOTE_PLAYER)
+    {
+        return false;
+    }
+
+    auto combatStat = obj->Get_Component<CombatStat>();
+    if (combatStat && combatStat->Is_Dead())
+        return false;
+
+    return true;
+}
+
+// 현재 적과 후보 타겟 사이의 거리 제곱값을 구한다.
+// 타겟이 없거나 Transform을 찾지 못하면 매우 큰 값으로 처리해서 비교에서 밀리게 만든다.
+static float Get_TargetDistanceSq(const Shared<Transform>& selfTransform, const Shared<GameObject>& target)
+{
+    if (!selfTransform || !target)
+        return FLT_MAX;
+
+    auto targetTransform = target->Get_Transform();
+    if (!targetTransform)
+        return FLT_MAX;
+
+    return Vec3::DistanceSquared(
+        selfTransform->Get_WorldPosition(),
+        targetTransform->Get_WorldPosition());
+}
 
 EnemyCharacter::EnemyCharacter(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Character(device, context)
@@ -29,6 +67,11 @@ EnemyCharacter::EnemyCharacter(const EnemyCharacter& rhs)
     , _hitEffectAssetName(rhs._hitEffectAssetName)
     , _hitEffectHeightOffset(rhs._hitEffectHeightOffset)
     , _idleStateName(rhs._idleStateName)
+    , _retargetCooldownRemaining(rhs._retargetCooldownRemaining)
+    , _retargetCooldown(rhs._retargetCooldown)
+    , _retargetMinDamage(rhs._retargetMinDamage)
+    , _retargetForceDamage(rhs._retargetForceDamage)
+    , _retargetPreferCloserDistance(rhs._retargetPreferCloserDistance)
 {
 }
 
@@ -59,6 +102,7 @@ HRESULT EnemyCharacter::Initialize(void* arg)
     _lastAnimStateKey.clear();
     _lastHitReactionType = Protocol::HIT_REACTION_TYPE_DEFAULT;
     _lastHitReactionSerial = 0;
+    _retargetCooldownRemaining = 0.f;
 
     return S_OK;
 }
@@ -85,6 +129,17 @@ void EnemyCharacter::Update(float timeDelta)
 {
     Character::Update(timeDelta);
 
+    _retargetCooldownRemaining = max(0.f, _retargetCooldownRemaining - timeDelta);
+
+    const bool isDead = (_combatStat && _combatStat->Is_Dead());
+    if (isDead)
+    {
+        // 사망 후에는 투명 상태로 남아도 AI가 계속 공격을 스폰하지 않도록 즉시 중단한다.
+        if (_model)
+            _model->Play_Animation(timeDelta);
+        return;
+    }
+
     if (_networkDriven)
     {
         const Vec3 currentPos = _transformCom->Get_WorldPosition();
@@ -101,7 +156,7 @@ void EnemyCharacter::Update(float timeDelta)
     }
     else if (_aiController)
     {
-        if (!GAME->Is_CinematicPlaying())
+        if (!GAME->Is_CinematicPlaying() && !GAME->Is_CinematicTransition())
         {
             _aiController->Update(timeDelta);
         }
@@ -134,8 +189,11 @@ void EnemyCharacter::Late_Update(float timeDelta)
         GAME->Add_Collider(_collider);
     }
 
-    GAME->Add_RenderGroup(ERenderGroup::NonBlend, GetSharedPtr());
-    GAME->Add_RenderGroup(ERenderGroup::ShadowDynamic, GetSharedPtr());
+    if (!isDead)
+    {
+        GAME->Add_RenderGroup(ERenderGroup::NonBlend, GetSharedPtr());
+        GAME->Add_RenderGroup(ERenderGroup::ShadowDynamic, GetSharedPtr());
+    }
 }
 
 HRESULT EnemyCharacter::Render()
@@ -202,6 +260,7 @@ void EnemyCharacter::OnDamaged(const FDamageEvent& damageEvent)
 
     if (damageEvent.damage > 0.f)
     {
+        // 몬스터/보스는 공격 종류와 상관없이 실제 데미지를 받으면 기본 HitParticle을 항상 재생한다.
         if (_transformCom && !_hitEffectAssetName.empty())
         {
             Vec3 hitEffectPosition = _transformCom->Get_WorldPosition();
@@ -216,6 +275,19 @@ void EnemyCharacter::OnDamaged(const FDamageEvent& damageEvent)
         auto blackboard = _behavior->Get_Blackboard();
         if (blackboard)
         {
+            if (Is_SuperArmorActiveFromSkillState())
+            {
+                if (damageEvent.damageCauser && !damageEvent.damageCauser->Is_Destroy())
+                {
+                    blackboard->Set_ValueAsObject("LastDamageCauser", damageEvent.damageCauser);
+
+                    if (Should_RetargetToDamageCauser(damageEvent))
+                        Apply_DamageCauserTarget(damageEvent);
+                }
+
+                return;
+            }
+
             static int32 sHitReactionSerial = 0;
             ++sHitReactionSerial;
 
@@ -261,18 +333,98 @@ void EnemyCharacter::OnDamaged(const FDamageEvent& damageEvent)
             if (damageEvent.damageCauser && !damageEvent.damageCauser->Is_Destroy())
             {
                 blackboard->Set_ValueAsObject("LastDamageCauser", damageEvent.damageCauser);
-                blackboard->Set_ValueAsObject("TargetObjectKey", damageEvent.damageCauser);
 
-                auto causerTransform = damageEvent.damageCauser->Get_Transform();
-                if (causerTransform)
-                {
-                    blackboard->Set_ValueAsVector(
-                        "TargetLocationKey",
-                        causerTransform->Get_WorldPosition());
-                }
+                if (Should_RetargetToDamageCauser(damageEvent))
+                    Apply_DamageCauserTarget(damageEvent);
             }
         }
     }
+}
+
+bool EnemyCharacter::Is_SuperArmorActiveFromSkillState() const
+{
+    const auto objectType = Get_ObjectType();
+    if (objectType != Protocol::OBJECT_TYPE_MONSTER_WOOD &&
+        objectType != Protocol::OBJECT_TYPE_MONSTER_LEAF &&
+        objectType != Protocol::OBJECT_TYPE_BOSS_PAIN)
+    {
+        return false;
+    }
+
+    string currentAnimStateName = "";
+
+    if (_behavior)
+    {
+        auto blackboard = _behavior->Get_Blackboard();
+        if (blackboard && blackboard->HasKey("AnimState"))
+            currentAnimStateName = blackboard->Get_ValueAsString("AnimState");
+    }
+
+    if (currentAnimStateName.empty() && _animState)
+        currentAnimStateName = _animState->Get_CurrentStateName();
+
+    return currentAnimStateName.rfind("Skill_", 0) == 0;
+}
+
+bool EnemyCharacter::Should_RetargetToDamageCauser(const FDamageEvent& damageEvent) const
+{
+    if (!_behavior || !_transformCom)
+        return false;
+
+    auto blackboard = _behavior->Get_Blackboard();
+    if (!blackboard)
+        return false;
+
+    auto damageCauser = damageEvent.damageCauser;
+    if (!Is_ValidCombatTargetObject(damageCauser))
+        return false;
+
+    auto currentTarget = blackboard->Get_ValueAsObject("TargetObjectKey");
+    if (!Is_ValidCombatTargetObject(currentTarget))
+        return true;
+
+    if (currentTarget == damageCauser)
+        return true;
+
+    if (damageEvent.damage >= _retargetForceDamage)
+        return true;
+
+    if (_retargetCooldownRemaining > 0.f)
+        return false;
+
+    if (damageEvent.damage < _retargetMinDamage)
+        return false;
+
+    const float currentTargetDistanceSq = Get_TargetDistanceSq(_transformCom, currentTarget);
+    const float damageCauserDistanceSq = Get_TargetDistanceSq(_transformCom, damageCauser);
+    const float preferCloserDistanceSq = _retargetPreferCloserDistance * _retargetPreferCloserDistance;
+
+    return damageCauserDistanceSq + preferCloserDistanceSq < currentTargetDistanceSq;
+}
+
+void EnemyCharacter::Apply_DamageCauserTarget(const FDamageEvent& damageEvent)
+{
+    if (!_behavior)
+        return;
+
+    auto blackboard = _behavior->Get_Blackboard();
+    if (!blackboard)
+        return;
+
+    auto damageCauser = damageEvent.damageCauser;
+    if (!Is_ValidCombatTargetObject(damageCauser))
+        return;
+
+    blackboard->Set_ValueAsObject("TargetObjectKey", damageCauser);
+    _retargetCooldownRemaining = _retargetCooldown;
+
+    auto causerTransform = damageCauser->Get_Transform();
+    if (!causerTransform)
+        return;
+
+    blackboard->Set_ValueAsVector(
+        "TargetLocationKey",
+        causerTransform->Get_WorldPosition());
 }
 
 void EnemyCharacter::OnDead(const FDamageEvent& damageEvent)
@@ -287,6 +439,45 @@ void EnemyCharacter::OnDead(const FDamageEvent& damageEvent)
         auto blackboard = _behavior->Get_Blackboard();
         if (blackboard)
             blackboard->Set_ValueAsBool("IsDead", true);
+    }
+
+    // 사망 시 몬스터 몸이 안 보이게 되므로 그 자리에 Test_Smoke 이펙트를 뿌림
+    if (_transformCom)
+    {
+        Vec3 center = _transformCom->Get_WorldPosition() + Vec3(0.f, 1.f, 0.f);
+
+        auto SpawnSmoke = [](const Vec3& pos)
+        {
+            AttachedEffectObject::FAttachedEffectObjectDesc desc{};
+            desc.effectAssetName = "Test_Smoke";
+            desc.loopOverride = false;
+            
+            auto effect = GAME->Clone_And_Add_GameObject(
+                ETOI(ELevelType::Static),
+                Protocol::OBJECT_TYPE_ATTACHED_EFFECT,
+                GAME->Current_Level(),
+                TEXT("Layer_Effect"),
+                &desc);
+
+            if (effect && effect->Get_Transform())
+            {
+                effect->Get_Transform()->Set_WorldPosition(pos);
+                effect->Get_Transform()->Set_LocalScale(Vec3(0.5f, 0.5f, 0.5f)); // 약간 크게
+            }
+        };
+
+        // 중심에 하나
+        SpawnSmoke(center);
+
+        // 주변에 4개 (지폭천성과 비슷한 느낌으로)
+        int32 burstCount = 4;
+        float radius = 1.2f;
+        for (int32 i = 0; i < burstCount; ++i)
+        {
+            float angle = XM_2PI * (static_cast<float>(i) / static_cast<float>(burstCount));
+            Vec3 offset = Vec3(cosf(angle), 0.f, sinf(angle)) * radius;
+            SpawnSmoke(center + offset);
+        }
     }
 }
 

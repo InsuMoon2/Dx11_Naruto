@@ -74,6 +74,42 @@ HRESULT Character::Bind_Lights()
     return S_OK;
 }
 
+const wchar_t* Character::Resolve_HitSoundFile(int32 hitSound)
+{
+    switch (hitSound)
+    {
+    case 1:
+        return L"Hand_Hit.wav";
+    default:
+        return nullptr;
+    }
+}
+
+bool Character::Try_PlayDirectHitSoundFile(const FDamageEvent& damageEvent)
+{
+    if (damageEvent.hitSoundFile.empty())
+        return false;
+
+    const wstring soundFile = Utils::ToWString(damageEvent.hitSoundFile);
+    GAME->Play_Sound(soundFile, ESoundChannel::Effect, 0.4f);
+    return true;
+}
+
+void Character::Play_HitSoundFromDamageEvent(const FDamageEvent& damageEvent)
+{
+    if (Try_PlayDirectHitSoundFile(damageEvent))
+        return;
+
+    if (damageEvent.hitSound <= 0)
+        return;
+
+    const wchar_t* soundFile = Resolve_HitSoundFile(damageEvent.hitSound);
+    if (!soundFile)
+        return;
+
+    GAME->Play_Sound(soundFile, ESoundChannel::Effect, 0.4f);
+}
+
 void Character::TakeDamage(const FDamageEvent& damageEvent)
 {
     if (damageEvent.launchPower > 0.f || damageEvent.launchUp > 0.f)
@@ -96,7 +132,7 @@ void Character::TakeDamage(const FDamageEvent& damageEvent)
             knockDir = Utils::Safe_Normalize(knockDir, Vec3::Forward);
         }
 
-        // 구한 방향값에 데이터 적용
+        // 援ы븳 諛⑺뼢媛믪뿉 ?곗씠???곸슜
         Vec3 launchVelocity = knockDir * damageEvent.launchPower;
         launchVelocity.y = damageEvent.launchUp;
 
@@ -110,9 +146,9 @@ void Character::TakeDamage(const FDamageEvent& damageEvent)
     auto& hub = GAME->Get_DelegateHub();
 
     hub.OnDamaged.Broadcast(
-        static_pointer_cast<Character>(GetSharedPtr()), damageEvent.damage);
+        static_pointer_cast<Character>(GetSharedPtr()), damageEvent.damage, damageEvent.damageCauser);
 
-    // 자식 클래스별 전용 처리 (FSM 상태처리)
+    // ?먯떇 ?대옒?ㅻ퀎 ?꾩슜 泥섎━ (FSM ?곹깭泥섎━)
     OnDamaged(damageEvent);
 }
 
@@ -120,6 +156,7 @@ void Character::OnDamaged(const FDamageEvent& damageEvent)
 {
      if (damageEvent.damage > 0.f)
     {
+        Play_HitSoundFromDamageEvent(damageEvent);
         Start_HitColor();
     }
 }

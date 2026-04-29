@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Camera.h"
 
@@ -45,7 +45,8 @@ public:
     void    On_CinematicFinished() override;
 
 public:
-    void    Set_TargetTransform(Shared<Transform> target) { _targetTransform = target; }
+    // 플레이어를 처음 따라붙는 순간 카메라 각도/위치를 즉시 안정화하고 첫 마우스 입력 튐을 막기 위해 호출된다.
+    void    Set_TargetTransform(Shared<Transform> target);
     float   Get_Yaw() const { return _yaw; }
 
 public:
@@ -59,7 +60,7 @@ private:
     Matrix  Build_ShakenViewMatrix(const Vec3& localPosOffset, const Vec3& localRotOffsetDeg) const;
 
     // 데미지받아서 처리될 때
-    void    On_Damaged(Shared<Character> damagedCharacter, float damage);
+    void    On_Damaged(Shared<Character> damagedCharacter, float damage, Shared<GameObject> damageCauser);
 
     static float Compute_ShakeEnvelope(const FActiveCameraShake& shake);
     static float Sample_ShakeAxis(float elapsedSec, float frequency, float phaseRad);
@@ -87,6 +88,10 @@ private:
 
     float           _zoomSpeed = 2.f;
     float           _zoomLerpSpeed = 10.f;
+
+private:
+    // 타겟을 새로 바인드한 직후 이전 프레임의 마우스 델타가 튀지 않도록 첫 입력 1회를 무시하는 상태값이다.
+    bool            _skipMouseInputOnce = false;
 
 private:
     bool            _enableMouseRotation = true;

@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "ch0000_00_NThruster",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "ch0000_00_Fabric",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "ch0000_00_NMechParts",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "ch0000_00_NMechParts_Emissive",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "ch0000_00_NRegArmor",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "ch0000_00_NMechParts_Toe_Emissive",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "ch0000_00_Hand",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "wp7200_00_Body",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "ch0000_00_NBackPack",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "ch0000_00_NRobotArm",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "ch0000_00_Head",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "ch0000_00_DetailDecal",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "wp9104_Body",
+      "textures": [
+      ]
+    }
+  ]
+}

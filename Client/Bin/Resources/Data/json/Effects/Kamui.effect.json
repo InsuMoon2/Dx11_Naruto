@@ -108,14 +108,14 @@
                     "materialName": "WorldGridMaterial",
                     "normalStrength": 1.0,
                     "normalTextureGuid": "",
-                    "opacity": 0.8199999928474426,
+                    "opacity": 0.6800000071525574,
                     "opacityGradationTextureGuid": "",
                     "opacitySubUvTextureGuid": "",
                     "opacityTextureGuid": "239c78b4-ca02-4800-bfd5-8c481bf2cee8",
                     "roughness": 0.5,
                     "roughnessTextureGuid": "",
-                    "screenDistortionRadialStrength": -0.054999999701976776,
-                    "screenDistortionStrength": 0.006000000052154064,
+                    "screenDistortionRadialStrength": -0.03999999910593033,
+                    "screenDistortionStrength": 0.004000000189989805,
                     "shadingMode": 0,
                     "specularPower": 32.0,
                     "specularStrength": 0.0,
@@ -145,7 +145,7 @@
             "modelGuid": "410d401b-3f69-4af1-a496-a3d8be9f4dd7",
             "normalStrength": 1.0,
             "normalTextureGuid": "",
-            "opacity": 0.8199999928474426,
+            "opacity": 0.6800000071525574,
             "opacityGradationTextureGuid": "",
             "opacitySubUvTextureGuid": "",
             "opacityTextureGuid": "239c78b4-ca02-4800-bfd5-8c481bf2cee8",
@@ -160,20 +160,20 @@
             "roughness": 0.5,
             "roughnessTextureGuid": "",
             "scaleDuration": 1.0,
-            "screenDistortionRadialStrength": -0.054999999701976776,
-            "screenDistortionStrength": 0.006000000052154064,
+            "screenDistortionRadialStrength": -0.03999999910593033,
+            "screenDistortionStrength": 0.004000000189989805,
             "shadingMode": 0,
             "specularPower": 32.0,
             "specularStrength": 0.0,
             "specularTextureGuid": "",
             "startDelay": 0.0,
             "twoSided": true,
-            "useColorTintOverTime": false,
+            "useColorTintOverTime": true,
             "useEmissiveStrengthOverTime": false,
             "useOpacityAsTransparency": true,
-            "useOpacityOverTime": false,
+            "useOpacityOverTime": true,
             "usePositionOverTime": false,
-            "useScaleOverTime": false,
+            "useScaleOverTime": true,
             "useScreenDistortion": true,
             "uvDistortionSpeed": [
                 0.07999999821186066,
@@ -192,7 +192,263 @@
                 1.0,
                 1.0
             ]
+        },
+        {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
+            "blendMode": 1,
+            "colorTint": [
+                0.05000000074505806,
+                0.05000000074505806,
+                0.05000000074505806,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "diffuseTextureGuid": "",
+            "duration": 1.0,
+            "emissiveGradationTextureGuid": "",
+            "emissiveStrength": 0.0,
+            "emissiveTextureGuid": "",
+            "enabled": true,
+            "endColorTint": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endEmissiveStrength": 0.0,
+            "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                1.4500000476837158,
+                1.4500000476837158,
+                1.4500000476837158
+            ],
+            "flipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "Kamui_Core_DarkSwirl",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                0.0,
+                90.0,
+                0.0
+            ],
+            "localScale": [
+                520.0,
+                520.0,
+                520.0
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "410d401b-3f69-4af1-a496-a3d8be9f4dd7",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
+            "opacity": 0.2800000011920929,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "239c78b4-ca02-4800-bfd5-8c481bf2cee8",
+            "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
+            "rotationAxis": [
+                0.0,
+                0.0,
+                1.0
+            ],
+            "rotationSpeed": 620.0,
+            "roughness": 0.5,
+            "roughnessTextureGuid": "",
+            "scaleDuration": 0.949999988079071,
+            "screenDistortionRadialStrength": -0.550000011920929,
+            "screenDistortionStrength": 0.10000000149011612,
+            "shadingMode": 0,
+            "specularPower": 32.0,
+            "specularStrength": 0.0,
+            "specularTextureGuid": "",
+            "startDelay": 0.0,
+            "twoSided": true,
+            "useColorTintOverTime": true,
+            "useEmissiveStrengthOverTime": true,
+            "useOpacityAsTransparency": true,
+            "useOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useScaleOverTime": true,
+            "useScreenDistortion": true,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.019999999552965164,
+                -0.03999999910593033
+            ],
+            "uvTiling": [
+                1.100000023841858,
+                1.100000023841858
+            ]
+        },
+        {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
+            "blendMode": 1,
+            "colorTint": [
+                1.0,
+                0.9856630563735962,
+                0.9856630563735962,
+                1.0
+            ],
+            "customParams0": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "customParams1": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "diffuseTextureGuid": "ca791068-8ef8-4f28-a192-6f7c56ac2563",
+            "duration": 0.30000001192092896,
+            "emissiveGradationTextureGuid": "",
+            "emissiveStrength": 0.0,
+            "emissiveTextureGuid": "",
+            "enabled": true,
+            "endColorTint": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "endEmissiveStrength": 0.0,
+            "endOpacity": 0.0,
+            "endPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "endScale": [
+                12.0,
+                12.0,
+                12.0
+            ],
+            "flipbook": {
+                "columns": 1,
+                "enabled": false,
+                "endFrame": -1,
+                "fps": 16.0,
+                "loop": true,
+                "rows": 1,
+                "startFrame": 0
+            },
+            "fresnelMultiplier": 1.0,
+            "fresnelPower": 0.0,
+            "kind": 1,
+            "layerName": "Kamui_End_SmokeSwirl",
+            "localPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "localRotation": [
+                90.0,
+                0.0,
+                0.0
+            ],
+            "localScale": [
+                0.18000000715255737,
+                0.3199999928474426,
+                0.18000000715255737
+            ],
+            "loop": false,
+            "maskTextureGuid": "",
+            "modelGuid": "db784895-3a6b-4c62-a545-9d3935c49b11",
+            "normalStrength": 1.0,
+            "normalTextureGuid": "",
+            "opacity": 0.2800000011920929,
+            "opacityGradationTextureGuid": "",
+            "opacitySubUvTextureGuid": "",
+            "opacityTextureGuid": "6f67b946-6275-4daf-95e5-a3b7c0005768",
+            "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
+            "rotationAxis": [
+                0.0,
+                0.0,
+                1.0
+            ],
+            "rotationSpeed": 260.0,
+            "roughness": 0.5,
+            "roughnessTextureGuid": "",
+            "scaleDuration": 0.25,
+            "screenDistortionRadialStrength": -0.3499999940395355,
+            "screenDistortionStrength": 0.2199999988079071,
+            "shadingMode": 0,
+            "specularPower": 32.0,
+            "specularStrength": 0.0,
+            "specularTextureGuid": "",
+            "startDelay": 0.8600000143051147,
+            "twoSided": true,
+            "useColorTintOverTime": true,
+            "useEmissiveStrengthOverTime": true,
+            "useOpacityAsTransparency": true,
+            "useOpacityOverTime": true,
+            "usePositionOverTime": false,
+            "useScaleOverTime": true,
+            "useScreenDistortion": false,
+            "uvDistortionSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionStrength": [
+                0.0,
+                0.0
+            ],
+            "uvDistortionTextureGuid": "",
+            "uvScrollSpeed": [
+                0.0,
+                0.0
+            ],
+            "uvTiling": [
+                1.0,
+                0.800000011920929
+            ]
         }
     ],
-    "totalDuration": -1.0
+    "totalDuration": 1.2000000476837158
 }

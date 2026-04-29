@@ -14,7 +14,7 @@ DECLARE_DELEGATE(FOnPlayerSpawned, Shared<Transform>);
 DECLARE_DELEGATE(FOnPlayerObjectSpawned, Shared<GameObject>);
 DECLARE_DELEGATE(FOnWeaponTypeChanged, int32);
 
-DECLARE_DELEGATE(FOnDamaged, Shared<Character> /*맞은놈*/, float/*데미지*/);
+DECLARE_DELEGATE(FOnDamaged, Shared<Character> /*맞은놈*/, float/*데미지*/, Shared<GameObject> /*때린놈*/);
 DECLARE_DELEGATE(FOnDead, Shared<Character> /*죽은놈*/, Shared<GameObject> /*죽인놈*/);
 
 DECLARE_DELEGATE(FOnPlayerComboHit, uint32/*콤보 수*/);

@@ -492,6 +492,11 @@ private:
     EGameState                      _gameState = EGameState::Play;
     bool                            _gameInputEnabled = false;
     bool                            _editorRuntime = false;
+    bool                            _isCinematicTransition = false;
+
+public:
+    void                            Set_CinematicTransition(bool b) { _isCinematicTransition = b; }
+    bool                            Is_CinematicTransition() const { return _isCinematicTransition; }
     // 에디터가 primary shadow light를 잠가서 레벨 코드의 자동 업데이트보다 우선 적용할지 결정하는 스위치다.
     bool                            _editorPrimaryShadowLightOverrideEnabled = false;
     // 에디터 인스펙터에서 직접 조정 중인 primary shadow light의 최신 설정이다.

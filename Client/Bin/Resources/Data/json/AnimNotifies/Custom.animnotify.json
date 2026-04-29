@@ -1,4 +1,4 @@
-{
+﻿{
     "clips": [
         {
             "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Hand_Punch_Left",
@@ -22,12 +22,15 @@
                         "left_foot": false,
                         "left_hand": true,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.1666666716337204,
@@ -97,12 +100,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": true,
                         "target": "hitbox",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.7333333492279053,
@@ -162,12 +168,15 @@
                         "left_foot": true,
                         "left_hand": false,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.20000000298023224,
@@ -197,12 +206,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": true,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.3333333432674408,
@@ -238,12 +250,86 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 5,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 4.0,
                         "override_launch_up": 5.0,
                         "right_foot": false,
                         "right_hand": true,
                         "target": "hitbox",
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
+                        "use_launch_override": true
+                    },
+                    "start_sec": 0.20000000298023224,
+                    "track_index": 0,
+                    "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.20000000298023224,
+                    "payload": {},
+                    "start_sec": 0.30000001192092896,
+                    "track_index": 1,
+                    "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.20000000298023224,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.23333333432674408,
+                    "track_index": 2,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_SSp_7Sword_cmb_01",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
+                },
+                {
+                    "name": "Notify State Track"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.10000000149011612,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "override_hit_reaction_type": 5,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
+                        "override_launch_power": 4.0,
+                        "override_launch_up": 5.0,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "weapon",
+                        "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true
                     },
                     "start_sec": 0.20000000298023224,
@@ -306,12 +392,86 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 5,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 4.0,
                         "override_launch_up": 7.0,
                         "right_foot": true,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
+                        "use_launch_override": true
+                    },
+                    "start_sec": 0.20000000298023224,
+                    "track_index": 0,
+                    "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.1666666716337204,
+                    "payload": {},
+                    "start_sec": 0.36666667461395264,
+                    "track_index": 1,
+                    "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.20000000298023224,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.13333334028720856,
+                    "track_index": 2,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_SSp_7Sword_cmb_02",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
+                },
+                {
+                    "name": "Notify State Track"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.1666666716337204,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "override_hit_reaction_type": 5,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
+                        "override_launch_power": 4.0,
+                        "override_launch_up": 7.0,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "weapon",
+                        "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true
                     },
                     "start_sec": 0.20000000298023224,
@@ -374,12 +534,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 5,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 4.0,
                         "override_launch_up": 6.0,
                         "right_foot": true,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true
                     },
                     "start_sec": 0.6333333253860474,
@@ -392,12 +555,127 @@
                         "left_foot": true,
                         "left_hand": false,
                         "override_hit_reaction_type": 5,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 4.0,
                         "override_launch_up": 6.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
+                        "use_launch_override": true
+                    },
+                    "start_sec": 1.399999976158142,
+                    "track_index": 0,
+                    "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.7666666507720947,
+                    "payload": {},
+                    "start_sec": 1.4333332777023315,
+                    "track_index": 1,
+                    "type": "ANS_ComboWindow"
+                },
+                {
+                    "duration_sec": 0.23333333432674408,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.6000000238418579,
+                    "track_index": 2,
+                    "type": "ANS_Move"
+                },
+                {
+                    "duration_sec": 0.23333333432674408,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 1.4333332777023315,
+                    "track_index": 2,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_SSp_7Sword_cmb_03",
+            "display_fps": 30,
+            "notifies": [],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
+                },
+                {
+                    "name": "Notify State Track 4"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.23333333432674408,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "override_hit_reaction_type": 5,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
+                        "override_launch_power": 4.0,
+                        "override_launch_up": 6.0,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "weapon",
+                        "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
+                        "use_launch_override": true
+                    },
+                    "start_sec": 0.6333333253860474,
+                    "track_index": 0,
+                    "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "override_hit_reaction_type": 5,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
+                        "override_launch_power": 4.0,
+                        "override_launch_up": 6.0,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "weapon",
+                        "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true
                     },
                     "start_sec": 1.399999976158142,
@@ -474,12 +752,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 6,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 15.0,
                         "override_launch_up": -5.0,
                         "right_foot": true,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true
                     },
                     "start_sec": 0.8666666746139526,
@@ -525,12 +806,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "weapon",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.5,
@@ -618,12 +902,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "weapon",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.6333333253860474,
@@ -689,12 +976,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "weapon",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.8999999761581421,
@@ -766,12 +1056,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 2,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 4.0,
                         "override_launch_up": 4.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "weapon",
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true
                     },
                     "start_sec": 0.8999999761581421,
@@ -817,12 +1110,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "weapon",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.699999988079071,
@@ -850,6 +1146,12 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track 1"
+                },
+                {
+                    "name": "Notify State Track 2"
                 }
             ],
             "notify_states": [
@@ -859,17 +1161,74 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "weapon",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
+                        "use_launch_override": false
+                    },
+                    "start_sec": 1.0999999046325684,
+                    "track_index": 0,
+                    "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "left_foot": false,
+                        "left_hand": false,
+                        "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
+                        "right_foot": false,
+                        "right_hand": false,
+                        "target": "weapon",
+                        "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 1.100000023841858,
                     "track_index": 0,
                     "type": "ANS_CollisionEnable"
+                },
+                {
+                    "duration_sec": 0.3333333432674408,
+                    "payload": {
+                        "bot_bone": "",
+                        "lifespan": 0.18000000715255737,
+                        "texture_index": 2,
+                        "top_bone": "R_Hand_Weapon_cnt_tr",
+                        "width": 2.5
+                    },
+                    "start_sec": 1.0999999046325684,
+                    "track_index": 1,
+                    "type": "ANS_SwordTrail"
+                },
+                {
+                    "duration_sec": 0.30000001192092896,
+                    "payload": {
+                        "Direction Source": 2,
+                        "constrain_to_ground": false,
+                        "direction_source": "TargetDirection",
+                        "ignore_y": false,
+                        "move_speed": 4.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": true,
+                        "rotation_speed": 1800.0
+                    },
+                    "start_sec": 0.8333333134651184,
+                    "track_index": 2,
+                    "type": "ANS_Move"
                 }
             ],
             "notify_tracks": [
@@ -884,17 +1243,57 @@
             "notifies": [
                 {
                     "payload": {
+                        "attach_to_bone": false,
+                        "bone_name": "CharacterRoot",
+                        "effect_name": "Ring_RasenShuriken",
+                        "local_offset": [
+                            0.0,
+                            0.10000000149011612,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            7.0,
+                            3.0,
+                            7.0
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
+                    },
+                    "time_sec": 0.30000001192092896,
+                    "track_index": 0,
+                    "type": "AN_SpawnParticle"
+                },
+                {
+                    "payload": {
                         "aim_at_target": true,
                         "launch_type": 19
                     },
                     "time_sec": 2.9666666984558105,
                     "track_index": 0,
                     "type": "AN_LaunchSkill"
+                },
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "RasenShuriken_Voice.wav",
+                        "volume": 0.4000000059604645
+                    },
+                    "time_sec": 0.30000001192092896,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 },
                 {
                     "name": "Notify State Track"
@@ -941,11 +1340,27 @@
                     "start_sec": 0.4000000059604645,
                     "track_index": 1,
                     "type": "ANS_Move"
+                },
+                {
+                    "duration_sec": 2.7666666507720947,
+                    "payload": {
+                        "channel": 3,
+                        "pitch": 1.0,
+                        "sound_file": "RasenShuriken_Charge.wav",
+                        "stop_on_end": true,
+                        "volume": 0.30000001192092896
+                    },
+                    "start_sec": 0.2666666805744171,
+                    "track_index": 2,
+                    "type": "ANS_PlaySound"
                 }
             ],
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 },
                 {
                     "name": "Notify Track"
@@ -1174,6 +1589,16 @@
             "notifies": [
                 {
                     "payload": {
+                        "channel": 3,
+                        "sound_file": "RasenShuriken_Voice.wav",
+                        "volume": 0.4000000059604645
+                    },
+                    "time_sec": 0.2666666805744171,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
                         "check_gravity": true
                     },
                     "time_sec": 3.8333332538604736,
@@ -1193,6 +1618,9 @@
             "notify_state_tracks": [
                 {
                     "name": "Notify States"
+                },
+                {
+                    "name": "Notify State Track"
                 },
                 {
                     "name": "Notify State Track"
@@ -1239,6 +1667,19 @@
                     "start_sec": 0.3333333432674408,
                     "track_index": 1,
                     "type": "ANS_AttachSkill"
+                },
+                {
+                    "duration_sec": 2.7333333492279053,
+                    "payload": {
+                        "channel": 3,
+                        "pitch": 1.0,
+                        "sound_file": "RasenShuriken_Charge.wav",
+                        "stop_on_end": true,
+                        "volume": 0.30000001192092896
+                    },
+                    "start_sec": 0.3333333432674408,
+                    "track_index": 2,
+                    "type": "ANS_PlaySound"
                 }
             ],
             "notify_tracks": [
@@ -1302,6 +1743,70 @@
                     "time_sec": 0.6000000238418579,
                     "track_index": 0,
                     "type": "AN_SpawnProjSkill"
+                },
+                {
+                    "payload": {
+                        "attach_to_bone": false,
+                        "bone_name": "CharacterRoot",
+                        "effect_name": "Ring_FireBall",
+                        "local_offset": [
+                            0.0,
+                            0.10000000149011612,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            7.0,
+                            3.0,
+                            7.0
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 1,
+                    "type": "AN_SpawnParticle"
+                },
+                {
+                    "payload": {
+                        "attach_to_bone": false,
+                        "bone_name": "CharacterRoot",
+                        "effect_name": "Last_FireBall_Start",
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
+                    },
+                    "time_sec": 0.6000000238418579,
+                    "track_index": 1,
+                    "type": "AN_SpawnParticle"
+                },
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Fireball_Voice.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 2,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -1334,6 +1839,12 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -1416,7 +1927,21 @@
                     "name": "Notify States"
                 }
             ],
-            "notify_states": [],
+            "notify_states": [
+                {
+                    "duration_sec": 1.2666666507720947,
+                    "payload": {
+                        "channel": 3,
+                        "pitch": 1.0,
+                        "sound_file": "Rasengan_Create.wav",
+                        "stop_on_end": true,
+                        "volume": 0.30000001192092896
+                    },
+                    "start_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "ANS_PlaySound"
+                }
+            ],
             "notify_tracks": [
                 {
                     "name": "Notifies"
@@ -1469,10 +1994,46 @@
             "display_fps": 30,
             "notifies": [
                 {
+                    "payload": {
+                        "effect_name": "Rasengan_Dash",
+                        "stop_all_from_owner": false
+                    },
+                    "time_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "AN_StopParticle"
+                },
+                {
                     "payload": {},
-                    "time_sec": 0.36666667461395264,
+                    "time_sec": 0.23333333432674408,
                     "track_index": 0,
                     "type": "AN_ClearMeleeSkill"
+                },
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 3,
+                        "layer_tag": "Layer_Skill",
+                        "lifetime": 0.8500000238418579,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
+                        "override_launch_power": 0.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 23,
+                        "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
+                        "use_launch_override": false,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.20000000298023224,
+                    "track_index": 1,
+                    "type": "AN_SpawnAttack"
                 }
             ],
             "notify_state_tracks": [
@@ -1488,11 +2049,11 @@
                         "constrain_to_ground": false,
                         "direction_source": "OwnerBackward",
                         "ignore_y": false,
-                        "move_speed": 5.0,
+                        "move_speed": 3.0,
                         "move_velocity": [
                             0.0,
-                            4.0,
-                            5.0
+                            2.0,
+                            3.0
                         ],
                         "rotate_to_target": true,
                         "rotation_speed": 1800.0
@@ -1505,6 +2066,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track 1"
                 }
             ]
         },
@@ -1558,7 +2122,21 @@
                     "name": "Notify States"
                 }
             ],
-            "notify_states": [],
+            "notify_states": [
+                {
+                    "duration_sec": 0.800000011920929,
+                    "payload": {
+                        "channel": 3,
+                        "pitch": 1.0,
+                        "sound_file": "Rasengan_Create.wav",
+                        "stop_on_end": true,
+                        "volume": 0.30000001192092896
+                    },
+                    "start_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "ANS_PlaySound"
+                }
+            ],
             "notify_tracks": [
                 {
                     "name": "Notifies"
@@ -1571,26 +2149,30 @@
             "notifies": [
                 {
                     "payload": {
+                        "channel": 3,
+                        "sound_file": "Fireball_Voice.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.13333334028720856,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
                         "aim_at_target": true,
                         "collision_preset": 3,
-                        "launch_if_projectile": true,
+                        "ignore_y": false,
                         "local_offset": [
                             0.0,
                             1.2000000476837158,
                             1.7999999523162842
                         ],
-                        "spawn_at_locked_target": false,
                         "spawn_type": 20,
-                        "target_offset": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "use_owner_forward": false
+                        "use_owner_forward": true
                     },
-                    "time_sec": 0.4333333373069763,
+                    "time_sec": 0.46666666865348816,
                     "track_index": 0,
-                    "type": "AN_SpawnSkill"
+                    "type": "AN_SpawnProjSkill"
                 }
             ],
             "notify_state_tracks": [
@@ -1658,10 +2240,13 @@
                             1.5
                         ],
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "spawn_object_type": 23,
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false,
                         "use_owner_forward": true
                     },
@@ -1861,7 +2446,7 @@
                         "bone_name": "L_Hand_Weapon_cnt_tr",
                         "effect_name": "Lightning_Follow",
                         "local_offset_step": [
-                            0.07999999821186066,
+                            0.18000000715255737,
                             0.0,
                             0.0
                         ],
@@ -1873,19 +2458,19 @@
                         ],
                         "rotation_offset_step": [
                             0.0,
-                            0.0,
-                            8.0
+                            18.0,
+                            34.0
                         ],
-                        "spawn_count": 1,
+                        "spawn_count": 2,
                         "thickness": [
                             3.0,
                             3.0,
                             3.0
                         ],
                         "thickness_step": [
-                            0.15000000596046448,
+                            0.44999998807907104,
                             0.0,
-                            0.15000000596046448
+                            0.3199999928474426
                         ]
                     },
                     "time_sec": 0.6333333253860474,
@@ -1894,7 +2479,17 @@
                 },
                 {
                     "payload": {
-                        "attach_to_bone": false,
+                        "channel": 3,
+                        "sound_file": "Chidori_Loop.wav",
+                        "volume": 0.20000000298023224
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
+                        "attach_to_bone": true,
                         "bone_name": "L_Hand_Weapon_cnt_tr",
                         "effect_name": "Chidori_Charging",
                         "local_offset": [
@@ -1908,25 +2503,16 @@
                             0.0
                         ],
                         "local_scale": [
-                            1.0,
-                            1.0,
-                            1.0
+                            1.2999999523162842,
+                            1.2999999523162842,
+                            1.2999999523162842
                         ],
                         "loop_override": false,
-                        "use_initial_bone_transform": true
+                        "use_initial_bone_transform": false
                     },
                     "time_sec": 0.23333333432674408,
                     "track_index": 1,
                     "type": "AN_SpawnParticle"
-                },
-                {
-                    "payload": {
-                        "block_game_input": false,
-                        "sequence_name": "Cam_Chidori"
-                    },
-                    "time_sec": 0.10000000149011612,
-                    "track_index": 2,
-                    "type": "AN_PlayCinematic"
                 }
             ],
             "notify_state_tracks": [
@@ -1953,11 +2539,13 @@
             "notifies": [
                 {
                     "payload": {
-                        "충돌 프리셋": 2
+                        "channel": 3,
+                        "sound_file": "Chidori_Voice.wav",
+                        "volume": 0.6000000238418579
                     },
-                    "time_sec": 0.800000011920929,
+                    "time_sec": 0.13333334028720856,
                     "track_index": 0,
-                    "type": "AN_BodyCollisionPreset_Change"
+                    "type": "AN_PlaySound"
                 },
                 {
                     "payload": {},
@@ -1967,12 +2555,12 @@
                 },
                 {
                     "payload": {
-                        "block_game_input": false,
-                        "sequence_name": "Cam_ChidoriEnd"
+                        "effect_name": "Chidori_Charging",
+                        "stop_all_from_owner": false
                     },
-                    "time_sec": 0.20000000298023224,
+                    "time_sec": 0.4333333373069763,
                     "track_index": 1,
-                    "type": "AN_PlayCinematic"
+                    "type": "AN_StopParticle"
                 }
             ],
             "notify_state_tracks": [
@@ -1994,23 +2582,6 @@
             "clip_name": "SK_CHR_NormalModel|CustomMan_Ninjutsu_Chidori_Run_Lv3_Loop",
             "display_fps": 30,
             "notifies": [
-                {
-                    "payload": {
-                        "effect_name": "Chidori_Charging",
-                        "stop_all_from_owner": false
-                    },
-                    "time_sec": 0.0,
-                    "track_index": 0,
-                    "type": "AN_StopParticle"
-                },
-                {
-                    "payload": {
-                        "충돌 프리셋": 1
-                    },
-                    "time_sec": 0.10000000149011612,
-                    "track_index": 0,
-                    "type": "AN_BodyCollisionPreset_Change"
-                },
                 {
                     "payload": {
                         "effect_name": "RingEffect_Loop",
@@ -2040,6 +2611,16 @@
             "clip_name": "SK_CHR_NormalModel|CustomMan_Throw_WindmillShuriken",
             "display_fps": 30,
             "notifies": [
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Shuriken.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.30000001192092896,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
                 {
                     "payload": {
                         "aim_at_target": true,
@@ -2195,7 +2776,7 @@
                 },
                 {
                     "payload": {
-                        "aim_at_target": false,
+                        "aim_at_target": true,
                         "collision_preset": 11,
                         "launch_if_projectile": false,
                         "local_offset": [
@@ -2215,6 +2796,16 @@
                     "time_sec": 1.0,
                     "track_index": 0,
                     "type": "AN_SpawnSkill"
+                },
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "ShinjuSenju2.wav",
+                        "volume": 0.4000000059604645
+                    },
+                    "time_sec": 0.1666666716337204,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [
@@ -2226,6 +2817,9 @@
             "notify_tracks": [
                 {
                     "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
                 }
             ]
         },
@@ -2363,7 +2957,7 @@
             "notifies": [
                 {
                     "payload": {
-                        "전환 상태": 0
+                        "?꾪솚 ?곹깭": 0
                     },
                     "time_sec": 0.8999999761581421,
                     "track_index": 0,
@@ -2388,12 +2982,15 @@
                         "left_foot": false,
                         "left_hand": true,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.4333333373069763,
@@ -2440,7 +3037,7 @@
             "notifies": [
                 {
                     "payload": {
-                        "전환 상태": 0
+                        "?꾪솚 ?곹깭": 0
                     },
                     "time_sec": 1.2999999523162842,
                     "track_index": 0,
@@ -2465,12 +3062,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": true,
                         "target": "hitbox",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.4000000059604645,
@@ -2517,7 +3117,7 @@
             "notifies": [
                 {
                     "payload": {
-                        "전환 상태": 0
+                        "?꾪솚 ?곹깭": 0
                     },
                     "time_sec": 1.5333333015441895,
                     "track_index": 0,
@@ -2542,12 +3142,15 @@
                         "left_foot": true,
                         "left_hand": false,
                         "override_hit_reaction_type": 5,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 4.0,
                         "override_launch_up": 16.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true
                     },
                     "start_sec": 0.7333333492279053,
@@ -2587,7 +3190,7 @@
             "notifies": [
                 {
                     "payload": {
-                        "전환 상태": 0
+                        "?꾪솚 ?곹깭": 0
                     },
                     "time_sec": 2.7666666507720947,
                     "track_index": 0,
@@ -2612,12 +3215,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 1,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": true,
                         "target": "hitbox",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.800000011920929,
@@ -2630,12 +3236,15 @@
                         "left_foot": true,
                         "left_hand": false,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 1.7333333492279053,
@@ -2698,12 +3307,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 1,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": true,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.4333333373069763,
@@ -2716,12 +3328,15 @@
                         "left_foot": true,
                         "left_hand": false,
                         "override_hit_reaction_type": 2,
-                        "override_launch_power": 100.0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
+                        "override_launch_power": 4.0,
                         "override_launch_up": 5.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "hitbox",
                         "use_hit_reaction_override": true,
+                        "use_hit_sound_override": false,
                         "use_launch_override": true
                     },
                     "start_sec": 1.1333333253860474,
@@ -2761,7 +3376,17 @@
             "notifies": [
                 {
                     "payload": {
-                        "전환 상태": 0
+                        "channel": 3,
+                        "sound_file": "Player_HitSmall.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
+                        "?꾪솚 ?곹깭": 0
                     },
                     "time_sec": 0.8666666746139526,
                     "track_index": 0,
@@ -2865,12 +3490,15 @@
                         "left_foot": false,
                         "left_hand": false,
                         "override_hit_reaction_type": 0,
+                        "override_hit_sound": 0,
+                        "override_hit_sound_file": "",
                         "override_launch_power": 0.0,
                         "override_launch_up": 0.0,
                         "right_foot": false,
                         "right_hand": false,
                         "target": "weapon",
                         "use_hit_reaction_override": false,
+                        "use_hit_sound_override": false,
                         "use_launch_override": false
                     },
                     "start_sec": 0.9666666388511658,
@@ -2952,6 +3580,157 @@
                     "time_sec": 2.0333333015441895,
                     "track_index": 0,
                     "type": "AN_SpawnSkill"
+                },
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Kamui_Voice.wav",
+                        "volume": 0.4000000059604645
+                    },
+                    "time_sec": 0.4333333373069763,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|SK_CHR_NormalModel|CustomMan_Ninjutsu_Aerial_Rasengan_Loop",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "attach_to_bone": true,
+                        "bone_name": "R_Hand_Weapon_cnt_tr",
+                        "effect_name": "Rasengan_Dash",
+                        "local_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            90.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
+                    },
+                    "time_sec": 0.0,
+                    "track_index": 0,
+                    "type": "AN_SpawnParticle"
+                },
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Rasengan_Voice.wav",
+                        "volume": 0.4000000059604645
+                    },
+                    "time_sec": 0.0,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track 1"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_Land",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Landing.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.0,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_WireJump_Ready",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Shuriken.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.36666667461395264,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_NormalModel|CustomMan_HeightLand",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 3,
+                        "sound_file": "Landing.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [

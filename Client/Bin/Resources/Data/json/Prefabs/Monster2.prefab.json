@@ -190,9 +190,9 @@
         {
             "Attack": 10.0,
             "Defense": 5.0,
-            "HP": 30.0,
+            "HP": 100.0,
             "MP": 100.0,
-            "Max HP": 30.0,
+            "Max HP": 100.0,
             "Max MP": 100.0,
             "Speed": 5.0,
             "type": "COMPONENT_TYPE_COMBAT_STAT"
@@ -211,7 +211,7 @@
             "Jump Velocity": 8.0,
             "Launch Control Lock Duration": 0.11999999731779099,
             "Max Sprint Speed": 4.0,
-            "Max Walk Speed": 2.0,
+            "Max Walk Speed": 4.0,
             "Wall Attach Offset": 0.15000000596046448,
             "Wall Detect Distance": 1.0,
             "Wall Jump Out Velocity": 6.0,
@@ -828,7 +828,7 @@
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
         }
     ],
-    "guid": "25a3e2fb-e628-41f7-be6f-eabf9377440b",
+    "guid": "5edcf160-1cbb-40c9-abcd-440bbbe440a5",
     "object_type": "OBJECT_TYPE_MONSTER",
     "prefab_name": "Monster2",
     "static_class": "Monster2"

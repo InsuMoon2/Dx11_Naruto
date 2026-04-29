@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Level.h"
 #include "MovementComponent.h"
@@ -44,6 +44,8 @@ private:
                         vector<MovementComponent::FCollisionModelInstance>& outInstances);
 
     HRESULT         Ready_UI();
+    // Konoha와 동일한 스카이박스를 GamePlay 레벨에 생성한다.
+    HRESULT         Ready_Layer_SkySphere();
     // 활성 카메라/플레이어 기준으로 shadow 전용 카메라를 다시 맞출 때 호출한다.
     void            Update_DynamicShadowLightFromView();
 

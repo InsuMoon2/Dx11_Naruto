@@ -1782,9 +1782,9 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_HelmDivide",
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_SSp_7Sword_cmb_01",
                         "loop": false,
-                        "playRate": 1.5
+                        "playRate": 1.0
                     },
                     "start": {
                         "animationName": "",
@@ -1874,9 +1874,147 @@
                     },
                     "mode": "Single",
                     "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_SSp_7Sword_cmb_02",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_SwordAir_03",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_SSp_7Sword_cmb_03",
+                        "loop": false,
+                        "playRate": 1.7999999523162842
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Attack_SwordAir_04",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
                         "animationName": "SK_CHR_NormalModel|CustomMan_Attack_Aerial_BigSword_HelmDivide_Type02",
                         "loop": false,
                         "playRate": 1.5
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit_Air_Down",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_BlowOff_toFall",
+                        "loop": false,
+                        "playRate": 1.0
                     },
                     "start": {
                         "animationName": "",
@@ -2786,52 +2924,6 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Hit_Air_Down",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_NormalModel|CustomMan_Beaten_Aerial_BlowOff_toFall",
-                        "loop": false,
-                        "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
                     "key": "Hit_Pull",
                     "loopClip": {
                         "animationName": "",
@@ -2851,7 +2943,7 @@
                     }
                 }
             ],
-            "current_state": "BigSword_Idle",
+            "current_state": "JumpFall",
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
         },
         {
@@ -3504,7 +3596,7 @@
                         "type": "COMPONENT_TYPE_MODEL"
                     }
                 ],
-                "guid": "7658f98b-f9a5-4199-b317-66fe2e6cf6db",
+                "guid": "9a69648e-ea7d-465b-85b4-810dbf54e6c1",
                 "object_type": "OBJECT_TYPE_PART_OBJECT",
                 "static_class": "Player_CustomPart"
             },
@@ -3546,7 +3638,7 @@
                         "type": "COMPONENT_TYPE_MODEL"
                     }
                 ],
-                "guid": "239c02e4-1a61-46aa-9861-171a6e0b9e88",
+                "guid": "bf197352-e8ee-43a4-9950-1b9c4309b8d8",
                 "object_type": "OBJECT_TYPE_PART_OBJECT",
                 "static_class": "Player_CustomPart"
             },
@@ -3587,7 +3679,7 @@
                         "type": "COMPONENT_TYPE_MODEL"
                     }
                 ],
-                "guid": "0ef2eab9-4cc1-472c-b1eb-fa2106999593",
+                "guid": "bace05cb-2be8-4620-85da-2d370a9eebcd",
                 "object_type": "OBJECT_TYPE_PART_OBJECT",
                 "static_class": "Player_CustomPart"
             },
@@ -3647,7 +3739,7 @@
                         "type": "COMPONENT_TYPE_MODEL"
                     }
                 ],
-                "guid": "4ad023b6-e297-4006-9f85-23d1892790d1",
+                "guid": "4e973ad8-20db-443f-9784-9deab9e04431",
                 "object_type": "OBJECT_TYPE_PART_WEAPON",
                 "static_class": "Weapon"
             }
@@ -3727,7 +3819,7 @@
             }
         }
     },
-    "guid": "0793af77-2dab-43db-b6da-0b9486e664d9",
+    "guid": "596b4933-9d59-4c7b-9b6f-9f53244e7b48",
     "object_type": "OBJECT_TYPE_PLAYER",
     "prefab_name": "TestPlayer2",
     "static_class": "TestPlayer2"

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Component.h"
 #include "IPlayerState.h"
@@ -129,6 +129,10 @@ public:
 public:
     void Set_ForceGroundAttack(bool val) { _forceGroundAttack = val; }
     bool Is_ForceGroundAttack() const    { return _forceGroundAttack; }
+
+    /** 현재 상태가 슈퍼아머를 가지고 있으면 true를 반환한다.
+     *  Player::OnDamaged에서 회전 억제 여부 판단에 사용된다. */
+    bool Is_SuperArmor() const { return _currentState && _currentState->Has_SuperArmor(); }
 
 
 private:

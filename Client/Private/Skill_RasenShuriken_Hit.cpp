@@ -24,6 +24,12 @@ Skill_RasenShuriken_Hit::Skill_RasenShuriken_Hit(const Skill_RasenShuriken_Hit& 
     , _finalBlastRadius(rhs._finalBlastRadius)
     , _finalBlastLaunchPower(rhs._finalBlastLaunchPower)
     , _finalBlastLaunchUp(rhs._finalBlastLaunchUp)
+    , _loopSoundDuration(rhs._loopSoundDuration)
+    , _loopSoundElapsedTime(rhs._loopSoundElapsedTime)
+    , _loopSoundFile(rhs._loopSoundFile)
+    , _finalBlastSoundFile(rhs._finalBlastSoundFile)
+    , _isHitLoopSoundPlaying(rhs._isHitLoopSoundPlaying)
+    , _hasPlayedFinalBlastSound(rhs._hasPlayedFinalBlastSound)
     , _isFinalBlast(rhs._isFinalBlast)
 {
 }
@@ -51,6 +57,9 @@ HRESULT Skill_RasenShuriken_Hit::Initialize(void* arg)
         Set_Owner(desc->damageCauser);
 
     _isFinalBlast = false;
+    _loopSoundElapsedTime = 0.f;
+    _isHitLoopSoundPlaying = false;
+    _hasPlayedFinalBlastSound = false;
 
     if (_transformCom)
     {
@@ -62,9 +71,10 @@ HRESULT Skill_RasenShuriken_Hit::Initialize(void* arg)
         _collider->Set_IsActive(true);
 
     EffectComponent::FPlayDesc playDesc{};
-    playDesc.effectAssetName = "RasenShuriken_Hit";
+    playDesc.effectAssetName = "Last_TrueRasenShuriken_Hit";
 
     CHECK_FAILED(_effectCom->Play_Effect(playDesc), E_FAIL);
+    Start_HitLoopSound();
 
     return S_OK;
 }
@@ -86,7 +96,41 @@ void Skill_RasenShuriken_Hit::Update(float timeDelta)
         if (sphere)
             sphere->Get_OriginSphere().Radius = nextScale;
     }
-    
+
+    if (_isHitLoopSoundPlaying && !_hasPlayedFinalBlastSound)
+    {
+        _loopSoundElapsedTime += timeDelta;
+        if (_loopSoundElapsedTime >= _loopSoundDuration)
+            Play_FinalBlastSound();
+    }
+}
+
+void Skill_RasenShuriken_Hit::Start_HitLoopSound()
+{
+    if (_isHitLoopSoundPlaying)
+        return;
+
+    if (GAME->Play_LoopSound(_loopSoundFile, ESoundChannel::Effect, 0.35f, false, 0.f))
+        _isHitLoopSoundPlaying = true;
+}
+
+void Skill_RasenShuriken_Hit::Stop_HitLoopSound()
+{
+    if (!_isHitLoopSoundPlaying)
+        return;
+
+    GAME->Stop_Sound(_loopSoundFile);
+    _isHitLoopSoundPlaying = false;
+}
+
+void Skill_RasenShuriken_Hit::Play_FinalBlastSound()
+{
+    if (_hasPlayedFinalBlastSound)
+        return;
+
+    Stop_HitLoopSound();
+    GAME->Play_Sound(_finalBlastSoundFile, ESoundChannel::Effect, 0.45f);
+    _hasPlayedFinalBlastSound = true;
 }
 
 void Skill_RasenShuriken_Hit::OnBeginOverlap(Shared<Collider> self, Shared<Collider> other)
@@ -167,6 +211,8 @@ void Skill_RasenShuriken_Hit::Process_MultiHit(Character* hitted, GameObject* ta
 
     if (_hitCount >= _maxHitCount -1)
     {
+        // 실제 마지막 폭발 히트가 먼저 도달한 경우에도 Finish 사운드가 빠지지 않게 즉시 재생한다.
+        Play_FinalBlastSound();
         _isFinalBlast = true;
         _hitCooldowns.clear();
 
@@ -251,5 +297,7 @@ Shared<GameObject> Skill_RasenShuriken_Hit::Clone(void* arg)
 
 void Skill_RasenShuriken_Hit::Free()
 {
+    // Hit 오브젝트가 충돌 종료 외 경로로 정리돼도 루프 사운드가 남지 않게 마지막에 한 번 더 정리한다.
+    Stop_HitLoopSound();
     SkillObject::Free();
 }

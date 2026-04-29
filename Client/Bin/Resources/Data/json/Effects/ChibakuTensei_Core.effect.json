@@ -30,7 +30,7 @@
             "emissiveGradationTextureGuid": "",
             "emissiveStrength": 1.0,
             "emissiveTextureGuid": "",
-            "enabled": true,
+            "enabled": false,
             "endColorTint": [
                 1.0,
                 1.0,
@@ -106,7 +106,7 @@
                     "fresnelPower": 0.0,
                     "maskTextureGuid": "",
                     "materialName": "MI_WEP_Eff_PlanetaryDevastation_C_01",
-                    "normalStrength": 1.0,
+                    "normalStrength": 0.20000000298023224,
                     "normalTextureGuid": "d01c5c0e-6ccf-4678-be15-301cf0fe385e",
                     "opacity": 1.0,
                     "opacityGradationTextureGuid": "",
@@ -114,12 +114,15 @@
                     "opacityTextureGuid": "",
                     "roughness": 0.5,
                     "roughnessTextureGuid": "",
+                    "screenDistortionRadialStrength": 0.0,
+                    "screenDistortionStrength": 0.029999999329447746,
                     "shadingMode": 1,
                     "specularPower": 24.0,
                     "specularStrength": 2.200000047683716,
                     "specularTextureGuid": "",
                     "twoSided": false,
                     "useOpacityAsTransparency": false,
+                    "useScreenDistortion": false,
                     "uvDistortionSpeed": [
                         0.0,
                         0.0
@@ -157,6 +160,8 @@
             "roughness": 0.8500000238418579,
             "roughnessTextureGuid": "",
             "scaleDuration": 1.0,
+            "screenDistortionRadialStrength": 0.0,
+            "screenDistortionStrength": 0.029999999329447746,
             "shadingMode": 0,
             "specularPower": 32.0,
             "specularStrength": 0.05000000074505806,
@@ -169,6 +174,7 @@
             "useOpacityOverTime": false,
             "usePositionOverTime": false,
             "useScaleOverTime": false,
+            "useScreenDistortion": false,
             "uvDistortionSpeed": [
                 0.0,
                 0.0

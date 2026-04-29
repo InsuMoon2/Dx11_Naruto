@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Level_Konoha.h"
 #include "Model.h"
 #include "Camera_Free.h"
@@ -113,6 +113,9 @@ static bool Try_FindKonohaPlayerStartTransform(uint32 levelIndex, Vec3& outSpawn
 
 HRESULT Level_Konoha::Initialize(EGameplaySpawnMode spawnMode)
 {
+    // [추가] Konoha 맵 진입 시 이전 BGM을 정리하고 코노하 전용 배경음을 재생한다.
+    GAME->Stop_SoundChannel(ESoundChannel::BGM, 0.45f);
+
     _spawnMode = spawnMode;
 
     CHECK_FAILED(Ready_Layer_SkySphere(), E_FAIL);
@@ -274,7 +277,7 @@ HRESULT Level_Konoha::Ready_Lights()
     lightDesc.specular = Vec4(0.42f, 0.32f, 0.25f, 1.f);
 
     lightDesc.castShadow = true;
-    lightDesc.shadowMapSize = 2048;
+    lightDesc.shadowMapSize = 8192;
     lightDesc.shadowCenter = Vec3::Zero;
     lightDesc.shadowOrthoWidth = KONOHA_SHADOW_ORTHO_WIDTH;
     lightDesc.shadowOrthoHeight = KONOHA_SHADOW_ORTHO_HEIGHT;
@@ -312,7 +315,7 @@ void Level_Konoha::Update_DynamicShadowLightFromView()
     lightDesc.specular = Vec4(0.42f, 0.32f, 0.25f, 1.f);
 
     lightDesc.castShadow = true;
-    lightDesc.shadowMapSize = 2048;
+    lightDesc.shadowMapSize = 8192;
     lightDesc.shadowCenter = Vec3::Zero;
     lightDesc.shadowOrthoWidth = KONOHA_SHADOW_ORTHO_WIDTH;
     lightDesc.shadowOrthoHeight = KONOHA_SHADOW_ORTHO_HEIGHT;
@@ -326,13 +329,11 @@ void Level_Konoha::Update_DynamicShadowLightFromView()
     lightDesc.shadowStrength = 0.68f;
     lightDesc.shadowSoftness = 0.35f;
 
-    Vec3 dynamicShadowEye = Vec3::Zero;
-    Vec3 dynamicShadowTarget = Vec3::Zero;
-    if (Try_BuildShadowCameraFromCurrentView(ETOI(ELevelType::Konoha), dynamicShadowEye, dynamicShadowTarget))
-    {
-        lightDesc.shadowTarget = dynamicShadowTarget;
-        lightDesc.shadowCenter = dynamicShadowTarget;
-    }
+    // shadow target을 플레이어 추적 대신 맵 중심 고정
+    // 플레이어를 따라가면 원거리 오브젝트가 shadow map 범위에 들어올 때 그림자가 팝인되는 현상이 발생한다.
+    const Vec3 fixedShadowCenter = Vec3(0.f, 0.f, 0.f); // 맵 월드 중심 고정
+    lightDesc.shadowTarget = fixedShadowCenter;
+    lightDesc.shadowCenter = fixedShadowCenter;
 
     Vec3 lightDir = Vec3(lightDesc.direction.x, lightDesc.direction.y, lightDesc.direction.z); // active camera 위치 대신 directional light 방향으로 shadow eye를 다시 맞추기 위한 벡터다.
     if (lightDir.LengthSquared() <= FLT_EPSILON)
@@ -410,7 +411,8 @@ HRESULT Level_Konoha::Ready_Layer_PlayerStart(const wstring& layerTag)
     // TODO : Spawn Point Save&Load로 위치 세팅
     {
         PlayerStart::FPlayerStartDesc desc;
-        desc.position = Vec3(0.f, 20.3f, -12.2f);
+        desc.position = Vec3(-107.163f, 22.484f, 85.026f);
+        desc.yaw = -282.434f;
         desc.spawnIndex = 0;
 
         CHECK_FAILED(GAME->Add_GameObject(levelIndex, Protocol::OBJECT_TYPE_PLAYER_START, layerTag, &desc), E_FAIL);
@@ -545,6 +547,13 @@ HRESULT Level_Konoha::Ready_UI()
                 &desc));
 
         CHECK_NULL(_playerHUD, E_FAIL);
+
+        // \ucf54\ub178\ud558 \ub808\ubca8\uc5d0 \uc785\uc7a5\ud560 \ub54c Konoha_Entry \uc2dc\ub124\ub9c8\ud2f1\uc744 \uc790\ub3d9\uc73c\ub85c \uc7ac\uc0dd\ud55c\ub2e4.
+        // \uc2dc\ub124\ub9c8\ud2f1 JSON\uc774 \uc5c6\uc73c\uba74 \ud398\uc774\ub4dc\uc778/\uc544\uc6c3 + \ub808\ud130\ubc15\uc2a4\ub9cc \ub3d9\uc791\ud558\uace0 \uc790\ub3d9 \uc885\ub8cc\ub41c\ub2e4.
+        _playerHUD->Trigger_LevelEntryCinematic(
+            "Konoha_Entry",
+            L"Start_CutScene.wav",
+            L"BGM/KonohaVillage_Background.wav");
     }
 
     _playerObjectSpawnedHandle = GAME->Get_DelegateHub().OnPlayerObjectSpawned.Add(

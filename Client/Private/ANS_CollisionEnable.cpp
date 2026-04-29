@@ -6,9 +6,28 @@
 #include "Weapon.h"
 #include "AnimNotify_Factory.h"
 #include "CombatStat.h"
+#include "EquipmentComponent.h"
+#include "PlayerStateMachine.h"
 
 REGISTER_ANIM_NOTIFY_STATE(ANS_CollisionEnable);
 IMPLEMENT_REFLECTION(ANS_CollisionEnable);
+
+// 검술형 공중콤보가 격투형 공중 애니메이션을 재사용할 때도 손/발 hitbox 대신 weapon collider를 강제로 쓰게 한다.
+static bool Should_UseWeaponColliderForSwordAerial(MyPlayer* myPlayer)
+{
+    if (!myPlayer)
+        return false;
+
+    auto stateMachine = myPlayer->Get_Component<PlayerStateMachine>();
+    if (!stateMachine || stateMachine->Get_CurrentStateID() != EPlayerState::JumpAttack)
+        return false;
+
+    auto equipment = myPlayer->Get_Component<EquipmentComponent>();
+    if (!equipment)
+        return false;
+
+    return equipment->Get_CurrentWeaponType() == EWeaponType::BigSwrod;
+}
 
 bool ANS_CollisionEnable::Register_Properties()
 {
@@ -29,6 +48,9 @@ bool ANS_CollisionEnable::Register_Properties()
     PROPERTY_BOOL_JSON("Override Launch", "use_launch_override", _useLaunchOverride);
     PROPERTY_FLOAT_JSON("Launch Power", "override_launch_power", _overrideLaunchPower, 0.f, 500.f);
     PROPERTY_FLOAT_JSON("Launch Up", "override_launch_up", _overrideLaunchUp, -50.f, 50.f);
+    PROPERTY_BOOL_JSON("Override Hit Sound", "use_hit_sound_override", _useHitSoundOverride);
+    PROPERTY_INT_JSON("Hit Sound", "override_hit_sound", _overrideHitSound, 0, 999);
+    PROPERTY_STRING_JSON("Hit Sound File", "override_hit_sound_file", _overrideHitSoundFile);
 
     return true;
 }
@@ -58,11 +80,17 @@ void ANS_CollisionEnable::On_Begin(const FAnimNotifyContext& context)
         overrideDesc.useLaunchOverride = _useLaunchOverride;
         overrideDesc.launchPower = _overrideLaunchPower;
         overrideDesc.launchUp = _overrideLaunchUp;
+        overrideDesc.useHitSoundOverride = _useHitSoundOverride;
+        overrideDesc.hitSound = _overrideHitSound;
+        overrideDesc.hitSoundFile = _overrideHitSoundFile;
 
         combatStat->Set_AttackSwingOverride(overrideDesc);
     }
 
-    if (_target == "weapon")
+    const bool useWeaponTarget = (_target == "weapon")
+        || Should_UseWeaponColliderForSwordAerial(myPlayer);
+
+    if (useWeaponTarget)
     {
         auto container = dynamic_cast<ContainerObject*>(context.owner);
         CHECK_NULL(container);
@@ -101,7 +129,10 @@ void ANS_CollisionEnable::On_End(const FAnimNotifyContext& context)
     if (combatStat)
         combatStat->Clear_AttackSwingOverride();
 
-    if (_target == "weapon")
+    const bool useWeaponTarget = (_target == "weapon")
+        || Should_UseWeaponColliderForSwordAerial(myPlayer);
+
+    if (useWeaponTarget)
     {
         auto container = dynamic_cast<ContainerObject*>(context.owner);
         if (!container)

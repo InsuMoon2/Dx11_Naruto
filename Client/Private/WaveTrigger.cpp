@@ -84,6 +84,7 @@ bool WaveTrigger::Register_Properties()
     info.properties.clear();
 
     PROPERTY_STRING_JSON("웨이브 태그", "wave_tag", _waveTag);
+    PROPERTY_STRING_JSON("선행 클리어 태그", "activate_on_wave_clear_tag", _activateOnWaveClearTag);
     PROPERTY_BOOL_JSON("1회 트리거", "trigger_once", _triggerOnce);
     PROPERTY_FLOAT_JSON("클리어 지연", "clear_delay_sec", _clearDelaySec, 0.f, 30.f);
 
@@ -105,9 +106,11 @@ WaveTrigger::WaveTrigger(ComPtr<Device> device, ComPtr<DeviceContext> context)
 WaveTrigger::WaveTrigger(const WaveTrigger& rhs)
     : GameObject(rhs)
     , _waveTag(rhs._waveTag)
+    , _activateOnWaveClearTag(rhs._activateOnWaveClearTag)
     , _triggerOnce(rhs._triggerOnce)
     , _hasTriggered(false)
     , _waveClearBroadcasted(false)
+    , _isLockedUntilRequiredWaveClear(!rhs._activateOnWaveClearTag.empty())
     , _clearDelaySec(rhs._clearDelaySec)
     , _clearElapsed(0.f)
     , _spawnLayerTag(rhs._spawnLayerTag)
@@ -134,13 +137,26 @@ HRESULT WaveTrigger::Initialize(void* arg)
     _hasTriggered = false;
     _waveClearBroadcasted = false;
     _clearElapsed = 0.f;
+    _isLockedUntilRequiredWaveClear = !_activateOnWaveClearTag.empty();
     _spawnedMonsters.clear();
     _prewarmedMonsters.clear();
 
     if (_triggerCollider)
     {
         _triggerCollider->Set_CollisionPreset(Collision_Preset::Trigger);
-        _triggerCollider->Set_IsActive(true);
+        _triggerCollider->Set_IsActive(!_isLockedUntilRequiredWaveClear);
+    }
+
+    if (_requiredWaveClearedHandle.IsValid())
+    {
+        GAME->Get_DelegateHub().OnWaveCleared.Remove(_requiredWaveClearedHandle);
+        _requiredWaveClearedHandle.Reset();
+    }
+
+    if (_isLockedUntilRequiredWaveClear)
+    {
+        _requiredWaveClearedHandle = GAME->Get_DelegateHub().OnWaveCleared.Add(
+            this, &WaveTrigger::Handle_RequiredWaveCleared);
     }
 
     return S_OK;
@@ -150,7 +166,7 @@ void WaveTrigger::BeginPlay()
 {
     GameObject::BeginPlay();
 
-    if (_showMissionMarker)
+    if (_showMissionMarker && !_isLockedUntilRequiredWaveClear)
         GAME->Get_DelegateHub().Set_MissionMarkerTarget(GetSharedPtr<GameObject>());
 
     if (!_serverAuthoritative)
@@ -177,11 +193,12 @@ void WaveTrigger::Refresh_ForEditorPlay()
     _hasTriggered = false;
     _waveClearBroadcasted = false;
     _clearElapsed = 0.f;
+    _isLockedUntilRequiredWaveClear = !_activateOnWaveClearTag.empty();
     _spawnedMonsters.clear();
     _prewarmedMonsters.clear();
 
     if (_triggerCollider)
-        _triggerCollider->Set_IsActive(true);
+        _triggerCollider->Set_IsActive(!_isLockedUntilRequiredWaveClear);
 
     if (_serverAuthoritative)
         return;
@@ -199,11 +216,12 @@ void WaveTrigger::Set_ServerAuthoritative(bool enabled)
     _hasTriggered = false;
     _waveClearBroadcasted = false;
     _clearElapsed = 0.f;
+    _isLockedUntilRequiredWaveClear = !_activateOnWaveClearTag.empty();
     _spawnedMonsters.clear();
     _prewarmedMonsters.clear();
 
     if (_triggerCollider)
-        _triggerCollider->Set_IsActive(true);
+        _triggerCollider->Set_IsActive(!_isLockedUntilRequiredWaveClear);
 }
 
 void WaveTrigger::Update(float timeDelta)
@@ -262,6 +280,7 @@ void WaveTrigger::Late_Update(float timeDelta)
         GAME->Add_Collider(_triggerCollider);
     }
 
+#ifdef _DEBUG
     if (_triggerCollider->Get_IsActive())
     {
         for (const auto& entry : _spawnEntries)
@@ -276,6 +295,7 @@ void WaveTrigger::Late_Update(float timeDelta)
             GAME->Draw_DebugSphere(debugSphereDesc);
         }
     }
+#endif
 
 }
 
@@ -290,6 +310,7 @@ json WaveTrigger::To_Json() const
     json custom = json::object();
 
     custom["wave_tag"] = _waveTag;
+    custom["activate_on_wave_clear_tag"] = _activateOnWaveClearTag;
     custom["trigger_once"] = _triggerOnce;
     custom["clear_delay_sec"] = _clearDelaySec;
     custom["spawn_layer_tag"] = Utils::ToString(_spawnLayerTag);
@@ -335,6 +356,9 @@ void WaveTrigger::From_Json(const json& data)
     // 이건 어쩔수없이 다시 하드코딩
     if (data.contains("wave_tag"))
         _waveTag = data["wave_tag"].get<string>();
+
+    if (data.contains("activate_on_wave_clear_tag"))
+        _activateOnWaveClearTag = data["activate_on_wave_clear_tag"].get<string>();
 
     if (data.contains("trigger_once"))
         _triggerOnce = data["trigger_once"].get<bool>();
@@ -448,6 +472,9 @@ HRESULT WaveTrigger::Ready_Components()
 void WaveTrigger::Try_TriggerWave(Shared<GameObject> otherObject)
 {
     if (_serverAuthoritative)
+        return;
+
+    if (_isLockedUntilRequiredWaveClear)
         return;
 
     if (!otherObject)
@@ -611,6 +638,26 @@ void WaveTrigger::Finish_WaveClear()
     }
 }
 
+void WaveTrigger::Handle_RequiredWaveCleared(const string& clearedWaveTag)
+{
+    if (!_isLockedUntilRequiredWaveClear)
+        return;
+
+    if (_activateOnWaveClearTag.empty())
+        return;
+
+    if (_activateOnWaveClearTag != clearedWaveTag)
+        return;
+
+    _isLockedUntilRequiredWaveClear = false;
+
+    if (_triggerCollider)
+        _triggerCollider->Set_IsActive(true);
+
+    if (_showMissionMarker)
+        GAME->Get_DelegateHub().Set_MissionMarkerTarget(GetSharedPtr<GameObject>());
+}
+
 bool WaveTrigger::Is_TrackedMonsterDead(const Shared<GameObject>& obj) const
 {
     if (!obj)
@@ -654,5 +701,11 @@ Shared<GameObject> WaveTrigger::Clone(void* arg)
 
 void WaveTrigger::Free()
 {
+    if (_requiredWaveClearedHandle.IsValid())
+    {
+        GAME->Get_DelegateHub().OnWaveCleared.Remove(_requiredWaveClearedHandle);
+        _requiredWaveClearedHandle.Reset();
+    }
+
     GameObject::Free();
 }

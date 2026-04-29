@@ -239,6 +239,7 @@
     <ClInclude Include="..\Public\ANS_ComboWindow.h" />
     <ClInclude Include="..\Public\ANS_GhostEffect.h" />
     <ClInclude Include="..\Public\ANS_Move.h" />
+    <ClInclude Include="..\Public\ANS_PlaySound.h" />
     <ClInclude Include="..\Public\ANS_SmearEffect.h" />
     <ClInclude Include="..\Public\ANS_SpawnParticle.h" />
     <ClInclude Include="..\Public\ANS_StretchingMesh.h" />
@@ -438,6 +439,7 @@
     <ClCompile Include="..\Private\ANS_ComboWindow.cpp" />
     <ClCompile Include="..\Private\ANS_GhostEffect.cpp" />
     <ClCompile Include="..\Private\ANS_Move.cpp" />
+    <ClCompile Include="..\Private\ANS_PlaySound.cpp" />
     <ClCompile Include="..\Private\ANS_SmearEffect.cpp" />
     <ClCompile Include="..\Private\ANS_SpawnParticle.cpp" />
     <ClCompile Include="..\Private\ANS_StretchingMesh.cpp" />

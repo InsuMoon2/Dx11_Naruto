@@ -163,6 +163,131 @@
                     "name": "Notifies"
                 }
             ]
+        },
+        {
+            "clip_name": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_etc_Appearance_Type03",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "attach_to_bone": false,
+                        "bone_name": "CharacterRoot",
+                        "effect_name": "Test_Smoke",
+                        "local_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "local_scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "loop_override": false,
+                        "use_initial_bone_transform": false
+                    },
+                    "time_sec": 0.5333333611488342,
+                    "track_index": 0,
+                    "type": "AN_SpawnParticle"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Left",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Bird_Hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.1666666716337204,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_UniversalPull_Start",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Bird_Hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.1666666716337204,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_TenTailsCloneLoser02|TenTailsCloneLoser02_Beaten_Aerial_BlowOff_toFall",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Bird_Hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.2666666805744171,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
         }
     ],
     "model_guid": "a4b9b038-035f-44d2-bd0c-b5992e2745fb"

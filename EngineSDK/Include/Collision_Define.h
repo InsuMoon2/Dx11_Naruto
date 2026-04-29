@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Engine_Enum.h"
 #include "Engine_Macro.h"
@@ -119,7 +119,7 @@ static const FCollision_Preset_Data g_CollisionPresets[ETOI(
                       ETOI(Collision_Channel::Trigger) |
                       ETOI(Collision_Channel::Projectile),
     /* blockMask   */ ETOI(Collision_Channel::Monster_Body) |
-                          ETOI(Collision_Channel::Enviroment)
+                      ETOI(Collision_Channel::Enviroment)
     },
     
     { Collision_Channel::Player_Attack,

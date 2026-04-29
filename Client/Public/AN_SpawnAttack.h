@@ -33,6 +33,9 @@ private:
     bool _useLaunchOverride = false; 
     float _overrideLaunchPower = 0.f;
     float _overrideLaunchUp = 0.f; 
+    bool _useHitSoundOverride = false; // SpawnAttack가 맞힌 대상의 피격음을 직접 지정할지 여부다.
+    int32 _overrideHitSound = 0; // useHitSoundOverride가 켜졌을 때 FDamageEvent에 실어 보낼 정수 기반 피격 사운드 ID다.
+    string _overrideHitSoundFile = ""; // useHitSoundOverride가 켜졌을 때 FDamageEvent에 실어 보낼 직접 피격 사운드 파일명이다.
 
     string _layerTag = "Layer_MonsterAttack";
 

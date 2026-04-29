@@ -7,6 +7,7 @@
 #include "Character.h"
 #include "Collider.h"
 #include "GameObject_Factory.h"
+#include "MeshDebrisObject.h"
 #include "Model.h"
 #include "Shader.h"
 
@@ -42,6 +43,11 @@ Skill_WoodHand::Skill_WoodHand(const Skill_WoodHand& rhs)
     , _impactActiveDuration(rhs._impactActiveDuration)
     , _impactRadius(rhs._impactRadius)
     , _impactEffectScale(rhs._impactEffectScale)
+    , _impactSmokeEffectName(rhs._impactSmokeEffectName)
+    , _impactSmokeEffectScale(rhs._impactSmokeEffectScale)
+    , _impactDebrisEffectName(rhs._impactDebrisEffectName)
+    , _impactDebrisCountPerBurst(rhs._impactDebrisCountPerBurst)
+    , _impactDebrisScatterRadius(rhs._impactDebrisScatterRadius)
 {
 }
 
@@ -297,6 +303,74 @@ void Skill_WoodHand::Spawn_Impact()
     }
 
     Spawn_Effect_Once(_impactEffectName, Resolve_ImpactWorldPosition(), _impactEffectScale);
+    Spawn_ImpactSmokeBurst();
+    Spawn_ImpactDebrisBurst();
+    GAME->Play_Sound(L"WoodHand_Clap.wav", ESoundChannel::Effect, 0.3f);
+}
+
+void Skill_WoodHand::Spawn_ImpactSmokeBurst()
+{
+    const Vec3 impactCenter = Resolve_ImpactWorldPosition();
+
+    Spawn_Effect_Once(_impactSmokeEffectName, impactCenter, _impactSmokeEffectScale);
+    Spawn_Effect_Once(_impactSmokeEffectName, Resolve_HandSmokeWorldPosition(true), _impactSmokeEffectScale);
+    Spawn_Effect_Once(_impactSmokeEffectName, Resolve_HandSmokeWorldPosition(false), _impactSmokeEffectScale);
+}
+
+void Skill_WoodHand::Spawn_ImpactDebrisBurst()
+{
+    const array<Vec3, 3> burstCenters =
+    {
+        Resolve_ImpactWorldPosition(),
+        Resolve_HandSmokeWorldPosition(true),
+        Resolve_HandSmokeWorldPosition(false),
+    };
+
+    const int32 safeBurstCount = max(1, _impactDebrisCountPerBurst);
+
+    for (const Vec3& burstCenter : burstCenters)
+    {
+        for (int32 debrisIndex = 0; debrisIndex < safeBurstCount; ++debrisIndex)
+        {
+            const float angle = XM_2PI * (static_cast<float>(debrisIndex) / static_cast<float>(safeBurstCount));
+            const Vec3 radialDir = Vec3(cosf(angle), 0.f, sinf(angle));
+            const float radiusJitter = Utils::RandomRange(0.25f, 1.0f);
+
+            MeshDebrisObject::FMeshDebrisDesc debrisDesc{};
+            debrisDesc.effectAssetName = _impactDebrisEffectName;
+            debrisDesc.position = burstCenter + radialDir * (_impactDebrisScatterRadius * radiusJitter);
+            debrisDesc.spawnRotation = Vec3(
+                Utils::RandomRange(0.f, 360.f),
+                Utils::RandomRange(0.f, 360.f),
+                Utils::RandomRange(0.f, 360.f));
+            debrisDesc.spawnScale = Vec3(1.f, 1.f, 1.f);
+
+            const float randomScale = Utils::RandomRange(0.10f, 0.18f);
+            debrisDesc.effectLocalScale = Vec3(randomScale, randomScale, randomScale);
+
+            debrisDesc.initialVelocity = Vec3(
+                radialDir.x * Utils::RandomRange(3.5f, 6.5f),
+                Utils::RandomRange(7.f, 11.f),
+                radialDir.z * Utils::RandomRange(3.5f, 6.5f));
+
+            debrisDesc.gravity = -24.f;
+            debrisDesc.angularVelocityDeg = Vec3(
+                Utils::RandomRange(-420.f, 420.f),
+                Utils::RandomRange(-420.f, 420.f),
+                Utils::RandomRange(-420.f, 420.f));
+            debrisDesc.lifetime = Utils::RandomRange(0.8f, 1.2f);
+            debrisDesc.groundY = burstCenter.y;
+            debrisDesc.destroyOnGroundHit = false;
+            debrisDesc.stopOnGroundHit = true;
+
+            GAME->Clone_And_Add_GameObject(
+                ETOI(ELevelType::Static),
+                Protocol::OBJECT_TYPE_MESH_DEBRIS,
+                GAME->Current_Level(),
+                TEXT("Layer_Effect"),
+                &debrisDesc);
+        }
+    }
 }
 
 Matrix Skill_WoodHand::Build_HandWorldMatrix(bool leftHand) const
@@ -329,6 +403,22 @@ Vec3 Skill_WoodHand::Resolve_ImpactWorldPosition() const
         return Vec3::Zero;
 
     return _transformCom->Get_WorldPosition() + _transformCom->Get_WorldForward() * _forwardOffset;
+}
+
+Vec3 Skill_WoodHand::Resolve_HandSmokeWorldPosition(bool leftHand) const
+{
+    Matrix handWorldMatrix = Build_HandWorldMatrix(leftHand);
+    Vec3 handScale = Vec3::One;
+    Vec3 handPosition = handWorldMatrix.Translation();
+    Quat handRotation = Quat::Identity;
+
+    if (handWorldMatrix.Decompose(handScale, handRotation, handPosition) == false)
+        handPosition = handWorldMatrix.Translation();
+
+    if (_transformCom)
+        handPosition.y = _transformCom->Get_WorldPosition().y;
+
+    return handPosition;
 }
 
 HRESULT Skill_WoodHand::Render_Model(Shared<Model> model, const Matrix& worldMatrix)

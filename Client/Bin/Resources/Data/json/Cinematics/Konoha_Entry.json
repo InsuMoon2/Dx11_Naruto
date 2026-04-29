@@ -1,0 +1,91 @@
+{
+    "name": "Konoha_Entry",
+    "track": {
+        "fps": 60,
+        "keys": [
+            {
+                "anchor_space": "WorldAbsolute",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7853981852531433,
+                "frame": 0,
+                "pitch": 0.0,
+                "position": [
+                    128.8179931640625,
+                    80.34750366210938,
+                    75.06108093261719
+                ],
+                "rotation": [
+                    -0.11909248679876328,
+                    0.8539301753044128,
+                    -0.2237667292356491,
+                    -0.45447632670402527
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "WorldAbsolute",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7853981852531433,
+                "frame": 87,
+                "pitch": 0.0,
+                "position": [
+                    111.81800079345703,
+                    80.34750366210938,
+                    96.96099853515625
+                ],
+                "rotation": [
+                    0.11220474541187286,
+                    -0.8674084544181824,
+                    0.22729866206645966,
+                    0.4281914532184601
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            },
+            {
+                "anchor_space": "WorldAbsolute",
+                "camera_mode": "Free",
+                "distance": 10.0,
+                "ease_type": "Linear",
+                "fov_y": 0.7853981852531433,
+                "frame": 164,
+                "pitch": 0.0,
+                "position": [
+                    18.718000411987305,
+                    81.24800109863281,
+                    110.46099853515625
+                ],
+                "rotation": [
+                    0.024194085970520973,
+                    0.9629231095314026,
+                    -0.25232741236686707,
+                    0.0923287644982338
+                ],
+                "target_offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "target_tag": "",
+                "yaw": 0.0
+            }
+        ],
+        "total_frames": 300,
+        "track_name": "Camera"
+    }
+}

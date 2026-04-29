@@ -50,7 +50,8 @@ void PlayerState_Hit::Enter(PlayerStateMachine* state)
 
     if (!playedHitOverride)
     {
-        const EPlayerState hitState = Resolve_HitState(pendingHit.type);
+        // 몬스터에게 맞았을 때는 현재 지상/공중 상태 기준으로만 피격 애니메이션을 고정해서 재생한다.
+        const EPlayerState hitState = Resolve_HitState(movement);
         state->Play_AnimState(hitState);
     }
 
@@ -122,24 +123,12 @@ void PlayerState_Hit::Exit(PlayerStateMachine* state)
         movement->Set_OrientRotationToMovement(true);
 }
 
-EPlayerState PlayerState_Hit::Resolve_HitState(EHitReactionType type)
+EPlayerState PlayerState_Hit::Resolve_HitState(const Shared<MovementComponent>& movement)
 {
-    switch (type)
-    {
-    case EHitReactionType::Launch:
-        return EPlayerState::Hit_Launch;
+    if (movement && !movement->Is_OnGround())
+        return EPlayerState::Hit_Air;
 
-    case EHitReactionType::BlowOff:
-        return EPlayerState::Hit_BlowOff;
-
-    case EHitReactionType::Down:
-        return EPlayerState::Hit_Down;
-
-    case EHitReactionType::Stagger:
-    case EHitReactionType::Default:
-    default:
-        return EPlayerState::Hit;
-    }
+    return EPlayerState::Hit;
 }
 
 Shared<PlayerState_Hit> PlayerState_Hit::Create()

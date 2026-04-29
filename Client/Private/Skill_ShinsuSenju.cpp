@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Skill_ShinsuSenju.h"
 #include "GameObject_Factory.h"
 #include "GameObject.h"
@@ -313,17 +313,21 @@ Vec3 Skill_ShinsuSenju::Build_ArmImpactPoint(int32 burstIndex)
     if (!ownerTransform)
         return _burstCenter;
 
-    static const Vec2 kPattern[5] =
+    static const Vec2 kPattern[10] =
     {
         Vec2(-0.60f, -0.25f),
-        Vec2(-0.30f,  0.35f),
+        Vec2( 0.40f,  0.20f),
+        Vec2(-0.20f,  0.45f),
+        Vec2( 0.60f, -0.15f),
         Vec2( 0.00f,  0.00f),
-        Vec2( 0.30f, -0.35f),
-        Vec2( 0.60f,  0.25f),
+        Vec2(-0.40f,  0.20f),
+        Vec2( 0.20f,  0.45f),
+        Vec2(-0.50f, -0.05f),
+        Vec2( 0.50f, -0.05f),
+        Vec2( 0.00f,  0.25f)
     };
 
-    const int32 safeIndex = (burstIndex < 0) ? 0 : ((burstIndex >= 5) ? 4 : burstIndex);
-    const Vec2 pattern = kPattern[safeIndex];
+    const Vec2 pattern = kPattern[burstIndex % 10];
 
     Vec3 right = ownerTransform->Get_WorldRight();
     right.y = 0.f;
@@ -429,21 +433,26 @@ Vec3 Skill_ShinsuSenju::Build_ArmSpawnPoint(int32 burstIndex) const
 
 Vec2 Skill_ShinsuSenju::Get_ArmSpawnPattern(int32 burstIndex) const
 {
-     static const Vec2 kPattern[5] =
+     static const Vec2 kPattern[10] =
     {
         Vec2(-1.0f, -0.2f),
-        Vec2(-0.8f,  0.6f),
-        Vec2( 0.0f,  1.0f),
         Vec2( 0.8f,  0.6f),
+        Vec2(-0.4f,  0.8f),
         Vec2( 1.0f, -0.2f),
+        Vec2( 0.0f,  1.0f),
+        Vec2(-0.8f,  0.6f),
+        Vec2( 0.4f,  0.8f),
+        Vec2(-0.6f, -0.1f),
+        Vec2( 0.6f, -0.1f),
+        Vec2( 0.0f,  0.4f)
     };
 
-    const int32 safeIndex = (burstIndex < 0) ? 0 : ((burstIndex >= 5) ? 4 : burstIndex);
-    return kPattern[safeIndex];
+    return kPattern[burstIndex % 10];
 }
 
 void Skill_ShinsuSenju::Spawn_Arm(const Vec3& spawnPoint, const Vec3& impactPoint)
 {
+    /*
     {
         FDebugLineDesc armPathLineDesc{}; 
         armPathLineDesc.start = spawnPoint;
@@ -469,6 +478,7 @@ void Skill_ShinsuSenju::Spawn_Arm(const Vec3& spawnPoint, const Vec3& impactPoin
         spawnPointSphereDesc.style.depthEnabled = true;
         GAME->Draw_DebugSphere(spawnPointSphereDesc);
     }
+    */
 
     auto owner = Get_Owner();
     if (!owner)
@@ -484,7 +494,13 @@ void Skill_ShinsuSenju::Spawn_Arm(const Vec3& spawnPoint, const Vec3& impactPoin
 
 
     {
-        const Quat finalRotation = Build_ShinsuSenjuArmSpawnRotation(launchDirection);
+        Quat finalRotation = Build_ShinsuSenjuArmSpawnRotation(launchDirection);
+        
+        // 자연스럽고 역동적인 연출을 위해 각 팔마다 약간의 랜덤한 회전(Roll)을 추가
+        const float randomRoll = Utils::RandomRange(-25.f, 25.f);
+        const Quat randomTwist = Quat::CreateFromAxisAngle(launchDirection, XMConvertToRadians(randomRoll));
+        finalRotation = finalRotation * randomTwist;
+        
         const Vec3 finalEulerRadians = finalRotation.ToEuler();
 
         desc.spawnRotation = Vec3(

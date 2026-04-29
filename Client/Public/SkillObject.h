@@ -40,6 +40,9 @@ public:
         bool useLaunchOverride = false; // SpawnAttack/스킬이 기본 launch 대신 지정한 launch 값을 강제로 사용할지 여부다.
         float launchPower = 0.f; // useLaunchOverride가 켜졌을 때 FDamageEvent에 실어 보낼 수평 launch 세기다.
         float launchUp = 0.f; // useLaunchOverride가 켜졌을 때 FDamageEvent에 실어 보낼 수직 launch 세기다.
+        bool useHitSoundOverride = false; // SpawnAttack/스킬이 콤보 프로파일 대신 지정한 피격음을 강제로 사용할지 여부다.
+        int32 hitSound = 0; // useHitSoundOverride가 켜졌을 때 FDamageEvent에 실어 보낼 정수 기반 피격 사운드 ID다.
+        string hitSoundFile = ""; // useHitSoundOverride가 켜졌을 때 FDamageEvent에 실어 보낼 직접 피격 사운드 파일명이다.
 
         bool useDirectionLookAt = true;
     };
@@ -95,6 +98,9 @@ protected:
     bool    _useLaunchOverride = false; // 이 스폰 공격이 Apply_Skill_Hit에 전달된 기본 launch 대신 지정 launch 값을 강제할지 여부다.
     float   _launchPower = 0.f; // _useLaunchOverride가 true일 때 Apply_Skill_Hit에서 사용할 수평 launch 세기다.
     float   _launchUp = 0.f; // _useLaunchOverride가 true일 때 Apply_Skill_Hit에서 사용할 수직 launch 세기다.
+    bool    _useHitSoundOverride = false; // 이 스폰 공격이 기본 피격음 대신 지정한 피격음을 강제할지 여부다.
+    int32   _hitSound = 0; // _useHitSoundOverride가 true일 때 Apply_Skill_Hit에서 사용할 정수 기반 피격 사운드 ID다.
+    string  _hitSoundFile = ""; // _useHitSoundOverride가 true일 때 Apply_Skill_Hit에서 사용할 직접 피격 사운드 파일명이다.
 
     // 동일 대상 충돌 처리
     umap<GameObject*, float> _hitCooldowns;

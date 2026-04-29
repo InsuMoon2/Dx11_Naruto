@@ -147,13 +147,13 @@ void UI_AnnounceCombo::Add_Combo()
 
 void UI_AnnounceCombo::On_PlayerComboHit(uint32 combo)
 {
-    _comboCount = combo;
-    _decayTimer = 5.f;
-    _digitPopTimer = DIGIT_POP_DURATION;
-    _isVisible = (_comboCount > 0);
-
-    if (_isVisible)
-        Update_Matrices();
+    // 콤보 히트 숫자 아나운스를 잠시 끄기 위해 이벤트 반응을 막아둔다.
+    // HUD 구조와 Delegate 연결은 유지하고, 실제 표시 갱신만 주석 처리한다.
+    UNREFERENCED_PARAMETER(combo);
+    _comboCount = 0;
+    _digitPopTimer = 0.f;
+    _decayTimer = 0.f;
+    _isVisible = false;
 }
 
 void UI_AnnounceCombo::Set_AnnouncePosition(float x, float y)

@@ -61,7 +61,7 @@ void PlayerState_HeightLand::Update(PlayerStateMachine* state, float timeDelta)
         movement->Apply_Command(cmd);
         movement->Update(timeDelta);
 
-        transform->Add_WorldOffset(_rollDirection * _moveSpeed * timeDelta);
+        transform->Add_WorldOffset(_rollDirection * (_moveSpeed * 0.7f) * timeDelta);
     }
     else
     {

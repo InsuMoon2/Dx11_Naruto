@@ -34,6 +34,8 @@ private:
     void                        Update_Candiates();
 
     void                        Refresh_LockedTarget();
+    // 현재 락온 중이어도 후보들 중 가장 가까운 적으로 자동 전환할 때 호출한다.
+    void                        Auto_SwitchToNearestTarget();
     void                        Clear_Lock();
     void                        LockOn_NearestTarget(bool currentTarget = false);
     Shared<Character>           Find_NearestTarget(bool currentTarget = false);

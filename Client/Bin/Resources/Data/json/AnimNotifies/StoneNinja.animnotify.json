@@ -6,6 +6,16 @@
             "notifies": [
                 {
                     "payload": {
+                        "channel": 4,
+                        "sound_file": "WoodHand_Start.wav",
+                        "volume": 0.4000000059604645
+                    },
+                    "time_sec": 0.5,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
                         "aim_at_target": false,
                         "collision_preset": 6,
                         "launch_if_projectile": false,
@@ -14,12 +24,332 @@
                             1.2000000476837158,
                             1.7999999523162842
                         ],
+                        "spawn_at_locked_target": false,
                         "spawn_type": 41,
+                        "target_offset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
                         "use_owner_forward": true
                     },
                     "time_sec": 0.9666666388511658,
                     "track_index": 0,
                     "type": "AN_SpawnSkill"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_StoneNinja|StoneNinja_Attack_Kunai_SlashingVertically_Low",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 3.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.5666666626930237,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Yamato_Attack1.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.5666666626930237,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_StoneNinja|StoneNinja_Attack_StepSlashingHorizontally",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "bone_name": "",
+                        "collider_radius": 1.0,
+                        "collision_preset": 6,
+                        "layer_tag": "Layer_MonsterAttack",
+                        "lifetime": 0.5,
+                        "local_offset": [
+                            0.0,
+                            1.0,
+                            1.5
+                        ],
+                        "override_hit_reaction_type": 0,
+                        "override_launch_power": 3.0,
+                        "override_launch_up": 0.0,
+                        "spawn_object_type": 40,
+                        "use_hit_reaction_override": false,
+                        "use_launch_override": true,
+                        "use_owner_forward": true
+                    },
+                    "time_sec": 0.46666666865348816,
+                    "track_index": 0,
+                    "type": "AN_SpawnAttack"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Yamato_Attack2.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.46666666865348816,
+                    "track_index": 1,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [
+                {
+                    "duration_sec": 0.2666666805744171,
+                    "payload": {
+                        "Direction Source": 65792,
+                        "constrain_to_ground": true,
+                        "direction_source": "OwnerForward",
+                        "ignore_y": true,
+                        "move_speed": 2.0,
+                        "move_velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotate_to_target": false,
+                        "rotation_speed": 720.0
+                    },
+                    "start_sec": 0.2666666805744171,
+                    "track_index": 0,
+                    "type": "ANS_Move"
+                }
+            ],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                },
+                {
+                    "name": "Notify Track"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_StoneNinja|StoneNinja_DashStep_Behind",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Dash.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.10000000149011612,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_StoneNinja|StoneNinja_Dying_Blasted",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Yamato_Die.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_StoneNinja|StoneNinja_Beaten_Left",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Yamato_Hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.06666667014360428,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_StoneNinja|StoneNinja_Beaten_Aerial_Small_Conect_toFall",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Yamato_Hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.0,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_StoneNinja|StoneNinja_Beaten_Aerial_BlowOff_toFall",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "Yamato_Hit.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                }
+            ],
+            "notify_state_tracks": [
+                {
+                    "name": "Notify States"
+                }
+            ],
+            "notify_states": [],
+            "notify_tracks": [
+                {
+                    "name": "Notifies"
+                }
+            ]
+        },
+        {
+            "clip_name": "SK_CHR_StoneNinja|StoneNinja_Walk_Loop",
+            "display_fps": 30,
+            "notifies": [
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "RunLoop.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.03333333507180214,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "RunLoop.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 0.4000000059604645,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
+                },
+                {
+                    "payload": {
+                        "channel": 4,
+                        "sound_file": "RunLoop.wav",
+                        "volume": 0.30000001192092896
+                    },
+                    "time_sec": 1.100000023841858,
+                    "track_index": 0,
+                    "type": "AN_PlaySound"
                 }
             ],
             "notify_state_tracks": [

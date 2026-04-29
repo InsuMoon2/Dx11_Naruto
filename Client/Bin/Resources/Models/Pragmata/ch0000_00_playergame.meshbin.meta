@@ -1,0 +1,3134 @@
+{
+    "boneCount": 521,
+    "bones": [
+        {
+            "depth": 0,
+            "index": 0,
+            "name": "RootNode",
+            "parentIndex": -1
+        },
+        {
+            "depth": 1,
+            "index": 1,
+            "name": "root",
+            "parentIndex": 0
+        },
+        {
+            "depth": 2,
+            "index": 2,
+            "name": "Null_Offset",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 3,
+            "name": "Hip",
+            "parentIndex": 1
+        },
+        {
+            "depth": 3,
+            "index": 4,
+            "name": "l_leg_front_muscleOffset",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 5,
+            "name": "l_leg_front_muscle",
+            "parentIndex": 4
+        },
+        {
+            "depth": 3,
+            "index": 6,
+            "name": "l_leg_back_muscleOffset",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 7,
+            "name": "l_leg_back_muscle",
+            "parentIndex": 6
+        },
+        {
+            "depth": 3,
+            "index": 8,
+            "name": "l_leg_side_muscleOffset",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 9,
+            "name": "l_leg_side_muscle",
+            "parentIndex": 8
+        },
+        {
+            "depth": 3,
+            "index": 10,
+            "name": "r_leg_front_muscleOffset",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 11,
+            "name": "r_leg_front_muscle",
+            "parentIndex": 10
+        },
+        {
+            "depth": 3,
+            "index": 12,
+            "name": "r_leg_back_muscleOffset",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 13,
+            "name": "r_leg_back_muscle",
+            "parentIndex": 12
+        },
+        {
+            "depth": 3,
+            "index": 14,
+            "name": "r_leg_side_muscleOffset",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 15,
+            "name": "r_leg_side_muscle",
+            "parentIndex": 14
+        },
+        {
+            "depth": 3,
+            "index": 16,
+            "name": "Spine_0",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 17,
+            "name": "Spine_1",
+            "parentIndex": 16
+        },
+        {
+            "depth": 5,
+            "index": 18,
+            "name": "Spine_2",
+            "parentIndex": 17
+        },
+        {
+            "depth": 6,
+            "index": 19,
+            "name": "L_trapA_muscleOffset",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 20,
+            "name": "L_trapA_muscle",
+            "parentIndex": 19
+        },
+        {
+            "depth": 6,
+            "index": 21,
+            "name": "L_latA_muscleOffset",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 22,
+            "name": "L_latA_muscle",
+            "parentIndex": 21
+        },
+        {
+            "depth": 6,
+            "index": 23,
+            "name": "L_serratusA_muscleOffset",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 24,
+            "name": "L_serratusA_muscle",
+            "parentIndex": 23
+        },
+        {
+            "depth": 6,
+            "index": 25,
+            "name": "L_pecB_muscleOffset",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 26,
+            "name": "L_pecB_muscle",
+            "parentIndex": 25
+        },
+        {
+            "depth": 6,
+            "index": 27,
+            "name": "R_trapA_muscleOffset",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 28,
+            "name": "R_trapA_muscle",
+            "parentIndex": 27
+        },
+        {
+            "depth": 6,
+            "index": 29,
+            "name": "R_latA_muscleOffset",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 30,
+            "name": "R_latA_muscle",
+            "parentIndex": 29
+        },
+        {
+            "depth": 6,
+            "index": 31,
+            "name": "R_serratusA_muscleOffset",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 32,
+            "name": "R_serratusA_muscle",
+            "parentIndex": 31
+        },
+        {
+            "depth": 6,
+            "index": 33,
+            "name": "R_pecB_muscleOffset",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 34,
+            "name": "R_pecB_muscle",
+            "parentIndex": 33
+        },
+        {
+            "depth": 6,
+            "index": 35,
+            "name": "L_Shoulder",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 36,
+            "name": "L_UpperArm",
+            "parentIndex": 35
+        },
+        {
+            "depth": 8,
+            "index": 37,
+            "name": "L_Forearm",
+            "parentIndex": 36
+        },
+        {
+            "depth": 9,
+            "index": 38,
+            "name": "L_Hand",
+            "parentIndex": 37
+        },
+        {
+            "depth": 10,
+            "index": 39,
+            "name": "L_Wep",
+            "parentIndex": 38
+        },
+        {
+            "depth": 10,
+            "index": 40,
+            "name": "L_Thumb1",
+            "parentIndex": 38
+        },
+        {
+            "depth": 11,
+            "index": 41,
+            "name": "L_Thumb2",
+            "parentIndex": 40
+        },
+        {
+            "depth": 12,
+            "index": 42,
+            "name": "L_Thumb3",
+            "parentIndex": 41
+        },
+        {
+            "depth": 10,
+            "index": 43,
+            "name": "L_IndexF1",
+            "parentIndex": 38
+        },
+        {
+            "depth": 11,
+            "index": 44,
+            "name": "L_IndexF2",
+            "parentIndex": 43
+        },
+        {
+            "depth": 12,
+            "index": 45,
+            "name": "L_IndexF3",
+            "parentIndex": 44
+        },
+        {
+            "depth": 10,
+            "index": 46,
+            "name": "L_MiddleF1",
+            "parentIndex": 38
+        },
+        {
+            "depth": 11,
+            "index": 47,
+            "name": "L_MiddleF2",
+            "parentIndex": 46
+        },
+        {
+            "depth": 12,
+            "index": 48,
+            "name": "L_MiddleF3",
+            "parentIndex": 47
+        },
+        {
+            "depth": 10,
+            "index": 49,
+            "name": "L_Palm",
+            "parentIndex": 38
+        },
+        {
+            "depth": 11,
+            "index": 50,
+            "name": "L_RingF1",
+            "parentIndex": 49
+        },
+        {
+            "depth": 12,
+            "index": 51,
+            "name": "L_RingF2",
+            "parentIndex": 50
+        },
+        {
+            "depth": 13,
+            "index": 52,
+            "name": "L_RingF3",
+            "parentIndex": 51
+        },
+        {
+            "depth": 11,
+            "index": 53,
+            "name": "L_PinkyF1",
+            "parentIndex": 49
+        },
+        {
+            "depth": 12,
+            "index": 54,
+            "name": "L_PinkyF2",
+            "parentIndex": 53
+        },
+        {
+            "depth": 13,
+            "index": 55,
+            "name": "L_PinkyF3",
+            "parentIndex": 54
+        },
+        {
+            "depth": 9,
+            "index": 56,
+            "name": "L_Forearm_Twist_0",
+            "parentIndex": 37
+        },
+        {
+            "depth": 10,
+            "index": 57,
+            "name": "L_Forearm_Twist_1",
+            "parentIndex": 56
+        },
+        {
+            "depth": 11,
+            "index": 58,
+            "name": "L_Forearm_Twist_2",
+            "parentIndex": 57
+        },
+        {
+            "depth": 12,
+            "index": 59,
+            "name": "L_Forearm_Twist_3",
+            "parentIndex": 58
+        },
+        {
+            "depth": 12,
+            "index": 60,
+            "name": "L_Forearm_Light",
+            "parentIndex": 58
+        },
+        {
+            "depth": 9,
+            "index": 61,
+            "name": "L_Hand_Cylinder_Gimic",
+            "parentIndex": 37
+        },
+        {
+            "depth": 8,
+            "index": 62,
+            "name": "L_UpperArm_Twist_0",
+            "parentIndex": 36
+        },
+        {
+            "depth": 9,
+            "index": 63,
+            "name": "L_UpperArm_Twist_1",
+            "parentIndex": 62
+        },
+        {
+            "depth": 10,
+            "index": 64,
+            "name": "L_UpperArm_Twist_2",
+            "parentIndex": 63
+        },
+        {
+            "depth": 11,
+            "index": 65,
+            "name": "L_UpperArm_Twist_3",
+            "parentIndex": 64
+        },
+        {
+            "depth": 10,
+            "index": 66,
+            "name": "L_deltFront_muscleOffset",
+            "parentIndex": 63
+        },
+        {
+            "depth": 11,
+            "index": 67,
+            "name": "L_deltFront_muscle",
+            "parentIndex": 66
+        },
+        {
+            "depth": 10,
+            "index": 68,
+            "name": "L_deltUp_muscleOffset",
+            "parentIndex": 63
+        },
+        {
+            "depth": 11,
+            "index": 69,
+            "name": "L_deltUp_muscle",
+            "parentIndex": 68
+        },
+        {
+            "depth": 11,
+            "index": 70,
+            "name": "L_Shoulder_Fabric_Jiggle",
+            "parentIndex": 68
+        },
+        {
+            "depth": 12,
+            "index": 71,
+            "name": "WEIGHT2_DUMMY_L_Shoulder_Fabric_Jiggle",
+            "parentIndex": 70
+        },
+        {
+            "depth": 10,
+            "index": 72,
+            "name": "L_deltBack_muscleOffset",
+            "parentIndex": 63
+        },
+        {
+            "depth": 11,
+            "index": 73,
+            "name": "L_deltBack_muscle",
+            "parentIndex": 72
+        },
+        {
+            "depth": 7,
+            "index": 74,
+            "name": "L_pecA_muscleOffset",
+            "parentIndex": 35
+        },
+        {
+            "depth": 8,
+            "index": 75,
+            "name": "L_pecA_muscle",
+            "parentIndex": 74
+        },
+        {
+            "depth": 6,
+            "index": 76,
+            "name": "R_Shoulder",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 77,
+            "name": "R_UpperArm",
+            "parentIndex": 76
+        },
+        {
+            "depth": 8,
+            "index": 78,
+            "name": "R_Forearm",
+            "parentIndex": 77
+        },
+        {
+            "depth": 9,
+            "index": 79,
+            "name": "R_Hand",
+            "parentIndex": 78
+        },
+        {
+            "depth": 10,
+            "index": 80,
+            "name": "R_Wep",
+            "parentIndex": 79
+        },
+        {
+            "depth": 10,
+            "index": 81,
+            "name": "R_Thumb1",
+            "parentIndex": 79
+        },
+        {
+            "depth": 11,
+            "index": 82,
+            "name": "R_Thumb2",
+            "parentIndex": 81
+        },
+        {
+            "depth": 12,
+            "index": 83,
+            "name": "R_Thumb3",
+            "parentIndex": 82
+        },
+        {
+            "depth": 10,
+            "index": 84,
+            "name": "R_IndexF1",
+            "parentIndex": 79
+        },
+        {
+            "depth": 11,
+            "index": 85,
+            "name": "R_IndexF2",
+            "parentIndex": 84
+        },
+        {
+            "depth": 12,
+            "index": 86,
+            "name": "R_IndexF3",
+            "parentIndex": 85
+        },
+        {
+            "depth": 10,
+            "index": 87,
+            "name": "R_MiddleF1",
+            "parentIndex": 79
+        },
+        {
+            "depth": 11,
+            "index": 88,
+            "name": "R_MiddleF2",
+            "parentIndex": 87
+        },
+        {
+            "depth": 12,
+            "index": 89,
+            "name": "R_MiddleF3",
+            "parentIndex": 88
+        },
+        {
+            "depth": 10,
+            "index": 90,
+            "name": "R_Palm",
+            "parentIndex": 79
+        },
+        {
+            "depth": 11,
+            "index": 91,
+            "name": "R_RingF1",
+            "parentIndex": 90
+        },
+        {
+            "depth": 12,
+            "index": 92,
+            "name": "R_RingF2",
+            "parentIndex": 91
+        },
+        {
+            "depth": 13,
+            "index": 93,
+            "name": "R_RingF3",
+            "parentIndex": 92
+        },
+        {
+            "depth": 11,
+            "index": 94,
+            "name": "R_PinkyF1",
+            "parentIndex": 90
+        },
+        {
+            "depth": 12,
+            "index": 95,
+            "name": "R_PinkyF2",
+            "parentIndex": 94
+        },
+        {
+            "depth": 13,
+            "index": 96,
+            "name": "R_PinkyF3",
+            "parentIndex": 95
+        },
+        {
+            "depth": 9,
+            "index": 97,
+            "name": "R_Forearm_Twist_0",
+            "parentIndex": 78
+        },
+        {
+            "depth": 10,
+            "index": 98,
+            "name": "R_Forearm_Twist_1",
+            "parentIndex": 97
+        },
+        {
+            "depth": 11,
+            "index": 99,
+            "name": "R_Forearm_Twist_2",
+            "parentIndex": 98
+        },
+        {
+            "depth": 12,
+            "index": 100,
+            "name": "R_Forearm_Twist_3",
+            "parentIndex": 99
+        },
+        {
+            "depth": 12,
+            "index": 101,
+            "name": "R_Forearm_Light",
+            "parentIndex": 99
+        },
+        {
+            "depth": 8,
+            "index": 102,
+            "name": "R_UpperArm_Twist_0",
+            "parentIndex": 77
+        },
+        {
+            "depth": 9,
+            "index": 103,
+            "name": "R_UpperArm_Twist_1",
+            "parentIndex": 102
+        },
+        {
+            "depth": 10,
+            "index": 104,
+            "name": "R_UpperArm_Twist_2",
+            "parentIndex": 103
+        },
+        {
+            "depth": 10,
+            "index": 105,
+            "name": "R_deltFront_muscleOffset",
+            "parentIndex": 103
+        },
+        {
+            "depth": 11,
+            "index": 106,
+            "name": "R_deltFront_muscle",
+            "parentIndex": 105
+        },
+        {
+            "depth": 10,
+            "index": 107,
+            "name": "R_deltUp_muscleOffset",
+            "parentIndex": 103
+        },
+        {
+            "depth": 11,
+            "index": 108,
+            "name": "R_deltUp_muscle",
+            "parentIndex": 107
+        },
+        {
+            "depth": 11,
+            "index": 109,
+            "name": "R_Shoulder_Fabric_Jiggle",
+            "parentIndex": 107
+        },
+        {
+            "depth": 12,
+            "index": 110,
+            "name": "WEIGHT2_DUMMY_R_Shoulder_Fabric_Jiggle",
+            "parentIndex": 109
+        },
+        {
+            "depth": 10,
+            "index": 111,
+            "name": "R_deltBack_muscleOffset",
+            "parentIndex": 103
+        },
+        {
+            "depth": 11,
+            "index": 112,
+            "name": "R_deltBack_muscle",
+            "parentIndex": 111
+        },
+        {
+            "depth": 7,
+            "index": 113,
+            "name": "R_pecA_muscleOffset",
+            "parentIndex": 76
+        },
+        {
+            "depth": 8,
+            "index": 114,
+            "name": "R_pecA_muscle",
+            "parentIndex": 113
+        },
+        {
+            "depth": 6,
+            "index": 115,
+            "name": "Neck_0",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 116,
+            "name": "Neck_1",
+            "parentIndex": 115
+        },
+        {
+            "depth": 8,
+            "index": 117,
+            "name": "Head",
+            "parentIndex": 116
+        },
+        {
+            "depth": 9,
+            "index": 118,
+            "name": "HeadVisor_Light",
+            "parentIndex": 117
+        },
+        {
+            "depth": 9,
+            "index": 119,
+            "name": "R_Head_Light",
+            "parentIndex": 117
+        },
+        {
+            "depth": 9,
+            "index": 120,
+            "name": "L_Head_Light",
+            "parentIndex": 117
+        },
+        {
+            "depth": 6,
+            "index": 121,
+            "name": "L_BackArm_00_MovZ",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 122,
+            "name": "WEIGHT2_DUMMY_L_BackArm_00_MovZ",
+            "parentIndex": 121
+        },
+        {
+            "depth": 7,
+            "index": 123,
+            "name": "L_BackArm_01_RotY",
+            "parentIndex": 121
+        },
+        {
+            "depth": 8,
+            "index": 124,
+            "name": "WEIGHT2_DUMMY_L_BackArm_01_RotY",
+            "parentIndex": 123
+        },
+        {
+            "depth": 8,
+            "index": 125,
+            "name": "L_BackArm_02_Ball",
+            "parentIndex": 123
+        },
+        {
+            "depth": 9,
+            "index": 126,
+            "name": "WEIGHT2_DUMMY_L_BackArm_02_Ball",
+            "parentIndex": 125
+        },
+        {
+            "depth": 9,
+            "index": 127,
+            "name": "L_BackArm_03_RotZ",
+            "parentIndex": 125
+        },
+        {
+            "depth": 10,
+            "index": 128,
+            "name": "WEIGHT2_DUMMY_L_BackArm_03_RotZ",
+            "parentIndex": 127
+        },
+        {
+            "depth": 10,
+            "index": 129,
+            "name": "L_BackArm_04_MovX",
+            "parentIndex": 127
+        },
+        {
+            "depth": 11,
+            "index": 130,
+            "name": "WEIGHT2_DUMMY_L_BackArm_04_MovX",
+            "parentIndex": 129
+        },
+        {
+            "depth": 11,
+            "index": 131,
+            "name": "L_BackArm_05_RotZ",
+            "parentIndex": 129
+        },
+        {
+            "depth": 12,
+            "index": 132,
+            "name": "WEIGHT2_DUMMY_L_BackArm_05_RotZ",
+            "parentIndex": 131
+        },
+        {
+            "depth": 12,
+            "index": 133,
+            "name": "L_BackArm_06_RotZ",
+            "parentIndex": 131
+        },
+        {
+            "depth": 13,
+            "index": 134,
+            "name": "WEIGHT2_DUMMY_L_BackArm_06_RotZ",
+            "parentIndex": 133
+        },
+        {
+            "depth": 13,
+            "index": 135,
+            "name": "L_BackArm_07_RotZ",
+            "parentIndex": 133
+        },
+        {
+            "depth": 14,
+            "index": 136,
+            "name": "WEIGHT2_DUMMY_L_BackArm_07_RotZ",
+            "parentIndex": 135
+        },
+        {
+            "depth": 14,
+            "index": 137,
+            "name": "L_BackArm_08_RotZ",
+            "parentIndex": 135
+        },
+        {
+            "depth": 15,
+            "index": 138,
+            "name": "WEIGHT2_DUMMY_L_BackArm_08_RotZ",
+            "parentIndex": 137
+        },
+        {
+            "depth": 15,
+            "index": 139,
+            "name": "L_BackArm_09_MovZ",
+            "parentIndex": 137
+        },
+        {
+            "depth": 16,
+            "index": 140,
+            "name": "WEIGHT2_DUMMY_L_BackArm_09_MovZ",
+            "parentIndex": 139
+        },
+        {
+            "depth": 16,
+            "index": 141,
+            "name": "L_BackArm_Wp",
+            "parentIndex": 139
+        },
+        {
+            "depth": 11,
+            "index": 142,
+            "name": "L_RobotArm_Light",
+            "parentIndex": 129
+        },
+        {
+            "depth": 6,
+            "index": 143,
+            "name": "NeckThruster_0",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 144,
+            "name": "L_NeckThruster_0",
+            "parentIndex": 143
+        },
+        {
+            "depth": 8,
+            "index": 145,
+            "name": "L_NeckFrontThruster_0",
+            "parentIndex": 144
+        },
+        {
+            "depth": 9,
+            "index": 146,
+            "name": "L_NeckFrontThruster_1",
+            "parentIndex": 145
+        },
+        {
+            "depth": 10,
+            "index": 147,
+            "name": "L_NeckFrontThrusterInside_0_Vfx",
+            "parentIndex": 146
+        },
+        {
+            "depth": 10,
+            "index": 148,
+            "name": "L_NeckFrontThrusterCenter_0_Vfx",
+            "parentIndex": 146
+        },
+        {
+            "depth": 10,
+            "index": 149,
+            "name": "L_NeckFrontThrusterOutside_0_Vfx",
+            "parentIndex": 146
+        },
+        {
+            "depth": 8,
+            "index": 150,
+            "name": "L_NeckBackThruster_0",
+            "parentIndex": 144
+        },
+        {
+            "depth": 9,
+            "index": 151,
+            "name": "L_NeckBackThruster_1",
+            "parentIndex": 150
+        },
+        {
+            "depth": 10,
+            "index": 152,
+            "name": "L_NeckBackThrusterInside_0_Vfx",
+            "parentIndex": 151
+        },
+        {
+            "depth": 10,
+            "index": 153,
+            "name": "L_NeckBackThrusterCenter_0_Vfx",
+            "parentIndex": 151
+        },
+        {
+            "depth": 10,
+            "index": 154,
+            "name": "L_NeckBackThrusterOutside_0_Vfx",
+            "parentIndex": 151
+        },
+        {
+            "depth": 7,
+            "index": 155,
+            "name": "R_NeckThruster_0",
+            "parentIndex": 143
+        },
+        {
+            "depth": 8,
+            "index": 156,
+            "name": "R_NeckFrontThruster_0",
+            "parentIndex": 155
+        },
+        {
+            "depth": 9,
+            "index": 157,
+            "name": "R_NeckFrontThruster_1",
+            "parentIndex": 156
+        },
+        {
+            "depth": 10,
+            "index": 158,
+            "name": "R_NeckFrontThrusterInside_0_Vfx",
+            "parentIndex": 157
+        },
+        {
+            "depth": 10,
+            "index": 159,
+            "name": "R_NeckFrontThrusterCenter_0_Vfx",
+            "parentIndex": 157
+        },
+        {
+            "depth": 10,
+            "index": 160,
+            "name": "R_NeckFrontThrusterOutside_0_Vfx",
+            "parentIndex": 157
+        },
+        {
+            "depth": 8,
+            "index": 161,
+            "name": "R_NeckBackThruster_0",
+            "parentIndex": 155
+        },
+        {
+            "depth": 9,
+            "index": 162,
+            "name": "R_NeckBackThruster_1",
+            "parentIndex": 161
+        },
+        {
+            "depth": 10,
+            "index": 163,
+            "name": "R_NeckBackThrusterInside_0_Vfx",
+            "parentIndex": 162
+        },
+        {
+            "depth": 10,
+            "index": 164,
+            "name": "R_NeckBackThrusterCenter_0_Vfx",
+            "parentIndex": 162
+        },
+        {
+            "depth": 10,
+            "index": 165,
+            "name": "R_NeckBackThrusterOutside_0_Vfx",
+            "parentIndex": 162
+        },
+        {
+            "depth": 6,
+            "index": 166,
+            "name": "R_BackArm_00_MovZ",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 167,
+            "name": "WEIGHT2_DUMMY_R_BackArm_00_MovZ",
+            "parentIndex": 166
+        },
+        {
+            "depth": 7,
+            "index": 168,
+            "name": "R_BackArm_01_RotY",
+            "parentIndex": 166
+        },
+        {
+            "depth": 8,
+            "index": 169,
+            "name": "WEIGHT2_DUMMY_R_BackArm_01_RotY",
+            "parentIndex": 168
+        },
+        {
+            "depth": 8,
+            "index": 170,
+            "name": "R_BackArm_02_Ball",
+            "parentIndex": 168
+        },
+        {
+            "depth": 9,
+            "index": 171,
+            "name": "WEIGHT2_DUMMY_R_BackArm_02_Ball",
+            "parentIndex": 170
+        },
+        {
+            "depth": 9,
+            "index": 172,
+            "name": "R_BackArm_03_RotZ",
+            "parentIndex": 170
+        },
+        {
+            "depth": 10,
+            "index": 173,
+            "name": "WEIGHT2_DUMMY_R_BackArm_03_RotZ",
+            "parentIndex": 172
+        },
+        {
+            "depth": 10,
+            "index": 174,
+            "name": "R_BackArm_04_MovX",
+            "parentIndex": 172
+        },
+        {
+            "depth": 11,
+            "index": 175,
+            "name": "WEIGHT2_DUMMY_R_BackArm_04_MovX",
+            "parentIndex": 174
+        },
+        {
+            "depth": 11,
+            "index": 176,
+            "name": "R_BackArm_05_RotZ",
+            "parentIndex": 174
+        },
+        {
+            "depth": 12,
+            "index": 177,
+            "name": "WEIGHT2_DUMMY_R_BackArm_05_RotZ",
+            "parentIndex": 176
+        },
+        {
+            "depth": 12,
+            "index": 178,
+            "name": "R_BackArm_06_RotZ",
+            "parentIndex": 176
+        },
+        {
+            "depth": 13,
+            "index": 179,
+            "name": "WEIGHT2_DUMMY_R_BackArm_06_RotZ",
+            "parentIndex": 178
+        },
+        {
+            "depth": 13,
+            "index": 180,
+            "name": "R_BackArm_07_RotZ",
+            "parentIndex": 178
+        },
+        {
+            "depth": 14,
+            "index": 181,
+            "name": "WEIGHT2_DUMMY_R_BackArm_07_RotZ",
+            "parentIndex": 180
+        },
+        {
+            "depth": 14,
+            "index": 182,
+            "name": "R_BackArm_08_RotZ",
+            "parentIndex": 180
+        },
+        {
+            "depth": 15,
+            "index": 183,
+            "name": "WEIGHT2_DUMMY_R_BackArm_08_RotZ",
+            "parentIndex": 182
+        },
+        {
+            "depth": 15,
+            "index": 184,
+            "name": "R_BackArm_09_MovZ",
+            "parentIndex": 182
+        },
+        {
+            "depth": 16,
+            "index": 185,
+            "name": "WEIGHT2_DUMMY_R_BackArm_09_MovZ",
+            "parentIndex": 184
+        },
+        {
+            "depth": 16,
+            "index": 186,
+            "name": "R_BackArm_Wp",
+            "parentIndex": 184
+        },
+        {
+            "depth": 11,
+            "index": 187,
+            "name": "R_RobotArm_Light",
+            "parentIndex": 174
+        },
+        {
+            "depth": 6,
+            "index": 188,
+            "name": "R_Center_Handle",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 189,
+            "name": "WEIGHT2_DUMMY_R_Center_Handle",
+            "parentIndex": 188
+        },
+        {
+            "depth": 6,
+            "index": 190,
+            "name": "R_Side_Handle",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 191,
+            "name": "WEIGHT2_DUMMY_R_Side_Handle",
+            "parentIndex": 190
+        },
+        {
+            "depth": 6,
+            "index": 192,
+            "name": "L_Center_Handle",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 193,
+            "name": "WEIGHT2_DUMMY_L_Center_Handle",
+            "parentIndex": 192
+        },
+        {
+            "depth": 6,
+            "index": 194,
+            "name": "L_Side_Handle",
+            "parentIndex": 18
+        },
+        {
+            "depth": 7,
+            "index": 195,
+            "name": "WEIGHT2_DUMMY_L_Side_Handle",
+            "parentIndex": 194
+        },
+        {
+            "depth": 6,
+            "index": 196,
+            "name": "Battery_body",
+            "parentIndex": 18
+        },
+        {
+            "depth": 6,
+            "index": 197,
+            "name": "R_Chest_Wp",
+            "parentIndex": 18
+        },
+        {
+            "depth": 5,
+            "index": 198,
+            "name": "Spine_Wep",
+            "parentIndex": 17
+        },
+        {
+            "depth": 6,
+            "index": 199,
+            "name": "WEIGHT2_DUMMY_Spine_Wep",
+            "parentIndex": 198
+        },
+        {
+            "depth": 3,
+            "index": 200,
+            "name": "L_Thigh",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 201,
+            "name": "L_Shin",
+            "parentIndex": 200
+        },
+        {
+            "depth": 5,
+            "index": 202,
+            "name": "L_Shin_Twist_0",
+            "parentIndex": 201
+        },
+        {
+            "depth": 6,
+            "index": 203,
+            "name": "L_Shin_Twist_1",
+            "parentIndex": 202
+        },
+        {
+            "depth": 7,
+            "index": 204,
+            "name": "L_Shin_Front_Light",
+            "parentIndex": 203
+        },
+        {
+            "depth": 7,
+            "index": 205,
+            "name": "L_Shin_Back_Light",
+            "parentIndex": 203
+        },
+        {
+            "depth": 5,
+            "index": 206,
+            "name": "L_Foot",
+            "parentIndex": 201
+        },
+        {
+            "depth": 6,
+            "index": 207,
+            "name": "L_Toe",
+            "parentIndex": 206
+        },
+        {
+            "depth": 7,
+            "index": 208,
+            "name": "L_ToeEnd",
+            "parentIndex": 207
+        },
+        {
+            "depth": 7,
+            "index": 209,
+            "name": "L_ToeGimic_L00",
+            "parentIndex": 207
+        },
+        {
+            "depth": 8,
+            "index": 210,
+            "name": "L_ToeGimic_L01",
+            "parentIndex": 209
+        },
+        {
+            "depth": 7,
+            "index": 211,
+            "name": "L_ToeGimic_R00",
+            "parentIndex": 207
+        },
+        {
+            "depth": 8,
+            "index": 212,
+            "name": "L_ToeGimic_R01",
+            "parentIndex": 211
+        },
+        {
+            "depth": 6,
+            "index": 213,
+            "name": "L_HeelParts_0",
+            "parentIndex": 206
+        },
+        {
+            "depth": 4,
+            "index": 214,
+            "name": "L_Thigh_Twist_0",
+            "parentIndex": 200
+        },
+        {
+            "depth": 5,
+            "index": 215,
+            "name": "L_Thigh_Twist_1",
+            "parentIndex": 214
+        },
+        {
+            "depth": 6,
+            "index": 216,
+            "name": "l_leg_thigh_muscleOffset",
+            "parentIndex": 215
+        },
+        {
+            "depth": 7,
+            "index": 217,
+            "name": "l_leg_thigh_muscle",
+            "parentIndex": 216
+        },
+        {
+            "depth": 3,
+            "index": 218,
+            "name": "R_Thigh",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 219,
+            "name": "R_Shin",
+            "parentIndex": 218
+        },
+        {
+            "depth": 5,
+            "index": 220,
+            "name": "R_Shin_Twist_0",
+            "parentIndex": 219
+        },
+        {
+            "depth": 6,
+            "index": 221,
+            "name": "R_Shin_Twist_1",
+            "parentIndex": 220
+        },
+        {
+            "depth": 7,
+            "index": 222,
+            "name": "R_Shin_Front_Light",
+            "parentIndex": 221
+        },
+        {
+            "depth": 7,
+            "index": 223,
+            "name": "R_Shin_Back_Light",
+            "parentIndex": 221
+        },
+        {
+            "depth": 5,
+            "index": 224,
+            "name": "R_Foot",
+            "parentIndex": 219
+        },
+        {
+            "depth": 6,
+            "index": 225,
+            "name": "R_Toe",
+            "parentIndex": 224
+        },
+        {
+            "depth": 7,
+            "index": 226,
+            "name": "R_ToeEnd",
+            "parentIndex": 225
+        },
+        {
+            "depth": 7,
+            "index": 227,
+            "name": "R_ToeGimic_R00",
+            "parentIndex": 225
+        },
+        {
+            "depth": 8,
+            "index": 228,
+            "name": "R_ToeGimic_R01",
+            "parentIndex": 227
+        },
+        {
+            "depth": 7,
+            "index": 229,
+            "name": "R_ToeGimic_L00",
+            "parentIndex": 225
+        },
+        {
+            "depth": 8,
+            "index": 230,
+            "name": "R_ToeGimic_L01",
+            "parentIndex": 229
+        },
+        {
+            "depth": 6,
+            "index": 231,
+            "name": "R_HeelParts_0",
+            "parentIndex": 224
+        },
+        {
+            "depth": 4,
+            "index": 232,
+            "name": "R_Thigh_Twist_0",
+            "parentIndex": 218
+        },
+        {
+            "depth": 5,
+            "index": 233,
+            "name": "R_Thigh_Twist_1",
+            "parentIndex": 232
+        },
+        {
+            "depth": 6,
+            "index": 234,
+            "name": "r_leg_thigh_muscleOffset",
+            "parentIndex": 233
+        },
+        {
+            "depth": 7,
+            "index": 235,
+            "name": "r_leg_thigh_muscle",
+            "parentIndex": 234
+        },
+        {
+            "depth": 4,
+            "index": 236,
+            "name": "R_LegWp",
+            "parentIndex": 218
+        },
+        {
+            "depth": 5,
+            "index": 237,
+            "name": "WEIGHT2_DUMMY_R_LegWp",
+            "parentIndex": 236
+        },
+        {
+            "depth": 3,
+            "index": 238,
+            "name": "L_HipThruster_0",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 239,
+            "name": "L_HipThrusterCenter_0",
+            "parentIndex": 238
+        },
+        {
+            "depth": 5,
+            "index": 240,
+            "name": "L_HipThrusterCenter_1_Vfx",
+            "parentIndex": 239
+        },
+        {
+            "depth": 5,
+            "index": 241,
+            "name": "L_HipThrusterInside_0",
+            "parentIndex": 239
+        },
+        {
+            "depth": 6,
+            "index": 242,
+            "name": "L_HipThrusterInside_1_Vfx",
+            "parentIndex": 241
+        },
+        {
+            "depth": 5,
+            "index": 243,
+            "name": "L_HipThrusterOutside_0",
+            "parentIndex": 239
+        },
+        {
+            "depth": 6,
+            "index": 244,
+            "name": "L_HipThrusterOutside_1_Vfx",
+            "parentIndex": 243
+        },
+        {
+            "depth": 3,
+            "index": 245,
+            "name": "R_HipThruster_0",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 246,
+            "name": "R_HipThrusterCenter_0",
+            "parentIndex": 245
+        },
+        {
+            "depth": 5,
+            "index": 247,
+            "name": "R_HipThrusterInside_0",
+            "parentIndex": 246
+        },
+        {
+            "depth": 6,
+            "index": 248,
+            "name": "R_HipThrusterInside_1_Vfx",
+            "parentIndex": 247
+        },
+        {
+            "depth": 5,
+            "index": 249,
+            "name": "R_HipThrusterOutside_0",
+            "parentIndex": 246
+        },
+        {
+            "depth": 6,
+            "index": 250,
+            "name": "R_HipThrusterOutside_1_Vfx",
+            "parentIndex": 249
+        },
+        {
+            "depth": 5,
+            "index": 251,
+            "name": "R_HipThrusterCenter_1_Vfx",
+            "parentIndex": 246
+        },
+        {
+            "depth": 3,
+            "index": 252,
+            "name": "WCarry_L_01",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 253,
+            "name": "WEIGHT2_DUMMY_WCarry_L_01",
+            "parentIndex": 252
+        },
+        {
+            "depth": 4,
+            "index": 254,
+            "name": "WCarry_L_02",
+            "parentIndex": 252
+        },
+        {
+            "depth": 5,
+            "index": 255,
+            "name": "WEIGHT2_DUMMY_WCarry_L_02",
+            "parentIndex": 254
+        },
+        {
+            "depth": 3,
+            "index": 256,
+            "name": "WCarry_R_01",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 257,
+            "name": "WEIGHT2_DUMMY_WCarry_R_01",
+            "parentIndex": 256
+        },
+        {
+            "depth": 4,
+            "index": 258,
+            "name": "WCarry_R_02",
+            "parentIndex": 256
+        },
+        {
+            "depth": 5,
+            "index": 259,
+            "name": "WEIGHT2_DUMMY_WCarry_R_02",
+            "parentIndex": 258
+        },
+        {
+            "depth": 3,
+            "index": 260,
+            "name": "Hip_Wp",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 261,
+            "name": "WEIGHT2_DUMMY_Hip_Wp",
+            "parentIndex": 260
+        },
+        {
+            "depth": 3,
+            "index": 262,
+            "name": "HipGimic_Light",
+            "parentIndex": 3
+        },
+        {
+            "depth": 2,
+            "index": 263,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 264,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 265,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 266,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 267,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 268,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 269,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 270,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 271,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 272,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 273,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 274,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 275,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 276,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 277,
+            "name": "_hash3405609042",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 278,
+            "name": "_hash903523029",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 279,
+            "name": "_hash3618709693",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 280,
+            "name": "_hash235092091",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 281,
+            "name": "Ground_Root",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 282,
+            "name": "_hash725651698",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 283,
+            "name": "_hash475114970",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 284,
+            "name": "_hash2484556583",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 285,
+            "name": "_hash1759491314",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 286,
+            "name": "_hash1265638277",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 287,
+            "name": "_hash1864822940",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 288,
+            "name": "_hash950338375",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 289,
+            "name": "_hash1212233777",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 290,
+            "name": "_hash417248010",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 291,
+            "name": "_hash4261419819",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 292,
+            "name": "_hash3563372633",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 293,
+            "name": "_hash713998421",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 294,
+            "name": "_hash309772307",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 295,
+            "name": "_hash1670395996",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 296,
+            "name": "_hash2790254121",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 297,
+            "name": "_hash1424316209",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 298,
+            "name": "_hash245979299",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 299,
+            "name": "_hash2766696602",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 300,
+            "name": "_hash2287670331",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 301,
+            "name": "_hash4152176540",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 302,
+            "name": "_hash950159011",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 303,
+            "name": "_hash3506090456",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 304,
+            "name": "_hash1901035655",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 305,
+            "name": "_hash1210411834",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 306,
+            "name": "_hash3524282984",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 307,
+            "name": "_hash2531418364",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 308,
+            "name": "_hash317934087",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 309,
+            "name": "_hash3115520197",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 310,
+            "name": "_hash4218270046",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 311,
+            "name": "_hash4040327144",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 312,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 313,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 314,
+            "name": "_hash3405609042",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 315,
+            "name": "_hash903523029",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 316,
+            "name": "_hash3618709693",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 317,
+            "name": "_hash235092091",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 318,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 319,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 320,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 321,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 322,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 323,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 324,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 325,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 326,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 327,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 328,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 329,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 330,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 331,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 332,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 333,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 334,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 335,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 336,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 337,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 338,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 339,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 340,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 341,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 342,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 343,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 344,
+            "name": "_hash3405609042",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 345,
+            "name": "_hash903523029",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 346,
+            "name": "_hash3618709693",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 347,
+            "name": "_hash235092091",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 348,
+            "name": "_hash725651698",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 349,
+            "name": "_hash475114970",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 350,
+            "name": "_hash2484556583",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 351,
+            "name": "_hash1759491314",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 352,
+            "name": "_hash1265638277",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 353,
+            "name": "_hash1864822940",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 354,
+            "name": "_hash950338375",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 355,
+            "name": "_hash1212233777",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 356,
+            "name": "_hash417248010",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 357,
+            "name": "_hash4261419819",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 358,
+            "name": "_hash3563372633",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 359,
+            "name": "_hash713998421",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 360,
+            "name": "_hash309772307",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 361,
+            "name": "_hash1670395996",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 362,
+            "name": "_hash2790254121",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 363,
+            "name": "_hash1424316209",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 364,
+            "name": "_hash245979299",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 365,
+            "name": "_hash2766696602",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 366,
+            "name": "_hash2287670331",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 367,
+            "name": "_hash4152176540",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 368,
+            "name": "_hash950159011",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 369,
+            "name": "_hash3506090456",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 370,
+            "name": "_hash1901035655",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 371,
+            "name": "_hash1210411834",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 372,
+            "name": "_hash3524282984",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 373,
+            "name": "_hash2531418364",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 374,
+            "name": "_hash317934087",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 375,
+            "name": "_hash3115520197",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 376,
+            "name": "_hash4218270046",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 377,
+            "name": "_hash4040327144",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 378,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 379,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 380,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 381,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 382,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 383,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 384,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 385,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 386,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 387,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 388,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 389,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 390,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 391,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 392,
+            "name": "_hash3405609042",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 393,
+            "name": "_hash903523029",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 394,
+            "name": "_hash3618709693",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 395,
+            "name": "_hash235092091",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 396,
+            "name": "_hash3405609042",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 397,
+            "name": "_hash903523029",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 398,
+            "name": "_hash3618709693",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 399,
+            "name": "_hash235092091",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 400,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 401,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 402,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 403,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 404,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 405,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 406,
+            "name": "_hash3405609042",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 407,
+            "name": "_hash903523029",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 408,
+            "name": "_hash3618709693",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 409,
+            "name": "_hash235092091",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 410,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 411,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 412,
+            "name": "_hash3405609042",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 413,
+            "name": "_hash903523029",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 414,
+            "name": "_hash3618709693",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 415,
+            "name": "_hash235092091",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 416,
+            "name": "_hash725651698",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 417,
+            "name": "_hash475114970",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 418,
+            "name": "_hash2484556583",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 419,
+            "name": "_hash1759491314",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 420,
+            "name": "_hash1265638277",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 421,
+            "name": "_hash1864822940",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 422,
+            "name": "_hash950338375",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 423,
+            "name": "_hash1212233777",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 424,
+            "name": "_hash417248010",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 425,
+            "name": "_hash4261419819",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 426,
+            "name": "_hash3563372633",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 427,
+            "name": "_hash713998421",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 428,
+            "name": "_hash309772307",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 429,
+            "name": "_hash1670395996",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 430,
+            "name": "_hash2790254121",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 431,
+            "name": "_hash1424316209",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 432,
+            "name": "_hash245979299",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 433,
+            "name": "_hash2766696602",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 434,
+            "name": "_hash2287670331",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 435,
+            "name": "_hash4152176540",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 436,
+            "name": "_hash950159011",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 437,
+            "name": "_hash3506090456",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 438,
+            "name": "_hash1901035655",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 439,
+            "name": "_hash1210411834",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 440,
+            "name": "_hash3524282984",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 441,
+            "name": "_hash2531418364",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 442,
+            "name": "_hash317934087",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 443,
+            "name": "_hash3115520197",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 444,
+            "name": "_hash4218270046",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 445,
+            "name": "_hash4040327144",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 446,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 447,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 448,
+            "name": "_hash3405609042",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 449,
+            "name": "_hash903523029",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 450,
+            "name": "_hash3618709693",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 451,
+            "name": "_hash235092091",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 452,
+            "name": "_hash725651698",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 453,
+            "name": "_hash475114970",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 454,
+            "name": "_hash2484556583",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 455,
+            "name": "_hash1759491314",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 456,
+            "name": "_hash1265638277",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 457,
+            "name": "_hash1864822940",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 458,
+            "name": "_hash950338375",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 459,
+            "name": "_hash1212233777",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 460,
+            "name": "_hash417248010",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 461,
+            "name": "_hash4261419819",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 462,
+            "name": "_hash3563372633",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 463,
+            "name": "_hash713998421",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 464,
+            "name": "_hash309772307",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 465,
+            "name": "_hash1670395996",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 466,
+            "name": "_hash2790254121",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 467,
+            "name": "_hash1424316209",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 468,
+            "name": "_hash245979299",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 469,
+            "name": "_hash2766696602",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 470,
+            "name": "_hash2287670331",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 471,
+            "name": "_hash4152176540",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 472,
+            "name": "_hash950159011",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 473,
+            "name": "_hash3506090456",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 474,
+            "name": "_hash1901035655",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 475,
+            "name": "_hash1210411834",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 476,
+            "name": "_hash3524282984",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 477,
+            "name": "_hash2531418364",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 478,
+            "name": "_hash317934087",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 479,
+            "name": "_hash3115520197",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 480,
+            "name": "_hash4218270046",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 481,
+            "name": "_hash4040327144",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 482,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 483,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 484,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 485,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 486,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 487,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 488,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 489,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 490,
+            "name": "_hash2502723692",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 491,
+            "name": "_hash4057437012",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 492,
+            "name": "_hash3405609042",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 493,
+            "name": "_hash903523029",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 494,
+            "name": "_hash3618709693",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 495,
+            "name": "_hash235092091",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 496,
+            "name": "_hash3405609042",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 497,
+            "name": "_hash903523029",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 498,
+            "name": "_hash3618709693",
+            "parentIndex": 1
+        },
+        {
+            "depth": 2,
+            "index": 499,
+            "name": "_hash235092091",
+            "parentIndex": 1
+        },
+        {
+            "depth": 1,
+            "index": 500,
+            "name": "ch0000_00_playergame_Group_0_sub0__ch0000_00_NThruster",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 501,
+            "name": "ch0000_00_playergame_Group_0_sub1__ch0000_00_Fabric",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 502,
+            "name": "ch0000_00_playergame_Group_0_sub2__ch0000_00_NMechParts",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 503,
+            "name": "ch0000_00_playergame_Group_0_sub3__ch0000_00_NMechParts_Emissive",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 504,
+            "name": "ch0000_00_playergame_Group_0_sub4__ch0000_00_NRegArmor",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 505,
+            "name": "ch0000_00_playergame_Group_0_sub5__ch0000_00_NMechParts_Toe_Emissive",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 506,
+            "name": "ch0000_00_playergame_Group_0_sub6__ch0000_00_Hand",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 507,
+            "name": "ch0000_00_playergame_Group_1_sub0__ch0000_00_NThruster",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 508,
+            "name": "ch0000_00_playergame_Group_2_sub0__ch0000_00_HeadGimic",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 509,
+            "name": "ch0000_00_playergame_Group_2_sub1__ch0000_00_NMechParts_Emissive",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 510,
+            "name": "ch0000_00_playergame_Group_3_sub0__wp7200_00_Body",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 511,
+            "name": "ch0000_00_playergame_Group_5_sub0__ch0000_00_NBackPack",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 512,
+            "name": "ch0000_00_playergame_Group_5_sub1__ch0000_00_NMechParts",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 513,
+            "name": "ch0000_00_playergame_Group_6_sub0__ch0000_00_NRobotArm",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 514,
+            "name": "ch0000_00_playergame_Group_6_sub1__ch0000_00_NMechParts_Emissive",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 515,
+            "name": "ch0000_00_playergame_Group_7_sub0__ch0000_00_NRobotArm",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 516,
+            "name": "ch0000_00_playergame_Group_7_sub1__ch0000_00_NMechParts_Emissive",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 517,
+            "name": "ch0000_00_playergame_Group_10_sub0__ch0000_00_Head",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 518,
+            "name": "ch0000_00_playergame_Group_10_sub1__ch0000_00_NMechParts_Emissive",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 519,
+            "name": "ch0000_00_playergame_Group_10_sub2__ch0000_00_DetailDecal",
+            "parentIndex": 0
+        },
+        {
+            "depth": 1,
+            "index": 520,
+            "name": "ch0000_00_playergame_Group_12_sub0__wp9104_Body",
+            "parentIndex": 0
+        }
+    ],
+    "guid": "b26fa342-0d10-428f-baea-589a884af57a",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

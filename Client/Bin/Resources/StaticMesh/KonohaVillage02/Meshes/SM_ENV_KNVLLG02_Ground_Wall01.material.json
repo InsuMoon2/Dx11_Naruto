@@ -1,45 +1,43 @@
 {
-  "version": 2,
+  "version": 4,
   "materials": [
     {
       "material_name": "MI_ENV_KNVLLG02_PipeDetails_01",
-      "textures": [
-      ]
+      "material_instance_guid": "0547ba36-4f59-40b4-8072-bb6954e77de6"
     },
     {
       "material_name": "MI_ENV_KNVLLG02_Pipe_04",
-      "textures": [
-      ]
+      "material_instance_guid": "1e908290-4c7d-4fc0-993b-a2737abebdfe"
     },
     {
       "material_name": "MI_ENV_KNVLLG02_RoughTiles",
-      "textures": [
-      ]
+      "material_instance_guid": "3f495c7a-f76b-4913-a13c-f9141946bc85"
     },
     {
       "material_name": "MI_ENV_KNVLLG_WoodBoard_Natural_Yellowed",
-      "textures": [
+      "textures": [],
+      "base_color_factor": [
+        0.56,
+        0.43,
+        0.24,
+        1.0
       ]
     },
     {
       "material_name": "MI_ENV_KNVLLG_StoneWall_Blend",
-      "textures": [
-      ]
+      "textures": []
     },
     {
       "material_name": "MI_ENV_KNVLLG_Stonewall_04",
-      "textures": [
-      ]
+      "textures": []
     },
     {
       "material_name": "MI_ENV_KNVLLG02_WoodBoard_Natural_Lighter",
-      "textures": [
-      ]
+      "material_instance_guid": "36beaf84-0844-4866-8f29-db7981d43320"
     },
     {
       "material_name": "Material_7",
-      "textures": [
-      ]
+      "textures": []
     }
   ]
 }

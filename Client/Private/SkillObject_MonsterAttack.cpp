@@ -3,6 +3,7 @@
 #include "GameObject_Factory.h"
 #include "Collider.h"
 #include "Character.h"
+#include "CombatStat.h"
 #include "Client_Defines.h"
 
 REGISTER_GAMEOBJECT_CATEGORY(SkillObject_MonsterAttack,
@@ -50,6 +51,21 @@ void SkillObject_MonsterAttack::OnBeginOverlap(Shared<Collider> self, Shared<Col
     if (Is_Destroy())
         return;
 
+    auto owner = Get_Owner();
+    if (!owner)
+    {
+        Set_Destroy(true);
+        return;
+    }
+
+    auto ownerCombatStat = owner->Get_Component<CombatStat>();
+    if (ownerCombatStat && ownerCombatStat->Is_Dead())
+    {
+        // 보스/몬스터가 이미 죽었으면 남아 있던 공격 판정도 즉시 제거한다.
+        Set_Destroy(true);
+        return;
+    }
+
     auto character = Find_HitCharacter(other);
     if (!character)
         return;
@@ -63,6 +79,20 @@ void SkillObject_MonsterAttack::OnBeginOverlap(Shared<Collider> self, Shared<Col
 void SkillObject_MonsterAttack::OnStayOverlap(Shared<Collider> self, Shared<Collider> other)
 {
     SkillObject::OnStayOverlap(self, other);
+
+    auto owner = Get_Owner();
+    if (!owner)
+    {
+        Set_Destroy(true);
+        return;
+    }
+
+    auto ownerCombatStat = owner->Get_Component<CombatStat>();
+    if (ownerCombatStat && ownerCombatStat->Is_Dead())
+    {
+        // 충돌 프레임이 남아 있더라도 사망한 오너의 공격체는 더 이상 유효하지 않다.
+        Set_Destroy(true);
+    }
 }
 
 void SkillObject_MonsterAttack::OnEndOverlap(Shared<Collider> self, Shared<Collider> other)

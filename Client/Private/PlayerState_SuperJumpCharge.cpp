@@ -21,7 +21,9 @@ void PlayerState_SuperJumpCharge::Enter(PlayerStateMachine* state)
     if (!movement)
         return;
 
+    _shouldPlayChargeEndSound = false;
     movement->Set_OrientRotationToMovement(false);
+    GAME->Play_LoopSound(_chargingLoopSoundFile, ESoundChannel::Player, 0.3f, false, 0.f);
 
     state->Play_AnimState(EPlayerState::SuperJumpCharge);
 }
@@ -49,6 +51,7 @@ void PlayerState_SuperJumpCharge::Update(PlayerStateMachine* state, float timeDe
             moveDesc.superJumpMinVelocity,
             moveDesc.superJumpMaxVelocity, ratio);
 
+        _shouldPlayChargeEndSound = true;
         state->Set_PendingSuperJumpVelocity(velocity);
         state->Change_State(EPlayerState::SuperJump);
 
@@ -65,7 +68,13 @@ void PlayerState_SuperJumpCharge::Update(PlayerStateMachine* state, float timeDe
 
 void PlayerState_SuperJumpCharge::Exit(PlayerStateMachine* state)
 {
+    GAME->Stop_Sound(_chargingLoopSoundFile);
 
+    if (_shouldPlayChargeEndSound)
+    {
+        GAME->Play_Sound(_chargingEndSoundFile, ESoundChannel::Player, 0.35f);
+        _shouldPlayChargeEndSound = false;
+    }
 }
 
 Shared<PlayerState_SuperJumpCharge> PlayerState_SuperJumpCharge::Create()

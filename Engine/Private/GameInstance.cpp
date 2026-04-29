@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "GameInstance.h"
 
 #include "Asset_Manager.h"
@@ -1007,32 +1007,32 @@ void GameInstance::Clear_Colliders()
 
 void GameInstance::Draw_DebugBox(const FDebugBoxDesc& desc)
 {
-    if (_debugManager)
-        _debugManager->Draw_Box(desc);
+    (void)desc;
+    return;
 }
 
 void GameInstance::Draw_DebugSphere(const FDebugSphereDesc& desc)
 {
-    if (_debugManager)
-        _debugManager->Draw_Sphere(desc);
+    (void)desc;
+    return;
 }
 
 void GameInstance::Draw_DebugLine(const FDebugLineDesc& desc)
 {
-    if (_debugManager)
-        _debugManager->Draw_Line(desc);
+    (void)desc;
+    return;
 }
 
 void GameInstance::Draw_DebugTraceLine(const FDebugTraceLineDesc& desc)
 {
-    if (_debugManager)
-        _debugManager->Draw_TraceLine(desc);
+    (void)desc;
+    return;
 }
 
 void GameInstance::Draw_DebugMesh(const FDebugMeshDesc& desc)
 {
-    if (_debugManager)
-        _debugManager->Draw_Mesh(desc);
+    (void)desc;
+    return;
 }
 
 void GameInstance::Clear_DebugDraws()
@@ -1043,29 +1043,23 @@ void GameInstance::Clear_DebugDraws()
 
 void GameInstance::Set_DebugRenderEnabled(bool enabled)
 {
-    if (_debugManager)
-        _debugManager->Set_Enabled(enabled);
+    (void)enabled;
+    return;
 }
 
 bool GameInstance::Is_DebugRenderEnabled() const
 {
-    return _debugManager ? _debugManager->Is_Enabled() : false;
+    return false;
 }
 
 HRESULT GameInstance::Render_DebugDepth()
 {
-    if (_debugManager == nullptr)
-        return S_OK;
-
-    return _debugManager->Render_Depth();
+    return S_OK;
 }
 
 HRESULT GameInstance::Render_DebugOverlay()
 {
-    if (_debugManager == nullptr)
-        return S_OK;
-
-    return _debugManager->Render_Overlay();
+    return S_OK;
 }
 
 void GameInstance::Ready_CollisionProxy(const vector<FProxyEntry>& entries)
@@ -1227,7 +1221,7 @@ void GameInstance::Invalidate_StaticShadowMap()
 #ifdef _DEBUG
 void GameInstance::Render_Colliders()
 {
-    return _collisionManager->Render_Debug();
+    return;
 }
 #endif
 Shared<Camera> GameInstance::Find_Camera(Protocol::OBJECT_TYPE type)

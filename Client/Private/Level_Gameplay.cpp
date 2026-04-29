@@ -22,6 +22,7 @@
 #include "Mesh.h"
 #include "CollisionProxyActor.h"
 #include "WaveTrigger.h"
+#include "SkySphereActor.h"
 
 Level_Gameplay::Level_Gameplay(ComPtr<Device> device, ComPtr<DeviceContext> context)
     : Level{ device, context }
@@ -77,7 +78,8 @@ static bool Try_FindGameplayPlayerStartTransform(uint32 levelIndex, Vec3& outSpa
             continue;
 
         outSpawnPos = transform->Get_WorldPosition();
-        outSpawnRotY = transform->Get_LocalRotation().ToEuler().y;
+        // Gameplay는 시작 시 PlayerStart가 바라보는 반대 방향에서 출발하도록 yaw를 180도 뒤집는다.
+        outSpawnRotY = transform->Get_LocalEulerAngles().y + 180.f;
         return true;
     }
 
@@ -124,11 +126,13 @@ HRESULT Level_Gameplay::Initialize(EGameplaySpawnMode spawnMode)
 {
     // Gameplay에 실제 진입하는 순간 이전 화면에서 재생 중이던 BGM을 정리한다.
     GAME->Stop_SoundChannel(ESoundChannel::BGM, 0.45f);
+    // [추가] TutorialMap으로 들어오면 튜토리얼 전용 배경음을 바로 재생한다.
 
     _spawnMode = spawnMode;
 
     CHECK_FAILED(Ready_Lights(), E_FAIL);
     CHECK_FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
+    CHECK_FAILED(Ready_Layer_SkySphere(), E_FAIL);
     CHECK_FAILED(Ready_UI(), E_FAIL);
 
     // ExamStadium은 별도 proxy 레이어가 없어도 기본 바닥 collision이 항상 준비되어야 한다.
@@ -250,9 +254,6 @@ void Level_Gameplay::On_WaveStarted(const string& waveTag)
         return;
 
     GAME->Play_Cinematic(L"GamePlayClearWave");
-
-    if (_playerHUD)
-        _playerHUD->Show_MissionTitle(L"적을 쓰러뜨려라!", 2.f);
 }
 
 HRESULT Level_Gameplay::Ready_Lights()
@@ -266,13 +267,13 @@ HRESULT Level_Gameplay::Ready_Lights()
     FLightDesc lightDesc{};
 
     lightDesc.type = ELightType::Directional;
-    lightDesc.direction = Vec4(-1.f, -1.f, -1.f, 0.f);
-    lightDesc.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
-    lightDesc.ambient = Vec4(0.18f, 0.18f, 0.18f, 1.f);
-    lightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+    lightDesc.direction = Vec4(0.72f, -1.f, 0.38f, 0.f);
+    lightDesc.diffuse = Vec4(0.97f, 0.985f, 1.f, 1.f);
+    lightDesc.ambient = Vec4(0.32f, 0.38f, 0.5f, 1.f);
+    lightDesc.specular = Vec4(0.78f, 0.84f, 0.92f, 1.f);
 
     lightDesc.castShadow = true;
-    lightDesc.shadowMapSize = 2048;
+    lightDesc.shadowMapSize = 8192;
     lightDesc.shadowCenter = Get_GameplayAreaShadowTarget();
     lightDesc.shadowOrthoWidth = GAMEPLAY_SHADOW_ORTHO_WIDTH;
     lightDesc.shadowOrthoHeight = GAMEPLAY_SHADOW_ORTHO_HEIGHT;
@@ -319,13 +320,13 @@ void Level_Gameplay::Update_DynamicShadowLightFromView()
     FLightDesc lightDesc{};
 
     lightDesc.type = ELightType::Directional;
-    lightDesc.direction = Vec4(-1.f, -1.f, -1.f, 0.f);
-    lightDesc.diffuse = Vec4(1.f, 1.f, 1.f, 1.f);
-    lightDesc.ambient = Vec4(0.18f, 0.18f, 0.18f, 1.f);
-    lightDesc.specular = Vec4(1.f, 1.f, 1.f, 1.f);
+    lightDesc.direction = Vec4(0.72f, -1.f, 0.38f, 0.f);
+    lightDesc.diffuse = Vec4(0.97f, 0.985f, 1.f, 1.f);
+    lightDesc.ambient = Vec4(0.32f, 0.38f, 0.5f, 1.f);
+    lightDesc.specular = Vec4(0.78f, 0.84f, 0.92f, 1.f);
 
     lightDesc.castShadow = true;
-    lightDesc.shadowMapSize = 2048;
+    lightDesc.shadowMapSize = 8192;
     lightDesc.shadowCenter = Get_GameplayAreaShadowTarget();
     lightDesc.shadowOrthoWidth = GAMEPLAY_SHADOW_ORTHO_WIDTH;
     lightDesc.shadowOrthoHeight = GAMEPLAY_SHADOW_ORTHO_HEIGHT;
@@ -342,13 +343,11 @@ void Level_Gameplay::Update_DynamicShadowLightFromView()
     lightDesc.shadowStrength = 0.68f;
     lightDesc.shadowSoftness = 0.35f;
 
-    Vec3 dynamicShadowEye = Vec3::Zero;
-    Vec3 dynamicShadowTarget = Vec3::Zero;
-    if (Try_BuildGameplayShadowCameraFromCurrentView(ETOI(ELevelType::GamePlay), dynamicShadowEye, dynamicShadowTarget))
-    {
-        lightDesc.shadowTarget = dynamicShadowTarget;
-        lightDesc.shadowCenter = dynamicShadowTarget;
-    }
+    // shadow target을 플레이어 추적 대신 맵 중심 고정
+    // 플레이어를 따라가면 원거리 오브젝트가 shadow map 범위에 들어올 때 그림자가 팝인되는 현상이 발생한다.
+    const Vec3 fixedShadowCenter = Vec3(0.f, GAMEPLAY_SHADOW_TARGET_HEIGHT_OFFSET, 0.f);
+    lightDesc.shadowTarget = fixedShadowCenter;
+    lightDesc.shadowCenter = fixedShadowCenter;
 
     Vec3 lightDir = Vec3(lightDesc.direction.x, lightDesc.direction.y, lightDesc.direction.z); // 수업코드처럼 shadow eye를 directional light 방향 축으로 계산하기 위한 광원 방향 벡터다.
     if (lightDir.LengthSquared() <= FLT_EPSILON)
@@ -420,7 +419,8 @@ HRESULT Level_Gameplay::Ready_Layer_PlayerStart(const wstring& layerTag)
     // TODO : Spawn Point Save&Load로 위치 세팅
     {
         PlayerStart::FPlayerStartDesc desc;
-        desc.position = Vec3(0.f, 5.f, 0.f);
+        desc.position = Vec3(0.f, 0.f, 32.f);
+        
         desc.spawnIndex = 0;
 
         CHECK_FAILED(GAME->Add_GameObject(ETOI(ELevelType::GamePlay), Protocol::OBJECT_TYPE_PLAYER_START, layerTag, &desc), E_FAIL);
@@ -450,6 +450,59 @@ HRESULT Level_Gameplay::Ready_Layer_GameObject(const wstring& layerTag)
     return S_OK;
 }
 
+HRESULT Level_Gameplay::Ready_Layer_SkySphere()
+{
+    const uint32 levelIndex = ETOI(ELevelType::GamePlay);
+    const wstring& layerTag = TEXT("Layer_SkySphere");
+
+    // Konoha\uc640 \ub3d9\uc77c\ud55c \uc2a4\uce74\uc774\ub3d4 \ubca0\uc774\uc2a4
+    {
+        SkySphereActor::FSkySphereDesc desc{};
+        desc.name = TEXT("Sky.Base");
+        desc.modelComponentName = "Sky_SkySphere_Base";
+        desc.followCamera = true;
+        desc.useBlend = false;
+        desc.twoSided = true;
+        desc.renderStyle = 1;
+        desc.uvTiling = Vec2(1.f, 1.f);
+        desc.uvScrollSpeed = Vec2::Zero;
+        desc.colorTint = Vec4(0.82f, 0.93f, 1.f, 1.f);
+        desc.horizonColor = Vec4(0.58f, 0.8f, 1.f, 1.f);
+        desc.zenithColor = Vec4(0.2f, 0.48f, 0.92f, 1.f);
+        desc.opacity = 1.f;
+        desc.emissiveStrength = 1.02f;
+        desc.scale = Vec3(1.f, 1.f, 1.f);
+
+        CHECK_FAILED(GAME->Add_GameObject(levelIndex, Protocol::OBJECT_TYPE_SKY_SPHERE, layerTag, &desc), E_FAIL);
+    }
+
+    // Konoha\uc640 \ub3d9\uc77c\ud55c \uad6c\ub984 \ub808\uc774\uc5b4
+    {
+        SkySphereActor::FSkySphereDesc desc{};
+        desc.name = TEXT("Sky.Cloud.Main");
+        desc.modelComponentName = "Sky_CloudPlate_01";
+        desc.followCamera = true;
+        desc.useBlend = true;
+        desc.twoSided = true;
+        desc.renderStyle = 2;
+        desc.pitch = -6.f;
+        desc.yaw = 14.f;
+        desc.roll = 4.f;
+        desc.uvTiling = Vec2(1.f, 1.f);
+        desc.uvScrollSpeed = Vec2::Zero;
+        desc.colorTint = Vec4(0.92f, 0.96f, 1.f, 0.86f);
+        desc.subUVTiling = Vec2(1.f, 1.f);
+        desc.subUVScrollSpeed = Vec2::Zero;
+        desc.opacity = 0.14f;
+        desc.emissiveStrength = 0.56f;
+        desc.scale = Vec3(1.f, 1.f, 1.f);
+
+        CHECK_FAILED(GAME->Add_GameObject(levelIndex, Protocol::OBJECT_TYPE_SKY_SPHERE, layerTag, &desc), E_FAIL);
+    }
+
+    return S_OK;
+}
+
 HRESULT Level_Gameplay::Ready_UI()
 {
     {
@@ -468,6 +521,13 @@ HRESULT Level_Gameplay::Ready_UI()
                 &desc));
 
         CHECK_NULL(_playerHUD, E_FAIL);
+
+        // Tutorial 레벨 진입 시 Tutorial_Entry 시네마틱을 재생한다.
+        // 시네마틱 완료 후 Konoha와 동일하게 임무개시(MissionStart) UI가 표시된다.
+        _playerHUD->Trigger_LevelEntryCinematic(
+            "Tutorial_Entry",
+            L"Start_CutScene.wav",
+            L"BGM/TutorialMap_BackGround.wav");
     }
 
     _playerObjectSpawnedHandle = GAME->Get_DelegateHub().OnPlayerObjectSpawned.Add(
@@ -864,6 +924,7 @@ void Level_Gameplay::Spawn_LocalPlayer()
     auto playerObj = Spawn_Helper::Prefab("TestPlayer2")
         .AtLevel(ETOI(ELevelType::GamePlay))
         .Position(spawnPos)
+        .Rotation(Vec3(0.f, spawnRotY, 0.f))
         .InLayer(TEXT("Layer_Player"))
         .Spawn();
 

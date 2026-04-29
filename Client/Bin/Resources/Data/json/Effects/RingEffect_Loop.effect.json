@@ -3,6 +3,9 @@
     "effectName": "NewEffect",
     "layers": [
         {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
             "blendMode": 1,
             "colorTint": [
                 0.09784047305583954,
@@ -84,6 +87,7 @@
             "opacitySubUvTextureGuid": "",
             "opacityTextureGuid": "7da97d58-d96d-4f2c-b8fc-1660a19f747d",
             "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
             "rotationAxis": [
                 0.0,
                 1.0,
@@ -92,6 +96,9 @@
             "rotationSpeed": 0.0,
             "roughness": 0.5,
             "roughnessTextureGuid": "",
+            "scaleDuration": 1.0,
+            "screenDistortionRadialStrength": 0.0,
+            "screenDistortionStrength": 0.029999999329447746,
             "shadingMode": 0,
             "specularPower": 32.0,
             "specularStrength": 1.0,
@@ -104,6 +111,7 @@
             "useOpacityOverTime": true,
             "usePositionOverTime": false,
             "useScaleOverTime": true,
+            "useScreenDistortion": false,
             "uvDistortionSpeed": [
                 0.0,
                 0.0
@@ -123,6 +131,9 @@
             ]
         },
         {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
             "blendMode": 1,
             "colorTint": [
                 0.09784047305583954,
@@ -204,6 +215,7 @@
             "opacitySubUvTextureGuid": "0a850b83-0091-4109-bff1-3bda17ae7de8",
             "opacityTextureGuid": "60a61031-61c8-4bd5-911c-d52984c8f4e6",
             "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
             "rotationAxis": [
                 0.0,
                 0.0,
@@ -212,6 +224,9 @@
             "rotationSpeed": 390.6000061035156,
             "roughness": 0.5,
             "roughnessTextureGuid": "",
+            "scaleDuration": 1.0,
+            "screenDistortionRadialStrength": 0.0,
+            "screenDistortionStrength": 0.029999999329447746,
             "shadingMode": 0,
             "specularPower": 32.0,
             "specularStrength": 1.0,
@@ -224,6 +239,7 @@
             "useOpacityOverTime": true,
             "usePositionOverTime": false,
             "useScaleOverTime": false,
+            "useScreenDistortion": false,
             "uvDistortionSpeed": [
                 0.0,
                 0.0
@@ -243,6 +259,9 @@
             ]
         },
         {
+            "animationLoop": true,
+            "animationName": "",
+            "animationPlayRate": 1.0,
             "blendMode": 1,
             "colorTint": [
                 0.09784047305583954,
@@ -324,6 +343,7 @@
             "opacitySubUvTextureGuid": "0a850b83-0091-4109-bff1-3bda17ae7de8",
             "opacityTextureGuid": "60a61031-61c8-4bd5-911c-d52984c8f4e6",
             "positionDuration": 1.0,
+            "rotateInLocalSpace": true,
             "rotationAxis": [
                 0.0,
                 0.0,
@@ -332,6 +352,9 @@
             "rotationSpeed": 390.6000061035156,
             "roughness": 0.5,
             "roughnessTextureGuid": "",
+            "scaleDuration": 1.0,
+            "screenDistortionRadialStrength": 0.0,
+            "screenDistortionStrength": 0.029999999329447746,
             "shadingMode": 0,
             "specularPower": 32.0,
             "specularStrength": 1.0,
@@ -344,6 +367,7 @@
             "useOpacityOverTime": true,
             "usePositionOverTime": false,
             "useScaleOverTime": false,
+            "useScreenDistortion": false,
             "uvDistortionSpeed": [
                 0.0,
                 0.0

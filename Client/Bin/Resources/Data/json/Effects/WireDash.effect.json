@@ -1,6 +1,6 @@
 {
     "autoPlay": true,
-    "effectName": "NewEffect",
+    "effectName": "WireDash",
     "layers": [
         {
             "animationLoop": true,

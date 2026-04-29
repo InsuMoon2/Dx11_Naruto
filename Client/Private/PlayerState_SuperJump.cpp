@@ -29,6 +29,7 @@ void PlayerState_SuperJump::Enter(PlayerStateMachine* state)
     const float velocity = state->Get_PendingSuperJumpVeloicty();
     movement->Start_SuperJump(velocity);
     movement->Set_OrientRotationToMovement(true);
+    GAME->Play_Sound(L"SuperJump_Start.wav", ESoundChannel::Player, 0.3f);
 
     GAME->Set_BlurStrength(0.45f);
     GAME->Set_BlurDirection(Vec2(0.f, 1.f));

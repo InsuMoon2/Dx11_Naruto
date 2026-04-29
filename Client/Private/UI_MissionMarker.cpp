@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "GameObject_Factory.h"
+#include "MyPlayer.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Transform.h"
@@ -37,6 +38,7 @@ UI_MissionMarker::UI_MissionMarker(const UI_MissionMarker& rhs)
     , _insideScale(rhs._insideScale)
     , _edgeScale(rhs._edgeScale)
     , _textureIndex(rhs._textureIndex)
+    , _maxVisibleDistance(rhs._maxVisibleDistance)
 {
 }
 
@@ -98,6 +100,17 @@ void UI_MissionMarker::Update(float timeDelta)
     {
         Set_Visibility(false);
         return;
+    }
+
+    Vec3 viewerWorldPosition = Vec3::Zero;
+    if (Resolve_ViewerWorldPosition(viewerWorldPosition))
+    {
+        const float maxVisibleDistanceSq = _maxVisibleDistance * _maxVisibleDistance;
+        if (Vec3::DistanceSquared(targetWorldPosition, viewerWorldPosition) > maxVisibleDistanceSq)
+        {
+            Set_Visibility(false);
+            return;
+        }
     }
 
     Vec2 targetUIPosition = Vec2::Zero;
@@ -208,6 +221,32 @@ bool UI_MissionMarker::Resolve_TargetWorldPosition(Vec3& outWorldPosition) const
     }
 
     return false;
+}
+
+bool UI_MissionMarker::Resolve_ViewerWorldPosition(Vec3& outWorldPosition) const
+{
+    const auto gameObjects = GAME->Get_GameObjects(GAME->Current_Level());
+
+    for (const Shared<GameObject>& gameObject : gameObjects)
+    {
+        auto myPlayer = dynamic_pointer_cast<MyPlayer>(gameObject);
+        if (!myPlayer || myPlayer->Is_Destroy())
+            continue;
+
+        auto transform = myPlayer->Get_Transform();
+        if (!transform)
+            continue;
+
+        outWorldPosition = transform->Get_WorldPosition();
+        return true;
+    }
+
+    const Vec4* camPosition = GAME->Get_CamPosition();
+    if (!camPosition)
+        return false;
+
+    outWorldPosition = Vec3(camPosition->x, camPosition->y, camPosition->z);
+    return true;
 }
 
 bool UI_MissionMarker::Project_WorldToUI(const Vec3& worldPosition, Vec2& outUIPosition, bool& outIsInsideScreen) const

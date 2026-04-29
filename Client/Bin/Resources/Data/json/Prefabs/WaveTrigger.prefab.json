@@ -42,17 +42,19 @@
         }
     ],
     "custom_properties": {
+        "activate_on_wave_clear_tag": "",
         "clear_delay_sec": 1.0,
-        "default_effect_asset_name": "RingEffect_Loop",
+        "default_effect_asset_name": "Wave_Effect",
         "play_default_effect_on_begin_play": true,
         "play_trigger_effect_on_trigger": true,
+        "show_mission_marker": true,
         "spawn_entries": [
             {
                 "object_type_override": "OBJECT_TYPE_MONSTER",
                 "position": [
-                    -5.5,
+                    7.0,
                     0.0,
-                    0.0
+                    7.0
                 ],
                 "prefab_name": "Monster",
                 "rotation": [
@@ -69,9 +71,9 @@
             {
                 "object_type_override": "OBJECT_TYPE_MONSTER",
                 "position": [
-                    5.099999904632568,
+                    -7.0,
                     0.0,
-                    0.0
+                    7.0
                 ],
                 "prefab_name": "Monster2",
                 "rotation": [
@@ -87,13 +89,12 @@
             }
         ],
         "spawn_layer_tag": "Layer_Builder",
-        "show_mission_marker": true,
         "stop_default_effect_on_trigger": true,
         "trigger_effect_asset_name": "",
         "trigger_once": true,
         "wave_tag": "GamePlayClearWave"
     },
-    "guid": "b4236004-8ba6-4c26-a0a8-74a3148b8bec",
+    "guid": "f66df8b5-33f2-4b20-801a-2570ee1788e1",
     "object_type": "OBJECT_TYPE_WAVE_TRIGGER",
     "prefab_name": "WaveTrigger",
     "static_class": "WaveTrigger"

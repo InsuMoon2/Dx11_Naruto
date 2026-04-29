@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "GameRoom.h"
 #include "GameSession.h"
 #include "Server_PacketHandler.h"
@@ -183,7 +183,11 @@ void GameRoom::Enter_GameRoom(Shared<GameSession> session, const Protocol::C_Ent
     player->info.set_weapon_type(pkt.info().weapon_type());
 
     auto* protoPos = player->info.mutable_pos();
-    protoPos->set_x(pkt.spawn_pos().x());
+
+    // 접속한 순서(현재 방에 있는 플레이어 수)에 따라 X축 위치를 5씩 띄워서 겹치지 않게 스폰합니다.
+    float spawnOffsetX = isReenter ? 0.f : static_cast<float>(_players.size()) * 5.f;
+
+    protoPos->set_x(pkt.spawn_pos().x() + spawnOffsetX);
     protoPos->set_y(pkt.spawn_pos().y());
     protoPos->set_z(pkt.spawn_pos().z());
     player->info.set_rot_y(pkt.rot_y());
@@ -272,15 +276,11 @@ void GameRoom::Handle_C_Move(Shared<GameSession> session, Protocol::C_Move& pkt)
 
     uint64 id = pkt.info().objectid();
 
-    if (pkt.info().objecttype() == Protocol::OBJECT_TYPE_MONSTER ||
-        pkt.info().objecttype() == Protocol::OBJECT_TYPE_BOSS_PAIN)
+    Shared<Monster> monster = Find_Monster(id);
+    if (monster != nullptr)
     {
         const uint64 authorityPlayerId = Get_MonsterAuthorityPlayerId();
         if (authorityPlayerId == 0 || session->Get_PlayerId() != authorityPlayerId)
-            return;
-
-        Shared<Monster> monster = Find_Monster(id);
-        if (monster == nullptr)
             return;
 
         const Protocol::OBJECT_TYPE networkObjectType = monster->info.objecttype();

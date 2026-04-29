@@ -21,11 +21,13 @@ bool BTTask_PainForceSkill::Register_Properties()
     PROPERTY_STRING_JSON("Skill Anim State", "skill_anim_state", _skillAnimState);
     PROPERTY_STRING_JSON("Cooldown Remain Key", "cooldown_remain_key", _cooldownRemainKey);
     PROPERTY_STRING_JSON("Global Cooldown Remain Key", "global_cooldown_remain_key", _globalCooldownRemainKey);
+    PROPERTY_STRING_JSON("Force Skill Cycle Cooldown Remain Key", "force_skill_cycle_cooldown_remain_key", _forceSkillCycleCooldownRemainKey);
     PROPERTY_ENUM_JSON("Skill Type", "skill_type", _skillType, EPainForceSkillType);
     PROPERTY_FLOAT_JSON("Min Range", "min_range", _minRange, 0.f, 100.f);
     PROPERTY_FLOAT_JSON("Max Range", "max_range", _maxRange, 0.1f, 100.f);
     PROPERTY_FLOAT_JSON("Cooldown", "cooldown", _cooldown, 0.f, 60.f);
     PROPERTY_FLOAT_JSON("Global Cooldown", "global_cooldown", _globalCooldown, 0.f, 30.f);
+    PROPERTY_FLOAT_JSON("Force Skill Cycle Cooldown", "force_skill_cycle_cooldown", _forceSkillCycleCooldown, 0.f, 30.f);
     PROPERTY_FLOAT_JSON("Impact Time", "impact_time", _impactTime, 0.f, 5.f);
     PROPERTY_FLOAT_JSON("Skill Duration", "skill_duration", _skillDuration, 0.1f, 10.f);
     PROPERTY_FLOAT_JSON("Launch Power", "launch_power", _launchPower, 0.f, 500.f);
@@ -51,11 +53,13 @@ BTTask_PainForceSkill::BTTask_PainForceSkill(const BTTask_PainForceSkill& rhs)
     , _skillAnimState(rhs._skillAnimState)
     , _cooldownRemainKey(rhs._cooldownRemainKey)
     , _globalCooldownRemainKey(rhs._globalCooldownRemainKey)
+    , _forceSkillCycleCooldownRemainKey(rhs._forceSkillCycleCooldownRemainKey)
     , _skillType(rhs._skillType)
     , _minRange(rhs._minRange)
     , _maxRange(rhs._maxRange)
     , _cooldown(rhs._cooldown)
     , _globalCooldown(rhs._globalCooldown)
+    , _forceSkillCycleCooldown(rhs._forceSkillCycleCooldown)
     , _impactTime(rhs._impactTime)
     , _skillDuration(rhs._skillDuration)
     , _launchPower(rhs._launchPower)
@@ -111,9 +115,11 @@ EBTNodeResult BTTask_PainForceSkill::Update(float timeDelta)
 
     if (!_startedSkill)
     {
+        Shared<GameObject> primaryTarget = !targets.empty() ? targets.front() : nullptr;
+
         if (_faceTarget)
         {
-            auto targetTransform = targets.front()->Get_Component<Transform>();
+            auto targetTransform = primaryTarget ? primaryTarget->Get_Component<Transform>() : nullptr;
             if (targetTransform)
             {
                 Vec3 ownerPos = ownerTransform->Get_WorldPosition();
@@ -134,7 +140,19 @@ EBTNodeResult BTTask_PainForceSkill::Update(float timeDelta)
         if (!_effectAssetName.empty())
         {
             Vec3 effectPos = ownerTransform->Get_WorldPosition();
-            SkillObject::Spawn_Effect_Once(_effectAssetName, effectPos, _effectScale);
+            Vec3 effectScale = _effectScale;
+
+            if (_skillType == EPainForceSkillType::BanshoTenin && primaryTarget)
+            {
+                auto targetTransform = primaryTarget->Get_Component<Transform>();
+                if (targetTransform)
+                    effectPos = targetTransform->Get_WorldPosition();
+
+                // 만상천인 이펙트는 보스 연출 체급에 맞게 기본 설정보다 전체 스케일을 2배 키운다.
+                effectScale *= 2.f;
+            }
+
+            SkillObject::Spawn_Effect_Once(_effectAssetName, effectPos, effectScale);
         }
 
         _startedSkill = true;
@@ -171,6 +189,12 @@ EBTNodeResult BTTask_PainForceSkill::Update(float timeDelta)
 
     if (!_globalCooldownRemainKey.empty())
         blackboard->Set_ValueAsFloat(_globalCooldownRemainKey, _globalCooldown);
+
+    if (_skillType != EPainForceSkillType::ChibakuTensei &&
+        !_forceSkillCycleCooldownRemainKey.empty())
+    {
+        blackboard->Set_ValueAsFloat(_forceSkillCycleCooldownRemainKey, _forceSkillCycleCooldown);
+    }
 
     _startedSkill = false;
     _elapsed = 0.f;

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Skill_ShinsuSenju_Impact.h"
 
 #include "GameObject_Factory.h"
@@ -69,7 +69,8 @@ HRESULT Skill_ShinsuSenju_Impact::Initialize(void* arg)
         _collider->Set_CollisionPreset(_collisionPreset);
     }
 
-    Spawn_Particle("SmallRock", 10, desc->spawnPosition);
+    // 타수가 많아 프레임 드랍이 생기므로 파편 생성 개수를 줄임 (10 -> 2)
+    Spawn_Particle("SmallRock", 2, desc->spawnPosition);
 
     CHECK_FAILED(Play_ImpactEffect(*desc), E_FAIL);
 
@@ -198,13 +199,15 @@ void Skill_ShinsuSenju_Impact::Spawn_Particle(const string& assetName, int32 spa
 
         debrisDesc.spawnScale = Vec3(1.f, 1.f, 1.f);
 
-        const float randomScale = Utils::RandomRange(0.10f, 0.18f);
+        // 돌덩이가 더 눈에 띄도록 크기를 약간 키움
+        const float randomScale = Utils::RandomRange(0.18f, 0.35f);
         debrisDesc.effectLocalScale = Vec3(randomScale, randomScale, randomScale);
 
+        // 훨씬 강하게 위와 옆으로 튀도록 속도 대폭 증가
         debrisDesc.initialVelocity = Vec3(
-            Utils::RandomRange(-3.5f, 3.5f),
-            Utils::RandomRange(7.f, 10.f),
-            Utils::RandomRange(-3.5f, 3.5f));
+            Utils::RandomRange(-8.5f, 8.5f),
+            Utils::RandomRange(16.f, 24.f),
+            Utils::RandomRange(-8.5f, 8.5f));
 
         debrisDesc.gravity = -24.f;
 

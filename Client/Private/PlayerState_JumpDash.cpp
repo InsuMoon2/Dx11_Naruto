@@ -57,6 +57,7 @@ void PlayerState_JumpDash::Enter(PlayerStateMachine* state)
 
     const auto& moveDesc = movement->Get_MoveDesc();
     movement->Start_Dash(dashWorldDir, moveDesc.dashDistance, moveDesc.dashDuration);
+    GAME->Play_Sound(L"Dash.wav", ESoundChannel::Player, 0.3f);
 
     state->Play_AnimState(EPlayerState::JumpDash);
 }

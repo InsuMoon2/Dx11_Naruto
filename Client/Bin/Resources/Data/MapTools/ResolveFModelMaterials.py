@@ -62,24 +62,61 @@ IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".tga", ".dds", ".bmp"}
 # [추가] KonohaVillage02 바닥 StaticMesh를 마스크 바닥으로 강제 치환할 대상 머티리얼 이름 목록이다.
 # [추가] 범위를 너무 넓히지 않기 위해 실제 Floor 청크에서 확인된 이름만 사용한다.
 GROUND_OVERRIDE_MATERIAL_NAMES = (
+    # [추가] KonohaVillage 1 바닥에 실제로 쓰이는 ground materials이다.
+    "MI_ENV_KNVLLG_GROUNDSOIL_A",
+    "MI_ENV_KNVLLG_DISTANCEGROUND_A",
+    "MI_ENV_KNVLLG_SANDYFLOORTILES",
     "MI_ENV_KNVLLG02_GROUNDSOIL_A",
     "MI_ENV_KNVLLG02_DISTANCEGROUND_A",
     "MI_ENV_KNVLLG02_SANDYFLOORTILES",
+    # [추가] ExamStadium 튜토리얼 바닥에 실제로 쓰이는 ground material이다.
+    "MI_ENV_TCHEXA_GROUNDSOIL_A",
 )
 
 # [추가] 바닥 오버라이드에 사용할 기본 모래 텍스처 stem이다.
 GROUND_OVERRIDE_BASE_COLOR_STEM = "T_ENV_KNVLLG_Ground_Sand_BC"
 # [추가] 바닥 오버라이드에 사용할 잔디 블렌드 텍스처 stem이다.
 GROUND_OVERRIDE_BLEND_COLOR_STEM = "T_ENV_KNVLLG_GrassBase_BC"
-# [추가] 바닥 오버라이드에 사용할 분포 마스크 텍스처 stem이다.
+# [추가] 바닥 오버라이드에 사용할 KonohaVillage 분포 마스크 텍스처 stem이다.
 GROUND_OVERRIDE_MASK_STEM = "T_ENV_KNVLLG_Mask_01_M"
 
 # [추가] 바닥 오버라이드 텍스처의 기본 타일링 배율이다.
-GROUND_OVERRIDE_BASE_SCALE = 8.0
+GROUND_OVERRIDE_BASE_SCALE = 6.0
 # [추가] 바닥 오버라이드 블렌드 텍스처의 기본 타일링 배율이다.
-GROUND_OVERRIDE_BLEND_SCALE = 8.0
-# [추가] 바닥 오버라이드 마스크는 메시 UV를 그대로 쓰도록 기본 배율 1을 사용한다.
-GROUND_OVERRIDE_MASK_SCALE = 1.0
+GROUND_OVERRIDE_BLEND_SCALE = 2.5
+# [추가] `GROUND_OVERRIDE_MASK_TEXTURE_SCALE` controls the mask texture tiling for larger grass patches.
+GROUND_OVERRIDE_MASK_TEXTURE_SCALE = 0.32
+# [추가] `GROUND_OVERRIDE_MASK_VALUE_SCALE` feeds shader-side `g_MaskScale` for sparse patch distribution.
+GROUND_OVERRIDE_MASK_VALUE_SCALE = 0.85
+# [추가] `GROUND_OVERRIDE_MASK_THRESHOLD` raises mask power so grass stays larger and more separated.
+GROUND_OVERRIDE_MASK_THRESHOLD = 0.25
+
+# [추가] `MOUNTAIN_OVERRIDE_NAME_TOKENS` lists mountain-like materials that should be forced brown.
+MOUNTAIN_OVERRIDE_NAME_TOKENS = (
+    "MOUNTAINSIDE",
+    "MOUNTAIN",
+    "ROCKWALL",
+    "FARMOUNTAINS",
+    "WALL_A_BG",
+)
+# [추가] `MOUNTAIN_OVERRIDE_EXACT_NAMES` lists ExamStadium cliff/wall materials that currently appear chalk-white.
+# [추가] These exact names are forced to the brown mountain palette during batch conversion.
+MOUNTAIN_OVERRIDE_EXACT_NAMES = (
+    "MI_ENV_TCHEXA_PLASTER_WHITE",
+    "MI_ENV_TCHEXA_PLASTER_WHITE_MASKED_CAMERATRANS",
+    "MI_ENV_TCHEXA_PLASTER_LIGHT",
+)
+# [추가] `MOUNTAIN_OVERRIDE_BASE_COLOR_STEM` is the brown mountain albedo used during map import.
+MOUNTAIN_OVERRIDE_BASE_COLOR_STEM = "T_ENV_LKNVLD_MountainSide_01_BCDark"
+# [추가] `MOUNTAIN_OVERRIDE_BASE_COLOR_FACTOR` keeps flat-color mountain materials brown even without textures.
+MOUNTAIN_OVERRIDE_BASE_COLOR_FACTOR = [0.81, 0.753659, 0.5427, 1.0]
+# [추가] `MOUNTAIN_OVERRIDE_SHADOW_COLOR_FACTOR` warms mountain shadow tint to avoid chalky white cliffs.
+MOUNTAIN_OVERRIDE_SHADOW_COLOR_FACTOR = [0.93, 0.88, 0.72, 1.0]
+
+# [추가] `EXAM_GROUND_OVERRIDE_*` values use textures that actually exist in the ExamStadium pipeline output.
+EXAM_GROUND_OVERRIDE_BASE_COLOR_STEM = "T_ENV_LKNVLD_Ground_03_BC"
+EXAM_GROUND_OVERRIDE_BLEND_COLOR_STEM = "T_ENV_KNFRST_Ground_01_BC"
+EXAM_GROUND_OVERRIDE_MASK_STEM = "T_ENV_LKNVLD_Mask_01_M"
 
 # Snow-related texture names are stripped when the batch opts into snow-free output.
 SNOW_NAME_TOKENS = (
@@ -824,11 +861,38 @@ def is_ground_override_material(material_name: str) -> bool:
     return upper_name in GROUND_OVERRIDE_MATERIAL_NAMES
 
 
+def is_mountain_override_material(material_name: str) -> bool:
+    # [추가] `is_mountain_override_material` decides whether a material should receive brown mountain correction.
+    # [추가] It is called from both generic and flat material conversion paths.
+    upper_name = material_name.upper().strip()
+    if upper_name in MOUNTAIN_OVERRIDE_EXACT_NAMES:
+        return True
+    return any(token in upper_name for token in MOUNTAIN_OVERRIDE_NAME_TOKENS)
+
+
 # [추가] 강제 주입용 texture stem을 texture_index에서 찾는 helper다.
 # [추가] FModel props를 거치지 않고도 지정된 텍스처를 바로 matinst에 심기 위해 사용한다.
 def resolve_forced_texture_path(texture_stem: str, texture_index: dict, owner_json_path: Path, copy_root, dry_run: bool) -> str:
     source_path = texture_index.get(texture_stem.lower())
     return make_texture_path(source_path, owner_json_path, copy_root, dry_run)
+
+
+def get_ground_override_texture_stems(material_name: str):
+    # [추가] `get_ground_override_texture_stems` selects map-specific ground textures for forced floor blending.
+    # [추가] ExamStadium does not ship the same KonohaVillage ground textures, so it needs a separate preset.
+    upper_name = material_name.upper().strip()
+    if upper_name == "MI_ENV_TCHEXA_GROUNDSOIL_A":
+        return (
+            EXAM_GROUND_OVERRIDE_BASE_COLOR_STEM,
+            EXAM_GROUND_OVERRIDE_BLEND_COLOR_STEM,
+            EXAM_GROUND_OVERRIDE_MASK_STEM,
+        )
+
+    return (
+        GROUND_OVERRIDE_BASE_COLOR_STEM,
+        GROUND_OVERRIDE_BLEND_COLOR_STEM,
+        GROUND_OVERRIDE_MASK_STEM,
+    )
 
 
 # [추가] KonohaVillage02 바닥 머티리얼을 Sand + Grass + Mask 조합으로 강제 덮어쓰는 helper다.
@@ -843,8 +907,8 @@ def apply_ground_material_override(material_name: str, out_data: dict, texture_i
     out_data["shadow_color"] = [1.0, 1.0, 1.0, 1.0]
     # [변경] 바닥 오버라이드에서는 잔디 블렌드가 더 잘 보이도록 threshold를 올린다.
     # [추가] 다른 건물 머티리얼에는 영향을 주지 않고, ground override 대상에만 적용된다.
-    out_data["mask_scale"] = 1.0
-    out_data["mask_threshold"] = 2.5
+    out_data["mask_scale"] = GROUND_OVERRIDE_MASK_VALUE_SCALE
+    out_data["mask_threshold"] = GROUND_OVERRIDE_MASK_THRESHOLD
 
     # [추가] 기존 FModel 텍스처 중 base/blend/mask 슬롯은 제거하고 바닥용 강제 텍스처로 교체한다.
     out_data["textures"] = [
@@ -852,15 +916,17 @@ def apply_ground_material_override(material_name: str, out_data: dict, texture_i
         if texture.get("slot") not in {"base_color", "blend_base_color", "mask"}
     ]
 
+    base_color_stem, blend_color_stem, mask_stem = get_ground_override_texture_stems(material_name)
+
     # [추가] 모래/잔디/마스크 텍스처를 프로젝트용 상대경로로 복사/변환한다.
     base_color_path = resolve_forced_texture_path(
-        GROUND_OVERRIDE_BASE_COLOR_STEM, texture_index, owner_json_path, copy_root, dry_run
+        base_color_stem, texture_index, owner_json_path, copy_root, dry_run
     )
     blend_color_path = resolve_forced_texture_path(
-        GROUND_OVERRIDE_BLEND_COLOR_STEM, texture_index, owner_json_path, copy_root, dry_run
+        blend_color_stem, texture_index, owner_json_path, copy_root, dry_run
     )
     mask_path = resolve_forced_texture_path(
-        GROUND_OVERRIDE_MASK_STEM, texture_index, owner_json_path, copy_root, dry_run
+        mask_stem, texture_index, owner_json_path, copy_root, dry_run
     )
 
     append_texture_slot(
@@ -873,8 +939,34 @@ def apply_ground_material_override(material_name: str, out_data: dict, texture_i
     )
     append_texture_slot(
         out_data, "mask", mask_path,
-        uv_channel=0, sampling_scale=GROUND_OVERRIDE_MASK_SCALE
+        uv_channel=0, sampling_scale=GROUND_OVERRIDE_MASK_TEXTURE_SCALE
     )
+
+
+def apply_mountain_material_override(material_name: str, out_data: dict, texture_index: dict,
+                                     owner_json_path: Path, copy_root, dry_run: bool):
+    # [추가] `apply_mountain_material_override` forces mountain-like materials toward a brown backdrop palette.
+    # [추가] It runs after the base material payload is built so batch files can fix tutorial cliffs automatically.
+    if not is_mountain_override_material(material_name):
+        return
+
+    out_data["base_color_factor"] = MOUNTAIN_OVERRIDE_BASE_COLOR_FACTOR[:]
+    out_data["shadow_color"] = MOUNTAIN_OVERRIDE_SHADOW_COLOR_FACTOR[:]
+
+    mountain_base_color_path = resolve_forced_texture_path(
+        MOUNTAIN_OVERRIDE_BASE_COLOR_STEM, texture_index, owner_json_path, copy_root, dry_run
+    )
+
+    if out_data.get("profile") == "generic_pbr":
+        out_data["textures"] = [
+            texture for texture in out_data["textures"]
+            if texture.get("slot") != "base_color"
+        ]
+
+        append_texture_slot(
+            out_data, "base_color", mountain_base_color_path,
+            uv_channel=0, sampling_scale=1.0
+        )
 
 
 def resolve_generic_pbr(material_name: str, mi_data: dict, texture_index: dict, owner_json_path: Path,
@@ -987,6 +1079,9 @@ def resolve_generic_pbr(material_name: str, mi_data: dict, texture_index: dict, 
     apply_ground_material_override(
         material_name, out, texture_index, owner_json_path, copy_root, dry_run
     )
+    apply_mountain_material_override(
+        material_name, out, texture_index, owner_json_path, copy_root, dry_run
+    )
 
     return out
 
@@ -1057,6 +1152,10 @@ def resolve_flat_color_normal(material_name: str, mi_data: dict, texture_index: 
             "uv_channel": specular_uv_channel,
             "sampling_scale": specular_sampling_scale,
         })
+
+    apply_mountain_material_override(
+        material_name, out, texture_index, owner_json_path, copy_root, dry_run
+    )
 
     return out
 
@@ -1189,6 +1288,8 @@ def infer_unresolved_material_base_color(material_name: str, mat_path: Path):
     lower_name = material_name.lower()
     lower_path = mat_path.as_posix().lower()
 
+    if lower_name == "mi_env_lknvld_wall_a_bg":
+        return [0.81, 0.753659, 0.5427, 1.0]
     if "window" in lower_name:
         return [0.72, 0.77, 0.83, 1.0]
     if "paper" in lower_name:

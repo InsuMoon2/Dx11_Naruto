@@ -73,6 +73,7 @@ void PlayerState_Dash::Enter(PlayerStateMachine* state)
 
     input->Set_InputMode(EPlayerInputMode::LookOnly);
     movement->Set_OrientRotationToMovement(false);
+    GAME->Play_Sound(L"Dash.wav", ESoundChannel::Player, 0.3f);
 
     // 실제 이동은 ANS_Move로 세팅
     state->Play_DirectionalAnimState(EPlayerState::Dash, _dashDir);

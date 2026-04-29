@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Player.h"
 #include "CombatStat.h"
 #include "Shader.h"
@@ -16,6 +16,7 @@
 #include "SmearEffect_Component.h"
 #include "SwordTrail_Component.h"
 #include "SkillComponent.h"
+#include "SkillObject.h"
 #include "Transform.h"
 
 Player::Player(ComPtr<Device> device, ComPtr<DeviceContext> context)
@@ -153,9 +154,20 @@ void Player::OnDamaged(const FDamageEvent& damageEvent)
 {
     Character::OnDamaged(damageEvent);
 
-    Set_RotationToDamageCauser(damageEvent);
+    if (damageEvent.damage > 0.f && _transformCom)
+    {
+        // 플레이어도 몬스터와 동일하게 실제 피격이 들어오면 기본 HitParticle을 즉시 재생한다.
+        Vec3 hitEffectPosition = _transformCom->Get_WorldPosition();
+        hitEffectPosition.y += 1.f;
+        SkillObject::Spawn_Effect_Once("HitParticle", hitEffectPosition);
+    }
 
     auto sm = Get_Component<PlayerStateMachine>();
+
+    // 슈퍼아머 상태에서는 피격 시 공격자 방향으로 회전하지 않는다.
+    if (!sm || !sm->Is_SuperArmor())
+        Set_RotationToDamageCauser(damageEvent);
+
     if (sm && _combatStat && !_combatStat->Is_Dead())
     {
         sm->Trigger_HitReaction(
@@ -407,6 +419,8 @@ bool Player::Is_SwordAttackState(EPlayerState state) const
     case EPlayerState::Attack_Sword_04:
     case EPlayerState::Attack_SwordAir_01:
     case EPlayerState::Attack_SwordAir_02:
+    case EPlayerState::Attack_SwordAir_03:
+    case EPlayerState::Attack_SwordAir_04:
         return true;
     default:
         return false;

@@ -121,52 +121,6 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Idle",
-                    "loopClip": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "mode": "Single",
-                    "single": {
-                        "animationName": "SK_CHR_Pain|Pain_Idle_Loop",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
-                    "start": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    }
-                },
-                {
-                    "directional": {
-                        "backward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "forward": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "left": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        },
-                        "right": {
-                            "animationName": "",
-                            "loop": true,
-                            "playRate": 1.0
-                        }
-                    },
-                    "end": {
-                        "animationName": "",
-                        "loop": true,
-                        "playRate": 1.0
-                    },
                     "key": "Skill_ChibakuTensei_Start",
                     "loopClip": {
                         "animationName": "",
@@ -259,7 +213,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Attack_04",
+                    "key": "Idle",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -267,9 +221,55 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_Pain|Pain_Attack_supa_01",
+                        "animationName": "SK_CHR_Pain|Pain_Idle_Loop",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Hit",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_Pain|Pain_Beaten_Left",
                         "loop": false,
-                        "playRate": 1.2999999523162842
+                        "playRate": 1.0
                     },
                     "start": {
                         "animationName": "",
@@ -351,7 +351,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Hit",
+                    "key": "Attack_04",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -359,9 +359,9 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_Pain|Pain_Beaten_Left",
+                        "animationName": "SK_CHR_Pain|Pain_Attack_supa_01",
                         "loop": false,
-                        "playRate": 1.0
+                        "playRate": 1.2999999523162842
                     },
                     "start": {
                         "animationName": "",
@@ -535,7 +535,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Hit_Launch",
+                    "key": "Skill_ShinraTensei",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -543,7 +543,7 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_Pain|Pain_Beaten_Blasted",
+                        "animationName": "SK_CHR_Pain|Pain_Ninjutsu_AlmightyPush_Start",
                         "loop": false,
                         "playRate": 1.0
                     },
@@ -581,7 +581,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Skill_ShinraTensei",
+                    "key": "Hit_Launch",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -589,7 +589,7 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_Pain|Pain_Ninjutsu_AlmightyPush_Start",
+                        "animationName": "SK_CHR_Pain|Pain_Beaten_Blasted",
                         "loop": false,
                         "playRate": 1.0
                     },
@@ -811,7 +811,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "AirApproach",
+                    "key": "Hit_2",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -819,8 +819,8 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_Pain|Pain_Aerial_Dash_Loop",
-                        "loop": true,
+                        "animationName": "SK_CHR_Pain|Pain_Beaten_Left_Head",
+                        "loop": false,
                         "playRate": 1.0
                     },
                     "start": {
@@ -857,7 +857,7 @@
                         "loop": true,
                         "playRate": 1.0
                     },
-                    "key": "Hit_2",
+                    "key": "AirApproach",
                     "loopClip": {
                         "animationName": "",
                         "loop": true,
@@ -865,8 +865,8 @@
                     },
                     "mode": "Single",
                     "single": {
-                        "animationName": "SK_CHR_Pain|Pain_Beaten_Left_Head",
-                        "loop": false,
+                        "animationName": "SK_CHR_Pain|Pain_Aerial_Dash_Loop",
+                        "loop": true,
                         "playRate": 1.0
                     },
                     "start": {
@@ -1426,10 +1426,59 @@
                         "loop": true,
                         "playRate": 1.0
                     }
+                },
+                {
+                    "directional": {
+                        "backward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "forward": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "left": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        },
+                        "right": {
+                            "animationName": "",
+                            "loop": true,
+                            "playRate": 1.0
+                        }
+                    },
+                    "end": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "key": "Dash",
+                    "loopClip": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    },
+                    "mode": "Single",
+                    "single": {
+                        "animationName": "SK_CHR_Pain|Pain_Dodge_Behind",
+                        "loop": false,
+                        "playRate": 1.0
+                    },
+                    "start": {
+                        "animationName": "",
+                        "loop": true,
+                        "playRate": 1.0
+                    }
                 }
             ],
             "current_state": "Idle",
             "type": "COMPONENT_TYPE_ANIMATION_STATE"
+        },
+        {
+            "type": "COMPONENT_TYPE_CHAKRA_MOVE"
         },
         {
             "animations": [
@@ -1648,7 +1697,7 @@
             "type": "COMPONENT_TYPE_MODEL"
         }
     ],
-    "guid": "bbdc0dd3-856a-4442-9669-b3ae540fa135",
+    "guid": "b3432124-5424-40fa-88b8-f728be74bbdc",
     "hit_effect_asset_name": "HitParticle",
     "idle_state_name": "Idle",
     "max_hp": 1500.0,

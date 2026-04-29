@@ -97,8 +97,8 @@
                 0.0
             ],
             "scale": [
-                0.20000000298023224,
-                0.07999999821186066
+                0.35,
+                0.05
             ],
             "scaleDuration": 1.0,
             "spawnHeight": 1.0,
@@ -228,7 +228,7 @@
                 2.0,
                 3.0
             ],
-            "screenDistortionRadialStrength": 0.45,
+            "screenDistortionRadialStrength": 0.0,
             "screenDistortionScrollA": [
                 0.20000000298023224,
                 1.0
