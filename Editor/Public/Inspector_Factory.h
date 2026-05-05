@@ -26,8 +26,8 @@ public:
 private:
     map<uint32, Shared<Component_Inspector>> _inspectors;
 
-    Shared<Texture_Inspector> _textureInspector;
-    Shared<Model_Inspector> _modelInspector;
+    Shared<Texture_Inspector>   _textureInspector;
+    Shared<Model_Inspector>     _modelInspector;
 };
 
 NS_END

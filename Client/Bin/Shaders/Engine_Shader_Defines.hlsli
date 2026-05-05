@@ -35,6 +35,9 @@ Texture2D g_MaskTexture : register(t1);
 
 //
 
+// Pragmata처럼 본 수가 많은 스켈레탈 메시를 수용하기 위한 스키닝 행렬 최대 개수다.
+#define MAX_SHADER_BONES 768
+
 // --- Common Sampler ---
 sampler DefaultSampler = sampler_state
 {
