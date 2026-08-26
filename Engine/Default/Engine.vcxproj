@@ -100,13 +100,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>../Bin/</OutDir>
+    <OutDir>../Bin/$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Unity|x64'">
-    <OutDir>../Bin/</OutDir>
+    <OutDir>../Bin/$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>../Bin/</OutDir>
+    <OutDir>../Bin/$(Configuration)/</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -182,7 +182,7 @@
       <AdditionalLibraryDirectories>../ThirdPartyLib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>call "$(SolutionDir)UpdateLib.bat"</Command>
+      <Command>call "$(SolutionDir)UpdateLib.bat" $(Configuration)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>call "$(SolutionDir)Server\Protobuf\Protocol\GenProto.bat"</Command>
@@ -210,7 +210,7 @@
       <AdditionalLibraryDirectories>../ThirdPartyLib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>call "$(SolutionDir)UpdateLib.bat"</Command>
+      <Command>call "$(SolutionDir)UpdateLib.bat" $(Configuration)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>call "$(SolutionDir)Server\Protobuf\Protocol\GenProto.bat"</Command>
@@ -242,7 +242,7 @@
       <AdditionalLibraryDirectories>../ThirdPartyLib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>call "$(SolutionDir)UpdateLib.bat"</Command>
+      <Command>call "$(SolutionDir)UpdateLib.bat" $(Configuration)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>call "$(SolutionDir)Server\Protobuf\Protocol\GenProto.bat"</Command>

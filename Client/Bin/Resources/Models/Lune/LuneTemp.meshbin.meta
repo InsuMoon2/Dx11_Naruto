@@ -1,0 +1,1304 @@
+{
+    "boneCount": 216,
+    "bones": [
+        {
+            "depth": 0,
+            "index": 0,
+            "name": "RootNode",
+            "parentIndex": -1
+        },
+        {
+            "depth": 1,
+            "index": 1,
+            "name": "SK_Lune_UE5",
+            "parentIndex": 0
+        },
+        {
+            "depth": 2,
+            "index": 2,
+            "name": "root",
+            "parentIndex": 1
+        },
+        {
+            "depth": 3,
+            "index": 3,
+            "name": "ik_foot_root",
+            "parentIndex": 2
+        },
+        {
+            "depth": 4,
+            "index": 4,
+            "name": "ik_foot_l",
+            "parentIndex": 3
+        },
+        {
+            "depth": 4,
+            "index": 5,
+            "name": "ik_foot_r",
+            "parentIndex": 3
+        },
+        {
+            "depth": 3,
+            "index": 6,
+            "name": "ik_hand_root",
+            "parentIndex": 2
+        },
+        {
+            "depth": 4,
+            "index": 7,
+            "name": "ik_hand_gun",
+            "parentIndex": 6
+        },
+        {
+            "depth": 5,
+            "index": 8,
+            "name": "ik_hand_l",
+            "parentIndex": 7
+        },
+        {
+            "depth": 5,
+            "index": 9,
+            "name": "ik_hand_r",
+            "parentIndex": 7
+        },
+        {
+            "depth": 3,
+            "index": 10,
+            "name": "pelvis",
+            "parentIndex": 2
+        },
+        {
+            "depth": 4,
+            "index": 11,
+            "name": "spine_01",
+            "parentIndex": 10
+        },
+        {
+            "depth": 5,
+            "index": 12,
+            "name": "Lune_Coat_01_01",
+            "parentIndex": 11
+        },
+        {
+            "depth": 6,
+            "index": 13,
+            "name": "Lune_Coat_01_02",
+            "parentIndex": 12
+        },
+        {
+            "depth": 7,
+            "index": 14,
+            "name": "Lune_Coat_01_03",
+            "parentIndex": 13
+        },
+        {
+            "depth": 8,
+            "index": 15,
+            "name": "Lune_Coat_01_04",
+            "parentIndex": 14
+        },
+        {
+            "depth": 5,
+            "index": 16,
+            "name": "Lune_Coat_02_01",
+            "parentIndex": 11
+        },
+        {
+            "depth": 6,
+            "index": 17,
+            "name": "Lune_Coat_02_02",
+            "parentIndex": 16
+        },
+        {
+            "depth": 7,
+            "index": 18,
+            "name": "Lune_Coat_02_03",
+            "parentIndex": 17
+        },
+        {
+            "depth": 8,
+            "index": 19,
+            "name": "Lune_Coat_02_04",
+            "parentIndex": 18
+        },
+        {
+            "depth": 5,
+            "index": 20,
+            "name": "Lune_Coat_03_01",
+            "parentIndex": 11
+        },
+        {
+            "depth": 6,
+            "index": 21,
+            "name": "Lune_Coat_03_02",
+            "parentIndex": 20
+        },
+        {
+            "depth": 7,
+            "index": 22,
+            "name": "Lune_Coat_03_03",
+            "parentIndex": 21
+        },
+        {
+            "depth": 8,
+            "index": 23,
+            "name": "Lune_Coat_03_04",
+            "parentIndex": 22
+        },
+        {
+            "depth": 5,
+            "index": 24,
+            "name": "Lune_Coat_04_01",
+            "parentIndex": 11
+        },
+        {
+            "depth": 6,
+            "index": 25,
+            "name": "Lune_Coat_04_02",
+            "parentIndex": 24
+        },
+        {
+            "depth": 7,
+            "index": 26,
+            "name": "Lune_Coat_04_03",
+            "parentIndex": 25
+        },
+        {
+            "depth": 8,
+            "index": 27,
+            "name": "Lune_Coat_04_04",
+            "parentIndex": 26
+        },
+        {
+            "depth": 5,
+            "index": 28,
+            "name": "Lune_Coat_05_01",
+            "parentIndex": 11
+        },
+        {
+            "depth": 6,
+            "index": 29,
+            "name": "Lune_Coat_05_02",
+            "parentIndex": 28
+        },
+        {
+            "depth": 7,
+            "index": 30,
+            "name": "Lune_Coat_05_03",
+            "parentIndex": 29
+        },
+        {
+            "depth": 8,
+            "index": 31,
+            "name": "Lune_Coat_05_04",
+            "parentIndex": 30
+        },
+        {
+            "depth": 9,
+            "index": 32,
+            "name": "Lune_Coat_05_05",
+            "parentIndex": 31
+        },
+        {
+            "depth": 5,
+            "index": 33,
+            "name": "Lune_Coat_06_01",
+            "parentIndex": 11
+        },
+        {
+            "depth": 6,
+            "index": 34,
+            "name": "Lune_Coat_06_02",
+            "parentIndex": 33
+        },
+        {
+            "depth": 7,
+            "index": 35,
+            "name": "Lune_Coat_06_03",
+            "parentIndex": 34
+        },
+        {
+            "depth": 8,
+            "index": 36,
+            "name": "Lune_Coat_06_04",
+            "parentIndex": 35
+        },
+        {
+            "depth": 9,
+            "index": 37,
+            "name": "Lune_Coat_06_05",
+            "parentIndex": 36
+        },
+        {
+            "depth": 5,
+            "index": 38,
+            "name": "Lune_Coat_07_01",
+            "parentIndex": 11
+        },
+        {
+            "depth": 6,
+            "index": 39,
+            "name": "Lune_Coat_07_02",
+            "parentIndex": 38
+        },
+        {
+            "depth": 7,
+            "index": 40,
+            "name": "Lune_Coat_07_03",
+            "parentIndex": 39
+        },
+        {
+            "depth": 8,
+            "index": 41,
+            "name": "Lune_Coat_07_04",
+            "parentIndex": 40
+        },
+        {
+            "depth": 9,
+            "index": 42,
+            "name": "Lune_Coat_07_05",
+            "parentIndex": 41
+        },
+        {
+            "depth": 5,
+            "index": 43,
+            "name": "spine_02",
+            "parentIndex": 11
+        },
+        {
+            "depth": 6,
+            "index": 44,
+            "name": "spine_03",
+            "parentIndex": 43
+        },
+        {
+            "depth": 7,
+            "index": 45,
+            "name": "spine_04",
+            "parentIndex": 44
+        },
+        {
+            "depth": 8,
+            "index": 46,
+            "name": "Weapon_b",
+            "parentIndex": 45
+        },
+        {
+            "depth": 8,
+            "index": 47,
+            "name": "spine_05",
+            "parentIndex": 45
+        },
+        {
+            "depth": 9,
+            "index": 48,
+            "name": "Lune_Scarf_04_01",
+            "parentIndex": 47
+        },
+        {
+            "depth": 10,
+            "index": 49,
+            "name": "Lune_Scarf_04_02",
+            "parentIndex": 48
+        },
+        {
+            "depth": 11,
+            "index": 50,
+            "name": "Lune_Scarf_04_03",
+            "parentIndex": 49
+        },
+        {
+            "depth": 9,
+            "index": 51,
+            "name": "Lune_Scarf_05_01",
+            "parentIndex": 47
+        },
+        {
+            "depth": 10,
+            "index": 52,
+            "name": "Lune_Scarf_05_02",
+            "parentIndex": 51
+        },
+        {
+            "depth": 9,
+            "index": 53,
+            "name": "clavicle_Pec_l",
+            "parentIndex": 47
+        },
+        {
+            "depth": 9,
+            "index": 54,
+            "name": "clavicle_Pec_r",
+            "parentIndex": 47
+        },
+        {
+            "depth": 9,
+            "index": 55,
+            "name": "clavicle_l",
+            "parentIndex": 47
+        },
+        {
+            "depth": 10,
+            "index": 56,
+            "name": "Lune_Scarf_06_01",
+            "parentIndex": 55
+        },
+        {
+            "depth": 11,
+            "index": 57,
+            "name": "Lune_Scarf_06_02",
+            "parentIndex": 56
+        },
+        {
+            "depth": 10,
+            "index": 58,
+            "name": "upperarm_l",
+            "parentIndex": 55
+        },
+        {
+            "depth": 11,
+            "index": 59,
+            "name": "lowerarm_l",
+            "parentIndex": 58
+        },
+        {
+            "depth": 12,
+            "index": 60,
+            "name": "hand_l",
+            "parentIndex": 59
+        },
+        {
+            "depth": 13,
+            "index": 61,
+            "name": "Weapon_l",
+            "parentIndex": 60
+        },
+        {
+            "depth": 13,
+            "index": 62,
+            "name": "index_metacarpal_l",
+            "parentIndex": 60
+        },
+        {
+            "depth": 14,
+            "index": 63,
+            "name": "index_01_l",
+            "parentIndex": 62
+        },
+        {
+            "depth": 15,
+            "index": 64,
+            "name": "index_02_l",
+            "parentIndex": 63
+        },
+        {
+            "depth": 16,
+            "index": 65,
+            "name": "index_03_l",
+            "parentIndex": 64
+        },
+        {
+            "depth": 13,
+            "index": 66,
+            "name": "middle_metacarpal_l",
+            "parentIndex": 60
+        },
+        {
+            "depth": 14,
+            "index": 67,
+            "name": "middle_01_l",
+            "parentIndex": 66
+        },
+        {
+            "depth": 15,
+            "index": 68,
+            "name": "middle_02_l",
+            "parentIndex": 67
+        },
+        {
+            "depth": 16,
+            "index": 69,
+            "name": "middle_03_l",
+            "parentIndex": 68
+        },
+        {
+            "depth": 13,
+            "index": 70,
+            "name": "pinky_metacarpal_l",
+            "parentIndex": 60
+        },
+        {
+            "depth": 14,
+            "index": 71,
+            "name": "pinky_01_l",
+            "parentIndex": 70
+        },
+        {
+            "depth": 15,
+            "index": 72,
+            "name": "pinky_02_l",
+            "parentIndex": 71
+        },
+        {
+            "depth": 16,
+            "index": 73,
+            "name": "pinky_03_l",
+            "parentIndex": 72
+        },
+        {
+            "depth": 13,
+            "index": 74,
+            "name": "ring_metacarpal_l",
+            "parentIndex": 60
+        },
+        {
+            "depth": 14,
+            "index": 75,
+            "name": "ring_01_l",
+            "parentIndex": 74
+        },
+        {
+            "depth": 15,
+            "index": 76,
+            "name": "ring_02_l",
+            "parentIndex": 75
+        },
+        {
+            "depth": 16,
+            "index": 77,
+            "name": "ring_03_l",
+            "parentIndex": 76
+        },
+        {
+            "depth": 13,
+            "index": 78,
+            "name": "thumb_01_l",
+            "parentIndex": 60
+        },
+        {
+            "depth": 14,
+            "index": 79,
+            "name": "thumb_02_l",
+            "parentIndex": 78
+        },
+        {
+            "depth": 15,
+            "index": 80,
+            "name": "thumb_03_l",
+            "parentIndex": 79
+        },
+        {
+            "depth": 13,
+            "index": 81,
+            "name": "hand_lSocket",
+            "parentIndex": 60
+        },
+        {
+            "depth": 13,
+            "index": 82,
+            "name": "Muzzle_02",
+            "parentIndex": 60
+        },
+        {
+            "depth": 13,
+            "index": 83,
+            "name": "FX_Hand_L1",
+            "parentIndex": 60
+        },
+        {
+            "depth": 13,
+            "index": 84,
+            "name": "FX_Hand_L2",
+            "parentIndex": 60
+        },
+        {
+            "depth": 13,
+            "index": 85,
+            "name": "FX_Hand_L3",
+            "parentIndex": 60
+        },
+        {
+            "depth": 13,
+            "index": 86,
+            "name": "FX_Hand_L4",
+            "parentIndex": 60
+        },
+        {
+            "depth": 13,
+            "index": 87,
+            "name": "FX_Palm_L",
+            "parentIndex": 60
+        },
+        {
+            "depth": 12,
+            "index": 88,
+            "name": "lowerarm_twist_01_l",
+            "parentIndex": 59
+        },
+        {
+            "depth": 13,
+            "index": 89,
+            "name": "FX_Ninja_01_l",
+            "parentIndex": 88
+        },
+        {
+            "depth": 13,
+            "index": 90,
+            "name": "FX_Ninja_02_l",
+            "parentIndex": 88
+        },
+        {
+            "depth": 12,
+            "index": 91,
+            "name": "lowerarm_twist_02_l",
+            "parentIndex": 59
+        },
+        {
+            "depth": 12,
+            "index": 92,
+            "name": "Shield_1",
+            "parentIndex": 59
+        },
+        {
+            "depth": 12,
+            "index": 93,
+            "name": "FX_Trail_L_02",
+            "parentIndex": 59
+        },
+        {
+            "depth": 12,
+            "index": 94,
+            "name": "FX_Trail_L_01",
+            "parentIndex": 59
+        },
+        {
+            "depth": 12,
+            "index": 95,
+            "name": "Holo_Interface",
+            "parentIndex": 59
+        },
+        {
+            "depth": 12,
+            "index": 96,
+            "name": "lowerarm_l_middle",
+            "parentIndex": 59
+        },
+        {
+            "depth": 12,
+            "index": 97,
+            "name": "WeaponAttachPointL",
+            "parentIndex": 59
+        },
+        {
+            "depth": 11,
+            "index": 98,
+            "name": "upperarm_twist_01_l",
+            "parentIndex": 58
+        },
+        {
+            "depth": 11,
+            "index": 99,
+            "name": "upperarm_twist_02_l",
+            "parentIndex": 58
+        },
+        {
+            "depth": 9,
+            "index": 100,
+            "name": "clavicle_r",
+            "parentIndex": 47
+        },
+        {
+            "depth": 10,
+            "index": 101,
+            "name": "Lune_Scarf_03_01",
+            "parentIndex": 100
+        },
+        {
+            "depth": 11,
+            "index": 102,
+            "name": "Lune_Scarf_03_02",
+            "parentIndex": 101
+        },
+        {
+            "depth": 12,
+            "index": 103,
+            "name": "Lune_Scarf_03_03",
+            "parentIndex": 102
+        },
+        {
+            "depth": 10,
+            "index": 104,
+            "name": "upperarm_r",
+            "parentIndex": 100
+        },
+        {
+            "depth": 11,
+            "index": 105,
+            "name": "lowerarm_r",
+            "parentIndex": 104
+        },
+        {
+            "depth": 12,
+            "index": 106,
+            "name": "hand_r",
+            "parentIndex": 105
+        },
+        {
+            "depth": 13,
+            "index": 107,
+            "name": "Weapon_r",
+            "parentIndex": 106
+        },
+        {
+            "depth": 13,
+            "index": 108,
+            "name": "index_metacarpal_r",
+            "parentIndex": 106
+        },
+        {
+            "depth": 14,
+            "index": 109,
+            "name": "index_01_r",
+            "parentIndex": 108
+        },
+        {
+            "depth": 15,
+            "index": 110,
+            "name": "index_02_r",
+            "parentIndex": 109
+        },
+        {
+            "depth": 16,
+            "index": 111,
+            "name": "index_03_r",
+            "parentIndex": 110
+        },
+        {
+            "depth": 13,
+            "index": 112,
+            "name": "middle_metacarpal_r",
+            "parentIndex": 106
+        },
+        {
+            "depth": 14,
+            "index": 113,
+            "name": "middle_01_r",
+            "parentIndex": 112
+        },
+        {
+            "depth": 15,
+            "index": 114,
+            "name": "middle_02_r",
+            "parentIndex": 113
+        },
+        {
+            "depth": 16,
+            "index": 115,
+            "name": "middle_03_r",
+            "parentIndex": 114
+        },
+        {
+            "depth": 15,
+            "index": 116,
+            "name": "RightHandFrontSocket",
+            "parentIndex": 113
+        },
+        {
+            "depth": 15,
+            "index": 117,
+            "name": "RightHandBackSocket",
+            "parentIndex": 113
+        },
+        {
+            "depth": 13,
+            "index": 118,
+            "name": "pinky_metacarpal_r",
+            "parentIndex": 106
+        },
+        {
+            "depth": 14,
+            "index": 119,
+            "name": "pinky_01_r",
+            "parentIndex": 118
+        },
+        {
+            "depth": 15,
+            "index": 120,
+            "name": "pinky_02_r",
+            "parentIndex": 119
+        },
+        {
+            "depth": 16,
+            "index": 121,
+            "name": "pinky_03_r",
+            "parentIndex": 120
+        },
+        {
+            "depth": 13,
+            "index": 122,
+            "name": "ring_metacarpal_r",
+            "parentIndex": 106
+        },
+        {
+            "depth": 14,
+            "index": 123,
+            "name": "ring_01_r",
+            "parentIndex": 122
+        },
+        {
+            "depth": 15,
+            "index": 124,
+            "name": "ring_02_r",
+            "parentIndex": 123
+        },
+        {
+            "depth": 16,
+            "index": 125,
+            "name": "ring_03_r",
+            "parentIndex": 124
+        },
+        {
+            "depth": 13,
+            "index": 126,
+            "name": "thumb_01_r",
+            "parentIndex": 106
+        },
+        {
+            "depth": 14,
+            "index": 127,
+            "name": "thumb_02_r",
+            "parentIndex": 126
+        },
+        {
+            "depth": 15,
+            "index": 128,
+            "name": "thumb_03_r",
+            "parentIndex": 127
+        },
+        {
+            "depth": 13,
+            "index": 129,
+            "name": "Muzzle_01",
+            "parentIndex": 106
+        },
+        {
+            "depth": 13,
+            "index": 130,
+            "name": "WeaponAttachPointR",
+            "parentIndex": 106
+        },
+        {
+            "depth": 13,
+            "index": 131,
+            "name": "FX_Hand_R1",
+            "parentIndex": 106
+        },
+        {
+            "depth": 13,
+            "index": 132,
+            "name": "FX_Hand_R2",
+            "parentIndex": 106
+        },
+        {
+            "depth": 13,
+            "index": 133,
+            "name": "FX_Hand_R3",
+            "parentIndex": 106
+        },
+        {
+            "depth": 13,
+            "index": 134,
+            "name": "FX_Hand_R4",
+            "parentIndex": 106
+        },
+        {
+            "depth": 13,
+            "index": 135,
+            "name": "Gun_High_LOS",
+            "parentIndex": 106
+        },
+        {
+            "depth": 13,
+            "index": 136,
+            "name": "Muzzle",
+            "parentIndex": 106
+        },
+        {
+            "depth": 13,
+            "index": 137,
+            "name": "Gun_LOS",
+            "parentIndex": 106
+        },
+        {
+            "depth": 13,
+            "index": 138,
+            "name": "Weapon",
+            "parentIndex": 106
+        },
+        {
+            "depth": 12,
+            "index": 139,
+            "name": "lowerarm_twist_01_r",
+            "parentIndex": 105
+        },
+        {
+            "depth": 13,
+            "index": 140,
+            "name": "FX_Ninja_01_r",
+            "parentIndex": 139
+        },
+        {
+            "depth": 13,
+            "index": 141,
+            "name": "FX_Ninja_02_r",
+            "parentIndex": 139
+        },
+        {
+            "depth": 12,
+            "index": 142,
+            "name": "lowerarm_twist_02_r",
+            "parentIndex": 105
+        },
+        {
+            "depth": 12,
+            "index": 143,
+            "name": "FX_Trail_R_02",
+            "parentIndex": 105
+        },
+        {
+            "depth": 12,
+            "index": 144,
+            "name": "FX_Trail_R_01",
+            "parentIndex": 105
+        },
+        {
+            "depth": 12,
+            "index": 145,
+            "name": "lowerarm_r_Middle",
+            "parentIndex": 105
+        },
+        {
+            "depth": 12,
+            "index": 146,
+            "name": "FX_Forearm_R",
+            "parentIndex": 105
+        },
+        {
+            "depth": 11,
+            "index": 147,
+            "name": "upperarm_twist_01_r",
+            "parentIndex": 104
+        },
+        {
+            "depth": 12,
+            "index": 148,
+            "name": "Lune_Scarf_01_01",
+            "parentIndex": 147
+        },
+        {
+            "depth": 13,
+            "index": 149,
+            "name": "Lune_Scarf_01_02",
+            "parentIndex": 148
+        },
+        {
+            "depth": 14,
+            "index": 150,
+            "name": "Lune_Scarf_01_03",
+            "parentIndex": 149
+        },
+        {
+            "depth": 12,
+            "index": 151,
+            "name": "Lune_Scarf_02_01",
+            "parentIndex": 147
+        },
+        {
+            "depth": 13,
+            "index": 152,
+            "name": "Lune_Scarf_02_02",
+            "parentIndex": 151
+        },
+        {
+            "depth": 14,
+            "index": 153,
+            "name": "Lune_Scarf_02_03",
+            "parentIndex": 152
+        },
+        {
+            "depth": 11,
+            "index": 154,
+            "name": "upperarm_twist_02_r",
+            "parentIndex": 104
+        },
+        {
+            "depth": 11,
+            "index": 155,
+            "name": "FX_Upperarm_R",
+            "parentIndex": 104
+        },
+        {
+            "depth": 9,
+            "index": 156,
+            "name": "neck_01",
+            "parentIndex": 47
+        },
+        {
+            "depth": 10,
+            "index": 157,
+            "name": "neck_02",
+            "parentIndex": 156
+        },
+        {
+            "depth": 11,
+            "index": 158,
+            "name": "head",
+            "parentIndex": 157
+        },
+        {
+            "depth": 12,
+            "index": 159,
+            "name": "FX_EyeTrails_R_01",
+            "parentIndex": 158
+        },
+        {
+            "depth": 12,
+            "index": 160,
+            "name": "FX_EyeTrails_R_02",
+            "parentIndex": 158
+        },
+        {
+            "depth": 12,
+            "index": 161,
+            "name": "FX_EyeTrails_L_01",
+            "parentIndex": 158
+        },
+        {
+            "depth": 12,
+            "index": 162,
+            "name": "FX_EyeTrails_L_02",
+            "parentIndex": 158
+        },
+        {
+            "depth": 12,
+            "index": 163,
+            "name": "Eyes_Position",
+            "parentIndex": 158
+        },
+        {
+            "depth": 12,
+            "index": 164,
+            "name": "FP_Camera",
+            "parentIndex": 158
+        },
+        {
+            "depth": 12,
+            "index": 165,
+            "name": "TP_CameraTrace_L",
+            "parentIndex": 158
+        },
+        {
+            "depth": 12,
+            "index": 166,
+            "name": "TP_CameraTrace_R",
+            "parentIndex": 158
+        },
+        {
+            "depth": 12,
+            "index": 167,
+            "name": "headSocket",
+            "parentIndex": 158
+        },
+        {
+            "depth": 10,
+            "index": 168,
+            "name": "Metahuman_Head",
+            "parentIndex": 156
+        },
+        {
+            "depth": 10,
+            "index": 169,
+            "name": "FX_Head",
+            "parentIndex": 156
+        },
+        {
+            "depth": 7,
+            "index": 170,
+            "name": "spine_03Socket",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 171,
+            "name": "WeaponHolster",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 172,
+            "name": "Status",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 173,
+            "name": "Impact",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 174,
+            "name": "Aim_Target",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 175,
+            "name": "Chest",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 176,
+            "name": "FX_CoreTrail_01",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 177,
+            "name": "FX_Passive",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 178,
+            "name": "UltBeamAttachPoint",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 179,
+            "name": "TorsoOrigin",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 180,
+            "name": "Bot",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 181,
+            "name": "Vent_L",
+            "parentIndex": 44
+        },
+        {
+            "depth": 7,
+            "index": 182,
+            "name": "Vent_R",
+            "parentIndex": 44
+        },
+        {
+            "depth": 6,
+            "index": 183,
+            "name": "Sword_2",
+            "parentIndex": 43
+        },
+        {
+            "depth": 6,
+            "index": 184,
+            "name": "Shield_2",
+            "parentIndex": 43
+        },
+        {
+            "depth": 4,
+            "index": 185,
+            "name": "thigh_l",
+            "parentIndex": 10
+        },
+        {
+            "depth": 5,
+            "index": 186,
+            "name": "calf_l",
+            "parentIndex": 185
+        },
+        {
+            "depth": 6,
+            "index": 187,
+            "name": "calf_twist_01_l",
+            "parentIndex": 186
+        },
+        {
+            "depth": 6,
+            "index": 188,
+            "name": "calf_twist_02_l",
+            "parentIndex": 186
+        },
+        {
+            "depth": 6,
+            "index": 189,
+            "name": "foot_l",
+            "parentIndex": 186
+        },
+        {
+            "depth": 7,
+            "index": 190,
+            "name": "ball_l",
+            "parentIndex": 189
+        },
+        {
+            "depth": 8,
+            "index": 191,
+            "name": "toes_tip_l_Socket",
+            "parentIndex": 190
+        },
+        {
+            "depth": 7,
+            "index": 192,
+            "name": "foot_l_Socket",
+            "parentIndex": 189
+        },
+        {
+            "depth": 7,
+            "index": 193,
+            "name": "heel_l_socket",
+            "parentIndex": 189
+        },
+        {
+            "depth": 5,
+            "index": 194,
+            "name": "thigh_twist_01_l",
+            "parentIndex": 185
+        },
+        {
+            "depth": 5,
+            "index": 195,
+            "name": "thigh_twist_02_l",
+            "parentIndex": 185
+        },
+        {
+            "depth": 4,
+            "index": 196,
+            "name": "thigh_r",
+            "parentIndex": 10
+        },
+        {
+            "depth": 5,
+            "index": 197,
+            "name": "calf_r",
+            "parentIndex": 196
+        },
+        {
+            "depth": 6,
+            "index": 198,
+            "name": "calf_twist_01_r",
+            "parentIndex": 197
+        },
+        {
+            "depth": 6,
+            "index": 199,
+            "name": "calf_twist_02_r",
+            "parentIndex": 197
+        },
+        {
+            "depth": 6,
+            "index": 200,
+            "name": "foot_r",
+            "parentIndex": 197
+        },
+        {
+            "depth": 7,
+            "index": 201,
+            "name": "ball_r",
+            "parentIndex": 200
+        },
+        {
+            "depth": 8,
+            "index": 202,
+            "name": "toes_tip_r_Socket",
+            "parentIndex": 201
+        },
+        {
+            "depth": 7,
+            "index": 203,
+            "name": "heel_r_socket",
+            "parentIndex": 200
+        },
+        {
+            "depth": 7,
+            "index": 204,
+            "name": "foot_rSocket",
+            "parentIndex": 200
+        },
+        {
+            "depth": 5,
+            "index": 205,
+            "name": "thigh_twist_01_r",
+            "parentIndex": 196
+        },
+        {
+            "depth": 5,
+            "index": 206,
+            "name": "thigh_twist_02_r",
+            "parentIndex": 196
+        },
+        {
+            "depth": 3,
+            "index": 207,
+            "name": "FX_root",
+            "parentIndex": 2
+        },
+        {
+            "depth": 3,
+            "index": 208,
+            "name": "Root",
+            "parentIndex": 2
+        },
+        {
+            "depth": 3,
+            "index": 209,
+            "name": "FX_Leap_AOE",
+            "parentIndex": 2
+        },
+        {
+            "depth": 3,
+            "index": 210,
+            "name": "FX_Ult_Blast",
+            "parentIndex": 2
+        },
+        {
+            "depth": 3,
+            "index": 211,
+            "name": "FX_Ult_Cast",
+            "parentIndex": 2
+        },
+        {
+            "depth": 3,
+            "index": 212,
+            "name": "HealthBar",
+            "parentIndex": 2
+        },
+        {
+            "depth": 3,
+            "index": 213,
+            "name": "HoverAttachPoint",
+            "parentIndex": 2
+        },
+        {
+            "depth": 3,
+            "index": 214,
+            "name": "SmashPoint",
+            "parentIndex": 2
+        },
+        {
+            "depth": 1,
+            "index": 215,
+            "name": "SK_Lune_UE5.001",
+            "parentIndex": 0
+        }
+    ],
+    "guid": "a7268cb0-94a8-4012-9570-86bc7e4ed5a7",
+    "modelType": "SkeletalMesh",
+    "type": "model"
+}

@@ -1,0 +1,79 @@
+{
+    "endFrame": 600,
+    "fps": 60,
+    "loop": false,
+    "name": "NewUIAnimation",
+    "startFrame": 0,
+    "targetName": "Logo",
+    "tracks": [
+        {
+            "keys": [
+                {
+                    "frame": 3,
+                    "value": [
+                        960.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 45,
+                    "value": [
+                        400.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "property": "PositionX"
+        },
+        {
+            "keys": [
+                {
+                    "frame": 1,
+                    "value": [
+                        416.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 57,
+                    "value": [
+                        1000.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "property": "ScaleY"
+        },
+        {
+            "keys": [
+                {
+                    "frame": 0,
+                    "value": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "frame": 500,
+                    "value": [
+                        0.30000001192092896,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "property": "Alpha"
+        }
+    ]
+}

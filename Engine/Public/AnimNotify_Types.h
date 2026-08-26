@@ -12,18 +12,18 @@ class AnimNotifyState;
 struct FAnimNotifyContext
 {
     GameObject* owner = nullptr;
-    Model*  model = nullptr;
+    Model*      model = nullptr;
 
-    string  modelGuid;
-    string  clipName;
+    string      modelGuid;
+    string      clipName;
 
-    float   previousTimeSec = 0.f;
-    float   currentTimeSec = 0.f;
-    float   deltaTime = 0.f;
+    float       previousTimeSec = 0.f;
+    float       currentTimeSec = 0.f;
+    float       deltaTime = 0.f;
 
-    bool    isLooping = false;
-    bool    wrapped = false;
-    bool    isPreview = false;
+    bool        isLooping = false;
+    bool        wrapped = false;
+    bool        isPreview = false;
 };
 
 struct FAnimNotifyTrackDesc

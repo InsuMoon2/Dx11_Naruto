@@ -6,7 +6,10 @@ param(
     [int]$Port = 7777,
 
     # Output folder that receives the external-PC release package.
-    [string]$OutputDir = "Dist\ReleaseExternal"
+    [string]$OutputDir = "Dist\ReleaseExternal",
+
+    # Build configuration folder (under each project's Bin\) to pull binaries from.
+    [string]$Configuration = "Release"
 )
 
 $ErrorActionPreference = "Stop"
@@ -35,13 +38,15 @@ New-Item -ItemType Directory -Force -Path $PackageServerBin | Out-Null
 New-Item -ItemType Directory -Force -Path $PackageClientBin | Out-Null
 
 # Runtime DLL/EXE files required beside Game.exe.
+# Read from the per-configuration Bin subfolder (each .vcxproj's OutDir), then flattened
+# into Game\Bin so runtime paths like ../../Client/Bin/Resources still resolve.
 $GameRuntimeFiles = @(
-    "Game\Bin\Game.exe",
-    "Game\Bin\Engine.dll",
-    "Game\Bin\assimp-vc143-mt.dll",
-    "Game\Bin\assimp-vc143-mtd.dll",
-    "Game\Bin\fmod.dll",
-    "Game\Bin\fmodL.dll"
+    "Game\Bin\$Configuration\Game.exe",
+    "Game\Bin\$Configuration\Engine.dll",
+    "Game\Bin\$Configuration\assimp-vc143-mt.dll",
+    "Game\Bin\$Configuration\assimp-vc143-mtd.dll",
+    "Game\Bin\$Configuration\fmod.dll",
+    "Game\Bin\$Configuration\fmodL.dll"
 )
 
 foreach ($RelativePath in $GameRuntimeFiles) {
@@ -54,7 +59,7 @@ foreach ($RelativePath in $GameRuntimeFiles) {
 }
 
 # Game server executable used by the host PC.
-$GameServerExe = Join-Path $RepoRoot "Server\GameServer\Bin\GameServer.exe"
+$GameServerExe = Join-Path $RepoRoot "Server\GameServer\Bin\$Configuration\GameServer.exe"
 
 if (Test-Path $GameServerExe) {
     Copy-Item -LiteralPath $GameServerExe -Destination $PackageServerBin -Force

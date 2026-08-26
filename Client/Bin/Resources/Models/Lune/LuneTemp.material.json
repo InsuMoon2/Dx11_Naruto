@@ -1,0 +1,55 @@
+{
+  "version": 2,
+  "materials": [
+    {
+      "material_name": "MI_Lucien_Shoulder_Scarf",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "Hide_Material",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_Lune_Top",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_Lune_Body_Lightoff",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_Noah_ArmRing",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_Lune_Coat",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_ArmBand",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_Noah_Mitaine",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_Lune_Bottom",
+      "textures": [
+      ]
+    },
+    {
+      "material_name": "MI_Lucien_Scarf",
+      "textures": [
+      ]
+    }
+  ]
+}

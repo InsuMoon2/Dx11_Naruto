@@ -41,9 +41,7 @@ HRESULT ModelMaterial::Initialize_FromJson(const json& data, const string& mater
         string slotStr = textureItem.value("slot", "");
         uint32 index = textureItem.value("index", 0u);
         string path = textureItem.value("path", "");
-        // [추가] texture item이 참조하는 UV 채널 인덱스다.
         uint32 uvChannel = textureItem.value("uv_channel", 0u);
-        // [추가] texture item의 원본 sampling scale이다.
         float samplingScale = textureItem.value("sampling_scale", 1.f);
 
         if (path.empty())
