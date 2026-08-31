@@ -102,6 +102,7 @@ public:
         bool triggerOnce = false;
         bool hasTriggered = false;
         bool clearBroadcasted = false;
+        bool playerWasInside = false; // 재발동(triggerOnce=false) 시, 플레이어가 트리거 밖으로 나갔다 다시 들어온 순간에만 재발동시키기 위한 상태다.
 
         Vec3 position = Vec3(0.f, 0.f, 0.f);
         float yaw = 0.f;

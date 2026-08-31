@@ -99,12 +99,18 @@ static bool Try_ReadTriggerExtents(const json& objJson, Vec3& outExtents)
         if (!compJson["type"].is_string())
             continue;
 
-        if (compJson["type"].get<string>() != "COMPONENT_TYPE_COLLIDER_OBB")
+        // Collider::To_Json()은 콜라이더 종류를 "COMPONENT_TYPE_COLLIDER"로, 세부 도형은 "shape"로 따로 적는다.
+        if (compJson["type"].get<string>() != "COMPONENT_TYPE_COLLIDER")
             continue;
 
-        if (compJson.contains("extents") && compJson["extents"].is_array() && compJson["extents"].size() >= 3)
+        if (!compJson.contains("shape") || compJson["shape"].get<string>() != "OBB")
+            continue;
+
+        // extents는 최상위가 아니라 "bounding" 하위에 중첩되어 저장된다.
+        if (compJson.contains("bounding") && compJson["bounding"].contains("extents") &&
+            compJson["bounding"]["extents"].is_array() && compJson["bounding"]["extents"].size() >= 3)
         {
-            outExtents = Json_ToVec3(compJson["extents"], Vec3(2.f, 2.f, 2.f));
+            outExtents = Json_ToVec3(compJson["bounding"]["extents"], Vec3(2.f, 2.f, 2.f));
             return true;
         }
     }
@@ -633,13 +639,26 @@ void GameRoom::Update_WaveTriggers()
             {
                 trigger.clearBroadcasted = true;
                 Broadcast_WaveCleared(trigger.waveTag);
+
+                // 클라이언트 WaveTrigger::Finish_WaveClear와 동일하게, 1회성이 아니면 다음 틱부터 재발동 가능하게 되돌린다.
+                if (!trigger.triggerOnce)
+                {
+                    trigger.hasTriggered = false;
+                    trigger.clearBroadcasted = false;
+                    trigger.spawnedMonsterIds.clear();
+                }
             }
 
             continue;
         }
 
         if (_players.empty())
+        {
+            trigger.playerWasInside = false;
             continue;
+        }
+
+        bool anyPlayerInside = false;
 
         for (const auto& [playerId, player] : _players)
         {
@@ -649,9 +668,16 @@ void GameRoom::Update_WaveTriggers()
             if (!IsPointInsideWaveTrigger(playerPos, trigger))
                 continue;
 
-            Trigger_Wave(trigger);
+            anyPlayerInside = true;
             break;
         }
+
+        // 재발동 가능한 트리거가 여전히 안쪽에 있을 때 매 틱 재발동되는 것을 막기 위해,
+        // 바깥 -> 안쪽으로 새로 들어오는 순간(rising edge)에만 웨이브를 시작한다.
+        if (anyPlayerInside && !trigger.playerWasInside)
+            Trigger_Wave(trigger);
+
+        trigger.playerWasInside = anyPlayerInside;
     }
 }
 

@@ -168,14 +168,8 @@ void Player::OnDamaged(const FDamageEvent& damageEvent)
     if (!sm || !sm->Is_SuperArmor())
         Set_RotationToDamageCauser(damageEvent);
 
-    if (sm && _combatStat && !_combatStat->Is_Dead())
-    {
-        sm->Trigger_HitReaction(
-            damageEvent.hitReactionType,
-            damageEvent.hitReactionSerial,
-            damageEvent.forceHitRestart,
-            damageEvent.hitAnimStateOverride); // 스테이트 머신에서 슈퍼아머인지 판단하고 상태 변환
-    }
+    // 플레이어 피격 시 Hit 애니메이션으로 전환되면 조작감을 방해해서 의도적으로 트리거하지 않는다.
+    // (HitParticle, 피격 방향 회전, 데미지 처리는 위에서 그대로 유지된다.)
 }
 
 void Player::Set_RotationToDamageCauser(const FDamageEvent& damageEvent)
